@@ -3,12 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{45456675-CCCE-4C64-A0EC-660B8087B5D8}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Desktop", "SeeingSharp.Desktop\SeeingSharp.Desktop.csproj", "{7A3E385A-E1F7-47C1-83FF-05DA9BCAE172}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{66734858-5FC7-486B-8FB7-8D6E86870BB0}"
+	ProjectSection(SolutionItems) = preProject
+		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
+		_Misc\_SeeingSharp.Tools.licenseheader = _Misc\_SeeingSharp.Tools.licenseheader
+		_Misc\SolutionInfo.cs = _Misc\SolutionInfo.cs
 	EndProjectSection
 EndProject
 Global
@@ -21,6 +30,10 @@ Global
 		{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3E385A-E1F7-47C1-83FF-05DA9BCAE172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3E385A-E1F7-47C1-83FF-05DA9BCAE172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3E385A-E1F7-47C1-83FF-05DA9BCAE172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3E385A-E1F7-47C1-83FF-05DA9BCAE172}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -34,7 +34,7 @@ using System.Text;
 
 namespace SeeingSharp.Util
 {
-    public static partial class CommonTools
+    public static partial class SeeingSharpUtil
     {
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {

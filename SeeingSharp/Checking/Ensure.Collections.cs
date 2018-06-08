@@ -62,7 +62,7 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             // Get the collection count
-            bool hasAnyElement = CommonTools.HasAnyElement(collection);
+            bool hasAnyElement = SeeingSharpUtil.HasAnyElement(collection);
 
             // Check result
             if(!hasAnyElement)
@@ -83,7 +83,7 @@ namespace SeeingSharp.Checking
 
             // Get the collection count
             int collectionCount = -1;
-            collectionCount = CommonTools.GetCollectionCount<T>(collection);
+            collectionCount = SeeingSharpUtil.GetCollectionCount<T>(collection);
 
             // Check result
             if ((collectionCount < countMin) ||
@@ -105,7 +105,7 @@ namespace SeeingSharp.Checking
 
             // Get the collection count
             int collectionCount = -1;
-            collectionCount = CommonTools.GetCollectionCount<T>(collection);
+            collectionCount = SeeingSharpUtil.GetCollectionCount<T>(collection);
 
             // Check result
             if (collectionCount != count)

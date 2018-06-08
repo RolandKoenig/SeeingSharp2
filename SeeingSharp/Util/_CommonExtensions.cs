@@ -176,7 +176,7 @@ namespace SeeingSharp.Util
         /// <param name="lst">The list from which to get the backing array for faster loop access.</param>
         public static T[] GetBackingArray<T>(this List<T> lst)
         {
-            return CommonTools.GetBackingArray(lst);
+            return SeeingSharpUtil.GetBackingArray(lst);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace SeeingSharp.Util
         /// <param name="queue">The queue from which to get the backing array for faster loop access.</param>
         public static T[] GetBackingArray<T>(this Queue<T> queue)
         {
-            return CommonTools.GetBackingArray(queue);
+            return SeeingSharpUtil.GetBackingArray(queue);
         }
 
         public static T[] Subset<T>(this T[] givenArray, int startIndex, int count)
@@ -243,7 +243,7 @@ namespace SeeingSharp.Util
         {
             foreach (var actDisposeable in listOfDisposables)
             {
-                CommonTools.DisposeObject(actDisposeable);
+                SeeingSharpUtil.DisposeObject(actDisposeable);
             }
             listOfDisposables.Clear();
         }
