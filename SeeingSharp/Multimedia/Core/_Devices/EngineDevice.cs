@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SeeingSharp.Util;
+using SeeingSharp.Checking;
 
 // Some namespace mappings
 using DXGI = SharpDX.DXGI;
@@ -80,6 +81,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineDevice(DeviceLoadSettings loadSettings, EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, DXGI.Adapter1 adapter, bool isSoftwareAdapter)
         {
+            loadSettings.EnsureNotNull(nameof(loadSettings));
+            engineFactory.EnsureNotNull(nameof(engineFactory));
+            coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
+            adapter.EnsureNotNull(nameof(adapter));
+
             m_engineFactory = engineFactory;
             m_deviceLoadSettings = loadSettings;
             m_adapter1 = adapter;

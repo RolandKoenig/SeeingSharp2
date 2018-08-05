@@ -28,6 +28,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using SharpDX;
 
 namespace SeeingSharp
 {
@@ -208,87 +209,6 @@ namespace SeeingSharp
         public static bool IsEmpty(this Vector3 vector)
         {
             return vector.Equals(Vector3.Zero);
-        }
-
-        /// <summary>
-        /// Projects a 3D vector from object space into screen space.
-        /// </summary>
-        /// <param name="vector">The vector to project.</param>
-        /// <param name="x">The X position of the viewport.</param>
-        /// <param name="y">The Y position of the viewport.</param>
-        /// <param name="width">The width of the viewport.</param>
-        /// <param name="height">The height of the viewport.</param>
-        /// <param name="minZ">The minimum depth of the viewport.</param>
-        /// <param name="maxZ">The maximum depth of the viewport.</param>
-        /// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
-        /// <param name="result">When the method completes, contains the vector in screen space.</param>
-        public static void Project(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix4x4 worldViewProjection, out Vector3 result)
-        {
-            Vector3 v = Vector3.Transform(vector, worldViewProjection);
-            result = new Vector3(((1.0f + v.X) * 0.5f * width) + x, ((1.0f - v.Y) * 0.5f * height) + y, (v.Z * (maxZ - minZ)) + minZ);
-        }
-
-        /// <summary>
-        /// Projects a 3D vector from object space into screen space.
-        /// </summary>
-        /// <param name="vector">The vector to project.</param>
-        /// <param name="x">The X position of the viewport.</param>
-        /// <param name="y">The Y position of the viewport.</param>
-        /// <param name="width">The width of the viewport.</param>
-        /// <param name="height">The height of the viewport.</param>
-        /// <param name="minZ">The minimum depth of the viewport.</param>
-        /// <param name="maxZ">The maximum depth of the viewport.</param>
-        /// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
-        /// <returns>The vector in screen space.</returns>
-        public static Vector3 Project(Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, Matrix4x4 worldViewProjection)
-        {
-            Vector3 result;
-            Project(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out result);
-            return result;
-        }
-
-        /// <summary>
-        /// Projects a 3D vector from screen space into object space.
-        /// </summary>
-        /// <param name="vector">The vector to project.</param>
-        /// <param name="x">The X position of the viewport.</param>
-        /// <param name="y">The Y position of the viewport.</param>
-        /// <param name="width">The width of the viewport.</param>
-        /// <param name="height">The height of the viewport.</param>
-        /// <param name="minZ">The minimum depth of the viewport.</param>
-        /// <param name="maxZ">The maximum depth of the viewport.</param>
-        /// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
-        /// <param name="result">When the method completes, contains the vector in object space.</param>
-        public static void Unproject(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix4x4 worldViewProjection, out Vector3 result)
-        {
-            Vector3 v = new Vector3();
-            Matrix4x4 matrix = new Matrix4x4();
-            Matrix4x4.Invert(worldViewProjection, out matrix);
-
-            v.X = (((vector.X - x) / width) * 2.0f) - 1.0f;
-            v.Y = -((((vector.Y - y) / height) * 2.0f) - 1.0f);
-            v.Z = (vector.Z - minZ) / (maxZ - minZ);
-
-            result = Vector3.Transform(v, matrix);
-        }
-
-        /// <summary>
-        /// Projects a 3D vector from screen space into object space.
-        /// </summary>
-        /// <param name="vector">The vector to project.</param>
-        /// <param name="x">The X position of the viewport.</param>
-        /// <param name="y">The Y position of the viewport.</param>
-        /// <param name="width">The width of the viewport.</param>
-        /// <param name="height">The height of the viewport.</param>
-        /// <param name="minZ">The minimum depth of the viewport.</param>
-        /// <param name="maxZ">The maximum depth of the viewport.</param>
-        /// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
-        /// <returns>The vector in object space.</returns>
-        public static Vector3 Unproject(Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, Matrix4x4 worldViewProjection)
-        {
-            Vector3 result;
-            Unproject(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out result);
-            return result;
         }
 
         /// <summary>

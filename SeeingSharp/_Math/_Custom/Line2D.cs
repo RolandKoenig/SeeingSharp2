@@ -22,7 +22,7 @@
 */
 #endregion
 using System;
-using System.Numerics;
+using SharpDX;
 
 namespace SeeingSharp
 {

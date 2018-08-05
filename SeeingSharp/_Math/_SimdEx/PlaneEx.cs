@@ -21,26 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+using SharpDX;
 
 namespace SeeingSharp
 {
-    public partial struct Size2
+    public static class PlaneEx
     {
-        public Size2(Tuple<int, int> values)
-            : this(values.Item1, values.Item2)
+        /// <summary>
+        /// Calculates the distance from this plane to the given point.
+        /// </summary>
+        /// <param name="point">The point to calculate the distance to.</param>
+        public static float Distance(this ref Plane plane, ref Vector3 point)
         {
+            float distance = Vector3.Dot(plane.Normal, point);
+            distance += plane.D;
 
-        }
-
-        public Vector2 ToVector2()
-        {
-            return new Vector2((float)this.Width, (float)this.Height);
+            return distance;
         }
     }
 }

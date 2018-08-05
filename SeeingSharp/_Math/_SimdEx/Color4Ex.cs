@@ -21,12 +21,54 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Numerics;
+using SharpDX;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp
 {
-    public partial struct Color4
+    public static class Color4Ex
     {
+        /// <summary>
+        /// Creates a <see cref="Color4"/> by the given color components.
+        /// </summary>
+        public static Color4 FromRgba(int red, int green, int blue, int alpha)
+        {
+            Color4 result = new Color4();
+            result.Alpha = alpha / 255f;
+            result.Red = red / 255f;
+            result.Green = green / 255f;
+            result.Blue = blue / 255f;
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Color4"/> by the given color components.
+        /// </summary>
+        public static Color4 FromRgb(int red, int green, int blue)
+        {
+            Color4 result = new Color4();
+            result.Alpha = 1f;
+            result.Red = red / 255f;
+            result.Green = green / 255f;
+            result.Blue = blue / 255f;
+            return result;
+        }
+        
+
+        public static void ChangeAlphaTo(this ref Color4 color, float newAlpha)
+        {
+            color.Alpha = newAlpha;
+        }
+
+        public static void ChangeColorByLight(this ref Color4 color, float changeFactor)
+        {
+            changeFactor.EnsureInRange(0.000001f, 0.4999999f, nameof(changeFactor));
+
+            color.Red = color.Red < 0.5f ? color.Red + changeFactor : color.Red - changeFactor;
+            color.Green = color.Green < 0.5f ? color.Green + changeFactor : color.Green - changeFactor;
+            color.Blue = color.Blue < 0.5f ? color.Blue + changeFactor : color.Blue - changeFactor;
+        }
+
         /// <summary>
         /// Transparent color
         /// </summary>

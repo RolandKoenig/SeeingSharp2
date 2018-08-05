@@ -21,6 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,20 @@ namespace SeeingSharp
 {
     public static class Vector4Ex
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 ToXYZ(this Vector4 vector)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToXYZ(this Vector4 vector, ref Vector3 target)
+        {
+            target.X = vector.X;
+            target.Y = vector.Y;
+            target.Z = vector.Z;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(Vector4 vector, int index)
         {

@@ -23,7 +23,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Numerics;
+using SharpDX;
 
 namespace SeeingSharp
 {
@@ -70,7 +70,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(float transX, float transY)
         {
-            m_top = Matrix3x2.CreateTranslation(transX, transY) * m_top;
+            m_top = Matrix3x2.Translation(transX, transY) * m_top;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(Vector2 transVector)
         {
-            m_top = Matrix3x2.CreateTranslation(transVector) * m_top;
+            m_top = Matrix3x2.Translation(transVector) * m_top;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SeeingSharp
         /// <param name="radians">The angle in radians.</param>
         public void RotateYawPitchRollLocal(float radians)
         {
-            m_top = Matrix3x2.CreateRotation(radians) * m_top;
+            m_top = Matrix3x2.Rotation(radians) * m_top;
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace SeeingSharp
         /// <param name="centerPoint">The center point of the rotation.</param>
         public void RotateYawPitchRollLocal(float radians, Vector2 centerPoint)
         {
-            m_top = Matrix3x2.CreateRotation(radians, centerPoint) * m_top;
+            m_top = Matrix3x2.Rotation(radians, centerPoint) * m_top;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleX, float scaleY)
         {
-            m_top = Matrix3x2.CreateScale(scaleX, scaleY) * m_top;
+            m_top = Matrix3x2.Scaling(scaleX, scaleY) * m_top;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(Vector2 scaling)
         {
-            m_top = Matrix3x2.CreateScale(scaling) * m_top;
+            m_top = Matrix3x2.Scaling(scaling) * m_top;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleFactor)
         {
-            m_top = Matrix3x2.CreateScale(scaleFactor, scaleFactor) * m_top;
+            m_top = Matrix3x2.Scaling(scaleFactor, scaleFactor) * m_top;
         }
 
         /// <summary>

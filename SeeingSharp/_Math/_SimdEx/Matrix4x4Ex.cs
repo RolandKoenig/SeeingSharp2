@@ -28,10 +28,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using SharpDX;
 
 namespace SeeingSharp
 {
-    public static class Matrix4x4Ex
+    public static class MatrixEx
     {
         /// <summary>
         /// Creates a left-handed, orthographic projection matrix.
@@ -41,7 +42,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreateOrthoLH(float width, float height, float znear, float zfar, out Matrix4x4 result)
+        public static void CreateOrthoLH(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
@@ -57,9 +58,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreateOrthoLH(float width, float height, float znear, float zfar)
+        public static Matrix CreateOrthoLH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateOrthoLH(width, height, znear, zfar, out result);
             return result;
         }
@@ -72,7 +73,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreateOrthoRH(float width, float height, float znear, float zfar, out Matrix4x4 result)
+        public static void CreateOrthoRH(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
@@ -88,9 +89,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreateOrthoRH(float width, float height, float znear, float zfar)
+        public static Matrix CreateOrthoRH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateOrthoRH(width, height, znear, zfar, out result);
             return result;
         }
@@ -105,11 +106,11 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix4x4 result)
+        public static void CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             float zRange = 1.0f / (zfar - znear);
 
-            result = Matrix4x4.Identity;
+            result = Matrix.Identity;
             result.M11 = 2.0f / (right - left);
             result.M22 = 2.0f / (top - bottom);
             result.M33 = zRange;
@@ -128,9 +129,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
@@ -145,7 +146,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix4x4 result)
+        public static void CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             result.M33 *= -1.0f;
@@ -161,9 +162,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateOrthoOffCenterRH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
@@ -174,10 +175,10 @@ namespace SeeingSharp
         /// <param name="upVector">The up vector (standard: y-axis).</param>
         /// <param name="forwardVector">The forward vector (standard: x-axis)</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 CreateRotationDirection(Vector3 upVector, Vector3 forwardVector)
+        public static Matrix CreateRotationDirection(Vector3 upVector, Vector3 forwardVector)
         {
             Vector3 right = Vector3.Cross(upVector, forwardVector);
-            return new Matrix4x4(
+            return new Matrix(
                 right.X, right.Y, right.Z, 0f,
                 upVector.X, upVector.Y, upVector.Z, 0f,
                 forwardVector.X, forwardVector.Y, forwardVector.Z, 0f,
@@ -192,7 +193,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveLH(float width, float height, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveLH(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
@@ -208,9 +209,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveLH(float width, float height, float znear, float zfar)
+        public static Matrix CreatePerspectiveLH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveLH(width, height, znear, zfar, out result);
             return result;
         }
@@ -223,7 +224,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveRH(float width, float height, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveRH(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
@@ -239,9 +240,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveRH(float width, float height, float znear, float zfar)
+        public static Matrix CreatePerspectiveRH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveRH(width, height, znear, zfar, out result);
             return result;
         }
@@ -254,7 +255,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
             float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
             float xScale = yScale / aspect;
@@ -273,9 +274,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar)
+        public static Matrix CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveFovLH(fov, aspect, znear, zfar, out result);
             return result;
         }
@@ -288,7 +289,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
             float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
             float xScale = yScale / aspect;
@@ -307,9 +308,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar)
+        public static Matrix CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveFovRH(fov, aspect, znear, zfar, out result);
             return result;
         }
@@ -324,11 +325,11 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             float zRange = zfar / (zfar - znear);
 
-            result = new Matrix4x4();
+            result = new Matrix();
             result.M11 = 2.0f * znear / (right - left);
             result.M22 = 2.0f * znear / (top - bottom);
             result.M31 = (left + right) / (left - right);
@@ -348,9 +349,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
@@ -365,7 +366,7 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix4x4 result)
+        public static void CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             result.M31 *= -1.0f;
@@ -384,9 +385,9 @@ namespace SeeingSharp
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix4x4 CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreatePerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
@@ -398,14 +399,14 @@ namespace SeeingSharp
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
-        public static void CreateLookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix4x4 result)
+        public static void CreateLookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
         {
             Vector3 xaxis, yaxis, zaxis;
             zaxis = Vector3.Normalize(Vector3.Subtract(target, eye));
             xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
             yaxis = Vector3.Cross(zaxis, xaxis);
 
-            result = Matrix4x4.Identity;
+            result = Matrix.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
             result.M12 = yaxis.X; result.M22 = yaxis.Y; result.M32 = yaxis.Z;
             result.M13 = zaxis.X; result.M23 = zaxis.Y; result.M33 = zaxis.Z;
@@ -426,9 +427,9 @@ namespace SeeingSharp
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at matrix.</returns>
-        public static Matrix4x4 CreateLookAtLH(Vector3 eye, Vector3 target, Vector3 up)
+        public static Matrix CreateLookAtLH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateLookAtLH(ref eye, ref target, ref up, out result);
             return result;
         }
@@ -440,14 +441,14 @@ namespace SeeingSharp
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
-        public static void CreateLookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix4x4 result)
+        public static void CreateLookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
         {
             Vector3 xaxis, yaxis, zaxis;
             zaxis = Vector3.Normalize(Vector3.Subtract(eye, target));
             xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
             yaxis = Vector3.Cross(zaxis, xaxis);
 
-            result = Matrix4x4.Identity;
+            result = Matrix.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
             result.M12 = yaxis.X; result.M22 = yaxis.Y; result.M32 = yaxis.Z;
             result.M13 = zaxis.X; result.M23 = zaxis.Y; result.M33 = zaxis.Z;
@@ -468,9 +469,9 @@ namespace SeeingSharp
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at matrix.</returns>
-        public static Matrix4x4 LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
+        public static Matrix LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix4x4 result;
+            Matrix result;
             CreateLookAtRH(ref eye, ref target, ref up, out result);
             return result;
         }
@@ -479,7 +480,7 @@ namespace SeeingSharp
         /// Gets the value at the given index of the given matrix.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetValue(Matrix4x4 matrix, int index)
+        public static float GetValue(Matrix matrix, int index)
         {
             switch (index)
             {
@@ -508,7 +509,7 @@ namespace SeeingSharp
         /// Sets the value at the given index of the given matrix.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetValue(Matrix4x4 matrix, int index, float value)
+        public static void SetValue(Matrix matrix, int index, float value)
         {
             switch (index)
             {
@@ -541,7 +542,7 @@ namespace SeeingSharp
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetValue(Matrix4x4 matrix, int row, int column)
+        public static float GetValue(Matrix matrix, int row, int column)
         {
             if (row < 0 || row > 3)
                 throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
@@ -561,7 +562,7 @@ namespace SeeingSharp
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetValue(Matrix4x4 matrix, int row, int column, float value)
+        public static void SetValue(Matrix matrix, int row, int column, float value)
         {
             if (row < 0 || row > 3)
                 throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");

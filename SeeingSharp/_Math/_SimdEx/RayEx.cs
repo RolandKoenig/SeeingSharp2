@@ -25,13 +25,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Numerics;
 using System.Threading.Tasks;
+using SharpDX;
 
 namespace SeeingSharp
 {
-    public static class Matrix3x2Ex
+    public static class RayEx
     {
-
+        /// <summary>
+        /// Transforms the ray
+        /// </summary>
+        public static void Transform(this ref Ray ray, Matrix transformMatrix)
+        {
+            Vector3.Transform(ray.Position, transformMatrix).ToXYZ(ref ray.Position);
+            ray.Direction = Vector3.TransformNormal(ray.Direction, transformMatrix);
+        }
     }
 }

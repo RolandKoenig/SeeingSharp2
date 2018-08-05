@@ -35,7 +35,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineHardwareInfo 
+    public class EngineHardwareInfo : IDisposable, ICheckDisposed
     {
         private DXGI.Factory1 m_dxgiFactory;
         private List<EngineAdapterInfo> m_adapters;
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
         /// </summary>
-        internal EngineHardwareInfo()
+        public EngineHardwareInfo()
         {
             this.CreateFactory();
             this.LoadAdapterInformation();
@@ -97,6 +97,16 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
+            foreach(var actAdapter in m_adapters)
+            {
+                SeeingSharpUtil.DisposeObject(actAdapter);
+            }
+            m_adapters.Clear();
+        }
+
         /// <summary>
         /// Gets a collection containing all adapters.
         /// </summary>
@@ -104,5 +114,19 @@ namespace SeeingSharp.Multimedia.Core
         {
             get { return m_adapters; }
         }
+
+        public EngineAdapterInfo SoftwareAdapter
+        {
+            get
+            {
+                foreach(var actAdapter in m_adapters)
+                {
+                    if (actAdapter.IsSoftwareAdapter) { return actAdapter; }
+                }
+                return null;
+            }
+        }
+
+        public bool IsDisposed => m_dxgiFactory == null;
     }
 }

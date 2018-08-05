@@ -30,10 +30,11 @@ using System.ComponentModel;
 using DXGI = SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineAdapterInfo 
+    public class EngineAdapterInfo : IDisposable, ICheckDisposed
     {
         private const string TRANSLATABLE_GROUP_COMMON_HARDWARE_INFO = "Common hardware information";
 
@@ -83,6 +84,12 @@ namespace SeeingSharp.Multimedia.Core
                     // .. no special handling needed here
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_adapter);
+            m_outputs.Clear();
         }
 
         /// <summary>
@@ -141,5 +148,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get { return m_adapterDescription.SharedSystemMemory.ToString(); }
         }
+
+        public bool IsDisposed => m_adapter == null;
     }
 }
