@@ -36,7 +36,7 @@ namespace SeeingSharp.Util
     /// <summary>
     /// Some common extension methods used in most coding of SeeingSharp.
     /// </summary>
-    public static partial class CommonExtensions
+    internal static partial class CommonExtensions
     {
         private static Dictionary<System.Threading.Timer, object> s_timerDict;
         private static object s_timerDictLock;
