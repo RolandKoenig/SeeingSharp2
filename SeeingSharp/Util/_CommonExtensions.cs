@@ -42,6 +42,16 @@ namespace SeeingSharp.Util
         private static object s_timerDictLock;
 
         /// <summary>
+        /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
+        /// can see them.
+        /// </summary>
+        /// <param name="asyncAction">The action to be fired.</param>
+        public static async void FireAndForget(this Task asyncAction)
+        {
+            await asyncAction;
+        }
+
+        /// <summary>
         /// Initializes the <see cref="CommonExtensions" /> class.
         /// </summary>
         static CommonExtensions()

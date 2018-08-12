@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Core
         #region Some helpers
         private GraphicsCoreConfiguration m_configuration;
         private UniqueGenericKeyGenerator m_resourceKeyGenerator;
-        //private PerformanceAnalyzer m_performanceCalculator;
+        private PerformanceAnalyzer m_performanceCalculator;
         //private ImporterExporterRepository m_importExporters;
         #endregion
 
@@ -138,10 +138,10 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Upate RK.Common members
                 m_devices = new List<EngineDevice>();
-                //m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0));
-                //m_performanceCalculator.SyncContext = SynchronizationContext.Current; // <-- TODO
-                //m_performanceCalculator.RunAsync(CancellationToken.None)
-                //    .FireAndForget();
+                m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0));
+                m_performanceCalculator.SyncContext = SynchronizationContext.Current; // <-- TODO
+                m_performanceCalculator.RunAsync(CancellationToken.None)
+                    .FireAndForget();
 
                 m_configuration = new GraphicsCoreConfiguration();
                 m_configuration.DebugEnabled = loadSettings.DebugEnabled;
@@ -345,24 +345,6 @@ namespace SeeingSharp.Multimedia.Core
 
             return result;
         }
-
-#if DESKTOP
-        /// <summary>
-        /// Initializes performance measure for Wpf render system.
-        /// </summary>
-        internal void InitializeWpfRenderPerformanceMeasure()
-        {
-            if (m_wpfRenderWaitreCreated) { return; }
-
-            m_wpfRenderWaitreCreated = true;
-            System.Windows.Media.CompositionTarget.Rendering += (sender, eArgs) =>
-            {
-                CommonTools.DisposeObject(m_wpfRenderWaiter);
-                m_wpfRenderWaiter = GraphicsCore.Current.PerformanceCalculator.BeginMeasureActivityDuration(
-                    Constants.PERF_WPF_RENDER);
-            };
-        }
-#endif
 
         ///// <summary>
         ///// Resumes rendering when in supendet state.
