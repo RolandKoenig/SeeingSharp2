@@ -358,5 +358,109 @@ namespace SeeingSharp
         {
             return boundingBox.Minimum.IsEmpty() && boundingBox.Maximum.IsEmpty();
         }
+
+        /// <summary>
+        /// Gets the corner A (lower left front).
+        /// </summary>
+        public static Vector3 GetCornerA(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.Minimum;
+        }
+
+        /// <summary>
+        /// Gets the corner B (lower right front).
+        /// </summary>
+        public static Vector3 GetCornerB(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner C (lower right back).
+        /// </summary>
+        public static Vector3 GetCornerC(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner D (lower left back).
+        /// </summary>
+        public static Vector3 GetCornerD(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner E (upper left front).
+        /// </summary>
+        public static Vector3 GetCornerE(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner F (upper right front).
+        /// </summary>
+        public static Vector3 GetCornerF(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner G (upper right back).
+        /// </summary>
+        public static Vector3 GetCornerG(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+        }
+
+        /// <summary>
+        /// Gets the corner H (upper left back).
+        /// </summary>
+        public static Vector3 GetCornerH(this ref BoundingBox boundingBox)
+        {
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+        }
+
+        public static Vector3 GetLowerA(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.Minimum; 
+        }
+
+        public static Vector3 GetLowerB(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerB(); 
+        }
+
+        public static Vector3 GetLowerC(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerC(); 
+        }
+
+        public static Vector3 GetLowerD(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerD(); 
+        }
+
+        public static Vector3 GetUpperA(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerE(); 
+        }
+
+        public static Vector3 GetUpperB(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerF(); 
+        }
+
+        public static Vector3 GetUpperC(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerG(); 
+        }
+
+        public static Vector3 GetUpperD(this ref BoundingBox boundingBox)
+        {
+            return boundingBox.GetCornerH();
+        }
     }
 }
