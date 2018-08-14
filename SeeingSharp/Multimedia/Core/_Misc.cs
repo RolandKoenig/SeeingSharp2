@@ -64,19 +64,19 @@ namespace SeeingSharp.Multimedia.Core
         DisposeGraphicsObject
     }
 
-    //public class ManipulateFilterListArgs : EventArgs
-    //{
-    //    public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
-    //    {
-    //        this.FilterList = filterList;
-    //    }
+    public class ManipulateFilterListArgs : EventArgs
+    {
+        public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
+        {
+            this.FilterList = filterList;
+        }
 
-    //    public List<SceneObjectFilter> FilterList
-    //    {
-    //        get;
-    //        private set;
-    //    }
-    //}
+        public List<SceneObjectFilter> FilterList
+        {
+            get;
+            private set;
+        }
+    }
 
     /// <summary>
     /// This structure holds information about dpi scaling factors.

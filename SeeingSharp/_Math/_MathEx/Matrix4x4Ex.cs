@@ -175,7 +175,7 @@ namespace SeeingSharp
         /// <param name="upVector">The up vector (standard: y-axis).</param>
         /// <param name="forwardVector">The forward vector (standard: x-axis)</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix CreateRotationDirection(Vector3 upVector, Vector3 forwardVector)
+        public static Matrix RotationDirection(Vector3 upVector, Vector3 forwardVector)
         {
             Vector3 right = Vector3.Cross(upVector, forwardVector);
             return new Matrix(

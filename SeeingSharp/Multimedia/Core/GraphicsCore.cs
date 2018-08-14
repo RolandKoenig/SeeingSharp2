@@ -30,6 +30,7 @@ using System.Threading;
 using System.Reflection;
 using SeeingSharp.Util;
 using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Objects;
 
 //Some namespace mappings
 using D2D = SharpDX.Direct2D1;
@@ -38,6 +39,7 @@ using D3D11 = SharpDX.Direct3D11;
 using DWrite = SharpDX.DirectWrite;
 using WIC = SharpDX.WIC;
 using DXGI = SharpDX.DXGI;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -68,13 +70,13 @@ namespace SeeingSharp.Multimedia.Core
         private GraphicsCoreConfiguration m_configuration;
         private UniqueGenericKeyGenerator m_resourceKeyGenerator;
         private PerformanceAnalyzer m_performanceCalculator;
-        //private ImporterExporterRepository m_importExporters;
+        private ImporterExporterRepository m_importExporters;
         #endregion
 
-        //#region Members for input
-        //private InputHandlerFactory m_inputHandlerFactory;
-        //private InputGathererThread m_inputGatherer;
-        //#endregion
+        #region Members for input
+        private InputHandlerFactory m_inputHandlerFactory;
+        private InputGathererThread m_inputGatherer;
+        #endregion
 
         #region Global device handlers
         private Exception m_initException;
@@ -85,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Members for threading
         private static Task m_defaultInitTask;
-        //private EngineMainLoop m_mainLoop;
+        private EngineMainLoop m_mainLoop;
         private Task m_mainLoopTask;
         private CancellationTokenSource m_mainLoopCancelTokenSource;
         #endregion
@@ -146,9 +148,9 @@ namespace SeeingSharp.Multimedia.Core
                 m_configuration = new GraphicsCoreConfiguration();
                 m_configuration.DebugEnabled = loadSettings.DebugEnabled;
 
-                //// Create container object for all input handlers
-                //m_inputHandlerFactory = new InputHandlerFactory();
-                //m_importExporters = new ImporterExporterRepository();
+                // Create container object for all input handlers
+                m_inputHandlerFactory = new InputHandlerFactory();
+                m_importExporters = new ImporterExporterRepository();
 
                 // Create the key generator for resource keys
                 m_resourceKeyGenerator = new UniqueGenericKeyGenerator();
@@ -201,17 +203,17 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 m_defaultDevice = m_devices.FirstOrDefault();
 
-                //// Start input gathering
-                //m_inputGatherer = new InputGathererThread();
-                //m_inputGatherer.Start();
+                // Start input gathering
+                m_inputGatherer = new InputGathererThread();
+                m_inputGatherer.Start();
 
-                //// Start main loop
-                //m_mainLoop = new EngineMainLoop(this);
-                //if (m_devices.Count > 0)
-                //{
-                //    m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                //    m_mainLoopTask = m_mainLoop.Start(m_mainLoopCancelTokenSource.Token);
-                //}
+                // Start main loop
+                m_mainLoop = new EngineMainLoop(this);
+                if (m_devices.Count > 0)
+                {
+                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
+                    m_mainLoopTask = m_mainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                }
             }
             catch (Exception ex2)
             {
@@ -346,25 +348,25 @@ namespace SeeingSharp.Multimedia.Core
             return result;
         }
 
-        ///// <summary>
-        ///// Resumes rendering when in supendet state.
-        ///// </summary>
-        //public void Resume()
-        //{
-        //    if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
+        /// <summary>
+        /// Resumes rendering when in supendet state.
+        /// </summary>
+        public void Resume()
+        {
+            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
 
-        //    m_mainLoop.Resume();
-        //}
+            m_mainLoop.Resume();
+        }
 
-        ///// <summary>
-        ///// Suspends rendering completely.
-        ///// </summary>
-        //public Task SuspendAsync()
-        //{
-        //    if(m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
+        /// <summary>
+        /// Suspends rendering completely.
+        /// </summary>
+        public Task SuspendAsync()
+        {
+            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
 
-        //    return m_mainLoop.SuspendAsync();
-        //}
+            return m_mainLoop.SuspendAsync();
+        }
 
         /// <summary>
         /// Initializes the GraphicsCore object.
@@ -400,34 +402,34 @@ namespace SeeingSharp.Multimedia.Core
             m_defaultDevice = m_devices.FirstOrDefault((actDevice) => actDevice.IsSoftware);
         }
 
-        ///// <summary>
-        ///// Starts measuring the duration of the given activity.
-        ///// </summary>
-        ///// <param name="activityName">The name of the activity.</param>
-        //internal IDisposable BeginMeasureActivityDuration(string activityName)
-        //{
-        //    return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
-        //}
+        /// <summary>
+        /// Starts measuring the duration of the given activity.
+        /// </summary>
+        /// <param name="activityName">The name of the activity.</param>
+        internal IDisposable BeginMeasureActivityDuration(string activityName)
+        {
+            return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
+        }
 
-        ///// <summary>
-        ///// Executes the given action and measures the time it takes.
-        ///// </summary>
-        ///// <param name="activityName">Name of the activity.</param>
-        ///// <param name="activityAction">The activity action.</param>
-        //internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
-        //{
-        //    this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
-        //}
+        /// <summary>
+        /// Executes the given action and measures the time it takes.
+        /// </summary>
+        /// <param name="activityName">Name of the activity.</param>
+        /// <param name="activityAction">The activity action.</param>
+        internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
+        {
+            this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
+        }
 
-        ///// <summary>
-        ///// Notifies the duration of the given activity.
-        ///// </summary>
-        ///// <param name="activityName"></param>
-        ///// <param name="durationTicks"></param>
-        //internal void NotifyActivityDuration(string activityName, long durationTicks)
-        //{
-        //    this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
-        //}
+        /// <summary>
+        /// Notifies the duration of the given activity.
+        /// </summary>
+        /// <param name="activityName"></param>
+        /// <param name="durationTicks"></param>
+        internal void NotifyActivityDuration(string activityName, long durationTicks)
+        {
+            this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
+        }
 
         /// <summary>
         /// Gets the next generic resource key.
@@ -445,19 +447,16 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-#if DESKTOP
+
                 // Do nothing if we are within the Wpf designer
                 if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
                 {
                     return null;
                 }
-#endif
 
                 if (s_current == null)
                 {
                     throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Current)} before Initialize was called or a rendering control created!");
-                    //GraphicsCore.InitializeDefaultAsync()
-                    //    .Wait();
                 }
 
                 return s_current;
@@ -567,17 +566,17 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_devices.Count; }
         }
 
-        ///// <summary>
-        ///// Gets the total count of registered RenderLoop objects.
-        ///// </summary>
-        //public int RegisteredRenderLoopCount
-        //{
-        //    get
-        //    {
-        //        if(m_mainLoop == null) { return 0; }
-        //        return m_mainLoop.RegisteredRenderLoopCount;
-        //    }
-        //}
+        /// <summary>
+        /// Gets the total count of registered RenderLoop objects.
+        /// </summary>
+        public int RegisteredRenderLoopCount
+        {
+            get
+            {
+                if (m_mainLoop == null) { return 0; }
+                return m_mainLoop.RegisteredRenderLoopCount;
+            }
+        }
 
         /// <summary>
         /// Gets the default software device.
@@ -599,42 +598,42 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_devices; }
         }
 
-        ///// <summary>
-        ///// Gets a list containing all input handlers.
-        ///// </summary>
-        //public InputHandlerFactory InputHandlers
-        //{
-        //    get { return m_inputHandlerFactory; }
-        //}
+        /// <summary>
+        /// Gets a list containing all input handlers.
+        /// </summary>
+        public InputHandlerFactory InputHandlers
+        {
+            get { return m_inputHandlerFactory; }
+        }
 
-        ///// <summary>
-        ///// Gets an object which manages all importers and exporters.
-        ///// </summary>
-        //public ImporterExporterRepository ImportersAndExporters
-        //{
-        //    get { return m_importExporters; }
-        //}
+        /// <summary>
+        /// Gets an object which manages all importers and exporters.
+        /// </summary>
+        public ImporterExporterRepository ImportersAndExporters
+        {
+            get { return m_importExporters; }
+        }
 
-        ///// <summary>
-        ///// Gets the current main loop object of the graphics engine.
-        ///// </summary>
-        //public EngineMainLoop MainLoop
-        //{
-        //    get { return m_mainLoop; }
-        //}
+        /// <summary>
+        /// Gets the current main loop object of the graphics engine.
+        /// </summary>
+        public EngineMainLoop MainLoop
+        {
+            get { return m_mainLoop; }
+        }
 
-        //public InputGathererThread InputGatherer
-        //{
-        //    get { return m_inputGatherer; }
-        //}
+        public InputGathererThread InputGatherer
+        {
+            get { return m_inputGatherer; }
+        }
 
-        ///// <summary>
-        ///// Gets the current performance calculator.
-        ///// </summary>
-        //public PerformanceAnalyzer PerformanceCalculator
-        //{
-        //    get { return m_performanceCalculator; }
-        //}
+        /// <summary>
+        /// Gets the current performance calculator.
+        /// </summary>
+        public PerformanceAnalyzer PerformanceCalculator
+        {
+            get { return m_performanceCalculator; }
+        }
 
         /// <summary>
         /// Gets the WIC factory object.
