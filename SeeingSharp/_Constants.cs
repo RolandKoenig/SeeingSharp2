@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp
 {
-    internal static class Constants
+    public static class SeeingSharpConstants
     {
         public const float MAX_FOCUS_DISTANCE = 15f;
         public const float MIN_FOCUS_DISTANCE = 3f;

@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,7 +21,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
     public class PickingInformation

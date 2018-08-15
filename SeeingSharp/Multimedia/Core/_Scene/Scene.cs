@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -805,9 +805,9 @@ namespace SeeingSharp.Multimedia.Core
         internal void Update(SceneRelatedUpdateState updateState)
         {
             m_perFrameData.Time = m_perFrameData.Time + updateState.UpdateTimeMilliseconds;
-            if (m_perFrameData.Time > Constants.MAX_PER_FRAME_TIME_VALUE)
+            if (m_perFrameData.Time > SeeingSharpConstants.MAX_PER_FRAME_TIME_VALUE)
             {
-                m_perFrameData.Time = m_perFrameData.Time % Constants.MAX_PER_FRAME_TIME_VALUE;
+                m_perFrameData.Time = m_perFrameData.Time % SeeingSharpConstants.MAX_PER_FRAME_TIME_VALUE;
             }
 
             // Invoke all async action attached to this scene

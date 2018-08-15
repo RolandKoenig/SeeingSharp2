@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Get the sample description for the given quality level.
         /// </summary>
         /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        internal DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        public DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
         {
             switch (qualityLevel)
             {
@@ -374,32 +374,30 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        //internal D2D.Factory2 FactoryD2D_2 => 
-
         /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
-        internal D3D11.Device1 DeviceD3D11_1
+        public D3D11.Device1 DeviceD3D11_1
         {
             get { return m_handlerD3D11.Device1; }
         }
 
-        internal D3D11.Device3 Device3D11_3
+        public D3D11.Device3 Device3D11_3
         {
             get { return m_handlerD3D11.Device3; }
         }
 
-        internal D2D.Device DeviceD2D
+        public D2D.Device DeviceD2D
         {
             get { return m_handlerD2D.Device; }
         }
 
-        internal D2D.DeviceContext DeviceContextD2D
+        public D2D.DeviceContext DeviceContextD2D
         {
             get { return m_handlerD2D.DeviceContext; }
         }
 
-        internal DXGI.Device3 DeviceDxgi
+        public DXGI.Device3 DeviceDxgi
         {
             get { return m_handlerDXGI.Device; }
         }
@@ -425,7 +423,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the main Direct3D 11 context object.
         /// </summary>
-        internal D3D11.DeviceContext DeviceImmediateContextD3D11
+        public D3D11.DeviceContext DeviceImmediateContextD3D11
         {
             get { return m_handlerD3D11.ImmediateContext; }
         }
@@ -441,7 +439,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        internal DXGI.Factory2 FactoryDxgi
+        public DXGI.Factory2 FactoryDxgi
         {
             get
             {
@@ -452,11 +450,19 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
         /// </summary>
-        internal D2D.RenderTarget FakeRenderTarget2D;
+        public D2D.RenderTarget FakeRenderTarget2D
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// Gets the index of this device.
         /// </summary>
-        internal int DeviceIndex;
+        public int DeviceIndex
+        {
+            get;
+            internal set;
+        }
     }
 }

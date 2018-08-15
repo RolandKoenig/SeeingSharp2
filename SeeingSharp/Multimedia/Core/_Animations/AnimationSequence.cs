@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Core
         private int m_currentWorkingThreadCount;
         private Thread m_currentWorkingThread;
 
-        private TimeSpan m_defaultCycleTime = Constants.UPDATE_DEFAULT_CYLCE;
+        private TimeSpan m_defaultCycleTime = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
 
         /// <summary>
         /// Raises when an animation within this sequence has failed.
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Core
             m_preUpdateActions = new ConcurrentQueue<Action>();
             m_runningAnimations = new Queue<IAnimation>();
             m_runningSecondaryAnimations = new Queue<Queue<IAnimation>>();
-            m_timeTillNextPartFinished = Constants.UPDATE_STATE_MAX_TIME;
+            m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace SeeingSharp.Multimedia.Core
                 if ((m_runningAnimationsCount == 0) &&
                     (m_runningSecondaryAnimationsCount == 0))
                 {
-                    m_timeTillNextPartFinished = Constants.UPDATE_STATE_MAX_TIME;
+                    m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
                     return AnimationUpdateResult.Empty;
                 }
 
@@ -523,20 +523,20 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void UpdateTimeTillNextPartFinished()
         {
-            TimeSpan timeTillNextEvent = Constants.UPDATE_STATE_MAX_TIME;
+            TimeSpan timeTillNextEvent = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
 
             // Cancel here if there are no animations at all
             if ((m_runningAnimationsCount == 0) &&
                 (m_runningSecondaryAnimationsCount == 0))
             {
-                m_timeTillNextPartFinished = Constants.UPDATE_STATE_MAX_TIME;
+                m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
                 return;
             }
 
             // Calculate sub-animation time using main animation
             if (m_runningAnimationsCount > 0)
             {
-                TimeSpan timeTillNextStepMin = Constants.UPDATE_STATE_MAX_TIME;
+                TimeSpan timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
                 TimeSpan timeTillNextStepMax = TimeSpan.MinValue;
                 TimeSpan actAnimTime = TimeSpan.MinValue;
                 bool containedBlockingAnimation = false;
@@ -547,7 +547,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Calculate parameters for GetTimeTillFinished method
                     //  .. Constants.UPDATE_STATE_MAX_TIME oder TimeSpan.MinValue are only internal representations for empty values
-                    TimeSpan mParamMin = timeTillNextStepMin != Constants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
+                    TimeSpan mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
                     TimeSpan mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                     // Update local time values
@@ -580,7 +580,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     if (actSecondaryQueue.Count > 0)
                     {
-                        TimeSpan timeTillNextStepMin = Constants.UPDATE_STATE_MAX_TIME;
+                        TimeSpan timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
                         TimeSpan timeTillNextStepMax = TimeSpan.MinValue;
                         TimeSpan actAnimTime = TimeSpan.Zero;
                         bool containedBlockingAnimation = false;
@@ -591,7 +591,7 @@ namespace SeeingSharp.Multimedia.Core
 
                             // Calculate parameters for GetTimeTillFinished method
                             //  .. Constants.UPDATE_STATE_MAX_TIME oder TimeSpan.MinValue are only internal representations for empty values
-                            TimeSpan mParamMin = timeTillNextStepMin != Constants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
+                            TimeSpan mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
                             TimeSpan mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                             // Update local time values
@@ -620,7 +620,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Apply time till next animation step
-            if (timeTillNextEvent == Constants.UPDATE_STATE_MAX_TIME) { m_timeTillNextPartFinished = Constants.UPDATE_STATE_MAX_TIME; }
+            if (timeTillNextEvent == SeeingSharpConstants.UPDATE_STATE_MAX_TIME) { m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME; }
             else if (timeTillNextEvent < TimeSpan.Zero) { throw new SeeingSharpGraphicsException("Invalid calculated value for timeTillNextEvent: " + timeTillNextEvent); }
             else
             {

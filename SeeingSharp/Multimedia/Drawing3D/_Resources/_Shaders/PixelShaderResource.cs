@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public PixelShaderResource(string shaderProfile, ResourceLink resourceLink)
             : base(shaderProfile, resourceLink)
         {
-
+            
         }
 
         /// <summary>

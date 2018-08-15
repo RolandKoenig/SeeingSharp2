@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Input
     public class InputGathererThread : ObjectThread
     {
         #region Constants
-        private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / Constants.INPUT_FRAMES_PER_SECOND);
+        private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
         #endregion
 
         #region Synchronization
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Input
         /// Initializes a new instance of the <see cref="InputGathererThread"/> class.
         /// </summary>
         internal InputGathererThread()
-            : base("Input Gatherer", 1000 / Constants.INPUT_FRAMES_PER_SECOND)
+            : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
         {
             m_commandQueue = new ThreadSaveQueue<Action>();
             m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Input
 
             // Ensure that we hold input frames for a maximum time range of a second
             //  (older input is obsolete)
-            while (m_gatheredInputFrames.Count > Constants.INPUT_FRAMES_PER_SECOND)
+            while (m_gatheredInputFrames.Count > SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
             {
                 InputFrame dummyFrame = null;
                 m_gatheredInputFrames.Dequeue(out dummyFrame);

@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -33,9 +33,9 @@ using WIC = SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    internal class WicBitmapSourceInternal : IDisposable, ICheckDisposed
+    public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
-        internal WicBitmapSourceInternal(WIC.BitmapDecoder decoder, WIC.FormatConverter converter)
+        public WicBitmapSourceInternal(WIC.BitmapDecoder decoder, WIC.FormatConverter converter)
         {
             this.Decoder = decoder;
             this.Converter = converter;

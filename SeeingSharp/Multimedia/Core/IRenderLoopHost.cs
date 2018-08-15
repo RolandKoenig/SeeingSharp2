@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -35,7 +35,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    internal interface IRenderLoopHost
+    public interface IRenderLoopHost
     {
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> OnRenderLoop_CreateViewResources(EngineDevice device);
 

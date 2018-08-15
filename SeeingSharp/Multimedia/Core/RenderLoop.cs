@@ -5,7 +5,7 @@
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
      - http://www.rolandk.de/wp (the autors homepage, german)
-    Copyright (C) 2016 Roland König (RolandK)
+    Copyright (C) 2018 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderLoop" /> class.
         /// </summary>
-        internal RenderLoop(
+        public RenderLoop(
             SynchronizationContext guiSyncContext,
             IRenderLoopHost renderLoopHost,
             bool isDesignMode = false)
@@ -191,15 +191,15 @@ namespace SeeingSharp.Multimedia.Core
         /// Sets the current with and height of the view.
         /// The RenderLoop will apply the values later.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        internal void SetCurrentViewSize(int width, int height)
+        /// <param name="width">Current width in pixels.</param>
+        /// <param name="height">Current height in pixels.</param>
+        public void SetCurrentViewSize(int width, int height)
         {
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            if (width < Constants.MIN_VIEW_WIDTH) { width = Constants.MIN_VIEW_WIDTH; }
-            if (height < Constants.MIN_VIEW_HEIGHT) { height = Constants.MIN_VIEW_HEIGHT; }
+            if (width < SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
+            if (height < SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
             m_targetSize = new Size2(width, height);
         }
@@ -251,6 +251,15 @@ namespace SeeingSharp.Multimedia.Core
         public void ForceViewReload()
         {
             m_viewConfiguration.ViewNeedsRefresh = true;
+        }
+
+        /// <summary>
+        /// Enqueues the given action to be called after presenting the next frame.
+        /// </summary>
+        /// <param name="action">The action to be called.</param>
+        public void EnqueueAfterPresentAction(Action action)
+        {
+            m_afterPresentActions.Enqueue(action);
         }
 
         /// <summary>
@@ -695,7 +704,7 @@ namespace SeeingSharp.Multimedia.Core
             m_renderTargetDepth = null;
             m_renderTargetDepthView = null;
             m_viewport = new SharpDX.Mathematics.Interop.RawViewportF();
-            m_currentViewSize = new Size2(Constants.MIN_VIEW_WIDTH, Constants.MIN_VIEW_HEIGHT);
+            m_currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
             SeeingSharpTools.SafeDispose(ref m_copyHelperTextureStaging);
@@ -967,7 +976,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Presents all contents on the screen
                     GraphicsCore.Current.ExecuteAndMeasureActivityDuration(
-                        string.Format(Constants.PERF_RENDERLOOP_PRESENT, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1),
+                        string.Format(SeeingSharpConstants.PERF_RENDERLOOP_PRESENT, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1),
                         () => m_renderLoopHost.OnRenderLoop_Present(m_currentDevice));
 
                     // Execute all deferred actions to be called after present
@@ -993,7 +1002,7 @@ namespace SeeingSharp.Multimedia.Core
             m_nextRenderAllowed = false;
 
             var renderTimeMeasurenment = GraphicsCore.Current.BeginMeasureActivityDuration(
-                string.Format(Constants.PERF_RENDERLOOP_RENDER, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1));
+                string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1));
             try
             {
                 // Handle all resources within the scene
@@ -1034,7 +1043,7 @@ namespace SeeingSharp.Multimedia.Core
                     (m_d2dOverlay.IsLoaded))
                 {
                     var d2dOverlayTime = GraphicsCore.Current.PerformanceCalculator.BeginMeasureActivityDuration(
-                        string.Format(Constants.PERF_RENDERLOOP_RENDER_2D, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1));
+                        string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER_2D, m_currentDevice.DeviceIndex, m_viewInformation.ViewIndex + 1));
                     m_d2dOverlay.BeginDraw();
                     try
                     {
@@ -1319,14 +1328,18 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Is this RenderLoop registered on the main loop?
+        /// </summary>
+        public bool IsRegisteredOnMainLoop
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// Internal field that is used to count visible objects.
         /// </summary>
         internal int VisibleObjectCountInternal;
-
-        /// <summary>
-        /// Is this RenderLoop registered on the main loop?
-        /// </summary>
-        internal bool IsRegisteredOnMainLoop;
 
         internal bool CallPresentInUIThread;
     }
