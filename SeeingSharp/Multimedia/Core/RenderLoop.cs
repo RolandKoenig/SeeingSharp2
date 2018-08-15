@@ -77,6 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Values needed for runtime
+        private RenderLoopInternals m_internals;
         private bool m_lastRenderSuccessfully;
         private bool m_nextRenderAllowed;
         private int m_totalRenderCount;
@@ -141,6 +142,8 @@ namespace SeeingSharp.Multimedia.Core
             IRenderLoopHost renderLoopHost,
             bool isDesignMode = false)
         {
+            m_internals = new RenderLoopInternals(this);
+
             m_afterPresentActions = new ThreadSaveQueue<Action>();
 
             m_guiSyncContext = guiSyncContext;
@@ -1336,11 +1339,49 @@ namespace SeeingSharp.Multimedia.Core
             internal set;
         }
 
+        public RenderLoopInternals Internals
+        {
+            get { return m_internals; }
+        }
+
         /// <summary>
         /// Internal field that is used to count visible objects.
         /// </summary>
         internal int VisibleObjectCountInternal;
 
         internal bool CallPresentInUIThread;
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        /// <summary>
+        /// Internal members of the <see cref="RenderLoop"/> class.
+        /// Be carefull when working with them.
+        /// </summary>
+        public class RenderLoopInternals
+        {
+            private RenderLoop m_target;
+
+            public RenderLoopInternals(RenderLoop target)
+            {
+                m_target = target;
+            }
+
+            public D3D11.Texture2D RenderTarget { get { return m_target.m_renderTarget; } }
+
+            public D3D11.Texture2D RenderTargetDepth { get { return m_target.m_renderTargetDepth; } }
+
+            public D3D11.Texture2D CopyHelperTextureStaging
+            {
+                get { return m_target.m_copyHelperTextureStaging; }
+                set { m_target.m_copyHelperTextureStaging = value; }
+            }
+
+            public D3D11.Texture2D CopyHelperTextureStandard
+            {
+                get { return m_target.m_copyHelperTextureStandard; }
+                set { m_target.m_copyHelperTextureStandard = value; }
+            }
+        }
     }
 }

@@ -22,9 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Tests", "Seeing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Desktop", "SeeingSharp.Desktop\SeeingSharp.Desktop.csproj", "{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApps", "TestApps", "{B1AA1C6C-C8CD-4A8C-9505-DC7596522C34}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Build", "_Build", "{058F4824-3E5D-4011-B1B8-3E1CCFA1F12C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Samples", "_Samples", "{790928B0-DED6-4996-9BAE-421B79C36561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WinFormsSamples", "_Samples\SeeingSharp.WinFormsSamples\SeeingSharp.WinFormsSamples.csproj", "{2861261F-440A-44BC-A334-D4611D0673F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,9 +46,16 @@ Global
 		{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2861261F-440A-44BC-A334-D4611D0673F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2861261F-440A-44BC-A334-D4611D0673F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2861261F-440A-44BC-A334-D4611D0673F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2861261F-440A-44BC-A334-D4611D0673F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2861261F-440A-44BC-A334-D4611D0673F0} = {790928B0-DED6-4996-9BAE-421B79C36561}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}

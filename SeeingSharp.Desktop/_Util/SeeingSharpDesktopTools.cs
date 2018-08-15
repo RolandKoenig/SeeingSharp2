@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using GDI = System.Drawing;
 using SDX = SharpDX;
 
-namespace SeeingSharp.Desktop
+namespace SeeingSharp.Util
 {
     public static class SeeingSharpDesktopTools
     {

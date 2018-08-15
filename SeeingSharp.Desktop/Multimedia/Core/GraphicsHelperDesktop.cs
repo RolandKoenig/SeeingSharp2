@@ -14,7 +14,7 @@ using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using WinForms = System.Windows.Forms;
 
-namespace SeeingSharp.Desktop
+namespace SeeingSharp.Multimedia.Core
 {
     public static class GraphicsHelperDesktop
     {

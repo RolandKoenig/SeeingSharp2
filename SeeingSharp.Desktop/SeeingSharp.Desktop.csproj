@@ -7,7 +7,7 @@
     <ProjectGuid>{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SeeingSharp.Desktop</RootNamespace>
+    <RootNamespace>SeeingSharp</RootNamespace>
     <AssemblyName>SeeingSharp.Desktop</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,10 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GraphicsHelperDesktop.cs" />
+    <Compile Include="Multimedia\Core\GraphicsHelperDesktop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeeingSharpDesktopTools.cs" />
-    <Compile Include="_Views\SeeingSharpRendererControl.cs">
+    <Compile Include="SeeingSharpConstantsDesktop.cs" />
+    <Compile Include="_Util\SeeingSharpDesktopTools.cs" />
+    <Compile Include="Multimedia\Core\RenderLoopEx.cs" />
+    <Compile Include="Multimedia\Views\SeeingSharpRendererControl.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>

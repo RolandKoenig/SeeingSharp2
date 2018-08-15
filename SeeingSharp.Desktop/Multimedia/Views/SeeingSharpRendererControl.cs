@@ -42,7 +42,7 @@ using D3D11 = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using GDI = System.Drawing;
 
-namespace SeeingSharp.Desktop
+namespace SeeingSharp.Multimedia.Views
 {
     public partial class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
@@ -433,10 +433,19 @@ namespace SeeingSharp.Desktop
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
 
+            Form parentForm = null;
+            Control actParent = this.Parent;
+            while((parentForm == null) && (actParent != null))
+            {
+                parentForm = actParent as Form;
+                actParent = actParent.Parent;
+            }
+
             // Check parent form
-            Form parentForm = this.GetParentForm();
             if(parentForm == null)
             {
+                // TODO: Handle the case where we are hosted inside a wpf environment
+
                 // Control's parent chain is broken -> it is not visible.
                 return false;
             }
@@ -521,7 +530,7 @@ namespace SeeingSharp.Desktop
         /// <param name="e">The decimal.</param>
         private void OnRenderLoopManipulateFilterList(object sender, ManipulateFilterListArgs e)
         {
-            ManipulateFilterList.Raise(this, e);
+            ManipulateFilterList?.Invoke(this, e);
         }
 
         /// <summary>
@@ -538,7 +547,7 @@ namespace SeeingSharp.Desktop
         /// <summary>
         /// Discard present of rendering results on the screen?
         /// </summary>
-        [Category(SeeingSharpConstants.DESIGNER_CATEGORY_RENDERER)]
+        [Category(SeeingSharpConstantsDesktop.DESIGNER_CATEGORY_RENDERER)]
         [DefaultValue(false)]
         public bool DiscardPresent
         {
@@ -566,7 +575,7 @@ namespace SeeingSharp.Desktop
         /// Gets the view configuration.
         /// </summary>
         [Browsable(true)]
-        [Category(SeeingSharpConstants.DESIGNER_CATEGORY_RENDERER)]
+        [Category(SeeingSharpConstantsDesktop.DESIGNER_CATEGORY_RENDERER)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public GraphicsViewConfiguration ViewConfiguration
@@ -594,7 +603,7 @@ namespace SeeingSharp.Desktop
             set
             {
                 base.BackColor = value;
-                m_renderLoop.ClearColor = new Color4(this.BackColor);
+                m_renderLoop.ClearColor = value.Color4FromGdiColor();
             }
         }
 
