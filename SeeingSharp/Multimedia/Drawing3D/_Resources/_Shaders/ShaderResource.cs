@@ -25,6 +25,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System.IO;
 using SharpDX.D3DCompiler;
+using System.Text;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -43,7 +44,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="shaderProfile">Shader profile used for compilation.</param>
         /// <param name="resourceLink">The source of the resource.</param>
         /// <param name="resourceKind">Kind of the shader resource.</param>
-        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
+        /// <param name="shaderModel">The shadermodel which is requred on <see cref="ShaderResourceKind.HlsFile"/>.</param>
+        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel = "")
         {
             m_resourceKind = resourceKind;
             m_shaderProfile = shaderProfile;
@@ -55,12 +57,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if(m_shaderBytecode == null) { GetShaderBytecode(m_resourceLink, m_resourceKind); }
+            if(m_shaderBytecode == null) { GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile); }
 
             LoadShader(device, m_shaderBytecode);
         }
 
-        private static byte[] GetShaderBytecode(ResourceLink resourceLink, ShaderResourceKind resourceKind)
+        private static byte[] GetShaderBytecode(EngineDevice device, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel)
         {
             switch(resourceKind)
             {
@@ -71,12 +73,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
 
                 case ShaderResourceKind.HlsFile:
-                    var cResult = SharpDX.D3DCompiler.ShaderBytecode.Compile("", "", ShaderFlags.Debug, EffectFlags.None, "test.txt", SecondaryDataFlags.None, null);
-               
-                    return new byte[0];
-            }
+                    using (ReusableStringBuilders.Current.UseStringBuilder(out StringBuilder singleShaderSourceBuilder, requiredCapacity: 10024))
+                    {
+                        SingleShaderFileBuilder.ReadShaderFileAndResolveIncludes(
+                            resourceLink,
+                            singleShaderSourceBuilder);
 
-            throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
+                        string shaderSource = singleShaderSourceBuilder.ToString();
+                        var compileResult = SharpDX.D3DCompiler.ShaderBytecode.Compile(
+                            shaderSource,
+                            shaderModel,
+                            shaderFlags: device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
+                            sourceFileName: resourceLink.ToString());
+                        if(compileResult.HasErrors)
+                        {
+                            throw new SeeingSharpGraphicsException($"Unable to compile shader from {resourceLink}: {compileResult.ResultCode} - {compileResult.Message}");
+                        }
+                        return compileResult.Bytecode.Data;
+                    }
+
+                default:
+                    throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
+            }            
         }
 
         /// <summary>

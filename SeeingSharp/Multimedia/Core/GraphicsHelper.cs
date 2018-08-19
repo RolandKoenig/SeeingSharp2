@@ -896,80 +896,18 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the resource file for the given shader.
-        /// </summary>
-        /// <param name="device">The target graphics device.</param>
-        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
-        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        /// <param name="shaderModel">The shader model to be loaded.</param>
-        /// <returns>A tuple containing namespace and filename.</returns>
-        public static Tuple<string, string> GetShaderResourcePath(
-            EngineDevice device,
-            string subdirectory, string shaderNameWithoutExt,
-            string shaderModel)
-        {
-            device.EnsureNotNull(nameof(device));
-
-            // Build raw shader resource name
-            StringBuilder resultBuilderNamespace = new StringBuilder(100);
-            resultBuilderNamespace.Append("SeeingSharp.Multimedia.Resources.Shaders.");
-            resultBuilderNamespace.Append(subdirectory);
-            resultBuilderNamespace.Append(".bin");
-
-            // Append shader name itself
-            StringBuilder resultBuilderFileName = new StringBuilder(100);
-            resultBuilderFileName.Append(shaderNameWithoutExt);
-
-            // Append shader model name
-            resultBuilderFileName.Append('.');
-            resultBuilderFileName.Append(shaderModel);
-
-            // Load debug shaders if debugging is enabled
-            if (GraphicsCore.Current.IsDebugEnabled)
-            {
-                resultBuilderFileName.Append(".Debug");
-            }
-
-            // Append extension
-            resultBuilderFileName.Append(".cso");
-
-            return Tuple.Create(resultBuilderNamespace.ToString(), resultBuilderFileName.ToString());
-        }
-
-        /// <summary>
-        /// Gets the resource link to the given shader.
-        /// </summary>
-        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
-        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        /// <param name="device">The target device object.</param>
-        /// <param name="shaderModel">The target shader model.</param>
-        public static AssemblyResourceLink GetShaderResourceLink(EngineDevice device, string subdirectory, string shaderNameWithoutExt, string shaderModel)
-        {
-            device.EnsureNotNull(nameof(device));
-
-            var shaderResourcePath = GetShaderResourcePath(device, subdirectory, shaderNameWithoutExt, shaderModel);
-
-            return new AssemblyResourceLink(
-                typeof(SeeingSharpResources).GetTypeInfo().Assembly,
-                shaderResourcePath.Item1,
-                shaderResourcePath.Item2);
-        }
-
-        /// <summary>
         /// Gets a vertex shader resource pointing to given shader file.
         /// </summary>
         /// <param name="device">The target device object.</param>
         /// <param name="subdirectory">The subdirectory where the shader is located.</param>
         /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        public static VertexShaderResource GetVertexShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
+        internal static VertexShaderResource GetVertexShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
         {
             device.EnsureNotNull(nameof(device));
 
-            string shaderModel = device.DefaultVertexShaderModel;
+            AssemblyResourceLink resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
 
-            AssemblyResourceLink resourceLink = GetShaderResourceLink(device, subdirectory, shaderNameWithoutExt, shaderModel);
-
-            return new VertexShaderResource(shaderModel, resourceLink);
+            return new VertexShaderResource(device.DefaultVertexShaderModel, resourceLink);
         }
 
         /// <summary>
@@ -978,15 +916,33 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The target device object.</param>
         /// <param name="subdirectory">The subdirectory where the shader is located.</param>
         /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        public static PixelShaderResource GetPixelShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
+        internal static PixelShaderResource GetPixelShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
         {
             device.EnsureNotNull(nameof(device));
 
-            string shaderModel = device.DefaultPixelShaderModel;
+            AssemblyResourceLink resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
 
-            AssemblyResourceLink resourceLink = GetShaderResourceLink(device, subdirectory, shaderNameWithoutExt, shaderModel);
+            return new PixelShaderResource(device.DefaultPixelShaderModel, resourceLink);
+        }
 
-            return new PixelShaderResource(shaderModel, resourceLink);
+        internal static AssemblyResourceLink GetShaderResourceLink(string subdirectory, string shaderNameWithoutExt)
+        {
+            AssemblyResourceLink resourceLink = null;
+            if (string.IsNullOrEmpty(subdirectory))
+            {
+                resourceLink = new AssemblyResourceLink(
+                    typeof(SeeingSharpResources),
+                    $"Shaders",
+                    $"{shaderNameWithoutExt}.hlsl");
+            }
+            else
+            {
+                resourceLink = new AssemblyResourceLink(
+                    typeof(SeeingSharpResources),
+                    $"Shaders.{subdirectory}",
+                    $"{shaderNameWithoutExt}.hlsl");
+            }
+            return resourceLink;
         }
 
         /// <summary>

@@ -464,5 +464,10 @@ namespace SeeingSharp.Multimedia.Core
             get;
             internal set;
         }
+
+        /// <summary>
+        /// Is debug mode enabled?
+        /// </summary>
+        public bool DebugEnabled => m_deviceLoadSettings.DebugEnabled;
     }
 }
