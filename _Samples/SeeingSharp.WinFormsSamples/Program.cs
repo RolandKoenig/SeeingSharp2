@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeeingSharp.Multimedia.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,12 @@ namespace SeeingSharp.WinFormsSamples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            GraphicsCore.Initialize(new DeviceLoadSettings()
+            {
+                DebugEnabled = true
+            });
+
             Application.Run(new MainWindow());
         }
     }

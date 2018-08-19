@@ -28,13 +28,46 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.m_mainMenu = new System.Windows.Forms.MenuStrip();
+            this.m_ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
+            this.SuspendLayout();
+            // 
+            // m_mainMenu
+            // 
+            this.m_mainMenu.Location = new System.Drawing.Point(0, 0);
+            this.m_mainMenu.Name = "m_mainMenu";
+            this.m_mainMenu.Size = new System.Drawing.Size(800, 24);
+            this.m_mainMenu.TabIndex = 1;
+            this.m_mainMenu.Text = "menuStrip1";
+            // 
+            // m_ctrlRenderPanel
+            // 
+            this.m_ctrlRenderPanel.DiscardRendering = true;
+            this.m_ctrlRenderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_ctrlRenderPanel.Location = new System.Drawing.Point(0, 24);
+            this.m_ctrlRenderPanel.Name = "m_ctrlRenderPanel";
+            this.m_ctrlRenderPanel.Size = new System.Drawing.Size(800, 426);
+            this.m_ctrlRenderPanel.TabIndex = 0;
+            // 
+            // MainWindow
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.Controls.Add(this.m_ctrlRenderPanel);
+            this.Controls.Add(this.m_mainMenu);
+            this.MainMenuStrip = this.m_mainMenu;
+            this.Name = "MainWindow";
+            this.Text = "Seeing# 2 - Windows.Forms samples";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private Multimedia.Views.SeeingSharpRendererControl m_ctrlRenderPanel;
+        private System.Windows.Forms.MenuStrip m_mainMenu;
     }
 }
 

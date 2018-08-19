@@ -44,8 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="shaderProfile">Shader profile used for compilation.</param>
         /// <param name="resourceLink">The source of the resource.</param>
         /// <param name="resourceKind">Kind of the shader resource.</param>
-        /// <param name="shaderModel">The shadermodel which is requred on <see cref="ShaderResourceKind.HlsFile"/>.</param>
-        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel = "")
+        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
         {
             m_resourceKind = resourceKind;
             m_shaderProfile = shaderProfile;
@@ -57,7 +56,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if(m_shaderBytecode == null) { GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile); }
+            if(m_shaderBytecode == null)
+            {
+                m_shaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
+            }
 
             LoadShader(device, m_shaderBytecode);
         }
@@ -82,6 +84,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         string shaderSource = singleShaderSourceBuilder.ToString();
                         var compileResult = SharpDX.D3DCompiler.ShaderBytecode.Compile(
                             shaderSource,
+                            "main",
                             shaderModel,
                             shaderFlags: device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             sourceFileName: resourceLink.ToString());

@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="shaderProfile">Shader profile used for compiling.</param>
         /// <param name="resourceLink">The resourceLink.</param>
         public VertexShaderResource(string shaderProfile, ResourceLink resourceLink)
-            : base(shaderProfile, resourceLink, ShaderResourceKind.Bytecode)
+            : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
         {
 
         }

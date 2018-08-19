@@ -33,6 +33,11 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class CubeType : ObjectType
     {
+        public CubeType()
+        {
+
+        }
+
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             VertexStructure result = new VertexStructure();
