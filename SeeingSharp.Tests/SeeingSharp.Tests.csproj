@@ -68,6 +68,7 @@
     <Compile Include="DeviceHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyResourcesAndShaderTests\AssemblyResourceLinkTests.cs" />
+    <Compile Include="ReusableObjectsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
