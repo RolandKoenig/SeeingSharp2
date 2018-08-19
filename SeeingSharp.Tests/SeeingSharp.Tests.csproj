@@ -64,8 +64,10 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyResourcesAndShaderTests\ShaderCompileTests.cs" />
     <Compile Include="DeviceHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AssemblyResourcesAndShaderTests\AssemblyResourceLinkTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +77,24 @@
       <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>
       <Name>SeeingSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\Dummy\CommonPixelShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\Dummy2\CommonPixelShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\_mainInclude.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\constants.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\functions.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyResourcesAndShaderTests\structures.hlsl" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

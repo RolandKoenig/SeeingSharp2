@@ -88,7 +88,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Task<Stream> OpenInputStreamAsync()
         {
-            return Task.Factory.StartNew(() => OpenInputStream());
+            return Task.FromResult(OpenInputStream());
         }
 
         /// <summary>

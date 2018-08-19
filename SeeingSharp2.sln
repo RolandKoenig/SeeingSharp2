@@ -14,7 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{66734858-5FC7-486B-8FB7-8D6E86870BB0}"
 	ProjectSection(SolutionItems) = preProject
 		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
-		_Misc\_SeeingSharp.Tools.licenseheader = _Misc\_SeeingSharp.Tools.licenseheader
 		_Misc\SolutionInfo.cs = _Misc\SolutionInfo.cs
 	EndProjectSection
 EndProject

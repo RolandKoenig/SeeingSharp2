@@ -26,6 +26,19 @@ using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    public enum ShaderResourceKind
+    {
+        /// <summary>
+        /// The resource is a text based hlsl file.
+        /// </summary>
+        HlsFile,
+
+        /// <summary>
+        /// The resource is pure bytecode.
+        /// </summary>
+        Bytecode
+    }
+
     public enum GradientDirection
     {
         LeftToRight,

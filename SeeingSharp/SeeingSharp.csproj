@@ -10,6 +10,48 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Shaders\Common\CommonPixelShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\CommonVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\SingleForcedColorVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\constants.hlsl" />
+    <None Remove="Resources\Shaders\functions.hlsl" />
+    <None Remove="Resources\Shaders\LineRendering\LinePixelShader.hlsl" />
+    <None Remove="Resources\Shaders\LineRendering\LineVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\PostProcessing\PostprocessBlur.hlsl" />
+    <None Remove="Resources\Shaders\PostProcessing\PostprocessEdgeDetect.hlsl" />
+    <None Remove="Resources\Shaders\PostProcessing\PostprocessVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\PostProcessing\_structures.hlsl" />
+    <None Remove="Resources\Shaders\SkyBox\CommonPixelShader.hlsl" />
+    <None Remove="Resources\Shaders\SkyBox\CommonVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\Sprite\SpritePixelShader.hlsl" />
+    <None Remove="Resources\Shaders\Sprite\SpriteVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\structures.hlsl" />
+    <None Remove="Resources\Shaders\_mainInclude.hlsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Common\CommonVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Common\SingleForcedColorVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\constants.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\functions.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\LineRendering\LinePixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\LineRendering\LineVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\PostProcessing\PostprocessBlur.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\PostProcessing\PostprocessEdgeDetect.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\PostProcessing\PostprocessVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\PostProcessing\_structures.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\SkyBox\CommonPixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\SkyBox\CommonVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Sprite\SpritePixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Sprite\SpriteVertexShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\structures.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\_mainInclude.hlsl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
 

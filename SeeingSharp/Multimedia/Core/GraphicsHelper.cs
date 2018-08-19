@@ -40,6 +40,7 @@ using D3D11 = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 using WIC = SharpDX.WIC;
+using SeeingSharp.Resources;
 
 namespace SeeingSharp.Multimedia.Core
 {

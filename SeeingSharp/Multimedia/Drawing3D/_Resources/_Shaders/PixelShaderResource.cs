@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="shaderProfile">Shader profile used for compiling.</param>
         /// <param name="resourceLink">The resourceLink.</param>
         public PixelShaderResource(string shaderProfile, ResourceLink resourceLink)
-            : base(shaderProfile, resourceLink)
+            : base(shaderProfile, resourceLink, ShaderResourceKind.Bytecode)
         {
             
         }

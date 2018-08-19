@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SeeingSharp
+namespace SeeingSharp.Resources
 {
     public static class SeeingSharpResources
     {

@@ -24,6 +24,7 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System.IO;
+using SharpDX.D3DCompiler;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -33,6 +34,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private string m_shaderProfile;
         private byte[] m_shaderBytecode;
         private ResourceLink m_resourceLink;
+        private ShaderResourceKind m_resourceKind;
         #endregion
 
         /// <summary>
@@ -40,8 +42,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="shaderProfile">Shader profile used for compilation.</param>
         /// <param name="resourceLink">The source of the resource.</param>
-        protected ShaderResource(string shaderProfile, ResourceLink resourceLink)
+        /// <param name="resourceKind">Kind of the shader resource.</param>
+        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
         {
+            m_resourceKind = resourceKind;
             m_shaderProfile = shaderProfile;
             m_resourceLink = resourceLink;
         }
@@ -51,16 +55,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            //Load the shader itself
-            if (m_shaderBytecode == null)
-            {
-                using (Stream inStream = m_resourceLink.OpenInputStream())
-                {
-                    m_shaderBytecode = inStream.ReadAllBytes();
-                }
-            }
+            if(m_shaderBytecode == null) { GetShaderBytecode(m_resourceLink, m_resourceKind); }
 
             LoadShader(device, m_shaderBytecode);
+        }
+
+        private static byte[] GetShaderBytecode(ResourceLink resourceLink, ShaderResourceKind resourceKind)
+        {
+            switch(resourceKind)
+            {
+                case ShaderResourceKind.Bytecode:
+                    using (Stream inStream = resourceLink.OpenInputStream())
+                    {
+                        return inStream.ReadAllBytes();
+                    }
+
+                case ShaderResourceKind.HlsFile:
+                    var cResult = SharpDX.D3DCompiler.ShaderBytecode.Compile("", "", ShaderFlags.Debug, EffectFlags.None, "test.txt", SecondaryDataFlags.None, null);
+               
+                    return new byte[0];
+            }
+
+            throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
         }
 
         /// <summary>
