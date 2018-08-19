@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Views
 
         #region Main reference to 3D-Engine
         private RenderLoop m_renderLoop;
-        #endregion Main reference to 3D-Engine
+        #endregion
 
         #region Resources for Direct3D 11
         private DXGI.Factory m_factory;
@@ -61,18 +61,20 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.DepthStencilView m_renderTargetDepth;
         private D3D11.Texture2D m_backBuffer;
         private D3D11.Texture2D m_depthBuffer;
-        #endregion Resources for Direct3D 11
-
-        #region Members for input handling
-        private bool m_isMouseInside;
-        #endregion Members for input handling
+        #endregion
 
         #region Generic members
         private Brush m_backBrush;
         private Brush m_foreBrushText;
         private Brush m_backBrushText;
         private Pen m_borderPen;
-        #endregion Generic members
+        #endregion
+
+        #region Misc
+        private bool m_isMouseInside;
+        private DateTime m_lastSizeChange;
+        private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
+        #endregion
 
         /// <summary>
         /// Raised when it is possible for the UI thread to manipulate current filter list.
@@ -89,7 +91,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public SeeingSharpRendererControl()
         {
-            //Set style parameters for this control
+            // Set style parameters for this control
             base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             base.SetStyle(ControlStyles.ResizeRedraw, true);
             base.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
@@ -97,7 +99,10 @@ namespace SeeingSharp.Multimedia.Views
             base.SetStyle(ControlStyles.Selectable, true);
             base.DoubleBuffered = false;
 
-            //Create the render loop
+            m_lastSizeChange = DateTime.MinValue;
+            m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
+
+            // Create the render loop
             GDI.Color backColor = this.BackColor;
             m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
             m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
@@ -114,34 +119,8 @@ namespace SeeingSharp.Multimedia.Views
                 m_renderLoop.SetScene(new Scene());
                 m_renderLoop.Camera = new PerspectiveCamera3D();
 
-                ////Observe resize event and throttle them
-                //this.HandleCreateDisposeOnControl(
-                //    () => Observable.FromEventPattern(this, "Resize")
-                //        .Merge(Observable.FromEventPattern(m_renderLoop.ViewConfiguration, "ConfigurationChanged"))
-                //        .Throttle(TimeSpan.FromSeconds(0.5))
-                //        .ObserveOn(SynchronizationContext.Current)
-                //        .Subscribe((eArgs) => OnThrottledViewRecreation()));
-
                 //Initialize background brush
                 UpdateDrawingResourcesForFailoverRendering();
-
-                //// Observe mouse click event
-                //this.HandleCreateDisposeOnControl(() =>
-                //{
-                //    var mouseDownEvent = Observable.FromEventPattern<MouseEventArgs>(this, "MouseDown");
-                //    var mouseUpEvent = Observable.FromEventPattern<MouseEventArgs>(this, "MouseUp");
-                //    var mouseClick = from down in mouseDownEvent
-                //                     let timeStampDown = DateTime.UtcNow
-                //                     from up in mouseUpEvent
-                //                     where up.EventArgs.Button == down.EventArgs.Button
-                //                     let timeStampUp = DateTime.UtcNow
-                //                     where timeStampUp - timeStampDown < TimeSpan.FromMilliseconds(200.0)
-                //                     select new { Down = down, Up = up };
-                //    return mouseClick.Subscribe((givenItem) =>
-                //    {
-                //        MouseClickEx.Raise(this, givenItem.Up.EventArgs);
-                //    });
-                //});
             }
 
             this.Disposed += OnDisposed;
@@ -314,6 +293,7 @@ namespace SeeingSharp.Multimedia.Views
             if ((this.Width > 0) && (this.Height > 0))
             {
                 m_renderLoop.Camera.SetScreenSize(this.Width, this.Height);
+                m_lastSizeChange = DateTime.UtcNow;
             }
         }
 
@@ -454,6 +434,8 @@ namespace SeeingSharp.Multimedia.Views
                 if(parentForm.WindowState == FormWindowState.Minimized) { return false; }
             }
 
+
+
             return true;
         }
 
@@ -463,7 +445,18 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="device">The current rendering device.</param>
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
+            if((m_lastSizeChange != DateTime.MinValue) &&
+               (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsDesktop.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+            {
+                m_lastSizeChange = DateTime.MinValue;
 
+                int width = this.Width;
+                int height = this.Height;
+                if ((width > 0) && (height > 0))
+                {
+                    m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
+                }
+            }
         }
 
         /// <summary>
@@ -487,21 +480,37 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        ///// <summary>
-        ///// Called when the control has changed its size.
-        ///// </summary>
-        //private void OnThrottledViewRecreation()
-        //{
-        //    if (!this.DesignMode)
-        //    {
-        //        m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
 
-        //        //if ((this.Width > 0) && (this.Height > 0))
-        //        //{
-        //        //    m_renderLoop.RefreshViewResources();
-        //        //}
-        //    }
-        //}
+            foreach (MouseButtons actButton in Enum.GetValues(typeof(MouseButtons)))
+            {
+                if (((int)e.Button | (int)actButton) != (int)actButton) { continue; }
+                if (m_mouseButtonDownTime.ContainsKey(actButton)) { continue; }
+
+                m_mouseButtonDownTime[actButton] = DateTime.UtcNow;
+            }
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            foreach (MouseButtons actButton in Enum.GetValues(typeof(MouseButtons)))
+            {
+                if (((int)e.Button | (int)actButton) != (int)actButton) { continue; }
+                if (!m_mouseButtonDownTime.ContainsKey(actButton)) { continue; }
+
+                DateTime downTimeStamp = m_mouseButtonDownTime[actButton];
+                m_mouseButtonDownTime.Remove(actButton);
+
+                if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsDesktop.MOUSE_CLICK_MAX_TIME)
+                {
+                    MouseClickEx?.Invoke(this, e);
+                }
+            }
+        }
 
         /// <summary>
         /// Called when the mouse is inside the area of this control.
@@ -521,6 +530,7 @@ namespace SeeingSharp.Multimedia.Views
             base.OnMouseLeave(e);
 
             m_isMouseInside = false;
+            m_mouseButtonDownTime.Clear();
         }
 
         /// <summary>
