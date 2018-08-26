@@ -61,6 +61,7 @@ namespace SeeingSharp.Multimedia.Views
         private Size m_lastRefreshTargetSize;
         private IDisposable m_observerSizeChanged;
         private bool m_compositionScaleChanged;
+        private DateTime m_lastSizeChange;
         #endregion
 
         #region Resources from Direct3D 11
@@ -77,6 +78,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public SeeingSharpPanelPainter()
         {
+            m_lastSizeChange = DateTime.MinValue;
+
             // Create the RenderLoop object
             m_renderLoop = new Core.RenderLoop(SynchronizationContext.Current, this);
             m_renderLoop.ClearColor = Color4Ex.CornflowerBlue;
@@ -288,6 +291,7 @@ namespace SeeingSharp.Multimedia.Views
             // Get the current pixel size and apply it on the camera
             Size2 viewSize = GetTargetRenderPixelSize();
             m_renderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
+            m_lastSizeChange = DateTime.UtcNow;
 
             //Resize render target only on greater size changes
             double resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? (double)viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / (double)viewSize.Width;
@@ -383,13 +387,14 @@ namespace SeeingSharp.Multimedia.Views
 
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
-            if ((m_targetPanel != null) &&
-                (m_renderLoop != null) &&
-                (m_renderLoop.Camera != null) &&
+            if (m_targetPanel == null){ return; }
+            if (m_renderLoop == null){ return; }
+
+            // Update swap chain scaling (only relevant for SwapChainPanel targets)
+            //  see https://www.packtpub.com/books/content/integrating-direct3d-xaml-and-windows-81
+            if ((m_renderLoop.Camera != null) &&
                 (m_swapChain != null))
             {
-                // Update swap chain scaling (only relevant for SwapChainPanel targets)
-                //  see https://www.packtpub.com/books/content/integrating-direct3d-xaml-and-windows-81
                 if (m_compositionScaleChanged &&
                     m_targetPanel.CompositionRescalingNeeded)
                 {
@@ -410,6 +415,14 @@ namespace SeeingSharp.Multimedia.Views
                         }
                     }
                 }
+            }
+
+            // Handle thottled resizing of view resources
+            if ((m_lastSizeChange != DateTime.MinValue) &&
+                (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+            {
+                m_lastSizeChange = DateTime.MinValue;
+                UpdateRenderLoopViewSize();
             }
         }
 

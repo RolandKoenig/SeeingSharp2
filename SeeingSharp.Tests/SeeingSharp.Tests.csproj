@@ -74,6 +74,9 @@
     <Compile Include="ReusableObjectsTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader">
+      <Link>_SeeingSharp.Multimedia.licenseheader</Link>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

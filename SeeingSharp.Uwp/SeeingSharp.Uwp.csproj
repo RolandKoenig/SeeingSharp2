@@ -112,6 +112,7 @@
     <Compile Include="Multimedia\Views\SeeingSharpRenderPanel.cs" />
     <Compile Include="Multimedia\Views\SwapChainPanelWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeeingSharpConstantsUwp.cs" />
     <Compile Include="_Util\SeeingSharpUwpTools.cs" />
     <EmbeddedResource Include="Properties\SeeingSharp.Uwp.rd.xml" />
   </ItemGroup>
@@ -143,6 +144,11 @@
       <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>
       <Name>SeeingSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader">
+      <Link>_SeeingSharp.Multimedia.licenseheader</Link>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
