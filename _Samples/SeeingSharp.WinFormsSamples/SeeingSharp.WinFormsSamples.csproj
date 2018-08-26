@@ -102,9 +102,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SeeingSharp.Desktop\SeeingSharp.Desktop.csproj">
+    <ProjectReference Include="..\..\SeeingSharp.WinForms\SeeingSharp.WinForms.csproj">
       <Project>{a4b14753-77fd-42d4-80e3-ba9ddb80ac34}</Project>
-      <Name>SeeingSharp.Desktop</Name>
+      <Name>SeeingSharp.WinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj">
       <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>

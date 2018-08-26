@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Views
         public event EventHandler<MouseEventArgs> MouseClickEx;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpRendererControl"/> class.
+        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
         /// </summary>
         public SeeingSharpRendererControl()
         {
@@ -135,12 +135,10 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (!m_isMouseInside) { return null; }
 
-            List<SceneObject> objects = await m_renderLoop.PickObjectAsync(
+            var objects = await m_renderLoop.PickObjectAsync(
                 SeeingSharpDesktopTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
                 new PickingOptions() { OnlyCheckBoundingBoxes = false });
-
-            if (objects == null) { return null; }
-            return objects.FirstOrDefault();
+            return objects?.FirstOrDefault();
         }
 
         /// <summary>
@@ -363,7 +361,7 @@ namespace SeeingSharp.Multimedia.Views
 
             //Create the swap chain and the render target
             m_swapChain = GraphicsHelperDesktop.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
-            m_backBuffer = D3D11.Texture2D.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
+            m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
             m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
 
             //Create the depth buffer
@@ -561,24 +559,24 @@ namespace SeeingSharp.Multimedia.Views
         [DefaultValue(false)]
         public bool DiscardPresent
         {
-            get { return m_renderLoop.DiscardPresent; }
-            set { m_renderLoop.DiscardPresent = value; }
+            get => m_renderLoop.DiscardPresent;
+            set => m_renderLoop.DiscardPresent = value;
         }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Scene Scene
         {
-            get { return m_renderLoop.Scene; }
-            set { m_renderLoop.SetScene(value); }
+            get => m_renderLoop.Scene;
+            set => m_renderLoop.SetScene(value);
         }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Camera3DBase Camera
         {
-            get { return m_renderLoop.Camera; }
-            set { m_renderLoop.Camera = value; }
+            get => m_renderLoop.Camera;
+            set => m_renderLoop.Camera = value;
         }
 
         /// <summary>
@@ -588,20 +586,14 @@ namespace SeeingSharp.Multimedia.Views
         [Category(SeeingSharpConstantsDesktop.DESIGNER_CATEGORY_RENDERER)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public GraphicsViewConfiguration ViewConfiguration
-        {
-            get { return m_renderLoop.ViewConfiguration; }
-        }
+        public GraphicsViewConfiguration ViewConfiguration => m_renderLoop.ViewConfiguration;
 
         /// <summary>
         /// Gets the render loop object.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public RenderLoop RenderLoop
-        {
-            get { return m_renderLoop; }
-        }
+        public RenderLoop RenderLoop => m_renderLoop;
 
         /// <summary>
         /// Ruft die Hintergrundfarbe für das Steuerelement ab oder legt diese fest.
@@ -609,7 +601,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <returns>Eine <see cref="T:System.Drawing.Color" />, die die Hintergrundfarbe des Steuerelements darstellt. Der Standardwert ist der Wert der <see cref="P:System.Windows.Forms.Control.DefaultBackColor" />-Eigenschaft.</returns>
         public override GDI.Color BackColor
         {
-            get { return base.BackColor; }
+            get => base.BackColor;
             set
             {
                 base.BackColor = value;
@@ -618,26 +610,13 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         [Browsable(false)]
-        public EngineDevice Device
-        {
-            get
-            {
-                if (m_renderLoop != null) { return m_renderLoop.Device; }
-                else { return null; }
-            }
-        }
+        public EngineDevice Device => m_renderLoop?.Device;
 
         /// <summary>
         /// True if the control is connected with the main rendering loop.
         /// False if something went wrong.
         /// </summary>
         [Browsable(false)]
-        public bool IsOperational
-        {
-            get
-            {
-                return m_renderLoop.IsOperational;
-            }
-        }
+        public bool IsOperational => m_renderLoop.IsOperational;
     }
 }
