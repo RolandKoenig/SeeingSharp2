@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!m_isMouseInside) { return null; }
 
             var objects = await m_renderLoop.PickObjectAsync(
-                SeeingSharpDesktopTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
                 new PickingOptions() { OnlyCheckBoundingBoxes = false });
             return objects?.FirstOrDefault();
         }
@@ -149,7 +149,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!m_isMouseInside) { return new List<SceneObject>(); }
 
             return await m_renderLoop.PickObjectAsync(
-                SeeingSharpDesktopTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
                 new PickingOptions() { OnlyCheckBoundingBoxes = false });
         }
 

@@ -45,8 +45,6 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Generic
-        private GraphicsDeviceConfiguration m_deviceConfig;
-        private bool m_viewNeedsRefresh;
         #endregion
 
         #region Antialiasing configuration
@@ -75,30 +73,21 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal GraphicsViewConfiguration()
         {
-            // Define and execute reset action
-            Action resetAction = () =>
-            {
-                ShowTextures = DEFAULT_SHOW_TEXTURES;
-                ShowTexturesInternal = DEFAULT_SHOW_TEXTURES;
-                WireframeEnabled = DEFAULT_WIREFRAME;
-                AntialiasingEnabled = DEFAULT_ANTIALIASING;
-                AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
-                m_generatedBorderFactor = DEFAULT_BORDER_FACTOR;
-                m_generatedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
-                m_accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
-                m_ambientFactor = DEFAULT_AMBIENT_FACTOR;
-                m_lightPower = DEFAULT_LIGHT_POWER;
-                m_strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
-                m_alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
-            };
-            resetAction();
+            ShowTextures = DEFAULT_SHOW_TEXTURES;
+            ShowTexturesInternal = DEFAULT_SHOW_TEXTURES;
+            WireframeEnabled = DEFAULT_WIREFRAME;
+            AntialiasingEnabled = DEFAULT_ANTIALIASING;
+            AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
+            m_generatedBorderFactor = DEFAULT_BORDER_FACTOR;
+            m_generatedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
+            m_accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
+            m_ambientFactor = DEFAULT_AMBIENT_FACTOR;
+            m_lightPower = DEFAULT_LIGHT_POWER;
+            m_strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
+            m_alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
         }
 
-        internal bool ViewNeedsRefresh
-        {
-            get { return m_viewNeedsRefresh; }
-            set { m_viewNeedsRefresh = value; }
-        }
+        public bool ViewNeedsRefresh { get; set; }
 
         /// <summary>
         /// Is wireframe rendering enabled?
@@ -116,13 +105,13 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ANTIALIASING)]
         public bool AntialiasingEnabled
         {
-            get { return m_antialiasingEnabled; }
+            get => m_antialiasingEnabled;
             set
             {
                 if (m_antialiasingEnabled != value)
                 {
                     m_antialiasingEnabled = value;
-                    m_viewNeedsRefresh = true;
+                    ViewNeedsRefresh = true;
 
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
@@ -135,13 +124,13 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ANTIALIASING_QUALITY)]
         public AntialiasingQualityLevel AntialiasingQuality
         {
-            get { return m_antialiasingQuality; }
+            get => m_antialiasingQuality;
             set
             {
                 if (m_antialiasingQuality != value)
                 {
                     m_antialiasingQuality = value;
-                    m_viewNeedsRefresh = true;
+                    ViewNeedsRefresh = true;
 
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
@@ -151,10 +140,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_GRADIENT_FACTOR)]
         public float GeneratedColorGradientFactor
         {
-            get { return m_generatedColorGradientFactor; }
+            get => m_generatedColorGradientFactor;
             set
             {
-                if (m_generatedColorGradientFactor != value)
+                if (EngineMath.EqualsWithTolerance(m_generatedColorGradientFactor, value))
                 {
                     m_generatedColorGradientFactor = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -165,10 +154,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_BORDER_FACTOR)]
         public float GeneratedBorderFactor
         {
-            get { return m_generatedBorderFactor; }
+            get => m_generatedBorderFactor;
             set
             {
-                if (m_generatedBorderFactor != value)
+                if (EngineMath.EqualsWithTolerance(m_generatedBorderFactor, value))
                 {
                     m_generatedBorderFactor = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -179,10 +168,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ACCENTUATION_FACTOR)]
         public float AccentuationFactor
         {
-            get { return m_accentuationFactor; }
+            get => m_accentuationFactor;
             set
             {
-                if (m_accentuationFactor != value)
+                if (EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
                 {
                     m_accentuationFactor = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -193,10 +182,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_AMBIENT_FACTOR)]
         public float AmbientFactor
         {
-            get { return m_ambientFactor; }
+            get => m_ambientFactor;
             set
             {
-                if (m_ambientFactor != value)
+                if (EngineMath.EqualsWithTolerance(m_ambientFactor, value))
                 {
                     m_ambientFactor = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -207,10 +196,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_LIGHT_POWER)]
         public float LightPower
         {
-            get { return m_lightPower; }
+            get => m_lightPower;
             set
             {
-                if (m_lightPower != value)
+                if (EngineMath.EqualsWithTolerance(m_lightPower, value))
                 {
                     m_lightPower = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -221,10 +210,10 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_STRONG_LIGHT_FACTOR)]
         public float StrongLightFactor
         {
-            get { return m_strongLightFactor; }
+            get => m_strongLightFactor;
             set
             {
-                if (m_strongLightFactor != value)
+                if (EngineMath.EqualsWithTolerance(m_strongLightFactor, value))
                 {
                     m_strongLightFactor = value;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -241,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_SHOW_TEXTURES)]
         public bool ShowTextures
         {
-            get { return ShowTexturesInternal; }
+            get => ShowTexturesInternal;
             set
             {
                 if (ShowTexturesInternal != value)
@@ -261,13 +250,13 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_SWAP_CHAIN_WIDTH_ALPHA)]
         public bool AlphaEnabledSwapChain
         {
-            get { return m_alphaEnabledSwapChain; }
+            get => m_alphaEnabledSwapChain;
             set
             {
                 if(m_alphaEnabledSwapChain != value)
                 {
                     m_alphaEnabledSwapChain = value;
-                    m_viewNeedsRefresh = true;
+                    ViewNeedsRefresh = true;
                     ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -277,23 +266,12 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets current device configuration.
         /// </summary>
         [Browsable(false)]
-        public GraphicsDeviceConfiguration DeviceConfiguration
-        {
-            get { return m_deviceConfig; }
-            internal set { m_deviceConfig = value; }
-        }
+        public GraphicsDeviceConfiguration DeviceConfiguration { get; internal set; }
 
         /// <summary>
         /// Gets current core configuration.
         /// </summary>
         [Browsable(false)]
-        public GraphicsCoreConfiguration CoreConfiguration
-        {
-            get 
-            {
-                if (m_deviceConfig == null) { return null; }
-                return m_deviceConfig.CoreConfiguration;
-            }
-        }
+        public GraphicsCoreConfiguration CoreConfiguration => DeviceConfiguration?.CoreConfiguration;
     }
 }

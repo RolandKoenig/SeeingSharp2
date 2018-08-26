@@ -11,7 +11,7 @@ using SDX = SharpDX;
 
 namespace SeeingSharp.Util
 {
-    public static class SeeingSharpDesktopTools
+    public static class SeeingSharpWinFormsTools
     {
         public static Color4 Color4FromGdiColor(this ref GDI.Color drawingColor)
         {

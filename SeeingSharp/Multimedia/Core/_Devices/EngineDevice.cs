@@ -63,6 +63,7 @@ namespace SeeingSharp.Multimedia.Core
         private DeviceHandlerDXGI m_handlerDXGI;
         private DeviceHandlerD3D11 m_handlerD3D11;
         private DeviceHandlerD2D m_handlerD2D;
+        private List<IDisposable> m_additionalDeviceHandlers;
         #endregion
 
         #region Possible antialiasing modes
@@ -85,6 +86,8 @@ namespace SeeingSharp.Multimedia.Core
             engineFactory.EnsureNotNull(nameof(engineFactory));
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
             adapter.EnsureNotNull(nameof(adapter));
+
+            m_additionalDeviceHandlers = new List<IDisposable>();
 
             m_engineFactory = engineFactory;
             m_deviceLoadSettings = loadSettings;
@@ -125,6 +128,17 @@ namespace SeeingSharp.Multimedia.Core
                 m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
                 this.FakeRenderTarget2D = m_handlerD2D.RenderTarget;
             }
+        }
+
+        public T TryGetAdditionalDeviceHandler<T>()
+            where T : class
+        {
+            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
+            {
+                if (actAdditionalDeviceHandler is T result) { return result; }
+            }
+
+            return null;
         }
 
         /// <summary>
