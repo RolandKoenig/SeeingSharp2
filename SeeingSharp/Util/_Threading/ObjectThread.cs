@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,6 +45,8 @@ namespace SeeingSharp.Util
         private volatile ObjectThreadState m_currentState;
         private ObjectThreadTimer m_timer;
         private Thread m_mainThread;
+        private CultureInfo m_culture;
+        private CultureInfo m_uiCulture;
         #endregion
 
         #region Threading resources
@@ -95,6 +98,9 @@ namespace SeeingSharp.Util
             m_name = name;
             m_heartBeat = heartBeat;
 
+            m_culture = Thread.CurrentThread.CurrentCulture;
+            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
+
             m_timer = new ObjectThreadTimer();
             m_createMessenger = createMessenger;
         }
@@ -123,8 +129,6 @@ namespace SeeingSharp.Util
             m_mainThread = new Thread(ObjectThreadMainMethod);
             m_mainThread.IsBackground = true;
             m_mainThread.Name = m_name;
-            m_mainThread.CurrentCulture = Thread.CurrentThread.CurrentCulture;
-            m_mainThread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
             m_mainThread.Start();
         }
 
@@ -242,7 +246,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnStarting(EventArgs eArgs)
         {
-            if (Starting != null) { Starting(this, eArgs); }
+            Starting?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -250,7 +254,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnTick(EventArgs eArgs)
         {
-            if (Tick != null) { Tick(this, eArgs); }
+            Tick?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -258,7 +262,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnThreadException(ObjectThreadExceptionEventArgs eArgs)
         {
-            if (ThreadException != null) { ThreadException(this, eArgs); }
+            ThreadException?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -266,7 +270,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnStopping(EventArgs eArgs)
         {
-            if (Stopping != null) { Stopping(this, eArgs); }
+            Stopping?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -276,6 +280,9 @@ namespace SeeingSharp.Util
         {
             try
             {
+                m_mainThread.CurrentCulture = m_culture;
+                m_mainThread.CurrentUICulture = m_uiCulture;
+
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
 
