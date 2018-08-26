@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp
 {
-    public class SeeingSharpConstantsDesktop
+    public class SeeingSharpConstantsWinForms
     {
         #region Constants for design-time
         public const string DESIGNER_CATEGORY_RENDERER = "Renderer";

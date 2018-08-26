@@ -16,7 +16,7 @@ using WinForms = System.Windows.Forms;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public static class GraphicsHelperDesktop
+    public static class GraphicsHelperWinForms
     {
         /// <summary>
         /// Creates a default SwapChain for the given target control.

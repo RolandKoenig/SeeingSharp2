@@ -83,6 +83,7 @@ namespace SeeingSharp.Multimedia.Core
         private int m_totalRenderCount;
         private RenderState m_renderState;
         private List<SeeingSharpVideoWriter> m_videoWriters;
+        private bool m_callPresentInUiThread;
         #endregion
 
         #region Direct3D resources and other values gathered during graphics loading
@@ -757,7 +758,7 @@ namespace SeeingSharp.Multimedia.Core
             bool writeVideoFrames = m_lastRenderSuccessfully;
 
             // Call present from Threadpool (if configured)
-            if (!CallPresentInUIThread)
+            if (!m_callPresentInUiThread)
             {
                 if (!m_discardPresent) { PresentFrameInternal(); }
                 m_lastRenderSuccessfully = false;
@@ -766,7 +767,7 @@ namespace SeeingSharp.Multimedia.Core
             await m_guiSyncContext.PostAsync(() =>
             {
                 // Call present from UI thread (if configured)
-                if (CallPresentInUIThread)
+                if (m_callPresentInUiThread)
                 {
                     if (!m_discardPresent) { PresentFrameInternal(); }
                     m_lastRenderSuccessfully = false;
@@ -1223,42 +1224,33 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current SynchronizationContext.
         /// </summary>
-        public SynchronizationContext UISynchronizationContext
-        {
-            get { return m_guiSyncContext; }
-        }
+        public SynchronizationContext UISynchronizationContext => m_guiSyncContext;
 
         /// <summary>
         /// Gets or sets the current clear color.
         /// </summary>
         public Color4 ClearColor
         {
-            get { return m_clearColor; }
-            set { m_clearColor = value; }
+            get => m_clearColor;
+            set => m_clearColor = value;
         }
 
         /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> Filters
-        {
-            get { return m_filters; }
-        }
+        internal List<SceneObjectFilter> Filters => m_filters;
 
         /// <summary>
         /// Counts the currently applied video writers.
         /// </summary>
-        public int CountVideoWriters
-        {
-            get { return m_videoWriters.Count; }
-        }
+        public int CountVideoWriters => m_videoWriters.Count;
 
         /// <summary>
         /// Gets or sets current camera object.
         /// </summary>
         public Camera3DBase Camera
         {
-            get { return m_camera; }
+            get => m_camera;
             set
             {
                 if (m_camera != value)
@@ -1271,8 +1263,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Change the current camera reference
                     Camera3DBase newCamera = null;
-                    if (value == null) { newCamera = new PerspectiveCamera3D(); }
-                    else { newCamera = value; }
+                    newCamera = value ?? new PerspectiveCamera3D();
                     if (newCamera.AssociatedRenderLoop != null)
                     {
                         throw new SeeingSharpGraphicsException("Unable to change camera: The given one is already associated to another RenderLoop!");
@@ -1294,18 +1285,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current view size.
         /// </summary>
-        public Size2 CurrentViewSize
-        {
-            get { return m_currentViewSize; }
-        }
+        public Size2 CurrentViewSize => m_currentViewSize;
 
         /// <summary>
         /// Gets the device this renderloop is using.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return m_currentDevice; }
-        }
+        public EngineDevice Device => m_currentDevice;
 
         /// <summary>
         /// Gets the total count of visible objects.
@@ -1339,17 +1324,15 @@ namespace SeeingSharp.Multimedia.Core
             internal set;
         }
 
-        public RenderLoopInternals Internals
-        {
-            get { return m_internals; }
-        }
+        /// <summary>
+        /// Internal properties and methods that sould be used with care.
+        /// </summary>
+        public RenderLoopInternals Internals => m_internals;
 
         /// <summary>
         /// Internal field that is used to count visible objects.
         /// </summary>
         internal int VisibleObjectCountInternal;
-
-        internal bool CallPresentInUIThread;
 
         //*********************************************************************
         //*********************************************************************
@@ -1367,6 +1350,11 @@ namespace SeeingSharp.Multimedia.Core
                 m_target = target;
             }
 
+            public void UnloadViewResources()
+            {
+                m_target.UnloadViewResources();
+            }
+
             public D3D11.Texture2D RenderTarget { get { return m_target.m_renderTarget; } }
 
             public D3D11.Texture2D RenderTargetDepth { get { return m_target.m_renderTargetDepth; } }
@@ -1381,6 +1369,12 @@ namespace SeeingSharp.Multimedia.Core
             {
                 get { return m_target.m_copyHelperTextureStandard; }
                 set { m_target.m_copyHelperTextureStandard = value; }
+            }
+
+            public bool CallPresentInUIThread
+            {
+                get => m_target.m_callPresentInUiThread;
+                set => m_target.m_callPresentInUiThread = value;
             }
         }
     }

@@ -360,7 +360,7 @@ namespace SeeingSharp.Multimedia.Views
             m_renderDeviceContext = m_renderDevice.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_swapChain = GraphicsHelperDesktop.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
+            m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
             m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
             m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
 
@@ -444,7 +444,7 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
             if((m_lastSizeChange != DateTime.MinValue) &&
-               (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsDesktop.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+               (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
             {
                 m_lastSizeChange = DateTime.MinValue;
 
@@ -503,7 +503,7 @@ namespace SeeingSharp.Multimedia.Views
                 DateTime downTimeStamp = m_mouseButtonDownTime[actButton];
                 m_mouseButtonDownTime.Remove(actButton);
 
-                if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsDesktop.MOUSE_CLICK_MAX_TIME)
+                if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)
                 {
                     MouseClickEx?.Invoke(this, e);
                 }
@@ -555,7 +555,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Discard present of rendering results on the screen?
         /// </summary>
-        [Category(SeeingSharpConstantsDesktop.DESIGNER_CATEGORY_RENDERER)]
+        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
         [DefaultValue(false)]
         public bool DiscardPresent
         {
@@ -583,7 +583,7 @@ namespace SeeingSharp.Multimedia.Views
         /// Gets the view configuration.
         /// </summary>
         [Browsable(true)]
-        [Category(SeeingSharpConstantsDesktop.DESIGNER_CATEGORY_RENDERER)]
+        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public GraphicsViewConfiguration ViewConfiguration => m_renderLoop.ViewConfiguration;

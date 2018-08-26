@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Core
                 renderLoop.Internals.CopyHelperTextureStaging);
 
             // Load the bitmap
-            GDI.Bitmap resultBitmap = GraphicsHelperDesktop.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
+            GDI.Bitmap resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
             return resultBitmap;
         }
     }
