@@ -44,20 +44,23 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.2.1\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.4.1.0\lib\net45\SharpDX.dll</HintPath>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct2D1, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct2D1.4.1.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.4.1.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.DXGI.4.1.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Mathematics, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Mathematics.4.1.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,6 +74,7 @@
     <Compile Include="ReusableObjectsTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

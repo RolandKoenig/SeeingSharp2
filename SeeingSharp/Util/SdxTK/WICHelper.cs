@@ -561,7 +561,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             try
                             {
                                 converter.CopyPixels(rowPitch, temp, slicePitch);
-                                frame.SetPalette(palette);
+                                frame.Palette = palette;
                                 frame.WritePixels(image.Height, temp, rowPitch, slicePitch);
                             }
                             finally
