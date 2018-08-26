@@ -1,0 +1,2 @@
+MainPackage=D:\Projects\GitHub\RolandKoenig\SeeingSharp2\_Samples\SeeingSharp.UwpSamples\bin\x86\Release\SeeingSharp.UwpSamples_1.1.4.0_x86.appx
+SymbolPackage=D:\Projects\GitHub\RolandKoenig\SeeingSharp2\_Samples\SeeingSharp.UwpSamples\AppPackages\SeeingSharp.UwpSamples_1.1.4.0_Test\SeeingSharp.UwpSamples_1.1.4.0_x86.appxsym
