@@ -48,6 +48,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             m_prevState = new GamepadReportedState();
             m_currentState = new GamepadReportedState();
+
+            this.Internals = new GamepadStateInternals(this);
         }
 
         /// <summary>
@@ -178,6 +180,35 @@ namespace SeeingSharp.Multimedia.Input
         public float RightTrigger
         {
             get { return m_currentState.RightTrigger; }
+        }
+
+        public GamepadStateInternals Internals
+        {
+            get;
+            private set;
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class GamepadStateInternals
+        {
+            private GamepadState m_host;
+
+            internal GamepadStateInternals(GamepadState host)
+            {
+                m_host = host;
+            }
+            
+            public void NotifyConnected(bool isConnected)
+            {
+                m_host.NotifyConnected(isConnected);
+            }
+
+            public void NotifyState(GamepadReportedState controllerState)
+            {
+                m_host.NotifyState(controllerState);
+            }
         }
     }
 }

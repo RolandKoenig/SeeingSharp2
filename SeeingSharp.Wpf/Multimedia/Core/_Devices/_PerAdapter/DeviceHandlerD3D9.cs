@@ -32,7 +32,7 @@ using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class DeviceHandlerD3D9
+    public class DeviceHandlerD3D9 : IDisposable
     {
         private DXGI.Adapter1 m_dxgiAdapter;
         private D3D9.Direct3DEx m_direct3DEx;
@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Unloads all loaded resources.
         /// </summary>
-        internal void UnloadResources()
+        public void Dispose()
         {
             m_deviceEx = SeeingSharpTools.DisposeObject(m_deviceEx);
             m_direct3DEx = SeeingSharpTools.DisposeObject(m_direct3DEx);

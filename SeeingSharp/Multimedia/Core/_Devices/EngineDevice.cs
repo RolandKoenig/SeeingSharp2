@@ -45,6 +45,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Main members
+        private EngineDeviceInternals m_internals;
         private DXGI.Adapter1 m_adapter1;
         private DXGI.AdapterDescription1 m_adapterDesc1;
         private GraphicsDeviceConfiguration m_configuration;
@@ -86,6 +87,8 @@ namespace SeeingSharp.Multimedia.Core
             engineFactory.EnsureNotNull(nameof(engineFactory));
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
             adapter.EnsureNotNull(nameof(adapter));
+
+            m_internals = new EngineDeviceInternals(this);
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
@@ -483,5 +486,27 @@ namespace SeeingSharp.Multimedia.Core
         /// Is debug mode enabled?
         /// </summary>
         public bool DebugEnabled => m_deviceLoadSettings.DebugEnabled;
+        
+        /// <summary>
+        /// Internal members, use with care.
+        /// </summary>
+        public EngineDeviceInternals Internals => m_internals;
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class EngineDeviceInternals
+        {
+            private EngineDevice m_host;
+
+            internal EngineDeviceInternals(EngineDevice host)
+            {
+                m_host = host;
+            }
+
+            public DXGI.Adapter1 Adapter => m_host.m_adapter1;
+
+            public DXGI.AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
+        }
     }
 }

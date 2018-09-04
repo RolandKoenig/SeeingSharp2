@@ -63,8 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Multimedia\Core\GraphicsHelperWinForms.cs" />
+    <Compile Include="Multimedia\Input\IInputControlHost.cs" />
+    <Compile Include="Multimedia\Input\WinFormsKeyAndMouseInputHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeeingSharpConstantsWinForms.cs" />
+    <Compile Include="SeeingSharpWpfExtensions.cs" />
+    <Compile Include="_Extensions.cs" />
     <Compile Include="_Util\SeeingSharpWinFormsTools.cs" />
     <Compile Include="Multimedia\Core\RenderLoopEx.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpRendererControl.cs">

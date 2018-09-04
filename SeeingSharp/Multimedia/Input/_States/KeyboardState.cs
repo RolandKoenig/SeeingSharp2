@@ -47,6 +47,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             m_keysHit = new List<WinVirtualKey>(6);
             m_keysDown = new List<WinVirtualKey>(12);
+
+            this.Internals = new KeyboardStateInternals(this);
         }
 
         internal void NotifyKeyDown(WinVirtualKey key)
@@ -124,6 +126,45 @@ namespace SeeingSharp.Multimedia.Input
         public bool IsConnected
         {
             get { return m_focused; }
+        }
+
+        public KeyboardStateInternals Internals
+        {
+            get;
+            private set;
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class KeyboardStateInternals
+        {
+            private KeyboardState m_host;
+
+            internal KeyboardStateInternals(KeyboardState host)
+            {
+                m_host = host;
+            }
+
+            public void NotifyKeyDown(WinVirtualKey key)
+            {
+                m_host.NotifyKeyDown(key);
+            }
+
+            public void NotifyKeyUp(WinVirtualKey key)
+            {
+                m_host.NotifyKeyUp(key);
+            }
+
+            public void NotifyFocusGot()
+            {
+                m_host.NotifyFocusGot();
+            }
+
+            public void NotifyFocusLost()
+            {
+                m_host.NotifyFocusLost();
+            }
         }
     }
 }

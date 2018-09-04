@@ -40,6 +40,7 @@ namespace SeeingSharp.Multimedia.Input
         private static readonly int BUTTON_COUNT = Enum.GetValues(typeof(MouseButton)).Length;
 
         #region Generic info
+        private MouseOrPointerStateInternals m_internals;
         private MouseOrPointerType m_mouseOrPointerType;
         #endregion
 
@@ -64,6 +65,8 @@ namespace SeeingSharp.Multimedia.Input
             {
                 buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
             }
+
+            m_internals = new MouseOrPointerStateInternals(this);
 
             m_buttonsHit = new bool[buttonCount];
             m_buttonsDown = new bool[buttonCount];
@@ -223,7 +226,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         /// <param name="buttonIndex">Index of the button.</param>
         /// <param name="pressedState">True, if the button is pressed currently.</param>
-         private void UpdateMouseButtonState(int buttonIndex, bool pressedState)
+        private void UpdateMouseButtonState(int buttonIndex, bool pressedState)
         {
             bool isHitOrDown = m_buttonsHit[buttonIndex] | m_buttonsDown[buttonIndex];
             if (isHitOrDown == pressedState) { return; }
@@ -298,6 +301,62 @@ namespace SeeingSharp.Multimedia.Input
         {
             get { return m_mouseOrPointerType; }
             internal set { m_mouseOrPointerType = value; }
+        }
+
+        public MouseOrPointerStateInternals Internals => m_internals;
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class MouseOrPointerStateInternals
+        {
+            private MouseOrPointerState m_host;
+            
+            internal MouseOrPointerStateInternals(MouseOrPointerState host)
+            {
+                m_host = host;
+            }
+
+            public void NotifyButtonDown(MouseButton button)
+            {
+                m_host.NotifyButtonDown(button);
+            }
+
+            public void NotifyButtonUp(MouseButton button)
+            {
+                m_host.NotifyButtonUp(button);
+            }
+
+            public void NotifyButtonStates(
+                bool isLeftButtonDown,
+                bool isMiddleButtonDown,
+                bool isRightButtonDown,
+                bool isExtended1ButtonDown,
+                bool isExtended2ButtonDown)
+            {
+                m_host.NotifyButtonStates(isLeftButtonDown, isMiddleButtonDown, isRightButtonDown, isExtended1ButtonDown, isExtended2ButtonDown);
+            }
+
+                public void NotifyMouseLocation(Vector2 pixelPosition, Vector2 moveDistancePixel, Vector2 screenSizePixel)
+            {
+                m_host.NotifyMouseLocation(pixelPosition, moveDistancePixel, screenSizePixel);
+            }
+
+            public void NotifyMouseWheel(int wheelDelta)
+            {
+                m_host.NotifyMouseWheel(wheelDelta);
+            }
+
+            public void NotifyInside(bool isMouseInside)
+            {
+                m_host.NotifyInside(isMouseInside);
+            }
+
+            public MouseOrPointerType Type
+            {
+                get => m_host.Type;
+                set => m_host.Type = value;
+            }
         }
     }
 }

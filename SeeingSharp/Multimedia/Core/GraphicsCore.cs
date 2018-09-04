@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsCore"/> class.
         /// </summary>
-        protected GraphicsCore(DeviceLoadSettings loadSettings)
+        private GraphicsCore(DeviceLoadSettings loadSettings)
         {
             try
             {
@@ -373,7 +373,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static void Initialize(DeviceLoadSettings loadSettings)
         {
-            if (s_current != null) { return; }
+            if (s_current != null) { throw new SeeingSharpException("Graphics is already initialized!"); }
 
             s_current = new GraphicsCore(loadSettings);
         }
