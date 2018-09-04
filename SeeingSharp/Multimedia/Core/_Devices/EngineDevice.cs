@@ -81,7 +81,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
         /// </summary>
-        internal EngineDevice(DeviceLoadSettings loadSettings, EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, DXGI.Adapter1 adapter, bool isSoftwareAdapter)
+        internal EngineDevice(
+            DeviceLoadSettings loadSettings, SeeingSharpInitializer initializer,
+            EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, 
+            DXGI.Adapter1 adapter, bool isSoftwareAdapter)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
             engineFactory.EnsureNotNull(nameof(engineFactory));
@@ -130,6 +133,16 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
                 this.FakeRenderTarget2D = m_handlerD2D.RenderTarget;
+            }
+
+            // Create additional device handlers
+            foreach(var actExtension in initializer.Extensions)
+            {
+                foreach(var actAdditionalDeviceHandler in actExtension.CreateAdditionalDeviceHandlers(this))
+                {
+                    if(actAdditionalDeviceHandler == null) { continue; }
+                    m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
+                }
             }
         }
 

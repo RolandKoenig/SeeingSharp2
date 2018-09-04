@@ -21,13 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeeingSharp.Util;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -42,14 +43,16 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Prevents a default instance of the <see cref="ImporterExporterRepository"/> class from being created.
         /// </summary>
-        internal ImporterExporterRepository()
+        internal ImporterExporterRepository(SeeingSharpInitializer initializer)
         {
-            //m_importers = SeeingSharpApplication.Current.TypeQuery
-            //    .GetAndInstanciateByContract<IModelImporter>();
-            //m_exporters = SeeingSharpApplication.Current.TypeQuery
-            //    .GetAndInstanciateByContract<IModelExporter>();
-            m_importers = new List<IModelImporter>();
-            m_exporters = new List<IModelExporter>();
+            m_importers =
+                (from actExtension in initializer.Extensions
+                 from actImporter in actExtension.CreateModelImporters()
+                 select actImporter).ToList();
+            m_exporters =
+                (from actExtension in initializer.Extensions
+                 from actExporter in actExtension.CreateModelExporters()
+                 select actExporter).ToList();
 
             m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
 

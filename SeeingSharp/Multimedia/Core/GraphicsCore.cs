@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsCore"/> class.
         /// </summary>
-        private GraphicsCore(DeviceLoadSettings loadSettings)
+        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpInitializer initializer)
         {
             try
             {
@@ -149,8 +149,8 @@ namespace SeeingSharp.Multimedia.Core
                 m_configuration.DebugEnabled = loadSettings.DebugEnabled;
 
                 // Create container object for all input handlers
-                m_inputHandlerFactory = new InputHandlerFactory();
-                m_importExporters = new ImporterExporterRepository();
+                m_inputHandlerFactory = new InputHandlerFactory(initializer);
+                m_importExporters = new ImporterExporterRepository(initializer);
 
                 // Create the key generator for resource keys
                 m_resourceKeyGenerator = new UniqueGenericKeyGenerator();
@@ -189,6 +189,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     EngineDevice actEngineDevice = new EngineDevice(
                         loadSettings,
+                        initializer,
                         m_engineFactory,
                         m_configuration,
                         actAdapterInfo.Adapter,
@@ -371,11 +372,21 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes the GraphicsCore object.
         /// </summary>
-        public static void Initialize(DeviceLoadSettings loadSettings)
+        public static void Initialize(
+            DeviceLoadSettings loadSettings = null,
+            Action<SeeingSharpInitializer> initializationQueue = null)
         {
             if (s_current != null) { throw new SeeingSharpException("Graphics is already initialized!"); }
 
-            s_current = new GraphicsCore(loadSettings);
+            if(loadSettings == null) { loadSettings = new DeviceLoadSettings(); }
+
+            SeeingSharpInitializer initializer = new SeeingSharpInitializer();
+            if (initializationQueue != null)
+            {
+                initializationQueue(initializer);
+            }
+
+            s_current = new GraphicsCore(loadSettings, initializer);
         }
 
         /// <summary>

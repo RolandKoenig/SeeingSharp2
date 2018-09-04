@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Multimedia.Objects;
 
 namespace SeeingSharp
 {
@@ -16,6 +17,16 @@ namespace SeeingSharp
         }
 
         public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        {
+            yield break;
+        }
+
+        public IEnumerable<IModelImporter> CreateModelImporters()
+        {
+            yield break;
+        }
+
+        public IEnumerable<IModelExporter> CreateModelExporters()
         {
             yield break;
         }

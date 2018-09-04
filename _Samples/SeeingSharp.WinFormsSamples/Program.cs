@@ -18,10 +18,12 @@ namespace SeeingSharp.WinFormsSamples
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            GraphicsCore.Initialize(new DeviceLoadSettings()
-            {
-                DebugEnabled = true
-            });
+            GraphicsCore.Initialize(
+                new DeviceLoadSettings()
+                {
+                    DebugEnabled = true
+                },
+                initializer => initializer.SupportWinForms());
 
             Application.Run(new MainWindow());
         }
