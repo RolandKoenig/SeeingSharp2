@@ -64,6 +64,10 @@ namespace SeeingSharp
         public static string PERF_GLOBAL_FRAMES_FINISHED = "Graphics.Global.FramesRendered";
         #endregion
 
+        #region Component group names
+        public const string COMPONENT_GROUP_CAMERA = "Camera";
+        #endregion
+
         #region Constants for animation system
         public static readonly TimeSpan UPDATE_STATE_MAX_TIME = new TimeSpan(0, 0, 0, 0, Int32.MaxValue);
         public static readonly TimeSpan UPDATE_DEFAULT_CYLCE = new TimeSpan(UPDATE_DEFAULT_CYCLES_TICKS);

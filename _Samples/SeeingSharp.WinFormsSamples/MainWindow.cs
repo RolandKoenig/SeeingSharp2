@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SeeingSharp.Multimedia.Components;
 using SharpDX;
 
 namespace SeeingSharp.WinFormsSamples
@@ -52,6 +53,7 @@ namespace SeeingSharp.WinFormsSamples
                     .ApplyAndRewind();
             });
 
+            m_ctrlRenderPanel.RenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
     }
 }

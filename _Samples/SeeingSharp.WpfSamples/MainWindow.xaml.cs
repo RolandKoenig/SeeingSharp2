@@ -1,6 +1,7 @@
 ﻿using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Components;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,8 @@ namespace SeeingSharp.WpfSamples
                     .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
+
+            this.CtrlRenderer.RenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
     }
 }

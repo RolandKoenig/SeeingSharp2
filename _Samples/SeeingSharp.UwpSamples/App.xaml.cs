@@ -44,7 +44,9 @@ namespace SeeingSharp.UwpSamples
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Initialize graphics
-            GraphicsCore.Initialize();
+            GraphicsCore.Initialize(
+                new DeviceLoadSettings() {DebugEnabled = true},
+                (initializer) => initializer.SupportUwp());
 
             // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
             // Nur sicherstellen, dass das Fenster aktiv ist.

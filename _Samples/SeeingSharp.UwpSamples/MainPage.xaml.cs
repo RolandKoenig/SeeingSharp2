@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
@@ -66,6 +67,8 @@ namespace SeeingSharp.UwpSamples
                     .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
+
+            m_panelPainter.RenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
     }
 }

@@ -9,9 +9,9 @@ namespace SeeingSharp
 {
     public static class SeeingSharpUwpExtensionMethods
     {
-        public static SeeingSharpInitializer SupportWinForms(this SeeingSharpInitializer initializer)
+        public static SeeingSharpInitializer SupportUwp(this SeeingSharpInitializer initializer)
         {
-            initializer.RegisterExtensions(new SeeingSharpWinFormsExtensions());
+            initializer.RegisterExtensions(new SeeingSharpUwpExtensions());
             return initializer;
         }
     }

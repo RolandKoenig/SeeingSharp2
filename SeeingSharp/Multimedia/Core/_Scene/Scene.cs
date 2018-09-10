@@ -42,15 +42,18 @@ namespace SeeingSharp.Multimedia.Core
     {
         #region Constants
         public const string DEFAULT_LAYER_NAME = "Default";
-        public const string DEFAULT_SCENE_NAME = "Scene";
         #endregion
 
-        #region Standard members
+        #region Misc
         private bool m_initialized;
         private string m_name;
         private List<SceneLayer> m_sceneLayers;
         private ReadOnlyCollection<SceneLayer> m_sceneLayersPublic;
-        #endregion Standard members
+        #endregion
+
+        #region Some other logical parts of the scene object
+        private SceneComponentFlyweight m_sceneComponents;
+        #endregion
 
         #region Members for 3D rendering
         private CBPerFrame m_perFrameData;
@@ -87,18 +90,15 @@ namespace SeeingSharp.Multimedia.Core
         /// If true, then the caller has to ensure that the name is only used once
         /// across the currently executed application.
         /// </param>
-        public Scene(
-            string name = "",
-            bool registerOnMessenger = false)
+        public Scene()
         {
-            if (string.IsNullOrEmpty(name)) { name = DEFAULT_SCENE_NAME; }
-            this.Name = name;
-
             m_perFrameData = new CBPerFrame();
 
             m_transformMode2D = Graphics2DTransformMode.Custom;
             m_customTransform2D = Matrix3x2.Identity;
             m_virtualScreenSize2D = new Size2F();
+
+            m_sceneComponents = new SceneComponentFlyweight(this);
 
             m_sceneLayers = new List<SceneLayer>();
             m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
@@ -116,7 +116,7 @@ namespace SeeingSharp.Multimedia.Core
             this.CachedUpdateState = new SceneRelatedUpdateState(this);
 
             // Try to initialize this scene object
-            InitializeResourceDictionaries(false);
+            InitializeResourceDictionaries();
         }
 
         /// <summary>
@@ -237,6 +237,35 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Attaches the given component to this scene.
+        /// </summary>
+        /// <param name="component">The component to be attached.</param>
+        /// <param name="sourceView">The view which attaches the component.</param>
+        public void AttachComponent(SceneComponentBase component, ViewInformation sourceView = null)
+        {
+            m_sceneComponents.AttachComponent(component, sourceView);
+        }
+
+        /// <summary>
+        /// Detaches the given component from this scene.
+        /// </summary>
+        /// <param name="component">The component to be detached.</param>
+        /// <param name="sourceView">The view which attached the component initially.</param>
+        public void DetachComponent(SceneComponentBase component, ViewInformation sourceView = null)
+        {
+            m_sceneComponents.AttachComponent(component, sourceView);
+        }
+
+        /// <summary>
+        /// Detaches all currently attached components.
+        /// </summary>
+        /// <param name="sourceView">The view from which we've to detach all components.</param>
+        public void DetachAllComponents(ViewInformation sourceView = null)
+        {
+            m_sceneComponents.DetachAllComponents(sourceView);
+        }
+
+        /// <summary>
         /// Triggers scene manipulation using the given lambda action.
         /// The action gets processed directly before scene update process.
         ///
@@ -274,7 +303,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             resourceFactory.EnsureNotNull(nameof(resourceFactory));
 
-            InitializeResourceDictionaries(true);
+            InitializeResourceDictionaries();
 
             if (resourceKey == NamedOrGenericKey.Empty) { resourceKey = GraphicsCore.GetNextGenericResourceKey(); }
             foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
@@ -311,7 +340,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             manipulateAction.EnsureNotNull(nameof(manipulateAction));
 
-            InitializeResourceDictionaries(true);
+            InitializeResourceDictionaries();
 
             foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
             {
@@ -328,7 +357,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceKey">The key of the resource to be deleted.</param>
         internal void RemoveResource(NamedOrGenericKey resourceKey)
         {
-            InitializeResourceDictionaries(true);
+            InitializeResourceDictionaries();
 
             foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
             {
@@ -416,7 +445,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureNotNull(nameof(sceneObject));
             layer.EnsureNotNullOrEmpty(nameof(layer));
 
-            InitializeResourceDictionaries(true);
+            InitializeResourceDictionaries();
 
             SceneLayer layerObject = GetLayer(layer);
             if (!layerObject.AddObject(sceneObject)) { return null; }
@@ -435,7 +464,7 @@ namespace SeeingSharp.Multimedia.Core
 
             bool isFirstView = m_registeredViews.Count == 0;
 
-            InitializeResourceDictionaries(true);
+            InitializeResourceDictionaries();
 
             // Register device on this scene if not done before
             //  -> This registration is forever, no deregister is made!
@@ -810,6 +839,10 @@ namespace SeeingSharp.Multimedia.Core
                 m_perFrameData.Time = m_perFrameData.Time % SeeingSharpConstants.MAX_PER_FRAME_TIME_VALUE;
             }
 
+            // Update all scene components first 
+            //  These may trigger some further manipulation actions
+            m_sceneComponents.UpdateSceneComponents(updateState);
+
             // Invoke all async action attached to this scene
             int asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
             if (asyncActionsBeforeUpdateCount > 0)
@@ -1028,8 +1061,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes this scene object.
         /// </summary>
-        /// <param name="throwExceptionIfUnable"></param>
-        private void InitializeResourceDictionaries(bool throwExceptionIfUnable)
+        private void InitializeResourceDictionaries()
         {
             if (m_initialized) { return; }
 
@@ -1054,19 +1086,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void SortLayers()
         {
-            m_sceneLayers.Sort(new Comparison<SceneLayer>((left, right) =>
-            {
-                return left.OrderID.CompareTo(right.OrderID);
-            }));
+            m_sceneLayers.Sort((left, right) => left.OrderID.CompareTo(right.OrderID));
         }
 
         /// <summary>
         /// Gets a collection containing all layers.
         /// </summary>
-        internal ReadOnlyCollection<SceneLayer> Layers
-        {
-            get { return m_sceneLayersPublic; }
-        }
+        internal ReadOnlyCollection<SceneLayer> Layers => m_sceneLayersPublic;
 
         /// <summary>
         /// Gets total count of objects within the scene.
@@ -1084,6 +1110,8 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        public int CountAttachedComponents => m_sceneComponents.CountAttached;
+
         /// <summary>
         /// Gets total count of resources.
         /// </summary>
@@ -1100,18 +1128,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets total count of layers.
         /// </summary>
-        public int CountLayers
-        {
-            get { return m_sceneLayers.Count; }
-        }
+        public int CountLayers => m_sceneLayers.Count;
 
         /// <summary>
         /// Gets the total count of view objects registered on this scene.
         /// </summary>
-        public int CountViews
-        {
-            get { return m_registeredViews.Count; }
-        }
+        public int CountViews => m_registeredViews.Count;
 
         /// <summary>
         /// Gets or sets a value indicating whether this scene is in pause mode.
@@ -1120,15 +1142,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Gets or sets the name of this scene.
-        /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-            private set { m_name = value; }
         }
 
         public Graphics2DTransformMode TransformMode2D
