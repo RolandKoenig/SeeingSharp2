@@ -85,6 +85,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader">
       <Link>_SeeingSharp.Multimedia.licenseheader</Link>
@@ -116,6 +117,16 @@
       <Project>{60ba236f-cf64-4c7f-854b-aa23ca910417}</Project>
       <Name>SeeingSharp.SampleContainer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Icons\Adapter16x16.png" />
+    <Content Include="Assets\Icons\Camera16x16.png" />
+    <Content Include="Assets\Icons\Copy16x16.png" />
+    <Content Include="Assets\Icons\Help16x16.png" />
+    <Content Include="Assets\Icons\Output16x16.png" />
+    <Content Include="Assets\Icons\OutputAdd16x16.png" />
+    <Content Include="Assets\Icons\PageCSharp16x16.png" />
+    <Content Include="Assets\Icons\PerformanceMeasure16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

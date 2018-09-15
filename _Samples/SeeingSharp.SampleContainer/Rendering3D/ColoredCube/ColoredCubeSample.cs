@@ -33,25 +33,26 @@ namespace SeeingSharp.SampleContainer.Rendering3D.ColoredCube
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource
-                CubeType pType = new CubeType();
+                CubeType cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(pType));
+                    () => new GeometryResource(cubeType));
 
                 // Create pallet object
-                GenericObject palletObject = manipulator.AddGeneric(resPalletGeometry);
-                palletObject.Color = Color4Ex.GreenColor;
-                palletObject.EnableShaderGeneratedBorder();
-                palletObject.BuildAnimationSequence()
+                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                cubeObject.Color = Color4Ex.GreenColor;
+                cubeObject.Position = new Vector3(0f, 0.5f, 0f);
+                cubeObject.EnableShaderGeneratedBorder();
+                cubeObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => palletObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
 
             // Configure camera
-            camera.Position = new Vector3(2f, 2f, 2f);
+            camera.Position = new Vector3(3f, 3f, 3f);
             camera.Target = new Vector3(0f, 0.5f, 0f);
             camera.UpdateCamera();
 

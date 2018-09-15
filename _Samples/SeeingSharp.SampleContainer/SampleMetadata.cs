@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -21,6 +22,15 @@ namespace SeeingSharp.SampleContainer
             if(result == null) { throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
 
             return result;
+        }
+
+        public AssemblyResourceLink TryGetSampleImageLink()
+        {
+            if (string.IsNullOrWhiteSpace((m_description.SampleImageFileName))) { return null; }
+
+            return new AssemblyResourceLink(
+                m_sampleType,
+                m_description.SampleImageFileName);
         }
 
         public string Name => m_description.SampleName;

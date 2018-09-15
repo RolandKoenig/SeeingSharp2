@@ -7,11 +7,12 @@ namespace SeeingSharp.SampleContainer
     [AttributeUsage(AttributeTargets.Class)]
     public class SampleDescriptionAttribute : Attribute
     {
-        public SampleDescriptionAttribute(string sampleName, int orderID, string sampleGroupName, string sourceCodeUrl = "")
+        public SampleDescriptionAttribute(string sampleName, int orderID, string sampleGroupName, string sampleImageFileName = "", string sourceCodeUrl = "")
         {
             this.SampleName = sampleName;
             this.OrderID = orderID;
             this.SampleGroupName = sampleGroupName;
+            this.SampleImageFileName = sampleImageFileName;
             this.SourceCodeUrl = sourceCodeUrl;
         }
 
@@ -28,6 +29,12 @@ namespace SeeingSharp.SampleContainer
         }
 
         public string SampleGroupName
+        {
+            get;
+            private set;
+        }
+
+        public string SampleImageFileName
         {
             get;
             private set;
