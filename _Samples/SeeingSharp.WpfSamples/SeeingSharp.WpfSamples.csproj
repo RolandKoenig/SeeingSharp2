@@ -125,6 +125,10 @@
       <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>
       <Name>SeeingSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj">
+      <Project>{60ba236f-cf64-4c7f-854b-aa23ca910417}</Project>
+      <Name>SeeingSharp.SampleContainer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

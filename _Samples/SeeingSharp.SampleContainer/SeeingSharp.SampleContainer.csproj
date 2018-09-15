@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Background.dds" />
+    <None Remove="Assets\Background.png" />
+    <None Remove="Assets\Floor.dds" />
+    <None Remove="Assets\Floor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Background.dds" />
+    <EmbeddedResource Include="Assets\Background.png" />
+    <EmbeddedResource Include="Assets\Floor.dds" />
+    <EmbeddedResource Include="Assets\Floor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Rendering2D\" />
+  </ItemGroup>
+
+</Project>
