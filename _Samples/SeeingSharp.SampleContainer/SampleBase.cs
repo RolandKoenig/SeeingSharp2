@@ -14,6 +14,11 @@ namespace SeeingSharp.SampleContainer
     {
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop);
 
+        public virtual void NotifyClosed()
+        {
+
+        }
+
         /// <summary>
         /// Builds a floor to the given scene.
         /// </summary>

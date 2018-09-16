@@ -19,7 +19,7 @@ namespace SeeingSharp.WinFormsSamples
             Application.SetCompatibleTextRenderingDefault(false);
 
             GraphicsCore.Initialize(
-                new DeviceLoadSettings()
+                new DeviceLoadSettings() 
                 {
                     DebugEnabled = true
                 },

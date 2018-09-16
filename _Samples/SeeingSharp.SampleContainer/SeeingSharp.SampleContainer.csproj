@@ -9,6 +9,9 @@
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\Floor.dds" />
     <None Remove="Assets\Floor.png" />
+    <None Remove="Rendering3D\ColoredCube\PreviewImage.png" />
+    <None Remove="Rendering3D\TexturedCube\PreviewImage.png" />
+    <None Remove="Rendering3D\TexturedCube\SimpleTexture.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +19,9 @@
     <EmbeddedResource Include="Assets\Background.png" />
     <EmbeddedResource Include="Assets\Floor.dds" />
     <EmbeddedResource Include="Assets\Floor.png" />
+    <EmbeddedResource Include="Rendering3D\ColoredCube\PreviewImage.png" />
+    <EmbeddedResource Include="Rendering3D\TexturedCube\PreviewImage.png" />
+    <EmbeddedResource Include="Rendering3D\TexturedCube\SimpleTexture.png" />
   </ItemGroup>
 
   <ItemGroup>

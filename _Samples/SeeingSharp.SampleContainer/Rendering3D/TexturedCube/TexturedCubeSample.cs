@@ -7,14 +7,15 @@ using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
 using SharpDX;
 
-namespace SeeingSharp.SampleContainer.Rendering3D.ColoredCube
+namespace SeeingSharp.SampleContainer.Rendering3D.TexturedCube
 {
     [SampleDescription(
-        "Colored Cube", 1, nameof(SeeingSharp.SampleContainer.Rendering3D),
+        "Textured Cube", 2, nameof(SeeingSharp.SampleContainer.Rendering3D),
         sampleImageFileName:"PreviewImage.png")]
-    public class ColoredCubeSample : SampleBase
+    public class TexturedCubeSample : SampleBase
     {
         /// <summary>
         /// Called when the sample has to startup.
@@ -34,8 +35,16 @@ namespace SeeingSharp.SampleContainer.Rendering3D.ColoredCube
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
+                // Define texture and material resource
+                var resTexture = manipulator.AddTexture(
+                    new AssemblyResourceLink(
+                        this.GetType(),
+                        "SimpleTexture.png"));
+                var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
+
                 // Create pallet geometry resource
                 CubeType cubeType = new CubeType();
+                cubeType.Material = resMaterial;
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 

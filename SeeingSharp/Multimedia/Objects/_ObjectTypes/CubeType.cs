@@ -27,6 +27,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -40,13 +41,23 @@ namespace SeeingSharp.Multimedia.Objects
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
+            MaterialProperties matProperties = new MaterialProperties();
+            matProperties.Key = Material;
+
             VertexStructure result = new VertexStructure();
-            result.CreateOrGetExistingSurface(MaterialProperties.Empty)
+            result.CreateOrGetExistingSurface(matProperties)
                 .BuildCube24V(
                     new Vector3(-0.5f, -0.5f, -0.5f),
                     new Vector3(1f, 1f, 1f),
                     Color4Ex.Transparent);
+            
             return result;
+        }
+
+        public NamedOrGenericKey Material
+        {
+            get;
+            set;
         }
     }
 }
