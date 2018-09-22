@@ -6,31 +6,34 @@ namespace SeeingSharp.SampleContainer
 {
     public class SampleRepository
     {
-        public SampleRepository()
+        public SampleRepository(bool autoLoadSamples = true)
         {
             SampleGroups = new List<SampleGroupMetadata>();
 
-            // Search for all samples
-            var sampleGroups = new Dictionary<string, SampleGroupMetadata>();
-            foreach (Type actType in Assembly.GetExecutingAssembly().GetTypes())
+            if (autoLoadSamples)
             {
-                var sampleDesc = actType.GetCustomAttribute<SampleDescriptionAttribute>();
-                if(sampleDesc == null) { continue; }
-
-                if (!sampleGroups.TryGetValue(sampleDesc.SampleGroupName, out var sampleGroup))
+                // Search for all samples
+                var sampleGroups = new Dictionary<string, SampleGroupMetadata>();
+                foreach (Type actType in Assembly.GetExecutingAssembly().GetTypes())
                 {
-                    sampleGroup = new SampleGroupMetadata(sampleDesc.SampleGroupName);
-                    sampleGroups.Add(sampleGroup.GroupName, sampleGroup);
-                    SampleGroups.Add(sampleGroup);
+                    var sampleDesc = actType.GetCustomAttribute<SampleDescriptionAttribute>();
+                    if (sampleDesc == null) { continue; }
+
+                    if (!sampleGroups.TryGetValue(sampleDesc.SampleGroupName, out var sampleGroup))
+                    {
+                        sampleGroup = new SampleGroupMetadata(sampleDesc.SampleGroupName);
+                        sampleGroups.Add(sampleGroup.GroupName, sampleGroup);
+                        SampleGroups.Add(sampleGroup);
+                    }
+
+                    sampleGroup.Samples.Add(new SampleMetadata(sampleDesc, actType));
                 }
 
-                sampleGroup.Samples.Add(new SampleMetadata(sampleDesc, actType));
-            }
-
-            // Sort samples
-            foreach (var actSampleGroup in SampleGroups)
-            {
-                actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo((right.OrderId)));
+                // Sort samples
+                foreach (var actSampleGroup in SampleGroups)
+                {
+                    actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo((right.OrderId)));
+                }
             }
         }
 

@@ -10,7 +10,7 @@ namespace SeeingSharp.SampleContainer
         private SampleDescriptionAttribute m_description;
         private Type m_sampleType;
 
-        internal SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
+        public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
         {
             m_description = description;
             m_sampleType = sampleType;

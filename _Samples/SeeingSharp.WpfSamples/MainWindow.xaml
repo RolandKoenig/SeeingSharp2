@@ -6,8 +6,71 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
         mc:Ignorable="d"
-        Title="Seeing# 2 - Wpf samples" Height="450" Width="800">
-    <Grid>
-        <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
-    </Grid>
+        Title="Seeing# 2 - Wpf samples" Width="800" Height="450" 
+        d:DataContext="{x:Static local:DesignData.MainWindowVM}">
+    
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File" />
+        </Menu>
+
+        <!-- List of sample groups -->
+        <ListBox DockPanel.Dock="Top"
+                 Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                 ItemsSource="{Binding Path=SampleGroups}"
+                 SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="5,2,5,2" />
+                </Style>
+            </ListBox.Resources>
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+        
+        <Grid>
+            <!-- The 3D renderer control-->
+            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+
+            <!-- List of samples of the currently selected group -->
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Top">
+                
+                <ListBox Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
+                         ItemsSource="{Binding Path=Samples}"
+                         SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                         SelectionChanged="OnSelectedSampleChanged"
+                         SelectionMode="Single"
+                         VerticalContentAlignment="Top">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical"
+                                        Margin="5" Cursor="Hand">
+                                <Image Source="{Binding Path=BitmapSource}"
+                                       Width="64" Height="64" 
+                                       RenderOptions.BitmapScalingMode="Fant"
+                                       Margin="5"/>
+                                <TextBlock Text="{Binding Path=Name}"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            
+        </Grid>
+        
+        
+    </DockPanel>
+    
+
 </Window>
