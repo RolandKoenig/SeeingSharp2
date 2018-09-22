@@ -18,7 +18,9 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.SampleContainer;
+using SeeingSharp.Checking;
 using SharpDX;
+using Windows.ApplicationModel;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -29,6 +31,10 @@ namespace SeeingSharp.UwpSamples
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private bool m_isChangingSample;
+        private SampleBase m_actSample;
+        private SampleMetadata m_actSampleInfo;
+
         private SeeingSharpPanelPainter m_panelPainter;
 
         public MainPage()
@@ -38,16 +44,74 @@ namespace SeeingSharp.UwpSamples
             this.Loaded += OnLoaded;
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Applies the given sample.
+        /// </summary>
+        /// <param name="sampleInfo">The sample to be applied.</param>
+        private async void ApplySample(SampleMetadata sampleInfo)
+        {
+            m_isChangingSample.EnsureFalse(nameof(m_isChangingSample));
+
+            m_isChangingSample = true;
+            try
+            {
+                if (m_actSampleInfo == sampleInfo) { return; }
+
+                // Clear previous sample 
+                if (m_actSampleInfo != null)
+                {
+                    await m_panelPainter.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+                    {
+                        manipulator.Clear(true);
+                    });
+                    m_actSample.NotifyClosed();
+                }
+
+                // Reset members
+                m_actSample = null;
+                m_actSampleInfo = null;
+
+                // Apply new sample
+                if (sampleInfo != null)
+                {
+                    SampleBase sampleObject = sampleInfo.CreateSampleObject();
+                    await sampleObject.OnStartupAsync(m_panelPainter.RenderLoop);
+
+                    m_actSample = sampleObject;
+                    m_actSampleInfo = sampleInfo;
+                }
+
+                // Wait for next finished rendering
+                await m_panelPainter.RenderLoop.WaitForNextFinishedRenderAsync();
+
+                await m_panelPainter.RenderLoop.WaitForNextFinishedRenderAsync();
+            }
+            finally
+            {
+                m_isChangingSample = false;
+            }
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             m_panelPainter = new SeeingSharpPanelPainter(CtrlSwapChain);
 
-            SampleRepository sampleRepo = new SampleRepository();
-            await sampleRepo.SampleGroups
-                .First()
-                .Samples
-                .First()
-                .CreateSampleObject().OnStartupAsync(m_panelPainter.RenderLoop);
+            if(!DesignMode.DesignModeEnabled)
+            {
+                SampleRepository sampleRepo = new SampleRepository();
+                this.DataContext = new MainWindowViewModel(sampleRepo);
+            }
+
+        }
+
+        private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+
+            var selectedSample = viewModel.SelectedSample;
+            if (selectedSample == null) { return; }
+
+            this.ApplySample(selectedSample.Sample);
         }
     }
 }

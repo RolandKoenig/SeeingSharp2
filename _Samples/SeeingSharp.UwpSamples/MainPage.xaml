@@ -9,6 +9,60 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <SwapChainPanel x:Name="CtrlSwapChain" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- List of sample groups -->
+        <ListBox Grid.Row="0"
+                 Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                 ItemsSource="{Binding Path=SampleGroups}"
+                 SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" Foreground="White" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Grid Grid.Row="1">
+            <SwapChainPanel x:Name="CtrlSwapChain" />
+
+            <ListBox VerticalAlignment="Top"
+                 Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
+                 ItemsSource="{Binding Path=Samples}"
+                 SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                 SelectionChanged="OnSelectedSampleChanged"
+                 SelectionMode="Single"
+                 VerticalContentAlignment="Top">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical"
+                                        Margin="5">
+                            <Image Source="{Binding Path=BitmapSource}"
+                                       Width="64" Height="64" 
+                                       Margin="5"/>
+                            <TextBlock Text="{Binding Path=Name}"
+                                           HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
+    
+
 </Page>
