@@ -9,9 +9,11 @@
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\Floor.dds" />
     <None Remove="Assets\Floor.png" />
-    <None Remove="Rendering3D\ColoredCube\PreviewImage.png" />
-    <None Remove="Rendering3D\TexturedCube\PreviewImage.png" />
-    <None Remove="Rendering3D\TexturedCube\SimpleTexture.png" />
+    <None Remove="Basics3D\_01_ColoredCube\PreviewImage.png" />
+    <None Remove="Basics3D\_02_TexturedCube\PreviewImage.png" />
+    <None Remove="Basics3D\_02_TexturedCube\SimpleTexture.png" />
+    <None Remove="Basics3D\_03_Skybox\PreviewImage.png" />
+    <None Remove="Basics3D\_03_Skybox\SkyBox.dds" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +21,11 @@
     <EmbeddedResource Include="Assets\Background.png" />
     <EmbeddedResource Include="Assets\Floor.dds" />
     <EmbeddedResource Include="Assets\Floor.png" />
-    <EmbeddedResource Include="Rendering3D\ColoredCube\PreviewImage.png" />
-    <EmbeddedResource Include="Rendering3D\TexturedCube\PreviewImage.png" />
-    <EmbeddedResource Include="Rendering3D\TexturedCube\SimpleTexture.png" />
+    <EmbeddedResource Include="Basics3D\_01_ColoredCube\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_02_TexturedCube\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_02_TexturedCube\SimpleTexture.png" />
+    <EmbeddedResource Include="Basics3D\_03_Skybox\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_03_Skybox\SkyBox.dds" />
   </ItemGroup>
 
   <ItemGroup>

@@ -120,10 +120,10 @@ namespace SeeingSharp.Multimedia.Objects
             localResources.IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices);
             localResources.VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
                 ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
-                () => GraphicsHelper.GetVertexShaderResource(device, "Skybox", "CommonVertexShader"));
+                () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader"));
             localResources.PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
                 ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
-                () => GraphicsHelper.GetPixelShaderResource(device, "Skybox", "CommonPixelShader"));
+                () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"));
 
             // Store resource container object
             m_localResources.AddObject(localResources, device.DeviceIndex);
