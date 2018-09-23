@@ -95,9 +95,9 @@ namespace SeeingSharp.UwpSamples
             if(!DesignMode.DesignModeEnabled)
             {
                 SampleRepository sampleRepo = new SampleRepository();
+                sampleRepo.LoadSampleData();
                 this.DataContext = new MainWindowViewModel(sampleRepo);
             }
-
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)

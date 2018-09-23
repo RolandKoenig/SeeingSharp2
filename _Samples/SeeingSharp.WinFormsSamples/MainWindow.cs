@@ -41,6 +41,7 @@ namespace SeeingSharp.WinFormsSamples
 
             // Add all sample pages
             SampleRepository sampleRepo = new SampleRepository();
+            sampleRepo.LoadSampleData();
             SampleMetadata firstSample = null;
             Dictionary<string, ListView> generatedTabs = new Dictionary<string, ListView>();
             foreach (var actSampleGroup in sampleRepo.SampleGroups)

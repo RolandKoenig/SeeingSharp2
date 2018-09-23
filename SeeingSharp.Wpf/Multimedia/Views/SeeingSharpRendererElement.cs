@@ -556,7 +556,11 @@ namespace SeeingSharp.Multimedia.Views
 
         public IEnumerable<EngineDevice> PossibleDevices
         {
-            get => GraphicsCore.Current.Devices;
+            get
+            {
+                if (!GraphicsCore.IsInitialized) { return new EngineDevice[0]; }
+                return GraphicsCore.Current.Devices;
+            }
         }
     }
 }

@@ -43,6 +43,7 @@ namespace SeeingSharp.WpfSamples
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
                 SampleRepository sampleRepo = new SampleRepository();
+                sampleRepo.LoadSampleData();
                 this.DataContext = new MainWindowViewModel(sampleRepo);
             }
         }

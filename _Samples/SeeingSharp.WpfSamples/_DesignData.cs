@@ -14,7 +14,7 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                SampleRepository sampleRepo = new SampleRepository(autoLoadSamples: false);
+                SampleRepository sampleRepo = new SampleRepository();
                 for(int loop=1; loop<5; loop++)
                 {
                     string actGroupName = $"DummyGroup {loop}";
