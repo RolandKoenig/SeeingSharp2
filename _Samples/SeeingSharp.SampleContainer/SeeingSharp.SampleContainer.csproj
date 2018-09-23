@@ -14,6 +14,8 @@
     <None Remove="Basics3D\_02_TexturedCube\SimpleTexture.png" />
     <None Remove="Basics3D\_03_Skybox\PreviewImage.png" />
     <None Remove="Basics3D\_03_Skybox\SkyBox.dds" />
+    <None Remove="Basics3D\_04_Text3D\PreviewImage.png" />
+    <None Remove="Basics3D\_05_ParentChild\PreviewImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,8 @@
     <EmbeddedResource Include="Basics3D\_02_TexturedCube\SimpleTexture.png" />
     <EmbeddedResource Include="Basics3D\_03_Skybox\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_03_Skybox\SkyBox.dds" />
+    <EmbeddedResource Include="Basics3D\_04_Text3D\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_05_ParentChild\PreviewImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Rendering2D\" />
+    <Folder Include="Basics2D\" />
   </ItemGroup>
 
 </Project>
