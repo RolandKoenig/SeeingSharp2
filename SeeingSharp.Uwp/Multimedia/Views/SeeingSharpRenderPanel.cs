@@ -29,15 +29,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    [ContentProperty(Name = "SceneComponents")]
-    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView
+    //[ContentProperty(Name = "SceneComponents")]
+    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
         #region Dependency properties
         public static readonly DependencyProperty SceneProperty =
@@ -50,12 +52,26 @@ namespace SeeingSharp.Multimedia.Views
 
         private SeeingSharpPanelPainter m_painter;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
         /// </summary>
         public SeeingSharpRenderPanel()
         {
             m_painter = new SeeingSharpPanelPainter(this);
+            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
+            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+        }
+
+        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
+        }
+
+        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentViewSize)));
         }
 
         /// <summary>
@@ -128,6 +144,29 @@ namespace SeeingSharp.Multimedia.Views
         public bool Focused
         {
             get { return ((IInputEnabledView)m_painter).Focused; }
+        }
+
+        public EngineDevice SelectedDevice
+        {
+            get => m_painter.RenderLoop.Device;
+            set => m_painter.RenderLoop.SetRenderingDevice(value);
+        }
+
+        public Size CurrentViewSize
+        {
+            get
+            {
+                var currentViewSize = m_painter.RenderLoop.CurrentViewSize;
+                Size result = new Size();
+                result.Width = currentViewSize.Width;
+                result.Height = currentViewSize.Height;
+                return result;
+            }
+        }
+
+        public IEnumerable<EngineDevice> PossibleDevices
+        {
+            get => GraphicsCore.Current.Devices;
         }
     }
 }

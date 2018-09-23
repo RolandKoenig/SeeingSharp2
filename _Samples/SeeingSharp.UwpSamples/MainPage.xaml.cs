@@ -35,8 +35,6 @@ namespace SeeingSharp.UwpSamples
         private SampleBase m_actSample;
         private SampleMetadata m_actSampleInfo;
 
-        private SeeingSharpPanelPainter m_panelPainter;
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -60,7 +58,7 @@ namespace SeeingSharp.UwpSamples
                 // Clear previous sample 
                 if (m_actSampleInfo != null)
                 {
-                    await m_panelPainter.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+                    await CtrlSwapChain.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
                     {
                         manipulator.Clear(true);
                     });
@@ -75,16 +73,16 @@ namespace SeeingSharp.UwpSamples
                 if (sampleInfo != null)
                 {
                     SampleBase sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(m_panelPainter.RenderLoop);
+                    await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
                 }
 
                 // Wait for next finished rendering
-                await m_panelPainter.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
 
-                await m_panelPainter.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
             }
             finally
             {
@@ -94,8 +92,6 @@ namespace SeeingSharp.UwpSamples
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            m_panelPainter = new SeeingSharpPanelPainter(CtrlSwapChain);
-
             if(!DesignMode.DesignModeEnabled)
             {
                 SampleRepository sampleRepo = new SampleRepository();
