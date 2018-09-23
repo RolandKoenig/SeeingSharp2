@@ -16,10 +16,8 @@ the particular gui framework.
  - Working with multiple graphics devices at once (dynamically configure the target device per view)
  - Working with multiple scenegraphs at once (dynamically configure the current scene per view)
  - Flexible postprocessing mechanism
- - Support for all Direct3D 11 Hardware (Featurelevel 9.1 up to 11)
  - Support for software rendering using WARP technology
- - Integration of Direct2D directly into the 3D render process (works also on Windows 7 platform)
- - Integration of Media Foundation to enable VideoTextures (read video files) and VideoCapturing (write video files)
- - Import external 3D models 
+ - Integration of Direct2D directly into the 3D render process
  - Build custom 3D models by code
+ - Import external 3D models 
  - And much more..
