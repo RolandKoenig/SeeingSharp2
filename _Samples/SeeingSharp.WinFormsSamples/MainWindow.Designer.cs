@@ -52,6 +52,7 @@
             this.m_mnuChangeDevice = new System.Windows.Forms.ToolStripDropDownButton();
             this.m_tabControlSamples = new System.Windows.Forms.TabControl();
             this.m_images = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_barStatus.SuspendLayout();
             this.m_barTools.SuspendLayout();
             this.SuspendLayout();
@@ -76,6 +77,7 @@
             this.m_barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_lblResolutionDesc,
             this.m_lblResolution,
+            this.toolStripStatusLabel1,
             this.m_lblObjectCountDesc,
             this.m_lblObjectCount,
             this.m_lblDeviceDesc,
@@ -237,6 +239,12 @@
             this.m_images.ImageSize = new System.Drawing.Size(64, 64);
             this.m_images.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(19, 19);
+            this.toolStripStatusLabel1.Text = "px";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -282,6 +290,7 @@
         private System.Windows.Forms.ImageList m_images;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem to1024x1024ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

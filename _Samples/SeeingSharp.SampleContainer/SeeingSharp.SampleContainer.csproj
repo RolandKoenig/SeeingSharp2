@@ -16,6 +16,7 @@
     <None Remove="Basics3D\_03_Skybox\SkyBox.dds" />
     <None Remove="Basics3D\_04_Text3D\PreviewImage.png" />
     <None Remove="Basics3D\_05_ParentChild\PreviewImage.png" />
+    <None Remove="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +31,7 @@
     <EmbeddedResource Include="Basics3D\_03_Skybox\SkyBox.dds" />
     <EmbeddedResource Include="Basics3D\_04_Text3D\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_05_ParentChild\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
   </ItemGroup>
 
   <ItemGroup>

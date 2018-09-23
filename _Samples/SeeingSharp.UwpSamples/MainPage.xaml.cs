@@ -50,7 +50,7 @@ namespace SeeingSharp.UwpSamples
         /// <param name="sampleInfo">The sample to be applied.</param>
         private async void ApplySample(SampleMetadata sampleInfo)
         {
-            m_isChangingSample.EnsureFalse(nameof(m_isChangingSample));
+            if (m_isChangingSample) { return; }
 
             m_isChangingSample = true;
             try
