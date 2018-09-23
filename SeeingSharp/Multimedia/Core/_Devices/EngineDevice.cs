@@ -204,8 +204,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            if (m_initializationException != null) { return m_adapter1.Description1.Description; }
-            else { return m_handlerD3D11.DeviceModeDescription; }
+            return this.AdapterDescription;
+            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
+            //else { return m_handlerD3D11.DeviceModeDescription; }
         }
 
         /// <summary>
@@ -289,7 +290,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public string AdapterDescription
         {
-            get { return m_adapter1.Description1.Description.Replace("\0", ""); }
+            get { return m_adapter1?.Description1.Description.Replace("\0", "") ?? nameof(EngineDevice); }
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ using GDI = System.Drawing;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    public partial class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost
+    public partial class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
         #region Dependency properties
         public static readonly DependencyProperty SceneProperty =
@@ -70,7 +70,6 @@ namespace SeeingSharp.Multimedia.Views
         private HigherD3DImageSource m_d3dImageSource;
         private int m_lastRecreateWidth;
         private int m_lastRecreateHeight;
-        //private IDisposable m_controlObserver;
         #endregion
 
         #region All needed direct3d resources
@@ -98,6 +97,7 @@ namespace SeeingSharp.Multimedia.Views
         public event EventHandler SceneChanged;
         public event EventHandler CameraChanged;
         public event EventHandler DrawingLayer2DChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         /// <summary>
@@ -115,21 +115,11 @@ namespace SeeingSharp.Multimedia.Views
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
 
-            //// Load ummy bitmap
-            //using (System.Drawing.Bitmap dummyOrig = Properties.Resources.GfxNotInitialized)
-            //{
-            //    m_dummyBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-            //        dummyOrig.GetHbitmap(),
-            //        IntPtr.Zero,
-            //        System.Windows.Int32Rect.Empty,
-            //        BitmapSizeOptions.FromWidthAndHeight(500, 500));
-            //}
-            //this.Source = m_dummyBitmap;
-            // TODO: Show another bitmap if 3D rendering is not possible
-
             // Create the RenderLoop object
             m_renderLoop = new RenderLoop(
                 SynchronizationContext.Current, this, isDesignMode: this.IsInDesignMode());
+            m_renderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+            m_renderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
 
             // Break here if we are in design mode
             if (this.IsInDesignMode()) { return; }
@@ -140,60 +130,6 @@ namespace SeeingSharp.Multimedia.Views
             // Create new scene and camera object
             this.Scene = new Core.Scene();
             this.Camera = new PerspectiveCamera3D();
-
-            //Attach to SizeChanged event (refresh view resources only after a specific time)
-            if (GraphicsCore.IsInitialized)
-            {
-                //// Observe events and trigger rendreing as long as the control lives
-                //this.Loaded += (sender, eArgs) =>
-                //{
-                //    if (m_controlObserver == null)
-                //    {
-                //        m_controlObserver = SeeingSharpTools.DisposeObject(m_controlObserver);
-                //        m_controlObserver = Observable.FromEventPattern<EventArgs>(this, "SizeChanged")
-                //            .Merge(Observable.FromEventPattern<EventArgs>(m_renderLoop.ViewConfiguration, "ConfigurationChanged"))
-                //            .Throttle(TimeSpan.FromSeconds(0.5))
-                //            .ObserveOn(SynchronizationContext.Current)
-                //            .Subscribe((innerEArgs) => OnThrottledSizeChanged());
-
-                //        SystemEvents.SessionSwitch += OnSystemEvents_SessionSwitch;
-                //    }
-                //};
-                //this.Unloaded += (sender, eArgs) =>
-                //{
-                //    if (m_controlObserver != null)
-                //    {
-                //        SystemEvents.SessionSwitch -= OnSystemEvents_SessionSwitch;
-
-                //        m_controlObserver = SeeingSharpTools.DisposeObject(m_controlObserver);
-                //    }
-                //};
-            }
-        }
-
-        /// <summary>
-        /// Called when the render size has changed.
-        /// </summary>
-        /// <param name="sizeInfo">New size information.</param>
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            if (!GraphicsCore.IsInitialized) { return; }
-
-            // Break here if we are in design mode
-            if (this.IsInDesignMode()) { return; }
-
-            // Update render size
-            m_renderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
-
-            //Resize render target only on greater size changes
-            double resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
-            double resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
-            if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
-            {
-                m_renderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
-            }
         }
 
         /// <summary>
@@ -282,12 +218,29 @@ namespace SeeingSharp.Multimedia.Views
             m_viewportWidth = width;
             m_viewportHeight = height;
 
-            //Create and apply the image source object
-            m_d3dImageSource = new HigherD3DImageSource(engineDevice);
-            m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
-            if (this.Source == m_dummyBitmap) 
-            { 
-                this.Source = m_d3dImageSource; 
+            // Try to create the object for surface sharing
+            try
+            {
+                m_d3dImageSource = new HigherD3DImageSource(engineDevice);
+            }
+            catch(Exception)
+            {
+              
+            }
+
+            if (m_d3dImageSource != null)
+            {
+                //Create and apply the image source object
+                m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
+                if (this.Source == m_dummyBitmap)
+                {
+                    this.Source = m_d3dImageSource;
+                }
+            }
+            else
+            {
+                // Set a dummy image source
+                this.Source = new BitmapImage();
             }
 
             m_lastRecreateWidth = width;
@@ -394,17 +347,42 @@ namespace SeeingSharp.Multimedia.Views
 
             // Now connect this view with the main renderloop
             m_renderLoop.RegisterRenderLoop();
-
-            //m_refreshTimer = new DispatcherTimer(DispatcherPriority.Render);
-            //m_refreshTimer.Tick += M_refreshTimer_Tick;
-            //m_refreshTimer.Interval = TimeSpan.FromMilliseconds(7.0);
-            //m_refreshTimer.Start();
         }
 
-        //private void M_refreshTimer_Tick(object sender, EventArgs e)
-        //{
-        //    this.InvalidateVisual();
-        //}
+        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
+        }
+
+        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentViewSize)));
+        }
+
+        /// <summary>
+        /// Called when the render size has changed.
+        /// </summary>
+        /// <param name="sizeInfo">New size information.</param>
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            if (!GraphicsCore.IsInitialized) { return; }
+
+            // Break here if we are in design mode
+            if (this.IsInDesignMode()) { return; }
+
+            // Update render size
+            m_renderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
+
+            //Resize render target only on greater size changes
+            double resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
+            double resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
+            if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
+            {
+                m_renderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
+            }
+        }
 
         /// <summary>
         /// Called when the current session was switched.
@@ -458,25 +436,6 @@ namespace SeeingSharp.Multimedia.Views
                 DrawingLayer2DChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        ///// <summary>
-        ///// Called when size changed event occurred.
-        ///// </summary>
-        //private void OnThrottledSizeChanged()
-        //{
-        //    if (!GraphicsCore.IsInitialized) { return; }
-        //    if (this.IsInDesignMode()) { return; }
-
-        //    Size pixelSize = SeeingSharpWpfTools.GetPixelSize(this, new Size(100.0, 100.0));
-
-        //    // Refresh view resources if resolution has changed
-        //    if ((pixelSize.Width != m_lastRecreateWidth) ||
-        //        (pixelSize.Height != m_lastRecreateHeight) ||
-        //        (RenderLoop.ViewConfiguration.ViewNeedsRefresh))
-        //    {
-        //        m_renderLoop.SetCurrentViewSize((int)pixelSize.Width, (int)pixelSize.Height);
-        //    }
-        //}
 
         /// <summary>
         /// Called when the image is unloaded.
@@ -575,6 +534,29 @@ namespace SeeingSharp.Multimedia.Views
             {
                 return m_renderLoop.IsOperational;
             }
+        }
+
+        public EngineDevice SelectedDevice
+        {
+            get => m_renderLoop.Device;
+            set => m_renderLoop.SetRenderingDevice(value);
+        }
+
+        public Size CurrentViewSize
+        {
+            get
+            {
+                var currentViewSize = m_renderLoop.CurrentViewSize;
+                Size result = new Size();
+                result.Width = currentViewSize.Width;
+                result.Height = currentViewSize.Height;
+                return result;
+            }
+        }
+
+        public IEnumerable<EngineDevice> PossibleDevices
+        {
+            get => GraphicsCore.Current.Devices;
         }
     }
 }

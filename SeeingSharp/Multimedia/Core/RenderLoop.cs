@@ -120,6 +120,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public event EventHandler DeviceChanged;
 
+        public event EventHandler CurrentViewSizeChanged;
+
         /// <summary>
         /// Raised when the current camera has changed.
         /// </summary>
@@ -786,8 +788,9 @@ namespace SeeingSharp.Multimedia.Core
                 m_nextRenderAllowed = true;
 
                 // Need to update view parameters?              (=> Later: Render Thread)
+                bool viewSizeChanged = m_targetSize != m_currentViewSize;
                 if ((m_renderTargetView == null) ||
-                    (m_targetSize != m_currentViewSize) ||
+                    (viewSizeChanged) ||
                     ((m_targetDevice != null) && (m_targetDevice != m_currentDevice)) ||
                     (m_viewConfiguration.ViewNeedsRefresh) ||
                     (m_viewRefreshForced))
@@ -825,6 +828,8 @@ namespace SeeingSharp.Multimedia.Core
                             Scene localScene = m_currentScene;
                             continuationActions.Add(() => localScene.RegisterView(m_viewInformation));
                         }
+
+                        if (viewSizeChanged) { CurrentViewSizeChanged?.Invoke(this, EventArgs.Empty); }
                     }
                     catch (Exception ex)
                     {
@@ -1382,7 +1387,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the current view size.
+        /// Gets the current view size in pixels.
         /// </summary>
         public Size2 CurrentViewSize => m_currentViewSize;
 
