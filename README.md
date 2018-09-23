@@ -7,6 +7,7 @@ The base library is separated into the following projects:
  - SeeingSharp.Uwp
  - SeeingSharp.Wpf
  - SeeingSharp.WinForms
+ 
 The first one is the core library which contains all logic for 2D/3D-rendering. The others contain classes to integrate SeeingSharp into 
 the particular gui framework. 
  
