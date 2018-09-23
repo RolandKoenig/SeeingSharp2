@@ -82,6 +82,11 @@ namespace SeeingSharp
             get { return Transparent; }
         }
 
+        public static Color4 White
+        {
+            get { return new Color4(1f, 1f, 1f, 1f); }
+        }
+
         /// <summary>
         /// AliceBlue color
         /// </summary>

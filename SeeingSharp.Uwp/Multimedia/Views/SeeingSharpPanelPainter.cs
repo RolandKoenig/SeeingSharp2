@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Views
 
             // Create the RenderLoop object
             m_renderLoop = new Core.RenderLoop(SynchronizationContext.Current, this);
-            m_renderLoop.ClearColor = Color4Ex.CornflowerBlue;
+            m_renderLoop.ClearColor = Color4Ex.White;
             m_renderLoop.Internals.CallPresentInUIThread = false;
 
             m_detachOnUnload = true;

@@ -48,6 +48,7 @@ namespace SeeingSharp.UwpSamples
         /// <param name="sampleInfo">The sample to be applied.</param>
         private async void ApplySample(SampleMetadata sampleInfo)
         {
+            if (DesignMode.DesignModeEnabled) { return; }
             if (m_isChangingSample) { return; }
 
             m_isChangingSample = true;
@@ -92,16 +93,18 @@ namespace SeeingSharp.UwpSamples
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if(!DesignMode.DesignModeEnabled)
-            {
-                SampleRepository sampleRepo = new SampleRepository();
-                sampleRepo.LoadSampleData();
-                this.DataContext = new MainWindowViewModel(sampleRepo);
-            }
+            if (DesignMode.DesignModeEnabled) { return; }
+
+            SampleRepository sampleRepo = new SampleRepository();
+            sampleRepo.LoadSampleData();
+
+            MainWindowViewModel viewModel = this.DataContext as MainWindowViewModel;
+            viewModel?.LoadSampleData(sampleRepo);
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (DesignMode.DesignModeEnabled) { return; }
             if (!(this.DataContext is MainWindowViewModel viewModel)) { return; }
 
             var selectedSample = viewModel.SelectedSample;

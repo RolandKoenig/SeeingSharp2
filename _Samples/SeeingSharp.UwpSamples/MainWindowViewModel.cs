@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -14,7 +15,25 @@ namespace SeeingSharp.UwpSamples
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
 
-        public MainWindowViewModel(SampleRepository sampleRepo)
+        public MainWindowViewModel()
+        {
+            if (!DesignMode.DesignModeEnabled) { return; }
+
+            for (int loop = 1; loop < 5; loop++)
+            {
+                this.SampleGroups.Add($"DummyGroup {loop}");
+            }
+            this.SelectedGroup = "DummyGroup 2";
+
+            for (int loop=1; loop<5; loop++)
+            {
+                this.Samples.Add(new SampleViewModel(new SampleMetadata(
+                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"),
+                    this.GetType())));
+            }
+        }
+
+        public void LoadSampleData(SampleRepository sampleRepo)
         {
             m_selectedGroup = string.Empty;
 
@@ -30,6 +49,8 @@ namespace SeeingSharp.UwpSamples
 
         private void UpdateSampleCollection()
         {
+            if (DesignMode.DesignModeEnabled) { return; }
+
             var sampleGroup = m_sampleRepo.SampleGroups
                 .Where((actGroup) => actGroup.GroupName == m_selectedGroup)
                 .FirstOrDefault();
