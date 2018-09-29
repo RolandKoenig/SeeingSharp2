@@ -288,18 +288,16 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (!GraphicsCore.IsInitialized) { return; }
 
-            // Get the current pixel size and apply it on the camera
-            Size2 viewSize = GetTargetRenderPixelSize();
-            m_renderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
-            m_lastSizeChange = DateTime.UtcNow;
-
             //Resize render target only on greater size changes
+            Size2 viewSize = GetTargetRenderPixelSize();
             double resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? (double)viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / (double)viewSize.Width;
             double resizeFactorHeight = (double)viewSize.Height > m_lastRefreshTargetSize.Height ? (double)viewSize.Height / m_lastRefreshTargetSize.Height : m_lastRefreshTargetSize.Height / (double)viewSize.Height;
             if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
             {
                 UpdateRenderLoopViewSize();
             }
+
+            m_lastSizeChange = DateTime.UtcNow;
         }
 
         /// <summary>
