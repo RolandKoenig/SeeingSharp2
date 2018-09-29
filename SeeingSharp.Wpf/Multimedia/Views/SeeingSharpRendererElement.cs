@@ -87,6 +87,7 @@ namespace SeeingSharp.Multimedia.Views
         private int m_renderTargetWidth;
         private int m_viewportHeight;
         private int m_viewportWidth;
+        private DateTime m_lastSizeChange;
         #endregion
 
         #region State members for handling rendering problems
@@ -341,7 +342,25 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="engineDevice">The engine device.</param>
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
+            if ((m_lastSizeChange != DateTime.MinValue) &&
+                (DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinWpf.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+            {
+                m_lastSizeChange = DateTime.MinValue;
 
+                SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
+
+                // Calculate pixel with and high of this visual
+                Size pixelSize = new Size(
+                    Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
+                    Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
+                int width = (int)pixelSize.Width;
+                int height = (int)pixelSize.Height;
+
+                if ((width > 0) && (height > 0))
+                {
+                    m_renderLoop.SetCurrentViewSize(width, height);
+                }
+            }
         }
 
         /// <summary>
@@ -465,6 +484,8 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_renderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
             }
+
+            m_lastSizeChange = DateTime.UtcNow;
         }
 
         /// <summary>

@@ -444,7 +444,7 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
             if((m_lastSizeChange != DateTime.MinValue) &&
-               (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+               (DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
             {
                 m_lastSizeChange = DateTime.MinValue;
 

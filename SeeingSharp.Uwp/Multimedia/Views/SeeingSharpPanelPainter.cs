@@ -419,7 +419,7 @@ namespace SeeingSharp.Multimedia.Views
 
             // Handle thottled resizing of view resources
             if ((m_lastSizeChange != DateTime.MinValue) &&
-                (DateTime.UtcNow - m_lastSizeChange < SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+                (DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
             {
                 m_lastSizeChange = DateTime.MinValue;
                 UpdateRenderLoopViewSize();

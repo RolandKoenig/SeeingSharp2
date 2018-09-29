@@ -74,6 +74,7 @@
     <Compile Include="Multimedia\Views\HigherD3DImageSource.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpRendererElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeeingSharpConstantsWpf.cs" />
     <Compile Include="SeeingSharpWpfExtensions.cs" />
     <Compile Include="_Extensions.cs" />
     <Compile Include="_Util\SeeingSharpWpfTools.cs" />
