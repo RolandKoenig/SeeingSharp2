@@ -65,7 +65,7 @@
             <TextBlock Text="Device:" />
             <ComboBox ItemsSource="{Binding ElementName=CtrlRenderer, Path=PossibleDevices}"
                       SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
-                      Width="150"/>
+                      Width="200"/>
         </StackPanel>
         
         <Grid>

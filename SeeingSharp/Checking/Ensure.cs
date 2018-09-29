@@ -40,6 +40,7 @@ namespace SeeingSharp.Checking
     /// </summary>
     public static partial class Ensure
     {
+        [Conditional("DEBUG")]
         public static void EnsureEqual(
             this object toCompare, object other, string checkedVariableName,
             [CallerMemberName]
@@ -48,6 +49,23 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             if (toCompare != other)
+            {
+                throw new SeeingSharpCheckException(string.Format(
+                    "Object {0} within method {1} has not the expected value!",
+                    checkedVariableName, callerMethod));
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureEqualComparable<T>(
+            this T toCompare, T other, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+            where T : IComparable<T>
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (toCompare.CompareTo(other) != 0)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Object {0} within method {1} has not the expected value!",

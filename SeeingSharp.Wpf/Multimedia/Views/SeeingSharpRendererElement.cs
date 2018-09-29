@@ -68,6 +68,7 @@ namespace SeeingSharp.Multimedia.Views
         #region Some members..
         private RenderLoop m_renderLoop;
         private HigherD3DImageSource m_d3dImageSource;
+        private WriteableBitmap m_fallbackWpfImageSource;
         private int m_lastRecreateWidth;
         private int m_lastRecreateHeight;
         #endregion
@@ -90,7 +91,6 @@ namespace SeeingSharp.Multimedia.Views
 
         #region State members for handling rendering problems
         private int m_isDirtyCount = 0;
-        private BitmapSource m_dummyBitmap;
         #endregion
 
         #region Change events
@@ -165,10 +165,9 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice engineDevice)
         {
+            this.Source = null;
             if (m_d3dImageSource != null)
             {
-                this.Source = m_dummyBitmap;
-
                 // Dispose the render target
                 m_d3dImageSource.SetRenderTarget(null);
                 m_d3dImageSource.Dispose();
@@ -198,6 +197,28 @@ namespace SeeingSharp.Multimedia.Views
             D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
             D3D11.DeviceContext renderDeviceContext = renderDevice.ImmediateContext;
 
+            // Try to create the object for surface sharing
+            try
+            {
+                m_d3dImageSource = new HigherD3DImageSource(engineDevice);
+            }
+            catch (Exception)
+            {
+                GraphicsHelperWpf.UniformRescale(ref width, ref height, 500f);
+
+                PresentationSource source = PresentationSource.FromVisual(this);
+                double dpiScaleFactorX = 1.0;
+                double dpiScaleFactorY = 1.0;
+                if (source?.CompositionTarget != null)
+                {
+                    dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
+                    dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+                }
+
+                m_d3dImageSource = null;
+                m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
+            }
+
             //Create the swap chain and the render target
             m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
             m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
@@ -218,29 +239,16 @@ namespace SeeingSharp.Multimedia.Views
             m_viewportWidth = width;
             m_viewportHeight = height;
 
-            // Try to create the object for surface sharing
-            try
-            {
-                m_d3dImageSource = new HigherD3DImageSource(engineDevice);
-            }
-            catch(Exception)
-            {
-              
-            }
-
             if (m_d3dImageSource != null)
             {
                 //Create and apply the image source object
                 m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
-                if (this.Source == m_dummyBitmap)
-                {
-                    this.Source = m_d3dImageSource;
-                }
+                this.Source = m_d3dImageSource;
             }
             else
             {
                 // Set a dummy image source
-                this.Source = new BitmapImage();
+                this.Source = m_fallbackWpfImageSource;
             }
 
             m_lastRecreateWidth = width;
@@ -255,25 +263,33 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice engineDevice)
         {
-            if (m_d3dImageSource == null) { return false; }
-            if (!m_d3dImageSource.IsFrontBufferAvailable) { return false; }
-            if (!m_d3dImageSource.HasRenderTarget) { return false; }
+            if (m_d3dImageSource != null)
+            {
+                if (!m_d3dImageSource.IsFrontBufferAvailable) { return false; }
+                if (!m_d3dImageSource.HasRenderTarget) { return false; }
+            }
+            else if(m_fallbackWpfImageSource == null) { return false; }
+
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
-            if ((SeeingSharpWpfTools.ReadPrivateMember<bool, D3DImage>(m_d3dImageSource, "_isDirty")) ||
-                (SeeingSharpWpfTools.ReadPrivateMember<IntPtr, D3DImage>(m_d3dImageSource, "_pUserSurfaceUnsafe") == IntPtr.Zero))
+
+            if (m_d3dImageSource != null)
             {
-                m_isDirtyCount++;
-                if (m_isDirtyCount > 20)
+                if ((SeeingSharpWpfTools.ReadPrivateMember<bool, D3DImage>(m_d3dImageSource, "_isDirty")) ||
+                    (SeeingSharpWpfTools.ReadPrivateMember<IntPtr, D3DImage>(m_d3dImageSource, "_pUserSurfaceUnsafe") == IntPtr.Zero))
                 {
-                    m_renderLoop.ViewConfiguration.ViewNeedsRefresh = true;
-                    return true;
+                    m_isDirtyCount++;
+                    if (m_isDirtyCount > 20)
+                    {
+                        m_renderLoop.ViewConfiguration.ViewNeedsRefresh = true;
+                        return true;
+                    }
+                    return false;
                 }
-                return false; 
-            }
-            else
-            {
-                m_isDirtyCount = 0;
+                else
+                {
+                    m_isDirtyCount = 0;
+                }
             }
 
             return true;
@@ -293,34 +309,61 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice engineDevice)
         {
-            if (m_d3dImageSource == null) { return; }
             if (!this.IsLoaded) { return; }
 
-            bool isLocked = false;
-            GraphicsCore.Current.PerformanceCalculator.ExecuteAndMeasureActivityDuration(
-                "Render.Lock", 
-                () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
-            if (!isLocked) { return; }
-            try
+            if (m_d3dImageSource != null)
             {
-                // Draw current 3d scene to wpf
-                D3D11.DeviceContext deviceContext = engineDevice.DeviceImmediateContextD3D11;
-                deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, DXGI.Format.B8G8R8A8_UNorm);
-                deviceContext.Flush();
-                deviceContext.ClearState();
-
-                // Apply true background texture if a cached bitmap was applied before
-                if(this.Source != m_d3dImageSource)
+                bool isLocked = false;
+                GraphicsCore.Current.PerformanceCalculator.ExecuteAndMeasureActivityDuration(
+                    "Render.Lock",
+                    () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
+                if (!isLocked) { return; }
+                try
                 {
-                    this.Source = m_d3dImageSource; 
+                    // Draw current 3d scene to wpf
+                    D3D11.DeviceContext deviceContext = engineDevice.DeviceImmediateContextD3D11;
+                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, DXGI.Format.B8G8R8A8_UNorm);
+                    deviceContext.Flush();
+                    deviceContext.ClearState();
+
+                    // Apply true background texture if a cached bitmap was applied before
+                    if (this.Source != m_d3dImageSource)
+                    {
+                        this.Source = m_d3dImageSource;
+                    }
+
+                    // Invalidate the D3D image
+                    m_d3dImageSource.InvalidateD3DImage();
+                }
+                finally
+                {
+                    m_d3dImageSource.Unlock();
+                }
+            }
+            else if(m_fallbackWpfImageSource != null)
+            {
+                // Get and read data from the gpu (create copy helper texture on demand)
+                if (m_renderLoop.Internals.CopyHelperTextureStaging == null)
+                {
+                    m_renderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    m_renderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
                 }
 
-                // Invalidate the D3D image
-                m_d3dImageSource.InvalidateD3DImage();
-            }
-            finally
-            {
-                m_d3dImageSource.Unlock();
+                // Copy resources
+                engineDevice.DeviceImmediateContextD3D11.ResolveSubresource(
+                    m_renderLoop.Internals.RenderTarget, 0,
+                    m_renderLoop.Internals.CopyHelperTextureStandard, 0,
+                    GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+                engineDevice.DeviceImmediateContextD3D11.CopyResource(
+                    m_renderLoop.Internals.CopyHelperTextureStandard,
+                    m_renderLoop.Internals.CopyHelperTextureStaging);
+
+                // Copy texture into wpf bitmap
+                GraphicsHelperWpf.LoadBitmapFromStagingTexture(
+                    engineDevice,
+                    m_renderLoop.Internals.CopyHelperTextureStaging,
+                    m_fallbackWpfImageSource,
+                    TimeSpan.FromMilliseconds(1000.0));
             }
         }
 
