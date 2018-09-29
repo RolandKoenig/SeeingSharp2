@@ -197,7 +197,7 @@ namespace SeeingSharp.Multimedia.Views
             int width = (int)pixelSize.Width;
             int height = (int)pixelSize.Height;
 
-            //Get references to current render device
+            // Get references to current render device
             D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
             D3D11.DeviceContext renderDeviceContext = renderDevice.ImmediateContext;
             SharpDX.Mathematics.Interop.RawViewportF viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
@@ -233,31 +233,30 @@ namespace SeeingSharp.Multimedia.Views
                     }
                 }
 
+                // Switch to fallback method if we can't create the HigherD3DImageSource
                 if (m_d3dImageSource == null)
                 {
-                    GraphicsHelperWpf.UniformRescale(ref width, ref height, 500f);
-
                     m_d3dImageSource = null;
                     m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
                 }
 
-                //Create the swap chain and the render target
+                // Create the swap chain and the render target
                 m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
                 m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
                 m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
 
-                //Create the depth buffer
+                // Create the depth buffer
                 m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
                 m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
 
-                //Apply render target size values
+                // Apply render target size values
                 m_renderTargetWidth = width;
                 m_renderTargetHeight = height;
 
-                //Define the viewport for rendering
+                // Define the viewport for rendering
                 viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
 
-                //Apply new width and height values of the viewport
+                // Apply new width and height values of the viewport
                 m_viewportWidth = width;
                 m_viewportHeight = height;
 
@@ -295,7 +294,7 @@ namespace SeeingSharp.Multimedia.Views
             m_lastRecreateWidth = width;
             m_lastRecreateHeight = height;
 
-            //Return all generated objects
+            // Return all generated objects
             return Tuple.Create(m_backBufferD3D11, m_renderTarget, m_depthBuffer, m_renderTargetDepth, viewPort, new Size2(width, height), GetDpiScaling());
         }
 

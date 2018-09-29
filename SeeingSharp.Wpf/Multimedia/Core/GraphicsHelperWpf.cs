@@ -50,29 +50,30 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsureEqualComparable(textureDesc.Width, $"{nameof(textureDesc)}.{nameof(textureDesc.Width)}");
             height.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
 
-            //Prepare target bitmap 
+            // Prepare target bitmap 
             SharpDX.DataBox dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
-                targetBitmap.TryLock(new System.Windows.Duration(lockTimeout));
+                if(!targetBitmap.TryLock(new System.Windows.Duration(lockTimeout))) { return; }
+
                 try
                 {
-                    //Copy data row by row
-                    // => Rows form datasource may have more pixels because driver changes the size of textures
+                    // Copy data row by row
+                    //  => Rows form datasource may have more pixels because driver changes the size of textures
                     ulong rowPitch = (ulong)(width * 4);
                     for (int loopRow = 0; loopRow < height; loopRow++)
                     {
-                        // Copy bitmap data
-                        targetBitmap.WritePixels(
-                            new System.Windows.Int32Rect(0, 0, width, height),
-                            dataBox.DataPointer,
-                            dataBox.SlicePitch,
-                            dataBox.RowPitch,
-                            0, 0);
+                        int rowPitchSource = dataBox.RowPitch;
+                        int rowPitchDestination = width * 4;
+                        SeeingSharpTools.CopyMemory(
+                            dataBox.DataPointer + loopRow * rowPitchSource,
+                            targetBitmap.BackBuffer + loopRow * rowPitchDestination,
+                            rowPitch);
                     }
                 }
                 finally
                 {
+                    targetBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, width, height));
                     targetBitmap.Unlock();
                 }
             }
