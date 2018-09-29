@@ -10,34 +10,6 @@
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
 
     <DockPanel LastChildFill="True">
-        <!-- Top toolbar -->
-        <StackPanel Orientation="Horizontal"
-                    DockPanel.Dock="Top">
-            <StackPanel.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="Image">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="ComboBox">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="Rectangle">
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-            </StackPanel.Resources>
-
-            <Image Source="/Assets/Icons/Adapter16x16.png" 
-                   Width="16"/>
-            <TextBlock Text="Change device" />
-            <ComboBox ItemsSource="{Binding ElementName=CtrlRenderer, Path=PossibleDevices}"
-                      SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
-                      Width="200"/>
-        </StackPanel>
 
         <!-- List of sample groups -->
         <ListBox DockPanel.Dock="Top"
@@ -80,7 +52,6 @@
 
             <Image Source="/Assets/Icons/Output16x16.png" 
                    Width="16"/>
-            <TextBlock Text="Resolution:" />
             <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CurrentViewSize}" />
             <TextBlock Text="px" />
             <Rectangle Width="1" 
@@ -88,8 +59,14 @@
 
             <Image Source="/Assets/Icons/Adapter16x16.png" 
                    Width="16"/>
-            <TextBlock Text="Device:" />
-            <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=SelectedDevice}" />
+            <ComboBox ItemsSource="{Binding ElementName=CtrlRenderer, Path=PossibleDevices}"
+                      SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
+                      Width="200"/>
+            <Rectangle Width="1" 
+                       Fill="Gray"/>
+            
+            <TextBlock Text="Composition:" />
+            <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CompositionMode}" />
         </StackPanel>
 
         <Grid>

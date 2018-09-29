@@ -48,7 +48,6 @@ using SharpDX;
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
-using GDI = System.Drawing;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -88,6 +87,7 @@ namespace SeeingSharp.Multimedia.Views
         private int m_viewportHeight;
         private int m_viewportWidth;
         private DateTime m_lastSizeChange;
+        private WpfSeeingSharpCompositionMode m_compositionMode;
         #endregion
 
         #region State members for handling rendering problems
@@ -108,6 +108,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             this.Loaded += OnLoaded;
             this.Unloaded += OnUnloaded;
+
+            m_compositionMode = WpfSeeingSharpCompositionMode.None;
 
             // Basic configuration
             this.Focusable = true;
@@ -182,6 +184,9 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
             m_backBufferForWpf = SeeingSharpTools.DisposeObject(m_backBufferForWpf);
             m_backBufferD3D11 = SeeingSharpTools.DisposeObject(m_backBufferD3D11);
+
+            // Reset composition mode
+            this.CompositionMode = WpfSeeingSharpCompositionMode.None;
         }
 
         /// <summary>
@@ -212,12 +217,15 @@ namespace SeeingSharp.Multimedia.Views
                 if(tryCount > 2)
                 {
                     this.Source = null;
+                    this.CompositionMode = WpfSeeingSharpCompositionMode.None;
                     throw new SeeingSharpException($"Unable to initialize view with device {engineDevice}: Too much tries, also fallback solution does not work!");
                 }
 
                 // Try to create the object for surface sharing
                 if ((!engineDevice.IsSoftware) &&
-                    (!forceFallbackSolution))
+                    (!forceFallbackSolution) &&
+                    (RenderOptions.ProcessRenderMode != RenderMode.SoftwareOnly) &&
+                    ((RenderCapability.Tier >> 16) >= 2))
                 {
                     var handlerD3D9 = engineDevice.TryGetAdditionalDeviceHandler<DeviceHandlerD3D9>();
                     if ((handlerD3D9 != null) &&
@@ -269,6 +277,7 @@ namespace SeeingSharp.Multimedia.Views
                         m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
                         this.Source = m_d3dImageSource;
                         initializedSuccessfully = true;
+                        this.CompositionMode = WpfSeeingSharpCompositionMode.OverHardware;
                     }
                     catch(Exception)
                     {
@@ -288,9 +297,12 @@ namespace SeeingSharp.Multimedia.Views
                     // Set a dummy image source
                     this.Source = m_fallbackWpfImageSource;
                     initializedSuccessfully = true;
+                    this.CompositionMode = WpfSeeingSharpCompositionMode.FallbackOverSoftware;
                 }
             }
             while (!initializedSuccessfully);
+
+            if (!initializedSuccessfully) { this.CompositionMode = WpfSeeingSharpCompositionMode.None; }
 
             m_lastRecreateWidth = width;
             m_lastRecreateHeight = height;
@@ -422,7 +434,7 @@ namespace SeeingSharp.Multimedia.Views
                     engineDevice,
                     m_renderLoop.Internals.CopyHelperTextureStaging,
                     m_fallbackWpfImageSource,
-                    TimeSpan.FromMilliseconds(1000.0));
+                    TimeSpan.FromMilliseconds(500.0));
             }
         }
 
@@ -664,6 +676,19 @@ namespace SeeingSharp.Multimedia.Views
             {
                 if (!GraphicsCore.IsInitialized) { return new EngineDevice[0]; }
                 return GraphicsCore.Current.Devices;
+            }
+        }
+
+        public WpfSeeingSharpCompositionMode CompositionMode
+        {
+            get => m_compositionMode;
+            set
+            {
+                if(m_compositionMode != value)
+                {
+                    m_compositionMode = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompositionMode)));
+                }
             }
         }
     }

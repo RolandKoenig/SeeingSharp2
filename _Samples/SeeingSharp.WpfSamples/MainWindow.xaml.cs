@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SeeingSharp.SampleContainer;
+using System.Windows.Interop;
 
 namespace SeeingSharp.WpfSamples
 {

@@ -73,6 +73,7 @@
     <Compile Include="Multimedia\Input\WpfKeyAndMouseInputHandler.cs" />
     <Compile Include="Multimedia\Views\HigherD3DImageSource.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpRendererElement.cs" />
+    <Compile Include="Multimedia\Views\_Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeeingSharpConstantsWpf.cs" />
     <Compile Include="SeeingSharpWpfExtensions.cs" />
