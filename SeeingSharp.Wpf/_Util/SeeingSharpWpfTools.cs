@@ -31,16 +31,21 @@ namespace SeeingSharp.Util
             target.B = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
         }
 
-        public static Wpf.Size GetPixelSize(Wpf.UIElement uiElement, Wpf.Size minSize)
+        public static void GetDpiScalingFactor(Wpf.UIElement uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY)
         {
             Wpf.PresentationSource source = Wpf.PresentationSource.FromVisual(uiElement);
-            double dpiScaleFactorX = 1.0;
-            double dpiScaleFactorY = 1.0;
+            dpiScaleFactorX = 1.0;
+            dpiScaleFactorY = 1.0;
             if (source?.CompositionTarget != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
             }
+        }
+
+        public static Wpf.Size GetPixelSize(Wpf.UIElement uiElement, Wpf.Size minSize)
+        {
+            GetDpiScalingFactor(uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY);
 
             return new Wpf.Size(
                 Math.Max(uiElement.RenderSize.Width * dpiScaleFactorX, 100),

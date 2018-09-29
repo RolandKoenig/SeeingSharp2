@@ -47,16 +47,9 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
         /// </summary>
-        public HigherD3DImageSource(EngineDevice device)
+        public HigherD3DImageSource(EngineDevice device, DeviceHandlerD3D9 deviceHandlerD3D9)
         {
             m_device = device;
-
-            var deviceHandlerD3D9 = device.TryGetAdditionalDeviceHandler<DeviceHandlerD3D9>();
-            if (deviceHandlerD3D9 == null)
-            {
-                throw new SeeingSharpException(
-                    $"Unable to load {nameof(HigherD3DImageSource)}: Direct3D 9 is not initialized correctly!");
-            }
 
             m_d3dContext = deviceHandlerD3D9.Context;
             m_d3dDevice = deviceHandlerD3D9.Device;

@@ -188,68 +188,109 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
+            SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
+
             // Calculate pixel with and high of this visual
-            Size pixelSize = SeeingSharpWpfTools.GetPixelSize(this, new Size(100.0, 100.0));
+            Size pixelSize = new Size(
+                Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
+                Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
             int width = (int)pixelSize.Width;
             int height = (int)pixelSize.Height;
 
             //Get references to current render device
             D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
             D3D11.DeviceContext renderDeviceContext = renderDevice.ImmediateContext;
+            SharpDX.Mathematics.Interop.RawViewportF viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
 
-            // Try to create the object for surface sharing
-            try
+            bool initializedSuccessfully = false;
+            bool forceFallbackSolution = false;
+            int tryCount = 0;
+            do
             {
-                m_d3dImageSource = new HigherD3DImageSource(engineDevice);
-            }
-            catch (Exception)
-            {
-                GraphicsHelperWpf.UniformRescale(ref width, ref height, 500f);
-
-                PresentationSource source = PresentationSource.FromVisual(this);
-                double dpiScaleFactorX = 1.0;
-                double dpiScaleFactorY = 1.0;
-                if (source?.CompositionTarget != null)
+                tryCount++;
+                if(tryCount > 2)
                 {
-                    dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
-                    dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+                    this.Source = null;
+                    throw new SeeingSharpException($"Unable to initialize view with device {engineDevice}: Too much tries, also fallback solution does not work!");
                 }
 
-                m_d3dImageSource = null;
-                m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
+                // Try to create the object for surface sharing
+                if ((!engineDevice.IsSoftware) &&
+                    (!forceFallbackSolution))
+                {
+                    var handlerD3D9 = engineDevice.TryGetAdditionalDeviceHandler<DeviceHandlerD3D9>();
+                    if ((handlerD3D9 != null) &&
+                        (handlerD3D9.Device != null))
+                    {
+                        try
+                        {
+                            m_d3dImageSource = new HigherD3DImageSource(engineDevice, handlerD3D9);
+                        }
+                        catch (Exception)
+                        {
+                            // Unable to enable surface sharing
+                        }
+                    }
+                }
+
+                if (m_d3dImageSource == null)
+                {
+                    GraphicsHelperWpf.UniformRescale(ref width, ref height, 500f);
+
+                    m_d3dImageSource = null;
+                    m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
+                }
+
+                //Create the swap chain and the render target
+                m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
+                m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
+                m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
+
+                //Create the depth buffer
+                m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
+                m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
+
+                //Apply render target size values
+                m_renderTargetWidth = width;
+                m_renderTargetHeight = height;
+
+                //Define the viewport for rendering
+                viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+
+                //Apply new width and height values of the viewport
+                m_viewportWidth = width;
+                m_viewportHeight = height;
+
+                if (m_d3dImageSource != null)
+                {
+                    // Create and apply the image source object
+                    try
+                    {
+                        m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
+                        this.Source = m_d3dImageSource;
+                        initializedSuccessfully = true;
+                    }
+                    catch(Exception)
+                    {
+                        initializedSuccessfully = false;
+                        forceFallbackSolution = true;
+
+                        SeeingSharpTools.SafeDispose(ref m_d3dImageSource);
+                        SeeingSharpTools.SafeDispose(ref m_renderTargetDepth);
+                        SeeingSharpTools.SafeDispose(ref m_depthBuffer);
+                        SeeingSharpTools.SafeDispose(ref m_renderTarget);
+                        SeeingSharpTools.SafeDispose(ref m_backBufferForWpf);
+                        SeeingSharpTools.SafeDispose(ref m_backBufferD3D11);
+                    }
+                }
+                else
+                {
+                    // Set a dummy image source
+                    this.Source = m_fallbackWpfImageSource;
+                    initializedSuccessfully = true;
+                }
             }
-
-            //Create the swap chain and the render target
-            m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
-            m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
-            m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
-
-            //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
-            m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
-
-            //Apply render target size values
-            m_renderTargetWidth = width;
-            m_renderTargetHeight = height;
-
-            //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
-
-            //Apply new width and height values of the viewport
-            m_viewportWidth = width;
-            m_viewportHeight = height;
-
-            if (m_d3dImageSource != null)
-            {
-                //Create and apply the image source object
-                m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
-                this.Source = m_d3dImageSource;
-            }
-            else
-            {
-                // Set a dummy image source
-                this.Source = m_fallbackWpfImageSource;
-            }
+            while (!initializedSuccessfully);
 
             m_lastRecreateWidth = width;
             m_lastRecreateHeight = height;
