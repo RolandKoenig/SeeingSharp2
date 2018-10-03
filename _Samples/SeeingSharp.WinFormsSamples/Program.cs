@@ -15,16 +15,12 @@ namespace SeeingSharp.WinFormsSamples
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             GraphicsCore.Initialize(
-                new DeviceLoadSettings() 
-                {
-                    DebugEnabled = true
-                },
+                new DeviceLoadSettings(),
                 initializer => initializer.SupportWinForms());
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
         }
     }

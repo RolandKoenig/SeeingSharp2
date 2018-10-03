@@ -14,7 +14,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 {
     [SampleDescription(
         "Parent/Child", 5, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName: "PreviewImage.png")]
+        sampleImageFileName: "PreviewImage.png",
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_05_ParentChild")]
     public class ParentChildSample : SampleBase
     {
         /// <summary>

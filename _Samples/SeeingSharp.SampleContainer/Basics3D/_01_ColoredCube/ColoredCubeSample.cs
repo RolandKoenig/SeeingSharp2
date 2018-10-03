@@ -13,7 +13,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
 {
     [SampleDescription(
         "Colored Cube", 1, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName:"PreviewImage.png")]
+        sampleImageFileName:"PreviewImage.png",
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_01_ColoredCube")]
     public class ColoredCubeSample : SampleBase
     {
         /// <summary>

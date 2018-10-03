@@ -19,10 +19,7 @@ namespace SeeingSharp.WpfSamples
         protected override void OnStartup(StartupEventArgs e)
         {
             GraphicsCore.Initialize(
-                new DeviceLoadSettings()
-                {
-                    DebugEnabled = true
-                },
+                new DeviceLoadSettings(),
                 initializer => initializer.SupportWpf());
 
             base.OnStartup(e);

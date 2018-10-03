@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
+    </Reference>
+    <Reference Include="PropertyTools.Wpf, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
@@ -76,7 +82,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PropertyGridControlFactory.cs" />
     <Compile Include="SampleViewModel.cs" />
+    <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="_Base\DelegateCommand.cs" />
     <Compile Include="_Base\ViewModelBase.cs" />
     <Compile Include="_DesignData.cs" />
     <Page Include="MainWindow.xaml">

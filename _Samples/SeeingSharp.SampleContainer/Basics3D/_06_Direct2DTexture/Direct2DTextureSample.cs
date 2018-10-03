@@ -15,7 +15,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 {
     [SampleDescription(
         "Direct2D Texture", 6, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName:"PreviewImage.png")]
+        sampleImageFileName:"PreviewImage.png",
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_06_Direct2DTexture")]
     public class Direct2DTextureSample : SampleBase
     {
         private SolidBrushResource m_solidBrush;

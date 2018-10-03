@@ -41,12 +41,12 @@ namespace SeeingSharp.UwpSamples
         /// <param name="e">Details über Startanforderung und -prozess.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
             // Initialize graphics
             GraphicsCore.Initialize(
-                new DeviceLoadSettings() {DebugEnabled = true},
+                new DeviceLoadSettings(),
                 (initializer) => initializer.SupportUwp());
+
+            Frame rootFrame = Window.Current.Content as Frame;
 
             // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
             // Nur sicherstellen, dass das Fenster aktiv ist.

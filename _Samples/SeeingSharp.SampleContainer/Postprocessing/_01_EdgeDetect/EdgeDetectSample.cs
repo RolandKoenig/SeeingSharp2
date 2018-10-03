@@ -9,10 +9,10 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 
-namespace SeeingSharp.SampleContainer.Basics3D._07_EdgeDetect
+namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 {
     [SampleDescription(
-        "Edge detect", 7, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Edge detect", 1, nameof(SeeingSharp.SampleContainer.Postprocessing),
         sampleImageFileName:"PreviewImage.png")]
     public class EdgeDetectSample : SampleBase
     {

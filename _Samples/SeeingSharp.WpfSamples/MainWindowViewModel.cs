@@ -1,10 +1,13 @@
-﻿using SeeingSharp.SampleContainer;
+﻿using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -13,10 +16,17 @@ namespace SeeingSharp.WpfSamples
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
+        private Visibility m_settingsVisibility;
+        private SettingsViewModel m_settingsVM;
+        private RenderLoop m_renderLoop;
 
-        public MainWindowViewModel(SampleRepository sampleRepo)
+        public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             m_selectedGroup = string.Empty;
+
+            m_settingsVisibility = Visibility.Collapsed;
+            m_settingsVM = null;
+            m_renderLoop = renderLoop;
 
             // Load samples
             m_sampleRepo = sampleRepo;
@@ -26,6 +36,9 @@ namespace SeeingSharp.WpfSamples
                 this.SampleGroups.Add(actSampleGroupName);
             }
             this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+
+            this.Command_ToggleOptionsVisibility = new DelegateCommand(
+                () => this.SetttingsVisibility = this.SetttingsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
         }
 
         private void UpdateSampleCollection()
@@ -79,6 +92,41 @@ namespace SeeingSharp.WpfSamples
                 {
                     m_selectedSample = value;
                     RaisePropertyChanged(nameof(SelectedSample));
+
+                    if(m_selectedSample == null) { this.SettingsVM = null; }
+                    else { this.SettingsVM = new SettingsViewModel(m_renderLoop, m_selectedSample.Sample); }
+                }
+            }
+        }
+
+        public ICommand Command_ToggleOptionsVisibility
+        {
+            get;
+            private set;
+        }
+
+        public Visibility SetttingsVisibility
+        {
+            get => m_settingsVisibility;
+            set
+            {
+                if(m_settingsVisibility != value)
+                {
+                    m_settingsVisibility = value;
+                    RaisePropertyChanged(nameof(SetttingsVisibility));
+                }
+            }
+        }
+
+        public SettingsViewModel SettingsVM
+        {
+            get => m_settingsVM;
+            set
+            {
+                if(m_settingsVM != value)
+                {
+                    m_settingsVM = value;
+                    RaisePropertyChanged(nameof(SettingsVM));
                 }
             }
         }

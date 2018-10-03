@@ -31,7 +31,9 @@ namespace SeeingSharp.WpfSamples
                     sampleRepo.SampleGroups.Add(actGroup);
                 }
 
-                return new MainWindowViewModel(sampleRepo);
+                var result = new MainWindowViewModel(sampleRepo, null);
+                result.SetttingsVisibility = System.Windows.Visibility.Visible;
+                return result;
             }
         }
 

@@ -45,7 +45,7 @@ namespace SeeingSharp.WpfSamples
             {
                 SampleRepository sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
-                this.DataContext = new MainWindowViewModel(sampleRepo);
+                this.DataContext = new MainWindowViewModel(sampleRepo, this.CtrlRenderer.RenderLoop);
             }
         }
 
@@ -55,6 +55,8 @@ namespace SeeingSharp.WpfSamples
 
             var selectedSample = viewModel.SelectedSample;
             if(selectedSample == null) { return; }
+
+            PropertyTools.Wpf.PropertyGrid g;
 
             this.ApplySample(selectedSample.Sample);
         }
@@ -94,6 +96,8 @@ namespace SeeingSharp.WpfSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
+
+                    
                 }
 
                 // Wait for next finished rendering

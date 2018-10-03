@@ -17,7 +17,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
 
         <!-- List of sample groups -->
@@ -68,44 +67,44 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </Grid>
 
-        <StackPanel Orientation="Horizontal"
-                    Grid.Row="2">
-            <StackPanel.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="Image">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="ComboBox">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style TargetType="Rectangle">
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-            </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal"
+                    Background="#BBD3D3D3"
+                    VerticalAlignment="Bottom">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                    <Style TargetType="Image">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                    <Style TargetType="Rectangle">
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                </StackPanel.Resources>
 
-            <Image Source="/Assets/Icons/Output16x16.png" 
+                <Image Source="/Assets/Icons/Output16x16.png" 
                    Width="16"/>
-            <TextBlock Text="Resolution:" />
-            <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize, Mode=OneWay}" />
-            <TextBlock Text="px" />
-            <Rectangle Width="1" 
+                <TextBlock Text="Resolution:" />
+                <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize, Mode=OneWay}" />
+                <TextBlock Text="px" />
+                <Rectangle Width="1" 
                        Fill="Gray"/>
 
-            <Image Source="/Assets/Icons/Adapter16x16.png" 
+                <Image Source="/Assets/Icons/Adapter16x16.png" 
                    Width="16"/>
-            <TextBlock Text="Device:" />
-            <ComboBox ItemsSource="{Binding ElementName=CtrlSwapChain, Path=PossibleDevices, Mode=OneWay}"
+                <TextBlock Text="Device:" />
+                <ComboBox ItemsSource="{Binding ElementName=CtrlSwapChain, Path=PossibleDevices, Mode=OneWay}"
                       SelectedItem="{Binding ElementName=CtrlSwapChain, Path=SelectedDevice, Mode=TwoWay}"
                       Width="250"/>
-        </StackPanel>
+            </StackPanel>
+        </Grid>
     </Grid>
-    
 
 </Page>
