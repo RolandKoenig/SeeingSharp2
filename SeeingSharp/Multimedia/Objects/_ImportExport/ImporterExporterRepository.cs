@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Prevents a default instance of the <see cref="ImporterExporterRepository"/> class from being created.
         /// </summary>
-        internal ImporterExporterRepository(SeeingSharpInitializer initializer)
+        internal ImporterExporterRepository(SeeingSharpLoader initializer)
         {
             m_importers =
                 (from actExtension in initializer.Extensions

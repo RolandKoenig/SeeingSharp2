@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
         /// </summary>
         internal EngineDevice(
-            DeviceLoadSettings loadSettings, SeeingSharpInitializer initializer,
+            DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, 
             DXGI.Adapter1 adapter, bool isSoftwareAdapter)
         {

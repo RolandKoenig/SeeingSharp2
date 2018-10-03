@@ -9,10 +9,10 @@ namespace SeeingSharp
 {
     public static class SeeingSharpUwpExtensionMethods
     {
-        public static SeeingSharpInitializer SupportUwp(this SeeingSharpInitializer initializer)
+        public static SeeingSharpLoader SupportUwp(this SeeingSharpLoader loader)
         {
-            initializer.RegisterExtensions(new SeeingSharpUwpExtensions());
-            return initializer;
+            loader.RegisterExtensions(new SeeingSharpUwpExtensions());
+            return loader;
         }
     }
 }

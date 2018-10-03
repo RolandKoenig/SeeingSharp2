@@ -15,9 +15,9 @@ namespace SeeingSharp.WinFormsSamples
         [STAThread]
         static void Main()
         {
-            GraphicsCore.Initialize(
-                new DeviceLoadSettings(),
-                initializer => initializer.SupportWinForms());
+            GraphicsCore.Loader
+                .SupportWinForms()
+                .Load();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

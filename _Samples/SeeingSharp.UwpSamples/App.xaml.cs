@@ -42,9 +42,9 @@ namespace SeeingSharp.UwpSamples
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Initialize graphics
-            GraphicsCore.Initialize(
-                new DeviceLoadSettings(),
-                (initializer) => initializer.SupportUwp());
+            GraphicsCore.Loader
+                .SupportUwp()
+                .Load();
 
             Frame rootFrame = Window.Current.Content as Frame;
 

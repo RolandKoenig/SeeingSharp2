@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsCore"/> class.
         /// </summary>
-        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpInitializer initializer)
+        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader initializer)
         {
             try
             {
@@ -372,21 +372,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes the GraphicsCore object.
         /// </summary>
-        public static void Initialize(
-            DeviceLoadSettings loadSettings = null,
-            Action<SeeingSharpInitializer> initializationQueue = null)
+        internal static void Initialize(SeeingSharpLoader initializer)
         {
             if (s_current != null) { throw new SeeingSharpException("Graphics is already initialized!"); }
 
-            if(loadSettings == null) { loadSettings = new DeviceLoadSettings(); }
-
-            SeeingSharpInitializer initializer = new SeeingSharpInitializer();
-            if (initializationQueue != null)
-            {
-                initializationQueue(initializer);
-            }
-
-            s_current = new GraphicsCore(loadSettings, initializer);
+            s_current = new GraphicsCore(initializer.LoadSettings, initializer);
         }
 
         /// <summary>
@@ -471,6 +461,15 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 return s_current;
+            }
+        }
+
+        public static SeeingSharpLoader Loader
+        {
+            get
+            {
+                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Loader)} after successfully initialization!"); }
+                return new SeeingSharpLoader();
             }
         }
 

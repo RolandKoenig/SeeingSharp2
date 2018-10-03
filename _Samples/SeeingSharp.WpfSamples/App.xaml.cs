@@ -18,9 +18,9 @@ namespace SeeingSharp.WpfSamples
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            GraphicsCore.Initialize(
-                new DeviceLoadSettings(),
-                initializer => initializer.SupportWpf());
+            GraphicsCore.Loader
+                .SupportWpf()
+                .Load();
 
             base.OnStartup(e);
         }

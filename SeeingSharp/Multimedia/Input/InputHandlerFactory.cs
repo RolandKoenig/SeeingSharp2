@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Initializes a new instance of the <see cref="InputHandlerFactory"/> class.
         /// </summary>
-        internal InputHandlerFactory(SeeingSharpInitializer initializer)
+        internal InputHandlerFactory(SeeingSharpLoader initializer)
         {
             m_inputHandlers =
                 (from actExtension in initializer.Extensions

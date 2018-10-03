@@ -9,10 +9,10 @@ namespace SeeingSharp
 {
     public static class SeeingSharpWinFormsExtensionMethods
     {
-        public static SeeingSharpInitializer SupportWinForms(this SeeingSharpInitializer initializer)
+        public static SeeingSharpLoader SupportWinForms(this SeeingSharpLoader loader)
         {
-            initializer.RegisterExtensions(new SeeingSharpWinFormsExtensions());
-            return initializer;
+            loader.RegisterExtensions(new SeeingSharpWinFormsExtensions());
+            return loader;
         }
     }
 }

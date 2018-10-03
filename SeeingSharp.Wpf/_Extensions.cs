@@ -9,10 +9,10 @@ namespace SeeingSharp
 {
     public static class SeeingSharpWpfExtensionMethods
     {
-        public static SeeingSharpInitializer SupportWpf(this SeeingSharpInitializer initializer)
+        public static SeeingSharpLoader SupportWpf(this SeeingSharpLoader loader)
         {
-            initializer.RegisterExtensions(new SeeingSharpWpfExtensions());
-            return initializer;
+            loader.RegisterExtensions(new SeeingSharpWpfExtensions());
+            return loader;
         }
     }
 }
