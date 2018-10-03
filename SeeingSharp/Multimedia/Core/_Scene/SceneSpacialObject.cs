@@ -93,10 +93,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Enables a shader generated border.
         /// </summary>
-        public void EnableShaderGeneratedBorder()
+        public void EnableShaderGeneratedBorder(float borderThicknes = 1f)
         {
             this.BorderMultiplyer = 50f;
-            this.BorderPart = 0.01f;
+            this.BorderPart = 0.01f * borderThicknes;
         }
 
         /// <summary>

@@ -52,7 +52,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     m_solidBrush);
 
                 d2dRectangle.Inflate(-10, -10);
-                graphics.DrawText(castedSettings.DisplayText, m_textFormat, d2dRectangle, m_textBrush);
+                graphics.DrawText(
+                    castedSettings.DisplayText.Replace("\\n", Environment.NewLine), 
+                    m_textFormat, d2dRectangle, m_textBrush);
             });
 
             // Build 3D scene

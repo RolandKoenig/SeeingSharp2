@@ -17,6 +17,7 @@
     <None Remove="Basics3D\_04_Text3D\PreviewImage.png" />
     <None Remove="Basics3D\_05_ParentChild\PreviewImage.png" />
     <None Remove="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
+    <None Remove="Basics3D\_07_GeneratedBorder\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
   </ItemGroup>
 
@@ -33,6 +34,7 @@
     <EmbeddedResource Include="Basics3D\_04_Text3D\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_05_ParentChild\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_07_GeneratedBorder\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
   </ItemGroup>
 

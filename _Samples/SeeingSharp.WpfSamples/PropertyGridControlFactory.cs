@@ -27,6 +27,8 @@ namespace SeeingSharp.WpfSamples
                 return result;
             }
 
+            property.AutoUpdateText = true;
+
             return base.CreateControl(property, options);
         }
     }
