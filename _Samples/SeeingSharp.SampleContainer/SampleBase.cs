@@ -12,7 +12,7 @@ namespace SeeingSharp.SampleContainer
 {
     public abstract class SampleBase
     {
-        public abstract Task OnStartupAsync(RenderLoop targetRenderLoop);
+        public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
 
         public virtual void NotifyClosed()
         {

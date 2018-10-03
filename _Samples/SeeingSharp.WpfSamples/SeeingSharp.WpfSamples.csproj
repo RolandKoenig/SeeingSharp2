@@ -84,7 +84,6 @@
     </ApplicationDefinition>
     <Compile Include="PropertyGridControlFactory.cs" />
     <Compile Include="SampleViewModel.cs" />
-    <Compile Include="SettingsViewModel.cs" />
     <Compile Include="_Base\DelegateCommand.cs" />
     <Compile Include="_Base\ViewModelBase.cs" />
     <Compile Include="_DesignData.cs" />

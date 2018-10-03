@@ -58,7 +58,7 @@
 
             <Button Background="#00CCFF" Foreground="White"
                     BorderThickness="0"
-                    Command="{Binding Path=Command_ToggleOptionsVisibility}">
+                    Command="{Binding Path=Command_ToggleSampleSettingsVisibility}">
                 <StackPanel Orientation="Vertical" Width="25">
                     <Rectangle Height="1.5" Stroke="White" Margin="2" />
                     <Rectangle Height="1.5" Stroke="White" Margin="2" />
@@ -122,11 +122,11 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <propTools:PropertyGrid SelectedObject="{Binding Path=SettingsVM}" 
+                <propTools:PropertyGrid SelectedObject="{Binding Path=SampleSettings}" 
                                         Width="325" Margin="15" 
                                         BorderThickness="1" BorderBrush="DarkGray"
                                         HorizontalAlignment="Left"
-                                        Visibility="{Binding Path=SetttingsVisibility}" 
+                                        Visibility="{Binding Path=SampleSettingsVisibility}" 
                                         TabVisibility="Collapsed" 
                                         Background="#BBD3D3D3" 
                                         ScrollViewer.VerticalScrollBarVisibility="Auto">

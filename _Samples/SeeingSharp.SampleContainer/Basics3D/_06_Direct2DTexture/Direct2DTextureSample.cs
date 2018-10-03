@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
@@ -16,7 +17,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
     [SampleDescription(
         "Direct2D Texture", 6, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_06_Direct2DTexture")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_06_Direct2DTexture",
+        settingsType: typeof(Direct2DTextureSampleSettings))]
     public class Direct2DTextureSample : SampleBase
     {
         private SolidBrushResource m_solidBrush;
@@ -26,10 +28,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         /// <summary>
         /// Called when the sample has to startup.
         /// </summary>
-        /// <param name="targetRenderLoop">The target render loop.</param>
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop)
+        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+
+            Direct2DTextureSampleSettings castedSettings = settings as Direct2DTextureSampleSettings;
+            if(castedSettings == null) { castedSettings = new Direct2DTextureSampleSettings(); }
 
             // Build dummy scene
             Scene scene = targetRenderLoop.Scene;
@@ -48,7 +52,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     m_solidBrush);
 
                 d2dRectangle.Inflate(-10, -10);
-                graphics.DrawText("Hello Direct2D!", m_textFormat, d2dRectangle, m_textBrush);
+                graphics.DrawText(castedSettings.DisplayText, m_textFormat, d2dRectangle, m_textBrush);
             });
 
             // Build 3D scene
@@ -99,6 +103,19 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
             SeeingSharpUtil.SafeDispose(ref m_solidBrush);
             SeeingSharpUtil.SafeDispose(ref m_textBrush);
             SeeingSharpUtil.SafeDispose(ref m_textFormat);
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        private class Direct2DTextureSampleSettings : SampleSettings
+        {
+            [Category("Direct2D Texture")]
+            public string DisplayText
+            {
+                get;
+                set;
+            } = "Hello Direct2D!";
         }
     }
 }

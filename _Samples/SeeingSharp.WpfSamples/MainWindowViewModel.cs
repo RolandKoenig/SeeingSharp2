@@ -16,16 +16,16 @@ namespace SeeingSharp.WpfSamples
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
-        private Visibility m_settingsVisibility;
-        private SettingsViewModel m_settingsVM;
+        private Visibility m_sampleSettingsVisibility;
+        private SampleSettings m_sampleSettings;
         private RenderLoop m_renderLoop;
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             m_selectedGroup = string.Empty;
 
-            m_settingsVisibility = Visibility.Collapsed;
-            m_settingsVM = null;
+            m_sampleSettingsVisibility = Visibility.Collapsed;
+            m_sampleSettings = null;
             m_renderLoop = renderLoop;
 
             // Load samples
@@ -37,8 +37,8 @@ namespace SeeingSharp.WpfSamples
             }
             this.SelectedGroup = this.SampleGroups.FirstOrDefault();
 
-            this.Command_ToggleOptionsVisibility = new DelegateCommand(
-                () => this.SetttingsVisibility = this.SetttingsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
+            this.Command_ToggleSampleSettingsVisibility = new DelegateCommand(
+                () => this.SampleSettingsVisibility = this.SampleSettingsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
         }
 
         private void UpdateSampleCollection()
@@ -91,44 +91,42 @@ namespace SeeingSharp.WpfSamples
                 if(m_selectedSample != value)
                 {
                     m_selectedSample = value;
-                    RaisePropertyChanged(nameof(SelectedSample));
 
-                    if(m_selectedSample == null) { this.SettingsVM = null; }
-                    else { this.SettingsVM = new SettingsViewModel(m_renderLoop, m_selectedSample.Sample); }
+                    if(m_selectedSample == null) { m_sampleSettings = null; }
+                    else
+                    {
+                        m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
+                        m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
+                    }
+
+                    RaisePropertyChanged(nameof(SelectedSample));
+                    RaisePropertyChanged(nameof(SampleSettings));
                 }
             }
         }
 
-        public ICommand Command_ToggleOptionsVisibility
+        public ICommand Command_ToggleSampleSettingsVisibility
         {
             get;
             private set;
         }
 
-        public Visibility SetttingsVisibility
+        public Visibility SampleSettingsVisibility
         {
-            get => m_settingsVisibility;
+            get => m_sampleSettingsVisibility;
             set
             {
-                if(m_settingsVisibility != value)
+                if(m_sampleSettingsVisibility != value)
                 {
-                    m_settingsVisibility = value;
-                    RaisePropertyChanged(nameof(SetttingsVisibility));
+                    m_sampleSettingsVisibility = value;
+                    RaisePropertyChanged(nameof(SampleSettingsVisibility));
                 }
             }
         }
 
-        public SettingsViewModel SettingsVM
+        public SampleSettings SampleSettings
         {
-            get => m_settingsVM;
-            set
-            {
-                if(m_settingsVM != value)
-                {
-                    m_settingsVM = value;
-                    RaisePropertyChanged(nameof(SettingsVM));
-                }
-            }
+            get => m_sampleSettings;
         }
     }
 }

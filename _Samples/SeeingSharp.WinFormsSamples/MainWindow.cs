@@ -42,12 +42,15 @@ namespace SeeingSharp.WinFormsSamples
             // Add all sample pages
             SampleRepository sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
-            SampleMetadata firstSample = null;
+            TabPage firstTabPage = null;
+            ListView firstListView = null;
+            ListViewItem firstListViewItem = null;
             Dictionary<string, ListView> generatedTabs = new Dictionary<string, ListView>();
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
                 TabPage actTabPage = new TabPage(actSampleGroup.GroupName);
                 m_tabControlSamples.TabPages.Add(actTabPage);
+                if(firstTabPage == null) { firstTabPage = actTabPage; }
 
                 ListView actListView = new ListView();
                 actListView.Dock = DockStyle.Fill;
@@ -57,16 +60,16 @@ namespace SeeingSharp.WinFormsSamples
                 actListView.LargeImageList = m_images;
                 actListView.SmallImageList = m_images;
                 actTabPage.Controls.Add(actListView);
+                if(firstListView == null) { firstListView = actListView; }
 
                 foreach (var actSample in actSampleGroup.Samples)
                 {
-                    if (firstSample == null) { firstSample = actSample;}
-
                     // Generate the new list entry for the current sample
                     ListViewItem newListItem = new ListViewItem();
                     newListItem.Text = actSample.Name;
                     newListItem.Tag = actSample;
                     actListView.Items.Add(newListItem);
+                    if(firstListViewItem == null) { firstListViewItem = newListItem; }
 
                     // Load the item's image
                     var sampleImageLink = actSample.TryGetSampleImageLink();
@@ -81,10 +84,8 @@ namespace SeeingSharp.WinFormsSamples
                 }
             }
 
-            if (firstSample != null)
-            {
-                ApplySample(firstSample);
-            }
+            if(firstTabPage != null) { m_tabControlSamples.SelectedTab = firstTabPage; }
+            if(firstListViewItem != null) { firstListView.SelectedIndices.Add(0); }
 
             UpdateWindowState();
         }
@@ -114,8 +115,7 @@ namespace SeeingSharp.WinFormsSamples
         /// <summary>
         /// Applies the given sample.
         /// </summary>
-        /// <param name="sampleInfo">The sample to be applied.</param>
-        private async void ApplySample(SampleMetadata sampleInfo)
+        private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
             if (m_isChangingSample) { return; }
 
@@ -145,7 +145,7 @@ namespace SeeingSharp.WinFormsSamples
                 if (sampleInfo != null)
                 {
                     SampleBase sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop);
+                    await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
@@ -208,8 +208,11 @@ namespace SeeingSharp.WinFormsSamples
                 actOtherListView.SelectedItems.Clear();
             }
 
+            var sampleSettings = sampleInfo.CreateSampleSettingsObject();
+            sampleSettings.SetEnvironment(m_ctrlRenderPanel.RenderLoop, sampleInfo);
+
             // Now apply the sample
-            this.ApplySample(sampleInfo);
+            this.ApplySample(sampleInfo, sampleSettings);
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)

@@ -56,16 +56,13 @@ namespace SeeingSharp.WpfSamples
             var selectedSample = viewModel.SelectedSample;
             if(selectedSample == null) { return; }
 
-            PropertyTools.Wpf.PropertyGrid g;
-
-            this.ApplySample(selectedSample.Sample);
+            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
         /// <summary>
         /// Applies the given sample.
         /// </summary>
-        /// <param name="sampleInfo">The sample to be applied.</param>
-        private async void ApplySample(SampleMetadata sampleInfo)
+        private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
             if (m_isChangingSample) { return; }
 
@@ -92,12 +89,10 @@ namespace SeeingSharp.WpfSamples
                 if (sampleInfo != null)
                 {
                     SampleBase sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(this.CtrlRenderer.RenderLoop);
+                    await sampleObject.OnStartupAsync(this.CtrlRenderer.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
-
-                    
                 }
 
                 // Wait for next finished rendering

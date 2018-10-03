@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using PropertyTools.DataAnnotations;
 using PropertyTools.Wpf;
 
 namespace SeeingSharp.WpfSamples
@@ -16,6 +17,8 @@ namespace SeeingSharp.WpfSamples
         {
             if(property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
             {
+                property.HeaderPlacement = HeaderPlacement.Hidden;
+
                 var result = new Button()
                 {
                     Content = property.DisplayName,

@@ -39,6 +39,16 @@ namespace SeeingSharp.SampleContainer
             return result;
         }
 
+        public SampleSettings CreateSampleSettingsObject()
+        {
+            var settingsType = m_description.SettingsType;
+            if(settingsType == null) { return new SampleSettings(); }
+
+            SampleSettings result = Activator.CreateInstance(settingsType) as SampleSettings;
+            if (result == null) { throw new ApplicationException($"SampleSettings type {m_sampleType.FullName} is not derived from {nameof(SampleSettings)}!"); }
+            return result;
+        }
+
         public AssemblyResourceLink TryGetSampleImageLink()
         {
             if (m_description == null) { return null; }

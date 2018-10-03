@@ -14,6 +14,7 @@ namespace SeeingSharp.UwpSamples
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
+        private SampleSettings m_sampleSettings;
 
         public MainWindowViewModel()
         {
@@ -102,6 +103,11 @@ namespace SeeingSharp.UwpSamples
                     RaisePropertyChanged(nameof(SelectedSample));
                 }
             }
+        }
+
+        public SampleSettings SampleSettings
+        {
+            get => m_sampleSettings;
         }
     }
 }

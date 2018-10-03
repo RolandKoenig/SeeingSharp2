@@ -13,14 +13,14 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 {
     [SampleDescription(
         "Edge detect", 1, nameof(SeeingSharp.SampleContainer.Postprocessing),
-        sampleImageFileName:"PreviewImage.png")]
+        sampleImageFileName:"PreviewImage.png",
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
     public class EdgeDetectSample : SampleBase
     {
         /// <summary>
         /// Called when the sample has to startup.
         /// </summary>
-        /// <param name="targetRenderLoop">The target render loop.</param>
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop)
+        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 

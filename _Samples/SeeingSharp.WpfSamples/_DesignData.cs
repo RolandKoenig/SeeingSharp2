@@ -32,14 +32,14 @@ namespace SeeingSharp.WpfSamples
                 }
 
                 var result = new MainWindowViewModel(sampleRepo, null);
-                result.SetttingsVisibility = System.Windows.Visibility.Visible;
+                result.SampleSettingsVisibility = System.Windows.Visibility.Visible;
                 return result;
             }
         }
 
         private class DummySampleClass : SampleBase
         {
-            public override Task OnStartupAsync(RenderLoop targetRenderLoop)
+            public override Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings sampleSettings)
             {
                 return Task.FromResult<object>(null);
             }

@@ -20,8 +20,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
         /// <summary>
         /// Called when the sample has to startup.
         /// </summary>
-        /// <param name="targetRenderLoop">The target render loop.</param>
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop)
+        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 

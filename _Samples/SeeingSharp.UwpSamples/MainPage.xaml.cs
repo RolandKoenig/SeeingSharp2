@@ -45,8 +45,7 @@ namespace SeeingSharp.UwpSamples
         /// <summary>
         /// Applies the given sample.
         /// </summary>
-        /// <param name="sampleInfo">The sample to be applied.</param>
-        private async void ApplySample(SampleMetadata sampleInfo)
+        private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
             if (DesignMode.DesignModeEnabled) { return; }
             if (m_isChangingSample) { return; }
@@ -74,7 +73,7 @@ namespace SeeingSharp.UwpSamples
                 if (sampleInfo != null)
                 {
                     SampleBase sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop);
+                    await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
@@ -110,7 +109,7 @@ namespace SeeingSharp.UwpSamples
             var selectedSample = viewModel.SelectedSample;
             if (selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.Sample);
+            this.ApplySample(selectedSample.Sample, viewModel.SampleSettings);
         }
     }
 }
