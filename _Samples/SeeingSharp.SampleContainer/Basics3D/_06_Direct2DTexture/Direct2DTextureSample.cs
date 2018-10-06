@@ -69,13 +69,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
-                // Create pallet geometry resource
+                // Create cube geometry resource
                 var pType = new CubeType();
                 pType.Material = resD2DMaterial;
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(pType));
 
-                // Create pallet object
+                // Create cube object
                 GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.YPos = 0.5f;

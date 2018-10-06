@@ -34,12 +34,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create pallet geometry resource
+                // Create cube geometry resource
                 CubeType cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 
-                // Create pallet object
+                // Create cube object
                 GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);

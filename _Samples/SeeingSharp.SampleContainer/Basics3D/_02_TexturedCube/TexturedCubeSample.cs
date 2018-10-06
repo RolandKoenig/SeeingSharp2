@@ -42,13 +42,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
                         "SimpleTexture.png"));
                 var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 
-                // Create pallet geometry resource
+                // Create cube geometry resource
                 CubeType cubeType = new CubeType();
                 cubeType.Material = resMaterial;
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 
-                // Create pallet object
+                // Create cube object
                 GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);

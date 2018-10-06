@@ -35,7 +35,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create pallet geometry resource
+                // Create cube geometry resource
                 CubeType cubeType = new CubeType();
                 var resCubeGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
