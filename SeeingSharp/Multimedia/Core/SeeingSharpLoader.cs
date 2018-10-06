@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
@@ -24,7 +25,12 @@ namespace SeeingSharp.Multimedia.Core
 
         public void Load()
         {
-            GraphicsCore.Initialize(this);
+            GraphicsCore.Load(this);
+        }
+
+        public Task LoadAsync()
+        {
+            return Task.Factory.StartNew(() => GraphicsCore.Load(this));
         }
 
         public SeeingSharpLoader Configure(DeviceLoadSettings loadSettings)

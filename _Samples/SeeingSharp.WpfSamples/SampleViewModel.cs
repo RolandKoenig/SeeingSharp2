@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace SeeingSharp.WpfSamples
 {
-    public class SampleViewModel : ViewModelBase
+    public class SampleViewModel : PropertyChangedBase
     {
         private SampleMetadata m_sample;
         private BitmapSource m_bitmapSource;

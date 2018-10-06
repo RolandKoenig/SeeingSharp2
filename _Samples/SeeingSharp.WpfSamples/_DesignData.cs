@@ -32,7 +32,6 @@ namespace SeeingSharp.WpfSamples
                 }
 
                 var result = new MainWindowViewModel(sampleRepo, null);
-                result.SampleSettingsVisibility = System.Windows.Visibility.Visible;
                 return result;
             }
         }

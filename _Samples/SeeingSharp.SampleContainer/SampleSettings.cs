@@ -13,23 +13,22 @@ using System.Windows.Input;
 
 namespace SeeingSharp.SampleContainer
 {
-    public class SampleSettings : INotifyPropertyChanged
+    public class SampleSettings : PropertyChangedBase
     {
         private RenderLoop m_renderLoop;
         private SampleMetadata m_sampleMetadata;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public SampleSettings()
         {
-            this.Command_ShowSource = new DelegateCommand(
-                () => Process.Start(m_sampleMetadata.SourceCodeUrl),
-                () => !string.IsNullOrEmpty(m_sampleMetadata?.SourceCodeUrl));
+
         }
 
-        protected void RaisePropertyChanged([CallerMemberName] string propName = "")
+        public virtual IEnumerable<SampleCommand> GetCommands()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            yield return new SampleCommand(
+                "Show Source",
+                () => Process.Start(m_sampleMetadata.SourceCodeUrl),
+                () => !string.IsNullOrEmpty(m_sampleMetadata?.SourceCodeUrl));
         }
 
         public void SetEnvironment(RenderLoop renderLoop, SampleMetadata sampleMetadata)
@@ -69,12 +68,18 @@ namespace SeeingSharp.SampleContainer
             }
         }
 
-        [DisplayName("Show sourcecode")]
         [Category("Basics")]
-        public ICommand Command_ShowSource
+        public AntialiasingQualityLevel AntialiasingQuality
         {
-            get;
-            private set;
+            get => m_renderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
+            set
+            {
+                if(value != m_renderLoop?.ViewConfiguration.AntialiasingQuality)
+                {
+                    m_renderLoop.ViewConfiguration.AntialiasingQuality = value;
+                    RaisePropertyChanged(nameof(AntialiasingQuality));
+                }
+            }
         }
     }
 }

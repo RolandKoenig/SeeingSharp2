@@ -1065,7 +1065,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_initialized) { return; }
 
-            if (!GraphicsCore.IsInitialized)
+            if (!GraphicsCore.IsLoaded)
             {
                 return;
             }

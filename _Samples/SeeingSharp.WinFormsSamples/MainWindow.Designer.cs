@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.m_ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
             this.m_refreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.m_barStatus = new System.Windows.Forms.StatusStrip();
             this.m_lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
@@ -52,18 +52,23 @@
             this.m_mnuChangeDevice = new System.Windows.Forms.ToolStripDropDownButton();
             this.m_tabControlSamples = new System.Windows.Forms.TabControl();
             this.m_images = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.m_propertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.m_splitter = new System.Windows.Forms.SplitContainer();
             this.m_barStatus.SuspendLayout();
             this.m_barTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).BeginInit();
+            this.m_splitter.Panel1.SuspendLayout();
+            this.m_splitter.Panel2.SuspendLayout();
+            this.m_splitter.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_ctrlRenderPanel
             // 
             this.m_ctrlRenderPanel.DiscardRendering = true;
             this.m_ctrlRenderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_ctrlRenderPanel.Location = new System.Drawing.Point(0, 145);
+            this.m_ctrlRenderPanel.Location = new System.Drawing.Point(0, 0);
             this.m_ctrlRenderPanel.Name = "m_ctrlRenderPanel";
-            this.m_ctrlRenderPanel.Size = new System.Drawing.Size(843, 431);
+            this.m_ctrlRenderPanel.Size = new System.Drawing.Size(671, 431);
             this.m_ctrlRenderPanel.TabIndex = 0;
             this.m_ctrlRenderPanel.ViewConfiguration.ViewNeedsRefresh = true;
             // 
@@ -99,6 +104,12 @@
             this.m_lblResolution.Name = "m_lblResolution";
             this.m_lblResolution.Size = new System.Drawing.Size(92, 19);
             this.m_lblResolution.Text = "<widthxheight>";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(19, 19);
+            this.toolStripStatusLabel1.Text = "px";
             // 
             // m_lblObjectCountDesc
             // 
@@ -239,18 +250,42 @@
             this.m_images.ImageSize = new System.Drawing.Size(64, 64);
             this.m_images.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // toolStripStatusLabel1
+            // m_propertyGrid
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(19, 19);
-            this.toolStripStatusLabel1.Text = "px";
+            this.m_propertyGrid.CanShowVisualStyleGlyphs = false;
+            this.m_propertyGrid.CommandsVisibleIfAvailable = false;
+            this.m_propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_propertyGrid.HelpVisible = false;
+            this.m_propertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.m_propertyGrid.Name = "m_propertyGrid";
+            this.m_propertyGrid.Size = new System.Drawing.Size(168, 431);
+            this.m_propertyGrid.TabIndex = 5;
+            this.m_propertyGrid.ToolbarVisible = false;
+            // 
+            // m_splitter
+            // 
+            this.m_splitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.m_splitter.Location = new System.Drawing.Point(0, 145);
+            this.m_splitter.Name = "m_splitter";
+            // 
+            // m_splitter.Panel1
+            // 
+            this.m_splitter.Panel1.Controls.Add(this.m_propertyGrid);
+            // 
+            // m_splitter.Panel2
+            // 
+            this.m_splitter.Panel2.Controls.Add(this.m_ctrlRenderPanel);
+            this.m_splitter.Size = new System.Drawing.Size(843, 431);
+            this.m_splitter.SplitterDistance = 168;
+            this.m_splitter.TabIndex = 6;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 600);
-            this.Controls.Add(this.m_ctrlRenderPanel);
+            this.Controls.Add(this.m_splitter);
             this.Controls.Add(this.m_tabControlSamples);
             this.Controls.Add(this.m_barTools);
             this.Controls.Add(this.m_barStatus);
@@ -260,6 +295,10 @@
             this.m_barStatus.PerformLayout();
             this.m_barTools.ResumeLayout(false);
             this.m_barTools.PerformLayout();
+            this.m_splitter.Panel1.ResumeLayout(false);
+            this.m_splitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).EndInit();
+            this.m_splitter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,7 +308,6 @@
 
         private Multimedia.Views.SeeingSharpRendererControl m_ctrlRenderPanel;
         private System.Windows.Forms.Timer m_refreshTimer;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.StatusStrip m_barStatus;
         private System.Windows.Forms.ToolStripStatusLabel m_lblResolutionDesc;
         private System.Windows.Forms.ToolStripStatusLabel m_lblResolution;
@@ -291,6 +329,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem to1024x1024ToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.PropertyGrid m_propertyGrid;
+        private System.Windows.Forms.SplitContainer m_splitter;
     }
 }
 

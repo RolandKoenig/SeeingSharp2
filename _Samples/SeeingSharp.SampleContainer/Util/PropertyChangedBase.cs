@@ -6,13 +6,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.WpfSamples
+namespace SeeingSharp.SampleContainer.Util
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class PropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ViewModelBase()
+        public PropertyChangedBase()
         {
 
         }

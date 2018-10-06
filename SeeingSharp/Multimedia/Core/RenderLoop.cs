@@ -161,7 +161,7 @@ namespace SeeingSharp.Multimedia.Core
             // Load DebugDrawingLayer if debug mode is enabled
             if (!isDesignMode)
             {
-                if (GraphicsCore.IsInitialized &&
+                if (GraphicsCore.IsLoaded &&
                     GraphicsCore.Current.IsDebugEnabled)
                 {
                     m_debugDrawingLayer = new DebugDrawingLayer();
@@ -190,7 +190,7 @@ namespace SeeingSharp.Multimedia.Core
             this.Camera = new PerspectiveCamera3D();
             this.SetScene(new Scene());
 
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
             if (isDesignMode) { return; }
 
             // Apply default rendering device for this RenderLoop
@@ -1124,7 +1124,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void DeregisterRenderLoop()
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             // Deregister this Renderloop object
             if (IsRegisteredOnMainLoop)
@@ -1144,7 +1144,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void RegisterRenderLoop()
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             // Deregister this Renderloop object
             if (!IsRegisteredOnMainLoop)
@@ -1164,7 +1164,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             // Deregister this Renderloop object
             GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
@@ -1413,7 +1413,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (!GraphicsCore.IsInitialized) { return false; }
+                if (!GraphicsCore.IsLoaded) { return false; }
                 if (GraphicsCore.Current.DeviceCount <= 0) { return false; }
                 return IsRegisteredOnMainLoop;
             }

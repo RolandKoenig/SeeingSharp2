@@ -9,84 +9,25 @@
         mc:Ignorable="d"
         Title="Seeing# 2 - Wpf samples" Width="800" Height="450" 
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
-    <Window.Resources>
-        <Style TargetType="{x:Type propTools:PropertyGrid}">
-            <Style.Resources>
-                <Style TargetType="{x:Type GroupBox}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type GroupBox}">
-                                <StackPanel Orientation="Vertical">
-                                    <Label Content="{TemplateBinding Header}"
-                                           FontSize="12" FontWeight="Bold" Foreground="Black" />
-                                    <Rectangle Height="1" Fill="Black" Margin="0,0,0,8" />
-                                    <ContentPresenter />
-                                </StackPanel>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type propTools:TextBoxEx}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type propTools:RadioButtonList}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-            </Style.Resources>
-        </Style>
-    </Window.Resources>
-
     <DockPanel LastChildFill="True">
 
         <!-- List of sample groups -->
-        <Grid DockPanel.Dock="Top"
-              Background="#00CCFF" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button Background="#00CCFF" Foreground="White"
-                    BorderThickness="0"
-                    Command="{Binding Path=Command_ToggleSampleSettingsVisibility}">
-                <StackPanel Orientation="Vertical" Width="25">
-                    <Rectangle Height="1.5" Stroke="White" Margin="2" />
-                    <Rectangle Height="1.5" Stroke="White" Margin="2" />
-                    <Rectangle Height="1.5" Stroke="White" Margin="2" />
-                </StackPanel>
-            </Button>
-
-            <Rectangle Grid.Column="1" Width="1" 
-                       HorizontalAlignment="Center" Margin="2"
-                       Fill="White"/>
-
-            <ListBox Grid.Column="2"
+        <ListBox DockPanel.Dock="Top"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
-                <ListBox.Resources>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Margin" Value="5,2,5,2" />
-                    </Style>
-                </ListBox.Resources>
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="5,2,5,2" />
+                </Style>
+            </ListBox.Resources>
 
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-        </Grid>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
 
         <Grid>
             <!-- The 3D renderer control-->
@@ -122,11 +63,28 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
+                <ItemsControl ItemsSource="{Binding Path=SampleCommands}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Margin="5,5,15,5"
+                                    MinWidth="150"
+                                    Command="{Binding}">
+                                <TextBlock Text="{Binding Path=CommandText}"
+                                           Margin="2" />
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
                 <propTools:PropertyGrid SelectedObject="{Binding Path=SampleSettings}" 
-                                        Width="325" Margin="15" 
+                                        Width="325" Margin="5,0,15,15" 
                                         BorderThickness="1" BorderBrush="DarkGray"
                                         HorizontalAlignment="Left"
-                                        Visibility="{Binding Path=SampleSettingsVisibility}" 
                                         TabVisibility="Collapsed" 
                                         Background="#BBD3D3D3" 
                                         ScrollViewer.VerticalScrollBarVisibility="Auto">

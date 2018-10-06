@@ -84,8 +84,6 @@
     </ApplicationDefinition>
     <Compile Include="PropertyGridControlFactory.cs" />
     <Compile Include="SampleViewModel.cs" />
-    <Compile Include="_Base\DelegateCommand.cs" />
-    <Compile Include="_Base\ViewModelBase.cs" />
     <Compile Include="_DesignData.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -147,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Icons\Output16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="_Base\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

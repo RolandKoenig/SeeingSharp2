@@ -1,5 +1,6 @@
 ﻿using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,12 +12,11 @@ using System.Windows.Input;
 
 namespace SeeingSharp.WpfSamples
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : PropertyChangedBase
     {
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
-        private Visibility m_sampleSettingsVisibility;
         private SampleSettings m_sampleSettings;
         private RenderLoop m_renderLoop;
 
@@ -24,7 +24,6 @@ namespace SeeingSharp.WpfSamples
         {
             m_selectedGroup = string.Empty;
 
-            m_sampleSettingsVisibility = Visibility.Collapsed;
             m_sampleSettings = null;
             m_renderLoop = renderLoop;
 
@@ -36,9 +35,6 @@ namespace SeeingSharp.WpfSamples
                 this.SampleGroups.Add(actSampleGroupName);
             }
             this.SelectedGroup = this.SampleGroups.FirstOrDefault();
-
-            this.Command_ToggleSampleSettingsVisibility = new DelegateCommand(
-                () => this.SampleSettingsVisibility = this.SampleSettingsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
         }
 
         private void UpdateSampleCollection()
@@ -101,28 +97,24 @@ namespace SeeingSharp.WpfSamples
 
                     RaisePropertyChanged(nameof(SelectedSample));
                     RaisePropertyChanged(nameof(SampleSettings));
+
+                    this.SampleCommands.Clear();
+                    if (m_sampleSettings != null)
+                    {
+                        foreach (var actSampleCommand in m_sampleSettings.GetCommands())
+                        {
+                            this.SampleCommands.Add(actSampleCommand);
+                        }
+                    }
                 }
             }
         }
 
-        public ICommand Command_ToggleSampleSettingsVisibility
+        public ObservableCollection<SampleCommand> SampleCommands
         {
             get;
             private set;
-        }
-
-        public Visibility SampleSettingsVisibility
-        {
-            get => m_sampleSettingsVisibility;
-            set
-            {
-                if(m_sampleSettingsVisibility != value)
-                {
-                    m_sampleSettingsVisibility = value;
-                    RaisePropertyChanged(nameof(SampleSettingsVisibility));
-                }
-            }
-        }
+        } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings
         {

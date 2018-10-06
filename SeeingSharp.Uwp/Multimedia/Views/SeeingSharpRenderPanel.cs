@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private static async void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) { return; }
 
             SeeingSharpRenderPanel renderPanel = sender as SeeingSharpRenderPanel;
@@ -168,7 +168,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (!GraphicsCore.IsInitialized) { return new EngineDevice[0]; }
+                if (!GraphicsCore.IsLoaded) { return new EngineDevice[0]; }
                 return GraphicsCore.Current.Devices;
             }
         }

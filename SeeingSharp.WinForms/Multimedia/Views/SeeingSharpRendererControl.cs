@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Views
             };
 
             // Perform default initialization logic (if not called before)
-            if (GraphicsCore.IsInitialized)
+            if (GraphicsCore.IsLoaded)
             {
                 m_renderLoop.SetScene(new Scene());
                 m_renderLoop.Camera = new PerspectiveCamera3D();
@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Views
                 e.Graphics.FillRectangle(m_backBrush, e.ClipRectangle);
 
                 // Paint a simple grid on the background to have something for the Designer
-                if (!GraphicsCore.IsInitialized)
+                if (!GraphicsCore.IsLoaded)
                 {
                     GDI.SizeF targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
                     GDI.RectangleF targetRect = new GDI.RectangleF(
@@ -223,7 +223,7 @@ namespace SeeingSharp.Multimedia.Views
         private void StartRendering()
         {
             if (this.DesignMode) { return; }
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             if (!m_renderLoop.IsRegisteredOnMainLoop)
             {
@@ -239,7 +239,7 @@ namespace SeeingSharp.Multimedia.Views
         private void StopRendering()
         {
             if (this.DesignMode) { return; }
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             if (m_renderLoop.IsRegisteredOnMainLoop)
             {
@@ -286,7 +286,7 @@ namespace SeeingSharp.Multimedia.Views
             base.OnSizeChanged(e);
 
             if (this.DesignMode) { return; }
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             if ((this.Width > 0) && (this.Height > 0))
             {

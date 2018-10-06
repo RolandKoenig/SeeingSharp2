@@ -93,6 +93,8 @@ namespace SeeingSharp.WpfSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
+
+                    
                 }
 
                 // Wait for next finished rendering

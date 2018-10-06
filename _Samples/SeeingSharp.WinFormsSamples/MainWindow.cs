@@ -17,12 +17,14 @@ namespace SeeingSharp.WinFormsSamples
         private SampleBase m_actSample;
         private SampleMetadata m_actSampleInfo;
         private List<ListView> m_generatedListViews;
+        private List<ToolStripItem> m_sampleCommandToolbarItems;
 
         public MainWindow()
         {
             InitializeComponent();
 
             m_generatedListViews = new List<ListView>();
+            m_sampleCommandToolbarItems = new List<ToolStripItem>();
 
             UpdateWindowState();
         }
@@ -149,6 +151,14 @@ namespace SeeingSharp.WinFormsSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
+
+                    m_propertyGrid.SelectedObject = sampleSettings;
+                    UpdateSampleCommands(sampleSettings);
+                }
+                else
+                {
+                    m_propertyGrid.SelectedObject = null;
+                    UpdateSampleCommands(null);
                 }
                 if (this.IsDisposed || (!this.IsHandleCreated)) { return; }
 
@@ -173,6 +183,38 @@ namespace SeeingSharp.WinFormsSamples
             this.UpdateWindowState();
         }
 
+        private void UpdateSampleCommands(SampleSettings settings)
+        {
+            foreach(var actLastItem in m_sampleCommandToolbarItems)
+            {
+                m_barTools.Items.Remove(actLastItem);
+                actLastItem.Dispose();
+            }
+            m_sampleCommandToolbarItems.Clear();
+
+            if(settings == null) { return; }
+            bool isFirst = true;
+            foreach(var actCommand in settings.GetCommands())
+            {
+                var actCommandInner = actCommand;
+                
+                if(isFirst)
+                {
+                    var separator = new ToolStripSeparator();
+                    m_barTools.Items.Add(separator);
+                    m_sampleCommandToolbarItems.Add(separator);
+                    isFirst = false;
+                }
+
+                var actNewToolbarItem = m_barTools.Items.Add(actCommandInner.CommandText);
+                actNewToolbarItem.Tag = actCommand;
+                actNewToolbarItem.Click += (sender, eArgs) =>
+                {
+                    if (actCommandInner.CanExecute(null)) { actCommandInner.Execute(null); }
+                };
+                m_sampleCommandToolbarItems.Add(actNewToolbarItem);
+            }
+        }
 
         private void UpdateWindowState()
         {

@@ -453,7 +453,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
             if (this.IsInDesignMode()) { return; }
 
             // Update render size
@@ -481,7 +481,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnRenderSizeChanged(sizeInfo);
 
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             // Break here if we are in design mode
             if (this.IsInDesignMode()) { return; }
@@ -532,7 +532,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnPropertyChanged(e);
 
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
             if (this.IsInDesignMode()) { return; }
 
             if (e.Property == SeeingSharpRendererElement.SceneProperty)
@@ -560,7 +560,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
             if (this.IsInDesignMode()) { return; }
 
             m_renderLoop.DeregisterRenderLoop();
@@ -674,7 +674,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (!GraphicsCore.IsInitialized) { return new EngineDevice[0]; }
+                if (!GraphicsCore.IsLoaded) { return new EngineDevice[0]; }
                 return GraphicsCore.Current.Devices;
             }
         }

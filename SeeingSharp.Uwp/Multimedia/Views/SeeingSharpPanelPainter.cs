@@ -261,7 +261,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             try
             {
-                if (!GraphicsCore.IsInitialized) { return; }
+                if (!GraphicsCore.IsLoaded) { return; }
 
                 // Ignore event, if nothing has changed..
                 Size2 actSize = GetTargetRenderPixelSize();
@@ -286,7 +286,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
         private void OnTargetPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             //Resize render target only on greater size changes
             Size2 viewSize = GetTargetRenderPixelSize();

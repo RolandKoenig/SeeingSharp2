@@ -138,7 +138,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             base.OnTick(eArgs);
 
-            if (!GraphicsCore.IsInitialized) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
 
             // Query for all input handlers on first tick
             if(m_globalInputHandlers == null)

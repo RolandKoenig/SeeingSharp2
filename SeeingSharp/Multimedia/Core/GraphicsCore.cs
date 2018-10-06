@@ -120,19 +120,13 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        /// <summary>
-        /// Initializes the <see cref="GraphicsCore"/> class.
-        /// </summary>
         static GraphicsCore()
         {
             s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
             s_internalExListenersLock = new object();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsCore"/> class.
-        /// </summary>
-        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader initializer)
+        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
         {
             try
             {
@@ -149,18 +143,18 @@ namespace SeeingSharp.Multimedia.Core
                 m_configuration.DebugEnabled = loadSettings.DebugEnabled;
 
                 // Create container object for all input handlers
-                m_inputHandlerFactory = new InputHandlerFactory(initializer);
-                m_importExporters = new ImporterExporterRepository(initializer);
+                m_inputHandlerFactory = new InputHandlerFactory(loader);
+                m_importExporters = new ImporterExporterRepository(loader);
 
                 // Create the key generator for resource keys
                 m_resourceKeyGenerator = new UniqueGenericKeyGenerator();
 
-                // Try to initialize global api factories (mostly for 2D rendering / operations)
+                // Try to load global api factories (mostly for 2D rendering / operations)
                 try
                 {
                     if(s_throwDeviceInitError)
                     {
-                        throw new SeeingSharpException("Simulated device initialization exception");
+                        throw new SeeingSharpException("Simulated device load exception");
                     }
 
                     m_factoryHandlerWIC = new FactoryHandlerWIC(loadSettings);
@@ -189,7 +183,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     EngineDevice actEngineDevice = new EngineDevice(
                         loadSettings,
-                        initializer,
+                        loader,
                         m_engineFactory,
                         m_configuration,
                         actAdapterInfo.Adapter,
@@ -354,7 +348,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Resume()
         {
-            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
+            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
             m_mainLoop.Resume();
         }
@@ -364,19 +358,21 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task SuspendAsync()
         {
-            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not initialized!"); }
+            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
             return m_mainLoop.SuspendAsync();
         }
 
         /// <summary>
-        /// Initializes the GraphicsCore object.
+        /// Loads the GraphicsCore object.
         /// </summary>
-        internal static void Initialize(SeeingSharpLoader initializer)
+        internal static void Load(SeeingSharpLoader loader)
         {
-            if (s_current != null) { throw new SeeingSharpException("Graphics is already initialized!"); }
+            if (s_current != null) { throw new SeeingSharpException("Graphics is already loaded!"); }
 
-            s_current = new GraphicsCore(initializer.LoadSettings, initializer);
+            var newCore = new GraphicsCore(loader.LoadSettings, loader);
+            if (s_current != null) { throw new SeeingSharpException("Parallel loading of GraphicsCore detected!"); }
+            s_current = newCore;
         }
 
         /// <summary>
@@ -457,7 +453,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if (s_current == null)
                 {
-                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Current)} before Initialize was called or a rendering control created!");
+                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Current)} before Load was called or a rendering control created!");
                 }
 
                 return s_current;
@@ -468,7 +464,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Loader)} after successfully initialization!"); }
+                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Loader)} after successfully loading!"); }
                 return new SeeingSharpLoader();
             }
         }
@@ -495,9 +491,9 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Is GraphicsCore initialized?
+        /// Is GraphicsCore loaded successfully?
         /// </summary>
-        public static bool IsInitialized
+        public static bool IsLoaded
         {
             get
             {
