@@ -30,6 +30,17 @@ namespace SeeingSharp.SampleContainer
                 sampleGroup.Samples.Add(new SampleMetadata(sampleDesc, actType));
             }
 
+            // Sort sample groups
+            Dictionary<string, int> groupOrder = new Dictionary<string, int>();
+            groupOrder[nameof(Basics3D)] = 1;
+            groupOrder[nameof(Postprocessing)] = 2;
+            Func<string, int> tryGetGroupOrderID = (groupName) =>
+            {
+                groupOrder.TryGetValue(groupName, out int orderID);
+                return orderID;
+            };
+            this.SampleGroups.Sort((left, right) => tryGetGroupOrderID(left.GroupName).CompareTo(tryGetGroupOrderID(right.GroupName)));
+
             // Sort samples
             foreach (var actSampleGroup in SampleGroups)
             {
