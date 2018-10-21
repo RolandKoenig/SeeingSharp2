@@ -1,4 +1,6 @@
-﻿using SeeingSharp.SampleContainer;
+﻿using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +16,7 @@ namespace SeeingSharp.UwpSamples
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
+        private RenderLoop m_renderLoop;
         private SampleSettings m_sampleSettings;
 
         public MainWindowViewModel()
@@ -34,12 +37,14 @@ namespace SeeingSharp.UwpSamples
             }
         }
 
-        public void LoadSampleData(SampleRepository sampleRepo)
+        public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             m_selectedGroup = string.Empty;
 
-            // Load samples
             m_sampleRepo = sampleRepo;
+            m_renderLoop = renderLoop;
+
+            // Load samples
             foreach(string actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select((actGroup) => actGroup.GroupName))
             {
@@ -100,10 +105,33 @@ namespace SeeingSharp.UwpSamples
                 if(m_selectedSample != value)
                 {
                     m_selectedSample = value;
+                    if (m_selectedSample == null) { m_sampleSettings = null; }
+                    else
+                    {
+                        m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
+                        m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
+                    }
+
                     RaisePropertyChanged(nameof(SelectedSample));
+                    RaisePropertyChanged(nameof(SampleSettings));
+
+                    this.SampleCommands.Clear();
+                    if (m_sampleSettings != null)
+                    {
+                        foreach (var actSampleCommand in m_sampleSettings.GetCommands())
+                        {
+                            this.SampleCommands.Add(actSampleCommand);
+                        }
+                    }
                 }
             }
         }
+
+        public ObservableCollection<SampleCommand> SampleCommands
+        {
+            get;
+            private set;
+        } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings
         {

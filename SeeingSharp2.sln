@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Blend for Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{D81A4B09-9569-4EAD-AA4D-D2012ED30CBC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{45456675-CCCE-4C64-A0EC-660B8087B5D8}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,12 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Wpf", "SeeingSh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WpfSamples", "_Samples\SeeingSharp.WpfSamples\SeeingSharp.WpfSamples.csproj", "{37B0B699-DF5E-4761-8213-0F1C5F1B1481}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.SampleContainer", "_Samples\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj", "{60BA236F-CF64-4C7F-854B-AA23CA910417}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.SampleContainer", "_Samples\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj", "{60BA236F-CF64-4C7F-854B-AA23CA910417}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -96,5 +93,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

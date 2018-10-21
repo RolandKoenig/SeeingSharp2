@@ -35,7 +35,7 @@ namespace SeeingSharp.UwpSamples
             RaisePropertyChanged(nameof(BitmapSource));
         }
 
-        public SampleMetadata Sample => m_sample;
+        public SampleMetadata SampleMetadata => m_sample;
 
         public string Name => m_sample.Name;
 

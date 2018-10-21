@@ -1,19 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Resources\Shaders\Common\CommonPixelShader.hlsl" />
     <None Remove="Resources\Shaders\Common\CommonVertexShader.hlsl" />
@@ -34,7 +35,6 @@
     <None Remove="Resources\Shaders\structures.hlsl" />
     <None Remove="Resources\Shaders\_mainInclude.hlsl" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonVertexShader.hlsl" />
@@ -55,11 +55,9 @@
     <EmbeddedResource Include="Resources\Shaders\structures.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\_mainInclude.hlsl" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
@@ -68,9 +66,7 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Multimedia\Objects\_ImportExport\_Formats\" />
   </ItemGroup>
-
 </Project>

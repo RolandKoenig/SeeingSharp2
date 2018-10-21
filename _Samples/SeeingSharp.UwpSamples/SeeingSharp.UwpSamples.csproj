@@ -104,6 +104,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ConfigurablePropertyMetadata.cs" />
+    <Compile Include="Controls\PropertyGrid.xaml.cs">
+      <DependentUpon>PropertyGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyGridViewModel.cs" />
+    <Compile Include="Controls\_Misc.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -140,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\PropertyGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

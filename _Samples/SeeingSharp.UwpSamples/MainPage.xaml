@@ -5,6 +5,7 @@
     xmlns:local="using:SeeingSharp.UwpSamples"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:localControls="using:SeeingSharp.UwpSamples.Controls"
     xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -67,6 +68,14 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <localControls:PropertyGrid Margin="10,150,10,40"
+                                        MaxWidth="530" Background="Red"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}">
+                
+            </localControls:PropertyGrid>
 
             <StackPanel Orientation="Horizontal"
                     Background="#BBD3D3D3"
