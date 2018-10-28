@@ -85,7 +85,7 @@ namespace SeeingSharp.Tests
                     await memRenderTarget.AwaitRenderAsync();
                     screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
 
-                    TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                    // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
                 }
             }
 

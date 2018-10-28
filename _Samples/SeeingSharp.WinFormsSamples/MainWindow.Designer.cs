@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.m_ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
             this.m_refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.m_barStatus = new System.Windows.Forms.StatusStrip();
@@ -289,6 +290,7 @@
             this.Controls.Add(this.m_tabControlSamples);
             this.Controls.Add(this.m_barTools);
             this.Controls.Add(this.m_barStatus);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "Seeing# 2 - Windows.Forms samples";
             this.m_barStatus.ResumeLayout(false);
