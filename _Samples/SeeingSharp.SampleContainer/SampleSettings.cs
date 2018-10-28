@@ -27,7 +27,7 @@ namespace SeeingSharp.SampleContainer
         {
             yield return new SampleCommand(
                 "Show Source",
-                () => Process.Start(m_sampleMetadata.SourceCodeUrl),
+                () => PlatformDependentMethods.OpenUrlInBrowser(m_sampleMetadata.SourceCodeUrl),
                 () => !string.IsNullOrEmpty(m_sampleMetadata?.SourceCodeUrl));
         }
 

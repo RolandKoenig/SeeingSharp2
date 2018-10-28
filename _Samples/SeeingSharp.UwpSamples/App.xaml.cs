@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -30,6 +32,13 @@ namespace SeeingSharp.UwpSamples
         public App()
         {
             this.InitializeComponent();
+
+            PlatformDependentMethods.SetOpenUrlInBrowser(async (url) =>
+            {
+                var targetUrl = new Uri(url);
+                await Windows.System.Launcher.LaunchUriAsync(targetUrl);
+            });
+
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
         }

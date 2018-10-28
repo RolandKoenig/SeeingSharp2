@@ -19,7 +19,7 @@
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+        
         <!-- List of sample groups -->
         <ListBox Grid.Row="0"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
@@ -69,7 +69,29 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <localControls:PropertyGrid Margin="10,150,10,40"
+            <!-- Command bar -->
+            <ItemsControl ItemsSource="{Binding Path=SampleCommands}"
+                          VerticalAlignment="Top">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Margin="10,135,10,40"
+                                Background="#BBD3D3D3"
+                                MinWidth="200"
+                                Command="{Binding}">
+                            <TextBlock Text="{Binding Path=CommandText}"
+                                       Margin="2" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- PropertyGrid on the left -->
+            <localControls:PropertyGrid Margin="10,180,10,40"
                                         MaxWidth="530" Background="Red"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"

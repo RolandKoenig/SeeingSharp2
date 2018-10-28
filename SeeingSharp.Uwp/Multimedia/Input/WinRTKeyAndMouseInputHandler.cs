@@ -239,6 +239,8 @@ namespace SeeingSharp.Multimedia.Input
         private void OnCoreWindow_KeyDown(CoreWindow sender, KeyEventArgs e)
         {
             if (m_painter == null) { return; }
+            if (!m_hasFocus) { return; }
+            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
 
             m_stateKeyboard.Internals.NotifyKeyDown(s_keyMappingDict[e.VirtualKey]);
         }
@@ -246,6 +248,8 @@ namespace SeeingSharp.Multimedia.Input
         private void OnCoreWindow_KeyUp(CoreWindow sender, KeyEventArgs e)
         {
             if (m_painter == null) { return; }
+            if (!m_hasFocus) { return; }
+            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
 
             m_stateKeyboard.Internals.NotifyKeyUp(s_keyMappingDict[e.VirtualKey]);
         }
