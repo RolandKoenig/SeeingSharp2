@@ -71,12 +71,14 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyResourcesAndShaderTests\ShaderCompileTests.cs" />
     <Compile Include="BitmapComparisonTests.cs" />
     <Compile Include="DeviceHandlingTests.cs" />
     <Compile Include="Drawing2DTests.cs" />
+    <Compile Include="ErrorHandlingTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyResourcesAndShaderTests\AssemblyResourceLinkTests.cs" />
@@ -121,17 +123,17 @@
     <EmbeddedResource Include="AssemblyResourcesAndShaderTests\structures.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Drawing2DTests\DebugDrawingLayer.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\RoundedRectOver3D.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleBitmap_Animated.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleBitmap_Transparency.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleGeometry2D.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleGeometry2D_Ellipse.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleObject_D2DTexture.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled_LinearGradient.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled_RadialGradient.png" />
-    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleText_SingleColor.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\DebugDrawingLayer.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\RoundedRectOver3D.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleBitmap_Animated.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleBitmap_Transparency.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleGeometry2D.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleGeometry2D_Ellipse.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleObject_D2DTexture.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleRoundedRectFilled.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleRoundedRectFilled_LinearGradient.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleRoundedRectFilled_RadialGradient.png" />
+    <EmbeddedResource Include="Resources\Drawing2D\SimpleText_SingleColor.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\BitmapComparison\BlackScreen.png" />
@@ -144,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
+    <EmbeddedResource Include="Resources\ErrorHandling\SimpleObject.png" />
     <EmbeddedResource Include="Resources\Bitmaps\Boom.png" />
     <EmbeddedResource Include="Resources\Bitmaps\Logo.png" />
   </ItemGroup>

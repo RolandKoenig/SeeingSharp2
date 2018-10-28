@@ -109,7 +109,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleText_SingleColor.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleText_SingleColor.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -140,7 +140,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleRoundedRectFilled.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -181,7 +181,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleGeometry2D.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleGeometry2D.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -213,7 +213,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleGeometry2D_Ellipse.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleGeometry2D_Ellipse.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -253,7 +253,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleRoundedRectFilled_LinearGradient.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_LinearGradient.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -294,7 +294,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleRoundedRectFilled_RadialGradient.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_RadialGradient.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -349,7 +349,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "RoundedRectOver3D.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "RoundedRectOver3D.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
 
@@ -377,7 +377,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "DebugDrawingLayer.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "DebugDrawingLayer.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
         }
@@ -436,7 +436,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 bool isNearEqual = BitmapComparison.IsNearEqual(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleObject_D2DTexture.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleObject_D2DTexture.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
 
@@ -471,7 +471,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleBitmap_Transparency.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Transparency.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
 
             }
@@ -515,7 +515,7 @@ namespace SeeingSharp.Tests
 
                 // Calculate and check difference
                 float diff = BitmapComparison.CalculatePercentageDifference(
-                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2DTests", "SimpleBitmap_Animated.png"));
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Animated.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
             }
         }

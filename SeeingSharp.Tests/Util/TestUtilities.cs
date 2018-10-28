@@ -20,7 +20,9 @@ namespace SeeingSharp.Tests.Util
             if (!GraphicsCore.IsLoaded)
             {
                 await GraphicsCore.Loader
+                    .SupportWinForms()
                     .LoadAsync();
+
                 GraphicsCore.Current.SetDefaultDeviceToSoftware();
                 GraphicsCore.Current.DefaultDevice.ForceDetailLevel(DetailLevel.High);
             }
@@ -49,6 +51,29 @@ namespace SeeingSharp.Tests.Util
         {
             string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             bitmap.Save(Path.Combine(desktopDir, fileName));
+        }
+
+        public static IDisposable FailTestOnInternalExceptions()
+        {
+            Exception internalEx = null;
+            InternalExceptionLocation location = InternalExceptionLocation.DisposeGraphicsObject;
+
+            EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (object sender, InternalCatchedExceptionEventArgs e) =>
+            {
+                if (internalEx == null)
+                {
+                    internalEx = e.Exception;
+                    location = e.Location;
+                }
+            };
+
+            GraphicsCore.InternalCachedException += eventHandler;
+            return new DummyDisposable(() =>
+            {
+                GraphicsCore.InternalCachedException -= eventHandler;
+
+                Assert.IsTrue(internalEx == null, $"Internal exception at {location}: {internalEx}");
+            });
         }
     }
 }

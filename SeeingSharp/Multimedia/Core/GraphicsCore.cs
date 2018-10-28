@@ -47,7 +47,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         #region Members for Unittesting
         private static bool s_throwDeviceInitError;
-        private static bool s_throwD2DInitDeviceError;
         #endregion
 
         #region Members for exception handling
@@ -67,8 +66,8 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Some helpers
+        private static UniqueGenericKeyGenerator s_resourceKeyGenerator;
         private GraphicsCoreConfiguration m_configuration;
-        private UniqueGenericKeyGenerator m_resourceKeyGenerator;
         private PerformanceAnalyzer m_performanceCalculator;
         private ImporterExporterRepository m_importExporters;
         #endregion
@@ -97,9 +96,6 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_force2DFallback;
         #endregion
 
-        /// <summary>
-        /// Occurs when [internal cached exception].
-        /// </summary>
         public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCachedException
         {
             add
@@ -124,6 +120,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
             s_internalExListenersLock = new object();
+
+            // Create the key generator for resource keys
+            s_resourceKeyGenerator = new UniqueGenericKeyGenerator();
         }
 
         private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
@@ -143,9 +142,6 @@ namespace SeeingSharp.Multimedia.Core
                 // Create container object for all input handlers
                 m_inputHandlerFactory = new InputHandlerFactory(loader);
                 m_importExporters = new ImporterExporterRepository(loader);
-
-                // Create the key generator for resource keys
-                m_resourceKeyGenerator = new UniqueGenericKeyGenerator();
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
                 try
@@ -216,7 +212,6 @@ namespace SeeingSharp.Multimedia.Core
                 m_hardwareInfo = null;
                 m_devices.Clear();
                 m_configuration = null;
-                m_resourceKeyGenerator = null;
             }
         }
 
@@ -245,45 +240,32 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        ///// <summary>
-        ///// This method is implemented for automated tests only!
-        ///// Is sets <see cref="GraphicsCore.Current"/> to null to enable a separate instance inside a using block. 
-        ///// </summary>
-        //public static IDisposable AutomatedTest_NewTestEnviornment()
-        //{
-        //    GraphicsCore lastCurrent = s_current;
-        //    if(lastCurrent?.MainLoop?.RegisteredRenderLoopCount > 0) { throw new SeeingSharpException("Current environment still active!"); }
+        /// <summary>
+        /// This method is implemented for automated tests only!
+        /// Is sets <see cref="GraphicsCore.Current"/> to null to enable a separate instance inside a using block. 
+        /// </summary>
+        public static IDisposable AutomatedTest_NewTestEnviornment()
+        {
+            GraphicsCore lastCurrent = s_current;
+            if (lastCurrent?.MainLoop?.RegisteredRenderLoopCount > 0) { throw new SeeingSharpException("Current environment still active!"); }
 
-        //    s_current = null;
+            s_current = null;
 
-        //    return new DummyDisposable(() => s_current = lastCurrent);
-        //}
+            return new DummyDisposable(() => s_current = lastCurrent);
+        }
 
-        ///// <summary>
-        ///// This method is implemented for automated tests only!
-        ///// It simulates a device initialization exception all next times GraphicsCore.Initialize is called.
-        ///// </summary>
-        //public static IDisposable AutomatedTest_ForceDeviceInitError()
-        //{
-        //    if (s_current != null) { throw new SeeingSharpException("This call is only valid before Initialize was called!"); }
+        /// <summary>
+        /// This method is implemented for automated tests only!
+        /// It simulates a device initialization exception all next times GraphicsCore.Initialize is called.
+        /// </summary>
+        public static IDisposable AutomatedTest_ForceDeviceInitError()
+        {
+            if (s_current != null) { throw new SeeingSharpException("This call is only valid before Initialize was called!"); }
 
-        //    s_throwDeviceInitError = true;
+            s_throwDeviceInitError = true;
 
-        //    return new DummyDisposable(() => s_throwDeviceInitError = false);
-        //}
-
-        ///// <summary>
-        ///// This method is implemented for automated tests only!
-        ///// It simulates a device initialization exception all next times GraphicsCore.Initialize is called.
-        ///// </summary>
-        //public static IDisposable AutomatedTest_ForceD2DInitError()
-        //{
-        //    if (s_current != null) { throw new SeeingSharpException("This call is only valid before Initialize was called!"); }
-
-        //    s_throwD2DInitDeviceError = true;
-
-        //    return new DummyDisposable(() => s_throwD2DInitDeviceError = false);
-        //}
+            return new DummyDisposable(() => s_throwDeviceInitError = false);
+        }
 
         /// <summary>
         /// Gets the device with the given luid.
@@ -432,8 +414,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static NamedOrGenericKey GetNextGenericResourceKey()
         {
-            if (s_current == null) { return new NamedOrGenericKey(); }
-            return s_current.ResourceKeyGenerator.GetNextGeneric();
+            return s_resourceKeyGenerator.GetNextGeneric();
         }
 
         /// <summary>
@@ -511,11 +492,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        internal static bool ThrowD2DInitDeviceError
-        {
-            get { return s_throwD2DInitDeviceError; }
-        }
-
         /// <summary>
         /// Is debug enabled?
         /// </summary>
@@ -527,9 +503,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current resource key generator.
         /// </summary>
-        public UniqueGenericKeyGenerator ResourceKeyGenerator
+        public static UniqueGenericKeyGenerator ResourceKeyGenerator
         {
-            get { return m_resourceKeyGenerator; }
+            get { return s_resourceKeyGenerator; }
         }
 
         /// <summary>
