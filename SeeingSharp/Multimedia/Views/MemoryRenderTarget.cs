@@ -49,7 +49,6 @@ namespace SeeingSharp.Multimedia.Views
 
         #region Reference to the render loop
         private RenderLoop m_renderLoop;
-        private ThreadSaveQueue<TaskCompletionSource<object>> m_renderAwaitors;
         #endregion
 
         #region All needed direct3d resources
@@ -79,7 +78,6 @@ namespace SeeingSharp.Multimedia.Views
             m_pixelWidth = pixelWidth;
             m_pixelHeight = pixelHeight;
 
-            m_renderAwaitors = new ThreadSaveQueue<TaskCompletionSource<object>>();
             if (syncContext == null) { syncContext = new SynchronizationContext(); }
 
             //Create the RenderLoop object
@@ -96,8 +94,11 @@ namespace SeeingSharp.Multimedia.Views
             if (!this.IsOperational) { return Task.Delay(100); }
 
             TaskCompletionSource<object> result = new TaskCompletionSource<object>();
-            m_renderAwaitors.Enqueue(result);
-
+            m_renderLoop.EnqueueAfterPresentAction(() =>
+            {
+                result.TrySetResult(null);
+            });
+            
             return result.Task;
         }
 
@@ -175,12 +176,6 @@ namespace SeeingSharp.Multimedia.Views
             // Finish rendering of all render tasks
             m_deviceContext.Flush();
             m_deviceContext.ClearState();
-
-            // Notify all render awaitors (callers of AwaitRenderAsync method)
-            m_renderAwaitors.DequeueAll().ForEachInEnumeration(actAwaitor =>
-                {
-                    actAwaitor.SetResult(null);
-                });
         }
 
         /// <summary>

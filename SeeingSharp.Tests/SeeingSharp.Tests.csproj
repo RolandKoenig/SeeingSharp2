@@ -76,12 +76,14 @@
     <Compile Include="AssemblyResourcesAndShaderTests\ShaderCompileTests.cs" />
     <Compile Include="BitmapComparisonTests.cs" />
     <Compile Include="DeviceHandlingTests.cs" />
+    <Compile Include="Drawing2DTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyResourcesAndShaderTests\AssemblyResourceLinkTests.cs" />
     <Compile Include="ResourceLinkTests.cs" />
     <Compile Include="ReusableObjectsTests.cs" />
     <Compile Include="Util\BitmapComparison.cs" />
+    <Compile Include="Util\TestUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader">
@@ -91,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SeeingSharp.WinForms\SeeingSharp.WinForms.csproj">
+      <Project>{a4b14753-77fd-42d4-80e3-ba9ddb80ac34}</Project>
+      <Name>SeeingSharp.WinForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj">
       <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>
       <Name>SeeingSharp</Name>
@@ -114,7 +120,19 @@
   <ItemGroup>
     <EmbeddedResource Include="AssemblyResourcesAndShaderTests\structures.hlsl" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Drawing2DTests\DebugDrawingLayer.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\RoundedRectOver3D.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleBitmap_Animated.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleBitmap_Transparency.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleGeometry2D.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleGeometry2D_Ellipse.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleObject_D2DTexture.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled_LinearGradient.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleRoundedRectFilled_RadialGradient.png" />
+    <EmbeddedResource Include="Resources\Drawing2DTests\SimpleText_SingleColor.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\BitmapComparison\BlackScreen.png" />
     <EmbeddedResource Include="Resources\BitmapComparison\ClearedScreen.png" />
@@ -123,6 +141,11 @@
     <EmbeddedResource Include="Resources\BitmapComparison\FlatShadedObject_Negative.png" />
     <EmbeddedResource Include="Resources\BitmapComparison\FlatShadedObject_Smaller.png" />
     <EmbeddedResource Include="Resources\BitmapComparison\WhiteScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
+    <EmbeddedResource Include="Resources\Bitmaps\Boom.png" />
+    <EmbeddedResource Include="Resources\Bitmaps\Logo.png" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

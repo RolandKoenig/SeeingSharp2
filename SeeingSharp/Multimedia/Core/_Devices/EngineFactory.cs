@@ -42,6 +42,12 @@ namespace SeeingSharp.Multimedia.Core
             m_handlerDWrite = new FactoryHandlerDWrite(loadSettings);
         }
 
+        public FactoryHandlerD2D Direct2D => m_handlerD2D;
+
+        public FactoryHandlerDWrite DirectWrite => m_handlerDWrite;
+
+        public FactoryHandlerWIC WindowsImagingComponent => m_handlerWic;
+
         internal D2D.Factory2 FactoryD2D_2 => m_handlerD2D.Factory2;
     }
 }

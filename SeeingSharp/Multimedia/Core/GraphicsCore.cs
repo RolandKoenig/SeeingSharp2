@@ -130,8 +130,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             try
             {
-                m_engineFactory = new EngineFactory(loadSettings);
-
                 // Upate RK.Common members
                 m_devices = new List<EngineDevice>();
                 m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0));
@@ -157,9 +155,10 @@ namespace SeeingSharp.Multimedia.Core
                         throw new SeeingSharpException("Simulated device load exception");
                     }
 
-                    m_factoryHandlerWIC = new FactoryHandlerWIC(loadSettings);
-                    m_factoryHandlerD2D = new FactoryHandlerD2D(loadSettings);
-                    m_factoryHandlerDWrite = new FactoryHandlerDWrite(loadSettings);
+                    m_engineFactory = new EngineFactory(loadSettings);
+                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
+                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
+                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
                 }
                 catch (Exception ex)
                 {
