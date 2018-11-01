@@ -20,7 +20,6 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class Drawing3DTests
     {
-        public const int MANIPULATE_WAIT_TIME = 500;
         public const string TEST_CATEGORY = "SeeingSharp Multimedia Drawing 3D";
 
         [TestMethod]

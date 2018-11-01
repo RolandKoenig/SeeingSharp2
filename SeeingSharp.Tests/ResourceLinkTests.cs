@@ -11,7 +11,7 @@ namespace SeeingSharp.Tests
     [TestClass]
     public class ResourceLinkTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp ResourceLink";
+        public const string TEST_CATEGORY = "SeeingSharp Util ResourceLink";
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]

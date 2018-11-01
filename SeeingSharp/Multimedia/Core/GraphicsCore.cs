@@ -31,6 +31,7 @@ using System.Reflection;
 using SeeingSharp.Util;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Input;
 
 //Some namespace mappings
 using D2D = SharpDX.Direct2D1;
@@ -39,7 +40,6 @@ using D3D11 = SharpDX.Direct3D11;
 using DWrite = SharpDX.DirectWrite;
 using WIC = SharpDX.WIC;
 using DXGI = SharpDX.DXGI;
-using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {

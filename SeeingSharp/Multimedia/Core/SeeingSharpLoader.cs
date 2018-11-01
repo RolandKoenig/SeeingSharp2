@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Objects;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -13,6 +14,8 @@ namespace SeeingSharp.Multimedia.Core
         internal SeeingSharpLoader()
         {
             m_extensions = new List<ISeeingSharpExtensions>();
+            m_extensions.Add(new DefaultImporterExporterExtensions());
+
             this.LoadSettings = new DeviceLoadSettings();
         }
 
