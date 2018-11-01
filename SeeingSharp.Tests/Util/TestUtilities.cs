@@ -30,12 +30,17 @@ namespace SeeingSharp.Tests.Util
             Assert.IsTrue(GraphicsCore.IsLoaded, "GraphicsCore could not be initialized!");
         }
 
-        public static Bitmap LoadBitmapFromResource(string subfolderName, string fileName)
+        public static AssemblyResourceLink CreateResourceLink(string subfolderName, string fileName)
         {
-            var resourceLink = new AssemblyResourceLink(
+            return new AssemblyResourceLink(
                 Assembly.GetExecutingAssembly(),
                 $"SeeingSharp.Tests.Resources.{subfolderName}",
                 fileName);
+        }
+
+        public static Bitmap LoadBitmapFromResource(string subfolderName, string fileName)
+        {
+            var resourceLink = CreateResourceLink(subfolderName, fileName);
             using (var inStream = resourceLink.OpenRead())
             {
                 return (Bitmap)Bitmap.FromStream(inStream);

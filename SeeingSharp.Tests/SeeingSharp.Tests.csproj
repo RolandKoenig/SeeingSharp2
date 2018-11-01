@@ -78,6 +78,7 @@
     <Compile Include="BitmapComparisonTests.cs" />
     <Compile Include="DeviceHandlingTests.cs" />
     <Compile Include="Drawing2DTests.cs" />
+    <Compile Include="Drawing3DTests.cs" />
     <Compile Include="ErrorHandlingTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="PostprocessingTests.cs" />
@@ -147,6 +148,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
+    <EmbeddedResource Include="Resources\Drawing3D\Skybox.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Ortho.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Transparent.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_StackedGeometry.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject.png" />
+    <EmbeddedResource Include="Resources\Textures\SkyBox.dds" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleLine.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\ClearedScreen.png" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_Focus.png" />
     <EmbeddedResource Include="Resources\ErrorHandling\SimpleObject.png" />

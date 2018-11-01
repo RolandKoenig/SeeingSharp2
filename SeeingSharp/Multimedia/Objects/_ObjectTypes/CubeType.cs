@@ -44,11 +44,14 @@ namespace SeeingSharp.Multimedia.Objects
             MaterialProperties matProperties = new MaterialProperties();
             matProperties.Key = Material;
 
+            float size = this.Size;
+            float halfSize = size / 2f;
+
             VertexStructure result = new VertexStructure();
             result.CreateOrGetExistingSurface(matProperties)
                 .BuildCube24V(
-                    new Vector3(-0.5f, -0.5f, -0.5f),
-                    new Vector3(1f, 1f, 1f),
+                    new Vector3(-halfSize, -halfSize, -halfSize),
+                    new Vector3(size, size, size),
                     Color4Ex.Transparent);
             
             return result;
@@ -59,5 +62,11 @@ namespace SeeingSharp.Multimedia.Objects
             get;
             set;
         }
+
+        public float Size
+        {
+            get;
+            set;
+        } = 1f;
     }
 }
