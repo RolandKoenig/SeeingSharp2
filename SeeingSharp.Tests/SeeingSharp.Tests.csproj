@@ -96,6 +96,11 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Models\Fox.stl" />
+    <EmbeddedResource Include="Resources\Models\ModelFlatShading.ac" />
+    <EmbeddedResource Include="Resources\Models\ModelShaded.ac" />
+    <EmbeddedResource Include="Resources\Models\ModelSingleSided.ac" />
+    <EmbeddedResource Include="Resources\Models\ModelTwoSided.ac" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SeeingSharp.WinForms\SeeingSharp.WinForms.csproj">
@@ -149,6 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\FlatShadedObject.png" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\ModelStl.png" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\ShadedObject.png" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\TwoSidedObject.png" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\SingleSidedObject.png" />
+    <Content Include="Resources\Models\Fox.LicenseInfo.txt" />
     <EmbeddedResource Include="Resources\Drawing3D\Skybox.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Ortho.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Transparent.png" />

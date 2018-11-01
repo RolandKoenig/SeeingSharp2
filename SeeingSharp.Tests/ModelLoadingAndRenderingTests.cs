@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
@@ -20,304 +21,214 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class ModelLoadingAndRenderingTests
     {
-        //public const string TEST_DUMMY_FILE_NAME = "UnitTest.Screenshot.png";
-        //public const string TEST_CATEGORY = "SeeingSharp Multimedia Model Loading and Rendering";
+        public const string TEST_CATEGORY = "SeeingSharp Multimedia Model Loading and Rendering";
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_StlFile()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task LoadAndRender_StlFile()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-4f, 4f, -4f);
-        //        camera.Target = new Vector3(2f, 0f, 2f);
-        //        camera.UpdateCamera();
+                // Get and configure the camera
+                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(-4f, 4f, -4f);
+                camera.Target = new Vector3(2f, 0f, 2f);
+                camera.UpdateCamera();
 
-        //        // Import Fox model
-        //        StlImportOptions importOptions = new StlImportOptions();
-        //        importOptions.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ;
-        //        IEnumerable<SceneObject> loadedObjects = await memRenderTarget.Scene.ImportAsync(
-        //            new AssemblyResourceLink(
-        //                typeof(ModelLoadingAndRenderingTests),
-        //                "Ressources.Models.Fox.stl"),
-        //            importOptions);
+                // Import Fox model
+                StlImportOptions importOptions = new StlImportOptions();
+                importOptions.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ;
+                IEnumerable<SceneObject> loadedObjects = await memRenderTarget.Scene.ImportAsync(
+                    TestUtilities.CreateResourceLink("Models", "Fox.stl"),
+                    importOptions);
 
-        //        // Wait for it to be visible
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(loadedObjects, memRenderTarget.RenderLoop);
+                // Wait for it to be visible
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(loadedObjects, memRenderTarget.RenderLoop);
 
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // Take screenshot
+                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_ModelStl);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
+                // Calculate and check difference
+                bool isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "ModelStl.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
 
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_ACFlatShadedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task LoadAndRender_ACFlatShadedObject()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-3f, 3f, -3f);
-        //        camera.Target = new Vector3(2f, 0f, 2f);
-        //        camera.UpdateCamera();
+                // Get and configure the camera
+                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(-3f, 3f, -3f);
+                camera.Target = new Vector3(2f, 0f, 2f);
+                camera.UpdateCamera();
 
-        //        // Define scene
-        //        SceneObject newObject = null;
-        //        await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
-        //        {
-        //            NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
-        //                () => new GeometryResource(ACFileLoader.ImportObjectType(Properties.Resources.ModelFlatShading)));
+                // Define scene
+                SceneObject newObject = null;
+                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                {
+                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                        () => new GeometryResource(ACFileLoader.ImportObjectType(
+                            TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
 
-        //            newObject = manipulator.AddGeneric(geoResource);
-        //        });
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                    newObject = manipulator.AddGeneric(geoResource);
+                });
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // Take screenshot
+                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
+                // Calculate and check difference
+                bool isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "FlatShadedObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
 
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_FlatShadedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
 
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task LoadAndRender_ACShadedObject()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_ACShadedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                // Get and configure the camera
+                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(-1.5f, 3f, -1.5f);
+                camera.Target = new Vector3(1f, 0f, 1f);
+                camera.UpdateCamera();
 
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-1.5f, 3f, -1.5f);
-        //        camera.Target = new Vector3(1f, 0f, 1f);
-        //        camera.UpdateCamera();
+                // Define scene
+                SceneObject newObject = null;
+                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                {
+                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                        () => new GeometryResource(ACFileLoader.ImportObjectType(
+                            TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
 
-        //        // Define scene
-        //        SceneObject newObject = null;
-        //        await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
-        //        {
-        //            NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
-        //                () => new GeometryResource(ACFileLoader.ImportObjectType(Properties.Resources.ModelShaded)));
+                    newObject = manipulator.AddGeneric(geoResource);
+                });
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
-        //            newObject = manipulator.AddGeneric(geoResource);
-        //        });
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                // Take screenshot
+                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // Calculate and check difference
+                bool isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "ShadedObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
 
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
 
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_ShadedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task LoadAndRender_ACTwoSidedObject()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
+            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_ACTwoSidedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+                // Get and configure the camera
+                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
+                camera.Target = new Vector3(1f, 0f, 1f);
+                camera.UpdateCamera();
 
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                // Define scene
+                SceneObject newObject = null;
+                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                {
+                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                        () => new GeometryResource(ACFileLoader.ImportObjectType(
+                            TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
 
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
-        //        camera.Target = new Vector3(1f, 0f, 1f);
-        //        camera.UpdateCamera();
+                    newObject = manipulator.AddGeneric(geoResource);
+                });
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
-        //        // Define scene
-        //        SceneObject newObject = null;
-        //        await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
-        //        {
-        //            NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
-        //                () => new GeometryResource(ACFileLoader.ImportObjectType(Properties.Resources.ModelTwoSided)));
+                // Take screenshot
+                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //            newObject = manipulator.AddGeneric(geoResource);
-        //        });
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                // Calculate and check difference
+                bool isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "TwoSidedObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
 
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
 
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task LoadAndRender_ACSingleSidedObject()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_TwoSidedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
+            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
+                // Get and configure the camera
+                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
+                camera.Target = new Vector3(1f, 0f, 1f);
+                camera.UpdateCamera();
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_ACSingleSidedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+                // Define scene
+                SceneObject newObject = null;
+                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                {
+                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                        () => new GeometryResource(ACFileLoader.ImportObjectType(
+                            TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
 
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                    newObject = manipulator.AddGeneric(geoResource);
+                });
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
-        //        camera.Target = new Vector3(1f, 0f, 1f);
-        //        camera.UpdateCamera();
+                // Take screenshot
+                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        // Define scene
-        //        SceneObject newObject = null;
-        //        await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
-        //        {
-        //            NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
-        //                () => new GeometryResource(ACFileLoader.ImportObjectType(Properties.Resources.ModelSingleSided)));
+                // Calculate and check difference
+                bool isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "SingleSidedObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
 
-        //            newObject = manipulator.AddGeneric(geoResource);
-        //        });
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
-
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
-
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_SingleSidedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
-
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
-
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task LoadAndRender_ACTexturedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
-
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
-
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-1f, 1f, -1f);
-        //        camera.Target = new Vector3(0f, 0f, 0f);
-        //        camera.UpdateCamera();
-
-        //        // Define scene
-        //        SceneObject newObject = null;
-        //        await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
-        //        {
-        //            NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
-        //                () => new GeometryResource(ACFileLoader.ImportObjectType(new AssemblyResourceLink(
-        //                    Assembly.GetExecutingAssembly(),
-        //                    "SeeingSharp.Tests.Rendering.Ressources.Models",
-        //                    "ModelTextured.ac"))));
-
-        //            newObject = manipulator.AddGeneric(geoResource);
-        //        });
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
-
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
-
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_TexturedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
-
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //}
-
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task ImportAndRender_ACShadedObject()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
-
-        //    IEnumerable<SceneObject> importedObjects = null;
-
-        //    using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
-
-        //        // Get and configure the camera
-        //        PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
-        //        camera.Position = new Vector3(-1.5f, 3f, -1.5f);
-        //        camera.Target = new Vector3(1f, 0f, 1f);
-        //        camera.UpdateCamera();
-
-        //        ResourceLink objSource = new AssemblyResourceLink(
-        //            typeof(ModelLoadingAndRenderingTests),
-        //            "Ressources.Models.ModelShaded.ac");
-        //        importedObjects = await memRenderTarget.Scene.ImportAsync(objSource);
-
-        //        // Wait until ac file is completely loaded
-        //        await memRenderTarget.Scene.WaitUntilVisibleAsync(importedObjects, memRenderTarget.RenderLoop);
-
-        //        // Take screenshot
-        //        GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-
-        //        //screenshot.DumpToDesktop(TEST_DUMMY_FILE_NAME);
-
-        //        // Calculate and check difference
-        //        bool isNearEqual = BitmapComparison.IsNearEqual(
-        //            screenshot, Properties.Resources.ReferenceImage_ShadedObject);
-        //        Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
-        //    }
-
-        //    // Finishing checks
-        //    Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
-        //    Assert.IsNotNull(importedObjects);
-        //    Assert.IsTrue(importedObjects.Count() == 1);
-        //}
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
     }
 }
