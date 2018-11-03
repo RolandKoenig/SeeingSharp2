@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
   <Identity Name="35049RolandK.Seeing2Samples" Publisher="CN=768032C6-916E-447E-BC21-CED6D927C479" Version="1.1.4.0" />
-  <mp:PhoneIdentity PhoneProductId="e1b315e7-6522-4726-8b7a-df56176fea5a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <mp:PhoneIdentity PhoneProductId="5a7904d1-1180-4e2c-a592-eb900b985313" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Seeing# 2 Samples</DisplayName>
     <PublisherDisplayName>RolandK</PublisherDisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SeeingSharp.UwpSamples.App">
-      <uap:VisualElements DisplayName="Seeing# 2 Samples" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="SeeingSharp.UwpSamples" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Seeing# 2 Samples" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Samples for the Seeing# 2" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -28,7 +28,4 @@
       </uap:VisualElements>
     </Application>
   </Applications>
-  <Capabilities>
-    <Capability Name="internetClient" />
-  </Capabilities>
 </Package>

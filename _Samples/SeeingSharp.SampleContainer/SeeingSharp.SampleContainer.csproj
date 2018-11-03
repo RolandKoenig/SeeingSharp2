@@ -7,6 +7,12 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\Debug.AnyCPU\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\Release.AnyCPU\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Background.dds" />
     <None Remove="Assets\Background.png" />

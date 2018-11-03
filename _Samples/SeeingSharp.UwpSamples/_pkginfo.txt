@@ -1,1 +1,1 @@
-D:\Projects\GitHub\RolandKoenig\SeeingSharp2\_Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_1.1.3.0\SeeingSharp.UwpSamples_1.1.3.0_x86.appxbundle
+D:\Projects\GitHub\RolandKoenig\SeeingSharp2\_Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_1.1.4.0\SeeingSharp.UwpSamples_1.1.4.0_x86.appxbundle
