@@ -23,6 +23,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Tests", "Seeing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WinFormsSamples", "_Samples\SeeingSharp.WinFormsSamples\SeeingSharp.WinFormsSamples.csproj", "{2861261F-440A-44BC-A334-D4611D0673F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{4B6075B0-74B1-441E-8FF8-43754C876B1D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
+		_Misc\SolutionInfo.cs = _Misc\SolutionInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966-EFF6-44CD-815F-1A30329AF41C}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
