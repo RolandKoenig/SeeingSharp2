@@ -28,6 +28,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 using GDI = System.Drawing;
 
@@ -65,8 +66,8 @@ namespace SeeingSharp.Tests.Util
         /// <returns>Difference of both bitmaps in precent</returns>
         public static float CalculatePercentageDifference(Bitmap bitmapLeft, Bitmap bitmapRight)
         {
-            if (bitmapLeft == null) { throw new ArgumentNullException("bitmapLeft"); }
-            if (bitmapRight == null) { throw new ArgumentNullException("bitmapRight"); }
+            bitmapLeft.EnsureNotNull(nameof(bitmapLeft));
+            bitmapRight.EnsureNotNull(nameof(bitmapRight));
             if (bitmapLeft.Size != bitmapRight.Size) { throw new SeeingSharpException("Both bitmaps musst have the same size!"); }
 
             decimal totalDiffPercent = 0M;
