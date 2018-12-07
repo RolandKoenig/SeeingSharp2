@@ -464,7 +464,18 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
         {
             //Present all rendered stuff on screen
-            m_swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
+            try
+            {
+                m_swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
+            }
+            catch(SharpDXException ex)
+            {
+                // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
+                // This error occurs some times on slower hardware
+                if (ex.ResultCode == DXGI.ResultCode.WasStillDrawing) { return; }
+
+                throw;
+            }
         }
 
         /// <summary>

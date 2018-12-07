@@ -62,6 +62,7 @@ namespace SeeingSharp.UwpSamples
                     {
                         manipulator.Clear(true);
                     });
+                    await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
 

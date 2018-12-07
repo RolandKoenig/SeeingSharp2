@@ -78,6 +78,7 @@ namespace SeeingSharp.WpfSamples
                     {
                         manipulator.Clear(true);
                     });
+                    await this.CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
 

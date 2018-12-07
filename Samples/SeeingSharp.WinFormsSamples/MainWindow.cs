@@ -158,6 +158,7 @@ namespace SeeingSharp.WinFormsSamples
                     {
                         manipulator.Clear(true);
                     });
+                    await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
                 if (this.IsDisposed || (!this.IsHandleCreated)) { return; }

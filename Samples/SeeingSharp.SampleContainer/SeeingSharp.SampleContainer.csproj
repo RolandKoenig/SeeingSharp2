@@ -18,6 +18,7 @@
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\Floor.dds" />
     <None Remove="Assets\Floor.png" />
+    <None Remove="Basics2D\_01_Primitives\PreviewImage.png" />
     <None Remove="Basics3D\_01_ColoredCube\PreviewImage.png" />
     <None Remove="Basics3D\_02_TexturedCube\PreviewImage.png" />
     <None Remove="Basics3D\_02_TexturedCube\SimpleTexture.png" />
@@ -35,6 +36,7 @@
     <EmbeddedResource Include="Assets\Background.png" />
     <EmbeddedResource Include="Assets\Floor.dds" />
     <EmbeddedResource Include="Assets\Floor.png" />
+    <EmbeddedResource Include="Basics2D\_01_Primitives\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_01_ColoredCube\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_02_TexturedCube\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_02_TexturedCube\SimpleTexture.png" />
@@ -57,9 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Basics2D\_01_Primitives\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />

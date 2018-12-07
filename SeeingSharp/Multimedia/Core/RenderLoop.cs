@@ -468,6 +468,29 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Removes all currently registered drawing layers from this render loop.
+        /// </summary>
+        public Task Clear2DDrawingLayersAsync()
+        {
+            TaskCompletionSource<object> result = new TaskCompletionSource<object>();
+
+            m_afterPresentActions.Enqueue(() =>
+            {
+                try
+                {
+                    m_2dDrawingLayers.Clear();
+                    result.SetResult(null);
+                }
+                catch (Exception ex)
+                {
+                    result.SetException(ex);
+                }
+            });
+
+            return result.Task;
+        }
+
+        /// <summary>
         /// Deregisters the given drawing layer from this RenderLoop.
         /// </summary>
         /// <param name="drawingLayer">The drawing layer to be deregistered.</param>
