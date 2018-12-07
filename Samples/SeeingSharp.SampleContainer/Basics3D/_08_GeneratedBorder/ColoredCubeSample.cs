@@ -32,12 +32,12 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 
-namespace SeeingSharp.SampleContainer.Basics3D._07_GeneratedBorder
+namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 {
     [SampleDescription(
-        "Generated Border", 7, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Generated Border", 8, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_07_GeneratedBorder")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder")]
     public class GeneratedBorderSample : SampleBase
     {
         /// <summary>
