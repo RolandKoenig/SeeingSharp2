@@ -51,15 +51,41 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
             var solidBrush = new SolidBrushResource(Color4Ex.Gray);
             await targetRenderLoop.Register2DDrawingLayerAsync((graphics) =>
             {
-                // Draw the background
-                RectangleF d2dRectangle = new RectangleF(
-                    10, 10, 
-                    graphics.ScreenWidth - 20f, graphics.ScreenHeight - 20f);
+                // Full width and height for all primitive objects
+                float allPrimitivesWidth = 180f;
+                float allPrimitivesHeight = 100f;
 
-                graphics.Clear(Color4Ex.LightBlue);
-                graphics.FillRoundedRectangle(
-                    d2dRectangle, 30, 30,
-                    solidBrush);
+                // Update current transform so that primitive objects are in the middle of the screen
+                RectangleF screenBounds = graphics.ScreenBounds;
+                graphics.TransformStack.Push(Matrix3x2.Translation(new Vector2(
+                    (graphics.ScreenWidth / 2f) - (allPrimitivesWidth / 2f),
+                    (graphics.ScreenHeight / 2f) - (allPrimitivesHeight / 2f))));
+                graphics.ApplyTransformStack();
+                try
+                {
+                    // Draw all primitives
+                    graphics.FillRectangle(
+                        new RectangleF(0f, 0f, 50f, 100f),
+                        solidBrush);
+                    graphics.FillRoundedRectangle(
+                        new RectangleF(60f, 0f, 50f, 100f),
+                        15f, 15f,
+                        solidBrush);
+                    graphics.DrawLine(
+                        new Vector2(120f, 0f),
+                        new Vector2(120f, 100f),
+                        solidBrush,
+                        2f);
+                    graphics.FillEllipse(
+                        new RectangleF(130f, 0f, 50f, 100f),
+                        solidBrush);
+                }
+                finally
+                {
+                    // Reset transform
+                    graphics.TransformStack.Pop();
+                    graphics.ApplyTransformStack();
+                }
             });
         }
     }

@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Applies the top of the local transform stack.
         /// </summary>
-        private unsafe void ApplyTransformStack()
+        public unsafe void ApplyTransformStack()
         {
             if(m_renderTarget == null) { return; }
 
@@ -243,6 +243,37 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
+        /// Draws the given ellipse with the given brush.
+        /// </summary>
+        public void DrawEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
+        {
+            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+
+            m_renderTarget.DrawEllipse(
+                ellipse,
+                brush.GetBrush(m_device),
+                strokeWidth);
+        }
+
+        /// <summary>
+        /// Draws the given ellipse with the given brush.
+        /// </summary>
+        public void DrawEllipse(RectangleF rectangle, BrushResource brush, float strokeWidth = 1f)
+        {
+            float radiusX = (rectangle.Width / 2f);
+            float radiusY = (rectangle.Height / 2f);
+            Vector2 center = new Vector2(
+                rectangle.X + radiusX,
+                rectangle.Y + radiusY);
+            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+
+            m_renderTarget.DrawEllipse(
+                ellipse,
+                brush.GetBrush(m_device),
+                strokeWidth);
+        }
+
+        /// <summary>
         /// Draws a point at the given location.
         /// </summary>
         public void DrawPoint(Vector2 point, BrushResource brush)
@@ -339,6 +370,35 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             m_renderTarget.FillRoundedRectangle(
                 roundedRect,
+                brush.GetBrush(m_device));
+        }
+
+        /// <summary>
+        /// Fills the given ellipse with the given brush.
+        /// </summary>
+        public void FillEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush)
+        {
+            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+
+            m_renderTarget.FillEllipse(
+                ellipse,
+                brush.GetBrush(m_device));
+        }
+
+        /// <summary>
+        /// Fills the given ellipse with the given brush.
+        /// </summary>
+        public void FillEllipse(RectangleF rectangle, BrushResource brush)
+        {
+            float radiusX = (rectangle.Width / 2f);
+            float radiusY = (rectangle.Height / 2f);
+            Vector2 center = new Vector2(
+                rectangle.X + radiusX,
+                rectangle.Y + radiusY);
+            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+
+            m_renderTarget.FillEllipse(
+                ellipse,
                 brush.GetBrush(m_device));
         }
 
