@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public static class GraphicsHelper
     {
-        // All default texture formats
+        #region All default texture formats
         public const DXGI.Format DEFAULT_TEXTURE_FORMAT = DXGI.Format.B8G8R8A8_UNorm;
         public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING = DXGI.Format.B8G8R8A8_UNorm;
         public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = DXGI.Format.B8G8R8A8_UNorm;
@@ -55,76 +55,7 @@ namespace SeeingSharp.Multimedia.Core
         public const DXGI.Format DEFAULT_TEXTURE_FORMAT_DEPTH = DXGI.Format.D32_Float_S8X24_UInt;
         public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = WIC.PixelFormat.Format32bppBGRA;
         public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = WIC.PixelFormat.Format32bppPBGRA;
-
-
-
-
-        //#if UNIVERSAL
-        //        /// <summary>
-        //        /// Creates the SwapChain object that is used on WinRT platforms.
-        //        /// </summary>
-        //        /// <param name="device">The device on which to create the SwapChain.</param>
-        //        /// <param name="coreWindow">The target CoreWindow object.</param>
-        //        /// <param name="width">Width of the screen in pixels.</param>
-        //        /// <param name="height">Height of the screen in pixels.</param>
-        //        /// <param name="gfxConfig">Current graphics configuration.</param>
-        //        internal static DXGI.SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
-        //        {
-        //            device.EnsureNotNull(nameof(device));
-        //            width.EnsurePositive(nameof(width));
-        //            height.EnsurePositive(nameof(height));
-        //            gfxConfig.EnsureNotNull(nameof(gfxConfig));
-
-        //            DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
-        //            {
-        //                Width = width,
-        //                Height = height,
-        //                Format = DEFAULT_TEXTURE_FORMAT,
-        //                Stereo = false,
-        //                SampleDescription = new DXGI.SampleDescription(1, 0),
-        //                Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
-        //                BufferCount = 2,
-        //                Scaling = DXGI.Scaling.None,
-        //                SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-        //                AlphaMode = SharpDX.DXGI.AlphaMode.Ignore
-        //            };
-
-        //            //Creates the swap chain for the given CoreWindow object
-        //            return new DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
-        //        }
-
-        //        /// <summary>
-        //        /// Creates the SwapChain object that is used on WinRT platforms.
-        //        /// </summary>
-        //        /// <param name="device">The device on which to create the SwapChain.</param>
-        //        /// <param name="width">Width of the screen in pixels.</param>
-        //        /// <param name="height">Height of the screen in pixels.</param>
-        //        /// <param name="gfxConfig">Current graphics configuration.</param>
-        //        internal static DXGI.SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
-        //        {
-        //            device.EnsureNotNull(nameof(device));
-        //            width.EnsurePositive(nameof(width));
-        //            height.EnsurePositive(nameof(height));
-        //            gfxConfig.EnsureNotNull(nameof(gfxConfig));
-
-        //            DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
-        //            {
-        //                Width = width,
-        //                Height = height,
-        //                Format = DEFAULT_TEXTURE_FORMAT,
-        //                Stereo = false,
-        //                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-        //                Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
-        //                BufferCount = 2,
-        //                Scaling = SharpDX.DXGI.Scaling.Stretch,
-        //                SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-        //                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? DXGI.AlphaMode.Premultiplied : SharpDX.DXGI.AlphaMode.Ignore
-        //            };
-
-        //            //Creates the swap chain for XAML composition
-        //            return new DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
-        //        }
-        //#endif
+        #endregion
 
         /// <summary>
         /// Creates a Direct3D 11 texture that can be shared between more devices.

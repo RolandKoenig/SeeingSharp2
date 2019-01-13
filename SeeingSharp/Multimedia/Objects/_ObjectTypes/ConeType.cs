@@ -5,13 +5,12 @@ using System.Text;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class CircleType : ObjectType
+    public class ConeType : ObjectType
     {
-        public CircleType()
+        public ConeType()
         {
-            this.Radius = 2f;
-            this.Width = 0.5f;
-            this.Height = 0.1f;
+            this.Radius = 0.5f;
+            this.Height = 1f;
             this.CountOfSegments = 10;
         }
 
@@ -20,18 +19,13 @@ namespace SeeingSharp.Multimedia.Objects
             VertexStructure result = new VertexStructure();
 
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildConeFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+ 
 
             return result;
         }
 
         public float Radius
-        {
-            get;
-            set;
-        }
-
-        public float Width
         {
             get;
             set;
