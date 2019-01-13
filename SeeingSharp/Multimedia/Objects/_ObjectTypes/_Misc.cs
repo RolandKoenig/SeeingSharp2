@@ -50,4 +50,11 @@ namespace SeeingSharp.Multimedia.Objects
             get { return (m_detailLevel & DetailLevel.High) == DetailLevel.High; }
         }
     }
+
+    public enum SpiralChuteRotationDirection
+    {
+        Clockwise,
+
+        Counterclockwise
+    }
 }

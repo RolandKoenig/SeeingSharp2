@@ -58,7 +58,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
-                CubeType cubeType = new CubeType();
+                var cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 

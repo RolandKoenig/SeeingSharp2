@@ -155,6 +155,68 @@ namespace SeeingSharp.Multimedia.Objects
             return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
         }
 
+        public BuiltVerticesRange BuildCircleFullV(Vector3 middle, float radius, float width, float height, int countOfSegments, Color4 Color)
+        {
+            int startVertex = m_owner.CountVertices;
+            if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
+
+            Matrix3x2 rotationMatrix;
+
+            float halfWidth = width / 2f;
+            float halfHeight = height / 2f;
+            Vector2 nearVector = new Vector2(0f, radius - halfWidth);
+            Vector2 farVector = new Vector2(0f, radius + halfWidth);
+            Vector2 lastNearVector = nearVector;
+            Vector2 lastFarVector = farVector;
+            Vector2 nextNearVector;
+            Vector2 nextFarVector;
+            for (int loop = 1; loop <= countOfSegments; loop++)
+            {
+                float actPercent = (float)loop / (float)countOfSegments;
+                float actAngle = EngineMath.RAD_360DEG * actPercent;
+
+                // Calculate next points
+                Matrix3x2.Rotation(actAngle, out rotationMatrix);
+                Matrix3x2.TransformPoint(ref rotationMatrix, ref nearVector, out nextNearVector);
+                Matrix3x2.TransformPoint(ref rotationMatrix, ref farVector, out nextFarVector);
+
+                // Build current segment
+                this.BuildRect4V(
+                    middle + new Vector3(lastNearVector.X, halfHeight, lastNearVector.Y),
+                    middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
+                    middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
+                    middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
+                    Vector3.Up,
+                    Color4Ex.Transparent);
+                this.BuildRect4V(
+                    middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
+                    middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
+                    middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
+                    middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
+                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
+                    Color4Ex.Transparent);
+                this.BuildRect4V(
+                    middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
+                    middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
+                    middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
+                    middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
+                    -Vector3.Up,
+                    Color4Ex.Transparent);
+                this.BuildRect4V(
+                    middle + new Vector3(lastNearVector.X, halfHeight, lastNearVector.Y),
+                    middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
+                    middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
+                    middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
+                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
+                    Color4Ex.Transparent);
+
+                lastNearVector = nextNearVector;
+                lastFarVector = nextFarVector;
+            }
+
+            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+        }
+
         /// <summary>
         /// Builds a cone into the structure with correct texture coordinates and normals.
         /// </summary>
