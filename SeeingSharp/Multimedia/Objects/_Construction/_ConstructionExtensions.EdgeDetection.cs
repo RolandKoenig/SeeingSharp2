@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Objects
             List<Line> foundEndges = new List<Line>(2048);
             List<Line> edgesToRemove = new List<Line>(2048);
             foreach (VertexStructure actStructure in structures)
-            { 
+            {
                 foreach (VertexStructureSurface actSurface in actStructure.Surfaces)
                 {
                     foreach (Triangle actTriangle in actSurface.Triangles)

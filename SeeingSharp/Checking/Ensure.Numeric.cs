@@ -230,7 +230,6 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            
             if (Math.Abs((double)numValue / 2) > EngineMath.TOLERANCE_DOUBLE_POSITIVE)
             {
                 throw new SeeingSharpCheckException(string.Format(

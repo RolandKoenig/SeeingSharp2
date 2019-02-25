@@ -74,11 +74,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public GeometryResource(VertexStructure vertexStructure)
             : this(new GenericObjectType(vertexStructure))
         {
-
         }
 
         /// <summary>
-        /// Stores all required data into a new <see cref="ExportGeometryInfo"/>. 
+        /// Stores all required data into a new <see cref="ExportGeometryInfo"/>.
         /// </summary>
         public ExportGeometryInfo PrepareForExport()
         {
@@ -187,7 +186,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 LoadedStructureInfo structureToDraw = m_loadedStructures[loop];
 
-                // Apply VertexBuffer 
+                // Apply VertexBuffer
                 if (lastVertexBufferID != structureToDraw.VertexBufferID)
                 {
                     lastVertexBufferID = structureToDraw.VertexBufferID;

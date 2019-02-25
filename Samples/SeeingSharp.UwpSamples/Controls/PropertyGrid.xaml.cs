@@ -128,7 +128,7 @@ namespace SeeingSharp.UwpSamples.Controls
                             Source = actProperty,
                             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                         });
-                        ctrlComboBox.Width = 200d;                  
+                        ctrlComboBox.Width = 200d;
                         ctrlValueEdit = ctrlComboBox;
                         break;
                 }

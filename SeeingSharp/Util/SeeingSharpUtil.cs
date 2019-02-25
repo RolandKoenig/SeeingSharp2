@@ -275,7 +275,7 @@ namespace SeeingSharp.Util
                 targetList.Insert(~targetIndex, newItem);
                 return ~targetIndex;
             }
-            else 
+            else
             {
                 targetList.Insert(targetIndex, newItem);
                 return targetIndex;

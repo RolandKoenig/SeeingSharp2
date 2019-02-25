@@ -101,19 +101,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public int Width
         {
-            get 
+            get
             {
                 if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return m_wicBitmap.Size.Width; 
+                return m_wicBitmap.Size.Width;
             }
         }
 
         public int Height
         {
-            get 
+            get
             {
                 if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return m_wicBitmap.Size.Height; 
+                return m_wicBitmap.Size.Height;
             }
         }
     }

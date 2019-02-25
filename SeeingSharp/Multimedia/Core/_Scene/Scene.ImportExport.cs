@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Create result object container
             ExportModelContainer result = new ExportModelContainer();
-            
+
             // Fill export container beside rendering
             //  (there it is ensured that no one changes the scene)
             await this.PerformBeforeUpdateAsync(() =>

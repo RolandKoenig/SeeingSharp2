@@ -1065,7 +1065,7 @@ namespace SeeingSharp.Multimedia.Core
                     // Renders current scene on this view
                     m_currentScene.HandleRenderResources(m_renderState);
                 }
-                
+
                 // Update render state
                 m_renderState.Reset(
                     new RenderTargets(m_renderTargetView, m_renderTargetDepthView),

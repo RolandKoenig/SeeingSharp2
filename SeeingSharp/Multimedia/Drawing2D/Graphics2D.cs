@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     m_transformStack.Push(transformSettings.CustomTransform);
                     break;
 
-                    // Calculate scaling matrix here 
+                    // Calculate scaling matrix here
                 case Graphics2DTransformMode.AutoScaleToVirtualScreen:
                     float virtualWidth = m_transformSettings.VirtualScreenSize.Width;
                     float virtualHeight = m_transformSettings.VirtualScreenSize.Height;
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Pushes a new matrix to the TransformStack and pops it after Dispose has 
+        /// Pushes a new matrix to the TransformStack and pops it after Dispose has
         /// been called on the result object.
         /// </summary>
         /// <param name="customTransform">The custom transform matrix.</param>
@@ -448,7 +448,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             BitmapResource bitmap,
             RectangleF destinationRectangle,
             float opacity = 1f,
-            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor, 
+            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor,
             int frameIndex = 0)
         {
             if (m_renderTarget == null) { return; }
@@ -558,7 +558,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 SharpDX.Mathematics.Interop.RawRectangleF destinationRectangle = new SharpDX.Mathematics.Interop.RawRectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
-               
+
                 // Render non-tiled bitmap
                 m_renderTarget.DrawBitmap(
                     bitmap.GetBitmap(m_device),
@@ -672,7 +672,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     default:
                         return m_screenPixelSize.Width;
                 }
-                
             }
         }
 

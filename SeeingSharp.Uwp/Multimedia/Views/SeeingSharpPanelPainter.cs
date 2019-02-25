@@ -270,9 +270,9 @@ namespace SeeingSharp.Multimedia.Views
                 // Ignore event, if nothing has changed..
                 Size2 actSize = GetTargetRenderPixelSize();
                 if (((int)m_lastRefreshTargetSize.Width == (int)actSize.Width) &&
-                    ((int)m_lastRefreshTargetSize.Height == (int)actSize.Height)) 
-                { 
-                    return; 
+                    ((int)m_lastRefreshTargetSize.Height == (int)actSize.Height))
+                {
+                    return;
                 }
 
                 UpdateRenderLoopViewSize();
@@ -305,7 +305,7 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Some configuration like 
+        /// Some configuration like
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -338,7 +338,7 @@ namespace SeeingSharp.Multimedia.Views
 
             Size2 viewSize = GetTargetRenderPixelSize();
 
-            // Create the SwapChain and associate it with the SwapChainBackgroundPanel 
+            // Create the SwapChain and associate it with the SwapChainBackgroundPanel
             m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, m_renderLoop.ViewConfiguration);
             m_targetPanel.SwapChain = m_swapChain;
             m_compositionScaleChanged = true;

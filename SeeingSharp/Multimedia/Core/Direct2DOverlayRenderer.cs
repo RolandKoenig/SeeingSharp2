@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates all resources 
+        /// Creates all resources
         /// </summary>
         private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {

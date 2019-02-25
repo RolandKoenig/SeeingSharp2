@@ -233,7 +233,7 @@ namespace SeeingSharp.Multimedia.Core
                     handlers = new List<EventHandler<InternalCatchedExceptionEventArgs>>(
                         s_internalExListeners);
                 }
-            } 
+            }
 
             foreach(var actEventHandler in handlers)
             {
@@ -248,7 +248,7 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// This method is implemented for automated tests only!
-        /// Is sets <see cref="GraphicsCore.Current"/> to null to enable a separate instance inside a using block. 
+        /// Is sets <see cref="GraphicsCore.Current"/> to null to enable a separate instance inside a using block.
         /// </summary>
         public static IDisposable AutomatedTest_NewTestEnviornment()
         {
@@ -483,8 +483,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                return 
-                    (s_current != null) && 
+                return
+                    (s_current != null) &&
                     (s_current.m_devices.Count > 0) &&
                     (s_current.m_initException == null);
             }

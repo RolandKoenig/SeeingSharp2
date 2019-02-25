@@ -71,7 +71,7 @@ namespace SeeingSharp.WpfSamples
             {
                 if (m_actSampleInfo == sampleInfo) { return; }
 
-                // Clear previous sample 
+                // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
                     await this.CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
@@ -94,8 +94,6 @@ namespace SeeingSharp.WpfSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
-
-                    
                 }
 
                 // Wait for next finished rendering

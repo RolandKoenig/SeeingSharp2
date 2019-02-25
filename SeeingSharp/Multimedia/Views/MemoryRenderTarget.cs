@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 result.TrySetResult(null);
             });
-            
+
             return result.Task;
         }
 
@@ -171,7 +171,6 @@ namespace SeeingSharp.Multimedia.Views
 
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
-            
         }
 
         /// <summary>

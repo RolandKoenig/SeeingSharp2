@@ -202,7 +202,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Clears all subscriptions 
+        /// Clears all subscriptions
         /// </summary>
         /// <param name="allObjects">A collection containing all objects of the current layer.</param>
         internal void ClearAllSubscriptions(List<SceneObject> allObjects)
@@ -265,7 +265,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            // Update all objects related to this view 
+            // Update all objects related to this view
             m_isSubscribeUnsubscribeAllowed = true;
             try
             {
@@ -326,11 +326,11 @@ namespace SeeingSharp.Multimedia.Core
                     for(int loop=0 ; loop<actPassProperties.Subscriptions.Count; loop++)
                     {
                         RenderPassSubscription actSubscription = actPassProperties.Subscriptions[loop];
-                        if (!actSubscription.IsSubscribed) 
+                        if (!actSubscription.IsSubscribed)
                         {
                             actSubscription.SceneObject.ClearSubscriptionsWithoutUnsubscribeCall(this, actSubscription);
                             trueUnsubscribeCount++;
-                            continue; 
+                            continue;
                         }
 
                         // Add this item to new subscription list
@@ -370,7 +370,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check whether we have to update all objects
-            bool refreshAllObjects = 
+            bool refreshAllObjects =
                 m_viewInformation.Camera.StateChanged ||
                 anyFilterChanged;
 
@@ -552,7 +552,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Subscribes the given object to the given render pass.
         /// </summary>
         internal RenderPassSubscription SubscribeForPass(
-            RenderPassInfo passInfo, 
+            RenderPassInfo passInfo,
             SceneObject sceneObject, Action<RenderState> renderMethod,
             int zOrder)
         {

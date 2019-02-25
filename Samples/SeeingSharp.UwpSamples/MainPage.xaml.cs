@@ -55,7 +55,7 @@ namespace SeeingSharp.UwpSamples
             {
                 if (m_actSampleInfo == sampleInfo) { return; }
 
-                // Clear previous sample 
+                // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
                     await CtrlSwapChain.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>

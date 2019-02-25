@@ -40,9 +40,8 @@ namespace SeeingSharp.Util
         /// </summary>
         protected ResourceLink()
         {
-
         }
- 
+
         /// <summary>
         /// Writes the contents of this resource to the given dummy file.
         /// </summary>

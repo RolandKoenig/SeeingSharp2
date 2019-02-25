@@ -469,7 +469,7 @@ namespace SeeingSharp.Util
                     {
                         completionSource.SetException(ex);
                     }
-                }, 
+                },
                 actionIfNull);
             return completionSource.Task;
         }

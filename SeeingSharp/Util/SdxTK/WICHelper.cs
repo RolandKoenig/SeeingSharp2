@@ -117,24 +117,24 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 // Directly support the formats listed in XnaTexUtil::g_WICFormats, so no conversion required
                 // Note target Guid in this conversion table must be one of those directly supported formats.
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format1bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format2bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format4bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format8bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format1bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format2bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format4bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format8bppIndexed, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format2bppGray, SharpDX.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format4bppGray, SharpDX.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format2bppGray, SharpDX.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format4bppGray, SharpDX.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format16bppGrayFixedPoint, SharpDX.WIC.PixelFormat.Format16bppGrayHalf), // DXGI.Format.R16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppGrayFixedPoint, SharpDX.WIC.PixelFormat.Format32bppGrayFloat), // DXGI.Format.R32_FLOAT 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format16bppGrayFixedPoint, SharpDX.WIC.PixelFormat.Format16bppGrayHalf), // DXGI.Format.R16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppGrayFixedPoint, SharpDX.WIC.PixelFormat.Format32bppGrayFloat), // DXGI.Format.R32_FLOAT
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format16bppBGR555, SharpDX.WIC.PixelFormat.Format16bppBGRA5551), // DXGI.Format.B5G5R5A1_UNorm 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format16bppBGR555, SharpDX.WIC.PixelFormat.Format16bppBGRA5551), // DXGI.Format.B5G5R5A1_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format32bppBGR101010, SharpDX.WIC.PixelFormat.Format32bppRGBA1010102), // DXGI.Format.R10G10B10A2_UNorm
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format24bppBGR, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format24bppRGB, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppPBGRA, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppPRGBA, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format24bppBGR, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format24bppRGB, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppPBGRA, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppPRGBA, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
 
                 new WICConvert(SharpDX.WIC.PixelFormat.Format48bppRGB, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format48bppBGR, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
@@ -142,20 +142,20 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 new WICConvert(SharpDX.WIC.PixelFormat.Format64bppPRGBA, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format64bppPBGRA, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppBGRFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBAFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppBGRAFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBHalf, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppRGBHalf, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppBGRFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBAFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppBGRAFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format64bppRGBHalf, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format48bppRGBHalf, SharpDX.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppPRGBAFloat, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBFloat, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBAFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppPRGBAFloat, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBFloat, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBAFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format128bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppCMYK, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format32bppCMYK, SharpDX.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format64bppCMYK, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format40bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format80bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
@@ -163,10 +163,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 #if DIRECTX11_1
                 new WICConvert( WIC.PixelFormat.Format32bppRGB,              WIC.PixelFormat.Format32bppRGBA ), // DXGI.Format.R8G8B8A8_UNorm
                 new WICConvert( WIC.PixelFormat.Format64bppRGB,              WIC.PixelFormat.Format64bppRGBA ), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert( WIC.PixelFormat.Format64bppPRGBAHalf,        WIC.PixelFormat.Format64bppRGBAHalf ), // DXGI.Format.R16G16B16A16_FLOAT 
-                new WICConvert( WIC.PixelFormat.Format96bppRGBFixedPoint,    WIC.PixelFormat.Format96bppRGBFloat ), // DXGI.Format.R32G32B32_FLOAT 
+                new WICConvert( WIC.PixelFormat.Format64bppPRGBAHalf,        WIC.PixelFormat.Format64bppRGBAHalf ), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert( WIC.PixelFormat.Format96bppRGBFixedPoint,    WIC.PixelFormat.Format96bppRGBFloat ), // DXGI.Format.R32G32B32_FLOAT
 #else
-                new WICConvert(SharpDX.WIC.PixelFormat.Format96bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT 
+                new WICConvert(SharpDX.WIC.PixelFormat.Format96bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
 #endif
 
                 // We don't support n-channel formats

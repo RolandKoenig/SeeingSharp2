@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>

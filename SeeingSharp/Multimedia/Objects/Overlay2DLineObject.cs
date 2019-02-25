@@ -65,7 +65,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <exception cref="System.NotImplementedException"></exception>
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
- 
         }
 
         /// <summary>

@@ -688,7 +688,7 @@ namespace SeeingSharp.Multimedia.Core
                         case AnimationFailedReaction.ThrowException:
                             throw;
 
-                        //Remove the animation and 
+                        //Remove the animation and
                         case AnimationFailedReaction.RemoveAndContinue:
                             actAnimation.Canceled = true;
                             anyFinishedOrCanceled = true;

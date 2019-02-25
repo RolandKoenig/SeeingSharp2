@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
                     new Vector3(-halfSize, -halfSize, -halfSize),
                     new Vector3(size, size, size),
                     Color4Ex.Transparent);
-            
+
             return result;
         }
 

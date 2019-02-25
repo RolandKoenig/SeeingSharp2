@@ -174,7 +174,7 @@ namespace SeeingSharp.Multimedia.Objects
                         // Remove leading and ending spaces
                         actLine = actLine.Trim();
 
-                        // Discard comments 
+                        // Discard comments
                         if (actLine[0] == '#') { continue; }
 
                         // Handle multiline entris (they have a \ at the end of the line)
@@ -274,7 +274,7 @@ namespace SeeingSharp.Multimedia.Objects
                         // Remove leading and ending spaces
                         actLine = actLine.Trim();
 
-                        // Discard comments 
+                        // Discard comments
                         if (actLine[0] == '#') { continue; }
 
                         // Handle multiline entris (they have a \ at the end of the line)
@@ -448,8 +448,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Store vertex
             Vector3 actCoordinate = new Vector3(
-                m_dummyFloatArguments_3[0] * m_importOptions.ResizeFactor, 
-                m_dummyFloatArguments_3[1] * m_importOptions.ResizeFactor, 
+                m_dummyFloatArguments_3[0] * m_importOptions.ResizeFactor,
+                m_dummyFloatArguments_3[1] * m_importOptions.ResizeFactor,
                 m_dummyFloatArguments_3[2] * m_importOptions.ResizeFactor);
             m_rawVertices.Add(actCoordinate);
         }
@@ -495,7 +495,7 @@ namespace SeeingSharp.Multimedia.Objects
                 return;
             }
 
-            // Parse normal arguments 
+            // Parse normal arguments
             //  We don't support 3D texture, so the third coordinate is ignored
             if (!TryParseStringsToFloats(vertexArguments, m_dummyFloatArguments_3, 2))
             {
@@ -591,7 +591,6 @@ namespace SeeingSharp.Multimedia.Objects
                     faceIndices[loop].NormalIndex = Int32.MinValue;
                 }
             }
-           
 
             // Generate vertices and triangles on current VertexStructure
             if(faceIndices.Length == 3)

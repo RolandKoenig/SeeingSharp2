@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         private Exception m_drawException;
         private Exception m_finishExeption;
         #endregion
-        
+
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
         /// </summary>
@@ -213,7 +213,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             get;
             internal set;
         }
-        
+
         /// <summary>
         /// Gets the current video size.
         /// </summary>

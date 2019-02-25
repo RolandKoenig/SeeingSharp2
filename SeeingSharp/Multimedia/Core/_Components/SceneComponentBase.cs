@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
     /// Base class for all scene components.
     /// </summary>
     public abstract class SceneComponentBase
-    { 
+    {
         internal abstract object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView);
 
         internal abstract void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext);
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
         /// If you attach a component to a scene where another component with the same group
         /// is active, this other component gets detached automatically.
         /// 
-        /// This feature was developed initially for various camera controls which 
+        /// This feature was developed initially for various camera controls which
         /// should not be activ simultaneously.
         /// </summary>
         public virtual string ComponentGroup => string.Empty;

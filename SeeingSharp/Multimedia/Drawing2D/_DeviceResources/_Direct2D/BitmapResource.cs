@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image. 
+        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
         /// </summary>
         BitmapResource IImageInternal.TryGetSourceBitmap()
         {

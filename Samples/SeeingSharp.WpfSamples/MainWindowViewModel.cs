@@ -72,14 +72,14 @@ namespace SeeingSharp.WpfSamples
                 this.Samples.Add(new SampleViewModel(actSampleMetadata));
             }
             this.SelectedSample = this.Samples.FirstOrDefault();
-        }      
+        }
 
         public ObservableCollection<string> SampleGroups
         {
             get;
             private set;
-        } = new ObservableCollection<string>();  
-        
+        } = new ObservableCollection<string>();
+
         public string SelectedGroup
         {
             get => m_selectedGroup;

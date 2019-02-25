@@ -79,7 +79,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 
                 d2dRectangle.Inflate(-10, -10);
                 graphics.DrawText(
-                    castedSettings.DisplayText.Replace("\\n", Environment.NewLine), 
+                    castedSettings.DisplayText.Replace("\\n", Environment.NewLine),
                     m_textFormat, d2dRectangle, m_textBrush);
             });
 

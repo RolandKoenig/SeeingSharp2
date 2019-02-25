@@ -31,7 +31,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public RenderPass2DOverlay()
         {
-
         }
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Apply(RenderState renderState)
         {
-            
         }
 
         /// <summary>
@@ -49,7 +47,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Discard(RenderState renderState)
         {
-
         }
 
         /// <summary>
@@ -59,7 +56,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-         
         }
 
         /// <summary>
@@ -69,7 +65,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-
         }
 
         /// <summary>

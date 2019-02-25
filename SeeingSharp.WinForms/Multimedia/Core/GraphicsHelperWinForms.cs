@@ -169,7 +169,7 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            //Prepare target bitmap 
+            //Prepare target bitmap
             GDI.Bitmap resultBitmap = new GDI.Bitmap(width, height);
             SharpDX.DataBox dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try

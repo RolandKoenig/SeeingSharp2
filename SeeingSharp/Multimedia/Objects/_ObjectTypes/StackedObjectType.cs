@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Objects
                     changedVertex.Position = changedVertex.Position + localCorrection;
                     if (loop % 2 == 1)
                     {
-                        var color = changedVertex.Color; 
+                        var color = changedVertex.Color;
                         color.ChangeColorByLight(0.05f);
                         changedVertex.Color = color;
                     }

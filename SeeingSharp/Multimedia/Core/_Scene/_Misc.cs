@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Just translation transformation
         /// </summary>
         Translation,
-        
+
         /// <summary>
         /// A custom transformation matrix.
         /// </summary>

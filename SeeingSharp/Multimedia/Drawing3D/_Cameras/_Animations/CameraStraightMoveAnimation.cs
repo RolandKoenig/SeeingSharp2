@@ -54,7 +54,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             targetCamera.EnsureNotNull(nameof(targetCamera));
             targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
- 
 
             m_camera = targetCamera;
             m_cameraPerspective = m_camera as PerspectiveCamera3D;

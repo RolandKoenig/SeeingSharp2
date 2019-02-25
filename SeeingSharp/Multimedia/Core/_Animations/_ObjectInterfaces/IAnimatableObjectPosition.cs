@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Core
 
     #endregion
 
-    public interface IAnimatableObjectPosition 
+    public interface IAnimatableObjectPosition
     {
         /// <summary>
         /// Gets or sets the position of the object.

@@ -163,8 +163,8 @@ namespace SeeingSharp.Multimedia.Core
         public ResourceDictionary Dictionary
         {
             get { return m_resourceDictionary; }
-            internal set 
-            { 
+            internal set
+            {
                 m_resourceDictionary = value;
                 if (m_resourceDictionary != null) { m_device = m_resourceDictionary.Device; }
                 else { m_device = null; }

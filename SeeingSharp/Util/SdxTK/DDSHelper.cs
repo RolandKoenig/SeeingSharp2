@@ -126,13 +126,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                                                  new LegacyMap(SharpDX.DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551, DDS.PixelFormat.A1R5G5B5), // D3DFMT_A1R5G5B5
                                                                  new LegacyMap(SharpDX.DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551
                                                                                                            | ConversionFlags.NoAlpha, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x7c00, 0x03e0, 0x001f, 0x0000)), // D3DFMT_X1R5G5B5
-     
+
                                                                  new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format8332, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x00e0, 0x001c, 0x0003, 0xff00)),
                                                                  // D3DFMT_A8R3G3B2
                                                                  new LegacyMap(SharpDX.DXGI.Format.B5G6R5_UNorm, ConversionFlags.Expand
                                                                                                          | ConversionFlags.Format332, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 8, 0xe0, 0x1c, 0x03, 0x00)), // D3DFMT_R3G3B2
-  
+
                                                                  new LegacyMap(SharpDX.DXGI.Format.R8_UNorm, ConversionFlags.None, DDS.PixelFormat.L8), // D3DFMT_L8
                                                                  new LegacyMap(SharpDX.DXGI.Format.R16_UNorm, ConversionFlags.None, DDS.PixelFormat.L16), // D3DFMT_L16
                                                                  new LegacyMap(SharpDX.DXGI.Format.R8G8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8L8), // D3DFMT_A8L8
@@ -872,7 +872,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     switch (outFormat)
                     {
                 case SharpDX.DXGI.Format.B4G4R4A4_UNorm :
-                    // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm 
+                    // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm
                     {
                         byte * sPtr = (byte*)(pSource);
                         short * dPtr = (short*)(pDestination);

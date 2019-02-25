@@ -179,7 +179,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>
@@ -207,7 +207,7 @@ namespace SeeingSharp.Multimedia.Input
             for(int loop=0; loop<BUTTON_COUNT; loop++)
             {
                 m_buttonsUp[loop] = false;
-                
+
                 if(m_buttonsHit[loop] || m_buttonsDown[loop])
                 {
                     m_buttonsHit[loop] = false;
@@ -312,7 +312,7 @@ namespace SeeingSharp.Multimedia.Input
         public class MouseOrPointerStateInternals
         {
             private MouseOrPointerState m_host;
-            
+
             internal MouseOrPointerStateInternals(MouseOrPointerState host)
             {
                 m_host = host;

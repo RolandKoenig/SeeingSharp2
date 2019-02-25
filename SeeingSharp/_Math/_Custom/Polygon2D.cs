@@ -140,7 +140,7 @@ namespace SeeingSharp
                 throw new SeeingSharpException("No point found on which given polygons can be combinded!");
             }
 
-            //Now generate result polygon 
+            //Now generate result polygon
             List<Vector2> resultBuilder = new List<Vector2>(this.m_vertices.Length + actHole.m_vertices.Length + 2);
             for (int loopFillVertex = 0; loopFillVertex < this.m_vertices.Length; loopFillVertex++)
             {
@@ -230,7 +230,7 @@ namespace SeeingSharp
         private EdgeOrder CalculateEdgeOrder()
         {
             //Calculation method taken from http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
-            //Formula: 
+            //Formula:
             // For each Edge: (x2-x1)(y2+y1)
             // Take sum from each result
             // If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise

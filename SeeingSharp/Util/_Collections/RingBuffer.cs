@@ -32,7 +32,7 @@ namespace SeeingSharp.Util
     #endregion
 
     /// <summary>
-    /// This is a simple RingBuffer implementation for Seeing#, 
+    /// This is a simple RingBuffer implementation for Seeing#,
     /// originally created for the Input event system.
     /// 
     /// More info on cyclic buffers: https://en.wikipedia.org/wiki/Circular_buffer
@@ -61,7 +61,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Adds a new item to the buffer and overrides existing items 
+        /// Adds a new item to the buffer and overrides existing items
         /// if the count of items reached the maximum.
         /// </summary>
         /// <param name="newItem">The new item to be added.</param>
@@ -83,7 +83,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Adds a new item to the buffer and throws an exception 
+        /// Adds a new item to the buffer and throws an exception
         /// if the count of items reached the maximum.
         /// </summary>
         /// <param name="newItem">The new item to be added.</param>

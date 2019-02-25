@@ -208,9 +208,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets or sets the alpha blend mode.
         /// </summary>
-        public TexturePainterAlphaBlendMode AlphaBlendMode 
-        { 
-            get; set; 
+        public TexturePainterAlphaBlendMode AlphaBlendMode
+        {
+            get; set;
         }
     }
 }

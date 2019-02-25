@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Components
         /// Update camera for keyboard input.
         /// </summary>
         private static void UpdateForKeyboard(
-            Camera3DBase actCamera, KeyboardState actKeyboardState, 
+            Camera3DBase actCamera, KeyboardState actKeyboardState,
             out bool isControlKeyDown)
         {
             // Define multiplyer

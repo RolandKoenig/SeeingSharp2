@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         if (targetSurface.ResourceLink != null)
                         {
                             var textureResourceLink = targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey);
-                           
+
                             resourceDict.AddResource<StandardTextureResource>(
                                 textureKey,
                                 new StandardTextureResource(
@@ -120,11 +120,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
                 catch { }
 
-                // Create a default textured material 
+                // Create a default textured material
                 if (!textureKey.IsEmpty)
                 {
                     SimpleColoredMaterialResource result = resourceDict.AddResource<SimpleColoredMaterialResource>(
-                        materialKey, 
+                        materialKey,
                         new SimpleColoredMaterialResource(textureKey));
                     result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
                     return result;

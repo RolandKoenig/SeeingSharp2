@@ -24,13 +24,12 @@
 
 #region using
 
-// Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
 
-namespace SeeingSharp.Multimedia.Drawing3D 
+namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
 

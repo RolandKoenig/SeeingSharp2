@@ -72,7 +72,7 @@ namespace SeeingSharp.Util
         /// <param name="calculationInterval">The interval from which to take all values from.</param>
         /// <returns></returns>
         internal override PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp, 
+            DateTime keyTimeStamp,
             DateTime minTimeStamp, DateTime maxTimeStamp,
             TimeSpan calculationInterval)
         {
@@ -95,7 +95,7 @@ namespace SeeingSharp.Util
                 double resultValue = (double)(m_lastReportedTimestamps
                     .PeekWhile((actTuple) => actTuple < maxTimeStamp)
                     .Count());
-              
+
                 // Handle case where measured timespan in more less than the calculation timespan
                 TimeSpan currentValueTimespan = maxTimeStamp - minTimeStamp;
                 if(currentValueTimespan != calculationInterval)

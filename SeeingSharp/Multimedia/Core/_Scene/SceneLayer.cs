@@ -464,7 +464,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets or sets an integer which controls the order 
+        /// Gets or sets an integer which controls the order
         /// </summary>
         public int OrderID
         {

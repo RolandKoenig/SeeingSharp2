@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     #endregion
 
     /// <summary>
-    /// This object represents a inmemory chached bitmap which is 
+    /// This object represents a inmemory chached bitmap which is
     /// loaded from a ResourceLink (e. g. a file).
     /// </summary>
     public class StandardBitmapResource : BitmapResource
@@ -144,7 +144,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     m_loadedBitmaps[engineDevice.DeviceIndex] = result;
                 }
             }
-            
 
             return result;
         }

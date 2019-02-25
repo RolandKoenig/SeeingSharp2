@@ -23,7 +23,7 @@
 #endregion
 
 namespace SeeingSharp.Multimedia.Core
-{      
+{
     /// <summary>
     /// Helper structure which holds informatin about all currently
     /// attached components.

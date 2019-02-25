@@ -300,7 +300,7 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Tries to set the visibility of this object on the given view.
-        /// This method can be used to force rendering on the next frame after adding 
+        /// This method can be used to force rendering on the next frame after adding
         /// an object to the scene.
         /// </summary>
         /// <param name="viewInfo">The view on which to set the visibility.</param>

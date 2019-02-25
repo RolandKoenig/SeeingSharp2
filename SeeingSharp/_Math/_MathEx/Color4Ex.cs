@@ -58,7 +58,6 @@ namespace SeeingSharp
             result.Blue = blue / 255f;
             return result;
         }
-        
 
         public static void ChangeAlphaTo(this ref Color4 color, float newAlpha)
         {

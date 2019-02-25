@@ -398,7 +398,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerB(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerC(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerD(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerE(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerF(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerG(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -446,42 +446,42 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerH(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
         }
 
         public static Vector3 GetLowerA(this ref BoundingBox boundingBox)
         {
-            return boundingBox.Minimum; 
+            return boundingBox.Minimum;
         }
 
         public static Vector3 GetLowerB(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerB(); 
+            return boundingBox.GetCornerB();
         }
 
         public static Vector3 GetLowerC(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerC(); 
+            return boundingBox.GetCornerC();
         }
 
         public static Vector3 GetLowerD(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerD(); 
+            return boundingBox.GetCornerD();
         }
 
         public static Vector3 GetUpperA(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerE(); 
+            return boundingBox.GetCornerE();
         }
 
         public static Vector3 GetUpperB(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerF(); 
+            return boundingBox.GetCornerF();
         }
 
         public static Vector3 GetUpperC(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerG(); 
+            return boundingBox.GetCornerG();
         }
 
         public static Vector3 GetUpperD(this ref BoundingBox boundingBox)

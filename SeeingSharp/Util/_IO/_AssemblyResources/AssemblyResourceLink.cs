@@ -70,7 +70,6 @@ namespace SeeingSharp.Util
         public AssemblyResourceLink(Type type, string resourceFile)
             : this(type.GetTypeInfo().Assembly, type.Namespace, resourceFile)
         {
-            
         }
 
         /// <summary>
@@ -82,7 +81,6 @@ namespace SeeingSharp.Util
         public AssemblyResourceLink(Type type, string deeperNamespace, string resourceFile)
             : this(type.GetTypeInfo().Assembly, type.Namespace + "." + deeperNamespace, resourceFile)
         {
-
         }
 
         /// <summary>
@@ -219,7 +217,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public string ResourcePath
         {
-            get 
+            get
             {
                 StringBuilder resultBuilder = new StringBuilder();
                 resultBuilder.Append(m_resourceNamespace);

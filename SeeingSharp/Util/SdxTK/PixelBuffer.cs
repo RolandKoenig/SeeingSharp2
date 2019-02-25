@@ -291,7 +291,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="pixelCount">Number of pixels to write into the destination pixels" buffer.</param>
         /// <exception cref="System.ArgumentException">If the sizeof(T) is an invalid size</exception>
         /// <remarks>
-        /// This method is working on a row basis. The yOffset is specifying the first row to get 
+        /// This method is working on a row basis. The yOffset is specifying the first row to get
         /// the pixels from.
         /// </remarks>
         public unsafe void GetPixels<T>(T[] pixels, int yOffset, int pixelIndex, int pixelCount) where T : struct
@@ -327,7 +327,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="yOffset">The y line offset.</param>
         /// <exception cref="System.ArgumentException">If the sizeof(T) is an invalid size</exception>
         /// <remarks>
-        /// This method is working on a row basis. The yOffset is specifying the first row to get 
+        /// This method is working on a row basis. The yOffset is specifying the first row to get
         /// the pixels from.
         /// </remarks>
         public void SetPixels<T>(T[] sourcePixels, int yOffset = 0) where T : struct
@@ -345,7 +345,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="pixelCount">Number of pixels to write into the source sourcePixels buffer.</param>
         /// <exception cref="System.ArgumentException">If the sizeof(T) is an invalid size</exception>
         /// <remarks>
-        /// This method is working on a row basis. The yOffset is specifying the first row to get 
+        /// This method is working on a row basis. The yOffset is specifying the first row to get
         /// the pixels from.
         /// </remarks>
         public unsafe void SetPixels<T>(T[] sourcePixels, int yOffset, int pixelIndex, int pixelCount) where T : struct

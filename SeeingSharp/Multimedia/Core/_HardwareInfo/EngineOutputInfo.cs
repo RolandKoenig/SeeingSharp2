@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Core
 
     #endregion
 
-    public class EngineOutputInfo 
+    public class EngineOutputInfo
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
@@ -124,8 +124,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                return 
-                    (m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left) + 
+                return
+                    (m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left) +
                     "x" +
                     (m_outputDescription.DesktopBounds.Bottom - m_outputDescription.DesktopBounds.Top);
             }

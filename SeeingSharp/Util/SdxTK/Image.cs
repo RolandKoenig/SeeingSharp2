@@ -930,7 +930,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         }
 
         /// <summary>
-        /// Allocates PixelBuffers 
+        /// Allocates PixelBuffers
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="pixelSize"></param>

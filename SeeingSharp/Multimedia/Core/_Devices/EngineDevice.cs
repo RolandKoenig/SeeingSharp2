@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineDevice(
             DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
-            EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, 
+            EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
             SharpDX.DXGI.Adapter1 adapter, bool isSoftwareAdapter)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
@@ -274,9 +274,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool IsStandardAntialiasingPossible
         {
-            get 
+            get
             {
-                return m_isStandardAntialiasingSupported; 
+                return m_isStandardAntialiasingSupported;
             }
         }
 
@@ -503,7 +503,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Is debug mode enabled?
         /// </summary>
         public bool DebugEnabled => m_deviceLoadSettings.DebugEnabled;
-        
+
         /// <summary>
         /// Internal members, use with care.
         /// </summary>

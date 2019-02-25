@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Core
 
     #endregion
 
-    public class GraphicsViewConfiguration 
+    public class GraphicsViewConfiguration
     {
         #region Constants
         private const bool DEFAULT_SHOW_TEXTURES = true;
@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
         }
-    
+
         [DefaultValue(DEFAULT_GRADIENT_FACTOR)]
         public float GeneratedColorGradientFactor
         {

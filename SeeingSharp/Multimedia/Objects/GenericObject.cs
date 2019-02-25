@@ -160,7 +160,6 @@ namespace SeeingSharp.Multimedia.Objects
                         }
                     }
                 }
-                
 
                 //base.UpdateAndApplyRenderParameters(renderState);
                 //geometryResource.Render(renderState);
@@ -256,7 +255,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_localResources.AddObject(
                 resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
-                device.DeviceIndex, 
+                device.DeviceIndex,
                 false);
         }
 

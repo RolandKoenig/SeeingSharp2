@@ -121,11 +121,12 @@ namespace SeeingSharp.Util
             m_mainLoopSynchronizeObject.Release();
 
             // Create stop semaphore
-            if (m_threadStopSynchronizeObject != null) 
+            if (m_threadStopSynchronizeObject != null)
             {
                 m_threadStopSynchronizeObject.Dispose();
                 m_threadStopSynchronizeObject = null;
             }
+
             m_threadStopSynchronizeObject = new SemaphoreSlim(0);
 
             //Go into starting state

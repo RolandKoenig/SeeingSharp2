@@ -45,11 +45,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public MaterialResource()
         {
-
         }
 
         /// <summary>
-        /// Stores all required data into a new <see cref="ExportMaterialInfo"/>. 
+        /// Stores all required data into a new <see cref="ExportMaterialInfo"/>.
         /// </summary>
         public virtual ExportMaterialInfo PrepareForExport()
         {

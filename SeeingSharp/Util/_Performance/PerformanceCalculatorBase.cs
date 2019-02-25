@@ -52,7 +52,7 @@ namespace SeeingSharp.Util
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
         /// <param name="calculationInterval">The interval from which to take all values from.</param>
         internal virtual PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp, 
+            DateTime keyTimeStamp,
             DateTime minTimeStamp, DateTime maxTimeStamp,
             TimeSpan calculationInterval)
         {
@@ -67,7 +67,7 @@ namespace SeeingSharp.Util
             get { return m_parent; }
             internal set { m_parent = value; }
         }
-        
+
         /// <summary>
         /// Gets the name of this calculator.
         /// </summary>

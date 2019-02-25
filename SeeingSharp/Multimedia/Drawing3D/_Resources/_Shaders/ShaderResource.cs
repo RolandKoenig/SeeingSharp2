@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 default:
                     throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
-            }            
+            }
         }
 
         /// <summary>

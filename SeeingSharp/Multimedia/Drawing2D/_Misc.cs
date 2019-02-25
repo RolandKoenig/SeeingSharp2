@@ -233,7 +233,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Repeat the edge pixels of the brush's content for all regions outside the normal
         /// content area.
-        /// </summary>  
+        /// </summary>
         Clamp = 0,
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Interpolation is performed in the linear-gamma color space.
-        /// </summary>  
+        /// </summary>
         Linear = 1
     }
 
@@ -295,7 +295,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// a two-stop gradient 0.0f, Black}, {2.0f, White is indistinguishable visually
     /// from 0.0f, Black}, {1.0f, Mid-level gray. Also, the colors are clamped before
     /// interpolation.
-    /// </summary> 
+    /// </summary>
     public struct GradientStop
     {
         public GradientStop(Color4 color, float position)
@@ -313,7 +313,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// A value that indicates the relative position of the gradient stop in the brush.
         /// This value must be in the [0.0f, 1.0f] range if the gradient stop is to be seen
         ///  explicitly.
-        /// </summary> 
+        /// </summary>
         public float Position;
     }
 }

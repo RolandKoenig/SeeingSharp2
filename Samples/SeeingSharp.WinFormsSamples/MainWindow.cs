@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -151,7 +151,7 @@ namespace SeeingSharp.WinFormsSamples
 
                 if (m_actSampleInfo == sampleInfo) { return; }
 
-                // Clear previous sample 
+                // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
                     await m_ctrlRenderPanel.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
@@ -221,7 +221,7 @@ namespace SeeingSharp.WinFormsSamples
             foreach(var actCommand in settings.GetCommands())
             {
                 var actCommandInner = actCommand;
-                
+
                 if(isFirst)
                 {
                     var separator = new ToolStripSeparator();

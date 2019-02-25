@@ -121,7 +121,7 @@ namespace SeeingSharp.Multimedia.Core
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
                     null, Type.EmptyTypes, null);
 #else
-                ConstructorInfo standardConstructor = 
+                ConstructorInfo standardConstructor =
                     resourceType.GetTypeInfo().DeclaredConstructors
                     .FirstOrDefault((actConstructor) => actConstructor.GetParameters().Length <= 0);
 #endif

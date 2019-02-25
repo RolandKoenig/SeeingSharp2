@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
     #endregion
 
     /// <summary>
-    /// A set of triangles of a VertexStructure which share the 
+    /// A set of triangles of a VertexStructure which share the
     /// same material settings.
     /// </summary>
     public partial class VertexStructureSurface
@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Clones this object.
         /// </summary>
         public VertexStructureSurface Clone(
-            VertexStructure newOwner, 
+            VertexStructure newOwner,
             bool copyGeometryData = true, int capacityMultiplier = 1,
             int baseIndex = 0)
         {

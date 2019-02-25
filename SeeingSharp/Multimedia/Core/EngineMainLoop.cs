@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
     #endregion
 
     /// <summary>
-    /// The core main loop for coordinating render and update processes over all 
+    /// The core main loop for coordinating render and update processes over all
     /// registered RenderLoops.
     /// </summary>
     public class EngineMainLoop
@@ -74,7 +74,7 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Events        
         /// <summary>
-        /// Occurs each pass within the MainLoop and holds information about generic 
+        /// Occurs each pass within the MainLoop and holds information about generic
         /// input states (like Gampepad).
         /// Be carefull with subscribing/unsubscribing because this event is raised
         /// by ThreadPoolThreads.
@@ -289,7 +289,7 @@ namespace SeeingSharp.Multimedia.Core
                             }
                         }
                     }
-                    catch (Exception) 
+                    catch (Exception)
                     {
                         exceptionOccurred = true;
                     }
@@ -359,7 +359,7 @@ namespace SeeingSharp.Multimedia.Core
                         if (actRenderLoop.Device == actDevice)
                         {
                             // Call prepare render and wait for the answer
-                            //  => Error handling is a bit tricky.. 
+                            //  => Error handling is a bit tricky..
                             //     Errors are catched by the continuation action
                             var actTask = actRenderLoop.PrepareRenderAsync();
                             prepareRenderTasks.Add(actTask.ContinueWith((givenTask) =>
@@ -447,7 +447,7 @@ namespace SeeingSharp.Multimedia.Core
                     await Task.WhenAll(prepareRenderTasks.ToArray());
                 }
 
-                // Throw exceptions if any occurred during scene update 
+                // Throw exceptions if any occurred during scene update
                 //  => This would be a fatal exception, so throw up to main loop
                 if (exceptionsDuringUpdate.HasAny())
                 {

@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Matrix m_project;
         private Matrix m_viewProj;
         #endregion
-        
+
         #region Additional parameters
         private float m_zNear = 0.1f;
         private float m_zFar = 500f;
@@ -345,7 +345,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Vector3 UpVector
         {
             get { return m_upVector; }
-            set 
+            set
             {
                 if (m_upVector != value)
                 {
@@ -415,7 +415,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get { return m_zNear; }
             set
-            { 
+            {
                 m_zNear = value;
                 UpdateCamera();
             }
@@ -427,7 +427,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public float ZFar
         {
             get { return m_zFar; }
-            set 
+            set
             {
                 m_zFar = value;
                 UpdateCamera();

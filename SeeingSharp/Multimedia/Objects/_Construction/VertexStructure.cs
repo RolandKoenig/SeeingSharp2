@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Creates a new Vertex structure object
         /// </summary>
-        public VertexStructure() 
+        public VertexStructure()
             : this(512)
         {
         }
@@ -450,7 +450,6 @@ namespace SeeingSharp.Multimedia.Objects
             if ((startVertex < 0) || (startVertex >= m_vertices.Count)) { throw new ArgumentException("startVertex"); }
             if (vertexCount + startVertex > m_vertices.Count) { throw new ArgumentException("vertexCount"); }
 
-            
             for (int actVertexIndex = startVertex; actVertexIndex < startVertex + vertexCount; actVertexIndex++)
             {
                 // Find all triangles connected to this vertex and get normals from them
@@ -728,7 +727,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             get
             {
-                int sum = 0; 
+                int sum = 0;
                 for(int loop=0; loop<m_surfaces.Count; loop++)
                 {
                     sum += m_surfaces[loop].CountTriangles;

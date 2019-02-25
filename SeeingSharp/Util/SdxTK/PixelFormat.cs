@@ -44,9 +44,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// Usage is slightly different from <see cref="SharpDX.DXGI.Format"/>, as you have to select the type of the pixel format first (Typeless, SInt...etc)
     /// and then access the available pixel formats for this type. Example: PixelFormat.UNorm.R8.
     /// </remarks>
-    /// <msdn-id>bb173059</msdn-id>	
-    /// <unmanaged>DXGI_FORMAT</unmanaged>	
-    /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>	
+    /// <msdn-id>bb173059</msdn-id>
+    /// <unmanaged>DXGI_FORMAT</unmanaged>
+    /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public struct PixelFormat : IEquatable<PixelFormat>
     {

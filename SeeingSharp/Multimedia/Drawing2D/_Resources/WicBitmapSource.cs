@@ -74,7 +74,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public int Width
         {
-            get 
+            get
             {
                 if (m_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
                 return m_wicBitmapSource.Converter.Size.Width;

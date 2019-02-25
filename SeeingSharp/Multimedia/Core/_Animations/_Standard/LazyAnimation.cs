@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_animation == null) { m_animation = m_animationCreator(); }
             if (m_animation == null) { return AnimationUpdateResult.Empty; }
 
-            return m_animation.Update(updateState, animationState); 
+            return m_animation.Update(updateState, animationState);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool Finished
         {
-            get 
+            get
             {
                 if (m_animation == null) { m_animation = m_animationCreator(); }
                 if (m_animation == null) { return true; }
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool IsBlockingAnimation
         {
-            get 
+            get
             {
                 if (m_animation == null) { m_animation = m_animationCreator(); }
                 if (m_animation == null) { return false; }

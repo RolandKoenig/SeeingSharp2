@@ -63,7 +63,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceDictionary">Current resource dicionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
-            
         }
 
         /// <summary>
@@ -73,7 +72,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            
         }
 
         /// <summary>

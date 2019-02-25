@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
                 return m_renderTarget != null;
             }
         }
-    
+
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>

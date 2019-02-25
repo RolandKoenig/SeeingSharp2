@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Core
     #endregion
 
     /// <summary>
-    /// This is mostly logic of the Scene class but experted here 
+    /// This is mostly logic of the Scene class but experted here
     /// following the Flyweight pattern.
     /// </summary>
     internal class SceneComponentFlyweight
@@ -125,7 +125,7 @@ namespace SeeingSharp.Multimedia.Core
                     m_attachedComponents[loop].Context);
             }
 
-            // Attach all components which are comming in 
+            // Attach all components which are comming in
             SceneComponentRequest actRequest = default(SceneComponentRequest);
             int actIndex = 0;
             while (m_componentRequests.Dequeue(out actRequest))
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Core
                     case SceneComponentRequestType.Attach:
                         if (actRequest.Component == null) { continue; }
                         if(TryGetAttachedComponent(
-                            actRequest.Component, actRequest.CorrespondingView, 
+                            actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
                         {
                             // We've already attached this component, so skip this request
@@ -149,7 +149,7 @@ namespace SeeingSharp.Multimedia.Core
                         if(!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
                         {
                             foreach(SceneComponentInfo actObsoleteComponent in GetExistingComponentsByGroup(
-                                actRequest.Component.ComponentGroup, 
+                                actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
                                 m_componentRequests.Enqueue(new SceneComponentRequest()
@@ -198,7 +198,7 @@ namespace SeeingSharp.Multimedia.Core
                             actComponent.Component.DetachInternal(
                                 actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                            // Remove the component 
+                            // Remove the component
                             m_attachedComponents.RemoveAt(actComponentIndex);
                         }
                         finally
@@ -218,7 +218,7 @@ namespace SeeingSharp.Multimedia.Core
                                 actComponent.Component.DetachInternal(
                                     actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                                // Remove the component 
+                                // Remove the component
                                 m_attachedComponents.RemoveAt(0);
                             }
                             finally

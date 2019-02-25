@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The ViewRelatedSceneLayerSubset to which to subscribe.</param>
         /// <param name="zOrder">The z order if sorting is enabled for this pass (default = 0).</param>
         protected internal void SubscribeToPass(
-            RenderPassInfo renderPass, 
+            RenderPassInfo renderPass,
             ViewRelatedSceneLayerSubset layerViewSubset, Action<RenderState> renderAction,
             int zOrder = 0)
         {

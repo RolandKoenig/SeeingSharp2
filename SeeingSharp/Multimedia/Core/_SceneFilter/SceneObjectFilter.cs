@@ -43,7 +43,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public SceneObjectFilter()
         {
-
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="input">The object to be checked..</param>
         /// <param name="viewInformation">A reference to the view on which to check for visibility.</param>
         public abstract bool IsObjectVisible(SceneObject input, ViewInformation viewInformation);
-        
+
         /// <summary>
         /// Sets some informational data telling the filter where it is used.
         /// </summary>

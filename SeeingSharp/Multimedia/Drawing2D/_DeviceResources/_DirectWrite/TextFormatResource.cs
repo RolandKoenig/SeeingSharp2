@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="fontStretch">The stretch parameter for the font.</param>
         /// <param name="fontStyle">The style parameter for the font.</param>
         public TextFormatResource(
-            string fontFamilyName, float fontSize, 
+            string fontFamilyName, float fontSize,
             FontWeight fontWeight = FontWeight.Normal,
             FontStyle fontStyle = FontStyle.Normal,
             FontStretch fontStretch = FontStretch.Normal)

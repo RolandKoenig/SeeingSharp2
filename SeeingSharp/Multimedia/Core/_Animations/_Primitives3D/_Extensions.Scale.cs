@@ -62,8 +62,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             sequenceBuilder.Add(
                 new Scale3DToAnimation(
-                    sequenceBuilder.TargetObject, 
-                    new Vector3(targetScaling, targetScaling, targetScaling), 
+                    sequenceBuilder.TargetObject,
+                    new Vector3(targetScaling, targetScaling, targetScaling),
                     animationTime));
             return sequenceBuilder;
         }

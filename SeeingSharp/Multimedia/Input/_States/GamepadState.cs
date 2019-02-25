@@ -110,7 +110,6 @@ namespace SeeingSharp.Multimedia.Input
             bool prevDown = ((short)m_prevState.Buttons & (short)button) == (short)button;
             bool currentDown = ((short)m_currentState.Buttons & (short)button) == (short)button;
 
-            
             return (!prevDown) && currentDown;
         }
 

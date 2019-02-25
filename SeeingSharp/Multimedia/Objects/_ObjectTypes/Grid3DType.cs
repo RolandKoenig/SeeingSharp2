@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.XLineHighlightColor = Color4Ex.GreenColor;
 
             this.GroundColor = Color4Ex.LightSteelBlue;
-            this.LineColor = Color4Ex.LightGray; 
+            this.LineColor = Color4Ex.LightGray;
         }
 
         /// <summary>

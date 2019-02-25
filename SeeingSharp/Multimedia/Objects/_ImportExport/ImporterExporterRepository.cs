@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Objects
                     m_infoByFileType[actFileFormat] = actSupportedFile;
                 }
             }
-            
+
             // Get format support on each exporter
             m_exportersByFileType = new Dictionary<string, IModelExporter>();
             foreach (IModelExporter actExporter in m_exporters)

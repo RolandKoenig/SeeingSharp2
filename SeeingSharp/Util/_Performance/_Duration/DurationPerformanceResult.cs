@@ -94,7 +94,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the average millisecond value as a double.
         /// </summary>
-        
+
         public double SumAverageMSDouble
         {
             get { return this.SumAverage.TotalMilliseconds; }

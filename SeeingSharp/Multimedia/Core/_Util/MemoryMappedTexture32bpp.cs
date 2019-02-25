@@ -163,10 +163,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public IntPtr Pointer
         {
-            get 
+            get
             {
                 if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException("MemoryMappedTextureFloat"); }
-                return m_pointer; 
+                return m_pointer;
             }
         }
     }

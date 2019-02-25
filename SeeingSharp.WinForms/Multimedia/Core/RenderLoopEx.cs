@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
             // Copy resources
             currentDevice.DeviceImmediateContextD3D11.ResolveSubresource(
                 renderLoop.Internals.RenderTarget, 0,
-                renderLoop.Internals.CopyHelperTextureStandard, 0, 
+                renderLoop.Internals.CopyHelperTextureStandard, 0,
                 GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
             currentDevice.DeviceImmediateContextD3D11.CopyResource(
                 renderLoop.Internals.CopyHelperTextureStandard,

@@ -57,8 +57,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Initializes a new instance of the <see cref="WriteableBitmapResource"/> class.
         /// </summary>
         public WriteableBitmapResource(
-            Size2 bitmapSize, 
-            BitmapFormat format = BitmapFormat.Bgra, 
+            Size2 bitmapSize,
+            BitmapFormat format = BitmapFormat.Bgra,
             AlphaMode alphaMode = AlphaMode.Straight,
             double dpiX = 96.0, double dpiY = 96.0)
         {
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Load the bitmap initially
                 result = new D2D.Bitmap(
                     engineDevice.FakeRenderTarget2D,
-                    m_bitmapSize, 
+                    m_bitmapSize,
                     new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
                 m_loadedBitmaps[engineDevice.DeviceIndex] = result;
             }

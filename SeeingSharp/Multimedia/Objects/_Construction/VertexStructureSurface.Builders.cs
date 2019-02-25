@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             distance = float.MaxValue;
             bool result = false;
- 
+
             for (int loop = 0; loop < m_indices.Count; loop += 3)
             {
                 Vector3 vertex1 = m_owner.VerticesInternal[m_indices[loop]].Position;

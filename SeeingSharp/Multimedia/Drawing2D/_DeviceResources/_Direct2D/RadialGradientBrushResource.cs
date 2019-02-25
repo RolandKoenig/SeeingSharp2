@@ -135,7 +135,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 result.Brush = new D2D.RadialGradientBrush(
                     engineDevice.FakeRenderTarget2D,
                     new D2D.RadialGradientBrushProperties()
-                    { 
+                    {
                         Center = m_center,
                         GradientOriginOffset = m_gradientOriginOffset,
                         RadiusX = m_radiusX,
@@ -188,7 +188,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// A simple helper storing both resurces.. 
+        /// A simple helper storing both resurces..
         ///  - the GradientStopCollection
         ///  - and the RadialGradientBrush itself
         /// </summary>

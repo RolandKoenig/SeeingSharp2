@@ -848,7 +848,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_perFrameData.Time = m_perFrameData.Time % SeeingSharpConstants.MAX_PER_FRAME_TIME_VALUE;
             }
 
-            // Update all scene components first 
+            // Update all scene components first
             //  These may trigger some further manipulation actions
             m_sceneComponents.UpdateSceneComponents(updateState);
 

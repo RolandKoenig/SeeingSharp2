@@ -61,7 +61,7 @@ namespace SeeingSharp.Util
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
         /// <param name="calculationInterval">The interval from which to take all values from.</param>
         internal override PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp, 
+            DateTime keyTimeStamp,
             DateTime minTimeStamp, DateTime maxTimeStamp,
             TimeSpan calculationInterval)
         {

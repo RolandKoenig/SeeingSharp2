@@ -52,12 +52,12 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public int ArraySize;
         public int MipLevels;
 
-        /// <summary>	
-        /// <dd> <p>Texture format (see <strong><see cref="SharpDX.DXGI.Format"/></strong>).</p> </dd>	
-        /// </summary>	
-        /// <msdn-id>ff476252</msdn-id>	
-        /// <unmanaged>DXGI_FORMAT Format</unmanaged>	
-        /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>	
+        /// <summary>
+        /// <dd> <p>Texture format (see <strong><see cref="SharpDX.DXGI.Format"/></strong>).</p> </dd>
+        /// </summary>
+        /// <msdn-id>ff476252</msdn-id>
+        /// <unmanaged>DXGI_FORMAT Format</unmanaged>
+        /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>
         public SharpDX.DXGI.Format Format;
 
         public bool Equals(ImageDescription other)

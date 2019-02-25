@@ -202,7 +202,7 @@ namespace SeeingSharp.Multimedia.Input
                 }
             }
 
-            // Store the generated InputFrame 
+            // Store the generated InputFrame
             m_lastInputFrame = newInputFrame;
             m_gatheredInputFrames.Enqueue(newInputFrame);
 

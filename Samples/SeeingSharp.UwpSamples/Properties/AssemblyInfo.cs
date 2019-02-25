@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -21,11 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SeeingSharp.UwpSamples")]
@@ -40,11 +41,11 @@ using System.Runtime.InteropServices;
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
-//      Minor Version 
+//      Minor Version
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
+// You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]

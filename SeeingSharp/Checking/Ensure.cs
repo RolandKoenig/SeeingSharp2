@@ -231,7 +231,7 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((objParam == null) && 
+            if ((objParam == null) &&
                 (default(T) != null))
             {
                 throw new SeeingSharpCheckException(string.Format(

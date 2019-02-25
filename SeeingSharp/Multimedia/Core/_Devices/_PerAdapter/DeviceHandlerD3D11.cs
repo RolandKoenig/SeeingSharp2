@@ -136,9 +136,9 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Throw exception on failure
-            if (m_device1 == null) 
-            { 
-                throw new SeeingSharpGraphicsException("Unable to initialize d3d11 device!"); 
+            if (m_device1 == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to initialize d3d11 device!");
             }
 
             // Get immediate context from the device

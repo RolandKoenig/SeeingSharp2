@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Luminance = 0x00020000, // DDPF_LUMINANCE
             LuminanceAlpha = 0x00020001, // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
             Alpha = 0x00000002, // DDPF_ALPHA
-            Pal8 = 0x00000020, // DDPF_PALETTEINDEXED8            
+            Pal8 = 0x00000020, // DDPF_PALETTEINDEXED8
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         [Flags]
         public enum HeaderFlags
         {
-            Texture = 0x00001007, // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT 
+            Texture = 0x00001007, // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
             Mipmap = 0x00020000, // DDSD_MIPMAPCOUNT
             Volume = 0x00800000, // DDSD_DEPTH
             Pitch = 0x00000008, // DDSD_PITCH
@@ -235,7 +235,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             public SharpDX.DXGI.Format DXGIFormat;
             public D3D11.ResourceDimension ResourceDimension;
-            public D3D11.ResourceOptionFlags MiscFlags; 
+            public D3D11.ResourceOptionFlags MiscFlags;
             public int ArraySize;
 
             private readonly uint Unused;

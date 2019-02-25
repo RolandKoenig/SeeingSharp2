@@ -157,7 +157,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Render all lines finally
             resourceData.LineRenderResources.RenderLines(
-                renderState, viewProj, m_lineColor, 
+                renderState, viewProj, m_lineColor,
                 resourceData.LineVertexBuffer, m_lineData.Length * 2);
         }
 

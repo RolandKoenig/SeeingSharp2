@@ -152,12 +152,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// The resize factor for imported geometry.
         /// (This property is handled by the importer)
         /// </summary>
-        public float ResizeFactor 
-        { 
-            get 
-            { 
+        public float ResizeFactor
+        {
+            get
+            {
                 return m_importOptions.ResizeFactor;
-            } 
+            }
         }
     }
 }

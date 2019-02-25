@@ -78,7 +78,7 @@ namespace SeeingSharp.Util
             }
 #elif DESKTOP
             return new Uri(string.Format("/{0};component/{1}", m_assemblyName, m_filePath), UriKind.Relative);
-#else 
+#else
             throw new InvalidOperationException("Unable to generate resource uri: Platform not handled!");
 #endif
         }

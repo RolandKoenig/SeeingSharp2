@@ -97,7 +97,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="updateState">Current update state.</param>
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
-            
         }
 
         /// <summary>

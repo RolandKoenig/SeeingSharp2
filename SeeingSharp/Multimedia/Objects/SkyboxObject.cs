@@ -207,7 +207,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Bind index and vertex buffer
             deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
-                localResources.VertexBuffer, 
+                localResources.VertexBuffer,
                 StandardVertex.Size, 0));
 
             // Draw the skybox

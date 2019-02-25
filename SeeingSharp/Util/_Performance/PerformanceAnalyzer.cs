@@ -200,7 +200,7 @@ namespace SeeingSharp.Util
                 () =>
                 {
                     this.RefreshUICollections();
-                }, 
+                },
                 ActionIfSyncContextIsNull.InvokeSynchronous);
         }
 
@@ -222,7 +222,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Triggers calculation of 
+        /// Triggers calculation of
         /// </summary>
         /// <param name="timestamp"></param>
         /// <returns></returns>

@@ -46,7 +46,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private UpdateState()
         {
-            
         }
 
         /// <summary>
@@ -58,7 +57,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_updateTime = updateTime;
             m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
-            
         }
 
         /// <summary>

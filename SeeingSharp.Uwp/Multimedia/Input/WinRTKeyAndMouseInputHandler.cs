@@ -151,7 +151,7 @@ namespace SeeingSharp.Multimedia.Input
                 m_coreWindow.KeyDown += OnCoreWindow_KeyDown;
                 m_coreWindow.KeyUp += OnCoreWindow_KeyUp;
 
-                // Set focus on the target 
+                // Set focus on the target
                 m_dummyButtonForFocus.Focus(FocusState.Programmatic);
             });
         }
