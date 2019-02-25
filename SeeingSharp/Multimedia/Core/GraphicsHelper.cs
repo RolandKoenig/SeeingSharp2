@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,40 +21,42 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using SharpDX;
-using System.Text;
-using SeeingSharp;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Drawing3D;
+
+#region using
 
 //Some namespace mappings
-using Buffer = SharpDX.Direct3D11.Buffer;
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
-using WIC = SharpDX.WIC;
-using SeeingSharp.Resources;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using Checking;
+    using Drawing3D;
+    using Resources;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public static class GraphicsHelper
     {
         #region All default texture formats
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT = DXGI.Format.B8G8R8A8_UNorm;
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING = DXGI.Format.B8G8R8A8_UNorm;
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = DXGI.Format.B8G8R8A8_UNorm;
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = DXGI.Format.R16G16B16A16_Float;
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = DXGI.Format.R32_Float;
-        public const DXGI.Format DEFAULT_TEXTURE_FORMAT_DEPTH = DXGI.Format.D32_Float_S8X24_UInt;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = WIC.PixelFormat.Format32bppBGRA;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = WIC.PixelFormat.Format32bppPBGRA;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT = SharpDX.DXGI.Format.B8G8R8A8_UNorm;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING = SharpDX.DXGI.Format.B8G8R8A8_UNorm;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = SharpDX.DXGI.Format.B8G8R8A8_UNorm;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = SharpDX.DXGI.Format.R16G16B16A16_Float;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = SharpDX.DXGI.Format.R32_Float;
+        public const SharpDX.DXGI.Format DEFAULT_TEXTURE_FORMAT_DEPTH = SharpDX.DXGI.Format.D32_Float_S8X24_UInt;
+        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = SharpDX.WIC.PixelFormat.Format32bppBGRA;
+        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = SharpDX.WIC.PixelFormat.Format32bppPBGRA;
         #endregion
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
                 Width = width,
                 Height = height,
                 MipLevels = 1,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
                 Usage = D3D11.ResourceUsage.Default,
                 OptionFlags = D3D11.ResourceOptionFlags.Shared,
                 CpuAccessFlags = D3D11.CpuAccessFlags.None,
@@ -99,7 +101,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = rawImage.Description.ArraySize;
             textureDescription.Format = rawImage.Description.Format;
             textureDescription.Usage = D3D11.ResourceUsage.Default;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.ShaderResource;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -166,14 +168,14 @@ namespace SeeingSharp.Multimedia.Core
                 inStream,
                 SharpDX.WIC.DecodeOptions.CacheOnDemand);
 
-            var formatConverter = new WIC.FormatConverter(GraphicsCore.Current.FactoryWIC);
+            var formatConverter = new SharpDX.WIC.FormatConverter(GraphicsCore.Current.FactoryWIC);
             formatConverter.Initialize(
                 bitmapDecoder.GetFrame(0),
                 DEFAULT_WIC_BITMAP_FORMAT,
-                WIC.BitmapDitherType.None,
+                SharpDX.WIC.BitmapDitherType.None,
                 null,
                 0.0,
-                WIC.BitmapPaletteType.Custom);
+                SharpDX.WIC.BitmapPaletteType.Custom);
 
             return new WicBitmapSourceInternal(bitmapDecoder, formatConverter);
         }
@@ -206,14 +208,14 @@ namespace SeeingSharp.Multimedia.Core
                 inStream,
                 SharpDX.WIC.DecodeOptions.CacheOnLoad);
 
-            var formatConverter = new WIC.FormatConverter(GraphicsCore.Current.FactoryWIC);
+            var formatConverter = new SharpDX.WIC.FormatConverter(GraphicsCore.Current.FactoryWIC);
             formatConverter.Initialize(
                 bitmapDecoder.GetFrame(0),
                 DEFAULT_WIC_BITMAP_FORMAT_D2D,
-                WIC.BitmapDitherType.None,
+                SharpDX.WIC.BitmapDitherType.None,
                 null,
                 0.0,
-                WIC.BitmapPaletteType.MedianCut);
+                SharpDX.WIC.BitmapPaletteType.MedianCut);
 
             return new WicBitmapSourceInternal(bitmapDecoder, formatConverter);
         }
@@ -259,7 +261,7 @@ namespace SeeingSharp.Multimedia.Core
             device.EnsureNotNull(nameof(device));
             bitmapSourceWrapper.EnsureNotNullOrDisposed(nameof(bitmapSourceWrapper));
 
-            WIC.BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
+            SharpDX.WIC.BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
             // Allocate DataStream to receive the WIC image pixels
             int stride = bitmapSource.Size.Width * 4;
@@ -324,7 +326,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format which is used to create the texture.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, SharpDX.DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
@@ -337,7 +339,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = format;
             textureDescription.Usage = D3D11.ResourceUsage.Default;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.ShaderResource;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -352,7 +354,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format which is used to create the texture.</param>
-        public static D3D11.Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+        public static D3D11.Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, SharpDX.DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
@@ -365,7 +367,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = format;
             textureDescription.Usage = D3D11.ResourceUsage.Dynamic;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.ShaderResource;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.Write;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -394,7 +396,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = DEFAULT_TEXTURE_FORMAT;
             textureDescription.Usage = D3D11.ResourceUsage.Default;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.ShaderResource;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -409,7 +411,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format used to create the texture.</param>
-        public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+        public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height, SharpDX.DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
@@ -425,7 +427,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = format;
             textureDescription.Usage = D3D11.ResourceUsage.Staging;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.None;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.Read;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -455,7 +457,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = DEFAULT_TEXTURE_FORMAT;
             textureDescription.Usage = D3D11.ResourceUsage.Staging;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.None;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.Read;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -503,7 +505,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.ArraySize = 1;
                 textureDescription.Format = DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH;
                 textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
                 textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -552,7 +554,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.ArraySize = 1;
                 textureDescription.Format = DEFAULT_TEXTURE_FORMAT_OBJECT_ID;
                 textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
                 textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -600,7 +602,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.ArraySize = 1;
                 textureDescription.Format = DEFAULT_TEXTURE_FORMAT;
                 textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
                 textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -645,7 +647,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.MipLevels = 1;
                 textureDescription.ArraySize = 1;
                 textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
                 textureDescription.BindFlags = D3D11.BindFlags.DepthStencil;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -656,14 +658,14 @@ namespace SeeingSharp.Multimedia.Core
             {
                 case HardwareDriverLevel.Direct3D11:
                 case HardwareDriverLevel.Direct3D10:
-                    textureDescription.Format = DXGI.Format.D32_Float_S8X24_UInt;
+                    textureDescription.Format = SharpDX.DXGI.Format.D32_Float_S8X24_UInt;
                     break;
 
                 // This would be for Direct3D 9 hardware
                 case HardwareDriverLevel.Direct3D9_1:
                 case HardwareDriverLevel.Direct3D9_2:
                 case HardwareDriverLevel.Direct3D9_3:
-                    textureDescription.Format = DXGI.Format.D24_UNorm_S8_UInt;
+                    textureDescription.Format = SharpDX.DXGI.Format.D24_UNorm_S8_UInt;
                     break;
 
                 default:
@@ -948,7 +950,7 @@ namespace SeeingSharp.Multimedia.Core
             textureDescription.ArraySize = 1;
             textureDescription.Format = DEFAULT_TEXTURE_FORMAT;
             textureDescription.Usage = D3D11.ResourceUsage.Default;
-            textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+            textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
             textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
             textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;

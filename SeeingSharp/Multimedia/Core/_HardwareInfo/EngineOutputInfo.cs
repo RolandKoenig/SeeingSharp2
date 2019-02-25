@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,37 +21,38 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel;
-
-using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+
+    #endregion
+
     public class EngineOutputInfo 
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
         private int m_adapterIndex;
         private int m_outputIndex;
-        private DXGI.OutputDescription m_outputDescription;
+        private SharpDX.DXGI.OutputDescription m_outputDescription;
         private EngineOutputModeInfo[] m_outputInfos;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
         /// </summary>
-        internal EngineOutputInfo(int adapterIndex, int outputIndex, DXGI.Output output)
+        internal EngineOutputInfo(int adapterIndex, int outputIndex, SharpDX.DXGI.Output output)
         {
             m_adapterIndex = adapterIndex;
             m_outputIndex = outputIndex;
             m_outputDescription = output.Description;
 
             // Get all supported modes
-            DXGI.ModeDescription[] modes = output.GetDisplayModeList(
+            SharpDX.DXGI.ModeDescription[] modes = output.GetDisplayModeList(
                 GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
-                DXGI.DisplayModeEnumerationFlags.Interlaced);
+                SharpDX.DXGI.DisplayModeEnumerationFlags.Interlaced);
 
             // Convert and sort them
             EngineOutputModeInfo[] engineModes = new EngineOutputModeInfo[modes.Length];

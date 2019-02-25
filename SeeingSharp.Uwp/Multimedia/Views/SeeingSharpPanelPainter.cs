@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,30 +21,33 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Threading;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Windows.Foundation;
-using Windows.Graphics.Display;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Threading;
+    using Windows.Foundation;
+    using Windows.UI.Core;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Media;
+    using Core;
+    using Drawing3D;
+    using Input;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     // Using SwapChainBackgroundPanel to render to the background of the WinRT app
     //  see http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
     public partial class SeeingSharpPanelPainter : ISeeingSharpPainter, IDisposable, IInputEnabledView, IRenderLoopHost
@@ -66,7 +69,7 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Resources from Direct3D 11
-        private DXGI.SwapChain1 m_swapChain;
+        private SharpDX.DXGI.SwapChain1 m_swapChain;
         private D3D11.Texture2D m_backBuffer;
         private D3D11.Texture2D m_backBufferMultisampled;
         private D3D11.Texture2D m_depthBuffer;
@@ -398,7 +401,7 @@ namespace SeeingSharp.Multimedia.Views
                     m_targetPanel.CompositionRescalingNeeded)
                 {
                     m_compositionScaleChanged = false;
-                    DXGI.SwapChain2 swapChain2 = m_swapChain.QueryInterfaceOrNull<DXGI.SwapChain2>();
+                    SharpDX.DXGI.SwapChain2 swapChain2 = m_swapChain.QueryInterfaceOrNull<SharpDX.DXGI.SwapChain2>();
                     if (swapChain2 != null)
                     {
                         try
@@ -440,7 +443,7 @@ namespace SeeingSharp.Multimedia.Views
             // First parameter indicates synchronization with vertical blank
             //  see http://msdn.microsoft.com/en-us/library/windows/desktop/bb174576(v=vs.85).aspx
             //  see example http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
-            m_swapChain.Present(1, DXGI.PresentFlags.None);
+            m_swapChain.Present(1, SharpDX.DXGI.PresentFlags.None);
         }
 
         /// <summary>

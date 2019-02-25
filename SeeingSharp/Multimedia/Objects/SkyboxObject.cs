@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Numerics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using Core;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class SkyboxObject : SceneObject
     {
         private NamedOrGenericKey m_cubeTextureKey;
@@ -203,7 +205,7 @@ namespace SeeingSharp.Multimedia.Objects
             deviceContext.PixelShader.SetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, DXGI.Format.R32_UInt, 0);
+            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
                 localResources.VertexBuffer, 
                 StandardVertex.Size, 0));

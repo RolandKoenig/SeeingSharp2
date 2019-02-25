@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,28 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mapping
 using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    #endregion
+
     internal class DDS
     {
         /// <summary>
@@ -229,7 +233,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderDXT10
         {
-            public DXGI.Format DXGIFormat;
+            public SharpDX.DXGI.Format DXGIFormat;
             public D3D11.ResourceDimension ResourceDimension;
             public D3D11.ResourceOptionFlags MiscFlags; 
             public int ArraySize;

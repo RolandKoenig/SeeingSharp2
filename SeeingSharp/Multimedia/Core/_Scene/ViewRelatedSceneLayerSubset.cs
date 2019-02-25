@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D = SharpDX.Direct3D;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class ViewRelatedSceneLayerSubset : IDisposable
     {
         private const int DEFAULT_PASS_SUBSCRIPTION_LENGTH = 1024;

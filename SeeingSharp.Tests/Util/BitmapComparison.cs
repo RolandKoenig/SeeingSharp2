@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
+
+#region using
 
 using GDI = System.Drawing;
 
+#endregion
+
 namespace SeeingSharp.Tests.Util
 {
+    #region using
+
+    using System;
+    using System.Drawing.Imaging;
+    using Checking;
+
+    #endregion
+
     /// <summary>
     /// This class is for comparing two pictueres and to calculate the difference between these.
     /// Originally, this algorithm was based on http://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET.
@@ -53,7 +57,7 @@ namespace SeeingSharp.Tests.Util
         /// </summary>
         /// <param name="bitmapLeft">The bitmap left.</param>
         /// <param name="bitmapRight">The bitmap right.</param>
-        public static bool IsNearEqual(Bitmap bitmapLeft, Bitmap bitmapRight)
+        public static bool IsNearEqual(GDI.Bitmap bitmapLeft, GDI.Bitmap bitmapRight)
         {
             return CalculatePercentageDifference(bitmapLeft, bitmapRight) < 0.05;
         }
@@ -64,7 +68,7 @@ namespace SeeingSharp.Tests.Util
         /// <param name="bitmapLeft">The first bitmap for the comparison.</param>
         /// <param name="bitmapRight">The second bitmap for the comparison.</param>
         /// <returns>Difference of both bitmaps in precent</returns>
-        public static float CalculatePercentageDifference(Bitmap bitmapLeft, Bitmap bitmapRight)
+        public static float CalculatePercentageDifference(GDI.Bitmap bitmapLeft, GDI.Bitmap bitmapRight)
         {
             bitmapLeft.EnsureNotNull(nameof(bitmapLeft));
             bitmapRight.EnsureNotNull(nameof(bitmapRight));

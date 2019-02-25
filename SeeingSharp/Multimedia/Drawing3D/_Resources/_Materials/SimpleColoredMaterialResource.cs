@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class SimpleColoredMaterialResource : MaterialResource
     {
         internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();

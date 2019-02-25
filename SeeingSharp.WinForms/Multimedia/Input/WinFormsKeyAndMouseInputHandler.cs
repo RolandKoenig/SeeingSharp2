@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,34 +21,35 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Numerics;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
+
+#region using
 
 // Some namespace mapings
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Core;
+    using SharpDX;
+
+    #endregion
+
     internal class WinFormsKeyAndMouseInputHandler : IInputHandler
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
 
-        private static readonly Dictionary<Keys, WinVirtualKey> s_keyMappingDict;
+        private static readonly Dictionary<WinForms.Keys, WinVirtualKey> s_keyMappingDict;
 
         #region References to the view
-        private Control m_currentControl;
+        private WinForms.Control m_currentControl;
         private RenderLoop m_renderLoop;
         private IInputEnabledView m_focusHandler;
         #endregion References to the view
@@ -76,8 +77,8 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Build the mapping dictionary
-            s_keyMappingDict = new Dictionary<Keys, WinVirtualKey>();
-            foreach (Keys actKeyMember in Enum.GetValues(typeof(Keys)))
+            s_keyMappingDict = new Dictionary<WinForms.Keys, WinVirtualKey>();
+            foreach (WinForms.Keys actKeyMember in Enum.GetValues(typeof(WinForms.Keys)))
             {
                 int actKeyCode = (int)actKeyMember;
                 if(supportedKeyCodes.ContainsKey(actKeyCode))
@@ -107,7 +108,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         public Type[] GetSupportedViewTypes()
         {
-            return new Type[] { typeof(Control), typeof(IInputControlHost) };
+            return new Type[] { typeof(WinForms.Control), typeof(IInputControlHost) };
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
         public void Start(IInputEnabledView viewObject)
         {
-            m_currentControl = viewObject as Control;
+            m_currentControl = viewObject as WinForms.Control;
             if (m_currentControl == null)
             {
                 IInputControlHost inputControlHost = viewObject as IInputControlHost;
@@ -163,7 +164,7 @@ namespace SeeingSharp.Multimedia.Input
             // Perform event deregistrations on UI thread
             if (m_currentControl != null)
             {
-                Control currentControl = m_currentControl;
+                WinForms.Control currentControl = m_currentControl;
                 Action removeEventRegistrationsAction = new Action(() =>
                 {
                     if(currentControl == null) { return; }
@@ -207,7 +208,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             if(m_currentControl == null) { return; }
 
-            m_lastMousePoint = m_currentControl.PointToClient(Cursor.Position);
+            m_lastMousePoint = m_currentControl.PointToClient(WinForms.Cursor.Position);
             m_isMouseInside = true;
 
             m_stateMouseOrPointer.Internals.NotifyInside(true);
@@ -216,64 +217,64 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when user clicks on this panel.
         /// </summary>
-        private void OnMouseClick(object sender, MouseEventArgs e)
+        private void OnMouseClick(object sender, WinForms.MouseEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
             m_currentControl.Focus();
         }
 
-        private void OnMouseDown(object sender, MouseEventArgs e)
+        private void OnMouseDown(object sender, WinForms.MouseEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
             switch (e.Button)
             {
-                case MouseButtons.Left:
+                case WinForms.MouseButtons.Left:
                     m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Left);
                     break;
 
-                case MouseButtons.Middle:
+                case WinForms.MouseButtons.Middle:
                     m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Middle);
                     break;
 
-                case MouseButtons.Right:
+                case WinForms.MouseButtons.Right:
                     m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Right);
                     break;
 
-                case MouseButtons.XButton1:
+                case WinForms.MouseButtons.XButton1:
                     m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended1);
                     break;
 
-                case MouseButtons.XButton2:
+                case WinForms.MouseButtons.XButton2:
                     m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended2);
                     break;
             }
         }
 
-        private void OnMouseUp(object sender, MouseEventArgs e)
+        private void OnMouseUp(object sender, WinForms.MouseEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
             switch (e.Button)
             {
-                case MouseButtons.Left:
+                case WinForms.MouseButtons.Left:
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
                     break;
 
-                case MouseButtons.Middle:
+                case WinForms.MouseButtons.Middle:
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
                     break;
 
-                case MouseButtons.Right:
+                case WinForms.MouseButtons.Right:
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
                     break;
 
-                case MouseButtons.XButton1:
+                case WinForms.MouseButtons.XButton1:
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
                     break;
 
-                case MouseButtons.XButton2:
+                case WinForms.MouseButtons.XButton2:
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
                     break;
             }
@@ -295,7 +296,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when the mouse moves on the screen.
         /// </summary>
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void OnMouseMove(object sender, WinForms.MouseEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
@@ -314,7 +315,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when mouse wheel is used.
         /// </summary>
-        private void OnMouseWheel(object sender, MouseEventArgs e)
+        private void OnMouseWheel(object sender, WinForms.MouseEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
@@ -327,7 +328,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when a key is up
         /// </summary>
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        private void OnKeyUp(object sender, WinForms.KeyEventArgs e)
         {
             if (m_currentControl == null) { return; }
 
@@ -342,7 +343,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when a key is down.
         /// </summary>
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, WinForms.KeyEventArgs e)
         {
             if (m_currentControl == null) { return; }
 

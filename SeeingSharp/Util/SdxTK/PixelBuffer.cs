@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,22 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mappings
 using SDX = SharpDX;
-using DXGI = SharpDX.DXGI;
-using System.IO;
+
+#endregion
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.IO;
+
+    #endregion
+
     /// <summary>
     /// An unmanaged buffer of pixels.
     /// </summary>
@@ -46,7 +50,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         private int height;
 
-        private DXGI.Format format;
+        private SharpDX.DXGI.Format format;
 
         private int rowStride;
 
@@ -70,7 +74,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="rowStride">The row pitch.</param>
         /// <param name="bufferStride">The slice pitch.</param>
         /// <param name="dataPointer">The pixels.</param>
-        public PixelBuffer(int width, int height, DXGI.Format format, int rowStride, int bufferStride, IntPtr dataPointer)
+        public PixelBuffer(int width, int height, SharpDX.DXGI.Format format, int rowStride, int bufferStride, IntPtr dataPointer)
         {
             if (dataPointer == IntPtr.Zero)
                 throw new ArgumentException("Pointer cannot be equal to IntPtr.Zero", "dataPointer");
@@ -81,7 +85,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             this.rowStride = rowStride;
             this.bufferStride = bufferStride;
             this.dataPointer = dataPointer;
-            this.pixelSize = DXGI.FormatHelper.SizeOfInBytes(this.format);
+            this.pixelSize = SharpDX.DXGI.FormatHelper.SizeOfInBytes(this.format);
             this.isStrictRowStride = (pixelSize * width) == rowStride;
         }
 
@@ -101,7 +105,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the format (this value can be changed)
         /// </summary>
         /// <value>The format.</value>
-        public DXGI.Format Format
+        public SharpDX.DXGI.Format Format
         {
             get
             {
@@ -109,7 +113,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
             set
             {
-                if (PixelSize != DXGI.FormatHelper.SizeOfInBytes(value))
+                if (PixelSize != SharpDX.DXGI.FormatHelper.SizeOfInBytes(value))
                 {
                     throw new ArgumentException(string.Format("Format [{0}] doesn't have same pixel size in bytes than current format [{1}]", value, format));
                 }
@@ -154,7 +158,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             // Check that buffers are identical
             if (this.Width != pixelBuffer.Width
                 || this.Height != pixelBuffer.Height
-                || PixelSize != DXGI.FormatHelper.SizeOfInBytes(pixelBuffer.Format))
+                || PixelSize != SharpDX.DXGI.FormatHelper.SizeOfInBytes(pixelBuffer.Format))
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }

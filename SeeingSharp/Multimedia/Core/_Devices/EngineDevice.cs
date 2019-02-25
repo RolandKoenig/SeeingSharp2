@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Checking;
 
-// Some namespace mappings
-using DXGI = SharpDX.DXGI;
+#region using
+
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Checking;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class EngineDevice
     {
         #region Constants
@@ -46,8 +49,8 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Main members
         private EngineDeviceInternals m_internals;
-        private DXGI.Adapter1 m_adapter1;
-        private DXGI.AdapterDescription1 m_adapterDesc1;
+        private SharpDX.DXGI.Adapter1 m_adapter1;
+        private SharpDX.DXGI.AdapterDescription1 m_adapterDesc1;
         private GraphicsDeviceConfiguration m_configuration;
         private DeviceLoadSettings m_deviceLoadSettings;
         private EngineFactory m_engineFactory;
@@ -68,14 +71,14 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Possible antialiasing modes
-        private DXGI.SampleDescription m_antialiasingConfigLow;
-        private DXGI.SampleDescription m_antialiasingConfigMedium;
-        private DXGI.SampleDescription m_antialiasingConfigHigh;
+        private SharpDX.DXGI.SampleDescription m_antialiasingConfigLow;
+        private SharpDX.DXGI.SampleDescription m_antialiasingConfigMedium;
+        private SharpDX.DXGI.SampleDescription m_antialiasingConfigHigh;
         #endregion
 
         #region Members for antialiasing
         private bool m_isStandardAntialiasingSupported;
-        private DXGI.SampleDescription m_sampleDescWithAntialiasing;
+        private SharpDX.DXGI.SampleDescription m_sampleDescWithAntialiasing;
         #endregion
 
         /// <summary>
@@ -84,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
         internal EngineDevice(
             DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration, 
-            DXGI.Adapter1 adapter, bool isSoftwareAdapter)
+            SharpDX.DXGI.Adapter1 adapter, bool isSoftwareAdapter)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
             engineFactory.EnsureNotNull(nameof(engineFactory));
@@ -103,7 +106,7 @@ namespace SeeingSharp.Multimedia.Core
             m_configuration = new GraphicsDeviceConfiguration(coreConfiguration);
 
             // Set default antialiasing configurations
-            m_sampleDescWithAntialiasing = new DXGI.SampleDescription(1, 0);
+            m_sampleDescWithAntialiasing = new SharpDX.DXGI.SampleDescription(1, 0);
 
             // Initialize all direct3D APIs
             try
@@ -170,7 +173,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Get the sample description for the given quality level.
         /// </summary>
         /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        public DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        public SharpDX.DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
         {
             switch (qualityLevel)
             {
@@ -184,16 +187,16 @@ namespace SeeingSharp.Multimedia.Core
                     return m_antialiasingConfigHigh;
             }
 
-            return new DXGI.SampleDescription(1, 0);
+            return new SharpDX.DXGI.SampleDescription(1, 0);
         }
 
         /// <summary>
         /// Get the sample description for the given quality level.
         /// </summary>
-        internal DXGI.SampleDescription GetSampleDescription(bool antialiasingEnabled)
+        internal SharpDX.DXGI.SampleDescription GetSampleDescription(bool antialiasingEnabled)
         {
             if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
-            else { return new DXGI.SampleDescription(1, 0); }
+            else { return new SharpDX.DXGI.SampleDescription(1, 0); }
         }
 
         /// <summary>
@@ -232,7 +235,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.ArraySize = 1;
                 textureDescription.Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT;
                 textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new DXGI.SampleDescription(2, 0);
+                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(2, 0);
                 textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -252,15 +255,15 @@ namespace SeeingSharp.Multimedia.Core
             // Generate sample descriptions for each possible quality level
             if (lowQualityLevels > 0)
             {
-                m_antialiasingConfigLow = new DXGI.SampleDescription(2, lowQualityLevels - 1);
+                m_antialiasingConfigLow = new SharpDX.DXGI.SampleDescription(2, lowQualityLevels - 1);
             }
             if (mediumQualityLevels > 0)
             {
-                m_antialiasingConfigMedium = new DXGI.SampleDescription(4, mediumQualityLevels - 1);
+                m_antialiasingConfigMedium = new SharpDX.DXGI.SampleDescription(4, mediumQualityLevels - 1);
             }
             if (hightQualityLevels > 0)
             {
-                m_antialiasingConfigHigh = new DXGI.SampleDescription(8, hightQualityLevels - 1);
+                m_antialiasingConfigHigh = new SharpDX.DXGI.SampleDescription(8, hightQualityLevels - 1);
             }
 
             return lowQualityLevels > 0;
@@ -428,7 +431,7 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_handlerD2D.DeviceContext; }
         }
 
-        public DXGI.Device3 DeviceDxgi
+        public SharpDX.DXGI.Device3 DeviceDxgi
         {
             get { return m_handlerDXGI.Device; }
         }
@@ -470,7 +473,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        public DXGI.Factory2 FactoryDxgi
+        public SharpDX.DXGI.Factory2 FactoryDxgi
         {
             get
             {
@@ -518,9 +521,9 @@ namespace SeeingSharp.Multimedia.Core
                 m_host = host;
             }
 
-            public DXGI.Adapter1 Adapter => m_host.m_adapter1;
+            public SharpDX.DXGI.Adapter1 Adapter => m_host.m_adapter1;
 
-            public DXGI.AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
+            public SharpDX.DXGI.AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
         }
     }
 }

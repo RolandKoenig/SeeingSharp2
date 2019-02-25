@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,25 +21,29 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mappings
 using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.InteropServices;
+
+    #endregion
+
     internal class DDSHelper
     {
         [Flags]
@@ -71,86 +75,86 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             /// <param name="format">The format.</param>
             /// <param name="conversionFlags">The conversion flags.</param>
             /// <param name="pixelFormat">The pixel format.</param>
-            public LegacyMap(DXGI.Format format, ConversionFlags conversionFlags, DDS.PixelFormat pixelFormat)
+            public LegacyMap(SharpDX.DXGI.Format format, ConversionFlags conversionFlags, DDS.PixelFormat pixelFormat)
             {
                 Format = format;
                 ConversionFlags = conversionFlags;
                 PixelFormat = pixelFormat;
             }
 
-            public DXGI.Format Format;
+            public SharpDX.DXGI.Format Format;
             public ConversionFlags ConversionFlags;
             public DDS.PixelFormat PixelFormat;
         };
 
         private static readonly LegacyMap[] LegacyMaps = new[]
                                                              {
-                                                                 new LegacyMap(DXGI.Format.BC1_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT1), // D3DFMT_DXT1
-                                                                 new LegacyMap(DXGI.Format.BC2_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT3), // D3DFMT_DXT3
-                                                                 new LegacyMap(DXGI.Format.BC3_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT5), // D3DFMT_DXT5
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC1_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT1), // D3DFMT_DXT1
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC2_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT3), // D3DFMT_DXT3
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC3_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT5), // D3DFMT_DXT5
 
-                                                                 new LegacyMap(DXGI.Format.BC2_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT2), // D3DFMT_DXT2 (ignore premultiply)
-                                                                 new LegacyMap(DXGI.Format.BC3_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT4), // D3DFMT_DXT4 (ignore premultiply)
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC2_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT2), // D3DFMT_DXT2 (ignore premultiply)
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC3_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT4), // D3DFMT_DXT4 (ignore premultiply)
 
-                                                                 new LegacyMap(DXGI.Format.BC4_UNorm, ConversionFlags.None, DDS.PixelFormat.BC4_UNorm),
-                                                                 new LegacyMap(DXGI.Format.BC4_SNorm, ConversionFlags.None, DDS.PixelFormat.BC4_SNorm),
-                                                                 new LegacyMap(DXGI.Format.BC5_UNorm, ConversionFlags.None, DDS.PixelFormat.BC5_UNorm),
-                                                                 new LegacyMap(DXGI.Format.BC5_SNorm, ConversionFlags.None, DDS.PixelFormat.BC5_SNorm),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC4_UNorm, ConversionFlags.None, DDS.PixelFormat.BC4_UNorm),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC4_SNorm, ConversionFlags.None, DDS.PixelFormat.BC4_SNorm),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC5_UNorm, ConversionFlags.None, DDS.PixelFormat.BC5_UNorm),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC5_SNorm, ConversionFlags.None, DDS.PixelFormat.BC5_SNorm),
 
-                                                                 new LegacyMap(DXGI.Format.BC4_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, new SDXM.FourCC('A', 'T', 'I', '1'), 0, 0, 0, 0, 0)),
-                                                                 new LegacyMap(DXGI.Format.BC5_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, new SDXM.FourCC('A', 'T', 'I', '2'), 0, 0, 0, 0, 0)),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC4_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, new SDXM.FourCC('A', 'T', 'I', '1'), 0, 0, 0, 0, 0)),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.BC5_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, new SDXM.FourCC('A', 'T', 'I', '2'), 0, 0, 0, 0, 0)),
 
-                                                                 new LegacyMap(DXGI.Format.R8G8_B8G8_UNorm, ConversionFlags.None, DDS.PixelFormat.R8G8_B8G8), // D3DFMT_R8G8_B8G8
-                                                                 new LegacyMap(DXGI.Format.G8R8_G8B8_UNorm, ConversionFlags.None, DDS.PixelFormat.G8R8_G8B8), // D3DFMT_G8R8_G8B8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8_B8G8_UNorm, ConversionFlags.None, DDS.PixelFormat.R8G8_B8G8), // D3DFMT_R8G8_B8G8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.G8R8_G8B8_UNorm, ConversionFlags.None, DDS.PixelFormat.G8R8_G8B8), // D3DFMT_G8R8_G8B8
 
-                                                                 new LegacyMap(DXGI.Format.B8G8R8A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8R8G8B8), // D3DFMT_A8R8G8B8 (uses DXGI 1.1 format)
-                                                                 new LegacyMap(DXGI.Format.B8G8R8X8_UNorm, ConversionFlags.None, DDS.PixelFormat.X8R8G8B8), // D3DFMT_X8R8G8B8 (uses DXGI 1.1 format)
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8B8G8R8), // D3DFMT_A8B8G8R8
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.NoAlpha, DDS.PixelFormat.X8B8G8R8), // D3DFMT_X8B8G8R8
-                                                                 new LegacyMap(DXGI.Format.R16G16_UNorm, ConversionFlags.None, DDS.PixelFormat.G16R16), // D3DFMT_G16R16
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B8G8R8A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8R8G8B8), // D3DFMT_A8R8G8B8 (uses DXGI 1.1 format)
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B8G8R8X8_UNorm, ConversionFlags.None, DDS.PixelFormat.X8R8G8B8), // D3DFMT_X8R8G8B8 (uses DXGI 1.1 format)
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8B8G8R8), // D3DFMT_A8B8G8R8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.NoAlpha, DDS.PixelFormat.X8B8G8R8), // D3DFMT_X8B8G8R8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16G16_UNorm, ConversionFlags.None, DDS.PixelFormat.G16R16), // D3DFMT_G16R16
 
-                                                                 new LegacyMap(DXGI.Format.R10G10B10A2_UNorm, ConversionFlags.Swizzle, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0x000003ff, 0x000ffc00, 0x3ff00000, 0xc0000000)),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R10G10B10A2_UNorm, ConversionFlags.Swizzle, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0x000003ff, 0x000ffc00, 0x3ff00000, 0xc0000000)),
                                                                  // D3DFMT_A2R10G10B10 (D3DX reversal issue workaround)
-                                                                 new LegacyMap(DXGI.Format.R10G10B10A2_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000)),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R10G10B10A2_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000)),
                                                                  // D3DFMT_A2B10G10R10 (D3DX reversal issue workaround)
 
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.NoAlpha
                                                                                                            | ConversionFlags.Format888, DDS.PixelFormat.R8G8B8), // D3DFMT_R8G8B8
 
-                                                                 new LegacyMap(DXGI.Format.B5G6R5_UNorm, ConversionFlags.Format565, DDS.PixelFormat.R5G6B5), // D3DFMT_R5G6B5
-                                                                 new LegacyMap(DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551, DDS.PixelFormat.A1R5G5B5), // D3DFMT_A1R5G5B5
-                                                                 new LegacyMap(DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B5G6R5_UNorm, ConversionFlags.Format565, DDS.PixelFormat.R5G6B5), // D3DFMT_R5G6B5
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551, DDS.PixelFormat.A1R5G5B5), // D3DFMT_A1R5G5B5
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B5G5R5A1_UNorm, ConversionFlags.Format5551
                                                                                                            | ConversionFlags.NoAlpha, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x7c00, 0x03e0, 0x001f, 0x0000)), // D3DFMT_X1R5G5B5
      
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format8332, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x00e0, 0x001c, 0x0003, 0xff00)),
                                                                  // D3DFMT_A8R3G3B2
-                                                                 new LegacyMap(DXGI.Format.B5G6R5_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.B5G6R5_UNorm, ConversionFlags.Expand
                                                                                                          | ConversionFlags.Format332, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 8, 0xe0, 0x1c, 0x03, 0x00)), // D3DFMT_R3G3B2
   
-                                                                 new LegacyMap(DXGI.Format.R8_UNorm, ConversionFlags.None, DDS.PixelFormat.L8), // D3DFMT_L8
-                                                                 new LegacyMap(DXGI.Format.R16_UNorm, ConversionFlags.None, DDS.PixelFormat.L16), // D3DFMT_L16
-                                                                 new LegacyMap(DXGI.Format.R8G8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8L8), // D3DFMT_A8L8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8_UNorm, ConversionFlags.None, DDS.PixelFormat.L8), // D3DFMT_L8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16_UNorm, ConversionFlags.None, DDS.PixelFormat.L16), // D3DFMT_L16
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8L8), // D3DFMT_A8L8
 
-                                                                 new LegacyMap(DXGI.Format.A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8), // D3DFMT_A8
+                                                                 new LegacyMap(SharpDX.DXGI.Format.A8_UNorm, ConversionFlags.None, DDS.PixelFormat.A8), // D3DFMT_A8
 
-                                                                 new LegacyMap(DXGI.Format.R16G16B16A16_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 36, 0, 0, 0, 0, 0)), // D3DFMT_A16B16G16R16
-                                                                 new LegacyMap(DXGI.Format.R16G16B16A16_SNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 110, 0, 0, 0, 0, 0)), // D3DFMT_Q16W16V16U16
-                                                                 new LegacyMap(DXGI.Format.R16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 111, 0, 0, 0, 0, 0)), // D3DFMT_R16F
-                                                                 new LegacyMap(DXGI.Format.R16G16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 112, 0, 0, 0, 0, 0)), // D3DFMT_G16R16F
-                                                                 new LegacyMap(DXGI.Format.R16G16B16A16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 113, 0, 0, 0, 0, 0)), // D3DFMT_A16B16G16R16F
-                                                                 new LegacyMap(DXGI.Format.R32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 114, 0, 0, 0, 0, 0)), // D3DFMT_R32F
-                                                                 new LegacyMap(DXGI.Format.R32G32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 115, 0, 0, 0, 0, 0)), // D3DFMT_G32R32F
-                                                                 new LegacyMap(DXGI.Format.R32G32B32A32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 116, 0, 0, 0, 0, 0)), // D3DFMT_A32B32G32R32F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16G16B16A16_UNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 36, 0, 0, 0, 0, 0)), // D3DFMT_A16B16G16R16
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16G16B16A16_SNorm, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 110, 0, 0, 0, 0, 0)), // D3DFMT_Q16W16V16U16
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 111, 0, 0, 0, 0, 0)), // D3DFMT_R16F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16G16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 112, 0, 0, 0, 0, 0)), // D3DFMT_G16R16F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R16G16B16A16_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 113, 0, 0, 0, 0, 0)), // D3DFMT_A16B16G16R16F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 114, 0, 0, 0, 0, 0)), // D3DFMT_R32F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R32G32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 115, 0, 0, 0, 0, 0)), // D3DFMT_G32R32F
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R32G32B32A32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.FourCC, 116, 0, 0, 0, 0, 0)), // D3DFMT_A32B32G32R32F
 
-                                                                 new LegacyMap(DXGI.Format.R32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0xffffffff, 0x00000000, 0x00000000, 0x00000000)),
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R32_Float, ConversionFlags.None, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 32, 0xffffffff, 0x00000000, 0x00000000, 0x00000000)),
                                                                  // D3DFMT_R32F (D3DX uses FourCC 114 instead)
 
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Pal8
                                                                                                            | ConversionFlags.FormatA8P8, new DDS.PixelFormat(DDS.PixelFormatFlags.Pal8, 0, 16, 0, 0, 0, 0)), // D3DFMT_A8P8
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Pal8, new DDS.PixelFormat(DDS.PixelFormatFlags.Pal8, 0, 8, 0, 0, 0, 0)), // D3DFMT_P8
 #if DIRECTX11_1
     new LegacyMap( DXGI.Format.B4G4R4A4_UNorm,     ConversionFlags.Format4444,        DDS.PixelFormat.A4R4G4B4 ), // D3DFMT_A4R4G4B4 (uses DXGI 1.2 format)
@@ -160,13 +164,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                       | ConversionFlags.Format44,        new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0,  8, 0x0f,       0x00,       0x00,       0xf0       ) ), // D3DFMT_A4L4 (uses DXGI 1.2 format)
 #else
                                                                  // !DXGI_1_2_FORMATS
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format4444, DDS.PixelFormat.A4R4G4B4), // D3DFMT_A4R4G4B4
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.NoAlpha
                                                                                                            | ConversionFlags.Format4444, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x0f00, 0x00f0, 0x000f, 0x0000)),
                                                                  // D3DFMT_X4R4G4B4
-                                                                 new LegacyMap(DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
+                                                                 new LegacyMap(SharpDX.DXGI.Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format44, new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0, 8, 0x0f, 0x00, 0x00, 0xf0)), // D3DFMT_A4L4
 #endif
                                                              };
@@ -186,7 +190,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         //      FourCC 117 D3DFMT_CxV8U8
         //      ZBuffer D3DFMT_D16_LOCKABLE
         //      FourCC 82 D3DFMT_D32F_LOCKABLE
-        private static DXGI.Format GetDXGIFormat(ref DDS.PixelFormat pixelFormat, DDSFlags flags, out ConversionFlags conversionFlags)
+        private static SharpDX.DXGI.Format GetDXGIFormat(ref DDS.PixelFormat pixelFormat, DDSFlags flags, out ConversionFlags conversionFlags)
         {
             conversionFlags = ConversionFlags.None;
 
@@ -220,15 +224,15 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
 
             if (index >= LegacyMaps.Length)
-                return DXGI.Format.Unknown;
+                return SharpDX.DXGI.Format.Unknown;
 
             conversionFlags = LegacyMaps[index].ConversionFlags;
             var format = LegacyMaps[index].Format;
 
             if ((conversionFlags & ConversionFlags.Expand) != 0 && (flags & DDSFlags.NoLegacyExpansion) != 0)
-                return DXGI.Format.Unknown;
+                return SharpDX.DXGI.Format.Unknown;
 
-            if ((format == DXGI.Format.R10G10B10A2_UNorm) && (flags & DDSFlags.NoR10B10G10A2Fixup) != 0)
+            if ((format == SharpDX.DXGI.Format.R10G10B10A2_UNorm) && (flags & DDSFlags.NoR10B10G10A2Fixup) != 0)
             {
                 conversionFlags ^= ConversionFlags.Swizzle;
             }
@@ -289,7 +293,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     throw new InvalidOperationException("Unexpected ArraySize == 0 from DDS HeaderDX10 ");
 
                 description.Format = headerDX10.DXGIFormat;
-                if (!DXGI.FormatHelper.IsValid(description.Format))
+                if (!SharpDX.DXGI.FormatHelper.IsValid(description.Format))
                     throw new InvalidOperationException("Invalid Format from DDS HeaderDX10 ");
 
                 switch (headerDX10.ResourceDimension)
@@ -374,42 +378,42 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                 description.Format = GetDXGIFormat(ref header.PixelFormat, flags, out convFlags);
 
-                if (description.Format == DXGI.Format.Unknown)
+                if (description.Format == SharpDX.DXGI.Format.Unknown)
                     throw new InvalidOperationException("Unsupported PixelFormat from DDS Header");
             }
 
             // Special flag for handling BGR DXGI 1.1 formats
             if ((flags & DDSFlags.ForceRgb) != 0)
             {
-                switch ((DXGI.Format)description.Format)
+                switch ((SharpDX.DXGI.Format)description.Format)
                 {
-                    case DXGI.Format.B8G8R8A8_UNorm:
-                        description.Format = DXGI.Format.R8G8B8A8_UNorm;
+                    case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
                         convFlags |= ConversionFlags.Swizzle;
                         break;
 
-                    case DXGI.Format.B8G8R8X8_UNorm:
-                        description.Format = DXGI.Format.R8G8B8A8_UNorm;
+                    case SharpDX.DXGI.Format.B8G8R8X8_UNorm:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
                         convFlags |= ConversionFlags.Swizzle | ConversionFlags.NoAlpha;
                         break;
 
-                    case DXGI.Format.B8G8R8A8_Typeless:
-                        description.Format = DXGI.Format.R8G8B8A8_Typeless;
+                    case SharpDX.DXGI.Format.B8G8R8A8_Typeless:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_Typeless;
                         convFlags |= ConversionFlags.Swizzle;
                         break;
 
-                    case DXGI.Format.B8G8R8A8_UNorm_SRgb:
-                        description.Format = DXGI.Format.R8G8B8A8_UNorm_SRgb;
+                    case SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm_SRgb;
                         convFlags |= ConversionFlags.Swizzle;
                         break;
 
-                    case DXGI.Format.B8G8R8X8_Typeless:
-                        description.Format = DXGI.Format.R8G8B8A8_Typeless;
+                    case SharpDX.DXGI.Format.B8G8R8X8_Typeless:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_Typeless;
                         convFlags |= ConversionFlags.Swizzle | ConversionFlags.NoAlpha;
                         break;
 
-                    case DXGI.Format.B8G8R8X8_UNorm_SRgb:
-                        description.Format = DXGI.Format.R8G8B8A8_UNorm_SRgb;
+                    case SharpDX.DXGI.Format.B8G8R8X8_UNorm_SRgb:
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm_SRgb;
                         convFlags |= ConversionFlags.Swizzle | ConversionFlags.NoAlpha;
                         break;
                 }
@@ -422,16 +426,16 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             // Special flag for handling 16bpp formats
             if ((flags & DDSFlags.No16Bpp) != 0)
             {
-                switch ((DXGI.Format)description.Format)
+                switch ((SharpDX.DXGI.Format)description.Format)
                 {
-                    case DXGI.Format.B5G6R5_UNorm:
-                    case DXGI.Format.B5G5R5A1_UNorm:
+                    case SharpDX.DXGI.Format.B5G6R5_UNorm:
+                    case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
 #if DIRECTX11_1
                     case Format.B4G4R4A4_UNorm:
 #endif
-                        description.Format = DXGI.Format.R8G8B8A8_UNorm;
+                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
                         convFlags |= ConversionFlags.Expand;
-                        if (description.Format == DXGI.Format.B5G6R5_UNorm)
+                        if (description.Format == SharpDX.DXGI.Format.B5G6R5_UNorm)
                             convFlags |= ConversionFlags.NoAlpha;
                         break;
                 }
@@ -465,61 +469,61 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 switch (description.Format)
                 {
-                    case DXGI.Format.R8G8B8A8_UNorm:
+                    case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
                         ddpf = DDS.PixelFormat.A8B8G8R8;
                         break;
-                    case DXGI.Format.R16G16_UNorm:
+                    case SharpDX.DXGI.Format.R16G16_UNorm:
                         ddpf = DDS.PixelFormat.G16R16;
                         break;
-                    case DXGI.Format.R8G8_UNorm:
+                    case SharpDX.DXGI.Format.R8G8_UNorm:
                         ddpf = DDS.PixelFormat.A8L8;
                         break;
-                    case DXGI.Format.R16_UNorm:
+                    case SharpDX.DXGI.Format.R16_UNorm:
                         ddpf = DDS.PixelFormat.L16;
                         break;
-                    case DXGI.Format.R8_UNorm:
+                    case SharpDX.DXGI.Format.R8_UNorm:
                         ddpf = DDS.PixelFormat.L8;
                         break;
-                    case DXGI.Format.A8_UNorm:
+                    case SharpDX.DXGI.Format.A8_UNorm:
                         ddpf = DDS.PixelFormat.A8;
                         break;
-                    case DXGI.Format.R8G8_B8G8_UNorm:
+                    case SharpDX.DXGI.Format.R8G8_B8G8_UNorm:
                         ddpf = DDS.PixelFormat.R8G8_B8G8;
                         break;
-                    case DXGI.Format.G8R8_G8B8_UNorm:
+                    case SharpDX.DXGI.Format.G8R8_G8B8_UNorm:
                         ddpf = DDS.PixelFormat.G8R8_G8B8;
                         break;
-                    case DXGI.Format.BC1_UNorm:
+                    case SharpDX.DXGI.Format.BC1_UNorm:
                         ddpf = DDS.PixelFormat.DXT1;
                         break;
-                    case DXGI.Format.BC2_UNorm:
+                    case SharpDX.DXGI.Format.BC2_UNorm:
                         ddpf = DDS.PixelFormat.DXT3;
                         break;
-                    case DXGI.Format.BC3_UNorm:
+                    case SharpDX.DXGI.Format.BC3_UNorm:
                         ddpf = DDS.PixelFormat.DXT5;
                         break;
-                    case DXGI.Format.BC4_UNorm:
+                    case SharpDX.DXGI.Format.BC4_UNorm:
                         ddpf = DDS.PixelFormat.BC4_UNorm;
                         break;
-                    case DXGI.Format.BC4_SNorm:
+                    case SharpDX.DXGI.Format.BC4_SNorm:
                         ddpf = DDS.PixelFormat.BC4_SNorm;
                         break;
-                    case DXGI.Format.BC5_UNorm:
+                    case SharpDX.DXGI.Format.BC5_UNorm:
                         ddpf = DDS.PixelFormat.BC5_UNorm;
                         break;
-                    case DXGI.Format.BC5_SNorm:
+                    case SharpDX.DXGI.Format.BC5_SNorm:
                         ddpf = DDS.PixelFormat.BC5_SNorm;
                         break;
-                    case DXGI.Format.B5G6R5_UNorm:
+                    case SharpDX.DXGI.Format.B5G6R5_UNorm:
                         ddpf = DDS.PixelFormat.R5G6B5;
                         break;
-                    case DXGI.Format.B5G5R5A1_UNorm:
+                    case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
                         ddpf = DDS.PixelFormat.A1R5G5B5;
                         break;
-                    case DXGI.Format.B8G8R8A8_UNorm:
+                    case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
                         ddpf = DDS.PixelFormat.A8R8G8B8;
                         break; // DXGI 1.1
-                    case DXGI.Format.B8G8R8X8_UNorm:
+                    case SharpDX.DXGI.Format.B8G8R8X8_UNorm:
                         ddpf = DDS.PixelFormat.X8R8G8B8;
                         break; // DXGI 1.1
 #if DIRECTX11_1
@@ -528,42 +532,42 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         break;
 #endif
                     // Legacy D3DX formats using D3DFMT enum value as FourCC
-                    case DXGI.Format.R32G32B32A32_Float:
+                    case SharpDX.DXGI.Format.R32G32B32A32_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 116; // D3DFMT_A32B32G32R32F
                         break;
-                    case DXGI.Format.R16G16B16A16_Float:
+                    case SharpDX.DXGI.Format.R16G16B16A16_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 113; // D3DFMT_A16B16G16R16F
                         break;
-                    case DXGI.Format.R16G16B16A16_UNorm:
+                    case SharpDX.DXGI.Format.R16G16B16A16_UNorm:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 36; // D3DFMT_A16B16G16R16
                         break;
-                    case DXGI.Format.R16G16B16A16_SNorm:
+                    case SharpDX.DXGI.Format.R16G16B16A16_SNorm:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 110; // D3DFMT_Q16W16V16U16
                         break;
-                    case DXGI.Format.R32G32_Float:
+                    case SharpDX.DXGI.Format.R32G32_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 115; // D3DFMT_G32R32F
                         break;
-                    case DXGI.Format.R16G16_Float:
+                    case SharpDX.DXGI.Format.R16G16_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 112; // D3DFMT_G16R16F
                         break;
-                    case DXGI.Format.R32_Float:
+                    case SharpDX.DXGI.Format.R32_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 114; // D3DFMT_R32F
                         break;
-                    case DXGI.Format.R16_Float:
+                    case SharpDX.DXGI.Format.R16_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
                         ddpf.Flags = DDS.PixelFormatFlags.FourCC;
                         ddpf.FourCC = 111; // D3DFMT_R16F
@@ -635,7 +639,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             int newHeight;
             Image.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, out newWidth, out newHeight);
 
-            if (DXGI.FormatHelper.IsCompressed(description.Format))
+            if (SharpDX.DXGI.FormatHelper.IsCompressed(description.Format))
             {
                 header->Flags |= DDS.HeaderFlags.LinearSize;
                 header->PitchOrLinearSize = slicePitch;
@@ -731,14 +735,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="pal8"></param>
         /// <param name="flags"></param>
         /// <returns></returns>
-        static unsafe bool LegacyExpandScanline(IntPtr pDestination, int outSize, DXGI.Format outFormat,
+        static unsafe bool LegacyExpandScanline(IntPtr pDestination, int outSize, SharpDX.DXGI.Format outFormat,
                                             IntPtr pSource, int inSize, TEXP_LEGACY_FORMAT inFormat,
                                             int* pal8, ScanlineFlags flags)
         {
             switch (inFormat)
             {
                 case TEXP_LEGACY_FORMAT.R8G8B8:
-                    if (outFormat != DXGI.Format.R8G8B8A8_UNorm)
+                    if (outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm)
                         return false;
 
                     // D3DFMT_R8G8B8 -> Format.R8G8B8A8_UNorm
@@ -762,7 +766,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 case TEXP_LEGACY_FORMAT.R3G3B2:
                     switch (outFormat)
                     {
-                        case DXGI.Format.R8G8B8A8_UNorm:
+                        case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
                             // D3DFMT_R3G3B2 -> Format.R8G8B8A8_UNorm
                             {
                                 var sPtr = (byte*)(pSource);
@@ -781,7 +785,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             }
                             return true;
 
-                        case DXGI.Format.B5G6R5_UNorm:
+                        case SharpDX.DXGI.Format.B5G6R5_UNorm:
                             // D3DFMT_R3G3B2 -> Format.B5G6R5_UNorm
                             {
                                 var sPtr = (byte*)(pSource);
@@ -803,7 +807,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     break;
 
                 case TEXP_LEGACY_FORMAT.A8R3G3B2:
-                    if (outFormat != DXGI.Format.R8G8B8A8_UNorm)
+                    if (outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm)
                         return false;
 
                     // D3DFMT_A8R3G3B2 -> Format.R8G8B8A8_UNorm
@@ -826,7 +830,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     return true;
 
                 case TEXP_LEGACY_FORMAT.P8:
-                    if ((outFormat != DXGI.Format.R8G8B8A8_UNorm) || pal8 == null)
+                    if ((outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm) || pal8 == null)
                         return false;
 
                     // D3DFMT_P8 -> Format.R8G8B8A8_UNorm
@@ -844,7 +848,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     return true;
 
                 case TEXP_LEGACY_FORMAT.A8P8:
-                    if ((outFormat != DXGI.Format.R8G8B8A8_UNorm) || pal8 == null)
+                    if ((outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm) || pal8 == null)
                         return false;
 
                     // D3DFMT_A8P8 -> Format.R8G8B8A8_UNorm
@@ -867,7 +871,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 case TEXP_LEGACY_FORMAT.A4L4:
                     switch (outFormat)
                     {
-                case DXGI.Format.B4G4R4A4_UNorm :
+                case SharpDX.DXGI.Format.B4G4R4A4_UNorm :
                     // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm 
                     {
                         byte * sPtr = (byte*)(pSource);
@@ -886,7 +890,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     return true;
                         // DXGI_1_2_FORMATS
 
-                        case DXGI.Format.R8G8B8A8_UNorm:
+                        case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
                             // D3DFMT_A4L4 -> Format.R8G8B8A8_UNorm
                             {
                                 byte* sPtr = (byte*)(pSource);
@@ -907,7 +911,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     break;
 
                 case TEXP_LEGACY_FORMAT.B4G4R4A4:
-                    if (outFormat != DXGI.Format.R8G8B8A8_UNorm)
+                    if (outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm)
                         return false;
 
                     // D3DFMT_A4R4G4B4 -> Format.R8G8B8A8_UNorm
@@ -1092,7 +1096,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         if (checkSize < 0)
                             throw new InvalidOperationException("Unexpected end of buffer");
 
-                        if (DXGI.FormatHelper.IsCompressed(metadata.Format))
+                        if (SharpDX.DXGI.FormatHelper.IsCompressed(metadata.Format))
                         {
                             SDX.Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].BufferStride, imagesDst[index].BufferStride));
                         }
@@ -1111,7 +1115,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                     if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551)) != 0)
 #endif
                                     {
-                                        ExpandScanline(pDest, dpitch, pSrc, spitch, (convFlags & ConversionFlags.Format565) != 0 ? DXGI.Format.B5G6R5_UNorm : DXGI.Format.B5G5R5A1_UNorm, tflags);
+                                        ExpandScanline(pDest, dpitch, pSrc, spitch, (convFlags & ConversionFlags.Format565) != 0 ? SharpDX.DXGI.Format.B5G6R5_UNorm : SharpDX.DXGI.Format.B5G5R5A1_UNorm, tflags);
                                     }
                                     else
                                     {
@@ -1167,11 +1171,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="inSize"></param>
         /// <param name="inFormat"></param>
         /// <param name="flags"></param>
-        private unsafe static void ExpandScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, DXGI.Format inFormat, ScanlineFlags flags)
+        private unsafe static void ExpandScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, SharpDX.DXGI.Format inFormat, ScanlineFlags flags)
         {
             switch (inFormat)
             {
-                case DXGI.Format.B5G6R5_UNorm:
+                case SharpDX.DXGI.Format.B5G6R5_UNorm:
                     // DXGI.Format.B5G6R5_UNorm -> DXGI.Format.R8G8B8A8_UNorm
                     {
                         var sPtr = (ushort*)(pSource);
@@ -1190,7 +1194,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     }
                     break;
 
-                case DXGI.Format.B5G5R5A1_UNorm:
+                case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
                     // DXGI.Format.B5G5R5A1_UNorm -> DXGI.Format.R8G8B8A8_UNorm
                     {
                         var sPtr = (ushort*)(pSource);
@@ -1246,24 +1250,24 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="outSize">The destination size.</param>
         /// <param name="pSource">The source buffer.</param>
         /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="DXGI.Format"/> of the source scanline.</param>
+        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
         /// <param name="flags">Scanline flags used when copying the scanline.</param>
-        internal static unsafe void CopyScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, DXGI.Format format, ScanlineFlags flags)
+        internal static unsafe void CopyScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, SharpDX.DXGI.Format format, ScanlineFlags flags)
         {
             if ((flags & ScanlineFlags.SetAlpha) != 0)
             {
                 switch (format)
                 {
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.R32G32B32A32_Typeless:
-                    case DXGI.Format.R32G32B32A32_Float:
-                    case DXGI.Format.R32G32B32A32_UInt:
-                    case DXGI.Format.R32G32B32A32_SInt:
+                    case SharpDX.DXGI.Format.R32G32B32A32_Typeless:
+                    case SharpDX.DXGI.Format.R32G32B32A32_Float:
+                    case SharpDX.DXGI.Format.R32G32B32A32_UInt:
+                    case SharpDX.DXGI.Format.R32G32B32A32_SInt:
                         {
                             uint alpha;
-                            if (format == DXGI.Format.R32G32B32A32_Float)
+                            if (format == SharpDX.DXGI.Format.R32G32B32A32_Float)
                                 alpha = 0x3f800000;
-                            else if (format == DXGI.Format.R32G32B32A32_SInt)
+                            else if (format == SharpDX.DXGI.Format.R32G32B32A32_SInt)
                                 alpha = 0x7fffffff;
                             else
                                 alpha = 0xffffffff;
@@ -1295,17 +1299,17 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         return;
 
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.R16G16B16A16_Typeless:
-                    case DXGI.Format.R16G16B16A16_Float:
-                    case DXGI.Format.R16G16B16A16_UNorm:
-                    case DXGI.Format.R16G16B16A16_UInt:
-                    case DXGI.Format.R16G16B16A16_SNorm:
-                    case DXGI.Format.R16G16B16A16_SInt:
+                    case SharpDX.DXGI.Format.R16G16B16A16_Typeless:
+                    case SharpDX.DXGI.Format.R16G16B16A16_Float:
+                    case SharpDX.DXGI.Format.R16G16B16A16_UNorm:
+                    case SharpDX.DXGI.Format.R16G16B16A16_UInt:
+                    case SharpDX.DXGI.Format.R16G16B16A16_SNorm:
+                    case SharpDX.DXGI.Format.R16G16B16A16_SInt:
                         {
                             ushort alpha;
-                            if (format == DXGI.Format.R16G16B16A16_Float)
+                            if (format == SharpDX.DXGI.Format.R16G16B16A16_Float)
                                 alpha = 0x3c00;
-                            else if (format == DXGI.Format.R16G16B16A16_SNorm || format == DXGI.Format.R16G16B16A16_SInt)
+                            else if (format == SharpDX.DXGI.Format.R16G16B16A16_SNorm || format == SharpDX.DXGI.Format.R16G16B16A16_SInt)
                                 alpha = 0x7fff;
                             else
                                 alpha = 0xffff;
@@ -1337,10 +1341,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         return;
 
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.R10G10B10A2_Typeless:
-                    case DXGI.Format.R10G10B10A2_UNorm:
-                    case DXGI.Format.R10G10B10A2_UInt:
-                    case DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm:
+                    case SharpDX.DXGI.Format.R10G10B10A2_Typeless:
+                    case SharpDX.DXGI.Format.R10G10B10A2_UNorm:
+                    case SharpDX.DXGI.Format.R10G10B10A2_UInt:
+                    case SharpDX.DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm:
                         {
                             if (pDestination == pSource)
                             {
@@ -1365,17 +1369,17 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         return;
 
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.R8G8B8A8_Typeless:
-                    case DXGI.Format.R8G8B8A8_UNorm:
-                    case DXGI.Format.R8G8B8A8_UNorm_SRgb:
-                    case DXGI.Format.R8G8B8A8_UInt:
-                    case DXGI.Format.R8G8B8A8_SNorm:
-                    case DXGI.Format.R8G8B8A8_SInt:
-                    case DXGI.Format.B8G8R8A8_UNorm:
-                    case DXGI.Format.B8G8R8A8_Typeless:
-                    case DXGI.Format.B8G8R8A8_UNorm_SRgb:
+                    case SharpDX.DXGI.Format.R8G8B8A8_Typeless:
+                    case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
+                    case SharpDX.DXGI.Format.R8G8B8A8_UNorm_SRgb:
+                    case SharpDX.DXGI.Format.R8G8B8A8_UInt:
+                    case SharpDX.DXGI.Format.R8G8B8A8_SNorm:
+                    case SharpDX.DXGI.Format.R8G8B8A8_SInt:
+                    case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
+                    case SharpDX.DXGI.Format.B8G8R8A8_Typeless:
+                    case SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb:
                         {
-                            uint alpha = (format == DXGI.Format.R8G8B8A8_SNorm || format == DXGI.Format.R8G8B8A8_SInt) ? 0x7f000000 : 0xff000000;
+                            uint alpha = (format == SharpDX.DXGI.Format.R8G8B8A8_SNorm || format == SharpDX.DXGI.Format.R8G8B8A8_SInt) ? 0x7f000000 : 0xff000000;
 
                             if (pDestination == pSource)
                             {
@@ -1403,7 +1407,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         return;
 
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.B5G5R5A1_UNorm:
+                    case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
                         {
                             if (pDestination == pSource)
                             {
@@ -1427,7 +1431,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         return;
 
                     //-----------------------------------------------------------------------------
-                    case DXGI.Format.A8_UNorm:
+                    case SharpDX.DXGI.Format.A8_UNorm:
                         SDX.Utilities.ClearMemory(pDestination, 0xff, outSize);
                         return;
 
@@ -1474,20 +1478,20 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="outSize">The destination size.</param>
         /// <param name="pSource">The source buffer.</param>
         /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="DXGI.Format"/> of the source scanline.</param>
+        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
         /// <param name="flags">Scanline flags used when copying the scanline.</param>
         /// <remarks>
         /// This method can be used in place as well, otherwise copies the image row unmodified.
         /// </remarks>
-        internal static unsafe void SwizzleScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, DXGI.Format format, ScanlineFlags flags)
+        internal static unsafe void SwizzleScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, SharpDX.DXGI.Format format, ScanlineFlags flags)
         {
             switch (format)
             {
                 //---------------------------------------------------------------------------------
-                case DXGI.Format.R10G10B10A2_Typeless:
-                case DXGI.Format.R10G10B10A2_UNorm:
-                case DXGI.Format.R10G10B10A2_UInt:
-                case DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm:
+                case SharpDX.DXGI.Format.R10G10B10A2_Typeless:
+                case SharpDX.DXGI.Format.R10G10B10A2_UNorm:
+                case SharpDX.DXGI.Format.R10G10B10A2_UInt:
+                case SharpDX.DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm:
                     if ((flags & ScanlineFlags.Legacy) != 0)
                     {
                         // Swap Red (R) and Blue (B) channel (used for D3DFMT_A2R10G10B10 legacy sources)
@@ -1528,15 +1532,15 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     break;
 
                 //---------------------------------------------------------------------------------
-                case DXGI.Format.R8G8B8A8_Typeless:
-                case DXGI.Format.R8G8B8A8_UNorm:
-                case DXGI.Format.R8G8B8A8_UNorm_SRgb:
-                case DXGI.Format.B8G8R8A8_UNorm:
-                case DXGI.Format.B8G8R8X8_UNorm:
-                case DXGI.Format.B8G8R8A8_Typeless:
-                case DXGI.Format.B8G8R8A8_UNorm_SRgb:
-                case DXGI.Format.B8G8R8X8_Typeless:
-                case DXGI.Format.B8G8R8X8_UNorm_SRgb:
+                case SharpDX.DXGI.Format.R8G8B8A8_Typeless:
+                case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
+                case SharpDX.DXGI.Format.R8G8B8A8_UNorm_SRgb:
+                case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
+                case SharpDX.DXGI.Format.B8G8R8X8_UNorm:
+                case SharpDX.DXGI.Format.B8G8R8A8_Typeless:
+                case SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb:
+                case SharpDX.DXGI.Format.B8G8R8X8_Typeless:
+                case SharpDX.DXGI.Format.B8G8R8X8_UNorm_SRgb:
                     // Swap Red (R) and Blue (B) channels (used to convert from DXGI 1.1 BGR formats to DXGI 1.0 RGB)
                     if (pDestination == pSource)
                     {

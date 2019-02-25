@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,28 +21,34 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Linq;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Reflection;
-using SeeingSharp.Util;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Multimedia.Input;
+
+#region using
 
 //Some namespace mappings
 using D2D = SharpDX.Direct2D1;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 using DWrite = SharpDX.DirectWrite;
-using WIC = SharpDX.WIC;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Checking;
+    using Input;
+    using Objects;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class GraphicsCore
     {
         #region Members for Unittesting
@@ -619,7 +625,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal WIC.ImagingFactory FactoryWIC;
+        internal SharpDX.WIC.ImagingFactory FactoryWIC;
 
         /// <summary>
         /// Gets the Direct2D factory object.

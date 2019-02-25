@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Namespace mappings
 using GDI = System.Drawing;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using Checking;
+    using SharpDX;
+
+    #endregion
+
     public static class GraphicsHelperUwp
     {
         /// <summary>
@@ -48,29 +49,29 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static DXGI.SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
+            SharpDX.DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
             {
                 Width = width,
                 Height = height,
                 Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
                 Stereo = false,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
                 Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
                 BufferCount = 2,
-                Scaling = DXGI.Scaling.None,
+                Scaling = SharpDX.DXGI.Scaling.None,
                 SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
                 AlphaMode = SharpDX.DXGI.AlphaMode.Ignore
             };
 
             //Creates the swap chain for the given CoreWindow object
-            return new DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
+            return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
         }
 
         /// <summary>
@@ -80,14 +81,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static DXGI.SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
+            SharpDX.DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
             {
                 Width = width,
                 Height = height,
@@ -98,11 +99,11 @@ namespace SeeingSharp.Multimedia.Core
                 BufferCount = 2,
                 Scaling = SharpDX.DXGI.Scaling.Stretch,
                 SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? DXGI.AlphaMode.Premultiplied : SharpDX.DXGI.AlphaMode.Ignore
+                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? SharpDX.DXGI.AlphaMode.Premultiplied : SharpDX.DXGI.AlphaMode.Ignore
             };
 
             //Creates the swap chain for XAML composition
-            return new DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
+            return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
         }
     }
 }

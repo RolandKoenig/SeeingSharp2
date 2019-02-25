@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Namespace mappings
 using GDI = System.Drawing;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using WinForms = System.Windows.Forms;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using Checking;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public static class GraphicsHelperWinForms
     {
         /// <summary>
@@ -47,14 +49,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetControl">Target control of the swap chain.</param>
         /// <param name="device">Graphics device.</param>
         /// <param name="gfxConfig">The current graphics configuration.</param>
-        internal static DXGI.SwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
+        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
         {
             targetControl.EnsureNotNull(nameof(targetControl));
             device.EnsureNotNull(nameof(device));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             // Create the swap chain description
-            DXGI.SwapChainDescription1 swapChainDesc = new DXGI.SwapChainDescription1();
+            SharpDX.DXGI.SwapChainDescription1 swapChainDesc = new SharpDX.DXGI.SwapChainDescription1();
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
                 swapChainDesc.BufferCount = 2;
@@ -63,24 +65,24 @@ namespace SeeingSharp.Multimedia.Core
             else
             {
                 swapChainDesc.BufferCount = 2;
-                swapChainDesc.SampleDescription = new DXGI.SampleDescription(1, 0);
+                swapChainDesc.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
             }
 
             // Set common parameters
             swapChainDesc.Width = targetControl.Width;
             swapChainDesc.Height = targetControl.Height;
             swapChainDesc.Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT;
-            swapChainDesc.Scaling = DXGI.Scaling.Stretch;
-            swapChainDesc.SwapEffect = DXGI.SwapEffect.Discard;
-            swapChainDesc.Usage = DXGI.Usage.RenderTargetOutput;
+            swapChainDesc.Scaling = SharpDX.DXGI.Scaling.Stretch;
+            swapChainDesc.SwapEffect = SharpDX.DXGI.SwapEffect.Discard;
+            swapChainDesc.Usage = SharpDX.DXGI.Usage.RenderTargetOutput;
 
             // Create and return the swap chain and the render target
-            return new DXGI.SwapChain1(
+            return new SharpDX.DXGI.SwapChain1(
                 device.FactoryDxgi, device.DeviceD3D11_1, targetControl.Handle,
                 ref swapChainDesc,
                 new SharpDX.DXGI.SwapChainFullScreenDescription()
                 {
-                    RefreshRate = new DXGI.Rational(60, 1),
+                    RefreshRate = new SharpDX.DXGI.Rational(60, 1),
                     Scaling = SharpDX.DXGI.DisplayModeScaling.Centered,
                     Windowed = true
                 },
@@ -135,7 +137,7 @@ namespace SeeingSharp.Multimedia.Core
                     Width = bitmap.Width,
                     Height = bitmap.Height,
                     ArraySize = 1,
-                    SampleDescription = new DXGI.SampleDescription(1, 0)
+                    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
                 }, new DataRectangle[] { dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle });
 
                 // Workaround for now... auto generate mip-levels

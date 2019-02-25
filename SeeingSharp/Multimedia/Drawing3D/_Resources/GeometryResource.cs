@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,21 +21,28 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Core;
+    using Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class GeometryResource : Resource
     {
         private const int MAX_VERTEX_COUNT_PER_BUFFER = 1000000000;
@@ -172,7 +179,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public void Render(RenderState renderState)
         {
             D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            DXGI.Format indexBufferFormat = renderState.Device.SupportsOnly16BitIndexBuffer ? DXGI.Format.R16_UInt : DXGI.Format.R32_UInt;
+            SharpDX.DXGI.Format indexBufferFormat = renderState.Device.SupportsOnly16BitIndexBuffer ? SharpDX.DXGI.Format.R16_UInt : SharpDX.DXGI.Format.R32_UInt;
 
             int lastVertexBufferID = -1;
             int lastIndexBufferID = -1;

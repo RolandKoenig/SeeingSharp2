@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,37 +21,37 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Threading;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Interop;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using Core;
+    using Drawing2D;
+    using Drawing3D;
+    using Input;
+    using Microsoft.Win32;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public partial class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
         #region Dependency properties
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.Texture2D m_depthBuffer;
         private D3D11.RenderTargetView m_renderTarget;
         private D3D11.DepthStencilView m_renderTargetDepth;
-        private DXGI.Surface m_renderTarget2DDxgi;
+        private SharpDX.DXGI.Surface m_renderTarget2DDxgi;
         #endregion
 
         #region Some size related properties
@@ -394,7 +394,7 @@ namespace SeeingSharp.Multimedia.Views
                 {
                     // Draw current 3d scene to wpf
                     D3D11.DeviceContext deviceContext = engineDevice.DeviceImmediateContextD3D11;
-                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, DXGI.Format.B8G8R8A8_UNorm);
+                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, SharpDX.DXGI.Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
 

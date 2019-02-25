@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,41 +21,40 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-// Some namespace mappings
-using WIC = SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class WicBitmap : IDisposable
     {
         #region Native resource
-        private WIC.Bitmap m_wicBitmap;
+        private SharpDX.WIC.Bitmap m_wicBitmap;
         #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmap"/> class.
         /// </summary>
         /// <param name="wicBitmap">The unmanaged bitmap data object.</param>
-        private WicBitmap(WIC.Bitmap wicBitmap)
+        private WicBitmap(SharpDX.WIC.Bitmap wicBitmap)
         {
             m_wicBitmap = wicBitmap;
         }
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
         {
-            WIC.Bitmap wicBitmap = null;
+            SharpDX.WIC.Bitmap wicBitmap = null;
             await Task.Factory.StartNew(() =>
             {
-                wicBitmap = new WIC.Bitmap(
+                wicBitmap = new SharpDX.WIC.Bitmap(
                     GraphicsCore.Current.FactoryWIC,
                     bitmapSource.BitmapSource,
                     new SharpDX.Mathematics.Interop.RawBox(0, 0, width, height));
@@ -69,12 +68,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="resourceLink">The source of the resource.</param>
         public static async Task<WicBitmap> FromResourceLinkAsync(ResourceLink resourceLink)
         {
-            WIC.Bitmap wicBitmap = null;
+            SharpDX.WIC.Bitmap wicBitmap = null;
             using (Stream inStream = await resourceLink.OpenInputStreamAsync())
             using (WicBitmapSourceInternal bitmapSourceWrapper = await SeeingSharpTools.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream)))
             {
-                wicBitmap = new WIC.Bitmap(
-                    GraphicsCore.Current.FactoryWIC, bitmapSourceWrapper.Converter, WIC.BitmapCreateCacheOption.CacheOnLoad);
+                wicBitmap = new SharpDX.WIC.Bitmap(
+                    GraphicsCore.Current.FactoryWIC, bitmapSourceWrapper.Converter, SharpDX.WIC.BitmapCreateCacheOption.CacheOnLoad);
             }
 
             return new WicBitmap(wicBitmap);

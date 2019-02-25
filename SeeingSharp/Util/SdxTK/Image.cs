@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,26 +21,31 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mappings
 using SDX = SharpDX;
 using SDXIO = SharpDX.IO;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using SDX;
+
+    #endregion
+
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>
@@ -55,7 +60,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Pixel buffers.
         /// </summary>
         internal PixelBuffer[] pixelBuffers;
-        private DataBox[] dataBoxArray;
+        private SDX.DataBox[] dataBoxArray;
         private List<int> mipMapToZIndex;
         private int zBufferCountPerArraySlice;
         private MipMapDescription[] mipmapDescriptions;
@@ -252,7 +257,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
-        public DataBox[] ToDataBox()
+        public SDX.DataBox[] ToDataBox()
         {
             return (DataBox[])dataBoxArray.Clone();
         }
@@ -261,7 +266,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
-        private DataBox[] ComputeDataBox()
+        private SDX.DataBox[] ComputeDataBox()
         {
             dataBoxArray = new DataBox[Description.ArraySize * Description.MipLevels];
             int i = 0;
@@ -419,7 +424,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
         /// <returns>An new image.</returns>
         /// <remarks>If <see paramref="makeACopy"/> is set to false, the returned image is now the holder of the unmanaged pointer and will release it on Dispose. </remarks>
-        public static Image Load(DataPointer dataBuffer, bool makeACopy = false)
+        public static Image Load(SDX.DataPointer dataBuffer, bool makeACopy = false)
         {
             return Load(dataBuffer.Pointer, dataBuffer.Size, makeACopy);
         }
@@ -669,7 +674,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
-            if (!DXGI.FormatHelper.IsValid(description.Format) || DXGI.FormatHelper.IsVideo(description.Format))
+            if (!SharpDX.DXGI.FormatHelper.IsValid(description.Format) || SharpDX.DXGI.FormatHelper.IsVideo(description.Format))
                 throw new InvalidOperationException("Unsupported DXGI Format");
 
             this.handle = handle;
@@ -769,26 +774,26 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Bpp8 = 0x40000,     // Override with a legacy 8 bits-per-pixel format size
         };
 
-        internal static void ComputePitch(DXGI.Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
+        internal static void ComputePitch(SharpDX.DXGI.Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
         {
             widthCount = width;
             heightCount = height;
 
-            if (DXGI.FormatHelper.IsCompressed(fmt))
+            if (SharpDX.DXGI.FormatHelper.IsCompressed(fmt))
             {
-                int bpb = (fmt == DXGI.Format.BC1_Typeless
-                             || fmt == DXGI.Format.BC1_UNorm
-                             || fmt == DXGI.Format.BC1_UNorm_SRgb
-                             || fmt == DXGI.Format.BC4_Typeless
-                             || fmt == DXGI.Format.BC4_UNorm
-                             || fmt == DXGI.Format.BC4_SNorm) ? 8 : 16;
+                int bpb = (fmt == SharpDX.DXGI.Format.BC1_Typeless
+                             || fmt == SharpDX.DXGI.Format.BC1_UNorm
+                             || fmt == SharpDX.DXGI.Format.BC1_UNorm_SRgb
+                             || fmt == SharpDX.DXGI.Format.BC4_Typeless
+                             || fmt == SharpDX.DXGI.Format.BC4_UNorm
+                             || fmt == SharpDX.DXGI.Format.BC4_SNorm) ? 8 : 16;
                 widthCount = Math.Max(1, (width + 3) / 4);
                 heightCount = Math.Max(1, (height + 3) / 4);
                 rowPitch = widthCount * bpb;
 
                 slicePitch = rowPitch * heightCount;
             }
-            else if (DXGI.FormatHelper.IsPacked(fmt))
+            else if (SharpDX.DXGI.FormatHelper.IsPacked(fmt))
             {
                 rowPitch = ((width + 1) >> 1) * 4;
 
@@ -805,7 +810,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 else if ((flags & PitchFlags.Bpp8) != 0)
                     bpp = 8;
                 else
-                    bpp = DXGI.FormatHelper.SizeOfInBits(fmt);
+                    bpp = SharpDX.DXGI.FormatHelper.SizeOfInBits(fmt);
 
                 if ((flags & PitchFlags.LegacyDword) != 0)
                 {

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,32 +21,30 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Graphics.Display;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 // Namespace mappings
-using DXGI = SharpDX.DXGI;
-
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using Windows.Foundation;
+    using Windows.Graphics.Display;
+    using Windows.UI.Core;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     internal class SwapChainPanelWrapper : IDisposable
     {
         #region UI objects
         private SwapChainBackgroundPanel m_bgPanel;
-        private DXGI.ISwapChainBackgroundPanelNative m_bgPanelNative;
+        private SharpDX.DXGI.ISwapChainBackgroundPanelNative m_bgPanelNative;
         private SwapChainPanel m_panel;
-        private DXGI.ISwapChainPanelNative m_panelNative;
+        private SharpDX.DXGI.ISwapChainPanelNative m_panelNative;
         #endregion
 
         #region Configuration
@@ -76,7 +74,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_bgPanel = bgPanel;
-            m_bgPanelNative = ComObject.As<DXGI.ISwapChainBackgroundPanelNative>(m_bgPanel);
+            m_bgPanelNative = ComObject.As<SharpDX.DXGI.ISwapChainBackgroundPanelNative>(m_bgPanel);
 
             m_bgPanel.SizeChanged += OnAnyPanel_SizeChanged;
             m_bgPanel.Loaded += OnAnyPanel_Loaded;
@@ -91,7 +89,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_panel = panel;
-            m_panelNative = ComObject.As<DXGI.ISwapChainPanelNative>(m_panel);
+            m_panelNative = ComObject.As<SharpDX.DXGI.ISwapChainPanelNative>(m_panel);
 
             m_panel.SizeChanged += OnAnyPanel_SizeChanged;
             m_panel.Loaded += OnAnyPanel_Loaded;
@@ -152,7 +150,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Sets the SwapChain object of the panel wrapped by this object.
         /// </summary>
-        public DXGI.SwapChain SwapChain
+        public SharpDX.DXGI.SwapChain SwapChain
         {
             set
             {
