@@ -132,12 +132,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 }
 
                 // Create the brush
-                result = new LoadedBrushResources();
-                result.GradientStops = new D2D.GradientStopCollection(
-                    engineDevice.FakeRenderTarget2D,
-                    d2dGradientStops,
-                    (D2D.Gamma)m_gamma,
-                    (D2D.ExtendMode)m_extendMode);
+                result = new LoadedBrushResources
+                {
+                    GradientStops = new D2D.GradientStopCollection(
+                        engineDevice.FakeRenderTarget2D,
+                        d2dGradientStops,
+                        (D2D.Gamma) m_gamma,
+                        (D2D.ExtendMode) m_extendMode)
+                };
 
                 unsafe
                 {

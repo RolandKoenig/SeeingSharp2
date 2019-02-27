@@ -245,9 +245,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions CreateDefaultImportOptions()
         {
-            var options = new XglImportOptions();
-            options.ResizeFactor = 0.01f;
-            options.ResourceCoordinateSystem = CoordinateSystem.RightHanded_UpZ;
+            var options = new XglImportOptions
+            {
+                ResizeFactor = 0.01f,
+                ResourceCoordinateSystem = CoordinateSystem.RightHanded_UpZ
+            };
+
             return options;
         }
 

@@ -90,8 +90,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="name">The internal name of the material.</param>
         public VertexStructureSurface CreateSurface(int triangleCapacity = 512, string name = "")
         {
-            var newSurface = new VertexStructureSurface(this, triangleCapacity);
-            newSurface.MaterialProperties.Name = name;
+            var newSurface = new VertexStructureSurface(this, triangleCapacity)
+            {
+                MaterialProperties = {Name = name}
+            };
 
             m_surfaces.Add(newSurface);
             return newSurface;

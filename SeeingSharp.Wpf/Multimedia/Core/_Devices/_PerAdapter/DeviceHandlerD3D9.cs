@@ -68,12 +68,15 @@ namespace SeeingSharp.Multimedia.Core
                         D3D9.CreateFlags.PureDevice |
                         D3D9.CreateFlags.FpuPreserve |
                         D3D9.CreateFlags.Multithreaded;
-                    var presentparams = new D3D9.PresentParameters();
-                    presentparams.Windowed = true;
-                    presentparams.SwapEffect = D3D9.SwapEffect.Discard;
-                    presentparams.DeviceWindowHandle = GetDesktopWindow();
-                    presentparams.PresentationInterval = D3D9.PresentInterval.Default;
-                    presentparams.BackBufferCount = 1;
+
+                    var presentparams = new D3D9.PresentParameters
+                    {
+                        Windowed = true,
+                        SwapEffect = D3D9.SwapEffect.Discard,
+                        DeviceWindowHandle = GetDesktopWindow(),
+                        PresentationInterval = D3D9.PresentInterval.Default,
+                        BackBufferCount = 1
+                    };
 
                     //Create the device finally
                     m_direct3DEx = new D3D9.Direct3DEx();

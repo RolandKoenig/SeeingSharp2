@@ -593,8 +593,11 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Create the new layer
-            var newLayer = new SceneLayer(name, this);
-            newLayer.OrderID = m_sceneLayers.Max((actLayer) => actLayer.OrderID) + 1;
+            var newLayer = new SceneLayer(name, this)
+            {
+                OrderID = m_sceneLayers.Max((actLayer) => actLayer.OrderID) + 1
+            };
+
             m_sceneLayers.Add(newLayer);
 
             // Sort local layer list

@@ -671,9 +671,13 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 var currentViewSize = m_renderLoop.CurrentViewSize;
-                var result = new Size();
-                result.Width = currentViewSize.Width;
-                result.Height = currentViewSize.Height;
+
+                var result = new Size
+                {
+                    Width = currentViewSize.Width,
+                    Height = currentViewSize.Height
+                };
+
                 return result;
             }
         }

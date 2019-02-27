@@ -69,9 +69,12 @@ namespace SeeingSharp.Multimedia.Components
         /// <returns></returns>
         protected override PerSceneContext Attach(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            var result = new PerSceneContext();
-            result.CameraDistance = this.CameraDistanceInitial;
-            result.CameraHVRotation = m_hvRotation;
+            var result = new PerSceneContext
+            {
+                CameraDistance = this.CameraDistanceInitial,
+                CameraHVRotation = m_hvRotation
+            };
+
             return result;
         }
 

@@ -62,8 +62,11 @@ namespace SeeingSharp.WinFormsSamples
 
             foreach (var actDevice in GraphicsCore.Current.Devices)
             {
-                var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}");
-                newButton.Tag = actDevice;
+                var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}")
+                {
+                    Tag = actDevice
+                };
+
                 newButton.Click += OnCmdChangeDevice_Click;
                 m_mnuChangeDevice.DropDownItems.Add(newButton);
             }
@@ -80,11 +83,18 @@ namespace SeeingSharp.WinFormsSamples
             {
                 var actTabPage = new TabPage(actSampleGroup.GroupName);
                 m_tabControlSamples.TabPages.Add(actTabPage);
-                if(firstTabPage == null) { firstTabPage = actTabPage; }
 
-                var actListView = new ListView();
-                actListView.Dock = DockStyle.Fill;
-                actListView.Activation = ItemActivation.OneClick;
+                if (firstTabPage == null)
+                {
+                    firstTabPage = actTabPage;
+                }
+
+                var actListView = new ListView
+                {
+                    Dock = DockStyle.Fill,
+                    Activation = ItemActivation.OneClick
+                };
+
                 actListView.ItemSelectionChanged += OnListView_ItemSelectionChanged;
                 actListView.MultiSelect = false;
                 actListView.LargeImageList = m_images;
@@ -99,9 +109,12 @@ namespace SeeingSharp.WinFormsSamples
                 foreach (var actSample in actSampleGroup.Samples)
                 {
                     // Generate the new list entry for the current sample
-                    var newListItem = new ListViewItem();
-                    newListItem.Text = actSample.Name;
-                    newListItem.Tag = actSample;
+                    var newListItem = new ListViewItem
+                    {
+                        Text = actSample.Name,
+                        Tag = actSample
+                    };
+
                     actListView.Items.Add(newListItem);
 
                     if (firstListViewItem == null)

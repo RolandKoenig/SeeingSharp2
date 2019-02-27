@@ -135,12 +135,15 @@ namespace SeeingSharp.Multimedia.Input
 
                 // Create the dummy button for focus management
                 //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
-                m_dummyButtonForFocus = new Button();
-                m_dummyButtonForFocus.Content = "Button";
-                m_dummyButtonForFocus.Width = 0;
-                m_dummyButtonForFocus.Height = 0;
-                m_dummyButtonForFocus.HorizontalAlignment = HorizontalAlignment.Left;
-                m_dummyButtonForFocus.VerticalAlignment = VerticalAlignment.Top;
+                m_dummyButtonForFocus = new Button
+                {
+                    Content = "Button",
+                    Width = 0,
+                    Height = 0,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+
                 m_dummyButtonForFocus.KeyDown += OnDummyButtonForFocus_KeyDown;
                 m_dummyButtonForFocus.KeyUp += OnDummyButtonForFocus_KeyUp;
                 m_dummyButtonForFocus.LostFocus += OnDummyButtonForFocus_LostFocus;

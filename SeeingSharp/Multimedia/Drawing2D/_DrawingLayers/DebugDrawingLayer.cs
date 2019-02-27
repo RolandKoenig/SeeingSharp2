@@ -45,9 +45,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DebugDrawingLayer()
         {
-            m_textFormat = new TextFormatResource("Arial", 30f);
-            m_textFormat.TextAlignment = TextAlignment.Center;
-            m_textFormat.ParagraphAlignment = ParagraphAlignment.Center;
+            m_textFormat = new TextFormatResource("Arial", 30f)
+            {
+                TextAlignment = TextAlignment.Center,
+                ParagraphAlignment = ParagraphAlignment.Center
+            };
 
             var grayColor = Color4Ex.LightGray;
             grayColor.ChangeAlphaTo(0.8f);

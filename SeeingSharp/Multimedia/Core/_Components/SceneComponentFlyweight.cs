@@ -173,11 +173,14 @@ namespace SeeingSharp.Multimedia.Core
 
                         try
                         {
-                            var newRegisteredComponentInfo = new SceneComponentInfo();
-                            newRegisteredComponentInfo.Component = actRequest.Component;
-                            newRegisteredComponentInfo.CorrespondingView = actRequest.CorrespondingView;
-                            newRegisteredComponentInfo.Context = actRequest.Component.AttachInternal(
-                                actManipulator, actRequest.CorrespondingView);
+                            var newRegisteredComponentInfo = new SceneComponentInfo
+                            {
+                                Component = actRequest.Component,
+                                CorrespondingView = actRequest.CorrespondingView,
+                                Context = actRequest.Component.AttachInternal(
+                                    actManipulator, actRequest.CorrespondingView)
+                            };
+
                             actIndex++;
 
                             // Register the component on local list of attached ones
@@ -218,8 +221,11 @@ namespace SeeingSharp.Multimedia.Core
                     case SceneComponentRequestType.DetachAll:
                         while(m_attachedComponents.Count > 0)
                         {
-                            actManipulator = new SceneManipulator(m_owner);
-                            actManipulator.IsValid = true;
+                            actManipulator = new SceneManipulator(m_owner)
+                            {
+                                IsValid = true
+                            };
+
                             try
                             {
                                 actComponent = m_attachedComponents[0];

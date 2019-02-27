@@ -117,12 +117,15 @@ namespace SeeingSharp.Multimedia.Core
             m_objectsPass2DOverlay = new PassSubscribionProperties();
 
             // Create dictionary for fast access to all render pass list
-            m_objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscribionProperties>();
-            m_objectsPerPassDict[RenderPassInfo.PASS_PLAIN_RENDER] = m_objectsPassPlainRender;
-            m_objectsPerPassDict[RenderPassInfo.PASS_LINE_RENDER] = m_objectsPassLineRender;
-            m_objectsPerPassDict[RenderPassInfo.PASS_TRANSPARENT_RENDER] = m_objectsPassTransparentRender;
-            m_objectsPerPassDict[RenderPassInfo.PASS_SPRITE_BATCH] = m_objectsPassSpriteBatchRender;
-            m_objectsPerPassDict[RenderPassInfo.PASS_2D_OVERLAY] = m_objectsPass2DOverlay;
+            m_objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscribionProperties>
+            {
+                [RenderPassInfo.PASS_PLAIN_RENDER] = m_objectsPassPlainRender,
+                [RenderPassInfo.PASS_LINE_RENDER] = m_objectsPassLineRender,
+                [RenderPassInfo.PASS_TRANSPARENT_RENDER] = m_objectsPassTransparentRender,
+                [RenderPassInfo.PASS_SPRITE_BATCH] = m_objectsPassSpriteBatchRender,
+                [RenderPassInfo.PASS_2D_OVERLAY] = m_objectsPass2DOverlay
+            };
+
             m_objectsPerPass = new List<PassSubscribionProperties>(m_objectsPerPassDict.Values);
 
             m_anythingUnsubscribed = false;
@@ -501,16 +504,19 @@ namespace SeeingSharp.Multimedia.Core
             RefreshDeviceDependentResources();
 
             // Update render parameters
-            var cbPerView = new CBPerView();
-            cbPerView.Accentuation = viewConfiguration.AccentuationFactor;
-            cbPerView.GradientFactor = viewConfiguration.GeneratedColorGradientFactor;
-            cbPerView.BorderFactor = viewConfiguration.GeneratedBorderFactor;
-            cbPerView.Ambient = viewConfiguration.AmbientFactor;
-            cbPerView.CameraPosition = this.ViewInformation.Camera.Position;
-            cbPerView.ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize();
-            cbPerView.LightPower = viewConfiguration.LightPower;
-            cbPerView.StrongLightFactor = viewConfiguration.StrongLightFactor;
-            cbPerView.ViewProj = Matrix.Transpose(this.ViewInformation.Camera.ViewProjection);
+            var cbPerView = new CBPerView
+            {
+                Accentuation = viewConfiguration.AccentuationFactor,
+                GradientFactor = viewConfiguration.GeneratedColorGradientFactor,
+                BorderFactor = viewConfiguration.GeneratedBorderFactor,
+                Ambient = viewConfiguration.AmbientFactor,
+                CameraPosition = this.ViewInformation.Camera.Position,
+                ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize(),
+                LightPower = viewConfiguration.LightPower,
+                StrongLightFactor = viewConfiguration.StrongLightFactor,
+                ViewProj = Matrix.Transpose(this.ViewInformation.Camera.ViewProjection)
+            };
+
             m_renderParameters.UpdateValues(renderState, cbPerView);
 
             // Query for postprocess effect

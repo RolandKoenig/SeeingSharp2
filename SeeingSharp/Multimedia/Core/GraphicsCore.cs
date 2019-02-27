@@ -136,13 +136,20 @@ namespace SeeingSharp.Multimedia.Core
             {
                 // Upate RK.Common members
                 m_devices = new List<EngineDevice>();
-                m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0));
-                m_performanceCalculator.SyncContext = SynchronizationContext.Current; // <-- TODO
+
+                m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                {
+                    SyncContext = SynchronizationContext.Current
+                };
+
+                // <-- TODO
                 m_performanceCalculator.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
-                m_configuration = new GraphicsCoreConfiguration();
-                m_configuration.DebugEnabled = loadSettings.DebugEnabled;
+                m_configuration = new GraphicsCoreConfiguration
+                {
+                    DebugEnabled = loadSettings.DebugEnabled
+                };
 
                 // Create container object for all input handlers
                 InputHandlers = new InputHandlerFactory(loader);

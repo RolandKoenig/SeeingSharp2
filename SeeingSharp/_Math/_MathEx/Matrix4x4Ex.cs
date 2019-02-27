@@ -329,14 +329,16 @@ namespace SeeingSharp
         {
             float zRange = zfar / (zfar - znear);
 
-            result = new Matrix();
-            result.M11 = 2.0f * znear / (right - left);
-            result.M22 = 2.0f * znear / (top - bottom);
-            result.M31 = (left + right) / (left - right);
-            result.M32 = (top + bottom) / (bottom - top);
-            result.M33 = zRange;
-            result.M34 = 1.0f;
-            result.M43 = -znear * zRange;
+            result = new Matrix
+            {
+                M11 = 2.0f * znear / (right - left),
+                M22 = 2.0f * znear / (top - bottom),
+                M31 = (left + right) / (left - right),
+                M32 = (top + bottom) / (bottom - top),
+                M33 = zRange,
+                M34 = 1.0f,
+                M43 = -znear * zRange
+            };
         }
 
         /// <summary>

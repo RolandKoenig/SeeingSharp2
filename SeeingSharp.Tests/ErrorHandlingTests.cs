@@ -174,13 +174,20 @@ namespace SeeingSharp.Tests
             };
             fakeUIThread.Starting += (sender, eArgs) =>
             {
-                hostPanel1 = new System.Windows.Forms.Panel();
-                hostPanel1.Size = new GDI.Size(500, 500);
-                hostPanel2 = new System.Windows.Forms.Panel();
-                hostPanel2.Size = new GDI.Size(500, 500);
+                hostPanel1 = new System.Windows.Forms.Panel
+                {
+                    Size = new GDI.Size(500, 500)
+                };
 
-                renderControl = new SeeingSharpRendererControl();
-                renderControl.Dock = System.Windows.Forms.DockStyle.Fill;
+                hostPanel2 = new System.Windows.Forms.Panel
+                {
+                    Size = new GDI.Size(500, 500)
+                };
+
+                renderControl = new SeeingSharpRendererControl
+                {
+                    Dock = System.Windows.Forms.DockStyle.Fill
+                };
 
                 hostPanel1.CreateControl();
                 hostPanel2.CreateControl();

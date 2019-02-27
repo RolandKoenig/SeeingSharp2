@@ -67,10 +67,13 @@ namespace SeeingSharp.SampleContainer
             var resTileMaterial = manipulator.AddResource(() => new SimpleColoredMaterialResource(resTileTexture));
 
             // Define floor geometry
-            var floorType = new FloorType(new Vector2(4f, 4f), 0f);
-            floorType.BottomMaterial = resTileMaterial;
-            floorType.DefaultFloorMaterial = resTileMaterial;
-            floorType.SideMaterial = resTileMaterial;
+            var floorType = new FloorType(new Vector2(4f, 4f), 0f)
+            {
+                BottomMaterial = resTileMaterial,
+                DefaultFloorMaterial = resTileMaterial,
+                SideMaterial = resTileMaterial
+            };
+
             floorType.SetTilemap(25, 25);
 
             // Add floor to scene

@@ -96,24 +96,27 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var wireObject = new WireObject();
-
-                    wireObject.LineData = new Line[]{
-                        new Line(
-                            new Vector3(-0.5f, 0f, -0.5f),
-                            new Vector3(0.5f, 0f, -0.5f)),
-                        new Line(
-                            new Vector3(0.5f, 0f, -0.5f),
-                            new Vector3(0.5f, 0f, 0.5f)),
-                        new Line(
-                            new Vector3(0.5f, 0f, 0.5f),
-                            new Vector3(-0.5f, 0f, 0.5f)),
-                        new Line(
-                            new Vector3(-0.5f, 0f, 0.5f),
-                            new Vector3(-0.5f, 0f, -0.5f)),
+                    var wireObject = new WireObject
+                    {
+                        LineData = new Line[]
+                        {
+                            new Line(
+                                new Vector3(-0.5f, 0f, -0.5f),
+                                new Vector3(0.5f, 0f, -0.5f)),
+                            new Line(
+                                new Vector3(0.5f, 0f, -0.5f),
+                                new Vector3(0.5f, 0f, 0.5f)),
+                            new Line(
+                                new Vector3(0.5f, 0f, 0.5f),
+                                new Vector3(-0.5f, 0f, 0.5f)),
+                            new Line(
+                                new Vector3(-0.5f, 0f, 0.5f),
+                                new Vector3(-0.5f, 0f, -0.5f)),
+                        },
+                        LineColor = Color4Ex.RedColor
                     };
 
-                    wireObject.LineColor = Color4Ex.RedColor;
+
                     manipulator.Add(wireObject);
                 });
                 await memRenderTarget.AwaitRenderAsync();
@@ -192,8 +195,11 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var cubeType = new CubeType();
-                    cubeType.Size = 0.3f;
+                    var cubeType = new CubeType
+                    {
+                        Size = 0.3f
+                    };
+
                     var stackedType = new StackedObjectType(cubeType, 10);
 
                     var geoResource = manipulator.AddResource<GeometryResource>(
@@ -274,10 +280,13 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = new OrthographicCamera3D();
-                camera.Position = new Vector3(0f, 5f, -7f);
-                camera.Target = new Vector3(0f, 1f, 0f);
-                camera.ZoomFactor = 200f;
+                var camera = new OrthographicCamera3D
+                {
+                    Position = new Vector3(0f, 5f, -7f),
+                    Target = new Vector3(0f, 1f, 0f),
+                    ZoomFactor = 200f
+                };
+
                 camera.UpdateCamera();
                 memRenderTarget.RenderLoop.Camera = camera;
 

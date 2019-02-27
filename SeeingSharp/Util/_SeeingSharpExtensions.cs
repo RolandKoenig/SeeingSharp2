@@ -286,10 +286,12 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Invalid vector3 format in xml file!");
             }
 
-            var result = new Vector3();
-            result.X = float.Parse(components[0], formatProvider);
-            result.Y = float.Parse(components[1], formatProvider);
-            result.Z = float.Parse(components[2], formatProvider);
+            var result = new Vector3
+            {
+                X = float.Parse(components[0], formatProvider),
+                Y = float.Parse(components[1], formatProvider),
+                Z = float.Parse(components[2], formatProvider)
+            };
 
             return result;
         }
@@ -317,9 +319,11 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Invalid vector2 format in xml file!");
             }
 
-            var result = new Vector2();
-            result.X = float.Parse(components[0], formatProvider);
-            result.Y = float.Parse(components[1], formatProvider);
+            var result = new Vector2
+            {
+                X = float.Parse(components[0], formatProvider),
+                Y = float.Parse(components[1], formatProvider)
+            };
 
             return result;
         }
@@ -347,10 +351,12 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Invalid vector3 format in xml file!");
             }
 
-            var result = new Vector3();
-            result.X = float.Parse(components[0], formatProvider);
-            result.Y = float.Parse(components[1], formatProvider);
-            result.Z = float.Parse(components[2], formatProvider);
+            var result = new Vector3
+            {
+                X = float.Parse(components[0], formatProvider),
+                Y = float.Parse(components[1], formatProvider),
+                Z = float.Parse(components[2], formatProvider)
+            };
 
             return result;
         }

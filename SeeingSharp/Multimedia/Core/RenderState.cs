@@ -191,12 +191,14 @@ namespace SeeingSharp.Multimedia.Core
             m_world = new Matrix4Stack(Matrix.Identity);
 
             //Inititialize current render properties
-            m_currentRenderSettings = new RenderStackEntry();
-            m_currentRenderSettings.Matrix4Stack = new Matrix4Stack();
-            m_currentRenderSettings.RenderTargets = renderTargets;
-            m_currentRenderSettings.SingleViewport = viewport;
-            m_currentRenderSettings.Camera = camera;
-            m_currentRenderSettings.ViewInformation = viewInformation;
+            m_currentRenderSettings = new RenderStackEntry
+            {
+                Matrix4Stack = new Matrix4Stack(),
+                RenderTargets = renderTargets,
+                SingleViewport = viewport,
+                Camera = camera,
+                ViewInformation = viewInformation
+            };
 
             //Apply initial render properties
             m_currentRenderSettings.Apply(m_device.DeviceImmediateContextD3D11);
@@ -339,12 +341,14 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             //Build new render stack entry
-            var newEntry = new RenderStackEntry();
-            newEntry.Matrix4Stack = new Matrix4Stack();
-            newEntry.Camera = camera;
-            newEntry.RenderTargets = renderTargets;
-            newEntry.SingleViewport = viewport;
-            newEntry.ViewInformation = viewInformation;
+            var newEntry = new RenderStackEntry
+            {
+                Matrix4Stack = new Matrix4Stack(),
+                Camera = camera,
+                RenderTargets = renderTargets,
+                SingleViewport = viewport,
+                ViewInformation = viewInformation
+            };
 
             //Overtake device settings
             newEntry.Apply(m_device.DeviceImmediateContextD3D11);

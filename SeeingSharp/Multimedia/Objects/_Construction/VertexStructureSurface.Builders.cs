@@ -618,8 +618,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color"></param>
         public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float heigh, Color4 color)
         {
-            var result = new BuiltVerticesRange(m_owner);
-            result.StartVertex = m_owner.CountVertices;
+            var result = new BuiltVerticesRange(m_owner)
+            {
+                StartVertex = m_owner.CountVertices
+            };
+
             int startTriangleIndex = this.CountTriangles;
 
             // Calculate texture coordinates
@@ -845,8 +848,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size, Color4 color)
         {
-            var result = new BuiltVerticesRange(m_owner);
-            result.StartVertex = m_owner.CountVertices;
+            var result = new BuiltVerticesRange(m_owner)
+            {
+                StartVertex = m_owner.CountVertices
+            };
 
             var dest = start + size;
 

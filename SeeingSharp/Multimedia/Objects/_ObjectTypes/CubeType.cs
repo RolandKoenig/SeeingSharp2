@@ -39,8 +39,10 @@ namespace SeeingSharp.Multimedia.Objects
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            var matProperties = new MaterialProperties();
-            matProperties.Key = Material;
+            var matProperties = new MaterialProperties
+            {
+                Key = Material
+            };
 
             var size = this.Size;
             var halfSize = size / 2f;

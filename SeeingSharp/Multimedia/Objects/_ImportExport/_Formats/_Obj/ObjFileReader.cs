@@ -653,9 +653,12 @@ namespace SeeingSharp.Multimedia.Objects
             for (var loop = 0; loop < faceIndices.Length; loop++)
             {
                 var actFaceIndices = faceIndices[loop];
-                var actVertex = new Vertex();
 
-                actVertex.Position = m_rawVertices[actFaceIndices.VertexIndex];
+                var actVertex = new Vertex
+                {
+                    Position = m_rawVertices[actFaceIndices.VertexIndex]
+                };
+
 
                 if (actFaceIndices.TextureCoordinateIndex > Int32.MinValue)
                 {

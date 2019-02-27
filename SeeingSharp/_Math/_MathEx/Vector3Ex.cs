@@ -113,9 +113,12 @@ namespace SeeingSharp
         {
             var normal = Vector3.Normalize(vector);
 
-            var result = new Vector2();
-            result.X = (float)Math.Atan2(normal.Z, normal.X);
-            result.Y = (float)Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length());
+            var result = new Vector2
+            {
+                X = (float) Math.Atan2(normal.Z, normal.X),
+                Y = (float) Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length())
+            };
+
             return result;
         }
 

@@ -340,8 +340,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="position">The position for the created object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position)
         {
-            var newGenericObject = new GenericObject(geometryResource);
-            newGenericObject.Position = position;
+            var newGenericObject = new GenericObject(geometryResource)
+            {
+                Position = position
+            };
 
             return this.Add(newGenericObject);
         }
@@ -354,8 +356,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position, string layer)
         {
-            var newGenericObject = new GenericObject(geometryResource);
-            newGenericObject.Position = position;
+            var newGenericObject = new GenericObject(geometryResource)
+            {
+                Position = position
+            };
 
             return this.Add(newGenericObject, layer);
         }

@@ -132,9 +132,12 @@ namespace SeeingSharp.Util
             //Go into starting state
             m_currentState = ObjectThreadState.Starting;
 
-            m_mainThread = new Thread(ObjectThreadMainMethod);
-            m_mainThread.IsBackground = true;
-            m_mainThread.Name = m_name;
+            m_mainThread = new Thread(ObjectThreadMainMethod)
+            {
+                IsBackground = true,
+                Name = m_name
+            };
+
             m_mainThread.Start();
         }
 

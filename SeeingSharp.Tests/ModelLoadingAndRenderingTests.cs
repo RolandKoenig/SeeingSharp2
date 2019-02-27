@@ -68,8 +68,11 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Import Fox model
-                var importOptions = new StlImportOptions();
-                importOptions.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ;
+                var importOptions = new StlImportOptions
+                {
+                    ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ
+                };
+
                 IEnumerable<SceneObject> loadedObjects = await memRenderTarget.Scene.ImportAsync(
                     TestUtilities.CreateResourceLink("Models", "Fox.stl"),
                     importOptions);

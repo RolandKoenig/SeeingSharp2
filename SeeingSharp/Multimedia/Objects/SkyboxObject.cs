@@ -115,17 +115,19 @@ namespace SeeingSharp.Multimedia.Objects
             };
 
             // Create and fill resource container object
-            var localResources = new SkyboxLocalResources();
-            localResources.DefaultResources = resourceDictionary.DefaultResources;
-            localResources.CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(m_cubeTextureKey);
-            localResources.VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices);
-            localResources.IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices);
-            localResources.VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
-                () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader"));
-            localResources.PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
-                () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"));
+            var localResources = new SkyboxLocalResources
+            {
+                DefaultResources = resourceDictionary.DefaultResources,
+                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(m_cubeTextureKey),
+                VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices),
+                IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices),
+                VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
+                    () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader")),
+                PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
+                    () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"))
+            };
 
             // Store resource container object
             m_localResources.AddObject(localResources, device.DeviceIndex);

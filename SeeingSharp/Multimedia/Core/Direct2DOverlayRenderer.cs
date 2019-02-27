@@ -119,11 +119,14 @@ namespace SeeingSharp.Multimedia.Core
             // Create the render target
             using (var dxgiSurface = m_renderTarget3D.QueryInterface<SharpDX.DXGI.Surface>())
             {
-                var bitmapProperties = new D2D.BitmapProperties1();
-                bitmapProperties.DpiX = dpiScaling.DpiX;
-                bitmapProperties.DpiY = dpiScaling.DpiY;
-                bitmapProperties.BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw;
-                bitmapProperties.PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, D2D.AlphaMode.Premultiplied);
+                var bitmapProperties = new D2D.BitmapProperties1
+                {
+                    DpiX = dpiScaling.DpiX,
+                    DpiY = dpiScaling.DpiY,
+                    BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
+                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                        D2D.AlphaMode.Premultiplied)
+                };
 
                 m_renderTargetBitmap = new SharpDX.Direct2D1.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
                 m_renderTarget2D = m_device.DeviceContextD2D;

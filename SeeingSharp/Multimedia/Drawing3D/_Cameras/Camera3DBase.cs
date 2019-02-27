@@ -104,9 +104,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public virtual Camera3DViewPoint GetViewPoint()
         {
-            var result = new Camera3DViewPoint();
-            result.Position = this.Position;
-            result.Rotation = this.TargetRotation;
+            var result = new Camera3DViewPoint
+            {
+                Position = this.Position,
+                Rotation = this.TargetRotation
+            };
+
             return result;
         }
 

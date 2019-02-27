@@ -102,9 +102,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             //Apply constant buffer data
-            var constantData = new ConstantBufferData();
-            constantData.DiffuseColor = lineColor;
-            constantData.WorldViewProj = worldViewProj;
+            var constantData = new ConstantBufferData
+            {
+                DiffuseColor = lineColor,
+                WorldViewProj = worldViewProj
+            };
+
             m_constantBuffer.SetData(deviceContext, constantData);
 
             //Apply vertex buffer and draw lines

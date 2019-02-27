@@ -51,10 +51,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device on which to load the effect instance.</param>
         protected override D2D.Effect BuildEffect(EngineDevice device)
         {
-            var blurEffect = new D2D.Effects.GaussianBlur(device.DeviceContextD2D);
-            blurEffect.BorderMode = D2D.BorderMode.Soft;
-            blurEffect.Optimization = D2D.GaussianBlurOptimization.Quality;
-            blurEffect.StandardDeviation = this.StandardDeviation;
+            var blurEffect = new D2D.Effects.GaussianBlur(device.DeviceContextD2D)
+            {
+                BorderMode = D2D.BorderMode.Soft,
+                Optimization = D2D.GaussianBlurOptimization.Quality,
+                StandardDeviation = this.StandardDeviation
+            };
+
             return blurEffect;
         }
 

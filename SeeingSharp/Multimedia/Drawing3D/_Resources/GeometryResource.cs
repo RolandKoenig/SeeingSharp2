@@ -412,17 +412,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         var actMaterialResource = resources.GetOrCreateMaterialResourceAndEnsureLoaded(actSurface);
 
                         // Create some information about the loaded structures
-                        var newStructureInfo = new LoadedStructureInfo();
-                        newStructureInfo.VertexBufferID = vertexBufferID;
-                        newStructureInfo.IndexBufferID = indexBufferID;
-                        newStructureInfo.SizePerVertex = StandardVertex.Size;
-                        newStructureInfo.VertexStructure = actStructure;
-                        newStructureInfo.IndexCount = indexArray.Length;
-                        newStructureInfo.StartIndex = actIndexCount - indexArray.Length;
-                        newStructureInfo.Material = actMaterialResource;
-                        newStructureInfo.MaterialProperties = actSurface.MaterialProperties;
-                        newStructureInfo.VertexBuffer = null;
-                        newStructureInfo.IndexBuffer = null;
+                        var newStructureInfo = new LoadedStructureInfo
+                        {
+                            VertexBufferID = vertexBufferID,
+                            IndexBufferID = indexBufferID,
+                            SizePerVertex = StandardVertex.Size,
+                            VertexStructure = actStructure,
+                            IndexCount = indexArray.Length,
+                            StartIndex = actIndexCount - indexArray.Length,
+                            Material = actMaterialResource,
+                            MaterialProperties = actSurface.MaterialProperties,
+                            VertexBuffer = null,
+                            IndexBuffer = null
+                        };
+
                         newStructureInfo.InputLayout = newStructureInfo.Material.GenerateInputLayout(
                             device, StandardVertex.InputElements, MaterialApplyInstancingMode.SingleObject);
                         result.Add(newStructureInfo);

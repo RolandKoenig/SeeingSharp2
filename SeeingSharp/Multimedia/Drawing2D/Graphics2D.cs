@@ -240,10 +240,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusY.EnsurePositive(nameof(radiusY));
             strokeWidth.EnsurePositive(nameof(strokeWidth));
 
-            var roundedRect = new D2D.RoundedRectangle();
-            roundedRect.Rect = rectangle;
-            roundedRect.RadiusX = radiusX;
-            roundedRect.RadiusY = radiusY;
+            var roundedRect = new D2D.RoundedRectangle
+            {
+                Rect = rectangle,
+                RadiusX = radiusX,
+                RadiusY = radiusY
+            };
 
             m_renderTarget.DrawRoundedRectangle(
                 roundedRect,
@@ -375,10 +377,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusX.EnsurePositive(nameof(radiusX));
             radiusY.EnsurePositive(nameof(radiusY));
 
-            var roundedRect = new D2D.RoundedRectangle();
-            roundedRect.Rect = rectangle;
-            roundedRect.RadiusX = radiusX;
-            roundedRect.RadiusY = radiusY;
+            var roundedRect = new D2D.RoundedRectangle
+            {
+                Rect = rectangle,
+                RadiusX = radiusX,
+                RadiusY = radiusY
+            };
 
             m_renderTarget.FillRoundedRectangle(
                 roundedRect,

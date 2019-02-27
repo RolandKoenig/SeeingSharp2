@@ -570,9 +570,11 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     string[] lineData = actLine.Split(' ');
 
-                                    var repetition = new Vector2();
-                                    repetition.X = Single.Parse(lineData[1], CultureInfo.InvariantCulture);
-                                    repetition.Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture);
+                                    var repetition = new Vector2
+                                    {
+                                        X = Single.Parse(lineData[1], CultureInfo.InvariantCulture),
+                                        Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture)
+                                    };
 
                                     currentObject.TextureRepeat = repetition;
                                 }
@@ -588,9 +590,11 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     string[] lineData = actLine.Split(' ');
 
-                                    var offset = new Vector2();
-                                    offset.X = Single.Parse(lineData[1], CultureInfo.InvariantCulture);
-                                    offset.Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture);
+                                    var offset = new Vector2
+                                    {
+                                        X = Single.Parse(lineData[1], CultureInfo.InvariantCulture),
+                                        Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture)
+                                    };
 
                                     currentObject.TextureRepeat = offset;
                                 }
@@ -645,10 +649,12 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     string[] lineData = actLine.Split(' ');
 
-                                    var location = new Vector3();
-                                    location.X = Single.Parse(lineData[1], CultureInfo.InvariantCulture);
-                                    location.Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture);
-                                    location.Z = Single.Parse(lineData[3], CultureInfo.InvariantCulture);
+                                    var location = new Vector3
+                                    {
+                                        X = Single.Parse(lineData[1], CultureInfo.InvariantCulture),
+                                        Y = Single.Parse(lineData[2], CultureInfo.InvariantCulture),
+                                        Z = Single.Parse(lineData[3], CultureInfo.InvariantCulture)
+                                    };
 
                                     currentObject.Translation = location;
                                 }
@@ -670,10 +676,12 @@ namespace SeeingSharp.Multimedia.Objects
                                         string actInnerLine = reader.ReadLine().Trim();
                                         string[] splittedVertex = actInnerLine.Split(' ');
 
-                                        var position = new Vector3();
-                                        position.X = Single.Parse(splittedVertex[0], CultureInfo.InvariantCulture);
-                                        position.Y = Single.Parse(splittedVertex[1], CultureInfo.InvariantCulture);
-                                        position.Z = Single.Parse(splittedVertex[2], CultureInfo.InvariantCulture);
+                                        var position = new Vector3
+                                        {
+                                            X = Single.Parse(splittedVertex[0], CultureInfo.InvariantCulture),
+                                            Y = Single.Parse(splittedVertex[1], CultureInfo.InvariantCulture),
+                                            Z = Single.Parse(splittedVertex[2], CultureInfo.InvariantCulture)
+                                        };
 
                                         currentObject.Vertices.Add(new ACVertex() { Position = position });
                                     }
@@ -819,12 +827,15 @@ namespace SeeingSharp.Multimedia.Objects
 
             public MaterialProperties CreateMaterialProperties()
             {
-                var result = new MaterialProperties();
-                result.DiffuseColor = Diffuse;
-                result.AmbientColor = Ambient;
-                result.EmissiveColor = Emissive;
-                result.SpecularColor = Specular;
-                result.Shininess = Shininess;
+                var result = new MaterialProperties
+                {
+                    DiffuseColor = Diffuse,
+                    AmbientColor = Ambient,
+                    EmissiveColor = Emissive,
+                    SpecularColor = Specular,
+                    Shininess = Shininess
+                };
+
                 return result;
             }
         }

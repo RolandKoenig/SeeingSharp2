@@ -79,8 +79,11 @@ namespace SeeingSharp.UwpSamples.Controls
                 {
                     actCategory = actProperty.CategoryName;
 
-                    var txtHeader = new TextBlock();
-                    txtHeader.Text = actCategory;
+                    var txtHeader = new TextBlock
+                    {
+                        Text = actCategory
+                    };
+
                     txtHeader.SetValue(Grid.RowProperty, (double)actRowIndex);
                     txtHeader.SetValue(Grid.ColumnSpanProperty, 2d);
                     txtHeader.SetValue(Grid.ColumnProperty, 0d);
@@ -89,11 +92,14 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.FontWeight = Windows.UI.Text.FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    var rect = new Windows.UI.Xaml.Shapes.Rectangle();
-                    rect.Height = 2d;
-                    rect.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
-                    rect.VerticalAlignment = VerticalAlignment.Bottom;
-                    rect.Margin = new Thickness(5d, 5d, 5d, 0d);
+                    var rect = new Windows.UI.Xaml.Shapes.Rectangle
+                    {
+                        Height = 2d,
+                        Fill = new SolidColorBrush(Windows.UI.Colors.Black),
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Margin = new Thickness(5d, 5d, 5d, 0d)
+                    };
+
                     rect.SetValue(Grid.RowProperty, (double)actRowIndex);
                     rect.SetValue(Grid.ColumnSpanProperty, 2d);
                     rect.SetValue(Grid.ColumnProperty, 0d);
@@ -102,8 +108,11 @@ namespace SeeingSharp.UwpSamples.Controls
                     actRowIndex++;
                 }
 
-                var ctrlText = new TextBlock();
-                ctrlText.Text = actProperty.PropertyDisplayName;
+                var ctrlText = new TextBlock
+                {
+                    Text = actProperty.PropertyDisplayName
+                };
+
                 ctrlText.SetValue(Grid.RowProperty, (double)actRowIndex);
                 ctrlText.SetValue(Grid.ColumnProperty, 0d);
                 ctrlText.Margin = new Thickness(5d, 5d, 50d, 5d);

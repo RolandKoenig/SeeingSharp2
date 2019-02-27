@@ -229,17 +229,20 @@ namespace SeeingSharp.Multimedia.Core
 
             try
             {
-                var textureDescription = new D3D11.Texture2DDescription();
-                textureDescription.Width = 100;
-                textureDescription.Height = 100;
-                textureDescription.MipLevels = 1;
-                textureDescription.ArraySize = 1;
-                textureDescription.Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT;
-                textureDescription.Usage = D3D11.ResourceUsage.Default;
-                textureDescription.SampleDescription = new SharpDX.DXGI.SampleDescription(2, 0);
-                textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
-                textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
-                textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
+                var textureDescription = new D3D11.Texture2DDescription
+                {
+                    Width = 100,
+                    Height = 100,
+                    MipLevels = 1,
+                    ArraySize = 1,
+                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    Usage = D3D11.ResourceUsage.Default,
+                    SampleDescription = new SharpDX.DXGI.SampleDescription(2, 0),
+                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
+                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                    OptionFlags = D3D11.ResourceOptionFlags.None
+                };
+
                 var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
                 SeeingSharpUtil.SafeDispose(ref testTexture);
             }

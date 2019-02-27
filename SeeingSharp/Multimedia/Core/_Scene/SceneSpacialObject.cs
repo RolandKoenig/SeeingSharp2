@@ -453,14 +453,18 @@ namespace SeeingSharp.Multimedia.Core
             if (renderParameters.NeedsRefresh)
             {
                 // Create constant buffer structure
-                CBPerObject cbPerObject = new CBPerObject();
-                cbPerObject.AccentuationFactor = m_accentuationFactor;
-                cbPerObject.Color = m_color.ToVector4();
-                cbPerObject.Opacity = m_opacity;
-                cbPerObject.World = Matrix.Transpose(m_transform);
-                cbPerObject.BorderPart = m_borderPart;
-                cbPerObject.BorderMultiplyer = m_borderMultiplyer;
-                cbPerObject.ObjectScaling = m_scaling;//Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
+                CBPerObject cbPerObject = new CBPerObject
+                {
+                    AccentuationFactor = m_accentuationFactor,
+                    Color = m_color.ToVector4(),
+                    Opacity = m_opacity,
+                    World = Matrix.Transpose(m_transform),
+                    BorderPart = m_borderPart,
+                    BorderMultiplyer = m_borderMultiplyer,
+                    ObjectScaling = m_scaling
+                };
+
+                //Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
 
                 // Update constant buffer
                 renderParameters.UpdateValues(renderState, cbPerObject);

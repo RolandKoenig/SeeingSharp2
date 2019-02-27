@@ -85,10 +85,12 @@ namespace SeeingSharp.Multimedia.Views
             m_lastSizeChange = DateTime.MinValue;
 
             // Create the RenderLoop object
-            m_renderLoop = new Core.RenderLoop(SynchronizationContext.Current, this);
-            m_renderLoop.ClearColor = Color4Ex.White;
-            m_renderLoop.Internals.CallPresentInUIThread = false;
+            m_renderLoop = new Core.RenderLoop(SynchronizationContext.Current, this)
+            {
+                ClearColor = Color4Ex.White
+            };
 
+            m_renderLoop.Internals.CallPresentInUIThread = false;
             m_detachOnUnload = true;
         }
 
@@ -376,9 +378,11 @@ namespace SeeingSharp.Multimedia.Views
             var viewPort = GraphicsHelper.CreateDefaultViewport(viewSize.Width, viewSize.Height);
             m_lastRefreshTargetSize = new Size(viewSize.Width, viewSize.Height);
 
-            var dpiScaling = new DpiScaling();
-            dpiScaling.DpiX = (float)(96.0 * m_targetPanel.CompositionScaleX);
-            dpiScaling.DpiY = (float)(96.0 * m_targetPanel.CompositionScaleY);
+            var dpiScaling = new DpiScaling
+            {
+                DpiX = (float) (96.0 * m_targetPanel.CompositionScaleX),
+                DpiY = (float) (96.0 * m_targetPanel.CompositionScaleY)
+            };
 
             return Tuple.Create(backBufferForRenderloop, m_renderTargetView, m_depthBuffer, m_renderTargetDepth, viewPort, viewSize, dpiScaling);
         }
@@ -415,9 +419,12 @@ namespace SeeingSharp.Multimedia.Views
                     {
                         try
                         {
-                            var inverseScale = new SharpDX.Mathematics.Interop.RawMatrix3x2();
-                            inverseScale.M11 = 1.0f / (float)m_targetPanel.CompositionScaleX;
-                            inverseScale.M22 = 1.0f / (float)m_targetPanel.CompositionScaleY;
+                            var inverseScale = new SharpDX.Mathematics.Interop.RawMatrix3x2
+                            {
+                                M11 = 1.0f / (float) m_targetPanel.CompositionScaleX,
+                                M22 = 1.0f / (float) m_targetPanel.CompositionScaleY
+                            };
+
                             swapChain2.MatrixTransform = inverseScale;
                         }
                         finally

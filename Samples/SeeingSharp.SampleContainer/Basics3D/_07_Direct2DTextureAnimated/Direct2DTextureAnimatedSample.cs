@@ -100,8 +100,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
-                var pType = new CubeType();
-                pType.Material = resD2DMaterial;
+                var pType = new CubeType
+                {
+                    Material = resD2DMaterial
+                };
+
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(pType));
 

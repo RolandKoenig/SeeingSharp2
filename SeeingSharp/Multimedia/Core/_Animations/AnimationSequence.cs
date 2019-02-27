@@ -491,8 +491,11 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Return some diagnostics about the executed animation
-            var result = new AnimationUpdateResult();
-            result.CountFinishedAnimations = countAnimationsFinished;
+            var result = new AnimationUpdateResult
+            {
+                CountFinishedAnimations = countAnimationsFinished
+            };
+
             return result;
         }
 

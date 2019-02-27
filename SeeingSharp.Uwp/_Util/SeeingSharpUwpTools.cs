@@ -44,11 +44,14 @@ namespace SeeingSharp.Util
 
         public static Windows.UI.Color UIColorFromColor4(ref SDX.Color4 color)
         {
-            var uiColor = new Windows.UI.Color();
-            uiColor.A = (byte)EngineMath.Clamp(0f, 255f, color.Alpha * 255f);
-            uiColor.R = (byte)EngineMath.Clamp(0f, 255f, color.Red * 255f);
-            uiColor.G = (byte)EngineMath.Clamp(0f, 255f, color.Green * 255f);
-            uiColor.B = (byte)EngineMath.Clamp(0f, 255f, color.Blue * 255f);
+            var uiColor = new Windows.UI.Color
+            {
+                A = (byte) EngineMath.Clamp(0f, 255f, color.Alpha * 255f),
+                R = (byte) EngineMath.Clamp(0f, 255f, color.Red * 255f),
+                G = (byte) EngineMath.Clamp(0f, 255f, color.Green * 255f),
+                B = (byte) EngineMath.Clamp(0f, 255f, color.Blue * 255f)
+            };
+
             return uiColor;
         }
     }
