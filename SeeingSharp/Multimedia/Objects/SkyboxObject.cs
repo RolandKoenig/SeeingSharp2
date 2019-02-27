@@ -115,7 +115,7 @@ namespace SeeingSharp.Multimedia.Objects
             };
 
             // Create and fill resource container object
-            SkyboxLocalResources localResources = new SkyboxLocalResources();
+            var localResources = new SkyboxLocalResources();
             localResources.DefaultResources = resourceDictionary.DefaultResources;
             localResources.CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(m_cubeTextureKey);
             localResources.VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices);
@@ -179,11 +179,22 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="device">The device for which to check.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex)) { return false; }
+            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            {
+                return false;
+            }
 
-            SkyboxLocalResources geoResource = m_localResources[device.DeviceIndex];
-            if (geoResource.CubeTexture == null) { return false; }
-            if (geoResource.CubeTexture.Key != m_cubeTextureKey) { return false; }
+            var geoResource = m_localResources[device.DeviceIndex];
+
+            if (geoResource.CubeTexture == null)
+            {
+                return false;
+            }
+
+            if (geoResource.CubeTexture.Key != m_cubeTextureKey)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -196,8 +207,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             renderState.ClearChachedAppliedMaterial();
 
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            SkyboxLocalResources localResources = m_localResources[renderState.DeviceIndex];
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var localResources = m_localResources[renderState.DeviceIndex];
 
             // Apply constants and shader resources
             deviceContext.VertexShader.Set(localResources.VertexShader.VertexShader);

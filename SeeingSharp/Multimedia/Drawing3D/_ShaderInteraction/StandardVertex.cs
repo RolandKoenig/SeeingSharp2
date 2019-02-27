@@ -141,14 +141,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="source">The VertexStructure object.</param>
         public static StandardVertex[] FromVertexStructure(VertexStructure source)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             int vertexCount = source.CountVertices;
 
             //Create result array
             StandardVertex[] result = new StandardVertex[vertexCount];
-            for (int loop = 0; loop < source.CountVertices; loop++)
+
+            for (var loop = 0; loop < source.CountVertices; loop++)
             {
-                Vertex vertex = source.Vertices[loop];
+                var vertex = source.Vertices[loop];
                 result[loop] = new StandardVertex(vertex);
             }
 
@@ -160,11 +165,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public static StandardVertex[] FromVertexStructure(VertexStructure[] structures)
         {
-            if (structures == null) { throw new ArgumentNullException("structures"); }
+            if (structures == null)
+            {
+                throw new ArgumentNullException("structures");
+            }
 
             //Get total vertex count
             int vertexCount = 0;
-            for (int loop = 0; loop < structures.Length; loop++)
+
+            for (var loop = 0; loop < structures.Length; loop++)
             {
                 vertexCount += structures[loop].CountVertices;
             }
@@ -172,11 +181,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             //create result array
             StandardVertex[] result = new StandardVertex[vertexCount];
             int actVertexPos = 0;
-            for (int loop = 0; loop < structures.Length; loop++)
+
+            for (var loop = 0; loop < structures.Length; loop++)
             {
-                VertexStructure actStructure = structures[loop];
+                var actStructure = structures[loop];
                 int structureVertexCount = actStructure.CountVertices;
-                for (int innerLoop = 0; innerLoop < structureVertexCount; innerLoop++)
+
+                for (var innerLoop = 0; innerLoop < structureVertexCount; innerLoop++)
                 {
                     result[actVertexPos] = new StandardVertex(actStructure.Vertices[innerLoop]);
                     actVertexPos++;
@@ -213,14 +224,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="lineList">List containing the lines.</param>
         public static StandardVertex[] FromLineList(Color4 lineColor, params Vector3[] lineList)
         {
-            if ((lineList == null) || (lineList.Length == 0)) { return new StandardVertex[0]; }
+            if ((lineList == null) || (lineList.Length == 0))
+            {
+                return new StandardVertex[0];
+            }
 
             StandardVertex[] result = new StandardVertex[lineList.Length];
-            for (int loop = 0; loop < lineList.Length; loop++)
+
+            for (var loop = 0; loop < lineList.Length; loop++)
             {
-                StandardVertex actVertex = new StandardVertex(lineList[loop], lineColor.ToRgba());
+                var actVertex = new StandardVertex(lineList[loop], lineColor.ToRgba());
                 result[loop] = actVertex;
             }
+
             return result;
         }
     }

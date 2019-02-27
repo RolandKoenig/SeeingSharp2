@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition);
             return result;
         }
@@ -107,14 +107,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="actTexCoord">The texture coordinate to be set.</param>
         public Vertex Copy(Vector2 actTexCoord)
         {
-            Vertex result = this;
+            var result = this;
             result.m_textureData.Coordinate1 = actTexCoord;
             return result;
         }
 
         internal Vertex Copy(Color4 Color4)
         {
-            Vertex result = this;
+            var result = this;
             result.Color = Color4;
             return result;
         }
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector2 newTexCoord1)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition);
             result.m_textureData = result.m_textureData.Copy(newTexCoord1);
             return result;
@@ -135,7 +135,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal, Vector2 newTexCoord1)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
             result.m_textureData = result.m_textureData.Copy(newTexCoord1);
             return result;
@@ -146,7 +146,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
             return result;
         }

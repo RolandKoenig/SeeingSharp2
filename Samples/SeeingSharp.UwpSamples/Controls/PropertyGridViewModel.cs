@@ -52,7 +52,8 @@ namespace SeeingSharp.UwpSamples.Controls
             foreach(var actProperty in selectedObject.GetType().GetProperties())
             {
                 // Check browsable attribute
-                BrowsableAttribute browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
+                var browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
+
                 if((browseAttrib != null) &&
                    (!browseAttrib.Browsable))
                 {

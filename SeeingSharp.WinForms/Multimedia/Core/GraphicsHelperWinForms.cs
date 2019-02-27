@@ -56,7 +56,8 @@ namespace SeeingSharp.Multimedia.Core
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             // Create the swap chain description
-            SharpDX.DXGI.SwapChainDescription1 swapChainDesc = new SharpDX.DXGI.SwapChainDescription1();
+            var swapChainDesc = new SharpDX.DXGI.SwapChainDescription1();
+
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
                 swapChainDesc.BufferCount = 2;
@@ -117,13 +118,13 @@ namespace SeeingSharp.Multimedia.Core
             D3D11.Texture2D result = null;
 
             // Lock bitmap so it can be accessed for texture loading
-            System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(
+            var bitmapData = bitmap.LockBits(
                 new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
                 System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             try
             {
                 // Open a reading stream for bitmap memory
-                DataRectangle dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
+                var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
                 result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription()
@@ -141,7 +142,7 @@ namespace SeeingSharp.Multimedia.Core
                 }, new DataRectangle[] { dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle });
 
                 // Workaround for now... auto generate mip-levels
-                using (D3D11.ShaderResourceView shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
+                using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
                 {
                     device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
                 }
@@ -170,20 +171,23 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsurePositive(nameof(height));
 
             //Prepare target bitmap
-            GDI.Bitmap resultBitmap = new GDI.Bitmap(width, height);
-            SharpDX.DataBox dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var resultBitmap = new GDI.Bitmap(width, height);
+            var dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+
             try
             {
                 //Lock bitmap so it can be accessed for texture loading
-                System.Drawing.Imaging.BitmapData bitmapData = resultBitmap.LockBits(
+                var bitmapData = resultBitmap.LockBits(
                     new System.Drawing.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
                     System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
                 try
                 {
                     //Copy data row by row
                     // => Rows form datasource may have more pixels because driver changes the size of textures
                     ulong rowPitch = (ulong)(width * 4);
-                    for (int loopRow = 0; loopRow < height; loopRow++)
+
+                    for (var loopRow = 0; loopRow < height; loopRow++)
                     {
                         // Copy bitmap data
                         int rowPitchSource = dataBox.RowPitch;

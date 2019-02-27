@@ -79,8 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="pitch"></param>
         public void SetBitmapContent(Graphics2D graphics, IntPtr pointer, int pitch)
         {
-            D2D.Bitmap bitmap = this.GetBitmap(graphics.Device);
-
+            var bitmap = this.GetBitmap(graphics.Device);
             bitmap.CopyFromMemory(pointer, pitch);
         }
 
@@ -91,9 +90,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            D2D.Bitmap result = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var result = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the bitmap initially
@@ -113,7 +116,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Bitmap brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (brush != null)
             {
                 SeeingSharpTools.DisposeObject(brush);

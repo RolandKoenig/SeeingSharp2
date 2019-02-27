@@ -76,21 +76,22 @@ namespace SeeingSharp.Multimedia.Drawing2D
             polygon.EnsureNotNull(nameof(polygon));
             polygon.Vertices.EnsureMoreThanZeroElements($"{nameof(polygon)}.{nameof(polygon.Vertices)}");
 
-            using (D2D.GeometrySink geoSink = m_d2dGeometry.Open())
+            using (var geoSink = m_d2dGeometry.Open())
             {
                 ReadOnlyCollection<Vector2> vertices = polygon.Vertices;
 
                 // Start the figure
-                Vector2 startPoint = vertices[0];
+                var startPoint = vertices[0];
                 geoSink.BeginFigure(
                     *(SDXM.RawVector2*)&startPoint,
                     D2D.FigureBegin.Filled);
 
                 // Add all lines
                 int vertexCount = vertices.Count;
-                for (int loop = 1; loop < vertexCount; loop++)
+
+                for (var loop = 1; loop < vertexCount; loop++)
                 {
-                    Vector2 actVectorOrig = vertices[loop];
+                    var actVectorOrig = vertices[loop];
                     geoSink.AddLine(*(SDXM.RawVector2*)&actVectorOrig);
                 }
 
@@ -109,7 +110,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             otherGeometry.EnsureNotNullOrDisposed(nameof(otherGeometry));
 
-            D2D.GeometryRelation relation = m_d2dGeometry.Compare(otherGeometry.m_d2dGeometry);
+            var relation = m_d2dGeometry.Compare(otherGeometry.m_d2dGeometry);
 
             return
                 (relation != D2D.GeometryRelation.Unknown) &&

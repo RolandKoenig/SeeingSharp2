@@ -88,18 +88,30 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Line2D other)
         {
             //Perform simple ray to ray intersection first
-            Ray2D ray1 = this.ToRay();
-            Ray2D ray2 = other.ToRay();
+            var ray1 = this.ToRay();
+            var ray2 = other.ToRay();
             Tuple<bool, Vector2> intersectionResult = ray1.Intersect(ray2);
-            if (!intersectionResult.Item1) { return intersectionResult; }
+
+            if (!intersectionResult.Item1)
+            {
+                return intersectionResult;
+            }
 
             //Is intersection point within line 1?
             float distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
-            if (distanceTo1 > this.Length) { return Tuple.Create(false, Vector2.Zero); }
+
+            if (distanceTo1 > this.Length)
+            {
+                return Tuple.Create(false, Vector2.Zero);
+            }
 
             //Is intersection point within line 2?
             float distanceTo2 = Vector2.Distance(ray2.Origin, intersectionResult.Item2);
-            if (distanceTo2 > other.Length) { return Tuple.Create(false, Vector2.Zero); }
+
+            if (distanceTo2 > other.Length)
+            {
+                return Tuple.Create(false, Vector2.Zero);
+            }
 
             return intersectionResult;
         }
@@ -111,7 +123,7 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Ray2D other)
         {
             //Perform simple ray to ray intersection first
-            Ray2D ray1 = this.ToRay();
+            var ray1 = this.ToRay();
             Tuple<bool, Vector2> intersectionResult = ray1.Intersect(other);
             if (!intersectionResult.Item1) { return intersectionResult; }
 
@@ -129,7 +141,7 @@ namespace SeeingSharp
         {
             get
             {
-                Vector2 lengthVector = this.EndPosition - this.StartPosition;
+                var lengthVector = this.EndPosition - this.StartPosition;
                 return lengthVector.Length();
             }
         }

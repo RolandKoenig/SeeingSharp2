@@ -79,7 +79,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 {
                     actCategory = actProperty.CategoryName;
 
-                    TextBlock txtHeader = new TextBlock();
+                    var txtHeader = new TextBlock();
                     txtHeader.Text = actCategory;
                     txtHeader.SetValue(Grid.RowProperty, (double)actRowIndex);
                     txtHeader.SetValue(Grid.ColumnSpanProperty, 2d);
@@ -89,7 +89,7 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.FontWeight = Windows.UI.Text.FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    Windows.UI.Xaml.Shapes.Rectangle rect = new Windows.UI.Xaml.Shapes.Rectangle();
+                    var rect = new Windows.UI.Xaml.Shapes.Rectangle();
                     rect.Height = 2d;
                     rect.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
                     rect.VerticalAlignment = VerticalAlignment.Bottom;
@@ -102,7 +102,7 @@ namespace SeeingSharp.UwpSamples.Controls
                     actRowIndex++;
                 }
 
-                TextBlock ctrlText = new TextBlock();
+                var ctrlText = new TextBlock();
                 ctrlText.Text = actProperty.PropertyDisplayName;
                 ctrlText.SetValue(Grid.RowProperty, (double)actRowIndex);
                 ctrlText.SetValue(Grid.ColumnProperty, 0d);
@@ -111,10 +111,12 @@ namespace SeeingSharp.UwpSamples.Controls
                 GridMain.Children.Add(ctrlText);
 
                 FrameworkElement ctrlValueEdit = null;
+
                 switch (actProperty.ValueType)
                 {
                     case PropertyValueType.Bool:
-                        CheckBox ctrlCheckBox = new CheckBox();
+                        var ctrlCheckBox = new CheckBox();
+
                         ctrlCheckBox.SetBinding(CheckBox.IsCheckedProperty, new Binding()
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
@@ -122,11 +124,12 @@ namespace SeeingSharp.UwpSamples.Controls
                             Source = actProperty,
                             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                         });
+
                         ctrlValueEdit = ctrlCheckBox;
                         break;
 
                     case PropertyValueType.String:
-                        TextBox ctrlTextBox = new TextBox();
+                        var ctrlTextBox = new TextBox();
                         ctrlTextBox.SetBinding(TextBox.TextProperty, new Binding()
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
@@ -139,7 +142,7 @@ namespace SeeingSharp.UwpSamples.Controls
                         break;
 
                     case PropertyValueType.Enum:
-                        ComboBox ctrlComboBox = new ComboBox();
+                        var ctrlComboBox = new ComboBox();
                         ctrlComboBox.ItemsSource = actProperty.GetEnumMembers();
                         ctrlComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
                         {

@@ -43,9 +43,16 @@ namespace SeeingSharp.Multimedia.Components
 
         protected override Vector3 GetFocusedLocation()
         {
-            SceneSpacialObject focusedObject = this.FocusedObject;
-            if(focusedObject != null) { return focusedObject.Position; }
-            else { return Vector3.Zero; }
+            var focusedObject = this.FocusedObject;
+
+            if (focusedObject != null)
+            {
+                return focusedObject.Position;
+            }
+            else
+            {
+                return Vector3.Zero;
+            }
         }
 
         public SceneSpacialObject FocusedObject

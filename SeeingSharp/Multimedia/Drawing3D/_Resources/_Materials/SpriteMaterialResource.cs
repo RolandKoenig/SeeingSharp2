@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <exception cref="SeeingSharpGraphicsException">Effect  + this.Effect +  not supported!</exception>
         internal override void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             bool isResourceSameType =
                 (previousMaterial != null) &&
                 (previousMaterial.ResourceType == base.ResourceType);

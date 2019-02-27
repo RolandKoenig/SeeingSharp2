@@ -94,7 +94,8 @@ namespace SeeingSharp.Multimedia.Objects
             m_targetVertexStructure = new VertexStructure();
 
             // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
-            Matrix coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
+            var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
+
             if(coordSpaceTransformMatrix != Matrix.Identity)
             {
                 m_targetVertexStructure.EnableBuildTimeTransform(coordSpaceTransformMatrix);
@@ -117,10 +118,11 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Define all material resources which where defined in the material file
-            foreach (VertexStructureSurface actSurface in m_targetVertexStructure.Surfaces)
+            foreach (var actSurface in m_targetVertexStructure.Surfaces)
             {
                 // Handle texture
-                NamedOrGenericKey textureKey = NamedOrGenericKey.Empty;
+                var textureKey = NamedOrGenericKey.Empty;
+
                 if (!string.IsNullOrEmpty(actSurface.TextureName))
                 {
                     string actTextureName = actSurface.TextureName;
@@ -133,7 +135,7 @@ namespace SeeingSharp.Multimedia.Objects
                 actSurface.TextureKey = textureKey;
 
                 // Handle material itself
-                NamedOrGenericKey actMaterialKey = m_targetContainer.GetResourceKey("Material", actSurface.MaterialProperties.Name);
+                var actMaterialKey = m_targetContainer.GetResourceKey("Material", actSurface.MaterialProperties.Name);
                 actSurface.Material = actMaterialKey;
                 m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                     actMaterialKey,
@@ -145,8 +147,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Define geometry resource
-            NamedOrGenericKey resGeometry = m_targetContainer.GetResourceKey("Geometry", "1");
-            GenericObjectType newObjType = new GenericObjectType(m_targetVertexStructure);
+            var resGeometry = m_targetContainer.GetResourceKey("Geometry", "1");
+            var newObjType = new GenericObjectType(m_targetVertexStructure);
             m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(newObjType)));
@@ -159,23 +161,32 @@ namespace SeeingSharp.Multimedia.Objects
         public void Read()
         {
             int actLineNumber = 0;
+
             try
             {
-                using (StreamReader inStreamReader = new StreamReader(m_resource.OpenInputStream()))
+                using (var inStreamReader = new StreamReader(m_resource.OpenInputStream()))
                 {
-                    StringBuilder multiLineBuilder = new StringBuilder(32);
+                    var multiLineBuilder = new StringBuilder(32);
+
                     while (!inStreamReader.EndOfStream)
                     {
                         actLineNumber++;
 
                         string actLine = inStreamReader.ReadLine();
-                        if (string.IsNullOrEmpty(actLine)) { continue; }
+
+                        if (string.IsNullOrEmpty(actLine))
+                        {
+                            continue;
+                        }
 
                         // Remove leading and ending spaces
                         actLine = actLine.Trim();
 
                         // Discard comments
-                        if (actLine[0] == '#') { continue; }
+                        if (actLine[0] == '#')
+                        {
+                            continue;
+                        }
 
                         // Handle multiline entris (they have a \ at the end of the line)
                         if (actLine[actLine.Length - 1] == '\\')
@@ -183,6 +194,7 @@ namespace SeeingSharp.Multimedia.Objects
                             multiLineBuilder.Append(actLine.TrimEnd('\\'));
                             continue;
                         }
+
                         if (multiLineBuilder.Length > 0)
                         {
                             multiLineBuilder.Append(actLine);
@@ -193,6 +205,7 @@ namespace SeeingSharp.Multimedia.Objects
                         // Parse current keyword and arguments
                         string actKeyword = null;
                         string actArguments = null;
+
                         if (!TrySplitLine(actLine, out actKeyword, out actArguments))
                         {
                             continue;
@@ -259,23 +272,32 @@ namespace SeeingSharp.Multimedia.Objects
         private void ReadMaterialLibrary(ResourceLink resource)
         {
             int actLineNumber = 0;
+
             try
             {
-                using (StreamReader inStreamReader = new StreamReader(resource.OpenInputStream()))
+                using (var inStreamReader = new StreamReader(resource.OpenInputStream()))
                 {
-                    StringBuilder multiLineBuilder = new StringBuilder(32);
+                    var multiLineBuilder = new StringBuilder(32);
+
                     while (!inStreamReader.EndOfStream)
                     {
                         actLineNumber++;
 
                         string actLine = inStreamReader.ReadLine();
-                        if (string.IsNullOrEmpty(actLine)) { continue; }
+
+                        if (string.IsNullOrEmpty(actLine))
+                        {
+                            continue;
+                        }
 
                         // Remove leading and ending spaces
                         actLine = actLine.Trim();
 
                         // Discard comments
-                        if (actLine[0] == '#') { continue; }
+                        if (actLine[0] == '#')
+                        {
+                            continue;
+                        }
 
                         // Handle multiline entris (they have a \ at the end of the line)
                         if (actLine[actLine.Length - 1] == '\\')
@@ -283,6 +305,7 @@ namespace SeeingSharp.Multimedia.Objects
                             multiLineBuilder.Append(actLine.TrimEnd('\\'));
                             continue;
                         }
+
                         if (multiLineBuilder.Length > 0)
                         {
                             multiLineBuilder.Append(actLine);
@@ -293,6 +316,7 @@ namespace SeeingSharp.Multimedia.Objects
                         // Parse current keyword and arguments
                         string actKeyword = null;
                         string actArguments = null;
+
                         if (!TrySplitLine(actLine, out actKeyword, out actArguments))
                         {
                             continue;
@@ -347,9 +371,10 @@ namespace SeeingSharp.Multimedia.Objects
         private void HandleKeyword_Obj_Mtllib(string arguments)
         {
             string[] mtlFiles = arguments.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            for(int loop=0; loop<mtlFiles.Length; loop++)
+
+            for(var loop =0; loop<mtlFiles.Length; loop++)
             {
-                ResourceLink mtlLibResource = m_resource.GetForAnotherFile(mtlFiles[loop]);
+                var mtlLibResource = m_resource.GetForAnotherFile(mtlFiles[loop]);
 
                 if (mtlLibResource.Exists())
                 {
@@ -435,6 +460,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             // Split arguments
             string[] vertexArguments = arguments.Split(ARGUMENT_SPLITTER, StringSplitOptions.RemoveEmptyEntries);
+
             if((vertexArguments.Length < 3) || (vertexArguments.Length > 4))
             {
                 throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'v', (expected=3, got={vertexArguments.Length})!");
@@ -447,7 +473,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Store vertex
-            Vector3 actCoordinate = new Vector3(
+            var actCoordinate = new Vector3(
                 m_dummyFloatArguments_3[0] * m_importOptions.ResizeFactor,
                 m_dummyFloatArguments_3[1] * m_importOptions.ResizeFactor,
                 m_dummyFloatArguments_3[2] * m_importOptions.ResizeFactor);
@@ -461,6 +487,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             // Split arguments
             string[] vertexArguments = arguments.Split(ARGUMENT_SPLITTER, StringSplitOptions.RemoveEmptyEntries);
+
             if (vertexArguments.Length != 3)
             {
                 throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'v', (expected=3, got={vertexArguments.Length})!");
@@ -623,16 +650,18 @@ namespace SeeingSharp.Multimedia.Objects
         private IEnumerable<int> GenerateFaceVertices(FaceIndices[] faceIndices)
         {
             // Generate vertex
-            for (int loop = 0; loop < faceIndices.Length; loop++)
+            for (var loop = 0; loop < faceIndices.Length; loop++)
             {
-                FaceIndices actFaceIndices = faceIndices[loop];
-                Vertex actVertex = new Vertex();
+                var actFaceIndices = faceIndices[loop];
+                var actVertex = new Vertex();
 
                 actVertex.Position = m_rawVertices[actFaceIndices.VertexIndex];
+
                 if (actFaceIndices.TextureCoordinateIndex > Int32.MinValue)
                 {
                     actVertex.TexCoord = m_rawTextureCoordinates[actFaceIndices.TextureCoordinateIndex];
                 }
+
                 if (actFaceIndices.NormalIndex > Int32.MinValue)
                 {
                     actVertex.Normal = m_rawNormals[actFaceIndices.NormalIndex];

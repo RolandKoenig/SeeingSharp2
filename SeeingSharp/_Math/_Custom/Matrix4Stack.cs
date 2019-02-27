@@ -176,16 +176,18 @@ namespace SeeingSharp
         /// </summary>
         public Object Clone()
         {
-            Matrix4Stack cloned = new Matrix4Stack();
+            var cloned = new Matrix4Stack();
 
             Matrix[] allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix>();
-            for (int loop = 0; loop < allElements.Length; loop++)
+
+            for (var loop = 0; loop < allElements.Length; loop++)
             {
                 cloned.m_stack.Push(allElements[loop]);
                 cloned.m_pushTimes++;
             }
+
             cloned.m_top = m_top;
 
             return cloned;

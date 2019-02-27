@@ -146,12 +146,18 @@ namespace SeeingSharp.Util
         /// <param name="separator">A custom separator string.</param>
         public static string ToCommaSeparatedString<T>(this IEnumerable<T> collection, string separator)
         {
-            StringBuilder readMessageBuilder = new StringBuilder();
-            foreach (T actObject in collection)
+            var readMessageBuilder = new StringBuilder();
+
+            foreach (var actObject in collection)
             {
-                if (readMessageBuilder.Length > 0) { readMessageBuilder.Append(separator); }
+                if (readMessageBuilder.Length > 0)
+                {
+                    readMessageBuilder.Append(separator);
+                }
+
                 readMessageBuilder.Append("" + actObject);
             }
+
             return readMessageBuilder.ToString();
         }
 
@@ -179,12 +185,18 @@ namespace SeeingSharp.Util
         /// <returns></returns>
         public static string ToCommaSeparatedString<T>(this IEnumerable<T> collection, Func<T, string> toStringFunc, string separator)
         {
-            StringBuilder readMessageBuilder = new StringBuilder();
-            foreach (T actObject in collection)
+            var readMessageBuilder = new StringBuilder();
+
+            foreach (var actObject in collection)
             {
-                if (readMessageBuilder.Length > 0) { readMessageBuilder.Append(separator); }
+                if (readMessageBuilder.Length > 0)
+                {
+                    readMessageBuilder.Append(separator);
+                }
+
                 readMessageBuilder.Append("" + toStringFunc(actObject));
             }
+
             return readMessageBuilder.ToString();
         }
 
@@ -268,9 +280,13 @@ namespace SeeingSharp.Util
         public static Vector3 ReadContentAsVector3(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
             string[] components = xmlReader.ReadContentAsString().Split(',');
-            if (components.Length != 3) { throw new SeeingSharpException("Invalid vector3 format in xml file!"); }
 
-            Vector3 result = new Vector3();
+            if (components.Length != 3)
+            {
+                throw new SeeingSharpException("Invalid vector3 format in xml file!");
+            }
+
+            var result = new Vector3();
             result.X = float.Parse(components[0], formatProvider);
             result.Y = float.Parse(components[1], formatProvider);
             result.Z = float.Parse(components[2], formatProvider);
@@ -295,9 +311,13 @@ namespace SeeingSharp.Util
         public static Vector2 ReadContentAsVector2(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
             string[] components = xmlReader.ReadContentAsString().Split(',');
-            if (components.Length != 2) { throw new SeeingSharpException("Invalid vector2 format in xml file!"); }
 
-            Vector2 result = new Vector2();
+            if (components.Length != 2)
+            {
+                throw new SeeingSharpException("Invalid vector2 format in xml file!");
+            }
+
+            var result = new Vector2();
             result.X = float.Parse(components[0], formatProvider);
             result.Y = float.Parse(components[1], formatProvider);
 
@@ -321,9 +341,13 @@ namespace SeeingSharp.Util
         public static Vector3 ReadElementContentAsVector3(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
             string[] components = xmlReader.ReadElementContentAsString().Split(',');
-            if (components.Length != 3) { throw new SeeingSharpException("Invalid vector3 format in xml file!"); }
 
-            Vector3 result = new Vector3();
+            if (components.Length != 3)
+            {
+                throw new SeeingSharpException("Invalid vector3 format in xml file!");
+            }
+
+            var result = new Vector3();
             result.X = float.Parse(components[0], formatProvider);
             result.Y = float.Parse(components[1], formatProvider);
             result.Z = float.Parse(components[2], formatProvider);
@@ -354,7 +378,7 @@ namespace SeeingSharp.Util
         /// <param name="actionPerElement">Action to perform for each element.</param>
         public static void ForEachInEnumeration<T>(this IEnumerable<T> enumeration, Action<T> actionPerElement)
         {
-            foreach (T actElement in enumeration)
+            foreach (var actElement in enumeration)
             {
                 actionPerElement(actElement);
             }
@@ -365,7 +389,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public static IEnumerable<TTarget> Convert<TSource, TTarget>(this IEnumerable<TSource> enumeration, Func<TSource, TTarget> converter)
         {
-            foreach (TSource actSourceItem in enumeration)
+            foreach (var actSourceItem in enumeration)
             {
                 yield return converter(actSourceItem);
             }

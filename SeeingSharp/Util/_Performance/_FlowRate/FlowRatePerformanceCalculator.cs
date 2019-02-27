@@ -97,7 +97,8 @@ namespace SeeingSharp.Util
                     .Count());
 
                 // Handle case where measured timespan in more less than the calculation timespan
-                TimeSpan currentValueTimespan = maxTimeStamp - minTimeStamp;
+                var currentValueTimespan = maxTimeStamp - minTimeStamp;
+
                 if(currentValueTimespan != calculationInterval)
                 {
                     double timespanFactor = (double)calculationInterval.Ticks / (double)currentValueTimespan.Ticks;

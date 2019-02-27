@@ -71,12 +71,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_adapters = new List<EngineAdapterInfo>();
 
-            int adapterCount = m_dxgiFactory.GetAdapterCount1();
-            for (int loop = 0; loop < adapterCount; loop++)
+            var adapterCount = m_dxgiFactory.GetAdapterCount1();
+
+            for (var loop = 0; loop < adapterCount; loop++)
             {
                 try
                 {
-                    SharpDX.DXGI.Adapter1 actAdapter = m_dxgiFactory.GetAdapter1(loop);
+                    var actAdapter = m_dxgiFactory.GetAdapter1(loop);
                     m_adapters.Add(new EngineAdapterInfo(loop, actAdapter));
                 }
                 catch (Exception)
@@ -90,12 +91,20 @@ namespace SeeingSharp.Multimedia.Core
         internal SharpDX.DXGI.Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
         {
             int adapterCount = m_dxgiFactory.GetAdapterCount1();
-            if(outputInfo.AdapterIndex >= adapterCount) { throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!"); }
 
-            using (SharpDX.DXGI.Adapter1 adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
+            if (outputInfo.AdapterIndex >= adapterCount)
+            {
+                throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!");
+            }
+
+            using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
             {
                 int outputCount = adapter.GetOutputCount();
-                if(outputInfo.OutputIndex >= outputCount) { throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!"); }
+
+                if (outputInfo.OutputIndex >= outputCount)
+                {
+                    throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!");
+                }
 
                 return adapter.GetOutput(outputInfo.OutputIndex);
             }
@@ -104,10 +113,12 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
+
             foreach(var actAdapter in m_adapters)
             {
                 SeeingSharpUtil.DisposeObject(actAdapter);
             }
+
             m_adapters.Clear();
         }
 

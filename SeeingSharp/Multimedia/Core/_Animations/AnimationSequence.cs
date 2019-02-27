@@ -118,7 +118,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Append all given animations
-                foreach (IAnimation actChildAnimation in animationSequenceList)
+                foreach (var actChildAnimation in animationSequenceList)
                 {
                     m_runningAnimations.Enqueue(actChildAnimation);
                     Interlocked.Increment(ref m_runningAnimationsCount);
@@ -156,9 +156,12 @@ namespace SeeingSharp.Multimedia.Core
                 // Check on primary animations
                 if (m_runningAnimationsCount > 0)
                 {
-                    foreach (IAnimation actAnimation in m_runningAnimations)
+                    foreach (var actAnimation in m_runningAnimations)
                     {
-                        if (actAnimation.IsObjectAnimated(targetObject)) { return true; }
+                        if (actAnimation.IsObjectAnimated(targetObject))
+                        {
+                            return true;
+                        }
                     }
                 }
 
@@ -167,9 +170,12 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
                     {
-                        foreach (IAnimation actAnimation in actSecondaryQueue)
+                        foreach (var actAnimation in actSecondaryQueue)
                         {
-                            if (actAnimation.IsObjectAnimated(targetObject)) { return true; }
+                            if (actAnimation.IsObjectAnimated(targetObject))
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -193,7 +199,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Cancel all primary animations
                 if (m_runningAnimationsCount > 0)
                 {
-                    foreach (IAnimation actAnimation in m_runningAnimations)
+                    foreach (var actAnimation in m_runningAnimations)
                     {
                         actAnimation.Canceled = true;
                     }
@@ -204,7 +210,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
                     {
-                        foreach (IAnimation actAnimation in actSecondaryQueue)
+                        foreach (var actAnimation in actSecondaryQueue)
                         {
                             actAnimation.Canceled = true;
                         }
@@ -229,9 +235,12 @@ namespace SeeingSharp.Multimedia.Core
                 // Cancel animations on primary queue
                 if (m_runningAnimationsCount > 0)
                 {
-                    foreach (IAnimation actAnimation in m_runningAnimations)
+                    foreach (var actAnimation in m_runningAnimations)
                     {
-                        if (actAnimation.IsObjectAnimated(targetObject)) { actAnimation.Canceled = true; }
+                        if (actAnimation.IsObjectAnimated(targetObject))
+                        {
+                            actAnimation.Canceled = true;
+                        }
                     }
                 }
 
@@ -240,9 +249,12 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
                     {
-                        foreach (IAnimation actAnimation in actSecondaryQueue)
+                        foreach (var actAnimation in actSecondaryQueue)
                         {
-                            if (actAnimation.IsObjectAnimated(actAnimation)) { actAnimation.Canceled = true; }
+                            if (actAnimation.IsObjectAnimated(actAnimation))
+                            {
+                                actAnimation.Canceled = true;
+                            }
                         }
                     }
                 }
@@ -294,19 +306,20 @@ namespace SeeingSharp.Multimedia.Core
                 PrecalculateAnimations();
 
                 // Create shared UpdateState object
-                UpdateState updateState = new UpdateState(TimeSpan.Zero);
+                var updateState = new UpdateState(TimeSpan.Zero);
 
                 // Perform whole animation in an event-driven way
                 List<EventDrivenStepInfo> steps = new List<EventDrivenStepInfo>(12);
+
                 while (this.CountRunningAnimations > 0)
                 {
                     // Store some values for measurement
                     int countAnimationsBegin = this.CountRunningAnimations;
 
                     // Perform animation calculation
-                    TimeSpan timeTillNext = this.TimeTillCurrentAnimationStepFinished;
+                    var timeTillNext = this.TimeTillCurrentAnimationStepFinished;
                     updateState.Reset(timeTillNext);
-                    AnimationUpdateResult updateResult = this.Update(updateState);
+                    var updateResult = this.Update(updateState);
                     countSteps++;
 
                     // Generate resport data
@@ -416,8 +429,12 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         anySubAnimationFinishedOrCanceled = true;
                         countAnimationsFinished++;
-                        IAnimation currentAnimation = m_runningAnimations.Dequeue();
-                        if (currentAnimation != null) { Interlocked.Decrement(ref m_runningAnimationsCount); }
+                        var currentAnimation = m_runningAnimations.Dequeue();
+
+                        if (currentAnimation != null)
+                        {
+                            Interlocked.Decrement(ref m_runningAnimationsCount);
+                        }
                     }
                     else
                     {
@@ -474,7 +491,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Return some diagnostics about the executed animation
-            AnimationUpdateResult result = new AnimationUpdateResult();
+            var result = new AnimationUpdateResult();
             result.CountFinishedAnimations = countAnimationsFinished;
             return result;
         }
@@ -525,7 +542,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void UpdateTimeTillNextPartFinished()
         {
-            TimeSpan timeTillNextEvent = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
+            var timeTillNextEvent = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
 
             // Cancel here if there are no animations at all
             if ((m_runningAnimationsCount == 0) &&
@@ -538,22 +555,24 @@ namespace SeeingSharp.Multimedia.Core
             // Calculate sub-animation time using main animation
             if (m_runningAnimationsCount > 0)
             {
-                TimeSpan timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
-                TimeSpan timeTillNextStepMax = TimeSpan.MinValue;
-                TimeSpan actAnimTime = TimeSpan.MinValue;
+                var timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
+                var timeTillNextStepMax = TimeSpan.MinValue;
+                var actAnimTime = TimeSpan.MinValue;
                 bool containedBlockingAnimation = false;
-                foreach (IAnimation actAnimationStep in m_runningAnimations)
+
+                foreach (var actAnimationStep in m_runningAnimations)
                 {
                     if (actAnimationStep.Canceled) { continue; }
                     if (actAnimationStep.Finished) { continue; }
 
                     // Calculate parameters for GetTimeTillFinished method
                     //  .. Constants.UPDATE_STATE_MAX_TIME oder TimeSpan.MinValue are only internal representations for empty values
-                    TimeSpan mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
-                    TimeSpan mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
+                    var mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
+                    var mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                     // Update local time values
                     actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, m_defaultCycleTime);
+
                     if (actAnimTime < timeTillNextStepMin) { timeTillNextStepMin = actAnimTime; }
                     if (actAnimTime > timeTillNextStepMax) { timeTillNextStepMax = actAnimTime; }
 
@@ -562,7 +581,9 @@ namespace SeeingSharp.Multimedia.Core
                     if (actAnimationStep.IsBlockingAnimation)
                     {
                         containedBlockingAnimation = true;
+
                         if (actAnimTime < timeTillNextEvent) { timeTillNextEvent = actAnimTime; }
+
                         break;
                     }
                 }
@@ -582,22 +603,24 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     if (actSecondaryQueue.Count > 0)
                     {
-                        TimeSpan timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
-                        TimeSpan timeTillNextStepMax = TimeSpan.MinValue;
-                        TimeSpan actAnimTime = TimeSpan.Zero;
+                        var timeTillNextStepMin = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
+                        var timeTillNextStepMax = TimeSpan.MinValue;
+                        var actAnimTime = TimeSpan.Zero;
                         bool containedBlockingAnimation = false;
-                        foreach (IAnimation actAnimationStep in actSecondaryQueue)
+
+                        foreach (var actAnimationStep in actSecondaryQueue)
                         {
                             if (actAnimationStep.Canceled) { continue; }
                             if (actAnimationStep.Finished) { continue; }
 
                             // Calculate parameters for GetTimeTillFinished method
                             //  .. Constants.UPDATE_STATE_MAX_TIME oder TimeSpan.MinValue are only internal representations for empty values
-                            TimeSpan mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
-                            TimeSpan mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
+                            var mParamMin = timeTillNextStepMin != SeeingSharpConstants.UPDATE_STATE_MAX_TIME ? timeTillNextStepMin : TimeSpan.Zero;
+                            var mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                             // Update local time values
                             actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, m_defaultCycleTime);
+
                             if (actAnimTime < timeTillNextStepMin) { timeTillNextStepMin = actAnimTime; }
                             if (actAnimTime > timeTillNextStepMax) { timeTillNextStepMax = actAnimTime; }
 
@@ -641,12 +664,12 @@ namespace SeeingSharp.Multimedia.Core
         private bool UpdateQueueInternal(IAnimationUpdateState updateState, AnimationState animationState, Queue<IAnimation> animationQueue)
         {
             bool anyFinishedOrCanceled = false;
-            AnimationState animationStateInner = new AnimationState();
+            var animationStateInner = new AnimationState();
             int actIndex = 0;
-            TimeSpan actMaxTime = TimeSpan.Zero;
+            var actMaxTime = TimeSpan.Zero;
 
             // Loop over all animations and update them till next blocking animation
-            foreach (IAnimation actAnimation in animationQueue)
+            foreach (var actAnimation in animationQueue)
             {
                 if (actAnimation.Canceled) { continue; }
                 if (actAnimation.Finished) { continue; }
@@ -676,13 +699,14 @@ namespace SeeingSharp.Multimedia.Core
                 catch (Exception ex)
                 {
                     //Log error
-                    AnimationHandler animHandler = this as AnimationHandler;
+                    var animHandler = this as AnimationHandler;
 
                     // Raise the animation failed event
                     AnimationFailed.Raise(this, new AnimationFailedEventArgs(actAnimation, ex));
 
                     //Query for reaction
-                    AnimationFailedReaction reaction = OnAnimationFailed(actAnimation, ex);
+                    var reaction = OnAnimationFailed(actAnimation, ex);
+
                     switch (reaction)
                     {
                         case AnimationFailedReaction.ThrowException:

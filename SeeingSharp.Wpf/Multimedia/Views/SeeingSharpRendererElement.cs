@@ -149,16 +149,17 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public DpiScaling GetDpiScaling()
         {
-            PresentationSource source = PresentationSource.FromVisual(this);
+            var source = PresentationSource.FromVisual(this);
             double dpiScaleFactorX = 1.0;
             double dpiScaleFactorY = 1.0;
+
             if (source != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
             }
 
-            DpiScaling result = DpiScaling.Default;
+            var result = DpiScaling.Default;
             result.DpiX = (float)(result.DpiX * dpiScaleFactorX);
             result.DpiY = (float)(result.DpiY * dpiScaleFactorY);
             return result;
@@ -198,7 +199,7 @@ namespace SeeingSharp.Multimedia.Views
             SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
 
             // Calculate pixel with and high of this visual
-            Size pixelSize = new Size(
+            var pixelSize = new Size(
                 Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
                 Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
             int width = (int)pixelSize.Width;
@@ -206,12 +207,13 @@ namespace SeeingSharp.Multimedia.Views
 
             // Get references to current render device
             D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
-            D3D11.DeviceContext renderDeviceContext = renderDevice.ImmediateContext;
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
+            var renderDeviceContext = renderDevice.ImmediateContext;
+            var viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
 
             bool initializedSuccessfully = false;
             bool forceFallbackSolution = false;
             int tryCount = 0;
+
             do
             {
                 tryCount++;
@@ -363,7 +365,7 @@ namespace SeeingSharp.Multimedia.Views
                 SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
 
                 // Calculate pixel with and high of this visual
-                Size pixelSize = new Size(
+                var pixelSize = new Size(
                     Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
                     Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
                 int width = (int)pixelSize.Width;
@@ -389,11 +391,16 @@ namespace SeeingSharp.Multimedia.Views
                 GraphicsCore.Current.PerformanceCalculator.ExecuteAndMeasureActivityDuration(
                     "Render.Lock",
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
-                if (!isLocked) { return; }
+
+                if (!isLocked)
+                {
+                    return;
+                }
+
                 try
                 {
                     // Draw current 3d scene to wpf
-                    D3D11.DeviceContext deviceContext = engineDevice.DeviceImmediateContextD3D11;
+                    var deviceContext = engineDevice.DeviceImmediateContextD3D11;
                     deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, SharpDX.DXGI.Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
@@ -620,13 +627,13 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 var clearColor = m_renderLoop.ClearColor;
-                System.Windows.Media.Color result = new System.Windows.Media.Color();
+                var result = new System.Windows.Media.Color();
                 SeeingSharpWpfTools.WpfColorFromColor4(ref clearColor, ref result);
                 return result;
             }
             set
             {
-                Color4 clearColor = new Color4();
+                var clearColor = new Color4();
                 SeeingSharpWpfTools.Color4FromWpfColor(ref value, ref clearColor);
                 m_renderLoop.ClearColor = clearColor;
             }
@@ -664,7 +671,7 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 var currentViewSize = m_renderLoop.CurrentViewSize;
-                Size result = new Size();
+                var result = new Size();
                 result.Width = currentViewSize.Width;
                 result.Height = currentViewSize.Height;
                 return result;
@@ -675,7 +682,11 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (!GraphicsCore.IsLoaded) { return new EngineDevice[0]; }
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return new EngineDevice[0];
+                }
+
                 return GraphicsCore.Current.Devices;
             }
         }

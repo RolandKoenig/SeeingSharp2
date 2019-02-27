@@ -233,9 +233,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="stencil">The stencil value to write over the whole buffer.</param>
         public void ClearCurrentDepthBuffer(float depth, byte stencil)
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
 
-            RenderTargets currentTargets = this.CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
+
             if (currentTargets.DepthStencilBuffer != null)
             {
                 m_device.DeviceImmediateContextD3D11.ClearDepthStencilView(
@@ -251,9 +255,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="color">The culor used for clering.</param>
         public void ClearCurrentColorBuffer(Color4 color)
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
 
-            RenderTargets currentTargets = this.CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
+
             if (currentTargets.ColorBuffer != null)
             {
                 m_device.DeviceImmediateContextD3D11.ClearRenderTargetView(
@@ -267,9 +275,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ClearCurrentNormalDepth()
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
 
-            RenderTargets currentTargets = this.CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
+
             if (currentTargets.NormalDepthBuffer != null)
             {
                 m_device.DeviceImmediateContextD3D11.ClearRenderTargetView(
@@ -321,10 +333,13 @@ namespace SeeingSharp.Multimedia.Core
             SharpDX.Mathematics.Interop.RawViewportF viewport,
             Camera3DBase camera, ViewInformation viewInformation)
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
 
             //Build new render stack entry
-            RenderStackEntry newEntry = new RenderStackEntry();
+            var newEntry = new RenderStackEntry();
             newEntry.Matrix4Stack = new Matrix4Stack();
             newEntry.Camera = camera;
             newEntry.RenderTargets = renderTargets;

@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="hostObject">The object that hosts this behavior.</param>
         internal void SetHostObject(SceneObject hostObject)
         {
-            SceneObject oldHostObject = m_host;
+            var oldHostObject = m_host;
             m_host = hostObject;
 
             OnHostObjectChanged(oldHostObject, m_host);

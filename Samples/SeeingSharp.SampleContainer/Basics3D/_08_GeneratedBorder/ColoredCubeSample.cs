@@ -50,8 +50,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -60,16 +60,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource
-                CubeType cubeType = new CubeType();
+                var cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 
                 float space = 1.05f;
 
                 // Create cubes with border
-                for (int loop = 0; loop < 10; loop++)
+                for (var loop = 0; loop < 10; loop++)
                 {
-                    GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
                     cubeObject.Position = new Vector3(0f, 0.5f, loop * space);
                     cubeObject.EnableShaderGeneratedBorder(borderThicknes: 2f);
@@ -81,9 +81,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                 }
 
                 // Create cubes without border
-                for (int loop = 0; loop < 10; loop++)
+                for (var loop = 0; loop < 10; loop++)
                 {
-                    GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
                     cubeObject.Position = new Vector3(space, 0.5f, loop * space);
 

@@ -63,19 +63,24 @@ namespace SeeingSharp.Multimedia.Objects
         public bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
         {
             distance = float.MaxValue;
-            bool result = false;
+            var result = false;
 
-            for (int loop = 0; loop < m_indices.Count; loop += 3)
+            for (var loop = 0; loop < m_indices.Count; loop += 3)
             {
-                Vector3 vertex1 = m_owner.VerticesInternal[m_indices[loop]].Position;
-                Vector3 vertex2 = m_owner.VerticesInternal[m_indices[loop + 1]].Position;
-                Vector3 vertex3 = m_owner.VerticesInternal[m_indices[loop + 2]].Position;
+                var vertex1 = m_owner.VerticesInternal[m_indices[loop]].Position;
+                var vertex2 = m_owner.VerticesInternal[m_indices[loop + 1]].Position;
+                var vertex3 = m_owner.VerticesInternal[m_indices[loop + 2]].Position;
 
                 float currentDistance = 0f;
+
                 if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out currentDistance))
                 {
                     result = true;
-                    if (currentDistance < distance) { distance = currentDistance; }
+
+                    if (currentDistance < distance)
+                    {
+                        distance = currentDistance;
+                    }
                 }
             }
 
@@ -169,13 +174,14 @@ namespace SeeingSharp.Multimedia.Objects
 
             float halfWidth = width / 2f;
             float halfHeight = height / 2f;
-            Vector2 nearVector = new Vector2(0f, radius - halfWidth);
-            Vector2 farVector = new Vector2(0f, radius + halfWidth);
-            Vector2 lastNearVector = nearVector;
-            Vector2 lastFarVector = farVector;
+            var nearVector = new Vector2(0f, radius - halfWidth);
+            var farVector = new Vector2(0f, radius + halfWidth);
+            var lastNearVector = nearVector;
+            var lastFarVector = farVector;
             Vector2 nextNearVector;
             Vector2 nextFarVector;
-            for (int loop = 1; loop <= countOfSegments; loop++)
+
+            for (var loop = 1; loop <= countOfSegments; loop++)
             {
                 float actPercent = (float)loop / (float)countOfSegments;
                 float actAngle = EngineMath.RAD_360DEG * actPercent;
@@ -234,12 +240,17 @@ namespace SeeingSharp.Multimedia.Objects
         {
             int startVertex = m_owner.CountVertices;
 
-            if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
+            if (countOfSegments < 5)
+            {
+                throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments");
+            }
+
             float diameter = radius * 2f;
 
             //Get texture offsets
             float texX = 1f;
             float texY = 1f;
+
             if (m_tileSize != Vector2.Zero)
             {
                 texX = diameter / m_tileSize.X;
@@ -247,11 +258,11 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Specify bottom and top middle coordinates
-            Vector3 bottomCoordinate = bottomMiddle;
-            Vector3 topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
+            var bottomCoordinate = bottomMiddle;
+            var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             //Create bottom and top vertices
-            Vertex bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
             //Add bottom and top vertices to the structure
             int bottomVertexIndex = m_owner.AddVertex(bottomVertex);
@@ -259,7 +270,8 @@ namespace SeeingSharp.Multimedia.Objects
             //Generate all segments
             float fullRadian = EngineMath.RAD_360DEG;
             float countOfSegmentsF = (float)countOfSegments;
-            for (int loop = 0; loop < countOfSegments; loop++)
+
+            for (var loop = 0; loop < countOfSegments; loop++)
             {
                 //Calculate rotation values for each segment border
                 float startRadian = fullRadian * ((float)loop / (float)countOfSegmentsF);
@@ -267,37 +279,38 @@ namespace SeeingSharp.Multimedia.Objects
                 float normalRadian = startRadian + (targetRadian - startRadian) / 2f;
 
                 //Generate all normals
-                Vector3 sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
-                Vector3 sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
-                Vector3 sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
+                var sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
+                var sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
+                var sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
 
                 //Calculate border texture coordinates
-                Vector2 sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
-                Vector2 sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
+                var sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
+                var sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
 
                 //Generate all points
-                Vector3 sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
-                Vector3 sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
-                Vector3 sideMiddleBottomCoord = bottomCoordinate + sideNormal * radius;
+                var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
+                var sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
+                var sideMiddleBottomCoord = bottomCoordinate + sideNormal * radius;
 
                 //Add segment bottom triangle
-                Vertex segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord);
-                Vertex segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord);
+                var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord);
+                var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord);
                 AddTriangle(
                     bottomVertexIndex,
                     m_owner.AddVertex(segmentBottomLeft),
                     m_owner.AddVertex(segmentBottomRight));
 
                 //Generate side normal
-                Vector3 vectorToTop = topCoordinate - sideMiddleBottomCoord;
-                Vector2 vectorToTopRotation = Vector3Ex.ToHVRotation(vectorToTop);
+                var vectorToTop = topCoordinate - sideMiddleBottomCoord;
+                var vectorToTopRotation = Vector3Ex.ToHVRotation(vectorToTop);
                 vectorToTopRotation.Y = vectorToTopRotation.Y + EngineMath.RAD_90DEG;
-                Vector3 topSideNormal = Vector3Ex.NormalFromHVRotation(vectorToTopRotation);
+                var topSideNormal = Vector3Ex.NormalFromHVRotation(vectorToTopRotation);
 
                 //Add segment top triangle
-                Vertex topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), topSideNormal);
-                Vertex segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
-                Vertex segmentTopRight = topVertex.Copy(sideRighBottomtCoord);
+                var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), topSideNormal);
+                var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
+                var segmentTopRight = topVertex.Copy(sideRighBottomtCoord);
+
                 AddTriangle(
                     m_owner.AddVertex(topVertex),
                     m_owner.AddVertex(segmentTopRight),
@@ -393,12 +406,12 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Specify bottom and top middle coordinates
-            Vector3 bottomCoordinate = bottomMiddle;
-            Vector3 topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
+            var bottomCoordinate = bottomMiddle;
+            var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             //Create bottom and top vertices
-            Vertex bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
-            Vertex topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
+            var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
             //Add bottom and top vertices to the structure
             int bottomVertexIndex = m_owner.AddVertex(bottomVertex);
@@ -407,7 +420,8 @@ namespace SeeingSharp.Multimedia.Objects
             //Generate all segments
             float fullRadian = EngineMath.RAD_360DEG;
             float countOfSegmentsF = (float)countOfSegments;
-            for (int loop = 0; loop < countOfSegments; loop++)
+
+            for (var loop = 0; loop < countOfSegments; loop++)
             {
                 //Calculate rotation values for each segment border
                 float startRadian = fullRadian * ((float)loop / (float)countOfSegmentsF);
@@ -415,25 +429,25 @@ namespace SeeingSharp.Multimedia.Objects
                 float normalRadian = startRadian + (targetRadian - startRadian) / 2f;
 
                 //Generate all normals
-                Vector3 sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
-                Vector3 sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
-                Vector3 sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
+                var sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
+                var sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
+                var sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
 
                 //
-                Vector2 sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
-                Vector2 sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
+                var sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
+                var sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
 
                 //Generate all points
-                Vector3 sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
-                Vector3 sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
-                Vector3 sideLeftTopCoord = new Vector3(sideLeftBottomCoord.X, sideLeftBottomCoord.Y + height, sideLeftBottomCoord.Z);
-                Vector3 sideRightTopCoord = new Vector3(sideRighBottomtCoord.X, sideRighBottomtCoord.Y + height, sideRighBottomtCoord.Z);
+                var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
+                var sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
+                var sideLeftTopCoord = new Vector3(sideLeftBottomCoord.X, sideLeftBottomCoord.Y + height, sideLeftBottomCoord.Z);
+                var sideRightTopCoord = new Vector3(sideRighBottomtCoord.X, sideRighBottomtCoord.Y + height, sideRighBottomtCoord.Z);
 
                 //Add segment bottom triangle
                 if (buildBottom)
                 {
-                    Vertex segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
-                    Vertex segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord, sideRightTexCoord);
+                    var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
+                    var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord, sideRightTexCoord);
                     AddTriangle(
                         bottomVertexIndex,
                         m_owner.AddVertex(segmentBottomLeft),
@@ -443,8 +457,8 @@ namespace SeeingSharp.Multimedia.Objects
                 //Add segment top triangle
                 if (buildTop)
                 {
-                    Vertex segmentTopLeft = topVertex.Copy(sideLeftTopCoord, sideLeftTexCoord);
-                    Vertex segmentTopRight = topVertex.Copy(sideRightTopCoord, sideRightTexCoord);
+                    var segmentTopLeft = topVertex.Copy(sideLeftTopCoord, sideLeftTexCoord);
+                    var segmentTopRight = topVertex.Copy(sideRightTopCoord, sideRightTexCoord);
                     AddTriangle(
                         topVertexIndex,
                         m_owner.AddVertex(segmentTopRight),
@@ -454,8 +468,8 @@ namespace SeeingSharp.Multimedia.Objects
                 if (buildSides)
                 {
                     //Calculate texture coords for side segment
-                    Vector2 texCoordSegmentStart = new Vector2(texSegmentX * ((float)loop / (float)countOfSegments), 0f);
-                    Vector2 texCoordSegmentTarget = new Vector2(texSegmentX * ((float)(loop + 1) / (float)countOfSegments), texSegmentY);
+                    var texCoordSegmentStart = new Vector2(texSegmentX * ((float)loop / (float)countOfSegments), 0f);
+                    var texCoordSegmentTarget = new Vector2(texSegmentX * ((float)(loop + 1) / (float)countOfSegments), texSegmentY);
 
                     //Add segment side
                     BuildRect4V(sideLeftBottomCoord, sideRighBottomtCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
@@ -475,17 +489,17 @@ namespace SeeingSharp.Multimedia.Objects
             double dt = (Math.PI * 2) / tDiv;
             double dp = Math.PI / pDiv;
 
-            for (int pi = 0; pi <= pDiv; pi++)
+            for (var pi = 0; pi <= pDiv; pi++)
             {
                 double phi = pi * dp;
 
-                for (int ti = 0; ti <= tDiv; ti++)
+                for (var ti = 0; ti <= tDiv; ti++)
                 {
                     // we want to start the mesh on the x axis
                     double theta = ti * dt;
 
-                    Vector3 position = SphereGetPosition(theta, phi, radius);
-                    Vertex vertex = new Vertex(
+                    var position = SphereGetPosition(theta, phi, radius);
+                    var vertex = new Vertex(
                         position,
                         color,
                         SphereGetTextureCoordinate(theta, phi),
@@ -494,9 +508,9 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            for (int pi = 0; pi < pDiv; pi++)
+            for (var pi = 0; pi < pDiv; pi++)
             {
-                for (int ti = 0; ti < tDiv; ti++)
+                for (var ti = 0; ti < tDiv; ti++)
                 {
                     int x0 = ti;
                     int x1 = (ti + 1);
@@ -538,8 +552,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             int startVertex = m_owner.CountVertices;
 
-            Vector3 dest = start + size;
-            Vertex vertex = new Vertex(start, color, new Vector2());
+            var dest = start + size;
+            var vertex = new Vertex(start, color, new Vector2());
 
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z)));
@@ -584,7 +598,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCube24V(Vector3 start, Vector3 size, Color4 color)
         {
-            BuiltVerticesRange result = new BuiltVerticesRange(m_owner);
+            var result = new BuiltVerticesRange(m_owner);
 
             result.Merge(this.BuildCubeSides16V(start, size, color));
             result.Merge(this.BuildCubeTop4V(start, size, color));
@@ -604,18 +618,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color"></param>
         public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float heigh, Color4 color)
         {
-            BuiltVerticesRange result = new BuiltVerticesRange(m_owner);
+            var result = new BuiltVerticesRange(m_owner);
             result.StartVertex = m_owner.CountVertices;
             int startTriangleIndex = this.CountTriangles;
 
             // Calculate texture coordinates
-            Vector3 size = new Vector3(
+            var size = new Vector3(
                 (topB - topA).Length(),
                 Math.Abs(heigh),
                 (topC - topB).Length());
             float texX = 1f;
             float texY = 1f;
             float texZ = 1f;
+
             if (m_tileSize != Vector2.Zero)
             {
                 texX = size.X / m_tileSize.X;
@@ -624,13 +639,13 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Calculate bottom vectors
-            Vector3 bottomA = new Vector3(topA.X, topA.Y - heigh, topA.Z);
-            Vector3 bottomB = new Vector3(topB.X, topB.Y - heigh, topB.Z);
-            Vector3 bottomC = new Vector3(topC.X, topC.Y - heigh, topC.Z);
-            Vector3 bottomD = new Vector3(topD.X, topD.Y - heigh, topD.Z);
+            var bottomA = new Vector3(topA.X, topA.Y - heigh, topA.Z);
+            var bottomB = new Vector3(topB.X, topB.Y - heigh, topB.Z);
+            var bottomC = new Vector3(topC.X, topC.Y - heigh, topC.Z);
+            var bottomD = new Vector3(topD.X, topD.Y - heigh, topD.Z);
 
             // Build Top side
-            Vertex vertex = new Vertex(topA, color, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
+            var vertex = new Vertex(topA, color, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
             int c = m_owner.AddVertex(vertex.Copy(topC, new Vector2(0f, texY)));
@@ -729,11 +744,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCube24V(Vector3 bottomCenter, float width, float height, Color4 color)
         {
-            Vector3 start = new Vector3(
+            var start = new Vector3(
                 bottomCenter.X - width / 2f,
                 bottomCenter.Y,
                 bottomCenter.Z - width / 2f);
-            Vector3 size = new Vector3(width, height, width);
+            var size = new Vector3(width, height, width);
             return BuildCube24V(start, size, color);
         }
 
@@ -776,8 +791,8 @@ namespace SeeingSharp.Multimedia.Objects
                 return 0f;
             };
 
-            Vector2 textureCoordinate = new Vector2(caluclateU(pointA), calculateV(pointA));
-            Vertex vertex = new Vertex(pointA, Color4.White, textureCoordinate, normal);
+            var textureCoordinate = new Vector2(caluclateU(pointA), calculateV(pointA));
+            var vertex = new Vertex(pointA, Color4.White, textureCoordinate, normal);
 
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(caluclateU(pointB), calculateV(pointB))));
@@ -795,7 +810,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildCubeTop4V(Vector3 start, Vector3 size, Color4 color)
         {
-            Vector3 dest = start + size;
+            var dest = start + size;
 
             return this.BuildRect4V(
                 new Vector3(start.X, dest.Y, start.Z),
@@ -811,7 +826,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildCubeBottom4V(Vector3 start, Vector3 size, Color4 color)
         {
-            Vector3 dest = start + size;
+            var dest = start + size;
 
             return this.BuildRect4V(
                 new Vector3(start.X, start.Y, dest.Z),
@@ -830,14 +845,15 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size, Color4 color)
         {
-            BuiltVerticesRange result = new BuiltVerticesRange(m_owner);
+            var result = new BuiltVerticesRange(m_owner);
             result.StartVertex = m_owner.CountVertices;
 
-            Vector3 dest = start + size;
+            var dest = start + size;
 
             float texX = 1f;
             float texY = 1f;
             float texZ = 1f;
+
             if (m_tileSize != Vector2.Zero)
             {
                 texX = size.X / m_tileSize.X;
@@ -846,7 +862,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Front side
-            Vertex vertex = new Vertex(start, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
+            var vertex = new Vertex(start, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector2(texX, texY)));
             int c = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector2(texX, 0f)));
@@ -897,13 +913,14 @@ namespace SeeingSharp.Multimedia.Objects
         {
             float texX = 1f;
             float texY = 1f;
+
             if (m_tileSize != Vector2.Zero)
             {
                 texX = (pointB - pointA).Length() / m_tileSize.X;
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            Vertex vertex = new Vertex(pointA, color, new Vector2(0f, texY));
+            var vertex = new Vertex(pointA, color, new Vector2(0f, texY));
 
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -931,13 +948,14 @@ namespace SeeingSharp.Multimedia.Objects
         {
             float texX = 1f;
             float texY = 1f;
+
             if (m_tileSize != Vector2.Zero)
             {
                 texX = (pointB - pointA).Length() / m_tileSize.X;
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            Vertex vertex = new Vertex(pointA, color, new Vector2(0f, texY), normal);
+            var vertex = new Vertex(pointA, color, new Vector2(0f, texY), normal);
 
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -955,7 +973,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Color4 color, Vector2 minTexCoord, Vector2 maxTexCoord)
         {
-            Vertex vertex = new Vertex(pointA, color, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
+            var vertex = new Vertex(pointA, color, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
 
             int a = m_owner.AddVertex(vertex);
             int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(maxTexCoord.X, maxTexCoord.Y)));

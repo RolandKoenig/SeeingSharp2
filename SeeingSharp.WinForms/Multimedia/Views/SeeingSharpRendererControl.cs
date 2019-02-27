@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Views
             m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
 
             // Create the render loop
-            GDI.Color backColor = this.BackColor;
+            var backColor = this.BackColor;
             m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
             m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
             m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
@@ -151,7 +151,10 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public async Task<List<SceneObject>> GetObjectsBelowCursorAsync()
         {
-            if (!m_isMouseInside) { return new List<SceneObject>(); }
+            if (!m_isMouseInside)
+            {
+                return new List<SceneObject>();
+            }
 
             return await m_renderLoop.PickObjectAsync(
                 SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
@@ -166,7 +169,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                GDI.Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                var screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile);
             }
         }
@@ -180,7 +183,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                GDI.Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                var screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile, imageFormat);
             }
         }
@@ -202,8 +205,8 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a simple grid on the background to have something for the Designer
                 if (!GraphicsCore.IsLoaded)
                 {
-                    GDI.SizeF targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
-                    GDI.RectangleF targetRect = new GDI.RectangleF(
+                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
+                    var targetRect = new GDI.RectangleF(
                         10f, 10f, targetSize.Width, targetSize.Height);
                     if ((targetRect.Width > 10) &&
                        (targetRect.Height > 10))
@@ -374,11 +377,12 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
 
             //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
 
             // Query for current dpi value
-            DpiScaling dpiScaling = DpiScaling.Default;
-            using (GDI.Graphics graphics = this.CreateGraphics())
+            var dpiScaling = DpiScaling.Default;
+
+            using (var graphics = this.CreateGraphics())
             {
                 dpiScaling.DpiX = graphics.DpiX;
                 dpiScaling.DpiY = graphics.DpiY;
@@ -417,7 +421,8 @@ namespace SeeingSharp.Multimedia.Views
             if (this.Height <= 0) { return false; }
 
             Form parentForm = null;
-            Control actParent = this.Parent;
+            var actParent = this.Parent;
+
             while((parentForm == null) && (actParent != null))
             {
                 parentForm = actParent as Form;
@@ -516,7 +521,7 @@ namespace SeeingSharp.Multimedia.Views
                 if (((int)e.Button | (int)actButton) != (int)actButton) { continue; }
                 if (!m_mouseButtonDownTime.ContainsKey(actButton)) { continue; }
 
-                DateTime downTimeStamp = m_mouseButtonDownTime[actButton];
+                var downTimeStamp = m_mouseButtonDownTime[actButton];
                 m_mouseButtonDownTime.Remove(actButton);
 
                 if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)

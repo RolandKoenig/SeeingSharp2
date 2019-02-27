@@ -72,12 +72,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialToApply">The materials to apply.</param>
         public void ApplyMaterialForAll(NamedOrGenericKey materialToApply)
         {
-            foreach (VertexStructureSurface actSurface in m_vertexStructure.Surfaces)
+            foreach (var actSurface in m_vertexStructure.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
 
-            foreach (VertexStructureSurface actSurface in m_vertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in m_vertexStructureLowDetail.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialNameNew">The new material to be converted to.</param>
         public void ConvertMaterial(NamedOrGenericKey materialNameOld, NamedOrGenericKey materialNameNew)
         {
-            foreach (VertexStructureSurface actSurface in m_vertexStructure.Surfaces)
+            foreach (var actSurface in m_vertexStructure.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            foreach (VertexStructureSurface actSurface in m_vertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in m_vertexStructureLowDetail.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {

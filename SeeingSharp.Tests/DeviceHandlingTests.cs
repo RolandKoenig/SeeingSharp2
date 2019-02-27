@@ -40,7 +40,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public void Check_QueryAdapters()
         {
-            using (EngineHardwareInfo hardwareInfo = new EngineHardwareInfo())
+            using (var hardwareInfo = new EngineHardwareInfo())
             {
                 Assert.IsTrue(hardwareInfo.Adapters.Count > 0);
                 Assert.IsNotNull(hardwareInfo.SoftwareAdapter);

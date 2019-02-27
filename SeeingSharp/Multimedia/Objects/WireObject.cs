@@ -135,7 +135,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void RenderLines(RenderState renderState)
         {
-            LocalResourceData resourceData = m_localResources[renderState.DeviceIndex];
+            var resourceData = m_localResources[renderState.DeviceIndex];
 
             // Load line data to memory if needed
             if (!resourceData.LineDataLoaded)
@@ -153,7 +153,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Calculate transform matrix
-            Matrix viewProj = Matrix.Transpose(renderState.ViewProj);
+            var viewProj = Matrix.Transpose(renderState.ViewProj);
 
             // Render all lines finally
             resourceData.LineRenderResources.RenderLines(

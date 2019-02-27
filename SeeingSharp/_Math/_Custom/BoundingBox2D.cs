@@ -65,10 +65,10 @@ namespace SeeingSharp
         /// <param name="otherOne"></param>
         public bool IsContainedBy(BoundingBox2D otherOne)
         {
-            Vector2 thisMinimum = this.Location;
-            Vector2 thisMaximum = this.Location + this.Size;
-            Vector2 otherMinimum = otherOne.Location;
-            Vector2 otherMaximum = otherOne.Location + otherOne.Size;
+            var thisMinimum = this.Location;
+            var thisMaximum = this.Location + this.Size;
+            var otherMinimum = otherOne.Location;
+            var otherMaximum = otherOne.Location + otherOne.Size;
 
             return (otherMinimum.X <= thisMinimum.X) &&
                    (otherMinimum.Y <= thisMinimum.Y) &&

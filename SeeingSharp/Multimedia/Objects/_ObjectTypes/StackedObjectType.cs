@@ -53,14 +53,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for structure building</param>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            VertexStructure structureFromChild = m_objTypeToStack.BuildStructure(buildOptions);
+            var structureFromChild = m_objTypeToStack.BuildStructure(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));
 
-            BoundingBox childStructBox = structureFromChild.GenerateBoundingBox();
-            Vector3 correctionVector = -childStructBox.GetBottomCenter();
+            var childStructBox = structureFromChild.GenerateBoundingBox();
+            var correctionVector = -childStructBox.GetBottomCenter();
 
             // Copy metadata infomration of the VertexStructures
-            VertexStructure result = structureFromChild.Clone(
+            var result = structureFromChild.Clone(
                 copyGeometryData: false,
                 capacityMultiplier: m_stackSize);
 
@@ -68,14 +68,16 @@ namespace SeeingSharp.Multimedia.Objects
             for (int loop = 0; loop < m_stackSize; loop++)
             {
                 float actYCorrection = childStructBox.Height * loop;
-                Vector3 localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
+                var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
 
                 int baseVertex = loop * structureFromChild.CountVertices;
-                foreach (Vertex actVertex in structureFromChild.Vertices)
+
+                foreach (var actVertex in structureFromChild.Vertices)
                 {
                     // Change vertex properties based on stack position
-                    Vertex changedVertex = actVertex;
+                    var changedVertex = actVertex;
                     changedVertex.Position = changedVertex.Position + localCorrection;
+
                     if (loop % 2 == 1)
                     {
                         var color = changedVertex.Color;
@@ -88,10 +90,11 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Clone all surfaces
-                foreach (VertexStructureSurface actSurfaceFromChild in structureFromChild.Surfaces)
+                foreach (var actSurfaceFromChild in structureFromChild.Surfaces)
                 {
-                    VertexStructureSurface newSurface = result.CreateSurface(actSurfaceFromChild.CountTriangles);
-                    foreach (Triangle actTriangle in actSurfaceFromChild.Triangles)
+                    var newSurface = result.CreateSurface(actSurfaceFromChild.CountTriangles);
+
+                    foreach (var actTriangle in actSurfaceFromChild.Triangles)
                     {
                         newSurface.AddTriangle(
                             baseVertex + actTriangle.Index1,
@@ -99,7 +102,6 @@ namespace SeeingSharp.Multimedia.Objects
                             baseVertex + actTriangle.Index3);
                     }
                 }
-
             }
 
             return result;

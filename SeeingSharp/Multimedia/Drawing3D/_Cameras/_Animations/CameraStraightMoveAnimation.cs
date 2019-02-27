@@ -78,8 +78,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             float actFrameFactor = (float)(currentMillis / maxMilliseconds);
 
             // Transform position and rotation
-            Vector3 moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
-            Vector2 rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
+            var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
+            var rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
             m_camera.Position = m_viewPointSource.Position + (moveVector * actFrameFactor);
             m_camera.TargetRotation = m_viewPointSource.Rotation + (rotationVector * actFrameFactor);
 

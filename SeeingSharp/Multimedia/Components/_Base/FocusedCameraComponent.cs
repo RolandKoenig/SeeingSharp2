@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Components
         /// <returns></returns>
         protected override PerSceneContext Attach(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            PerSceneContext result = new PerSceneContext();
+            var result = new PerSceneContext();
             result.CameraDistance = this.CameraDistanceInitial;
             result.CameraHVRotation = m_hvRotation;
             return result;
@@ -90,15 +90,20 @@ namespace SeeingSharp.Multimedia.Components
 
         protected override void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView, PerSceneContext componentContext)
         {
-            Camera3DBase actCamera = correspondingView.Camera;
-            if (actCamera == null) { return; }
+            var actCamera = correspondingView.Camera;
 
-            foreach (InputFrame actInputFrame in updateState.InputFrames)
+            if (actCamera == null)
+            {
+                return;
+            }
+
+            foreach (var actInputFrame in updateState.InputFrames)
             {
                 foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
                 {
                     // Handle keyboard
-                    KeyboardState actKeyboardState = actInputState as KeyboardState;
+                    var actKeyboardState = actInputState as KeyboardState;
+
                     if (actKeyboardState != null)
                     {
                         UpdateForKeyboard(componentContext, actCamera, actKeyboardState);
@@ -106,7 +111,8 @@ namespace SeeingSharp.Multimedia.Components
                     }
 
                     // Handle mouse (or pointer)
-                    MouseOrPointerState mouseState = actInputState as MouseOrPointerState;
+                    var mouseState = actInputState as MouseOrPointerState;
+
                     if (mouseState != null)
                     {
                         UpdateForMouse(componentContext, actCamera, mouseState);
@@ -118,13 +124,14 @@ namespace SeeingSharp.Multimedia.Components
             float maxRad = EngineMath.RAD_90DEG * 0.99f;
             float minRad = EngineMath.RAD_90DEG * -0.99f;
             componentContext.CameraHVRotation.X = componentContext.CameraHVRotation.X % EngineMath.RAD_360DEG;
+
             if (componentContext.CameraDistance < this.CameraDistanceMin) { componentContext.CameraDistance = this.CameraDistanceMin; }
             if (componentContext.CameraDistance > this.CameraDistanceMax) { componentContext.CameraDistance = this.CameraDistanceMax; }
             if (componentContext.CameraHVRotation.Y <= minRad) { componentContext.CameraHVRotation.Y = minRad; }
             if (componentContext.CameraHVRotation.Y >= maxRad) { componentContext.CameraHVRotation.Y = maxRad; }
 
             // Update camera position and rotation
-            Vector3 cameraOffset = Vector3.UnitX;
+            var cameraOffset = Vector3.UnitX;
             cameraOffset = Vector3.TransformNormal(
                 cameraOffset,
                 Matrix.RotationY(componentContext.CameraHVRotation.X));
@@ -132,7 +139,7 @@ namespace SeeingSharp.Multimedia.Components
                 cameraOffset,
                 Matrix.RotationAxis(Vector3.Cross(cameraOffset, Vector3.UnitY), componentContext.CameraHVRotation.Y));
 
-            Vector3 focusedLocation = this.GetFocusedLocation();
+            var focusedLocation = this.GetFocusedLocation();
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;
             actCamera.Target = focusedLocation;
         }
@@ -144,7 +151,7 @@ namespace SeeingSharp.Multimedia.Components
             PerSceneContext componentContext, Camera3DBase actCamera,
             KeyboardState actKeyboardState)
         {
-            foreach (WinVirtualKey actKey in actKeyboardState.KeysDown)
+            foreach (var actKey in actKeyboardState.KeysDown)
             {
                 switch (actKey)
                 {
@@ -199,12 +206,18 @@ namespace SeeingSharp.Multimedia.Components
             // Handle mouse move
             if (mouseState.MoveDistanceDip != Vector2.Zero)
             {
-                Vector2 moving = mouseState.MoveDistanceDip;
+                var moving = mouseState.MoveDistanceDip;
+
                 if (mouseState.IsButtonDown(MouseButton.Left) &&
                     mouseState.IsButtonDown(MouseButton.Right))
                 {
                     float multiplyer = 1.05f;
-                    if (moving.Y < 0f) { multiplyer = 0.95f; }
+
+                    if (moving.Y < 0f)
+                    {
+                        multiplyer = 0.95f;
+                    }
+
                     componentContext.CameraDistance = componentContext.CameraDistance * multiplyer;
                 }
                 else if (mouseState.IsButtonDown(MouseButton.Left) ||
@@ -221,6 +234,7 @@ namespace SeeingSharp.Multimedia.Components
             if (mouseState.WheelDelta != 0)
             {
                 float multiplyer = 0.95f - (Math.Abs(mouseState.WheelDelta) / 1000f);
+
                 if (mouseState.WheelDelta < 0)
                 {
                     multiplyer = 1.05f + (Math.Abs(mouseState.WheelDelta) / 1000f);

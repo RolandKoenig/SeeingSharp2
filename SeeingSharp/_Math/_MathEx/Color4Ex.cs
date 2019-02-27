@@ -38,7 +38,7 @@ namespace SeeingSharp
         /// </summary>
         public static Color4 FromRgba(int red, int green, int blue, int alpha)
         {
-            Color4 result = new Color4();
+            var result = new Color4();
             result.Alpha = alpha / 255f;
             result.Red = red / 255f;
             result.Green = green / 255f;
@@ -51,7 +51,7 @@ namespace SeeingSharp
         /// </summary>
         public static Color4 FromRgb(int red, int green, int blue)
         {
-            Color4 result = new Color4();
+            var result = new Color4();
             result.Alpha = 1f;
             result.Red = red / 255f;
             result.Green = green / 255f;

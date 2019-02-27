@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public TextureData Copy(Vector2 newCoord1)
         {
-            TextureData result = this;
+            var result = this;
             result.m_coordiante1 = newCoord1;
             return result;
         }

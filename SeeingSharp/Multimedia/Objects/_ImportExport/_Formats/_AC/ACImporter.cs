@@ -43,19 +43,20 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            ACImportOptions acImportOptions = importOptions as ACImportOptions;
+            var acImportOptions = importOptions as ACImportOptions;
+
             if (acImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }
 
-            ImportedModelContainer result = new ImportedModelContainer(acImportOptions);
+            var result = new ImportedModelContainer(acImportOptions);
 
             // Get needed resource key
-            NamedOrGenericKey resGeometry = GraphicsCore.GetNextGenericResourceKey();
+            var resGeometry = GraphicsCore.GetNextGenericResourceKey();
 
             // Load and fill result object
-            ObjectType objType = ACFileLoader.ImportObjectType(sourceFile);
+            var objType = ACFileLoader.ImportObjectType(sourceFile);
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(objType)));

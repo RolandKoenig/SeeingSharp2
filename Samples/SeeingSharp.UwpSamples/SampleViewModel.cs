@@ -48,11 +48,13 @@ namespace SeeingSharp.UwpSamples
 
         private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
         {
-            BitmapImage source = new BitmapImage();
+            var source = new BitmapImage();
+
             using (var randomAccessStream = sourceLink.OpenRead().AsRandomAccessStream())
             {
                 await source.SetSourceAsync(randomAccessStream);
             }
+
             m_bitmapSource = source;
 
             RaisePropertyChanged(nameof(BitmapSource));

@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal UpdateState CopyForSceneUpdate()
         {
-            UpdateState result = new UpdateState();
+            var result = new UpdateState();
             result.m_updateTime = this.m_updateTime;
             result.m_updateTimeMilliseconds = this.m_updateTimeMilliseconds;
             return result;

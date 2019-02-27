@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureSource">The source of the texture which should be loaded.</param>
         public static NamedOrGenericKey AddSimpleColoredMaterial(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
-            NamedOrGenericKey resTexture = sceneManipulator.AddTexture(textureSource);
+            var resTexture = sceneManipulator.AddTexture(textureSource);
             return sceneManipulator.AddResource<SimpleColoredMaterialResource>(() => new SimpleColoredMaterialResource(resTexture));
         }
 
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this SceneManipulator sceneManipulator,
             ResourceLink textureSourceHighQuality, ResourceLink textureSourceLowQuality)
         {
-            NamedOrGenericKey resTexture = sceneManipulator.AddTexture(textureSourceHighQuality, textureSourceLowQuality);
+            var resTexture = sceneManipulator.AddTexture(textureSourceHighQuality, textureSourceLowQuality);
             return sceneManipulator.AddResource<SimpleColoredMaterialResource>(() => new SimpleColoredMaterialResource(resTexture));
         }
 

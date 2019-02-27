@@ -93,8 +93,8 @@ namespace SeeingSharp
         {
             get
             {
-                Vector2 start = this.Origin;
-                Vector2 end = this.Origin + Direction;
+                var start = this.Origin;
+                var end = this.Origin + Direction;
                 return end.Y - start.Y;
             }
         }
@@ -103,8 +103,8 @@ namespace SeeingSharp
         {
             get
             {
-                Vector2 start = this.Origin;
-                Vector2 end = this.Origin + Direction;
+                var start = this.Origin;
+                var end = this.Origin + Direction;
                 return start.X - end.X;
             }
         }
@@ -113,8 +113,8 @@ namespace SeeingSharp
         {
             get
             {
-                Vector2 start = this.Origin;
-                Vector2 end = this.Origin + Direction;
+                var start = this.Origin;
+                var end = this.Origin + Direction;
                 return this.A * start.X + this.B * start.Y;
             }
         }

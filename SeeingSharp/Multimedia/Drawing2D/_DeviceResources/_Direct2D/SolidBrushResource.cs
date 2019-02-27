@@ -90,9 +90,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            D2D.SolidColorBrush result = m_loadedBrushes[engineDevice.DeviceIndex];
+            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the brush

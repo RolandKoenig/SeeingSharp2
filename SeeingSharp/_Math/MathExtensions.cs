@@ -48,10 +48,14 @@ namespace SeeingSharp
         /// <param name="lines">A list containing all lines.</param>
         public static IEnumerable<Vector3> GetAllPoints(this IEnumerable<Line> lines)
         {
-            Vector3 lastVector = Vector3Ex.MinValue;
-            foreach (Line actLine in lines)
+            var lastVector = Vector3Ex.MinValue;
+
+            foreach (var actLine in lines)
             {
-                if (lastVector != actLine.StartPosition) { yield return actLine.StartPosition; }
+                if (lastVector != actLine.StartPosition)
+                {
+                    yield return actLine.StartPosition;
+                }
 
                 yield return actLine.EndPosition;
 

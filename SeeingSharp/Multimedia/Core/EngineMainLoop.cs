@@ -198,7 +198,7 @@ namespace SeeingSharp.Multimedia.Core
 
             m_runningTask = Task.Factory.StartNew(async () =>
             {
-                Stopwatch renderStopWatch = new Stopwatch();
+                var renderStopWatch = new Stopwatch();
                 renderStopWatch.Start();
 
                 List<RenderLoop> renderingRenderLoops = new List<RenderLoop>(16);
@@ -206,10 +206,12 @@ namespace SeeingSharp.Multimedia.Core
                 List<Camera3DBase> camerasToUpdate = new List<Camera3DBase>(16);
                 List<EngineDevice> devicesInUse = new List<EngineDevice>(16);
                 List<InputFrame> inputFrames = new List<InputFrame>(16);
-                UpdateState updateState = new UpdateState(TimeSpan.Zero);
+                var updateState = new UpdateState(TimeSpan.Zero);
+
                 while (!cancelToken.IsCancellationRequested)
                 {
-                    bool exceptionOccurred = false;
+                    var exceptionOccurred = false;
+
                     try
                     {
                         using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_PER_FRAME))
@@ -217,7 +219,11 @@ namespace SeeingSharp.Multimedia.Core
                             // Wait some time before doing anything..
                             double lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
                             double delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
-                            if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS) { delayTime = SeeingSharpConstants.MINIMUM_DELAY_TIME_MS; }
+
+                            if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS)
+                            {
+                                delayTime = SeeingSharpConstants.MINIMUM_DELAY_TIME_MS;
+                            }
 
                             using (var perfTokenInner = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_WAIT_TIME))
                             {
@@ -236,8 +242,13 @@ namespace SeeingSharp.Multimedia.Core
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
 
                             // Build new UpdateState object
-                            TimeSpan updateTime = renderStopWatch.Elapsed;
-                            if (updateTime.TotalMilliseconds > 100.0) { updateTime = TimeSpan.FromMilliseconds(100.0); }
+                            var updateTime = renderStopWatch.Elapsed;
+
+                            if (updateTime.TotalMilliseconds > 100.0)
+                            {
+                                updateTime = TimeSpan.FromMilliseconds(100.0);
+                            }
+
                             updateState.Reset(updateTime);
 
                             // Restart the stopwatch
@@ -249,7 +260,8 @@ namespace SeeingSharp.Multimedia.Core
                             // First global pass: Update scene and prepare rendering
                             await UpdateAndPrepareRendering(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState)
                                 .ConfigureAwait(false);
-                            foreach (Camera3DBase actCamera in camerasToUpdate)
+
+                            foreach (var actCamera in camerasToUpdate)
                             {
                                 actCamera.AnimationHandler.Update(updateState);
                             }
@@ -270,19 +282,21 @@ namespace SeeingSharp.Multimedia.Core
                             // Clear unreferenced Scenes finally
                             lock(m_scenesForUnloadLock)
                             {
-                                foreach(Scene actScene in m_scenesForUnload)
+                                foreach(var actScene in m_scenesForUnload)
                                 {
                                     actScene.UnloadResources();
                                     actScene.Clear(true);
                                 }
+
                                 m_scenesForUnload.Clear();
                             }
 
                             // Unload all Direct2D resources which are not needed anymore
                             Drawing2DResourceBase act2DResourceToUnload = null;
+
                             while (m_drawing2DResourcesToUnload.TryDequeue(out act2DResourceToUnload))
                             {
-                                foreach (EngineDevice actDevice in m_host.Devices)
+                                foreach (var actDevice in m_host.Devices)
                                 {
                                     act2DResourceToUnload.UnloadResources(actDevice);
                                 }
@@ -311,7 +325,8 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Handle suspend / resume
-                    Task suspendWaiter = m_suspendWaiter;
+                    var suspendWaiter = m_suspendWaiter;
+
                     if (suspendWaiter != null)
                     {
                         m_suspendCallWaiterSource.TrySetResult(null);
@@ -346,22 +361,26 @@ namespace SeeingSharp.Multimedia.Core
             using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_UPDATE_AND_PREPARE))
             {
                 List<Action> additionalContinuationActions = new List<Action>();
-                object additionalContinuationActionsLock = new object();
+                var additionalContinuationActionsLock = new object();
 
                 // Trigger all tasks for preparing views
                 List<Task<List<Action>>> prepareRenderTasks = new List<Task<List<Action>>>(renderingRenderLoops.Count);
-                for (int actDeviceIndex = 0; actDeviceIndex < devicesInUse.Count; actDeviceIndex++)
+
+                for (var actDeviceIndex = 0; actDeviceIndex < devicesInUse.Count; actDeviceIndex++)
                 {
-                    EngineDevice actDevice = devicesInUse[actDeviceIndex];
-                    for (int loop = 0; loop < renderingRenderLoops.Count; loop++)
+                    var actDevice = devicesInUse[actDeviceIndex];
+
+                    for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
                     {
-                        RenderLoop actRenderLoop = renderingRenderLoops[loop];
+                        var actRenderLoop = renderingRenderLoops[loop];
+
                         if (actRenderLoop.Device == actDevice)
                         {
                             // Call prepare render and wait for the answer
                             //  => Error handling is a bit tricky..
                             //     Errors are catched by the continuation action
                             var actTask = actRenderLoop.PrepareRenderAsync();
+
                             prepareRenderTasks.Add(actTask.ContinueWith((givenTask) =>
                             {
                                 if (!givenTask.IsFaulted)
@@ -427,8 +446,8 @@ namespace SeeingSharp.Multimedia.Core
                         using (var perfToken2 = m_host.BeginMeasureActivityDuration(
                             string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_SCENE, actTaskIndex)))
                         {
-                            Scene actScene = scenesToRender[actTaskIndex];
-                            SceneRelatedUpdateState actUpdateState = actScene.CachedUpdateState;
+                            var actScene = scenesToRender[actTaskIndex];
+                            var actUpdateState = actScene.CachedUpdateState;
 
                             actUpdateState.OnStartSceneUpdate(actScene, updateState, inputFrames);
 
@@ -457,12 +476,17 @@ namespace SeeingSharp.Multimedia.Core
                 // Trigger all continuation actions returned by the previously executed prepare tasks
                 foreach (var actPrepareTasks in prepareRenderTasks)
                 {
-                    if (actPrepareTasks.IsFaulted || actPrepareTasks.IsCanceled) { continue; }
-                    foreach (Action actContinuationAction in actPrepareTasks.Result)
+                    if (actPrepareTasks.IsFaulted || actPrepareTasks.IsCanceled)
+                    {
+                        continue;
+                    }
+
+                    foreach (var actContinuationAction in actPrepareTasks.Result)
                     {
                         actContinuationAction();
                     }
                 }
+
                 foreach (var actAction in additionalContinuationActions)
                 {
                     actAction();
@@ -499,12 +523,14 @@ namespace SeeingSharp.Multimedia.Core
                     if (actTaskIndex < devicesInUse.Count)
                     {
                         // Render all targets for the current device
-                        EngineDevice actDevice = devicesInUse[actTaskIndex];
+                        var actDevice = devicesInUse[actTaskIndex];
+
                         using (var perfTokenInner = m_host.BeginMeasureActivityDuration(string.Format(SeeingSharpConstants.PERF_GLOBAL_RENDER_DEVICE, actDevice.AdapterDescription)))
                         {
-                            for (int loop = 0; loop < registeredRenderLoops.Count; loop++)
+                            for (var loop = 0; loop < registeredRenderLoops.Count; loop++)
                             {
-                                RenderLoop actRenderLoop = registeredRenderLoops[loop];
+                                var actRenderLoop = registeredRenderLoops[loop];
+
                                 try
                                 {
                                     if (actRenderLoop.Device == actDevice)
@@ -524,10 +550,11 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         // Perform updates beside rendering for the current scene
                         int sceneIndex = actTaskIndex - devicesInUse.Count;
+
                         using (var perfTokenInner = m_host.BeginMeasureActivityDuration(string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_BESIDE, sceneIndex)))
                         {
-                            Scene actScene = scenesToRender[sceneIndex];
-                            SceneRelatedUpdateState actUpdateState = actScene.CachedUpdateState;
+                            var actScene = scenesToRender[sceneIndex];
+                            var actUpdateState = actScene.CachedUpdateState;
 
                             actUpdateState.OnStartSceneUpdate(actScene, updateState, null);
                             actScene.UpdateBesideRender(actUpdateState);
@@ -545,7 +572,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Reset camera changed flags
-                foreach(RenderLoop actRenderLoop in registeredRenderLoops)
+                foreach(var actRenderLoop in registeredRenderLoops)
                 {
                     actRenderLoop.Camera.StateChanged = false;
                 }
@@ -563,6 +590,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 // Handle global and local RenderLoop collections
                 List<RenderLoop> copiedUnregisteredRenderLoops = null;
+
                 lock (m_registeredRenderLoopsLock)
                 {
                     copiedUnregisteredRenderLoops = new List<RenderLoop>(m_unregisteredRenderLoops);
@@ -609,15 +637,18 @@ namespace SeeingSharp.Multimedia.Core
         {
             scenesToRender.Clear();
             camerasToUpdate.Clear();
-            for (int loop = 0; loop < registeredRenderLoops.Count; loop++)
+
+            for (var loop = 0; loop < registeredRenderLoops.Count; loop++)
             {
-                Scene actScene = registeredRenderLoops[loop].Scene;
+                var actScene = registeredRenderLoops[loop].Scene;
+
                 if ((actScene != null) && (!scenesToRender.Contains(actScene)))
                 {
                     scenesToRender.Add(actScene);
                 }
 
                 Camera3DBase actCamera = registeredRenderLoops[loop].Camera;
+
                 if ((actCamera != null) && (!camerasToUpdate.Contains(actCamera)))
                 {
                     camerasToUpdate.Add(actCamera);
@@ -633,9 +664,11 @@ namespace SeeingSharp.Multimedia.Core
         private static void QueryForDevicesInUse(List<RenderLoop> registeredRenderLoops, List<EngineDevice> devicesInUse)
         {
             devicesInUse.Clear();
-            for (int loop = 0; loop < registeredRenderLoops.Count; loop++)
+
+            for (var loop = 0; loop < registeredRenderLoops.Count; loop++)
             {
-                EngineDevice actDevice = registeredRenderLoops[loop].Device;
+                var actDevice = registeredRenderLoops[loop].Device;
+
                 if ((actDevice != null) && (!devicesInUse.Contains(actDevice)))
                 {
                     devicesInUse.Add(actDevice);

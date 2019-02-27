@@ -72,10 +72,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The view on which to check for visibility.</param>
         public override bool IsObjectVisible(SceneObject input, ViewInformation viewInfo)
         {
-            if (m_viewInfo == null) { return true; }
+            if (m_viewInfo == null)
+            {
+                return true;
+            }
 
             // Perform viewbox clipping
-            if (!input.IsInBoundingFrustum(m_viewInfo, ref m_boundingFrustum)) { return false; }
+            if (!input.IsInBoundingFrustum(m_viewInfo, ref m_boundingFrustum))
+            {
+                return false;
+            }
 
             // Handle Y-Filter
             if ((m_enableYFilter) &&
@@ -83,16 +89,28 @@ namespace SeeingSharp.Multimedia.Core
                 (m_yFilterMax > m_yFilterMin) &&
                 (m_yFilterMax - m_yFilterMin > 0.1f))
             {
-                SceneSpacialObject spacialObject = input as SceneSpacialObject;
+                var spacialObject = input as SceneSpacialObject;
+
                 if (spacialObject != null)
                 {
                     // Get the bounding box of the object
-                    BoundingBox boundingBox = spacialObject.TryGetBoundingBox(viewInfo);
-                    if (boundingBox.IsEmpty()) { boundingBox = new BoundingBox(spacialObject.Position, spacialObject.Position + new Vector3(0.1f, 0.1f, 0.1f)); }
+                    var boundingBox = spacialObject.TryGetBoundingBox(viewInfo);
+
+                    if (boundingBox.IsEmpty())
+                    {
+                        boundingBox = new BoundingBox(spacialObject.Position, spacialObject.Position + new Vector3(0.1f, 0.1f, 0.1f));
+                    }
 
                     // Perform some checks based on the bounding box
-                    if (boundingBox.GetUpperA().Y < m_yFilterMin) { return false; }
-                    if (boundingBox.GetLowerA().Y > m_yFilterMax) { return false; }
+                    if (boundingBox.GetUpperA().Y < m_yFilterMin)
+                    {
+                        return false;
+                    }
+
+                    if (boundingBox.GetLowerA().Y > m_yFilterMax)
+                    {
+                        return false;
+                    }
                 }
             }
 

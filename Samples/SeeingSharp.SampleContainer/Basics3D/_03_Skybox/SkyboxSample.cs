@@ -52,8 +52,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -61,12 +61,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
-                CubeType cubeType = new CubeType();
+                var cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 
                 // Create cube object
-                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();
@@ -85,7 +85,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
 
                 // Create the skybox on a new layer
                 manipulator.AddLayer("Skybox");
-                SkyboxObject skyboxObject = new SkyboxObject(resSkyboxTexture);
+                var skyboxObject = new SkyboxObject(resSkyboxTexture);
                 manipulator.Add(skyboxObject, "Skybox");
             });
 

@@ -81,9 +81,11 @@ namespace SeeingSharp.Multimedia.Core
             // Update the corresponding subscription entry
             int subscriptionCount = subscriptionList.Count;
             int entryCount = 0;
+
             for (int loop = 0; loop < subscriptionCount; loop++)
             {
-                RenderPassSubscription currentSubscriptionInfo = subscriptionList[loop];
+                var currentSubscriptionInfo = subscriptionList[loop];
+
                 if ((currentSubscriptionInfo.SceneObject == newSubscriptionInfo.SceneObject) &&
                     (currentSubscriptionInfo.RenderPass == newSubscriptionInfo.RenderPass) &&
                     (currentSubscriptionInfo.RenderMethod == newSubscriptionInfo.RenderMethod))
@@ -92,7 +94,11 @@ namespace SeeingSharp.Multimedia.Core
                     entryCount++;
                 }
             }
-            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
+
+            if (entryCount > 1)
+            {
+                throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!");
+            }
         }
 
         /// <summary>
@@ -130,14 +136,20 @@ namespace SeeingSharp.Multimedia.Core
             // Get the subscription list
             // (may be null if object was removed from the layer)
             List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-            if (subscriptionList == null) { return; }
+
+            if (subscriptionList == null)
+            {
+                return;
+            }
 
             // Remove the given entry from subscription list
             int subscriptionCount = subscriptionList.Count;
             int entryCount = 0;
-            for (int loop = 0; loop < subscriptionCount; loop++)
+
+            for (var loop = 0; loop < subscriptionCount; loop++)
             {
-                RenderPassSubscription currentSubscriptionInfo = subscriptionList[loop];
+                var currentSubscriptionInfo = subscriptionList[loop];
+
                 if ((currentSubscriptionInfo.SceneObject == subscription.SceneObject) &&
                    (currentSubscriptionInfo.RenderPass == subscription.RenderPass) &&
                    (currentSubscriptionInfo.RenderMethod == subscription.RenderMethod))
@@ -148,7 +160,11 @@ namespace SeeingSharp.Multimedia.Core
                     entryCount++;
                 }
             }
-            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
+
+            if (entryCount > 1)
+            {
+                throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!");
+            }
         }
 
         /// <summary>

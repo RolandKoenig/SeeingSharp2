@@ -185,7 +185,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            MouseOrPointerState targetStateCasted = targetState as MouseOrPointerState;
+            var targetStateCasted = targetState as MouseOrPointerState;
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
             targetStateCasted.m_moveDistancePixel = m_moveDistancePixel;

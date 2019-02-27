@@ -40,7 +40,7 @@ namespace SeeingSharp.Util
     {
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {
-            FieldInfo fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
             return (T)fInfo.GetValue(sourceObject);
         }
 
@@ -51,7 +51,7 @@ namespace SeeingSharp.Util
         public static T[] GetBackingArray<T>(List<T> lst)
         {
 #if !WINRT && !UNIVERSAL
-            FieldInfo fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
             return fInfo.GetValue(lst) as T[];
 #else
             return lst.ToArray();
@@ -65,12 +65,11 @@ namespace SeeingSharp.Util
         public static T[] GetBackingArray<T>(Queue<T> queue)
         {
 #if !WINRT && !UNIVERSAL
-            FieldInfo fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
             return fInfo.GetValue(queue) as T[];
 #else
             return queue.ToArray();
 #endif
-
         }
 
         public static T TryExecute<T>(Func<T> funcToExec)
@@ -91,7 +90,9 @@ namespace SeeingSharp.Util
             {
                 actionToExecute();
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -164,11 +165,14 @@ namespace SeeingSharp.Util
         /// <param name="delayMilliseconds">Total delay time.</param>
         public static async Task MaximumDelayAsync(double delayMilliseconds)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             // Ensure initial short delay
-            if (delayMilliseconds > 5.0) { await Task.Delay(2); }
+            if (delayMilliseconds > 5.0)
+            {
+                await Task.Delay(2);
+            }
 
             // Do short delay pahses until we reach a point where we are "near" the target value
             while(stopwatch.GetTrueElapsedMilliseconds() < delayMilliseconds - 10.0)
@@ -200,7 +204,8 @@ namespace SeeingSharp.Util
             }
             else
             {
-                ICollection simpleCollection = collection as ICollection;
+                var simpleCollection = collection as ICollection;
+
                 if (simpleCollection != null)
                 {
                     return simpleCollection.Count > 0;
@@ -208,10 +213,11 @@ namespace SeeingSharp.Util
                 else
                 {
                     // Try to loop forward to the first element
-                    foreach(T actElement in collection)
+                    foreach(var actElement in collection)
                     {
                         return true;
                     }
+
                     return false;
                 }
             }
@@ -223,13 +229,15 @@ namespace SeeingSharp.Util
         public static int GetCollectionCount<T>(IEnumerable<T> collection)
         {
             IReadOnlyCollection<T> readonlyCollection = collection as IReadOnlyCollection<T>;
+
             if (readonlyCollection != null)
             {
                 return readonlyCollection.Count;
             }
             else
             {
-                ICollection simpleCollection = collection as ICollection;
+                var simpleCollection = collection as ICollection;
+
                 if (simpleCollection != null)
                 {
                     return simpleCollection.Count;
@@ -350,9 +358,12 @@ namespace SeeingSharp.Util
         public static void DisposeObjects<T>(IEnumerable<T> enumeration)
             where T : class, IDisposable
         {
-            if (enumeration == null) { throw new ArgumentNullException("enumeration"); }
+            if (enumeration == null)
+            {
+                throw new ArgumentNullException("enumeration");
+            }
 
-            foreach (T actItem in enumeration)
+            foreach (var actItem in enumeration)
             {
                 DisposeObject(actItem);
             }

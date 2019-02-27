@@ -48,12 +48,13 @@ namespace SeeingSharp.Util
         /// <param name="fileName">Name of the dummy file.</param>
         public void WriteAllBytesToDummyFile(string fileName)
         {
-            using(Stream inStream = this.OpenInputStream())
-            using(Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            using (var inStream = this.OpenInputStream())
+
+            using (Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 byte[] buffer = new byte[1024];
                 int readBytes = inStream.Read(buffer, 0, buffer.Length);
-                while(readBytes > 0)
+                while (readBytes > 0)
                 {
                     outStream.Write(buffer, 0, readBytes);
                     readBytes = inStream.Read(buffer, 0, buffer.Length);
@@ -66,8 +67,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public string ReadCompleteToString()
         {
-            using(Stream inStream = this.OpenInputStream())
-            using(StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = this.OpenInputStream())
+
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -78,8 +80,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task<string> ReadCompleteToStringAsync()
         {
-            using (Stream inStream = await this.OpenInputStreamAsync())
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = await this.OpenInputStreamAsync())
+
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return await inStreamReader.ReadToEndAsync();
             }

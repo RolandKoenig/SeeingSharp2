@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
-            TexturePainterHelper newHelper = new TexturePainterHelper(m_resTexture);
+            var newHelper = new TexturePainterHelper(m_resTexture);
 
             m_texturePainterHelpers.AddObject(
                 newHelper,
@@ -127,7 +127,7 @@ namespace SeeingSharp.Multimedia.Objects
             if (m_opacity >= 1f)
             {
                 // Get and configure helper object
-                TexturePainterHelper actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
+                var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
                 actHelper.Scaling = m_scaling;
                 actHelper.Opacity = m_opacity;
                 actHelper.AccentuationFactor = m_accentuationFactor;
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Objects
             if (m_opacity < 1f)
             {
                 // Get and configure helper object
-                TexturePainterHelper actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
+                var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
                 actHelper.Scaling = m_scaling;
                 actHelper.Opacity = m_opacity;
                 actHelper.AccentuationFactor = m_accentuationFactor;
@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             base.UnloadResources();
 
-            foreach(TexturePainterHelper actHelper in m_texturePainterHelpers)
+            foreach(var actHelper in m_texturePainterHelpers)
             {
                 actHelper.UnloadResources();
             }

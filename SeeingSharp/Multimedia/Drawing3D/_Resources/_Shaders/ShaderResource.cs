@@ -74,19 +74,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
             switch(resourceKind)
             {
                 case ShaderResourceKind.Bytecode:
-                    using (Stream inStream = resourceLink.OpenInputStream())
+                    using (var inStream = resourceLink.OpenInputStream())
                     {
                         return inStream.ReadAllBytes();
                     }
 
                 case ShaderResourceKind.HlsFile:
-                    using (ReusableStringBuilders.Current.UseStringBuilder(out StringBuilder singleShaderSourceBuilder, requiredCapacity: 10024))
+                    using (ReusableStringBuilders.Current.UseStringBuilder(out var singleShaderSourceBuilder, requiredCapacity: 10024))
                     {
                         SingleShaderFileBuilder.ReadShaderFileAndResolveIncludes(
                             resourceLink,
                             singleShaderSourceBuilder);
 
-                        string shaderSource = singleShaderSourceBuilder.ToString();
+                        var shaderSource = singleShaderSourceBuilder.ToString();
                         var compileResult = SharpDX.D3DCompiler.ShaderBytecode.Compile(
                             shaderSource,
                             "main",

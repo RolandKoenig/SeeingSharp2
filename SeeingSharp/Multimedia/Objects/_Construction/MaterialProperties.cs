@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public string GetDynamicResourceKey()
         {
-            StringBuilder resultBuilder = new StringBuilder(100);
+            var resultBuilder = new StringBuilder(100);
             resultBuilder.Append("DyamicMaterial|");
             resultBuilder.Append(this.AmbientColor.GetHashCode().ToString());
             resultBuilder.Append(this.DiffuseColor.GetHashCode().ToString());
@@ -71,8 +71,12 @@ namespace SeeingSharp.Multimedia.Objects
 
         public override bool Equals(object obj)
         {
-            MaterialProperties other = obj as MaterialProperties;
-            if(other == null) { return false; }
+            var other = obj as MaterialProperties;
+
+            if (other == null)
+            {
+                return false;
+            }
 
             return this.Equals(other);
         }

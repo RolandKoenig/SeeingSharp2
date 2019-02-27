@@ -57,12 +57,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -73,13 +73,13 @@ namespace SeeingSharp.Tests
                     var keyPostprocess = manipulator.AddResource<FocusPostprocessEffectResource>(
                         () => new FocusPostprocessEffectResource(false, 0f));
 
-                    SceneLayer defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
+                    var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                     newObject.Color = Color4Ex.RedColor;
@@ -87,7 +87,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
 
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
@@ -107,12 +107,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -126,13 +126,13 @@ namespace SeeingSharp.Tests
                             Thickness = 10f
                         });
 
-                    SceneLayer defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
+                    var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                     newObject.Color = Color4Ex.RedColor;
@@ -140,7 +140,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
 
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 

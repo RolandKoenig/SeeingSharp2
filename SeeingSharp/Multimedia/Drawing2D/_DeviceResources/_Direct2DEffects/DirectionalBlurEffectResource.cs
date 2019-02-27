@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device on which to load the effect instance.</param>
         protected override D2D.Effect BuildEffect(EngineDevice device)
         {
-            D2D.Effects.DirectionalBlur dirBlurEffect = new D2D.Effects.DirectionalBlur(device.DeviceContextD2D);
+            var dirBlurEffect = new D2D.Effects.DirectionalBlur(device.DeviceContextD2D);
             dirBlurEffect.Angle = this.Angle;
             dirBlurEffect.BorderMode = D2D.BorderMode.Soft;
             dirBlurEffect.StandardDeviation = this.StandardDeviation;

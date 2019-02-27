@@ -98,7 +98,7 @@ namespace SeeingSharp.Util
         /// <param name="calculatorName">The name of the calculator this occurrence belongs to.</param>
         public void NotifyFlowRateOccurrence(string calculatorName)
         {
-            FlowRatePerformanceCalculator kpiCalculator = GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
+            var kpiCalculator = GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
             kpiCalculator.NotifyOccurrence();
         }
 
@@ -109,7 +109,7 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
         public void NotifyActivityDuration(string activity, long durationTicks)
         {
-            DurationPerformanceCalculator kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
             kpiCalculator.NotifyActivityDuration(durationTicks);
         }
 
@@ -120,9 +120,10 @@ namespace SeeingSharp.Util
         /// <param name="actionToExecute">The action to be executed and measured.</param>
         public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
-            DurationPerformanceCalculator kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
-            Stopwatch stopwatch = new Stopwatch();
+            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
+
             try
             {
                 actionToExecute();
@@ -139,7 +140,7 @@ namespace SeeingSharp.Util
         /// <param name="activity">The activity name to be measured.</param>
         public IDisposable BeginMeasureActivityDuration(string activity)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             return new DummyDisposable(() =>
@@ -170,8 +171,12 @@ namespace SeeingSharp.Util
                         await Task.Delay(m_delayTimeMS);
 
                         // Do we have anything to do?
-                        DateTime utcNow = DateTime.UtcNow;
-                        if (utcNow - m_valueInterval < m_lastValueTimestamp) { continue; }
+                        var utcNow = DateTime.UtcNow;
+
+                        if (utcNow - m_valueInterval < m_lastValueTimestamp)
+                        {
+                            continue;
+                        }
 
                         // Calculate values now
                         this.CalculateValuesAsync(utcNow);
@@ -211,9 +216,10 @@ namespace SeeingSharp.Util
         {
             m_uiDurationKpisCurrents.Clear();
 
-            foreach (CalculatorInfo actCalculatorInfo in m_calculatorsBag)
+            foreach (var actCalculatorInfo in m_calculatorsBag)
             {
                 PerformanceAnalyzeResultBase actResult = null;
+
                 while (actCalculatorInfo.Results.TryTake(out actResult))
                 {
                     this.HandleResultForUI(actResult);
@@ -229,17 +235,22 @@ namespace SeeingSharp.Util
         internal void CalculateValuesAsync(DateTime timestamp)
         {
             // Trigger kpi calculation
-            DateTime actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+            var actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+
             while (actKeyTimestamp < timestamp)
             {
-                DateTime actMaxTimestamp = actKeyTimestamp;
-                DateTime actMinTimestamp = actKeyTimestamp - m_calculationInterval;
-                if (actMinTimestamp < m_startupTimestamp) { actMinTimestamp = m_startupTimestamp; }
+                var actMaxTimestamp = actKeyTimestamp;
+                var actMinTimestamp = actKeyTimestamp - m_calculationInterval;
+
+                if (actMinTimestamp < m_startupTimestamp)
+                {
+                    actMinTimestamp = m_startupTimestamp;
+                }
 
                 // Calculate reporting values
-                foreach (CalculatorInfo actCalculatorInfo in m_calculatorsBag)
+                foreach (var actCalculatorInfo in m_calculatorsBag)
                 {
-                    PerformanceAnalyzeResultBase actResult = actCalculatorInfo.Calculator.Calculate(
+                    var actResult = actCalculatorInfo.Calculator.Calculate(
                         actKeyTimestamp,
                         actMinTimestamp, actMaxTimestamp,
                         m_calculationInterval);
@@ -260,14 +271,14 @@ namespace SeeingSharp.Util
         private T GetKpiCalculator<T>(string activity)
             where T : PerformanceCalculatorBase
         {
-            CalculatorInfo newCalculatorInfo = m_calculatorsDict.GetOrAdd(
+            var newCalculatorInfo = m_calculatorsDict.GetOrAdd(
                 activity,
                 (key) =>
                 {
-                    PerformanceCalculatorBase newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
+                    var newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
                     newCalculator.Parent = this;
 
-                    CalculatorInfo calcInfo = new CalculatorInfo(newCalculator);
+                    var calcInfo = new CalculatorInfo(newCalculator);
                     m_calculatorsBag.Add(calcInfo);
                     return calcInfo;
                 });
@@ -279,7 +290,8 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }
 
-            T result = newCalculatorInfo.Calculator as T;
+            var result = newCalculatorInfo.Calculator as T;
+
             if(result == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");

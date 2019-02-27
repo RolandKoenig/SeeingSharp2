@@ -42,8 +42,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            VertexStructure result = new VertexStructure();
-
+            var result = new VertexStructure();
             var mainSurface = result.CreateSurface();
             mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
 

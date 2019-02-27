@@ -51,8 +51,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            D2D.Geometry geometryThis = this.GetGeometry();
-            D2D.Geometry geometryOther = other.GetGeometry();
+            var geometryThis = this.GetGeometry();
+            var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther) != D2D.GeometryRelation.Disjoint;
         }
@@ -67,8 +67,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            D2D.Geometry geometryThis = this.GetGeometry();
-            D2D.Geometry geometryOther = other.GetGeometry();
+            var geometryThis = this.GetGeometry();
+            var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;
         }

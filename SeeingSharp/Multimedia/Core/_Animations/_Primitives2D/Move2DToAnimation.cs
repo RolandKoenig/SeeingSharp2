@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnStartAnimation()
         {
             m_startVector = m_targetObject.Position;
-            Vector3 moveVector = new Vector3(m_targetVector - m_startVector, 0f);
+            var moveVector = new Vector3(m_targetVector - m_startVector, 0f);
 
             // Create move-helper individually
             if (m_paramDuration > TimeSpan.Zero)

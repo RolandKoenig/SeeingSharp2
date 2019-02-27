@@ -93,7 +93,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="ignorePause">Should this animation ignore pause stateß</param>
         public void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null)
         {
-            if (m_ownerAnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
+            if (m_ownerAnimationHandler == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!");
+            }
 
             // Append 'CallAction' on demand
             if ((actionToCall != null) || (cancelAction != null))
@@ -105,7 +108,7 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if(ignorePause != null)
             {
-                foreach(IAnimation actAnimation in m_sequenceList)
+                foreach(var actAnimation in m_sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }
@@ -135,7 +138,7 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if (ignorePause != null)
             {
-                foreach (IAnimation actAnimation in m_sequenceList)
+                foreach (var actAnimation in m_sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }
@@ -205,7 +208,7 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if (ignorePause != null)
             {
-                foreach (IAnimation actAnimation in m_sequenceList)
+                foreach (var actAnimation in m_sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }

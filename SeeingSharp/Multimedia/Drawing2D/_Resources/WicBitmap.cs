@@ -69,8 +69,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public static async Task<WicBitmap> FromResourceLinkAsync(ResourceLink resourceLink)
         {
             SharpDX.WIC.Bitmap wicBitmap = null;
-            using (Stream inStream = await resourceLink.OpenInputStreamAsync())
-            using (WicBitmapSourceInternal bitmapSourceWrapper = await SeeingSharpTools.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream)))
+
+            using (var inStream = await resourceLink.OpenInputStreamAsync())
+
+            using (var bitmapSourceWrapper = await SeeingSharpTools.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream)))
             {
                 wicBitmap = new SharpDX.WIC.Bitmap(
                     GraphicsCore.Current.FactoryWIC, bitmapSourceWrapper.Converter, SharpDX.WIC.BitmapCreateCacheOption.CacheOnLoad);

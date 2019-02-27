@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         internal override bool NotifyAfterRender(RenderState renderState, int passID)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Reset settings made on render state (needed for all passes)
             deviceContext.Rasterizer.State = m_defaultResources.RasterStateDefault;

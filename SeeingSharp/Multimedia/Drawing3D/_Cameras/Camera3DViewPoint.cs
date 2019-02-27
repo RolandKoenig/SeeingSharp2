@@ -104,7 +104,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get { return this.CameraType.ToString(); }
             set
             {
-                Camera3DType valueParsed = Camera3DType.Perspective;
+                var valueParsed = Camera3DType.Perspective;
+
                 if (Enum.TryParse(value, out valueParsed))
                 {
                     this.CameraType = valueParsed;

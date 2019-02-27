@@ -55,11 +55,12 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
                 float allPrimitivesHeight = 100f;
 
                 // Update current transform so that primitive objects are in the middle of the screen
-                RectangleF screenBounds = graphics.ScreenBounds;
+                var screenBounds = graphics.ScreenBounds;
                 graphics.TransformStack.Push(Matrix3x2.Translation(new Vector2(
                     (graphics.ScreenWidth / 2f) - (allPrimitivesWidth / 2f),
                     (graphics.ScreenHeight / 2f) - (allPrimitivesHeight / 2f))));
                 graphics.ApplyTransformStack();
+
                 try
                 {
                     // Draw all primitives

@@ -72,7 +72,7 @@ namespace SeeingSharp.UwpSamples
                 .SupportUwp()
                 .Load();
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
             // Nur sicherstellen, dass das Fenster aktiv ist.

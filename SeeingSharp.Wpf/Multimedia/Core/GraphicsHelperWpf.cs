@@ -76,16 +76,21 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
 
             // Prepare target bitmap
-            SharpDX.DataBox dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+
             try
             {
-                if(!targetBitmap.TryLock(new System.Windows.Duration(lockTimeout))) { return; }
+                if (!targetBitmap.TryLock(new System.Windows.Duration(lockTimeout)))
+                {
+                    return;
+                }
 
                 try
                 {
                     // Copy data row by row
                     //  => Rows form datasource may have more pixels because driver changes the size of textures
                     ulong rowPitch = (ulong)(width * 4);
+
                     for (int loopRow = 0; loopRow < height; loopRow++)
                     {
                         int rowPitchSource = dataBox.RowPitch;

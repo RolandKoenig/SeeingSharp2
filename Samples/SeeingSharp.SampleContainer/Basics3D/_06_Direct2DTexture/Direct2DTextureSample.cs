@@ -58,20 +58,25 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            Direct2DTextureSampleSettings castedSettings = settings as Direct2DTextureSampleSettings;
-            if(castedSettings == null) { castedSettings = new Direct2DTextureSampleSettings(); }
+            var castedSettings = settings as Direct2DTextureSampleSettings;
+
+            if (castedSettings == null)
+            {
+                castedSettings = new Direct2DTextureSampleSettings();
+            }
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
             m_textFormat = new TextFormatResource("Arial", 36);
             m_textBrush = new SolidBrushResource(Color4Ex.RedColor);
-            Custom2DDrawingLayer d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+
+            var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
             {
-                RectangleF d2dRectangle = new RectangleF(10, 10, 236, 236);
+                var d2dRectangle = new RectangleF(10, 10, 236, 236);
                 graphics.Clear(Color4Ex.LightBlue);
                 graphics.FillRoundedRectangle(
                     d2dRectangle, 30, 30,
@@ -102,7 +107,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     () => new GeometryResource(pType));
 
                 // Create cube object
-                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.YPos = 0.5f;
                 cubeObject.EnableShaderGeneratedBorder();

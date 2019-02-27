@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">The render state on which to apply.</param>
         internal void Apply(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
             deviceContext.VertexShader.SetConstantBuffer(2, m_cbPerObject.ConstantBuffer);

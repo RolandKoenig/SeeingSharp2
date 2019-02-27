@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Input
 
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            KeyboardState targetStateCasted = targetState as KeyboardState;
+            var targetStateCasted = targetState as KeyboardState;
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
             targetStateCasted.m_keysHit.Clear();

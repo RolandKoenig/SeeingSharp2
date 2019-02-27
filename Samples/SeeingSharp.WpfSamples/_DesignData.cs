@@ -38,11 +38,12 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                SampleRepository sampleRepo = new SampleRepository();
-                for(int loop=1; loop<5; loop++)
+                var sampleRepo = new SampleRepository();
+
+                for(var loop =1; loop<5; loop++)
                 {
-                    string actGroupName = $"DummyGroup {loop}";
-                    SampleGroupMetadata actGroup = new SampleGroupMetadata(actGroupName);
+                    var actGroupName = $"DummyGroup {loop}";
+                    var actGroup = new SampleGroupMetadata(actGroupName);
                     actGroup.Samples.Add(new SampleMetadata(
                         new SampleDescriptionAttribute("DummySample1", 1, actGroupName),
                         typeof(DummySampleClass)));

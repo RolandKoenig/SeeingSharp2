@@ -167,11 +167,20 @@ namespace SeeingSharp.Multimedia.Core
         {
             return builder.Lazy(() =>
             {
-                AnimationHandler result = new AnimationHandler(builder.AnimationHandler.Owner);
+                var result = new AnimationHandler(builder.AnimationHandler.Owner);
                 IAnimationSequenceBuilder<ObjectType> childBuilder = new AnimationSequenceBuilder<ObjectType>(result);
                 childSequenceBuilder(childBuilder);
-                if ((childBuilder.ItemCount == 0) && (!childBuilder.Applied)) { childBuilder.Apply(); }
-                if (!childBuilder.Applied) { throw new InvalidOperationException("Child sequence was not correctly applied (call to Apply is missing!)"); }
+
+                if ((childBuilder.ItemCount == 0) && (!childBuilder.Applied))
+                {
+                    childBuilder.Apply();
+                }
+
+                if (!childBuilder.Applied)
+                {
+                    throw new InvalidOperationException("Child sequence was not correctly applied (call to Apply is missing!)");
+                }
+
                 return result;
             });
         }

@@ -93,7 +93,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            DWrite.TextFormat textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
+
             if (textFormat != null)
             {
                 SeeingSharpTools.DisposeObject(textFormat);
@@ -108,9 +109,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal DWrite.TextFormat GetTextFormat(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            DWrite.TextFormat result = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var result = m_loadedTextFormats[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the TextFormat object
@@ -145,7 +150,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (ParagraphAlignment)m_paragraphAlignment; }
             set
             {
-                DWrite.ParagraphAlignment castedValue = (DWrite.ParagraphAlignment)value;
+                var castedValue = (DWrite.ParagraphAlignment)value;
+
                 if(castedValue != m_paragraphAlignment)
                 {
                     m_paragraphAlignment = castedValue;
@@ -162,7 +168,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (TextAlignment)m_textAlignment; }
             set
             {
-                DWrite.TextAlignment castedValue = (DWrite.TextAlignment)value;
+                var castedValue = (DWrite.TextAlignment)value;
+
                 if(castedValue != m_textAlignment)
                 {
                     m_textAlignment = castedValue;
@@ -179,7 +186,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (WordWrapping)m_wordWrapping; }
             set
             {
-                DWrite.WordWrapping castedValue = (DWrite.WordWrapping)value;
+                var castedValue = (DWrite.WordWrapping)value;
+
                 if(castedValue != m_wordWrapping)
                 {
                     m_wordWrapping = castedValue;
@@ -196,7 +204,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (ReadingDirection)m_readingDirection; }
             set
             {
-                DWrite.ReadingDirection castedValue = (DWrite.ReadingDirection)value;
+                var castedValue = (DWrite.ReadingDirection)value;
+
                 if(castedValue != m_readingDirection)
                 {
                     m_readingDirection = castedValue;

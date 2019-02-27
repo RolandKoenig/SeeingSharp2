@@ -220,7 +220,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void UpdateRenderLoopViewSize()
         {
-            Size2 viewSize = GetTargetRenderPixelSize();
+            var viewSize = GetTargetRenderPixelSize();
             m_renderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
             m_renderLoop.SetCurrentViewSize(
                 (int)viewSize.Width,
@@ -265,10 +265,14 @@ namespace SeeingSharp.Multimedia.Views
         {
             try
             {
-                if (!GraphicsCore.IsLoaded) { return; }
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return;
+                }
 
                 // Ignore event, if nothing has changed..
-                Size2 actSize = GetTargetRenderPixelSize();
+                var actSize = GetTargetRenderPixelSize();
+
                 if (((int)m_lastRefreshTargetSize.Width == (int)actSize.Width) &&
                     ((int)m_lastRefreshTargetSize.Height == (int)actSize.Height))
                 {
@@ -290,12 +294,16 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
         private void OnTargetPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!GraphicsCore.IsLoaded) { return; }
+            if (!GraphicsCore.IsLoaded)
+            {
+                return;
+            }
 
             //Resize render target only on greater size changes
-            Size2 viewSize = GetTargetRenderPixelSize();
+            var viewSize = GetTargetRenderPixelSize();
             double resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? (double)viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / (double)viewSize.Width;
             double resizeFactorHeight = (double)viewSize.Height > m_lastRefreshTargetSize.Height ? (double)viewSize.Height / m_lastRefreshTargetSize.Height : m_lastRefreshTargetSize.Height / (double)viewSize.Height;
+
             if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
             {
                 UpdateRenderLoopViewSize();
@@ -336,7 +344,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             m_backBufferMultisampled = null;
 
-            Size2 viewSize = GetTargetRenderPixelSize();
+            var viewSize = GetTargetRenderPixelSize();
 
             // Create the SwapChain and associate it with the SwapChainBackgroundPanel
             m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, m_renderLoop.ViewConfiguration);
@@ -365,10 +373,10 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.DeviceD3D11_1, m_depthBuffer);
 
             //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(viewSize.Width, viewSize.Height);
+            var viewPort = GraphicsHelper.CreateDefaultViewport(viewSize.Width, viewSize.Height);
             m_lastRefreshTargetSize = new Size(viewSize.Width, viewSize.Height);
 
-            DpiScaling dpiScaling = new DpiScaling();
+            var dpiScaling = new DpiScaling();
             dpiScaling.DpiX = (float)(96.0 * m_targetPanel.CompositionScaleX);
             dpiScaling.DpiY = (float)(96.0 * m_targetPanel.CompositionScaleY);
 
@@ -401,12 +409,13 @@ namespace SeeingSharp.Multimedia.Views
                     m_targetPanel.CompositionRescalingNeeded)
                 {
                     m_compositionScaleChanged = false;
-                    SharpDX.DXGI.SwapChain2 swapChain2 = m_swapChain.QueryInterfaceOrNull<SharpDX.DXGI.SwapChain2>();
+                    var swapChain2 = m_swapChain.QueryInterfaceOrNull<SharpDX.DXGI.SwapChain2>();
+
                     if (swapChain2 != null)
                     {
                         try
                         {
-                            SharpDX.Mathematics.Interop.RawMatrix3x2 inverseScale = new SharpDX.Mathematics.Interop.RawMatrix3x2();
+                            var inverseScale = new SharpDX.Mathematics.Interop.RawMatrix3x2();
                             inverseScale.M11 = 1.0f / (float)m_targetPanel.CompositionScaleX;
                             inverseScale.M22 = 1.0f / (float)m_targetPanel.CompositionScaleY;
                             swapChain2.MatrixTransform = inverseScale;

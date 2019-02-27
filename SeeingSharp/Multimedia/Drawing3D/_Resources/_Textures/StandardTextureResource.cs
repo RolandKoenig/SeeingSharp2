@@ -95,14 +95,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Select source texture
-            ResourceLink source = m_resourceLinkLowQuality;
-            if (device.Configuration.TextureQuality == TextureQuality.Hight) { source = m_resourceLinkHighQuality; }
+            var source = m_resourceLinkLowQuality;
+
+            if (device.Configuration.TextureQuality == TextureQuality.Hight)
+            {
+                source = m_resourceLinkHighQuality;
+            }
 
             // Load the texture
             if (source != null)
             {
-                using (Stream inStream = source.OpenInputStream())
-                using (SDXTK.Image rawImage = SDXTK.Image.Load(inStream))
+                using (var inStream = source.OpenInputStream())
+                using (var rawImage = SDXTK.Image.Load(inStream))
                 {
                     m_texture = GraphicsHelper.CreateTexture(device, rawImage);
                 }

@@ -39,7 +39,8 @@ namespace SeeingSharp.Util
         private void HandleResultForUI(PerformanceAnalyzeResultBase actResult)
         {
             // Handle duration kpi results
-            DurationPerformanceResult actDurationResult = actResult as DurationPerformanceResult;
+            var actDurationResult = actResult as DurationPerformanceResult;
+
             if (actDurationResult != null)
             {
                 HandleResultForUIForFlowRateKpi(
@@ -49,7 +50,8 @@ namespace SeeingSharp.Util
             }
 
             // Put here other result handlers
-            FlowRatePerformanceResult actFlowRateResult = actResult as FlowRatePerformanceResult;
+            var actFlowRateResult = actResult as FlowRatePerformanceResult;
+
             if (actFlowRateResult != null)
             {
                 HandleResultForUIForFlowRateKpi(
@@ -71,11 +73,15 @@ namespace SeeingSharp.Util
             // Handle historical entries
             if (m_generateHistoricalCollection)
             {
-                int actResultCount = 1;
+                var actResultCount = 1;
                 kpisHistorical.Add(kpiResult);
-                for (int loop = kpisHistorical.Count - 1; loop >= 0; loop--)
+                for (var loop = kpisHistorical.Count - 1; loop >= 0; loop--)
                 {
-                    if (kpisHistorical[loop].Calculator == kpiResult.Calculator) { actResultCount++; }
+                    if (kpisHistorical[loop].Calculator == kpiResult.Calculator)
+                    {
+                        actResultCount++;
+                    }
+
                     if (actResultCount > m_maxCountHistoricalEntries)
                     {
                         kpisHistorical.RemoveAt(loop);
@@ -87,7 +93,7 @@ namespace SeeingSharp.Util
             if (m_generateCurrentValueCollection)
             {
                 kpisCurrents.Add(kpiResult);
-                for (int loop = kpisCurrents.Count - 1; loop >= 0; loop--)
+                for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
                 {
                     if ((kpisCurrents[loop] != kpiResult) &&
                         (kpisCurrents[loop].Calculator == kpiResult.Calculator))

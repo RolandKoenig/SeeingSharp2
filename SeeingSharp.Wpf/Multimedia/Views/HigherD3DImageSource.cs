@@ -113,13 +113,15 @@ namespace SeeingSharp.Multimedia.Views
                 throw new ArgumentException("texture must be created with ResourceOptionFlags.Shared");
             }
 
-            D3D9.Format format = HigherD3DImageSource.TranslateFormat(renderTarget);
+            var format = HigherD3DImageSource.TranslateFormat(renderTarget);
+
             if (format == D3D9.Format.Unknown)
             {
                 throw new ArgumentException("texture format is not compatible with OpenSharedResource");
             }
 
-            IntPtr handle = GetSharedHandle(renderTarget);
+            var handle = GetSharedHandle(renderTarget);
+
             if (handle == IntPtr.Zero)
             {
                 throw new ArgumentNullException(nameof(handle));
@@ -134,7 +136,8 @@ namespace SeeingSharp.Multimedia.Views
                 renderTarget.Description.Width,
                 renderTarget.Description.Height,
                 1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
-            using (D3D9.Surface surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
+
+            using (var surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
             {
                 base.Lock();
                 base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
@@ -150,7 +153,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             texture.EnsureNotNull(nameof(texture));
 
-            using (SharpDX.DXGI.Resource resource = texture.QueryInterface<SharpDX.DXGI.Resource>())
+            using (var resource = texture.QueryInterface<SharpDX.DXGI.Resource>())
             {
                 return resource.SharedHandle;
             }

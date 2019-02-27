@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_textFormat.TextAlignment = TextAlignment.Center;
             m_textFormat.ParagraphAlignment = ParagraphAlignment.Center;
 
-            Color4 grayColor = Color4Ex.LightGray;
+            var grayColor = Color4Ex.LightGray;
             grayColor.ChangeAlphaTo(0.8f);
             m_solidBrushBackground = new SolidBrushResource(grayColor);
             m_solidBrushForeground = new SolidBrushResource(Color4Ex.RedColor);
@@ -75,7 +75,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if (m_textFormat == null) { return; }
 
             // Check for minimum screen size
-            Size2F screenSize = graphics.ScreenSize;
+            var screenSize = graphics.ScreenSize;
+
             if((screenSize.Width < 300f) ||
                (screenSize.Height < 100f))
             {
@@ -83,7 +84,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             // Draw the debug message on the upper right corner
-            RectangleF targetRect = new RectangleF(
+            var targetRect = new RectangleF(
                 screenSize.Width - 300f, 10f,
                 280f, 80f);
             graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);

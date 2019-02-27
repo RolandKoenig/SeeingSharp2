@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Input
             foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
             {
                 short actVirtualKeyCode = (short)actVirtualKey;
-                WinVirtualKey actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
+                var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
                 s_keyMappingDict[actVirtualKey] = actWinVirtualKey;
             }
         }
@@ -166,9 +166,10 @@ namespace SeeingSharp.Multimedia.Input
             if(m_dispatcher == null) { return; }
 
             // Deregister all events on UI thread
-            Button dummyButtonForFocus = m_dummyButtonForFocus;
-            SeeingSharpPanelPainter painter = m_painter;
-            CoreWindow coreWindow = m_coreWindow;
+            var dummyButtonForFocus = m_dummyButtonForFocus;
+            var painter = m_painter;
+            var coreWindow = m_coreWindow;
+
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Remove the dummy button
@@ -273,8 +274,9 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -300,8 +302,9 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -311,6 +314,7 @@ namespace SeeingSharp.Multimedia.Input
                     pointProperties.IsXButton1Pressed,
                     pointProperties.IsXButton2Pressed);
             }
+
             m_lastDragPoint = currentPoint;
 
             // Needed here because we loose focus again by default on left mouse button
@@ -319,20 +323,29 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnTargetPanel_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (m_painter == null) { return; }
+            if (m_painter == null)
+            {
+                return;
+            }
 
             // Calculate move distance
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            if(m_lastDragPoint == null) { m_lastDragPoint = currentPoint; }
-            Vector2 moveDistance = new Vector2(
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+
+            if (m_lastDragPoint == null)
+            {
+                m_lastDragPoint = currentPoint;
+            }
+
+            var moveDistance = new Vector2(
                 (float)(currentPoint.Position.X - m_lastDragPoint.Position.X),
                 (float)(currentPoint.Position.Y - m_lastDragPoint.Position.Y));
-            Vector2 currentLocation = new Vector2(
+            var currentLocation = new Vector2(
                 (float)currentPoint.Position.X,
                 (float)currentPoint.Position.Y);
 
             // Track mouse/pointer state
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -357,9 +370,10 @@ namespace SeeingSharp.Multimedia.Input
             if (!m_hasFocus) { return; }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
             int wheelDelta = pointProperties.MouseWheelDelta;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(

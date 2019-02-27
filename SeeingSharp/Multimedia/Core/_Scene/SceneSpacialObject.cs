@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dist">The Distance you want to zoom.</param>
         public void MoveForward(float dist)
         {
-            Vector3 look = this.Look;
+            var look = this.Look;
 
             m_position.X += dist * look.X;
             m_position.Y += dist * look.Y;
@@ -170,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDown(float points)
         {
-            Vector3 up = this.Up;
+            var up = this.Up;
 
             m_position.X = m_position.X + up.X * points;
             m_position.Y = m_position.Y + up.Y * points;
@@ -184,7 +184,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDownWithoutMoving(float points)
         {
-            Vector3 up = this.Up;
+            var up = this.Up;
 
             m_position.Y = m_position.Y + up.Y * points;
 
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Strave(float points)
         {
-            Vector3 right = this.Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Y = m_position.Y + right.Y * points;
@@ -210,7 +210,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void StraveAtPlane(float points)
         {
-            Vector3 right = this.Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Z = m_position.Z + right.Z * points;
@@ -383,11 +383,13 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 int childCount = children.Count;
-                for (int loop = 0; loop < childCount; loop++)
+
+                for (var loop = 0; loop < childCount; loop++)
                 {
                     // Forward current transform matrix to child objects
-                    Matrix4Stack currentWorld = updateState.World;
+                    var currentWorld = updateState.World;
                     currentWorld.Push(m_transform);
+
                     try
                     {
                         children[loop].Update(updateState);
@@ -438,7 +440,8 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateAndApplyRenderParameters(RenderState renderState)
         {
             // Get or create RenderParamters object on object level
-            ObjectRenderParameters renderParameters = m_renderParameters[renderState.DeviceIndex];
+            var renderParameters = m_renderParameters[renderState.DeviceIndex];
+
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded<ObjectRenderParameters>(

@@ -51,8 +51,8 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -71,12 +71,12 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 edgeLayer.PostprocessEffectKey = resEdgeDetect;
 
                 // Create pallet geometry resource
-                CubeType cubeType = new CubeType();
+                var cubeType = new CubeType();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(cubeType));
 
                 // Create pallet object
-                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry, "EdgeDetectLayer");
+                var cubeObject = manipulator.AddGeneric(resPalletGeometry, "EdgeDetectLayer");
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();

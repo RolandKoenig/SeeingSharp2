@@ -41,7 +41,7 @@ namespace SeeingSharp.Util
         /// <param name="target">The target <see cref="StringBuilder"/> to write the shader source to.</param>
         public static void ReadShaderFileAndResolveIncludes(ResourceLink resourceLink, StringBuilder target)
         {
-            using (StringWriter stringWriter = new StringWriter(target))
+            using (var stringWriter = new StringWriter(target))
             {
                 ReadShaderFileAndResolveIncludes(resourceLink, stringWriter);
             }
@@ -54,7 +54,7 @@ namespace SeeingSharp.Util
         /// <param name="target">The target <see cref="StringWriter"/> to write the shader source to.</param>
         public static void ReadShaderFileAndResolveIncludes(ResourceLink resourceLink, StringWriter target)
         {
-            using (StreamReader streamReader = new StreamReader(resourceLink.OpenInputStream()))
+            using (var streamReader = new StreamReader(resourceLink.OpenInputStream()))
             {
                 string actLine = null;
                 while(null != (actLine = streamReader.ReadLine()))

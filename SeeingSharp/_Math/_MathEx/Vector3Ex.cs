@@ -42,7 +42,7 @@ namespace SeeingSharp
         /// <param name="verticalRotation">Vertical rotation value.</param>
         public static Vector3 NormalFromHVRotation(float horizontalRotation, float verticalRotation)
         {
-            Vector3 result = Vector3.Zero;
+            var result = Vector3.Zero;
 
             //Generate vector
             result.X = (float)(1f * Math.Cos(verticalRotation) * Math.Cos(horizontalRotation));
@@ -70,8 +70,12 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Average(params Vector3[] vectors)
         {
-            if (vectors.Length == 0) { return Vector3.Zero; }
-            Vector3 result = Vector3Ex.Sum(vectors);
+            if (vectors.Length == 0)
+            {
+                return Vector3.Zero;
+            }
+
+            var result = Vector3Ex.Sum(vectors);
 
             result.X = result.X / (float)vectors.Length;
             result.Y = result.Y / (float)vectors.Length;
@@ -86,8 +90,12 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Average(List<Vector3> vectors)
         {
-            if (vectors.Count == 0) { return Vector3.Zero; }
-            Vector3 result = Vector3Ex.Sum(vectors);
+            if (vectors.Count == 0)
+            {
+                return Vector3.Zero;
+            }
+
+            var result = Vector3Ex.Sum(vectors);
 
             result.X = result.X / (float)vectors.Count;
             result.Y = result.Y / (float)vectors.Count;
@@ -103,9 +111,9 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 ToHVRotation(Vector3 vector)
         {
-            Vector3 normal = Vector3.Normalize(vector);
+            var normal = Vector3.Normalize(vector);
 
-            Vector2 result = new Vector2();
+            var result = new Vector2();
             result.X = (float)Math.Atan2(normal.Z, normal.X);
             result.Y = (float)Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length());
             return result;
@@ -118,11 +126,13 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Sum(params Vector3[] vectors)
         {
-            Vector3 result = Vector3.Zero;
-            for (int loop = 0; loop < vectors.Length; loop++)
+            var result = Vector3.Zero;
+
+            for (var loop = 0; loop < vectors.Length; loop++)
             {
                 result = result + vectors[loop];
             }
+
             return result;
         }
 
@@ -133,11 +143,13 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Sum(List<Vector3> vectors)
         {
-            Vector3 result = Vector3.Zero;
-            for (int loop = 0; loop < vectors.Count; loop++)
+            var result = Vector3.Zero;
+
+            for (var loop = 0; loop < vectors.Count; loop++)
             {
                 result = result + vectors[loop];
             }
+
             return result;
         }
 
@@ -156,7 +168,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToHVRotation(Vector3 vector, out float hRotation, out float vRotation)
         {
-            Vector3 normal = Vector3.Normalize(vector);
+            var normal = Vector3.Normalize(vector);
 
             hRotation = (float)Math.Atan2(normal.Z, normal.X);
             vRotation = (float)Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length());
@@ -184,7 +196,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 CalculateTriangleNormal(Vector3 p0, Vector3 p1, Vector3 p2, bool doNormalize)
         {
-            Vector3 result = new Vector3();
+            var result = new Vector3();
 
             // Calculation of the normal based on 'Mathematics for 3D Game Programming and Computer Graphics (Eric Lengyel, 2012)
             //  Page 175: 7.7.1 Calculating Normal Vectors
@@ -192,7 +204,7 @@ namespace SeeingSharp
             //  We have two modes: Normalized and unnormalized form of the result
             if (doNormalize)
             {
-                Vector3 crossProductVector = Vector3.Cross(p1 - p0, p2 - p0);
+                var crossProductVector = Vector3.Cross(p1 - p0, p2 - p0);
                 result = crossProductVector / crossProductVector.Length();
             }
             else

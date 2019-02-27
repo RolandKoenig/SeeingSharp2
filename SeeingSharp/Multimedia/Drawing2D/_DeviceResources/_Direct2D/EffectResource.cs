@@ -87,16 +87,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device for which to get the input.</param>
         IDisposable IImageInternal.GetImageObject(EngineDevice device)
         {
-            D2D.Effect effect = m_loadedEffects[device.DeviceIndex];
+            var effect = m_loadedEffects[device.DeviceIndex];
+
             if(effect == null)
             {
                 // Create the effect
                 effect = BuildEffect(device);
 
                 // Set input values
-                for(int loop=0; loop<m_effectInputs.Length; loop++)
+                for(var loop =0; loop<m_effectInputs.Length; loop++)
                 {
-                    using (D2D.Image actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
+                    using (var actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
                     {
                         effect.SetInput(loop, actInput, new SharpDX.Mathematics.Interop.RawBool(false));
                     }
@@ -121,7 +122,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Effect actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+            var actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+
             if (actEffect != null)
             {
                 SeeingSharpTools.DisposeObject(actEffect);

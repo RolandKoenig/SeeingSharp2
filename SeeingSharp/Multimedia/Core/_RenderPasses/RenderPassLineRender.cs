@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Apply(RenderState renderState)
         {
-            EngineDevice device = renderState.Device;
+            var device = renderState.Device;
 
             device.DeviceImmediateContextD3D11.Rasterizer.State = m_defaultResources.RasterStateLines;
             device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.LineList;
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Discard(RenderState renderState)
         {
-            EngineDevice device = renderState.Device;
+            var device = renderState.Device;
 
             device.DeviceImmediateContextD3D11.Rasterizer.State = m_defaultResources.RasterStateDefault;
             device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;

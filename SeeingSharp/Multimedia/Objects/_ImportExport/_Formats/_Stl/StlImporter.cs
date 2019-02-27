@@ -75,17 +75,19 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            StlImportOptions stlImportOptions = importOptions as StlImportOptions;
+            var stlImportOptions = importOptions as StlImportOptions;
+
             if(stlImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for StlImporter!");
             }
 
             ImportedModelContainer result = null;
+
             try
             {
                 // Try to read in BINARY format first
-                using (Stream inStream = sourceFile.OpenInputStream())
+                using (var inStream = sourceFile.OpenInputStream())
                 {
                     result = this.TryReadBinary(inStream, stlImportOptions);
                 }
@@ -93,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Read in ASCII format (if binary did not work)
                 if (result == null)
                 {
-                    using (Stream inStream = sourceFile.OpenInputStream())
+                    using (var inStream = sourceFile.OpenInputStream())
                     {
                         result = this.TryReadAscii(inStream, stlImportOptions);
                     }
@@ -242,12 +244,14 @@ namespace SeeingSharp.Multimedia.Objects
             m_cachedPoints.Clear();
 
             // Read all geometry
-            Vector3 normal = ParseNormal(normalString);
+            var normal = ParseNormal(normalString);
             ReadLine(reader, "outer");
+
             while (true)
             {
                 string line = reader.ReadLine();
                 Vector3 point;
+
                 if (TryParseVertex(line, out point))
                 {
                     m_cachedPoints.Add(point);
@@ -267,8 +271,9 @@ namespace SeeingSharp.Multimedia.Objects
             ReadLine(reader, "endfacet");
 
             // Overtake geometry data
-            VertexStructureSurface targetSurfae = newStructure.FirstSurface;
-            int pointCount = m_cachedPoints.Count;
+            var targetSurfae = newStructure.FirstSurface;
+            var pointCount = m_cachedPoints.Count;
+
             switch (m_cachedPoints.Count)
             {
                 case 0:
@@ -345,7 +350,8 @@ namespace SeeingSharp.Multimedia.Objects
             // Try to read color information
             var attrib = Convert.ToString(ReadUInt16(reader), 2).PadLeft(16, '0').ToCharArray();
             var hasColor = attrib[0].Equals('1');
-            Color currentColor = Color.Transparent;
+            var currentColor = Color.Transparent;
+
             if (hasColor)
             {
                 int blue = attrib[15].Equals('1') ? 1 : 0;
@@ -372,7 +378,8 @@ namespace SeeingSharp.Multimedia.Objects
                 currentColor = new Color(Convert.ToByte(r), Convert.ToByte(g), Convert.ToByte(b));
             }
 
-            VertexStructureSurface targetSurface = vertexStructure.FirstSurface;
+            var targetSurface = vertexStructure.FirstSurface;
+
             if (importOptions.IsChangeTriangleOrderNeeded())
             {
                 targetSurface.AddTriangle(
@@ -396,16 +403,19 @@ namespace SeeingSharp.Multimedia.Objects
         {
             using (var reader = new StreamReader(stream, ENCODING, false, 128, true))
             {
-                VertexStructure newStructure = new VertexStructure();
+                var newStructure = new VertexStructure();
+
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
+
                     if (line == null)
                     {
                         continue;
                     }
 
                     line = line.Trim();
+
                     if (line.Length == 0 || line.StartsWith("\0") || line.StartsWith("#") || line.StartsWith("!")
                         || line.StartsWith("$"))
                     {
@@ -432,17 +442,17 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Generate result container
-                ImportedModelContainer result = new ImportedModelContainer(importOptions);
-                NamedOrGenericKey geoResourceKey = result.GetResourceKey(
+                var result = new ImportedModelContainer(importOptions);
+                var geoResourceKey = result.GetResourceKey(
                     RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     geoResourceKey,
                     () => new GeometryResource(newStructure)));
-                GenericObject geoObject = new GenericObject(geoResourceKey);
+                var geoObject = new GenericObject(geoResourceKey);
                 result.Objects.Add(geoObject);
 
                 // Append an object which transform the whole coordinate system
-                ScenePivotObject rootObject = result.CreateAndAddRootObject();
+                var rootObject = result.CreateAndAddRootObject();
                 result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, geoObject));
 
                 return result;
@@ -468,6 +478,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Read header (is not needed)
                 //  (solid stands for Ascii format)
                 string header = ENCODING.GetString(reader.ReadBytes(80), 0, 80).Trim();
+
                 if(header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
 
                 // Read and check number of triangles
@@ -478,25 +489,26 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Read geometry data
-                VertexStructure newStructure = new VertexStructure((int)numberTriangles * 3);
+                var newStructure = new VertexStructure((int)numberTriangles * 3);
                 newStructure.CreateSurface((int)numberTriangles);
-                for (int loop = 0; loop < numberTriangles; loop++)
+
+                for (var loop = 0; loop < numberTriangles; loop++)
                 {
                     this.ReadTriangle(reader, newStructure, importOptions);
                 }
 
                 // Generate result container
-                ImportedModelContainer result = new ImportedModelContainer(importOptions);
-                NamedOrGenericKey geoResourceKey = result.GetResourceKey(
+                var result = new ImportedModelContainer(importOptions);
+                var geoResourceKey = result.GetResourceKey(
                     RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     geoResourceKey,
                     () => new GeometryResource(newStructure)));
-                GenericObject geoObject = new GenericObject(geoResourceKey);
+                var geoObject = new GenericObject(geoResourceKey);
                 result.Objects.Add(geoObject);
 
                 // Append an object which transform the whole coordinate system
-                ScenePivotObject rootObject = result.CreateAndAddRootObject();
+                var rootObject = result.CreateAndAddRootObject();
                 result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, geoObject));
 
                 return result;

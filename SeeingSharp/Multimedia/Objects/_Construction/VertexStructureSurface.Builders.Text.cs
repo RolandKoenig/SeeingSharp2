@@ -57,12 +57,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="geometryOptions">Some configuration for geometry creation.</param>
         public void BuildTextGeometry(string stringToBuild, TextGeometryOptions geometryOptions)
         {
-            DWrite.Factory writeFactory = GraphicsCore.Current.FactoryDWrite;
+            var writeFactory = GraphicsCore.Current.FactoryDWrite;
 
             //TODO: Cache font objects
 
             //Get DirectWrite font weight
-            DWrite.FontWeight fontWeight = DWrite.FontWeight.Normal;
+            var fontWeight = DWrite.FontWeight.Normal;
+
             switch (geometryOptions.FontWeight)
             {
                 case FontGeometryWeight.Bold:
@@ -75,7 +76,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Get DirectWrite font style
-            DWrite.FontStyle fontStyle = DWrite.FontStyle.Normal;
+            var fontStyle = DWrite.FontStyle.Normal;
+
             switch (geometryOptions.FontStyle)
             {
                 case FontGeometryStyle.Italic:
@@ -94,14 +96,14 @@ namespace SeeingSharp.Multimedia.Objects
             //Create the text layout object
             try
             {
-                DWrite.TextLayout textLayout = new DWrite.TextLayout(
+                var textLayout = new DWrite.TextLayout(
                     writeFactory, stringToBuild,
                     new DWrite.TextFormat(
                         writeFactory, geometryOptions.FontFamily, fontWeight, fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
                 //Render the text using the vertex structure text renderer
-                using (VertexStructureTextRenderer textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
+                using (var textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
                 {
                     textLayout.Draw(textRenderer, 0f, 0f);
                 }
@@ -119,14 +121,19 @@ namespace SeeingSharp.Multimedia.Objects
         public void BuildPlainPolygon(Vector3[] coordinates)
         {
             //Build the polygon
-            Polygon polygon = new Polygon(coordinates);
+            var polygon = new Polygon(coordinates);
 
             //Try to triangulate it
             IEnumerable<int> indices = polygon.TriangulateUsingCuttingEars();
-            if (indices == null) { throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!"); }
+
+            if (indices == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
+            }
 
             //Append all vertices
             int baseIndex = m_owner.CountVertices;
+
             for (int loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
                 m_owner.AddVertex(new Vertex(coordinates[loopCoordinates]));

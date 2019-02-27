@@ -144,22 +144,24 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            XglImportOptions xglImportOptions = importOptions as XglImportOptions;
+            var xglImportOptions = importOptions as XglImportOptions;
+
             if (xglImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }
 
-            ImportedModelContainer result = new ImportedModelContainer(importOptions);
+            var result = new ImportedModelContainer(importOptions);
 
             // Append an object which transform the whole coordinate system
-            ScenePivotObject rootObject = result.CreateAndAddRootObject();
+            var rootObject = result.CreateAndAddRootObject();
 
             // Load current model by walking through xml nodes
-            using (Stream inStream = sourceFile.OpenInputStream())
+            using (var inStream = sourceFile.OpenInputStream())
             {
                 // Handle compressed xgl files (extension zgl)
-                Stream nextStream = inStream;
+                var nextStream = inStream;
+
                 if (sourceFile.FileExtension.Equals("zgl", StringComparison.OrdinalIgnoreCase))
                 {
                     // Skip the first bytes in case of compression
@@ -172,7 +174,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Read all xml data
                 try
                 {
-                    using (XmlReader inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings() { CloseInput = false }))
+                    using (var inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings() { CloseInput = false }))
                     {
                         while (inStreamXml.Read())
                         {
@@ -212,7 +214,8 @@ namespace SeeingSharp.Multimedia.Objects
                                 // Get current line and column
                                 int currentLine = 0;
                                 int currentColumn = 0;
-                                IXmlLineInfo lineInfo = inStreamXml as IXmlLineInfo;
+                                var lineInfo = inStreamXml as IXmlLineInfo;
+
                                 if (lineInfo != null)
                                 {
                                     currentLine = lineInfo.LineNumber;
@@ -242,7 +245,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions CreateDefaultImportOptions()
         {
-            XglImportOptions options = new XglImportOptions();
+            var options = new XglImportOptions();
             options.ResizeFactor = 0.01f;
             options.ResourceCoordinateSystem = CoordinateSystem.RightHanded_UpZ;
             return options;
@@ -363,12 +366,12 @@ namespace SeeingSharp.Multimedia.Objects
         private void ImportMesh(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
             string id = inStreamXml.GetAttribute("ID");
-            VertexStructure actVertexStructure = new VertexStructure();
+            var actVertexStructure = new VertexStructure();
             int minVertexID = int.MaxValue;
             int actVertexIndex = -1;
             int actNormalIndex = -1;
             int actTextureIndex = -1;
-            Vertex actTempVertex = Vertex.Empty;
+            var actTempVertex = Vertex.Empty;
             int[] actFaceReferences = new int[3];
             Dictionary<int, MaterialProperties> localMaterialInfos = new Dictionary<int, MaterialProperties>();
 
@@ -475,11 +478,13 @@ namespace SeeingSharp.Multimedia.Objects
                         }
 
                         // Get the correct material
-                        MaterialProperties referencedMatObject = MaterialProperties.Empty;
+                        var referencedMatObject = MaterialProperties.Empty;
+
                         if(referencedMat > -1)
                         {
                             localMaterialInfos.TryGetValue(referencedMat, out referencedMatObject);
                         }
+
                         if(referencedTexture > -1)
                         {
                             referencedMatObject = referencedMatObject.Clone();
@@ -524,7 +529,8 @@ namespace SeeingSharp.Multimedia.Objects
         private Tuple<int, MaterialProperties> ImportMaterial(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
             int resultID = Int32.Parse(inStreamXml.GetAttribute("ID"));
-            MaterialProperties result = new MaterialProperties();
+            var result = new MaterialProperties();
+
             while (inStreamXml.Read())
             {
                 // Ending condition
@@ -582,17 +588,21 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void ImportObject(XmlReader inStreamXml, ImportedModelContainer container, SceneObject parentObject, XglImportOptions xglImportOptions)
         {
-            Vector3 upVector = Vector3.UnitY;
-            Vector3 forwardVector = Vector3.UnitZ;
-            Vector3 positionVector = Vector3.UnitX;
+            var upVector = Vector3.UnitY;
+            var forwardVector = Vector3.UnitZ;
+            var positionVector = Vector3.UnitX;
             string meshID = string.Empty;
 
             // Define a action which finally create the new object
             //  (may be called on two locations here.. so this action was defined
             SceneSpacialObject newObject = null;
+
             Action actionFinalizeObject = () =>
             {
-                if (newObject != null) { return; }
+                if (newObject != null)
+                {
+                    return;
+                }
 
                 if (string.IsNullOrEmpty(meshID))
                 {
@@ -605,6 +615,7 @@ namespace SeeingSharp.Multimedia.Objects
                     newObject = new GenericObject(
                         container.GetResourceKey(RES_CLASS_MESH, meshID));
                 }
+
                 newObject.Position = positionVector;
                 newObject.TransformationType = SpacialTransformationType.TranslationDirection;
                 newObject.RotationForward = forwardVector;

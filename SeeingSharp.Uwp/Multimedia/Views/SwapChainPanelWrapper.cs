@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Views
 
         public SwapChainPanelWrapper()
         {
-            DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
+            var displayInfo = DisplayInformation.GetForCurrentView();
             m_currentDpiX = displayInfo.LogicalDpi;
             m_currentDpiY = displayInfo.LogicalDpi;
         }

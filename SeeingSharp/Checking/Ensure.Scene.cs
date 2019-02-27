@@ -59,8 +59,9 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            int actIndex = 0;
-            foreach (SceneObject actObject in sceneObjects)
+            var actIndex = 0;
+
+            foreach (var actObject in sceneObjects)
             {
                 actObject.EnsureObjectOfScene(scene, $"{checkedVariableName}[{actIndex}]", callerMethod);
                 actIndex++;

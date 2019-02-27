@@ -209,7 +209,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public virtual void Trigger()
         {
-            SemaphoreSlim synchronizationObject = m_mainLoopSynchronizeObject;
+            var synchronizationObject = m_mainLoopSynchronizeObject;
+
             if (synchronizationObject != null)
             {
                 synchronizationObject.Release();
@@ -222,10 +223,14 @@ namespace SeeingSharp.Util
         /// <param name="actionToInvoke">The delegate to invoke.</param>
         public Task InvokeAsync(Action actionToInvoke)
         {
-            if (actionToInvoke == null) { throw new ArgumentNullException("actionToInvoke"); }
+            if (actionToInvoke == null)
+            {
+                throw new ArgumentNullException("actionToInvoke");
+            }
 
             //Enqueues the given action
             TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+
             m_taskQueue.Enqueue(() =>
             {
                 try
@@ -238,6 +243,7 @@ namespace SeeingSharp.Util
                     taskCompletionSource.SetException(ex);
                 }
             });
+
             Task result = taskCompletionSource.Task;
 
             //Triggers the main loop
@@ -289,7 +295,7 @@ namespace SeeingSharp.Util
                 m_mainThread.CurrentCulture = m_culture;
                 m_mainThread.CurrentUICulture = m_uiCulture;
 
-                Stopwatch stopWatch = new Stopwatch();
+                var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
                 //Set synchronization context for this thread
@@ -297,7 +303,10 @@ namespace SeeingSharp.Util
                 SynchronizationContext.SetSynchronizationContext(m_syncContext);
 
                 //Notify start process
-                try { OnStarting(EventArgs.Empty); }
+                try
+                {
+                    OnStarting(EventArgs.Empty);
+                }
                 catch (Exception ex)
                 {
                     OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
@@ -331,9 +340,12 @@ namespace SeeingSharp.Util
                             }
 
                             //Execute all tasks
-                            foreach (Action actTask in localTaskQueue)
+                            foreach (var actTask in localTaskQueue)
                             {
-                                try { actTask(); }
+                                try
+                                {
+                                    actTask();
+                                }
                                 catch (Exception ex)
                                 {
                                     OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));

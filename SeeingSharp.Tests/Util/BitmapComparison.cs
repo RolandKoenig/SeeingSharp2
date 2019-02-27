@@ -76,11 +76,12 @@ namespace SeeingSharp.Tests.Util
 
             decimal totalDiffPercent = 0M;
 
-            GDI.Rectangle lockRect = new GDI.Rectangle(
+            var lockRect = new GDI.Rectangle(
                 new GDI.Point(0, 0),
                 bitmapLeft.Size);
-            BitmapData dataLeft = bitmapLeft.LockBits(lockRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            BitmapData dataRight = bitmapRight.LockBits(lockRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            var dataLeft = bitmapLeft.LockBits(lockRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            var dataRight = bitmapRight.LockBits(lockRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
             try
             {
                 unsafe

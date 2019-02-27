@@ -59,9 +59,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (Steps == null) { return TimeSpan.Zero; }
+                if (Steps == null)
+                {
+                    return TimeSpan.Zero;
+                }
 
-                TimeSpan totalTime = TimeSpan.Zero;
+                var totalTime = TimeSpan.Zero;
+
                 foreach(var actAnimStep in this.Steps)
                 {
                     totalTime = totalTime + actAnimStep.UpdateTime;

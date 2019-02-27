@@ -89,12 +89,14 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            Stream result = m_streamFactory();
+            var result = m_streamFactory();
+
             if(!result.CanWrite)
             {
                 result.Dispose();
                 throw new SeeingSharpException("Can not write to created stream!");
             }
+
             return result;
         }
 
@@ -111,12 +113,14 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            Stream result = m_streamFactory();
+            var result = m_streamFactory();
+
             if (!result.CanRead)
             {
                 result.Dispose();
                 throw new SeeingSharpException("Can not read from created stream!");
             }
+
             return result;
         }
 

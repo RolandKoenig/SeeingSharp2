@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
         {
-            TContextType componentContextCasted = componentContext as TContextType;
+            var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
             this.Detach(manipulator, correspondingView, componentContextCasted);
@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
         {
-            TContextType componentContextCasted = componentContext as TContextType;
+            var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
             this.Update(updateState, correspondingView, componentContextCasted);

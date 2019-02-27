@@ -56,7 +56,7 @@ namespace SeeingSharp.Tests
         public void GetFileExtension_AssemblyResourceLink()
         {
             ResourceLink extPNG = new AssemblyResourceLink(this.GetType(), "DummyNamespace.DummyFile.png");
-            ResourceLink extJPG = extPNG.GetForAnotherFile("Dummy.jpg");
+            var extJPG = extPNG.GetForAnotherFile("Dummy.jpg");
 
             Assert.IsTrue(extPNG.FileExtension == "png");
             Assert.IsTrue(extJPG.FileExtension == "jpg");

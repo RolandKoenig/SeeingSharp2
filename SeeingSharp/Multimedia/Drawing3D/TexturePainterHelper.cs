@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 KEY_GEOMETRY,
                 () =>
                 {
-                    VertexStructure structure = new VertexStructure();
+                    var structure = new VertexStructure();
                     structure.FirstSurface.BuildRect4V(
                         new Vector3(-1f, -1f, 0f),
                         new Vector3(1f, -1f, 0f),
@@ -155,13 +155,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">The current render state.</param>
         private void RenderInternal(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply all current rendering parameters
             m_renderParameters.Apply(renderState);
 
             // Render the object
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
+
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
@@ -173,6 +174,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             }
+
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
         }
 

@@ -46,7 +46,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public RenderPassDefaultTransparent()
         {
-
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Apply(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
@@ -67,7 +66,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         public override void Discard(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;

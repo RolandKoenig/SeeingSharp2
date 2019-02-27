@@ -300,12 +300,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject Add3DText(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false, string layer = Scene.DEFAULT_LAYER_NAME)
         {
-            VertexStructure newStructure = new VertexStructure();
+            var newStructure = new VertexStructure();
             newStructure.FirstSurface.BuildTextGeometry(
                 textToDisplay,
                 textOptions);
 
-            if (realignToCenter) { newStructure.RealignToCenter(); }
+            if (realignToCenter)
+            {
+                newStructure.RealignToCenter();
+            }
 
             var resTextGeometry = this.AddResource(() => new GeometryResource(newStructure));
             return this.AddGeneric(resTextGeometry, layer);
@@ -337,7 +340,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="position">The position for the created object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position)
         {
-            GenericObject newGenericObject = new GenericObject(geometryResource);
+            var newGenericObject = new GenericObject(geometryResource);
             newGenericObject.Position = position;
 
             return this.Add(newGenericObject);
@@ -351,7 +354,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position, string layer)
         {
-            GenericObject newGenericObject = new GenericObject(geometryResource);
+            var newGenericObject = new GenericObject(geometryResource);
             newGenericObject.Position = position;
 
             return this.Add(newGenericObject, layer);
@@ -363,10 +366,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjects">All objects to add.</param>
         public IEnumerable<SceneObject> AddRange(IEnumerable<SceneObject> sceneObjects)
         {
-            foreach (SceneObject actObject in sceneObjects)
+            foreach (var actObject in sceneObjects)
             {
                 this.Add(actObject);
             }
+
             return sceneObjects;
         }
 
@@ -377,10 +381,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">Layer on wich the objects should be added.</param>
         public IEnumerable<SceneObject> AddRange(IEnumerable<SceneObject> sceneObjects, string layer)
         {
-            foreach (SceneObject actObject in sceneObjects)
+            foreach (var actObject in sceneObjects)
             {
                 this.Add(actObject, layer);
             }
+
             return sceneObjects;
         }
 
@@ -464,7 +469,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            SceneLayer layerObject = m_owner.GetLayer(layer);
+            var layerObject = m_owner.GetLayer(layer);
             m_owner.SetLayerOrderID(layerObject, oderID);
         }
 

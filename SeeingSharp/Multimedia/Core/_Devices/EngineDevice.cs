@@ -221,14 +221,15 @@ namespace SeeingSharp.Multimedia.Core
             // More on the used technique
             //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
 
-            D3D11.FormatSupport formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+
             if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
             if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
             if (m_handlerD3D11.FeatureLevel == SharpDX.Direct3D.FeatureLevel.Level_9_1) { return false; }
 
             try
             {
-                D3D11.Texture2DDescription textureDescription = new D3D11.Texture2DDescription();
+                var textureDescription = new D3D11.Texture2DDescription();
                 textureDescription.Width = 100;
                 textureDescription.Height = 100;
                 textureDescription.MipLevels = 1;
@@ -239,7 +240,7 @@ namespace SeeingSharp.Multimedia.Core
                 textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                 textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
-                D3D11.Texture2D testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
+                var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
                 SeeingSharpUtil.SafeDispose(ref testTexture);
             }
             catch(Exception)

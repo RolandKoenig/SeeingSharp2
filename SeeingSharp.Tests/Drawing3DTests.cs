@@ -57,14 +57,14 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -83,12 +83,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -96,7 +96,8 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    WireObject wireObject = new WireObject();
+                    var wireObject = new WireObject();
+
                     wireObject.LineData = new Line[]{
                         new Line(
                             new Vector3(-0.5f, 0f, -0.5f),
@@ -111,13 +112,14 @@ namespace SeeingSharp.Tests
                             new Vector3(-0.5f, 0f, 0.5f),
                             new Vector3(-0.5f, 0f, -0.5f)),
                     };
+
                     wireObject.LineColor = Color4Ex.RedColor;
                     manipulator.Add(wireObject);
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -133,12 +135,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -146,10 +148,10 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                     newObject.Color = Color4Ex.RedColor;
@@ -158,7 +160,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -177,12 +179,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 1f, 0f);
                 camera.UpdateCamera();
@@ -192,12 +194,12 @@ namespace SeeingSharp.Tests
                 {
                     var cubeType = new CubeType();
                     cubeType.Size = 0.3f;
-                    StackedObjectType stackedType = new StackedObjectType(cubeType, 10);
+                    var stackedType = new StackedObjectType(cubeType, 10);
 
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(stackedType));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(5f, 1f, 5f);
                     newObject.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
@@ -205,7 +207,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -224,12 +226,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -237,10 +239,10 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                     newObject.Opacity = 0.5f;
@@ -248,7 +250,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -267,12 +269,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                OrthographicCamera3D camera = new OrthographicCamera3D();
+                var camera = new OrthographicCamera3D();
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 1f, 0f);
                 camera.ZoomFactor = 200f;
@@ -282,10 +284,10 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                     newObject.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
@@ -293,7 +295,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -312,12 +314,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-3f, -3f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -331,7 +333,7 @@ namespace SeeingSharp.Tests
                         () => new GeometryResource(cubeType));
 
                     // Create pallet object
-                    GenericObject palletObject = manipulator.AddGeneric(resPalletGeometry);
+                    var palletObject = manipulator.AddGeneric(resPalletGeometry);
                     palletObject.Color = Color4Ex.GreenColor;
                     palletObject.EnableShaderGeneratedBorder();
                     palletObject.BuildAnimationSequence()
@@ -346,13 +348,13 @@ namespace SeeingSharp.Tests
 
                     // Create the skybox on a new layer
                     manipulator.AddLayer("Skybox");
-                    SkyboxObject skyboxObject = new SkyboxObject(resSkyboxTexture);
+                    var skyboxObject = new SkyboxObject(resSkyboxTexture);
                     manipulator.Add(skyboxObject, "Skybox");
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference

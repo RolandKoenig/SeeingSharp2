@@ -49,16 +49,17 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            ObjImportOptions objImportOptions = importOptions as ObjImportOptions;
+            var objImportOptions = importOptions as ObjImportOptions;
+
             if (objImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }
 
-            ImportedModelContainer result = new ImportedModelContainer(objImportOptions);
+            var result = new ImportedModelContainer(objImportOptions);
 
             // Read object file
-            ObjFileReader objFileReader = new ObjFileReader(sourceFile, result, objImportOptions);
+            var objFileReader = new ObjFileReader(sourceFile, result, objImportOptions);
             objFileReader.Read();
             objFileReader.GenerateObjects();
 

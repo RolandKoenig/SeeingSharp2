@@ -85,68 +85,78 @@ namespace SeeingSharp.Multimedia.Objects
         public BuiltVerticesRange DisableTexture()
         {
             int lastVertex = StartVertex + VertexCount;
-            for (int loop = StartVertex; loop < lastVertex; loop++)
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                Vertex actVertex = this.Structure.Vertices[loop];
+                var actVertex = this.Structure.Vertices[loop];
                 actVertex.TextureFactor = -100;
                 this.Structure.Vertices[loop] = actVertex;
             }
+
             return this;
         }
 
         public BuiltVerticesRange FlipTextureCoordinatesX()
         {
-            int lastVertex = StartVertex + VertexCount;
-            for (int loop = StartVertex; loop < lastVertex; loop++)
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                Vertex actVertex = this.Structure.Vertices[loop];
+                var actVertex = this.Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     actVertex.TexCoord.Y);
                 this.Structure.Vertices[loop] = actVertex;
             }
+
             return this;
         }
 
         public BuiltVerticesRange FlipTextureCoordinatesY()
         {
-            int lastVertex = StartVertex + VertexCount;
-            for (int loop = StartVertex; loop < lastVertex; loop++)
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                Vertex actVertex = this.Structure.Vertices[loop];
+                var actVertex = this.Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
                 this.Structure.Vertices[loop] = actVertex;
             }
+
             return this;
         }
 
         public BuiltVerticesRange FlipTextureCoordinatesXY()
         {
-            int lastVertex = StartVertex + VertexCount;
-            for (int loop = StartVertex; loop < lastVertex; loop++)
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                Vertex actVertex = this.Structure.Vertices[loop];
+                var actVertex = this.Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
                 this.Structure.Vertices[loop] = actVertex;
             }
+
             return this;
         }
 
         public BuiltVerticesRange RotateTextureCoordinates()
         {
-            int lastVertex = StartVertex + VertexCount;
-            for (int loop = StartVertex; loop < lastVertex; loop++)
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                Vertex actVertex = this.Structure.Vertices[loop];
+                var actVertex = this.Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.Y,
                     actVertex.TexCoord.X);
                 this.Structure.Vertices[loop] = actVertex;
             }
+
             return this;
         }
 

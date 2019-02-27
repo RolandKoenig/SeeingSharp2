@@ -49,7 +49,7 @@ namespace SeeingSharp.SampleContainer
         /// </summary>
         protected void BuildStandardFloor(SceneManipulator manipulator, string sceneLayer)
         {
-            SceneLayer bgLayer = manipulator.AddLayer("BACKGROUND");
+            var bgLayer = manipulator.AddLayer("BACKGROUND");
             manipulator.SetLayerOrderID(bgLayer, 0);
             manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 1);
             ResourceLink sourceBackgroundTexture = new AssemblyResourceLink(
@@ -67,7 +67,7 @@ namespace SeeingSharp.SampleContainer
             var resTileMaterial = manipulator.AddResource(() => new SimpleColoredMaterialResource(resTileTexture));
 
             // Define floor geometry
-            FloorType floorType = new FloorType(new Vector2(4f, 4f), 0f);
+            var floorType = new FloorType(new Vector2(4f, 4f), 0f);
             floorType.BottomMaterial = resTileMaterial;
             floorType.DefaultFloorMaterial = resTileMaterial;
             floorType.SideMaterial = resTileMaterial;

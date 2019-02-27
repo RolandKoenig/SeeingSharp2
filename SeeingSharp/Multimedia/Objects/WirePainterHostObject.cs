@@ -119,11 +119,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void RenderLines(RenderState renderState)
         {
-            LineRenderResources resourceData = m_localResources[renderState.DeviceIndex];
+            var resourceData = m_localResources[renderState.DeviceIndex];
 
             if (m_paintAction != null)
             {
-                WirePainter wirePainter = new WirePainter(renderState, resourceData);
+                var wirePainter = new WirePainter(renderState, resourceData);
+
                 try
                 {
                     m_paintAction(wirePainter);

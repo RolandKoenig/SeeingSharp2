@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public virtual Camera3DViewPoint GetViewPoint()
         {
-            Camera3DViewPoint result = new Camera3DViewPoint();
+            var result = new Camera3DViewPoint();
             result.Position = this.Position;
             result.Rotation = this.TargetRotation;
             return result;
@@ -115,10 +115,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpdateCamera()
         {
-            Vector3 newTarget = m_relativeTarget;
+            var newTarget = m_relativeTarget;
             newTarget = Vector3.Add(newTarget, m_position);
 
-            if (m_screenHeight == 0f) { m_screenHeight = 1; }
+            if (m_screenHeight == 0f)
+            {
+                m_screenHeight = 1;
+            }
 
             // Calculate matrices
             CalculateViewProjectionMatrices(
@@ -366,7 +369,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get { return new Vector2(m_hRotation, m_vRotation); }
             set
             {
-                Vector2 v = value;
+                var v = value;
 
                 m_hRotation = v.X;
                 m_vRotation = v.Y;

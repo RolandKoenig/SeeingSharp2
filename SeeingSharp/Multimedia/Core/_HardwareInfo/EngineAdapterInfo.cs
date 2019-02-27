@@ -73,7 +73,8 @@ namespace SeeingSharp.Multimedia.Core
             {
                 try
                 {
-                    SharpDX.DXGI.Output actOutput = outputs[loop];
+                    var actOutput = outputs[loop];
+
                     try
                     {
                         m_outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));

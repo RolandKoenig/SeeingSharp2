@@ -92,7 +92,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            LoadedBrushResources loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
+            var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
+
             if (loadedBrush.Brush != null)
             {
                 loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
@@ -109,14 +110,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            LoadedBrushResources result = m_loadedBrushes[engineDevice.DeviceIndex];
+            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+
             if (result.Brush == null)
             {
                 // Convert gradient stops to structure from SharpDX
                 D2D.GradientStop[] d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
-                for(int loop=0; loop<d2dGradientStops.Length; loop++)
+
+                for(var loop =0; loop<d2dGradientStops.Length; loop++)
                 {
                     d2dGradientStops[loop] = new D2D.GradientStop()
                     {

@@ -106,19 +106,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 
             // Create resources for rendering on the texture
-            using (Direct2DOverlayRenderer overlayRenderer = new Direct2DOverlayRenderer(
+            using (var overlayRenderer = new Direct2DOverlayRenderer(
                 device,
                 m_renderTargetTexture,
                 m_width, m_height,
                 DpiScaling.Default))
             {
-                Graphics2D graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
+                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
 
                 // Start drawing
                 overlayRenderer.BeginDraw();
+
                 try
                 {
-                    if (m_drawingLayer != null) { m_drawingLayer.Draw2DInternal(graphics2D); }
+                    if (m_drawingLayer != null)
+                    {
+                        m_drawingLayer.Draw2DInternal(graphics2D);
+                    }
                     else if (m_fillBrush != null)
                     {
                         graphics2D.FillRectangle(

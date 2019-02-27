@@ -64,10 +64,10 @@ namespace SeeingSharp
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
             //Calculate transform matrix
-            Vector3 upVector = m_normal.Value;
-            Vector3 right = Vector3.Cross(
+            var upVector = m_normal.Value;
+            var right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
-            Vector3 backward = Vector3.Cross(right, upVector);
+            var backward = Vector3.Cross(right, upVector);
             var m = new Matrix(
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
@@ -92,7 +92,7 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            Polygon2D surface2D = this.Flattern();
+            var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 

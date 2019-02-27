@@ -106,7 +106,8 @@ namespace SeeingSharp.Multimedia.Input
             // Deregister all events
             if(m_rendererElement != null)
             {
-                SeeingSharpRendererElement rendererElement = m_rendererElement;
+                var rendererElement = m_rendererElement;
+
                 m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     rendererElement.MouseWheel -= OnRendererElement_MouseWheel;
@@ -225,11 +226,15 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnRendererElement_MouseMove(object sender, MouseEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (m_rendererElement == null)
+            {
+                return;
+            }
 
             m_stateMouseOrPointer.Internals.NotifyInside(true);
 
-            System.Windows.Point currentPosition = e.GetPosition(m_rendererElement);
+            var currentPosition = e.GetPosition(m_rendererElement);
+
             if (m_lastDragPointValid)
             {
                 var moveDistance = currentPosition - m_lastDragPoint;

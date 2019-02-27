@@ -59,9 +59,10 @@ namespace SeeingSharp.Util
 
         public static void GetDpiScalingFactor(Wpf.UIElement uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY)
         {
-            Wpf.PresentationSource source = Wpf.PresentationSource.FromVisual(uiElement);
+            var source = Wpf.PresentationSource.FromVisual(uiElement);
             dpiScaleFactorX = 1.0;
             dpiScaleFactorY = 1.0;
+
             if (source?.CompositionTarget != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
@@ -80,8 +81,13 @@ namespace SeeingSharp.Util
 
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {
-            FieldInfo fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
-            if(fInfo == null) { throw new SeeingSharpException($"Unable to read member {memberName} from object of type {typeof(U).FullName}!"); }
+            var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (fInfo == null)
+            {
+                throw new SeeingSharpException($"Unable to read member {memberName} from object of type {typeof(U).FullName}!");
+            }
+
             return (T)fInfo.GetValue(sourceObject);
         }
     }

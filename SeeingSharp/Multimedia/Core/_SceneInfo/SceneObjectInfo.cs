@@ -53,9 +53,10 @@ namespace SeeingSharp.Multimedia.Core
 
             // Build child list
             m_childs = new List<SceneObjectInfo>(obj.CountChildren);
+
             if(buildFullChildTree)
             {
-                foreach(SceneObject actChildObject in obj.GetAllChildrenInternal())
+                foreach(var actChildObject in obj.GetAllChildrenInternal())
                 {
                     m_childs.Add(new SceneObjectInfo(actChildObject));
                 }
@@ -63,9 +64,16 @@ namespace SeeingSharp.Multimedia.Core
 
             // Set the type of this object
             m_sceneObjectType = SceneObjectInfoType.Other;
-            Type clrType = obj.GetType();
-            if(clrType == typeof(GenericObject)) { m_sceneObjectType = SceneObjectInfoType.GenericObject; }
-            else if(clrType == typeof(ScenePivotObject)) { m_sceneObjectType = SceneObjectInfoType.Pivot; }
+            var clrType = obj.GetType();
+
+            if (clrType == typeof(GenericObject))
+            {
+                m_sceneObjectType = SceneObjectInfoType.GenericObject;
+            }
+            else if (clrType == typeof(ScenePivotObject))
+            {
+                m_sceneObjectType = SceneObjectInfoType.Pivot;
+            }
         }
 
         public override string ToString()

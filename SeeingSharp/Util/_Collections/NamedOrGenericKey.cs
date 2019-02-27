@@ -141,7 +141,7 @@ namespace SeeingSharp.Util
         {
             if (obj is NamedOrGenericKey)
             {
-                NamedOrGenericKey other = (NamedOrGenericKey)obj;
+                var other = (NamedOrGenericKey)obj;
                 return this.Equals(other);
             }
             else
@@ -201,9 +201,18 @@ namespace SeeingSharp.Util
         {
             get
             {
-                string result = m_hint;
-                if (string.IsNullOrEmpty(result)) { result = m_nameKey; }
-                if (string.IsNullOrEmpty(result)) { result = string.Empty; }
+                var result = m_hint;
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = m_nameKey;
+                }
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = string.Empty;
+                }
+
                 return result;
             }
             set

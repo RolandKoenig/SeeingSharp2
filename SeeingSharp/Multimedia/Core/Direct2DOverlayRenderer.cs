@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
         private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {
             // Calculate the screen size in device independent units
-            Size2F scaledScreenSize = new Size2F(
+            var scaledScreenSize = new Size2F(
                 (float)viewWidth / dpiScaling.ScaleFactorX,
                 (float)viewHeight / dpiScaling.ScaleFactorY);
 
@@ -117,9 +117,9 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Create the render target
-            using (SharpDX.DXGI.Surface dxgiSurface = m_renderTarget3D.QueryInterface<SharpDX.DXGI.Surface>())
+            using (var dxgiSurface = m_renderTarget3D.QueryInterface<SharpDX.DXGI.Surface>())
             {
-                D2D.BitmapProperties1 bitmapProperties = new D2D.BitmapProperties1();
+                var bitmapProperties = new D2D.BitmapProperties1();
                 bitmapProperties.DpiX = dpiScaling.DpiX;
                 bitmapProperties.DpiY = dpiScaling.DpiY;
                 bitmapProperties.BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw;

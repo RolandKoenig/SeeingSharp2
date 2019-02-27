@@ -125,7 +125,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayer.EnsureNotNull(nameof(m_sceneLayer));
 
             // Remember old scene
-            Scene oldScene = m_scene;
+            var oldScene = m_scene;
 
             // Clear references
             m_scene = null;
@@ -152,11 +152,16 @@ namespace SeeingSharp.Multimedia.Core
         public BehaviorType GetBehavior<BehaviorType>()
             where BehaviorType : SceneObjectBehavior
         {
-            Type typeToSearch = typeof(BehaviorType);
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            var typeToSearch = typeof(BehaviorType);
+
+            foreach (var actBehavior in m_behaviors)
             {
-                if (actBehavior.GetType() == typeToSearch) { return actBehavior as BehaviorType; }
+                if (actBehavior.GetType() == typeToSearch)
+                {
+                    return actBehavior as BehaviorType;
+                }
             }
+
             return null;
         }
 
@@ -166,10 +171,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="behaviorType">The type of the behavior to get.</param>
         public SceneObjectBehavior GetBehavior(Type behaviorType)
         {
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
-                if (actBehavior.GetType() == behaviorType) { return actBehavior; }
+                if (actBehavior.GetType() == behaviorType)
+                {
+                    return actBehavior;
+                }
             }
+
             return null;
         }
 
@@ -185,10 +194,15 @@ namespace SeeingSharp.Multimedia.Core
             // Caution: This method must be thread safe because
             //          it is callable on the SceneObject class directly
 
-            SceneObject actParent = other.m_parent;
+            var actParent = other.m_parent;
+
             while(actParent != null)
             {
-                if(actParent == this) { return true; }
+                if (actParent == this)
+                {
+                    return true;
+                }
+
                 actParent = actParent.m_parent;
             }
 
@@ -214,11 +228,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal IEnumerable<SceneObject> GetAllChildrenInternal()
         {
-            foreach (SceneObject actChild in m_children)
+            foreach (var actChild in m_children)
             {
                 yield return actChild;
 
-                foreach (SceneObject actLowerChild in actChild.GetAllChildrenInternal())
+                foreach (var actLowerChild in actChild.GetAllChildrenInternal())
                 {
                     yield return actLowerChild;
                 }
@@ -265,8 +279,12 @@ namespace SeeingSharp.Multimedia.Core
             if (viewInfo.Scene == null) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to any scene!"); }
             if (viewInfo.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
-            VisibilityCheckData checkData = m_visibilityData[viewInfo.ViewIndex];
-            if (checkData == null) { return false; }
+            var checkData = m_visibilityData[viewInfo.ViewIndex];
+
+            if (checkData == null)
+            {
+                return false;
+            }
 
             return checkData.IsVisible;
         }
@@ -276,7 +294,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ClearVisibilityStageData()
         {
-            foreach (VisibilityCheckData actCheckData in m_visibilityData)
+            foreach (var actCheckData in m_visibilityData)
             {
                 actCheckData.FilterStageData.Clear();
             }
@@ -288,13 +306,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The VisibilityCheckData for this object for the given view.</param>
         internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
         {
-            VisibilityCheckData checkData = m_visibilityData[viewInfo.ViewIndex];
+            var checkData = m_visibilityData[viewInfo.ViewIndex];
+
             if (checkData == null)
             {
                 checkData = m_visibilityData.AddObject(
                     new VisibilityCheckData(),
                     viewInfo.ViewIndex);
             }
+
             return checkData;
         }
 
@@ -309,7 +329,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             if(viewInfo.ViewIndex < 0) { return false; }
 
-            VisibilityCheckData checkData = this.GetVisibilityCheckData(viewInfo);
+            var checkData = this.GetVisibilityCheckData(viewInfo);
+
             if (checkData.IsVisible) { return true; }
 
             if ((checkData.IsVisible != isVisible) &&
@@ -408,7 +429,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void Update(SceneRelatedUpdateState updateState)
         {
             // Update all behaviors first
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
                 actBehavior.Update(updateState);
             }
@@ -444,7 +465,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update all behaviors first
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
                 actBehavior.UpdateOverall(updateState);
             }
@@ -519,7 +540,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (SceneObject actDependency in m_children)
+            foreach (var actDependency in m_children)
             {
                 actDependency.Update(updateState);
             }
@@ -533,7 +554,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenOverallInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (SceneObject actDependency in m_children)
+            foreach (var actDependency in m_children)
             {
                 actDependency.UpdateOverall(updateState);
             }

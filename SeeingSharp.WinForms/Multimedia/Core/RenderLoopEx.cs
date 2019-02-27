@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 try
                 {
-                    GDI.Bitmap resultBitmap = GetScreenshotGdiInternal(renderLoop);
+                    var resultBitmap = GetScreenshotGdiInternal(renderLoop);
                     result.SetResult(resultBitmap);
                 }
                 catch (Exception ex)
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Core
                 renderLoop.Internals.CopyHelperTextureStaging);
 
             // Load the bitmap
-            GDI.Bitmap resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
+            var resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
             return resultBitmap;
         }
     }

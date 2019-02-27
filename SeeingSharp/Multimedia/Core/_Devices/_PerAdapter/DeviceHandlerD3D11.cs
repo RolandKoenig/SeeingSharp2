@@ -72,8 +72,9 @@ namespace SeeingSharp.Multimedia.Core
             m_dxgiAdapter = dxgiAdapter;
 
             // Define possible create flags
-            D3D11.DeviceCreationFlags createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
-            D3D11.DeviceCreationFlags createFlags = D3D11.DeviceCreationFlags.None;
+            var createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
+            var createFlags = D3D11.DeviceCreationFlags.None;
+
             if (deviceLoadSettings.DebugEnabled)
             {
                 createFlagsBgra |= D3D11.DeviceCreationFlags.Debug;
@@ -109,17 +110,18 @@ namespace SeeingSharp.Multimedia.Core
             // Try to create the device, each defined configuration step by step
             foreach (Tuple<D3D.FeatureLevel, D3D11.DeviceCreationFlags, HardwareDriverLevel> actInitParameters in initParameterQueue)
             {
-                D3D.FeatureLevel featureLevel = actInitParameters.Item1;
-                D3D11.DeviceCreationFlags direct3D11Flags = actInitParameters.Item2;
-                HardwareDriverLevel actDriverLevel = actInitParameters.Item3;
+                var featureLevel = actInitParameters.Item1;
+                var direct3D11Flags = actInitParameters.Item2;
+                var actDriverLevel = actInitParameters.Item3;
 
                 try
                 {
                     // Try to create the device using current parameters
-                    using (D3D11.Device device = new D3D11.Device(dxgiAdapter, direct3D11Flags, featureLevel))
+                    using (var device = new D3D11.Device(dxgiAdapter, direct3D11Flags, featureLevel))
                     {
                         m_device1 = device.QueryInterface<D3D11.Device1>();
                         m_device3 = SeeingSharpUtil.TryExecute(() => m_device1.QueryInterface<D3D11.Device3>());
+
                         if(m_device3 != null)
                         {
                             m_immediateContext3 = m_device3.ImmediateContext3;

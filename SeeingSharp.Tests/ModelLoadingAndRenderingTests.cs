@@ -57,18 +57,18 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-4f, 4f, -4f);
                 camera.Target = new Vector3(2f, 0f, 2f);
                 camera.UpdateCamera();
 
                 // Import Fox model
-                StlImportOptions importOptions = new StlImportOptions();
+                var importOptions = new StlImportOptions();
                 importOptions.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ;
                 IEnumerable<SceneObject> loadedObjects = await memRenderTarget.Scene.ImportAsync(
                     TestUtilities.CreateResourceLink("Models", "Fox.stl"),
@@ -78,7 +78,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(loadedObjects, memRenderTarget.RenderLoop);
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -97,30 +97,32 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-3f, 3f, -3f);
                 camera.Target = new Vector3(2f, 0f, 2f);
                 camera.UpdateCamera();
 
                 // Define scene
                 SceneObject newObject = null;
+
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
 
                     newObject = manipulator.AddGeneric(geoResource);
                 });
+
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -139,21 +141,22 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-1.5f, 3f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();
 
                 // Define scene
                 SceneObject newObject = null;
+
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
 
@@ -162,7 +165,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -181,30 +184,32 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();
 
                 // Define scene
                 SceneObject newObject = null;
+
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
 
                     newObject = manipulator.AddGeneric(geoResource);
                 });
+
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -223,26 +228,28 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();
 
                 // Define scene
                 SceneObject newObject = null;
+
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
 
                     newObject = manipulator.AddGeneric(geoResource);
                 });
+
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
                 // Take screenshot

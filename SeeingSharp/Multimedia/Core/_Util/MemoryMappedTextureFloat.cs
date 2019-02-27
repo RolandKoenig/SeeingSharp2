@@ -77,10 +77,11 @@ namespace SeeingSharp.Multimedia.Core
             int currentX = xPos;
             int currentY = yPos;
             float lastObjID = m_pointerNative[currentY * m_size.Width + currentX];
-            for (int loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
+
+            for (var loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
             {
                 // Calculate current query location
-                Point currentStep = QUERY_OBJECT_ID_STEPS[loopActQueryStep];
+                var currentStep = QUERY_OBJECT_ID_STEPS[loopActQueryStep];
                 currentX = currentX + currentStep.X;
                 currentY = currentY + currentStep.Y;
 

@@ -41,14 +41,14 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         [TestCategory(TEST_CATEGORY)]
         public void Check_ReadAndMergeFromAssemblyResources()
         {
-            AssemblyResourceLink resLink = new AssemblyResourceLink(
+            var resLink = new AssemblyResourceLink(
                 this.GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 
-            StringBuilder singleShaderFileBuilder = new StringBuilder(1024);
+            var singleShaderFileBuilder = new StringBuilder(1024);
             SingleShaderFileBuilder.ReadShaderFileAndResolveIncludes(resLink, singleShaderFileBuilder);
-            string result = singleShaderFileBuilder.ToString();
+            var result = singleShaderFileBuilder.ToString();
 
             Assert.IsTrue(result.Contains("constants.hlsl"));
             Assert.IsTrue(result.Contains("struct VSInputStandard"));

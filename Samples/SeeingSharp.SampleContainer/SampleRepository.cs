@@ -43,10 +43,15 @@ namespace SeeingSharp.SampleContainer
         {
             // Search for all samples
             var sampleGroups = new Dictionary<string, SampleGroupMetadata>();
-            foreach (Type actType in Assembly.GetExecutingAssembly().GetTypes())
+
+            foreach (var actType in Assembly.GetExecutingAssembly().GetTypes())
             {
                 var sampleDesc = actType.GetCustomAttribute<SampleDescriptionAttribute>();
-                if (sampleDesc == null) { continue; }
+
+                if (sampleDesc == null)
+                {
+                    continue;
+                }
 
                 if (!sampleGroups.TryGetValue(sampleDesc.SampleGroupName, out var sampleGroup))
                 {

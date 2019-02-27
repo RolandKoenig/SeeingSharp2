@@ -58,11 +58,11 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            EllipseGeometryResource ellipseGeometry01 = new EllipseGeometryResource(
+            var ellipseGeometry01 = new EllipseGeometryResource(
                 new Vector2(50, 50), 10f, 10f);
-            EllipseGeometryResource ellipseGeometry02 = new EllipseGeometryResource(
+            var ellipseGeometry02 = new EllipseGeometryResource(
                 new Vector2(50, 80), 10f, 10f);
-            EllipseGeometryResource ellipseGeometry03 = new EllipseGeometryResource(
+            var ellipseGeometry03 = new EllipseGeometryResource(
                 new Vector2(50, 70), 10f, 11f);
             try
             {
@@ -84,12 +84,12 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            EllipseGeometryResource ellipseGeometry01 = new EllipseGeometryResource(
+            var ellipseGeometry01 = new EllipseGeometryResource(
                 new Vector2(50, 50), 10f, 10f);
-            EllipseGeometryResource ellipseGeometry02 = new EllipseGeometryResource(
+            var ellipseGeometry02 = new EllipseGeometryResource(
                 new Vector2(50, 80), 10f, 10f);
 
-            PolygonGeometryResource polygonGeometry = new PolygonGeometryResource(new Polygon2D(new Vector2[]
+            var polygonGeometry = new PolygonGeometryResource(new Polygon2D(new Vector2[]
             {
                 new Vector2(55f, 50f),
                 new Vector2(60f, 50f),
@@ -115,9 +115,9 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.RedColor))
-            using (TextFormatResource textFormat = new TextFormatResource("Arial", 70))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.RedColor))
+            using (var textFormat = new TextFormatResource("Arial", 70))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
@@ -133,7 +133,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -149,8 +149,8 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.Gray))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.Gray))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
@@ -164,7 +164,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -180,7 +180,7 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            Polygon2D polygon = new Polygon2D(new Vector2[]
+            var polygon = new Polygon2D(new Vector2[]
             {
                 new Vector2(10, 10),
                 new Vector2(900, 100),
@@ -189,10 +189,10 @@ namespace SeeingSharp.Tests
                 new Vector2(10, 10)
             });
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.LightGray))
-            using (SolidBrushResource solidBrushBorder = new SolidBrushResource(Color4Ex.Gray))
-            using (PolygonGeometryResource polygonGeometry = new PolygonGeometryResource(polygon))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.LightGray))
+            using (var solidBrushBorder = new SolidBrushResource(Color4Ex.Gray))
+            using (var polygonGeometry = new PolygonGeometryResource(polygon))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
@@ -205,7 +205,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -221,23 +221,25 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.LightGray))
-            using (SolidBrushResource solidBrushBorder = new SolidBrushResource(Color4Ex.Gray))
-            using (EllipseGeometryResource ellipseGeometry = new EllipseGeometryResource(new Vector2(512, 512), 400f, 300f))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.LightGray))
+            using (var solidBrushBorder = new SolidBrushResource(Color4Ex.Gray))
+            using (var ellipseGeometry = new EllipseGeometryResource(new Vector2(512, 512), 400f, 300f))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+
                 await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync((graphics) =>
                 {
                     // 2D rendering is made here
                     graphics.DrawGeometry(ellipseGeometry, solidBrushBorder, 3f);
                     graphics.FillGeometry(ellipseGeometry, solidBrush);
                 });
+
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -253,7 +255,7 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (LinearGradientBrushResource gradientBrush = new LinearGradientBrushResource(
+            using (var gradientBrush = new LinearGradientBrushResource(
                 new Vector2(0f, 0f),
                 new Vector2(512f, 0f),
                 new GradientStop[]
@@ -263,10 +265,12 @@ namespace SeeingSharp.Tests
                     new GradientStop(Color4Ex.Black, 1f)
                 },
                 extendMode: ExtendMode.Mirror))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+
                 await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync((graphics) =>
                 {
                     // 2D rendering is made here
@@ -274,10 +278,11 @@ namespace SeeingSharp.Tests
                         new RectangleF(10, 10, 900, 900), 30, 30,
                         gradientBrush);
                 });
+
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -293,7 +298,7 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (RadialGradientBrushResource radialGradientBrush = new RadialGradientBrushResource(
+            using (var radialGradientBrush = new RadialGradientBrushResource(
                 new Vector2(200f, 400f),
                 new Vector2(0f, 0f),
                 200f, 400f,
@@ -304,7 +309,7 @@ namespace SeeingSharp.Tests
                     new GradientStop(Color4Ex.BlueColor, 1f)
                 },
                 extendMode: ExtendMode.Clamp))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
@@ -318,7 +323,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -337,13 +342,13 @@ namespace SeeingSharp.Tests
             var brushColor = Color4Ex.Gray;
             brushColor.ChangeAlphaTo(0.5f);
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(brushColor))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(brushColor))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -5f);
                 camera.Target = new Vector3(0f, 1f, 0f);
                 camera.UpdateCamera();
@@ -352,7 +357,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     // Define object
-                    NamedOrGenericKey geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType()));
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -373,7 +378,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -392,8 +397,8 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (DebugDrawingLayer debugLayer = new DebugDrawingLayer())
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var debugLayer = new DebugDrawingLayer())
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
@@ -417,23 +422,23 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.Gray))
-            using (TextFormatResource textFormat = new TextFormatResource("Arial", 36))
-            using (SolidBrushResource textBrush = new SolidBrushResource(Color4Ex.RedColor))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.Gray))
+            using (var textFormat = new TextFormatResource("Arial", 36))
+            using (var textBrush = new SolidBrushResource(Color4Ex.RedColor))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                 // Get and configure the camera
-                PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
 
                 // 2D rendering is made here
-                Custom2DDrawingLayer d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+                var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
                 {
-                    RectangleF d2dRectangle = new RectangleF(10, 10, 236, 236);
+                    var d2dRectangle = new RectangleF(10, 10, 236, 236);
                     graphics.Clear(Color4Ex.LightBlue);
                     graphics.FillRoundedRectangle(
                         d2dRectangle, 30, 30,
@@ -452,7 +457,7 @@ namespace SeeingSharp.Tests
                     var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(new CubeType() { Material = resD2DMaterial }));
 
-                    GenericObject newObject = manipulator.AddGeneric(geoResource);
+                    var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newObject.Scaling = new Vector3(2f, 2f, 2f);
                 });
@@ -460,7 +465,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -479,12 +484,13 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.LightGray))
-            using (StandardBitmapResource bitmap = new StandardBitmapResource(new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Logo.png")))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var solidBrush = new SolidBrushResource(Color4Ex.LightGray))
+            using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Logo.png")))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+
                 await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync((graphics) =>
                 {
                     // 2D rendering is made here
@@ -495,7 +501,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
@@ -512,17 +518,18 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            using (StandardBitmapResource bitmap = new StandardBitmapResource(
+            using (var bitmap = new StandardBitmapResource(
                 new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Boom.png"),
                 frameCountX: 8, frameCountY: 8))
-            using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
                 memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+
                 await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync((graphics) =>
                 {
                     // 2D rendering is made here
-                    for (int loop = 0; loop < 8; loop++)
+                    for (var loop = 0; loop < 8; loop++)
                     {
                         graphics.DrawBitmap(bitmap, new Vector2(100f * loop, 10f), frameIndex: 7);
                         graphics.DrawBitmap(bitmap, new Vector2(100f * loop, 100f), frameIndex: 15);
@@ -539,7 +546,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference

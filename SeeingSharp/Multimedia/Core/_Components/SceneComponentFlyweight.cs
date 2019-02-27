@@ -117,7 +117,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Update all components
             int attachedComponentsCount = m_attachedComponents.Count;
-            for (int loop = 0; loop < attachedComponentsCount; loop++)
+
+            for (var loop = 0; loop < attachedComponentsCount; loop++)
             {
                 m_attachedComponents[loop].Component.UpdateInternal(
                     updateState,
@@ -126,16 +127,22 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Attach all components which are comming in
-            SceneComponentRequest actRequest = default(SceneComponentRequest);
+            var actRequest = default(SceneComponentRequest);
             int actIndex = 0;
+
             while (m_componentRequests.Dequeue(out actRequest))
             {
                 SceneComponentInfo actComponent;
                 int actComponentIndex;
+
                 switch (actRequest.RequestType)
                 {
                     case SceneComponentRequestType.Attach:
-                        if (actRequest.Component == null) { continue; }
+                        if (actRequest.Component == null)
+                        {
+                            continue;
+                        }
+
                         if(TryGetAttachedComponent(
                             actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
@@ -148,7 +155,7 @@ namespace SeeingSharp.Multimedia.Core
                         //  (new components replace old components with same group name)
                         if(!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
                         {
-                            foreach(SceneComponentInfo actObsoleteComponent in GetExistingComponentsByGroup(
+                            foreach(var actObsoleteComponent in GetExistingComponentsByGroup(
                                 actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
@@ -161,11 +168,12 @@ namespace SeeingSharp.Multimedia.Core
                             }
                         }
 
-                        SceneManipulator actManipulator = new SceneManipulator(m_owner);
+                        var actManipulator = new SceneManipulator(m_owner);
                         actManipulator.IsValid = true;
+
                         try
                         {
-                            SceneComponentInfo newRegisteredComponentInfo = new SceneComponentInfo();
+                            var newRegisteredComponentInfo = new SceneComponentInfo();
                             newRegisteredComponentInfo.Component = actRequest.Component;
                             newRegisteredComponentInfo.CorrespondingView = actRequest.CorrespondingView;
                             newRegisteredComponentInfo.Context = actRequest.Component.AttachInternal(

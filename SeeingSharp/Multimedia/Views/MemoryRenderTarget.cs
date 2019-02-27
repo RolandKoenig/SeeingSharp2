@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTargetDepthView = new D3D11.DepthStencilView(m_device, m_renderTargetDepth);
 
             //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
 
             //Return all generated objects
             return Tuple.Create(m_renderTarget, m_renderTargetView, m_renderTargetDepth, m_renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);
@@ -163,8 +163,12 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
         {
-            CancelEventArgs eventArgs = new CancelEventArgs(false);
-            if (BeforeRender != null) { BeforeRender(this, eventArgs); }
+            var eventArgs = new CancelEventArgs(false);
+
+            if (BeforeRender != null)
+            {
+                BeforeRender(this, eventArgs);
+            }
 
             return !eventArgs.Cancel;
         }

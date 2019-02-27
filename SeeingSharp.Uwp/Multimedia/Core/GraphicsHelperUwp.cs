@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            SharpDX.DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SharpDX.DXGI.SwapChainDescription1()
             {
                 Width = width,
                 Height = height,
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            SharpDX.DXGI.SwapChainDescription1 desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SharpDX.DXGI.SwapChainDescription1()
             {
                 Width = width,
                 Height = height,

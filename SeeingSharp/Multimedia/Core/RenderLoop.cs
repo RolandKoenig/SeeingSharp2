@@ -233,9 +233,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public int GetViewIndex()
         {
-            ViewInformation viewInformation = m_viewInformation;
-            if (viewInformation != null) { return viewInformation.ViewIndex + 1; }
-            else { return -1; }
+            var viewInformation = m_viewInformation;
+
+            if (viewInformation != null)
+            {
+                return viewInformation.ViewIndex + 1;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         /// <summary>
@@ -301,7 +308,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             drawAction.EnsureNotNull(nameof(drawAction));
 
-            Custom2DDrawingLayer result = new Custom2DDrawingLayer(drawAction);
+            var result = new Custom2DDrawingLayer(drawAction);
             return Register2DDrawingLayerAsync(result)
                 .ContinueWith((givenTask) => result);
         }
@@ -316,9 +323,9 @@ namespace SeeingSharp.Multimedia.Core
             if (m_currentScene == null) { return; }
             if (m_currentDevice == null) { return; }
 
-            BoundingBox sceneBox = await CalculateSceneBoxAsync();
-            if (sceneBox.IsEmpty()) { return; }
+            var sceneBox = await CalculateSceneBoxAsync();
 
+            if (sceneBox.IsEmpty()) { return; }
             if (m_currentScene == null) { return; }
             if (m_currentDevice == null) { return; }
 
@@ -326,12 +333,12 @@ namespace SeeingSharp.Multimedia.Core
             {
                 await m_currentScene.PerformBeforeUpdateAsync(() =>
                 {
-                    Vector3 bottomCenter = sceneBox.GetBottomCenter();
-                    Vector3 anyEdge = sceneBox.GetTopFrontMiddleCoordinate();
-                    Vector3 centerToEdgeVector = anyEdge - bottomCenter;
+                    var bottomCenter = sceneBox.GetBottomCenter();
+                    var anyEdge = sceneBox.GetTopFrontMiddleCoordinate();
+                    var centerToEdgeVector = anyEdge - bottomCenter;
                     float centerToEdgeDistance = centerToEdgeVector.Length();
 
-                    Vector3 direction = Vector3.TransformNormal(
+                    var direction = Vector3.TransformNormal(
                         new Vector3(0f, 0f, -1f),
                         Matrix.RotationYawPitchRoll(horizontalRotation, verticalRotation, 0f));
 
@@ -347,22 +354,32 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public async Task<BoundingBox> CalculateSceneBoxAsync()
         {
-            BoundingBox result = default(BoundingBox);
+            var result = default(BoundingBox);
 
             if (m_currentScene == null) { return result; }
             if (m_currentDevice == null) { return result; }
 
             await m_currentScene.PerformBesideRenderingAsync(() =>
             {
-                foreach (SceneLayer actLayer in m_currentScene.Layers)
+                foreach (var actLayer in m_currentScene.Layers)
                 {
-                    foreach (SceneSpacialObject actSpacialObject in actLayer.SpacialObjects)
+                    foreach (var actSpacialObject in actLayer.SpacialObjects)
                     {
-                        BoundingBox actBoundingBox = actSpacialObject.TryGetBoundingBox(m_viewInformation);
-                        if (actBoundingBox.IsEmpty()) { continue; }
+                        var actBoundingBox = actSpacialObject.TryGetBoundingBox(m_viewInformation);
 
-                        if (result.IsEmpty()) { result = actBoundingBox; }
-                        else { result.MergeWith(actBoundingBox); }
+                        if (actBoundingBox.IsEmpty())
+                        {
+                            continue;
+                        }
+
+                        if (result.IsEmpty())
+                        {
+                            result = actBoundingBox;
+                        }
+                        else
+                        {
+                            result.MergeWith(actBoundingBox);
+                        }
                     }
                 }
             });
@@ -378,7 +395,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             videoWriter.EnsureNotNull(nameof(videoWriter));
 
-            if (videoWriter.AssociatedRenderLoop != this) { throw new SeeingSharpGraphicsException("The given VideoWriter is not associated with this RenderLoop!"); }
+            if (videoWriter.AssociatedRenderLoop != this)
+            {
+                throw new SeeingSharpGraphicsException("The given VideoWriter is not associated with this RenderLoop!");
+            }
 
             TaskCompletionSource<object> result = new TaskCompletionSource<object>();
             m_afterPresentActions.Enqueue(() =>
@@ -533,23 +553,23 @@ namespace SeeingSharp.Multimedia.Core
             if ((m_currentScene != null) &&
                 (m_camera != null))
             {
-                Matrix projectionMatrix = m_camera.Projection;
+                var projectionMatrix = m_camera.Projection;
 
                 Vector3 pickingVector;
                 pickingVector.X = (((2.0f * pixelLocation.X) / m_currentViewSize.Width) - 1) / projectionMatrix.M11;
                 pickingVector.Y = -(((2.0f * pixelLocation.Y) / m_currentViewSize.Height) - 1) / projectionMatrix.M22;
                 pickingVector.Z = 1f;
 
-                Matrix worldMatrix = Matrix.Identity;
-                Matrix viewWorld = m_camera.View * worldMatrix;
+                var worldMatrix = Matrix.Identity;
+                var viewWorld = m_camera.View * worldMatrix;
                 Matrix inversionViewWorld;
                 Matrix.Invert(ref viewWorld, out inversionViewWorld);
 
-                Vector3 rayDirection = Vector3.Normalize(new Vector3(
+                var rayDirection = Vector3.Normalize(new Vector3(
                     pickingVector.X * inversionViewWorld.M11 + pickingVector.Y * inversionViewWorld.M21 + pickingVector.Z * inversionViewWorld.M31,
                     pickingVector.X * inversionViewWorld.M12 + pickingVector.Y * inversionViewWorld.M22 + pickingVector.Z * inversionViewWorld.M32,
                     pickingVector.X * inversionViewWorld.M13 + pickingVector.Y * inversionViewWorld.M23 + pickingVector.Z * inversionViewWorld.M33));
-                Vector3 rayStart = new Vector3(
+                var rayStart = new Vector3(
                     inversionViewWorld.M41,
                     inversionViewWorld.M42,
                     inversionViewWorld.M43);
@@ -830,9 +850,10 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         // Trigger deregister on scene if needed
                         bool reregisterOnScene = (m_targetDevice != null) && (m_targetDevice != m_currentDevice) && (m_currentScene != null);
+
                         if (reregisterOnScene)
                         {
-                            Scene localScene = m_currentScene;
+                            var localScene = m_currentScene;
                             continuationActions.Add(() => localScene.DeregisterView(m_viewInformation));
                         }
 
@@ -854,11 +875,14 @@ namespace SeeingSharp.Multimedia.Core
                         // Trigger reregister on scene if needed
                         if (reregisterOnScene)
                         {
-                            Scene localScene = m_currentScene;
+                            var localScene = m_currentScene;
                             continuationActions.Add(() => localScene.RegisterView(m_viewInformation));
                         }
 
-                        if (viewSizeChanged) { CurrentViewSizeChanged?.Invoke(this, EventArgs.Empty); }
+                        if (viewSizeChanged)
+                        {
+                            CurrentViewSizeChanged?.Invoke(this, EventArgs.Empty);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -886,10 +910,10 @@ namespace SeeingSharp.Multimedia.Core
                         // Trigger deregister on the current scene
                         if (m_currentScene != null)
                         {
-                            Scene localScene = m_currentScene;
+                            var localScene = m_currentScene;
                             continuationActions.Add(() => localScene.DeregisterView(m_viewInformation));
 
-                            foreach (SceneComponentBase actComponent in m_sceneComponents)
+                            foreach (var actComponent in m_sceneComponents)
                             {
                                 localScene.DetachComponent(actComponent, m_viewInformation);
                             }
@@ -902,10 +926,10 @@ namespace SeeingSharp.Multimedia.Core
                         // Trigger reregister on the new scene
                         if (m_currentScene != null)
                         {
-                            Scene localScene = m_currentScene;
+                            var localScene = m_currentScene;
                             continuationActions.Add(() => localScene.RegisterView(m_viewInformation));
 
-                            foreach (SceneComponentBase actComponent in m_sceneComponents)
+                            foreach (var actComponent in m_sceneComponents)
                             {
                                 localScene.AttachComponent(actComponent, m_viewInformation);
                             }
@@ -922,7 +946,7 @@ namespace SeeingSharp.Multimedia.Core
                 else if ((m_currentScene != null) &&
                         (!m_currentScene.IsViewRegistered(m_viewInformation)))
                 {
-                    Scene localScene = m_currentScene;
+                    var localScene = m_currentScene;
                     continuationActions.Add(() => localScene.RegisterView(m_viewInformation));
                 }
 
@@ -972,8 +996,8 @@ namespace SeeingSharp.Multimedia.Core
             // Write current frame if we have an associated video writer
             if (m_videoWriters.Count > 0)
             {
-                using (TextureUploader texUploader = new TextureUploader(m_currentDevice, m_renderTarget))
-                using (MemoryMappedTexture32bpp mappedTexture = new MemoryMappedTexture32bpp(m_currentViewSize))
+                using (var texUploader = new TextureUploader(m_currentDevice, m_renderTarget))
+                using (var mappedTexture = new MemoryMappedTexture32bpp(m_currentViewSize))
                 {
                     // Upload texture
                     texUploader.UploadToIntBuffer(mappedTexture);
@@ -981,10 +1005,13 @@ namespace SeeingSharp.Multimedia.Core
                     // Render the texture to all video writers
                     Parallel.For(0, m_videoWriters.Count, (actIndex) =>
                     {
-                        SeeingSharpVideoWriter actVideoWriter = m_videoWriters[actIndex];
+                        var actVideoWriter = m_videoWriters[actIndex];
 
                         // Start video rendering if not done so before
-                        if (!actVideoWriter.HasStarted) { actVideoWriter.StartRendering(m_currentViewSize); }
+                        if (!actVideoWriter.HasStarted)
+                        {
+                            actVideoWriter.StartRendering(m_currentViewSize);
+                        }
 
                         // Render current frame
                         if (actVideoWriter.HasStarted)
@@ -995,9 +1022,10 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Check for occurred errors (Cancel writing if there was any)
-                for (int loop = 0; loop < m_videoWriters.Count; loop++)
+                for (var loop = 0; loop < m_videoWriters.Count; loop++)
                 {
-                    SeeingSharpVideoWriter actWriter = m_videoWriters[loop];
+                    var actWriter = m_videoWriters[loop];
+
                     if ((actWriter.LastDrawException != null) ||
                         (actWriter.LastStartException != null) ||
                         (actWriter.LastFinishException != null))
@@ -1106,7 +1134,7 @@ namespace SeeingSharp.Multimedia.Core
                         m_currentScene.Render2DOverlay(m_renderState);
 
                         // Perform rendering of custom 2D drawing layers
-                        foreach (Custom2DDrawingLayer act2DLayer in m_2dDrawingLayers)
+                        foreach (var act2DLayer in m_2dDrawingLayers)
                         {
                             act2DLayer.Draw2DInternal(m_d2dOverlay.Graphics);
                         }
@@ -1160,7 +1188,8 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
 
-                IInputEnabledView inputInterface = m_renderLoopHost as IInputEnabledView;
+                var inputInterface = m_renderLoopHost as IInputEnabledView;
+
                 if (inputInterface != null)
                 {
                     GraphicsCore.Current.InputGatherer.DeregisterView(inputInterface);
@@ -1180,7 +1209,8 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.RegisterRenderLoop(this);
 
-                IInputEnabledView inputInterface = m_renderLoopHost as IInputEnabledView;
+                var inputInterface = m_renderLoopHost as IInputEnabledView;
+
                 if (inputInterface != null)
                 {
                     GraphicsCore.Current.InputGatherer.RegisterView(inputInterface);

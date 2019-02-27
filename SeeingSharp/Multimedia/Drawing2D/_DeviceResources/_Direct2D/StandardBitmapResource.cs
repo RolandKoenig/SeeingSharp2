@@ -106,11 +106,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
 
-            D2D.Bitmap result = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var result = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (result == null)
             {
-                using (Stream inputStream = m_resourceLink.OpenInputStream())
-                using (WicBitmapSourceInternal bitmapSourceWrapper = GraphicsHelper.LoadBitmapSource_D2D(inputStream))
+                using (var inputStream = m_resourceLink.OpenInputStream())
+                using (var bitmapSourceWrapper = GraphicsHelper.LoadBitmapSource_D2D(inputStream))
                 {
                     SharpDX.WIC.BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
@@ -162,7 +163,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Bitmap brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (brush != null)
             {
                 SeeingSharpTools.DisposeObject(brush);

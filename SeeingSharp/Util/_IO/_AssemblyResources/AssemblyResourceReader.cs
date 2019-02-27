@@ -58,17 +58,19 @@ namespace SeeingSharp.Util
         {
             m_targetType = targetType;
 
-            TypeInfo targetTypeInfo = m_targetType.GetTypeInfo();
+            var targetTypeInfo = m_targetType.GetTypeInfo();
             m_targetAssembly = targetTypeInfo.Assembly;
 
             m_resources = new List<AssemblyResourceInfo>();
             m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
-            foreach (AssemblyResourceFileAttribute actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
+
+            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
             {
-                ManifestResourceInfo resInfo = m_targetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+                var resInfo = m_targetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+
                 if (resInfo != null)
                 {
-                    AssemblyResourceInfo fileInfo = new AssemblyResourceInfo(m_targetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    var fileInfo = new AssemblyResourceInfo(m_targetAssembly, actAttrib.ResourcePath, actAttrib.Key);
                     m_resources.Add(fileInfo);
 
                     if ((actAttrib.Key != null) && (!m_resourcesDict.ContainsKey(actAttrib.Key)))
@@ -90,7 +92,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead(int index)
         {
-            AssemblyResourceInfo info = m_resources[index];
+            var info = m_resources[index];
             return info.OpenRead();
         }
 
@@ -99,7 +101,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead(string key)
         {
-            AssemblyResourceInfo info = m_resourcesDict[key];
+            var info = m_resourcesDict[key];
             return info.OpenRead();
         }
 
@@ -109,8 +111,8 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public string GetText(string key)
         {
-            using(Stream inStream = OpenRead(key))
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = OpenRead(key))
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -122,8 +124,8 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public string GetText(int index)
         {
-            using (Stream inStream = OpenRead(index))
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = OpenRead(index))
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -135,7 +137,7 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public byte[] GetBytes(string key)
         {
-            using (Stream inStream = OpenRead(key))
+            using (var inStream = OpenRead(key))
             {
                 byte[] result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
@@ -149,7 +151,7 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public byte[] GetBytes(int index)
         {
-            using (Stream inStream = OpenRead(index))
+            using (var inStream = OpenRead(index))
             {
                 byte[] result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);

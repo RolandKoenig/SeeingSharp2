@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!GraphicsCore.IsLoaded) { return; }
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) { return; }
 
-            SeeingSharpRenderPanel renderPanel = sender as SeeingSharpRenderPanel;
+            var renderPanel = sender as SeeingSharpRenderPanel;
             if(renderPanel == null) { return; }
 
             if (e.Property == SeeingSharpRenderPanel.SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
@@ -158,7 +158,7 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 var currentViewSize = m_painter.RenderLoop.CurrentViewSize;
-                Size result = new Size();
+                var result = new Size();
                 result.Width = currentViewSize.Width;
                 result.Height = currentViewSize.Height;
                 return result;
@@ -169,7 +169,11 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (!GraphicsCore.IsLoaded) { return new EngineDevice[0]; }
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return new EngineDevice[0];
+                }
+
                 return GraphicsCore.Current.Devices;
             }
         }

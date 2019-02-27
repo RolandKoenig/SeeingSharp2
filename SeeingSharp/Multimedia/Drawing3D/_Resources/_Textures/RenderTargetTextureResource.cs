@@ -98,13 +98,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">The render state used for creating all resources.</param>
         public void ApplySize(RenderState renderState)
         {
-            ViewInformation viewInfo = renderState.ViewInformation;
-            GraphicsViewConfiguration viewConfig = viewInfo.ViewConfiguration;
+            var viewInfo = renderState.ViewInformation;
+            var viewConfig = viewInfo.ViewConfiguration;
 
             // Get current view size and antialiasing settings
-            Size2 currentViewSize = viewInfo.CurrentViewSize;
+            var currentViewSize = viewInfo.CurrentViewSize;
             bool currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
-            AntialiasingQualityLevel currentAntialiasingQuality = viewConfig.AntialiasingQuality;
+            var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
             if ((m_width != currentViewSize.Width) ||
                 (m_heigth != currentViewSize.Height) ||
@@ -198,8 +198,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void PushOnRenderState(RenderState renderState, PushRenderTargetMode mode)
         {
             // Store RenderTargets structures
-            RenderTargets prevRenderTargets = renderState.CurrentRenderTargets;
-            RenderTargets newRenderTargets = new RenderTargets();
+            var prevRenderTargets = renderState.CurrentRenderTargets;
+            var newRenderTargets = new RenderTargets();
 
             // Handle color buffer
             if (mode.HasFlag(PushRenderTargetMode.UseOwnColorBuffer))

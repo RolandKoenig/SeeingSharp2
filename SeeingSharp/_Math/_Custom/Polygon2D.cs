@@ -88,9 +88,10 @@ namespace SeeingSharp
             //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
             //Find the hole vertex with the highest x value
-            Vector2 holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
+            var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
             int holeVertexIndexWithHighestX = -1;
-            for (int loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
+
+            for (var loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
             {
                 if (actHole.m_vertices[loopVertex].X > holeVertexWithHighestX.X)
                 {
@@ -98,23 +99,30 @@ namespace SeeingSharp
                     holeVertexIndexWithHighestX = loopVertex;
                 }
             }
-            if (cutPoints != null) { cutPoints.Add(holeVertexWithHighestX); }
+
+            if (cutPoints != null)
+            {
+                cutPoints.Add(holeVertexWithHighestX);
+            }
 
             //Define a ray from the found vertex pointing in x direction
-            Ray2D ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
+            var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
             //Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
             int actLineIndex = 0;
-            foreach (Line2D actLine in this.Lines)
+
+            foreach (var actLine in this.Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
+
                 if (actIntersection.Item1)
                 {
-                    Ray2D rayToIntersectionPoint = new Ray2D(
+                    var rayToIntersectionPoint = new Ray2D(
                         ray2D.Origin,
                         Vector2.Normalize(actIntersection.Item2 - ray2D.Origin));
                     float lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
+
                     if ((lengthToIntersectionPoint > 0f) &&
                         (rayToIntersectionPoint.EqualsWithTolerance(ray2D)))
                     {
@@ -209,10 +217,10 @@ namespace SeeingSharp
             }
             else
             {
-                Vector2 minimum = new Vector2(float.MaxValue, float.MaxValue);
-                Vector2 maximum = new Vector2(float.MinValue, float.MinValue);
+                var minimum = new Vector2(float.MaxValue, float.MaxValue);
+                var maximum = new Vector2(float.MinValue, float.MinValue);
 
-                for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+                for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
                 {
                     if (m_vertices[loopVertex].X < minimum.X) { minimum.X = m_vertices[loopVertex].X; }
                     if (m_vertices[loopVertex].Y < minimum.Y) { minimum.Y = m_vertices[loopVertex].Y; }

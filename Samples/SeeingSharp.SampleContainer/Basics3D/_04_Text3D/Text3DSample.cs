@@ -51,8 +51,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -61,14 +61,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Configure text geometry
-                TextGeometryOptions textOptions = TextGeometryOptions.Default;
+                var textOptions = TextGeometryOptions.Default;
                 textOptions.FontSize = 50;
                 textOptions.MakeVolumetricText = true;
                 textOptions.SurfaceVertexColor = Color.Blue;
                 textOptions.VolumetricSideSurfaceVertexColor = Color4Ex.CornflowerBlue;
 
                 // Create text geometry and object
-                GenericObject textObject = manipulator.Add3DText($"Seeing# 2 {Environment.NewLine} Text3D Sample", textOptions);
+                var textObject = manipulator.Add3DText($"Seeing# 2 {Environment.NewLine} Text3D Sample", textOptions);
                 textObject.YPos = textOptions.VolumetricTextDepth;
             });
 

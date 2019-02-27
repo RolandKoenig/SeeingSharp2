@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData Copy(Vector3 newPosition)
         {
-            GeometryData result = this;
+            var result = this;
             result.m_position = newPosition;
             return result;
         }
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData Copy(Vector3 newPosition, Vector3 newNormal)
         {
-            GeometryData result = this;
+            var result = this;
             result.m_position = newPosition;
             result.m_normal = newNormal;
             return result;

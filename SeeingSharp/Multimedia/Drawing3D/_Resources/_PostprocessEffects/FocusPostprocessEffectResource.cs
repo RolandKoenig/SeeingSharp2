@@ -209,7 +209,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         internal override bool NotifyAfterRender(RenderState renderState, int passID)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             if (renderState.Device.IsHighDetailSupported && (!m_forceSimpleMethod))
             {

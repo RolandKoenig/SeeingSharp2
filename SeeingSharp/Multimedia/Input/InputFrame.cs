@@ -124,7 +124,8 @@ namespace SeeingSharp.Multimedia.Input
             // Register first MouseOrPointer state as default
             if (this.DefaultMouseOrPointer == MouseOrPointerState.Dummy)
             {
-                MouseOrPointerState mouseOrPointer = inputState as MouseOrPointerState;
+                var mouseOrPointer = inputState as MouseOrPointerState;
+
                 if (mouseOrPointer != null)
                 {
                     this.DefaultMouseOrPointer = mouseOrPointer;
@@ -134,7 +135,8 @@ namespace SeeingSharp.Multimedia.Input
             // Register first Gamepad state as default
             if (this.DefaultGamepad == GamepadState.Dummy)
             {
-                GamepadState gamepadState = inputState as GamepadState;
+                var gamepadState = inputState as GamepadState;
+
                 if (gamepadState != null)
                 {
                     this.DefaultGamepad = gamepadState;
@@ -144,7 +146,8 @@ namespace SeeingSharp.Multimedia.Input
             // Register first keyboard state as default
             if (this.DefaultKeyboard == KeyboardState.Dummy)
             {
-                KeyboardState keyboardState = inputState as KeyboardState;
+                var keyboardState = inputState as KeyboardState;
+
                 if (keyboardState != null)
                 {
                     this.DefaultKeyboard = keyboardState;

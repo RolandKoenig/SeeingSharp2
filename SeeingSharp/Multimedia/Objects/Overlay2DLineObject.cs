@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderOverlay2D(RenderState renderState)
         {
-            using(D2D.SolidColorBrush brush = new D2D.SolidColorBrush(renderState.RenderTarget2D, Color4Ex.RedColor))
+            using(var brush = new D2D.SolidColorBrush(renderState.RenderTarget2D, Color4Ex.RedColor))
             {
                 renderState.RenderTarget2D.DrawLine(
                     new SharpDX.Mathematics.Interop.RawVector2(10f, 10f),
@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Objects
                     brush,
                     10f);
 
-                for(int loop=0 ; loop < 100; loop++)
+                for(var loop =0 ; loop < 100; loop++)
                 {
                     renderState.RenderTarget2D.DrawLine(
                         new SharpDX.Mathematics.Interop.RawVector2(200f + 10f * loop, 10f),
@@ -108,6 +108,5 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
         }
-
     }
 }

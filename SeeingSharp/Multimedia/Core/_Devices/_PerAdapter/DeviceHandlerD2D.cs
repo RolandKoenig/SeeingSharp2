@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
                     throw new SeeingSharpGraphicsException("Simulation Direct2D device init exception");
                 }
 
-                using (SharpDX.DXGI.Device dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<SharpDX.DXGI.Device>())
+                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<SharpDX.DXGI.Device>())
                 {
                     m_deviceD2D = new D2D.Device1(engineFactory.FactoryD2D_2, dxgiDevice);
                     m_deviceContextD2D = new SharpDX.Direct2D1.DeviceContext(

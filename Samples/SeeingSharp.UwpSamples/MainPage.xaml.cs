@@ -81,7 +81,7 @@ namespace SeeingSharp.UwpSamples
                 // Apply new sample
                 if (sampleInfo != null)
                 {
-                    SampleBase sampleObject = sampleInfo.CreateSampleObject();
+                    var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
@@ -103,10 +103,10 @@ namespace SeeingSharp.UwpSamples
         {
             if (DesignMode.DesignModeEnabled) { return; }
 
-            SampleRepository sampleRepo = new SampleRepository();
+            var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
 
-            MainWindowViewModel viewModel = this.DataContext as MainWindowViewModel;
+            var viewModel = this.DataContext as MainWindowViewModel;
             viewModel?.LoadSampleData(sampleRepo, this.CtrlSwapChain.RenderLoop);
         }
 

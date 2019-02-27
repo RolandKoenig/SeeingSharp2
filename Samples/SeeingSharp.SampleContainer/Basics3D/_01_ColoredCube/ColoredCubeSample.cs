@@ -51,8 +51,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -66,7 +66,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                     () => new GeometryResource(cubeType));
 
                 // Create cube object
-                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();

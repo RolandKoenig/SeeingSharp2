@@ -86,7 +86,7 @@ namespace SeeingSharp.Tests.Util
         public static IDisposable FailTestOnInternalExceptions()
         {
             Exception internalEx = null;
-            InternalExceptionLocation location = InternalExceptionLocation.DisposeGraphicsObject;
+            var location = InternalExceptionLocation.DisposeGraphicsObject;
 
             EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (object sender, InternalCatchedExceptionEventArgs e) =>
             {

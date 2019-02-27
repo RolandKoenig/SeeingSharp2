@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ScenePivotObject CreateAndAddRootObject()
         {
             // Append an object which transform the whole coordinate system
-            ScenePivotObject rootObject = new ScenePivotObject();
+            var rootObject = new ScenePivotObject();
 
             // Handle base transformation
             switch(m_importOptions.ResourceCoordinateSystem)

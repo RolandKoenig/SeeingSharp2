@@ -513,8 +513,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public static Image Load(string fileName)
         {
             SDXIO.NativeFileStream stream = null;
-            IntPtr memoryPtr = IntPtr.Zero;
+            var memoryPtr = IntPtr.Zero;
             int size;
+
             try
             {
                 stream = new SDXIO.NativeFileStream(fileName, SDXIO.NativeFileMode.Open, SDXIO.NativeFileAccess.Read);
@@ -525,7 +526,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             catch (Exception)
             {
                 if (memoryPtr != IntPtr.Zero)
+                {
                     Utilities.FreeMemory(memoryPtr);
+                }
+
                 throw;
             }
             finally
@@ -533,9 +537,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 try
                 {
                     if (stream != null)
+                    {
                         stream.Dispose();
+                    }
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             // If everything was fine, load the image from memory

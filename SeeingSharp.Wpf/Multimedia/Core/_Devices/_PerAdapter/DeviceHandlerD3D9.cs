@@ -63,12 +63,12 @@ namespace SeeingSharp.Multimedia.Core
                 if (!isSoftwareAdapter)
                 {
                     //Prepare device creation
-                    D3D9.CreateFlags createFlags =
+                    var createFlags =
                         D3D9.CreateFlags.HardwareVertexProcessing |
                         D3D9.CreateFlags.PureDevice |
                         D3D9.CreateFlags.FpuPreserve |
                         D3D9.CreateFlags.Multithreaded;
-                    D3D9.PresentParameters presentparams = new D3D9.PresentParameters();
+                    var presentparams = new D3D9.PresentParameters();
                     presentparams.Windowed = true;
                     presentparams.SwapEffect = D3D9.SwapEffect.Discard;
                     presentparams.DeviceWindowHandle = GetDesktopWindow();

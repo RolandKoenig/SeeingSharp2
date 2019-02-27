@@ -35,18 +35,17 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public CubeType()
         {
-
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            MaterialProperties matProperties = new MaterialProperties();
+            var matProperties = new MaterialProperties();
             matProperties.Key = Material;
 
-            float size = this.Size;
-            float halfSize = size / 2f;
+            var size = this.Size;
+            var halfSize = size / 2f;
 
-            VertexStructure result = new VertexStructure();
+            var result = new VertexStructure();
             result.CreateOrGetExistingSurface(matProperties)
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),

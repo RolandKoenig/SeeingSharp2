@@ -117,10 +117,14 @@ namespace SeeingSharp.Util
         /// <param name="throwIfIndexAlreadyUsed">Throw an exception if the item does already exist? If false, the existing value will be overwritten.</param>
         public void AddObject(T objectToAdd, int index, bool throwIfIndexAlreadyUsed)
         {
-            T currentObject = this[index];
+            var currentObject = this[index];
+
             if (currentObject != null)
             {
-                if (throwIfIndexAlreadyUsed) { throw new SeeingSharpException("There is already an object at the given index!"); }
+                if (throwIfIndexAlreadyUsed)
+                {
+                    throw new SeeingSharpException("There is already an object at the given index!");
+                }
 
                 this.RemoveObject(currentObject);
             }
@@ -192,7 +196,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index of the object to remove.</param>
         public void RemoveObject(int index)
         {
-            T objectToRemove = m_list[index];
+            var objectToRemove = m_list[index];
             RemoveObject(objectToRemove);
         }
 
@@ -216,12 +220,20 @@ namespace SeeingSharp.Util
         public IEnumerator<T> GetEnumerator()
         {
             int max = m_list.Count;
-            for (int loop = 0; loop < max; loop++)
-            {
-                if (m_list.Count != max) { throw new InvalidOperationException("Collection was modified!"); }
 
-                T actObject = m_list[loop];
-                if (actObject != null) { yield return actObject; }
+            for (var loop = 0; loop < max; loop++)
+            {
+                if (m_list.Count != max)
+                {
+                    throw new InvalidOperationException("Collection was modified!");
+                }
+
+                var actObject = m_list[loop];
+
+                if (actObject != null)
+                {
+                    yield return actObject;
+                }
             }
         }
 

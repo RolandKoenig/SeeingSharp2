@@ -91,8 +91,13 @@ namespace SeeingSharp.Util
         /// </returns>
         public override string ToString()
         {
-            StringBuilder resultBuilder = new StringBuilder();
-            if (m_targetAssembly != null) { resultBuilder.Append(m_targetAssembly.GetName().Name + ": "); }
+            var resultBuilder = new StringBuilder();
+
+            if (m_targetAssembly != null)
+            {
+                resultBuilder.Append(m_targetAssembly.GetName().Name + ": ");
+            }
+
             resultBuilder.Append(m_resourceNamespace);
             resultBuilder.Append(".");
             resultBuilder.Append(m_resourceFile);
@@ -181,8 +186,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public string GetText()
         {
-            using(Stream inStream = OpenRead())
-            using(StreamReader inStreamReader = new StreamReader(inStream))
+            using(var inStream = OpenRead())
+            using(var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -219,7 +224,7 @@ namespace SeeingSharp.Util
         {
             get
             {
-                StringBuilder resultBuilder = new StringBuilder();
+                var resultBuilder = new StringBuilder();
                 resultBuilder.Append(m_resourceNamespace);
                 resultBuilder.Append(".");
                 resultBuilder.Append(m_resourceFile);

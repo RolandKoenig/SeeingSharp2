@@ -261,12 +261,12 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         //-------------------------------------------------------------------------------------
         private static SharpDX.DXGI.Format DetermineFormat(Guid pixelFormat, WICFlags flags, out Guid pixelFormatOut)
         {
-            SharpDX.DXGI.Format format = ToDXGI(pixelFormat);
+            var format = ToDXGI(pixelFormat);
             pixelFormatOut = Guid.Empty;
 
             if (format == SharpDX.DXGI.Format.Unknown)
             {
-                for (int i = 0; i < WICConvertTable.Length; ++i)
+                for (var i = 0; i < WICConvertTable.Length; ++i)
                 {
                     if (WICConvertTable[i].source == pixelFormat)
                     {
@@ -540,7 +540,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             frame.Initialize();
             frame.SetSize(image.Width, image.Height);
             frame.SetResolution(72, 72);
-            Guid targetGuid = pfGuid;
+            var targetGuid = pfGuid;
             frame.SetPixelFormat(ref targetGuid);
 
             if (targetGuid != pfGuid)

@@ -69,8 +69,9 @@ namespace SeeingSharp.Multimedia.Core
 
             // Strip them (we want to have each relevant mode once)
             List<EngineOutputModeInfo> strippedModeList = new List<EngineOutputModeInfo>(engineModes.Length);
-            EngineOutputModeInfo lastOutputMode = new EngineOutputModeInfo();
-            for (int loop=engineModes.Length - 1; loop > -1; loop--)
+            var lastOutputMode = new EngineOutputModeInfo();
+
+            for (var loop =engineModes.Length - 1; loop > -1; loop--)
             {
                 if(!engineModes[loop].Equals(lastOutputMode))
                 {

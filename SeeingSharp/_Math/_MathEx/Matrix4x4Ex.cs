@@ -177,7 +177,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix RotationDirection(Vector3 upVector, Vector3 forwardVector)
         {
-            Vector3 right = Vector3.Cross(upVector, forwardVector);
+            var right = Vector3.Cross(upVector, forwardVector);
             return new Matrix(
                 right.X, right.Y, right.Z, 0f,
                 upVector.X, upVector.Y, upVector.Z, 0f,

@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            GamepadState targetStateCasted = targetState as GamepadState;
+            var targetStateCasted = targetState as GamepadState;
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
             targetStateCasted.m_controllerIndex = this.m_controllerIndex;

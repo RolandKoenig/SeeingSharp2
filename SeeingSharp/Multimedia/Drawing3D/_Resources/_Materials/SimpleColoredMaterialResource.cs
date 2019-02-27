@@ -145,7 +145,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="previousMaterial">The previously applied material.</param>
         internal override void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             bool isResourceSameType =
                 (previousMaterial != null) &&
                 (previousMaterial.ResourceType == base.ResourceType);

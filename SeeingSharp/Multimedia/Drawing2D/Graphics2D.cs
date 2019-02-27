@@ -124,9 +124,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public unsafe void ApplyTransformStack()
         {
-            if(m_renderTarget == null) { return; }
+            if (m_renderTarget == null)
+            {
+                return;
+            }
 
-            Matrix3x2 top = m_transformStack.Top;
+            var top = m_transformStack.Top;
             m_renderTarget.Transform =
                 *(SDXM.RawMatrix3x2*)&top;
         }
@@ -226,7 +229,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawRoundedRectangle(RectangleF rectangle, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
         {
-            if (m_renderTarget == null) { return; }
+            if (m_renderTarget == null)
+            {
+                return;
+            }
 
             rectangle.EnsureNotEmpty(nameof(rectangle));
             brush.EnsureNotNull(nameof(brush));
@@ -234,7 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusY.EnsurePositive(nameof(radiusY));
             strokeWidth.EnsurePositive(nameof(strokeWidth));
 
-            D2D.RoundedRectangle roundedRect = new D2D.RoundedRectangle();
+            var roundedRect = new D2D.RoundedRectangle();
             roundedRect.Rect = rectangle;
             roundedRect.RadiusX = radiusX;
             roundedRect.RadiusY = radiusY;
@@ -250,7 +256,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
         {
-            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
 
             m_renderTarget.DrawEllipse(
                 ellipse,
@@ -265,10 +271,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             float radiusX = (rectangle.Width / 2f);
             float radiusY = (rectangle.Height / 2f);
-            Vector2 center = new Vector2(
+            var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
 
             m_renderTarget.DrawEllipse(
                 ellipse,
@@ -359,14 +365,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="brush">The brush to be used.</param>
         public void FillRoundedRectangle(RectangleF rectangle, float radiusX, float radiusY, BrushResource brush)
         {
-            if (m_renderTarget == null) { return; }
+            if (m_renderTarget == null)
+            {
+                return;
+            }
 
             rectangle.EnsureNotEmpty(nameof(rectangle));
             brush.EnsureNotNull(nameof(brush));
             radiusX.EnsurePositive(nameof(radiusX));
             radiusY.EnsurePositive(nameof(radiusY));
 
-            D2D.RoundedRectangle roundedRect = new D2D.RoundedRectangle();
+            var roundedRect = new D2D.RoundedRectangle();
             roundedRect.Rect = rectangle;
             roundedRect.RadiusX = radiusX;
             roundedRect.RadiusY = radiusY;
@@ -381,7 +390,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void FillEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush)
         {
-            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
 
             m_renderTarget.FillEllipse(
                 ellipse,
@@ -395,10 +404,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             float radiusX = (rectangle.Width / 2f);
             float radiusY = (rectangle.Height / 2f);
-            Vector2 center = new Vector2(
+            var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            D2D.Ellipse ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
 
             m_renderTarget.FillEllipse(
                 ellipse,
@@ -425,8 +434,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             targetRectangle.EnsureNotEmpty(nameof(targetRectangle));
             brush.EnsureNotNull(nameof(brush));
 
-            D2D.DrawTextOptions drawOptionsD2D = (D2D.DrawTextOptions)drawOptions;
-            D2D.MeasuringMode measuringModeD2D = (D2D.MeasuringMode)measuringMode;
+            var drawOptionsD2D = (D2D.DrawTextOptions)drawOptions;
+            var measuringModeD2D = (D2D.MeasuringMode)measuringMode;
 
             m_renderTarget.DrawText(
                 textToDraw,
@@ -466,7 +475,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Get the native bitmap object first
                 // (if not, we may not have loaded it already and therefore
                 //  missing size information)
-                D2D.Bitmap nativeBitmap = bitmap.GetBitmap(m_device);
+                var nativeBitmap = bitmap.GetBitmap(m_device);
 
                 // Calculate source rectangle
                 int framesX = bitmap.FrameCountX;
@@ -474,7 +483,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 int yFrameIndex = (frameIndex - xFrameIndex) / framesX;
                 int singleFrameWidth = bitmap.SingleFramePixelWidth;
                 int singleFrameHeight = bitmap.SingleFramePixelHeight;
-                RectangleF sourceRectangle = new RectangleF(
+                var sourceRectangle = new RectangleF(
                     xFrameIndex * singleFrameWidth,
                     yFrameIndex * singleFrameHeight,
                     singleFrameWidth, singleFrameHeight);
@@ -527,12 +536,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Get the native bitmap object first
                 // (if not, we may not have loaded it already and therefore
                 //  missing size information)
-                D2D.Bitmap nativeBitmap = bitmap.GetBitmap(m_device);
+                var nativeBitmap = bitmap.GetBitmap(m_device);
 
                 // Calculate destination rectangle
                 int singleFrameWidth = bitmap.SingleFramePixelWidth;
                 int singleFrameHeight = bitmap.SingleFramePixelHeight;
-                RectangleF destinationRectangle = new RectangleF(
+                var destinationRectangle = new RectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     singleFrameWidth, singleFrameHeight);
 
@@ -540,7 +549,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 int framesX = bitmap.FrameCountX;
                 int xFrameIndex = frameIndex % framesX;
                 int yFrameIndex = (frameIndex - xFrameIndex) / framesX;
-                RectangleF sourceRectangle = new RectangleF(
+                var sourceRectangle = new RectangleF(
                     xFrameIndex * singleFrameWidth,
                     yFrameIndex * singleFrameHeight,
                     singleFrameWidth, singleFrameHeight);
@@ -555,7 +564,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
             else
             {
-                SharpDX.Mathematics.Interop.RawRectangleF destinationRectangle = new SharpDX.Mathematics.Interop.RawRectangleF(
+                var destinationRectangle = new SharpDX.Mathematics.Interop.RawRectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
@@ -581,12 +590,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             image.EnsureNotNull(nameof(image));
 
-            IImageInternal internalImage = image as IImageInternal;
+            var internalImage = image as IImageInternal;
             internalImage.EnsureNotNull(nameof(internalImage));
 
             if (m_deviceContext != null)
             {
-                D2D.Image d2dImage = internalImage.GetImageObject(m_device) as D2D.Image;
+                var d2dImage = internalImage.GetImageObject(m_device) as D2D.Image;
                 d2dImage.EnsureNotNull(nameof(d2dImage));
 
                 m_deviceContext.DrawImage(
@@ -598,7 +607,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
             else
             {
-                BitmapResource bitmap = internalImage.TryGetSourceBitmap();
+                var bitmap = internalImage.TryGetSourceBitmap();
+
                 if(bitmap != null)
                 {
                     this.DrawBitmap(bitmap, destinationOrigin);

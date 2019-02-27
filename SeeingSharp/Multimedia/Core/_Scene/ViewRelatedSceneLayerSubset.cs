@@ -151,13 +151,21 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjects">The scene objects to be registered.</param>
         internal void RegisterObjectRange(params SceneObject[] sceneObjects)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("ViewRelatedLayerSubset");
+            }
 
             int length = sceneObjects.Length;
-            for (int loop = 0; loop < length; loop++)
+
+            for (var loop = 0; loop < length; loop++)
             {
-                SceneObject actSceneObject = sceneObjects[loop];
-                if (m_invalidObjects.ContainsKey(actSceneObject)) { continue; }
+                var actSceneObject = sceneObjects[loop];
+
+                if (m_invalidObjects.ContainsKey(actSceneObject))
+                {
+                    continue;
+                }
 
                 if((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
                 {
@@ -235,11 +243,13 @@ namespace SeeingSharp.Multimedia.Core
             // TODO: Trigger some other logic to update transparent object order
             // TODO: Performance improvement!!!
             bool anyOrderChanges = false;
-            Camera3DBase camera = m_viewInformation.Camera;
+            var camera = m_viewInformation.Camera;
+
             m_objectsPassTransparentRender.Subscriptions.Sort(new Comparison<RenderPassSubscription>((left, right) =>
             {
-                SceneSpacialObject leftSpacial = left.SceneObject as SceneSpacialObject;
-                SceneSpacialObject rightSpacial = right.SceneObject as SceneSpacialObject;
+                var leftSpacial = left.SceneObject as SceneSpacialObject;
+                var rightSpacial = right.SceneObject as SceneSpacialObject;
+
                 if ((leftSpacial != null) && (rightSpacial != null))
                 {
                     float leftDistance = (camera.Position - leftSpacial.Position).LengthSquared();
@@ -247,16 +257,23 @@ namespace SeeingSharp.Multimedia.Core
                     anyOrderChanges = true;
                     return rightDistance.CompareTo(leftDistance);
                 }
-                else if (leftSpacial != null) { anyOrderChanges = true; return -1; }
-                else if (rightSpacial != null) { anyOrderChanges = true; return 1; }
+                else if (leftSpacial != null)
+                {
+                    anyOrderChanges = true; return -1;
+                }
+                else if (rightSpacial != null)
+                {
+                    anyOrderChanges = true; return 1;
+                }
                 {
                     return 0;
                 }
             }));
+
             if(anyOrderChanges)
             {
                 // Synchronize ordering changes with corresponding scene object
-                for(int loop=0 ; loop<m_objectsPassTransparentRender.Subscriptions.Count; loop++)
+                for(var loop =0 ; loop<m_objectsPassTransparentRender.Subscriptions.Count; loop++)
                 {
                     var actSubscription = m_objectsPassTransparentRender.Subscriptions[loop];
                     actSubscription.SubscriptionIndex = loop;
@@ -267,6 +284,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Update all objects related to this view
             m_isSubscribeUnsubscribeAllowed = true;
+
             try
             {
                 // Update subscriptions based on visibility check result
@@ -288,9 +306,11 @@ namespace SeeingSharp.Multimedia.Core
                 List<SceneObject> allObjects = m_sceneLayer.ObjectsInternal;
                 int allObjectsLength = allObjects.Count;
                 int visibleObjectCount = m_viewInformation.Owner.VisibleObjectCountInternal;
-                for (int loop = 0; loop < allObjectsLength; loop++)
+
+                for (var loop = 0; loop < allObjectsLength; loop++)
                 {
-                    SceneObject actSceneObject = allObjects[loop];
+                    var actSceneObject = allObjects[loop];
+
                     if (m_invalidObjects.ContainsKey(actSceneObject)) { continue; }
 
                     if (actSceneObject.IsLayerViewSubsetRegistered(this.ViewIndex) &&
@@ -323,9 +343,11 @@ namespace SeeingSharp.Multimedia.Core
                     //  => Build new subscription list and ignore all whith 'IsSubscribed' == false
                     List<RenderPassSubscription> newSubscriptionList = new List<RenderPassSubscription>(
                         (actPassProperties.Subscriptions.Count - actPassProperties.UnsubscribeCallCount) + 128);
-                    for(int loop=0 ; loop<actPassProperties.Subscriptions.Count; loop++)
+
+                    for(var loop =0 ; loop<actPassProperties.Subscriptions.Count; loop++)
                     {
-                        RenderPassSubscription actSubscription = actPassProperties.Subscriptions[loop];
+                        var actSubscription = actPassProperties.Subscriptions[loop];
+
                         if (!actSubscription.IsSubscribed)
                         {
                             actSubscription.SceneObject.ClearSubscriptionsWithoutUnsubscribeCall(this, actSubscription);
@@ -362,11 +384,16 @@ namespace SeeingSharp.Multimedia.Core
             m_tmpChangedVisibilities.Clear();
 
             // Perform some pre-logic on filters
-            bool anyFilterChanged = false;
-            foreach (SceneObjectFilter actFilter in filters)
+            var anyFilterChanged = false;
+
+            foreach (var actFilter in filters)
             {
                 actFilter.SetEnvironmentData(m_sceneLayer, m_viewInformation);
-                if (actFilter.ConfigurationChanged) { anyFilterChanged = true; }
+
+                if (actFilter.ConfigurationChanged)
+                {
+                    anyFilterChanged = true;
+                }
             }
 
             // Check whether we have to update all objects
@@ -377,12 +404,14 @@ namespace SeeingSharp.Multimedia.Core
             // Perform viewbox culling for all standard objects
             List<SceneObject> allObjects = m_sceneLayer.ObjectsInternal;
             int allObjectsLength = allObjects.Count;
+
             if (allObjectsLength > 0)
             {
                 SceneObject[] allObjectsArray = allObjects.GetBackingArray();
-                for (int loop = 0; loop < allObjectsLength; loop++)
+
+                for (var loop = 0; loop < allObjectsLength; loop++)
                 {
-                    SceneObject actObject = allObjectsArray[loop];
+                    var actObject = allObjectsArray[loop];
 
                     // Don't handle static objects here if we don't want to handle them
                     if(!refreshAllObjects)
@@ -401,10 +430,12 @@ namespace SeeingSharp.Multimedia.Core
 
             // Update objects which are passed for a single update call (normally newly inserted static objects)
             int singleUpdateCallCount = sceneObjectsForSingleUpdateCall.Count;
+
             if((!refreshAllObjects) && (singleUpdateCallCount  >0))
             {
                 SceneObject[] singleUpdateArray = sceneObjectsForSingleUpdateCall.GetBackingArray();
-                for(int loop=0 ; loop<singleUpdateCallCount; loop++)
+
+                for(var loop =0 ; loop<singleUpdateCallCount; loop++)
                 {
                     // Perform culling
                     PerformViewboxCulling(
@@ -417,7 +448,8 @@ namespace SeeingSharp.Multimedia.Core
             // Handle changed visibility in standard update logic
             if (m_tmpChangedVisibilities.Count > 0)
             {
-                Scene startingScene = m_scene;
+                var startingScene = m_scene;
+
                 m_changedVisibilitiesAction = () =>
                 {
                     if (m_disposed) { return; }
@@ -457,19 +489,19 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             List<SceneObject> invalidObjects = null;
-            ResourceDictionary resources = renderState.CurrentResources;
+            var resources = renderState.CurrentResources;
 
             if (renderState.Device != m_device) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong device object!"); }
             if (renderState.CurrentResources != m_resources) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong ResourceDictionary object!"); }
 
             // Get current view configuration
-            GraphicsViewConfiguration viewConfiguration = m_viewInformation.ViewConfiguration;
+            var viewConfiguration = m_viewInformation.ViewConfiguration;
 
             // Update device dependent resources here
             RefreshDeviceDependentResources();
 
             // Update render parameters
-            CBPerView cbPerView = new CBPerView();
+            var cbPerView = new CBPerView();
             cbPerView.Accentuation = viewConfiguration.AccentuationFactor;
             cbPerView.GradientFactor = viewConfiguration.GeneratedColorGradientFactor;
             cbPerView.BorderFactor = viewConfiguration.GeneratedBorderFactor;
@@ -482,7 +514,7 @@ namespace SeeingSharp.Multimedia.Core
             m_renderParameters.UpdateValues(renderState, cbPerView);
 
             // Query for postprocess effect
-            PostprocessEffectResource postprocessEffect = m_renderParameters.GetPostprocessEffect(
+            var postprocessEffect = m_renderParameters.GetPostprocessEffect(
                 m_sceneLayer.PostprocessEffectKey,
                 resources);
 
@@ -497,6 +529,7 @@ namespace SeeingSharp.Multimedia.Core
 
             int passID = 0;
             bool continueWithNextPass = true;
+
             while (continueWithNextPass)
             {
                 // Notify state before rendering
@@ -556,14 +589,18 @@ namespace SeeingSharp.Multimedia.Core
             SceneObject sceneObject, Action<RenderState> renderMethod,
             int zOrder)
         {
-            if (!m_isSubscribeUnsubscribeAllowed) { throw new SeeingSharpException("Subscription is not allowed currently!"); }
+            if (!m_isSubscribeUnsubscribeAllowed)
+            {
+                throw new SeeingSharpException("Subscription is not allowed currently!");
+            }
 
             var subscriptionProperties = m_objectsPerPassDict[passInfo];
 
             // Append new subscription to subscription list
             List<RenderPassSubscription> subscriptions = subscriptionProperties.Subscriptions;
             int subscriptionsCount = subscriptions.Count;
-            RenderPassSubscription newSubscription = new RenderPassSubscription(this, passInfo, sceneObject, renderMethod, zOrder);
+            var newSubscription = new RenderPassSubscription(this, passInfo, sceneObject, renderMethod, zOrder);
+
             if (!passInfo.IsSorted)
             {
                 // No sort, so put the new subscription to the end of the collection
@@ -633,7 +670,8 @@ namespace SeeingSharp.Multimedia.Core
             if (m_invalidObjects.ContainsKey(actObject)) { return; }
 
             // Get visiblity check data about current object
-            VisibilityCheckData checkData = actObject.GetVisibilityCheckData(m_viewInformation);
+            var checkData = actObject.GetVisibilityCheckData(m_viewInformation);
+
             if (checkData == null) { return; }
 
             // Execute all filters in configured order step by step
@@ -641,12 +679,14 @@ namespace SeeingSharp.Multimedia.Core
             bool previousFilterExecuted = false;
             bool previousFilterResult = true;
             VisibilityCheckFilterStageData lastFilterStageData = null;
-            for (int actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
+
+            for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
             {
-                SceneObjectFilter actFilter = filters[actFilterIndex];
+                var actFilter = filters[actFilterIndex];
 
                 // Get data about current filter stage
-                VisibilityCheckFilterStageData filterStageData = checkData.FilterStageData[actFilterIndex];
+                var filterStageData = checkData.FilterStageData[actFilterIndex];
+
                 if (filterStageData == null)
                 {
                     filterStageData = checkData.FilterStageData.AddObject(
@@ -777,9 +817,11 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     int subscriptionCount = subscriptions.Subscriptions.Count;
-                    for (int loopPass = 0; loopPass < subscriptionCount; loopPass++)
+
+                    for (var loopPass = 0; loopPass < subscriptionCount; loopPass++)
                     {
-                        RenderPassSubscription actSubscription = subscriptions.Subscriptions[loopPass];
+                        var actSubscription = subscriptions.Subscriptions[loopPass];
+
                         try
                         {
                             actSubscription.RenderMethod(renderState);
@@ -790,7 +832,11 @@ namespace SeeingSharp.Multimedia.Core
                                 ex, InternalExceptionLocation.Rendering3DObject);
 
                             // Mark this object as invalid
-                            if (invalidObjects == null) { invalidObjects = new List<SceneObject>(); }
+                            if (invalidObjects == null)
+                            {
+                                invalidObjects = new List<SceneObject>();
+                            }
+
                             invalidObjects.Add(actSubscription.SceneObject);
                         }
                     }
@@ -834,7 +880,7 @@ namespace SeeingSharp.Multimedia.Core
         private void HandleInvalidObjects(List<SceneObject> invalidObjects)
         {
             // Register the given objects as invalid
-            foreach(SceneObject actInvalidObject in invalidObjects)
+            foreach(var actInvalidObject in invalidObjects)
             {
                 m_invalidObjects.Add(actInvalidObject, null);
                 m_invalidObjectsToDeregister.Enqueue(actInvalidObject);

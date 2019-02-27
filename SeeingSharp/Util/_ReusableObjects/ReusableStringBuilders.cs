@@ -50,7 +50,7 @@ namespace SeeingSharp.Util
         {
             stringBuilder = TakeStringBuilder(requiredCapacity);
 
-            StringBuilder cachedStringBuilder = stringBuilder;
+            var cachedStringBuilder = stringBuilder;
             return new DummyDisposable(() => ReregisterStringBuilder(cachedStringBuilder));
         }
 

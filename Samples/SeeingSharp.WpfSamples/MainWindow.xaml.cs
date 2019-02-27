@@ -52,7 +52,7 @@ namespace SeeingSharp.WpfSamples
         {
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
-                SampleRepository sampleRepo = new SampleRepository();
+                var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
                 this.DataContext = new MainWindowViewModel(sampleRepo, this.CtrlRenderer.RenderLoop);
             }
@@ -98,7 +98,7 @@ namespace SeeingSharp.WpfSamples
                 // Apply new sample
                 if (sampleInfo != null)
                 {
-                    SampleBase sampleObject = sampleInfo.CreateSampleObject();
+                    var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(this.CtrlRenderer.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;

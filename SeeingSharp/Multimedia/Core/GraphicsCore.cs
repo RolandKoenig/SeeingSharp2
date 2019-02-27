@@ -180,15 +180,17 @@ namespace SeeingSharp.Multimedia.Core
                 // Create the object containing all hardware information
                 m_hardwareInfo = new EngineHardwareInfo();
                 int actIndex = 0;
+
                 foreach(var actAdapterInfo in m_hardwareInfo.Adapters)
                 {
-                    EngineDevice actEngineDevice = new EngineDevice(
+                    var actEngineDevice = new EngineDevice(
                         loadSettings,
                         loader,
                         m_engineFactory,
                         m_configuration,
                         actAdapterInfo.Adapter,
                         actAdapterInfo.IsSoftwareAdapter);
+
                     if(actEngineDevice.IsLoadedSuccessfully)
                     {
                         actEngineDevice.DeviceIndex = actIndex;
@@ -197,6 +199,7 @@ namespace SeeingSharp.Multimedia.Core
                         m_devices.Add(actEngineDevice);
                     }
                 }
+
                 m_defaultDevice = m_devices.FirstOrDefault();
 
                 // Start input gathering
@@ -252,8 +255,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static IDisposable AutomatedTest_NewTestEnviornment()
         {
-            GraphicsCore lastCurrent = s_current;
-            if (lastCurrent?.MainLoop?.RegisteredRenderLoopCount > 0) { throw new SeeingSharpException("Current environment still active!"); }
+            var lastCurrent = s_current;
+
+            if (lastCurrent?.MainLoop?.RegisteredRenderLoopCount > 0)
+            {
+                throw new SeeingSharpException("Current environment still active!");
+            }
 
             s_current = null;
 
@@ -266,7 +273,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static IDisposable AutomatedTest_ForceDeviceInitError()
         {
-            if (s_current != null) { throw new SeeingSharpException("This call is only valid before Initialize was called!"); }
+            if (s_current != null)
+            {
+                throw new SeeingSharpException("This call is only valid before Initialize was called!");
+            }
 
             s_throwDeviceInitError = true;
 
@@ -293,20 +303,23 @@ namespace SeeingSharp.Multimedia.Core
 
             // Query for all available FontFamilies installed on the system
             List<string> result = null;
-            using (DWrite.FontCollection fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
+
+            using (var fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
             {
                 int fontFamilyCount = fontCollection.FontFamilyCount;
                 result = new List<string>(fontFamilyCount);
 
-                for(int loop=0; loop< fontFamilyCount; loop++)
+                for(var loop =0; loop< fontFamilyCount; loop++)
                 {
-                    using (DWrite.FontFamily actFamily = fontCollection.GetFontFamily(loop))
-                    using (DWrite.LocalizedStrings actLocalizedStrings = actFamily.FamilyNames)
+                    using (var actFamily = fontCollection.GetFontFamily(loop))
+                    using (var actLocalizedStrings = actFamily.FamilyNames)
                     {
                         int localeIndex = -1;
+
                         if ((bool)actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
                         {
                             string actName = actLocalizedStrings.GetString(0);
+
                             if(!string.IsNullOrWhiteSpace(actName))
                             {
                                 result.Add(actName);
@@ -315,6 +328,7 @@ namespace SeeingSharp.Multimedia.Core
                         else if((bool)actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
                         {
                             string actName = actLocalizedStrings.GetString(0);
+
                             if (!string.IsNullOrWhiteSpace(actName))
                             {
                                 result.Add(actName);

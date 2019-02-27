@@ -50,7 +50,7 @@ namespace SeeingSharp.Util
         {
             memoryStream = TakeMemoryStream(requiredCapacity);
 
-            MemoryStream cachedMemoryStream = memoryStream;
+            var cachedMemoryStream = memoryStream;
             return new DummyDisposable(() => ReregisterMemoryStream(cachedMemoryStream));
         }
 
@@ -71,7 +71,7 @@ namespace SeeingSharp.Util
         public void ReregisterMemoryStream(MemoryStream memoryStream)
         {
             var buffer = memoryStream.GetBuffer();
-            MemoryStream newAroundSameBuffer = new MemoryStream(buffer, 0, buffer.Length, true, true);
+            var newAroundSameBuffer = new MemoryStream(buffer, 0, buffer.Length, true, true);
             newAroundSameBuffer.SetLength(0);
 
             m_memoryStreams.Push(newAroundSameBuffer);

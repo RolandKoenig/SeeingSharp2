@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create default blend state
             m_defaultBlendState = new Lazy<D3D11.BlendState>(() =>
             {
-                D3D11.BlendStateDescription blendDesc = D3D11.BlendStateDescription.Default();
+                var blendDesc = D3D11.BlendStateDescription.Default();
                 return new D3D11.BlendState(device.DeviceD3D11_1, blendDesc);
             });
 
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_alphaBlendingBlendState = new Lazy<D3D11.BlendState>(() =>
             {
                 //Define the blend state (based on http://www.rastertek.com/dx11tut26.html)
-                D3D11.BlendStateDescription blendDesc = D3D11.BlendStateDescription.Default();
+                var blendDesc = D3D11.BlendStateDescription.Default();
                 blendDesc.RenderTarget[0].IsBlendEnabled = true;
                 blendDesc.RenderTarget[0].SourceBlend = D3D11.BlendOption.SourceAlpha;
                 blendDesc.RenderTarget[0].DestinationBlend = D3D11.BlendOption.InverseSourceAlpha;
@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create default depth stencil state
             m_depthStencilStateDefault = new Lazy<D3D11.DepthStencilState>(() =>
             {
-                D3D11.DepthStencilStateDescription stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilStateDescription.Default();
                 stateDesc.DepthComparison = D3D11.Comparison.LessEqual;
                 return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
             });
@@ -139,7 +139,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create the depth stencil state for diabling z writes
             m_depthStencilStateDisableZWrites = new Lazy<D3D11.DepthStencilState>(() =>
             {
-                D3D11.DepthStencilStateDescription stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilStateDescription.Default();
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 stateDesc.DepthComparison = D3D11.Comparison.LessEqual;
                 return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             m_depthStencilStateAllwaysPass = new Lazy<D3D11.DepthStencilState>(() =>
             {
-                D3D11.DepthStencilStateDescription stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilStateDescription.Default();
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 stateDesc.DepthComparison = D3D11.Comparison.Always;
                 stateDesc.IsDepthEnabled = false;
@@ -157,7 +157,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create the depth stencil state for inverting z logic
             m_depthStencilStateInvertedZTest = new Lazy<D3D11.DepthStencilState>(() =>
             {
-                D3D11.DepthStencilStateDescription stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilStateDescription.Default();
                 stateDesc.DepthComparison = D3D11.Comparison.Greater;
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
@@ -172,7 +172,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create a raster state with depth bias
             m_rasterStateBiased = new Lazy<D3D11.RasterizerState>(() =>
             {
-                D3D11.RasterizerStateDescription rasterDesc = D3D11.RasterizerStateDescription.Default();
+                var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.DepthBias = GraphicsHelper.GetDepthBiasValue(device, -0.00003f);
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
@@ -180,7 +180,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create a raster state for wireframe rendering
             m_rasterStateWireframe = new Lazy<SharpDX.Direct3D11.RasterizerState>(() =>
             {
-                D3D11.RasterizerStateDescription rasterDesc = D3D11.RasterizerStateDescription.Default();
+                var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.FillMode = D3D11.FillMode.Wireframe;
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
@@ -188,7 +188,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create the rasterizer state for line rendering
             m_rasterStateLines = new Lazy<D3D11.RasterizerState>(() =>
             {
-                D3D11.RasterizerStateDescription stateDesc = D3D11.RasterizerStateDescription.Default();
+                var stateDesc = D3D11.RasterizerStateDescription.Default();
                 stateDesc.CullMode = D3D11.CullMode.None;
                 stateDesc.IsAntialiasedLineEnabled = true;
                 stateDesc.FillMode = D3D11.FillMode.Solid;

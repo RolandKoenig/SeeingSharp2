@@ -69,23 +69,24 @@ namespace SeeingSharp.Tests
                 Assert.IsTrue(GraphicsCore.IsLoaded);
                 Assert.IsFalse(GraphicsCore.Current.DefaultDevice.Supports2D);
 
-                using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.Gray))
-                using (TextFormatResource textFormat = new TextFormatResource("Arial", 36))
-                using (SolidBrushResource textBrush = new SolidBrushResource(Color4Ex.RedColor))
-                using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+                using (var solidBrush = new SolidBrushResource(Color4Ex.Gray))
+                using (var textFormat = new TextFormatResource("Arial", 36))
+                using (var textBrush = new SolidBrushResource(Color4Ex.RedColor))
+
+                using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
                 {
                     memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                     // Get and configure the camera
-                    PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                    var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                     camera.Position = new Vector3(0f, 5f, -7f);
                     camera.Target = new Vector3(0f, 0f, 0f);
                     camera.UpdateCamera();
 
                     // 2D rendering is made here
-                    Custom2DDrawingLayer d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+                    var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
                     {
-                        SharpDX.RectangleF d2dRectangle = new SharpDX.RectangleF(10, 10, 236, 236);
+                        var d2dRectangle = new SharpDX.RectangleF(10, 10, 236, 236);
                         graphics.Clear(Color4Ex.LightBlue);
                         graphics.FillRoundedRectangle(
                             d2dRectangle, 30, 30,
@@ -104,7 +105,7 @@ namespace SeeingSharp.Tests
                         var geoResource = manipulator.AddResource<GeometryResource>(
                             () => new GeometryResource(new CubeType() { Material = resD2DMaterial }));
 
-                        GenericObject newObject = manipulator.AddGeneric(geoResource);
+                        var newObject = manipulator.AddGeneric(geoResource);
                         newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                         newObject.Scaling = new Vector3(2f, 2f, 2f);
                     });
@@ -134,12 +135,13 @@ namespace SeeingSharp.Tests
             bool isGraphicsCoreInitialized = true;
             int registeredRenderLoopCount = 1;
             using (GraphicsCore.AutomatedTest_NewTestEnviornment())
+
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
             {
                 await GraphicsCore.Loader
                     .LoadAsync();
 
-                using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+                using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
                 {
                     isRenderTargetOperational = memRenderTarget.IsOperational;
                     isGraphicsCoreInitialized = GraphicsCore.IsLoaded;
@@ -164,7 +166,8 @@ namespace SeeingSharp.Tests
             int stepID = 0;
             Exception fakeUIThreadException = null;
 
-            ObjectThread fakeUIThread = new ObjectThread("Fake-UI", 100);
+            var fakeUIThread = new ObjectThread("Fake-UI", 100);
+
             fakeUIThread.ThreadException += (sender, eArgs) =>
             {
                 fakeUIThreadException = eArgs.Exception;
