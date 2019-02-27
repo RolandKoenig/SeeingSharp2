@@ -26,9 +26,6 @@ namespace SeeingSharp.Multimedia.Objects._ObjectTypes
 {
     #region usings
 
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class SphereType : ObjectType

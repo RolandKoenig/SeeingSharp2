@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -21,9 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+#region using
+
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#endregion
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,

@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -21,30 +21,34 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Util;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using GDI = System.Drawing;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using Core;
+    using Drawing3D;
+    using Input;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public partial class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
         private const string TEXT_GRAPHICS_NOT_INITIALIZED = "Graphics not initialized!";
@@ -54,8 +58,8 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Resources for Direct3D 11
-        private DXGI.Factory m_factory;
-        private DXGI.SwapChain1 m_swapChain;
+        private SharpDX.DXGI.Factory m_factory;
+        private SharpDX.DXGI.SwapChain1 m_swapChain;
         private D3D11.Device m_renderDevice;
         private D3D11.DeviceContext m_renderDeviceContext;
         private D3D11.RenderTargetView m_renderTarget;
@@ -65,10 +69,10 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Generic members
-        private Brush m_backBrush;
-        private Brush m_foreBrushText;
-        private Brush m_backBrushText;
-        private Pen m_borderPen;
+        private GDI.Brush m_backBrush;
+        private GDI.Brush m_foreBrushText;
+        private GDI.Brush m_backBrushText;
+        private GDI.Pen m_borderPen;
         #endregion
 
         #region Misc
@@ -162,7 +166,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                GDI.Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile);
             }
         }
@@ -176,7 +180,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                GDI.Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile, imageFormat);
             }
         }
@@ -262,9 +266,9 @@ namespace SeeingSharp.Multimedia.Views
             m_backBrush = new System.Drawing.Drawing2D.HatchBrush(
                 GDI.Drawing2D.HatchStyle.DottedGrid,
                 GDI.Color.Gray, this.BackColor);
-            m_backBrushText = new SolidBrush(GDI.Color.White);
-            m_foreBrushText = new SolidBrush(GDI.Color.Black);
-            m_borderPen = new Pen(GDI.Color.DarkGray);
+            m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
+            m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
+            m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
         }
 
         /// <summary>
@@ -374,7 +378,7 @@ namespace SeeingSharp.Multimedia.Views
 
             // Query for current dpi value
             DpiScaling dpiScaling = DpiScaling.Default;
-            using (Graphics graphics = this.CreateGraphics())
+            using (GDI.Graphics graphics = this.CreateGraphics())
             {
                 dpiScaling.DpiX = graphics.DpiX;
                 dpiScaling.DpiY = graphics.DpiY;
@@ -466,13 +470,13 @@ namespace SeeingSharp.Multimedia.Views
             //Present all rendered stuff on screen
             try
             {
-                m_swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
+                m_swapChain.Present(0, SharpDX.DXGI.PresentFlags.DoNotWait, new SharpDX.DXGI.PresentParameters());
             }
             catch(SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware
-                if (ex.ResultCode == DXGI.ResultCode.WasStillDrawing) { return; }
+                if (ex.ResultCode == SharpDX.DXGI.ResultCode.WasStillDrawing) { return; }
 
                 throw;
             }

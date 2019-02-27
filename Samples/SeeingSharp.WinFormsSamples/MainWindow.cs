@@ -21,19 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.SampleContainer;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.WinFormsSamples
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Windows.Forms;
+    using Checking;
+    using Multimedia.Core;
+    using SampleContainer;
+    using SharpDX;
+
+    #endregion
+
     public partial class MainWindow : Form
     {
         private bool m_isChangingSample;

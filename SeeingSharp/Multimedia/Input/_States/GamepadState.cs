@@ -198,7 +198,6 @@ namespace SeeingSharp.Multimedia.Input
             {
                 m_host = host;
             }
-            
             public void NotifyConnected(bool isConnected)
             {
                 m_host.NotifyConnected(isConnected);

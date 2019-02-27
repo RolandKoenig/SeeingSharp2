@@ -1,31 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Multimedia.Views;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.Checking;
-using SharpDX;
-using Windows.ApplicationModel;
+﻿#region License information
+/*
+    Seeing# and all games/applications distributed together with it. 
+    Exception are projects where it is noted otherwhise.
+    More info at 
+     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
+     - http://www.rolandk.de (the autors homepage, german)
+    Copyright (C) 2019 Roland König (RolandK)
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/.
+*/
+#endregion
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
-
 namespace SeeingSharp.UwpSamples
 {
+    #region using
+
+    using Windows.ApplicationModel;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using SampleContainer;
+
+    #endregion
+
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
     /// </summary>
