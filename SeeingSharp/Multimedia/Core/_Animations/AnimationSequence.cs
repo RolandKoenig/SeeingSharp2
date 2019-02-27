@@ -50,8 +50,6 @@ namespace SeeingSharp.Multimedia.Core
         private int m_currentWorkingThreadCount;
         private Thread m_currentWorkingThread;
 
-        private TimeSpan m_defaultCycleTime = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
-
         /// <summary>
         /// Raises when an animation within this sequence has failed.
         /// </summary>
@@ -477,9 +475,9 @@ namespace SeeingSharp.Multimedia.Core
                 else
                 {
                     m_timeTillNextPartFinished = m_timeTillNextPartFinished - updateState.UpdateTime;
-                    if(m_timeTillNextPartFinished < m_defaultCycleTime)
+                    if(m_timeTillNextPartFinished < DefaultCycleTime)
                     {
-                        m_timeTillNextPartFinished = m_defaultCycleTime;
+                        m_timeTillNextPartFinished = DefaultCycleTime;
                     }
                 }
             }
@@ -574,7 +572,7 @@ namespace SeeingSharp.Multimedia.Core
                     var mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                     // Update local time values
-                    actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, m_defaultCycleTime);
+                    actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, DefaultCycleTime);
 
                     if (actAnimTime < timeTillNextStepMin) { timeTillNextStepMin = actAnimTime; }
                     if (actAnimTime > timeTillNextStepMax) { timeTillNextStepMax = actAnimTime; }
@@ -622,7 +620,7 @@ namespace SeeingSharp.Multimedia.Core
                             var mParamMax = timeTillNextStepMax != TimeSpan.MinValue ? timeTillNextStepMax : TimeSpan.Zero;
 
                             // Update local time values
-                            actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, m_defaultCycleTime);
+                            actAnimTime = actAnimationStep.GetTimeTillNextEvent(mParamMin, mParamMax, DefaultCycleTime);
 
                             if (actAnimTime < timeTillNextStepMin) { timeTillNextStepMin = actAnimTime; }
                             if (actAnimTime > timeTillNextStepMax) { timeTillNextStepMax = actAnimTime; }
@@ -814,11 +812,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets or sets the default cycletime (cycles time in continous calculation model).
         /// </summary>
-        public TimeSpan DefaultCycleTime
-        {
-            get { return m_defaultCycleTime; }
-            set { m_defaultCycleTime = value; }
-        }
+        public TimeSpan DefaultCycleTime { get; set; } = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
 
         /// <summary>
         /// Should this animation ignore pause state?

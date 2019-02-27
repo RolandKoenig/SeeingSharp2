@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         private IntPtr m_pointer;
         private int* m_pointerNative;
         private Size2 m_size;
-        private int m_countInts;
+
         #endregion
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
             m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
             m_pointerNative = (int*)m_pointer.ToPointer();
             m_size = size;
-            m_countInts = m_size.Width * m_size.Height;
+            CountInts = m_size.Width * m_size.Height;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             uint alphaByteValue = 0xFF000000;
             uint* pointerUInt = (uint*)m_pointerNative;
-            for (int loopIndex = 0; loopIndex < m_countInts; loopIndex++)
+            for (int loopIndex = 0; loopIndex < CountInts; loopIndex++)
             {
                 pointerUInt[loopIndex] |= alphaByteValue;
             }
@@ -108,10 +108,7 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public int CountInts
-        {
-            get { return m_countInts; }
-        }
+        public int CountInts { get; }
 
         /// <summary>
         /// Gets the width of the buffer.

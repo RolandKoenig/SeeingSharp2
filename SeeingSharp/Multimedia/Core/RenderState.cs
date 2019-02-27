@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderState : IDisposable
     {
         #region Resources for Direct3D 11 rendering
-        private EngineDevice m_device;
+
         #endregion
 
         #region  Generic fields
@@ -74,7 +74,7 @@ namespace SeeingSharp.Multimedia.Core
         private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
         {
             //Set device members
-            m_device = device;
+            Device = device;
             this.DeviceIndex = device.DeviceIndex;
 
             //Initialize world matrix
@@ -201,7 +201,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             //Apply initial render properties
-            m_currentRenderSettings.Apply(m_device.DeviceImmediateContextD3D11);
+            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -216,8 +216,8 @@ namespace SeeingSharp.Multimedia.Core
             m_forcedMaterial = null;
             m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
 
-            m_device.DeviceImmediateContextD3D11.ClearState();
-            if (m_currentRenderSettings != null) { m_currentRenderSettings.Apply(m_device.DeviceImmediateContextD3D11); }
+            Device.DeviceImmediateContextD3D11.ClearState();
+            if (m_currentRenderSettings != null) { m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11); }
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (currentTargets.DepthStencilBuffer != null)
             {
-                m_device.DeviceImmediateContextD3D11.ClearDepthStencilView(
+                Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
                     currentTargets.DepthStencilBuffer,
                     D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil,
                     depth, stencil);
@@ -266,7 +266,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (currentTargets.ColorBuffer != null)
             {
-                m_device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.ColorBuffer,
                     color);
             }
@@ -286,7 +286,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (currentTargets.NormalDepthBuffer != null)
             {
-                m_device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.NormalDepthBuffer,
                     Color4Ex.Transparent);
             }
@@ -351,7 +351,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             //Overtake device settings
-            newEntry.Apply(m_device.DeviceImmediateContextD3D11);
+            newEntry.Apply(Device.DeviceImmediateContextD3D11);
 
             //Push new entry onto the stack
             m_renderSettingsStack.Push(m_currentRenderSettings);
@@ -370,7 +370,7 @@ namespace SeeingSharp.Multimedia.Core
             m_currentRenderSettings = m_renderSettingsStack.Pop();
 
             //Apply old configuration
-            m_currentRenderSettings.Apply(m_device.DeviceImmediateContextD3D11);
+            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (m_currentRenderSettings != null)
             {
-                m_currentRenderSettings.Apply(m_device.DeviceImmediateContextD3D11);
+                m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
             }
         }
 
@@ -400,10 +400,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current Device object.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return m_device; }
-        }
+        public EngineDevice Device { get; }
 
         /// <summary>
         /// Gets the ViewProj matrix.

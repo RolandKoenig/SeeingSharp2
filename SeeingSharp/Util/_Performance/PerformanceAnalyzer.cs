@@ -51,7 +51,6 @@ namespace SeeingSharp.Util
         private DateTime m_startupTimestamp;
 
         // Members for threading
-        private SynchronizationContext m_syncContext;
         private volatile int m_delayTimeMS;
         private Task m_runningTask;
 
@@ -60,7 +59,6 @@ namespace SeeingSharp.Util
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
 
         // Collections for UI
-        private ObservableCollection<DurationPerformanceResult> m_uiDurationKpisCurrents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
@@ -77,14 +75,14 @@ namespace SeeingSharp.Util
             m_generateHistoricalCollection = true;
             m_generateCurrentValueCollection = true;
 
-            m_syncContext = SynchronizationContext.Current;
+            SyncContext = SynchronizationContext.Current;
             m_delayTimeMS = 1000;
 
             m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
             UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            m_uiDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
+            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
             UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
             UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
         }
@@ -198,7 +196,7 @@ namespace SeeingSharp.Util
         public async Task RefreshUICollectionsAsync()
         {
             // Trigger UI synchronization
-            await m_syncContext.PostAlsoIfNullAsync(
+            await SyncContext.PostAlsoIfNullAsync(
                 () =>
                 {
                     this.RefreshUICollections();
@@ -211,7 +209,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void RefreshUICollections()
         {
-            m_uiDurationKpisCurrents.Clear();
+            UIDurationKpisCurrents.Clear();
 
             foreach (var actCalculatorInfo in m_calculatorsBag)
             {
@@ -320,11 +318,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets or sets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext
-        {
-            get { return m_syncContext; }
-            set { m_syncContext = value; }
-        }
+        public SynchronizationContext SyncContext { get; set; }
 
         /// <summary>
         /// Is the main loop currently running?
@@ -419,10 +413,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets current duration results (if activated).
         /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisCurrents
-        {
-            get { return m_uiDurationKpisCurrents; }
-        }
+        public ObservableCollection<DurationPerformanceResult> UIDurationKpisCurrents { get; }
 
         /// <summary>
         /// Gets historical flowrate results (if activated).

@@ -32,21 +32,16 @@ namespace SeeingSharp.Multimedia.Objects
 
     public struct StructureBuildOptions
     {
-        private DetailLevel m_detailLevel;
-
         public StructureBuildOptions(DetailLevel detailLevel)
         {
-            m_detailLevel = detailLevel;
+            TargetDetailLevel = detailLevel;
         }
 
-        public DetailLevel TargetDetailLevel
-        {
-            get { return m_detailLevel; }
-        }
+        public DetailLevel TargetDetailLevel { get; }
 
         public bool IsHighDetail
         {
-            get { return (m_detailLevel & DetailLevel.High) == DetailLevel.High; }
+            get { return (TargetDetailLevel & DetailLevel.High) == DetailLevel.High; }
         }
     }
 

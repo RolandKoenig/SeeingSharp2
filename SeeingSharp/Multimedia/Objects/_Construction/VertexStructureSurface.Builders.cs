@@ -65,11 +65,11 @@ namespace SeeingSharp.Multimedia.Objects
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < m_indices.Count; loop += 3)
+            for (var loop = 0; loop < IndicesInternal.Count; loop += 3)
             {
-                var vertex1 = m_owner.VerticesInternal[m_indices[loop]].Position;
-                var vertex2 = m_owner.VerticesInternal[m_indices[loop + 1]].Position;
-                var vertex3 = m_owner.VerticesInternal[m_indices[loop + 2]].Position;
+                var vertex1 = Owner.VerticesInternal[IndicesInternal[loop]].Position;
+                var vertex2 = Owner.VerticesInternal[IndicesInternal[loop + 1]].Position;
+                var vertex3 = Owner.VerticesInternal[IndicesInternal[loop + 2]].Position;
 
                 float currentDistance = 0f;
 
@@ -95,38 +95,38 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="height">Total height of the column.</param>
         public BuiltVerticesRange BuildColumn24V(Vector3 bottomMiddle, float size, float height)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             float halfSize = size / 2f;
             this.BuildCube24V(
                 new Vector3(bottomMiddle.X - halfSize, bottomMiddle.Y, bottomMiddle.Z - halfSize),
                 new Vector3(size, height, size));
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         public BuiltVerticesRange BuildHorizontalColumnX24V(Vector3 leftMiddle, float size, float width)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             float halfSize = size / 2f;
             this.BuildCube24V(
                 new Vector3(leftMiddle.X, leftMiddle.Y - halfSize, leftMiddle.Z - halfSize),
                 new Vector3(width, size, size));
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         public BuiltVerticesRange BuildHorizontalColumnZ24V(Vector3 frontMiddle, float size, float depth)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             float halfSize = size / 2f;
             this.BuildCube24V(
                 new Vector3(frontMiddle.X - halfSize, frontMiddle.Y - halfSize, frontMiddle.Z),
                 new Vector3(size, size, depth));
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -137,14 +137,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="size">The size of the rectangle.</param>
         public BuiltVerticesRange BuildXAxisAlignedRect(Vector3 startPoint, Vector3 destinationPoint, float size)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             float halfSize = size / 2f;
             this.BuildCube24V(
                 new Vector3(startPoint.X, startPoint.Y - halfSize, startPoint.Z - halfSize),
                 new Vector3(destinationPoint.X - startPoint.X, size, size));
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -155,19 +155,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="size">The size of the rectangle.</param>
         public BuiltVerticesRange BuildZAxisAlignedRect(Vector3 startPoint, Vector3 destinationPoint, float size)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             float halfSize = size / 2f;
             this.BuildCube24V(
                 new Vector3(startPoint.X - halfSize, startPoint.Y - halfSize, startPoint.Z),
                 new Vector3(size, size, destinationPoint.Z - startPoint.Z));
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         public BuiltVerticesRange BuildCircleFullV(Vector3 middle, float radius, float width, float height, int countOfSegments, Color4 Color)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
             if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
 
             Matrix3x2 rotationMatrix;
@@ -225,7 +225,7 @@ namespace SeeingSharp.Multimedia.Objects
                 lastFarVector = nextFarVector;
             }
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">The color for the generated vertices.</param>
         public BuiltVerticesRange BuildConeFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             if (countOfSegments < 5)
             {
@@ -265,7 +265,7 @@ namespace SeeingSharp.Multimedia.Objects
             var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
             //Add bottom and top vertices to the structure
-            int bottomVertexIndex = m_owner.AddVertex(bottomVertex);
+            int bottomVertexIndex = Owner.AddVertex(bottomVertex);
 
             //Generate all segments
             float fullRadian = EngineMath.RAD_360DEG;
@@ -297,8 +297,8 @@ namespace SeeingSharp.Multimedia.Objects
                 var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord);
                 AddTriangle(
                     bottomVertexIndex,
-                    m_owner.AddVertex(segmentBottomLeft),
-                    m_owner.AddVertex(segmentBottomRight));
+                    Owner.AddVertex(segmentBottomLeft),
+                    Owner.AddVertex(segmentBottomRight));
 
                 //Generate side normal
                 var vectorToTop = topCoordinate - sideMiddleBottomCoord;
@@ -312,12 +312,12 @@ namespace SeeingSharp.Multimedia.Objects
                 var segmentTopRight = topVertex.Copy(sideRighBottomtCoord);
 
                 AddTriangle(
-                    m_owner.AddVertex(topVertex),
-                    m_owner.AddVertex(segmentTopRight),
-                    m_owner.AddVertex(segmentTopLeft));
+                    Owner.AddVertex(topVertex),
+                    Owner.AddVertex(segmentTopRight),
+                    Owner.AddVertex(segmentTopLeft));
             }
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace SeeingSharp.Multimedia.Objects
             Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color,
             bool buildSides, bool buildBottom, bool buildTop)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
             float diameter = radius * 2f;
@@ -414,8 +414,8 @@ namespace SeeingSharp.Multimedia.Objects
             var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
             //Add bottom and top vertices to the structure
-            int bottomVertexIndex = m_owner.AddVertex(bottomVertex);
-            int topVertexIndex = m_owner.AddVertex(topVertex);
+            int bottomVertexIndex = Owner.AddVertex(bottomVertex);
+            int topVertexIndex = Owner.AddVertex(topVertex);
 
             //Generate all segments
             float fullRadian = EngineMath.RAD_360DEG;
@@ -450,8 +450,8 @@ namespace SeeingSharp.Multimedia.Objects
                     var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord, sideRightTexCoord);
                     AddTriangle(
                         bottomVertexIndex,
-                        m_owner.AddVertex(segmentBottomLeft),
-                        m_owner.AddVertex(segmentBottomRight));
+                        Owner.AddVertex(segmentBottomLeft),
+                        Owner.AddVertex(segmentBottomRight));
                 }
 
                 //Add segment top triangle
@@ -461,8 +461,8 @@ namespace SeeingSharp.Multimedia.Objects
                     var segmentTopRight = topVertex.Copy(sideRightTopCoord, sideRightTexCoord);
                     AddTriangle(
                         topVertexIndex,
-                        m_owner.AddVertex(segmentTopRight),
-                        m_owner.AddVertex(segmentTopLeft));
+                        Owner.AddVertex(segmentTopRight),
+                        Owner.AddVertex(segmentTopLeft));
                 }
 
                 if (buildSides)
@@ -476,7 +476,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildShpere(int tDiv, int pDiv, double radius, Color4 color)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             double dt = (Math.PI * 2) / tDiv;
             double dp = Math.PI / pDiv;
@@ -504,7 +504,7 @@ namespace SeeingSharp.Multimedia.Objects
                         color,
                         SphereGetTextureCoordinate(theta, phi),
                         Vector3.Normalize(position));
-                    m_owner.Vertices.Add(vertex);
+                    Owner.Vertices.Add(vertex);
                 }
             }
 
@@ -529,7 +529,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -550,19 +550,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCube8V(Vector3 start, Vector3 size, Color4 color)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             var dest = start + size;
             var vertex = new Vertex(start, color, new Vector2());
 
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z)));
-            int c = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z)));
-            int d = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z)));
-            int e = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z)));
-            int f = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z)));
-            int g = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z)));
-            int h = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z)));
+            int c = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z)));
+            int d = Owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z)));
+            int e = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z)));
+            int f = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z)));
+            int g = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z)));
+            int h = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z)));
 
             this.AddTriangle(a, e, f);  //front side
             this.AddTriangle(f, b, a);
@@ -577,7 +577,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.AddTriangle(a, b, c);  //botton side
             this.AddTriangle(c, d, a);
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCube24V(Vector3 start, Vector3 size, Color4 color)
         {
-            var result = new BuiltVerticesRange(m_owner);
+            var result = new BuiltVerticesRange(Owner);
 
             result.Merge(this.BuildCubeSides16V(start, size, color));
             result.Merge(this.BuildCubeTop4V(start, size, color));
@@ -618,9 +618,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color"></param>
         public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float heigh, Color4 color)
         {
-            var result = new BuiltVerticesRange(m_owner)
+            var result = new BuiltVerticesRange(Owner)
             {
-                StartVertex = m_owner.CountVertices
+                StartVertex = Owner.CountVertices
             };
 
             int startTriangleIndex = this.CountTriangles;
@@ -649,59 +649,59 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Build Top side
             var vertex = new Vertex(topA, color, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
-            int c = m_owner.AddVertex(vertex.Copy(topC, new Vector2(0f, texY)));
-            int d = m_owner.AddVertex(vertex.Copy(topD, new Vector2(0f, 0f)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
+            int c = Owner.AddVertex(vertex.Copy(topC, new Vector2(0f, texY)));
+            int d = Owner.AddVertex(vertex.Copy(topD, new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Build Bottom side
             vertex = new Vertex(topA, color, new Vector2(0f, 0f), new Vector3(0f, -1f, 0f));
-            a = m_owner.AddVertex(vertex);
-            b = m_owner.AddVertex(vertex.Copy(topD, new Vector2(texX, 0f)));
-            c = m_owner.AddVertex(vertex.Copy(topC, new Vector2(texX, texY)));
-            d = m_owner.AddVertex(vertex.Copy(topB, new Vector2(0f, texY)));
+            a = Owner.AddVertex(vertex);
+            b = Owner.AddVertex(vertex.Copy(topD, new Vector2(texX, 0f)));
+            c = Owner.AddVertex(vertex.Copy(topC, new Vector2(texX, texY)));
+            d = Owner.AddVertex(vertex.Copy(topB, new Vector2(0f, texY)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Build Front side
             vertex = new Vertex(topA, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
-            a = m_owner.AddVertex(vertex);
-            b = m_owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
-            c = m_owner.AddVertex(vertex.Copy(bottomB, new Vector2(texX, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(bottomA, new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex);
+            b = Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
+            c = Owner.AddVertex(vertex.Copy(bottomB, new Vector2(texX, 0f)));
+            d = Owner.AddVertex(vertex.Copy(bottomA, new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Build Right side
-            a = m_owner.AddVertex(vertex.Copy(topB, new Vector3(1f, 0f, 0f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(topC, new Vector3(1f, 0f, 0f), new Vector2(texZ, texY)));
-            c = m_owner.AddVertex(vertex.Copy(bottomC, new Vector3(1f, 0f, 0f), new Vector2(texZ, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(bottomB, new Vector3(1f, 0f, 0f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(topB, new Vector3(1f, 0f, 0f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(topC, new Vector3(1f, 0f, 0f), new Vector2(texZ, texY)));
+            c = Owner.AddVertex(vertex.Copy(bottomC, new Vector3(1f, 0f, 0f), new Vector2(texZ, 0f)));
+            d = Owner.AddVertex(vertex.Copy(bottomB, new Vector3(1f, 0f, 0f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Build Back side
-            a = m_owner.AddVertex(vertex.Copy(topC, new Vector3(0f, 0f, 1f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(topD, new Vector3(0f, 0f, 1f), new Vector2(texX, texY)));
-            c = m_owner.AddVertex(vertex.Copy(bottomD, new Vector3(0f, 0f, 1f), new Vector2(texX, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(bottomC, new Vector3(0f, 0f, 1f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(topC, new Vector3(0f, 0f, 1f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(topD, new Vector3(0f, 0f, 1f), new Vector2(texX, texY)));
+            c = Owner.AddVertex(vertex.Copy(bottomD, new Vector3(0f, 0f, 1f), new Vector2(texX, 0f)));
+            d = Owner.AddVertex(vertex.Copy(bottomC, new Vector3(0f, 0f, 1f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Build Left side
-            a = m_owner.AddVertex(vertex.Copy(topD, new Vector3(-1f, 0f, 0f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(topA, new Vector3(-1f, 0f, 0f), new Vector2(texZ, texY)));
-            c = m_owner.AddVertex(vertex.Copy(bottomA, new Vector3(-1f, 0f, 0f), new Vector2(texZ, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(bottomD, new Vector3(-1f, 0f, 0f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(topD, new Vector3(-1f, 0f, 0f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(topA, new Vector3(-1f, 0f, 0f), new Vector2(texZ, texY)));
+            c = Owner.AddVertex(vertex.Copy(bottomA, new Vector3(-1f, 0f, 0f), new Vector2(texZ, 0f)));
+            d = Owner.AddVertex(vertex.Copy(bottomD, new Vector3(-1f, 0f, 0f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             // Calculate normals finally
             this.CalculateNormalsFlat(startTriangleIndex, this.CountTriangles - startTriangleIndex);
 
-            result.VertexCount = (int)(m_owner.CountVertices - result.StartVertex);
+            result.VertexCount = (int)(Owner.CountVertices - result.StartVertex);
             return result;
         }
 
@@ -760,7 +760,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, TextureCoordinateCalculationAlignment uCoordAlignment, TextureCoordinateCalculationAlignment vCoordAlignment, float coordRepeatUnit)
         {
-            int startVertex = m_owner.CountVertices;
+            int startVertex = Owner.CountVertices;
 
             //Define texture coordinate calculation functions
             Func<Vector3, float> caluclateU = (actPosition) =>
@@ -797,15 +797,15 @@ namespace SeeingSharp.Multimedia.Objects
             var textureCoordinate = new Vector2(caluclateU(pointA), calculateV(pointA));
             var vertex = new Vertex(pointA, Color4.White, textureCoordinate, normal);
 
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(caluclateU(pointB), calculateV(pointB))));
-            int c = m_owner.AddVertex(vertex.Copy(pointC, new Vector2(caluclateU(pointC), calculateV(pointC))));
-            int d = m_owner.AddVertex(vertex.Copy(pointD, new Vector2(caluclateU(pointD), calculateV(pointD))));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(caluclateU(pointB), calculateV(pointB))));
+            int c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(caluclateU(pointC), calculateV(pointC))));
+            int d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(caluclateU(pointD), calculateV(pointD))));
 
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
-            return new BuiltVerticesRange(m_owner, (int)startVertex, (int)(m_owner.CountVertices - startVertex));
+            return new BuiltVerticesRange(Owner, (int)startVertex, (int)(Owner.CountVertices - startVertex));
         }
 
         /// <summary>
@@ -848,9 +848,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size, Color4 color)
         {
-            var result = new BuiltVerticesRange(m_owner)
+            var result = new BuiltVerticesRange(Owner)
             {
-                StartVertex = m_owner.CountVertices
+                StartVertex = Owner.CountVertices
             };
 
             var dest = start + size;
@@ -868,38 +868,38 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Front side
             var vertex = new Vertex(start, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector2(texX, texY)));
-            int c = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector2(texX, 0f)));
-            int d = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z), new Vector2(0f, 0f)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector2(texX, texY)));
+            int c = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector2(texX, 0f)));
+            int d = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             //Right side
-            a = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector3(1f, 0f, 0f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z), new Vector3(1f, 0f, 0f), new Vector2(texZ, texY)));
-            c = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z), new Vector3(1f, 0f, 0f), new Vector2(texZ, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector3(1f, 0f, 0f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector3(1f, 0f, 0f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z), new Vector3(1f, 0f, 0f), new Vector2(texZ, texY)));
+            c = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z), new Vector3(1f, 0f, 0f), new Vector2(texZ, 0f)));
+            d = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector3(1f, 0f, 0f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             //Back side
-            a = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(texX, texY)));
-            c = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(texX, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(texX, texY)));
+            c = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(texX, 0f)));
+            d = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z), new Vector3(0f, 0f, 1f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
             //Left side
-            a = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z), new Vector3(-1f, 0f, 0f), new Vector2(0f, texY)));
-            b = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, start.Z), new Vector3(-1f, 0f, 0f), new Vector2(texZ, texY)));
-            c = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z), new Vector3(-1f, 0f, 0f), new Vector2(texZ, 0f)));
-            d = m_owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z), new Vector3(-1f, 0f, 0f), new Vector2(0f, 0f)));
+            a = Owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, dest.Z), new Vector3(-1f, 0f, 0f), new Vector2(0f, texY)));
+            b = Owner.AddVertex(vertex.Copy(new Vector3(start.X, start.Y, start.Z), new Vector3(-1f, 0f, 0f), new Vector2(texZ, texY)));
+            c = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, start.Z), new Vector3(-1f, 0f, 0f), new Vector2(texZ, 0f)));
+            d = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z), new Vector3(-1f, 0f, 0f), new Vector2(0f, 0f)));
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
-            result.VertexCount = (int)(m_owner.CountVertices - result.StartVertex);
+            result.VertexCount = (int)(Owner.CountVertices - result.StartVertex);
             return result;
         }
 
@@ -927,15 +927,15 @@ namespace SeeingSharp.Multimedia.Objects
 
             var vertex = new Vertex(pointA, color, new Vector2(0f, texY));
 
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
-            int c = m_owner.AddVertex(vertex.Copy(pointC, new Vector2(texX, 0f)));
-            int d = m_owner.AddVertex(vertex.Copy(pointD, new Vector2(0f, 0f)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
+            int c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(texX, 0f)));
+            int d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(0f, 0f)));
 
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
-            return new BuiltVerticesRange(m_owner, (int)(m_owner.CountVertices - 4), 4);
+            return new BuiltVerticesRange(Owner, (int)(Owner.CountVertices - 4), 4);
         }
 
         /// <summary>
@@ -962,15 +962,15 @@ namespace SeeingSharp.Multimedia.Objects
 
             var vertex = new Vertex(pointA, color, new Vector2(0f, texY), normal);
 
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
-            int c = m_owner.AddVertex(vertex.Copy(pointC, new Vector2(texX, 0f)));
-            int d = m_owner.AddVertex(vertex.Copy(pointD, new Vector2(0f, 0f)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
+            int c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(texX, 0f)));
+            int d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(0f, 0f)));
 
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
-            return new BuiltVerticesRange(m_owner, (int)(m_owner.CountVertices - 4), 4);
+            return new BuiltVerticesRange(Owner, (int)(Owner.CountVertices - 4), 4);
         }
 
         /// <summary>
@@ -980,15 +980,15 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var vertex = new Vertex(pointA, color, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
 
-            int a = m_owner.AddVertex(vertex);
-            int b = m_owner.AddVertex(vertex.Copy(pointB, new Vector2(maxTexCoord.X, maxTexCoord.Y)));
-            int c = m_owner.AddVertex(vertex.Copy(pointC, new Vector2(maxTexCoord.X, minTexCoord.Y)));
-            int d = m_owner.AddVertex(vertex.Copy(pointD, new Vector2(minTexCoord.X, minTexCoord.Y)));
+            int a = Owner.AddVertex(vertex);
+            int b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(maxTexCoord.X, maxTexCoord.Y)));
+            int c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(maxTexCoord.X, minTexCoord.Y)));
+            int d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(minTexCoord.X, minTexCoord.Y)));
 
             this.AddTriangle(a, c, b);
             this.AddTriangle(a, d, c);
 
-            return new BuiltVerticesRange(m_owner, (int)(m_owner.CountVertices - 4), 4);
+            return new BuiltVerticesRange(Owner, (int)(Owner.CountVertices - 4), 4);
         }
 
         /// <summary>
@@ -996,14 +996,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for (int loop = 2; loop < m_indices.Count; loop += 3)
+            for (int loop = 2; loop < IndicesInternal.Count; loop += 3)
             {
-                int index1 = m_indices[loop - 2];
-                int index2 = m_indices[loop - 1];
-                int index3 = m_indices[loop];
-                m_indices[loop] = index1;
-                m_indices[loop - 1] = index2;
-                m_indices[loop - 2] = index3;
+                int index1 = IndicesInternal[loop - 2];
+                int index2 = IndicesInternal[loop - 1];
+                int index3 = IndicesInternal[loop];
+                IndicesInternal[loop] = index1;
+                IndicesInternal[loop - 1] = index2;
+                IndicesInternal[loop - 2] = index3;
             }
         }
 

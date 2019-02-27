@@ -36,7 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
         private SharpDX.DXGI.OutputDescription m_outputDescription;
-        private EngineOutputModeInfo[] m_outputInfos;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
@@ -79,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Store mode list
-            m_outputInfos = strippedModeList.ToArray();
+            SupportedModes = strippedModeList.ToArray();
         }
 
         /// <summary>
@@ -139,12 +138,9 @@ namespace SeeingSharp.Multimedia.Core
 
         public EngineOutputModeInfo DefaultMode
         {
-            get { return m_outputInfos[0]; }
+            get { return SupportedModes[0]; }
         }
 
-        public EngineOutputModeInfo[] SupportedModes
-        {
-            get { return m_outputInfos; }
-        }
+        public EngineOutputModeInfo[] SupportedModes { get; }
     }
 }

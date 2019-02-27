@@ -42,8 +42,6 @@ namespace SeeingSharp.Multimedia.Objects
 
     public class SkyboxObject : SceneObject
     {
-        private NamedOrGenericKey m_cubeTextureKey;
-
         //Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
 
@@ -53,7 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
         public SkyboxObject(NamedOrGenericKey cubeTextureKey)
         {
             m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
-            m_cubeTextureKey = cubeTextureKey;
+            CubeTextureKey = cubeTextureKey;
         }
 
         /// <summary>
@@ -118,7 +116,7 @@ namespace SeeingSharp.Multimedia.Objects
             var localResources = new SkyboxLocalResources
             {
                 DefaultResources = resourceDictionary.DefaultResources,
-                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(m_cubeTextureKey),
+                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(CubeTextureKey),
                 VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices),
                 IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices),
                 VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
@@ -193,7 +191,7 @@ namespace SeeingSharp.Multimedia.Objects
                 return false;
             }
 
-            if (geoResource.CubeTexture.Key != m_cubeTextureKey)
+            if (geoResource.CubeTexture.Key != CubeTextureKey)
             {
                 return false;
             }
@@ -230,11 +228,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the key of the cube texture.
         /// </summary>
-        public NamedOrGenericKey CubeTextureKey
-        {
-            get { return m_cubeTextureKey; }
-            set { m_cubeTextureKey = value; }
-        }
+        public NamedOrGenericKey CubeTextureKey { get; set; }
 
         //*********************************************************************
         //*********************************************************************

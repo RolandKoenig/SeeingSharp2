@@ -46,15 +46,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// </summary>
     public sealed class PixelBuffer
     {
-        private int width;
-
-        private int height;
-
         private SharpDX.DXGI.Format format;
-
-        private int rowStride;
-
-        private int pixelSize;
 
         /// <summary>
         /// True when RowStride == sizeof(pixelformat) * width
@@ -75,27 +67,27 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             if (dataPointer == IntPtr.Zero)
                 throw new ArgumentException("Pointer cannot be equal to IntPtr.Zero", "dataPointer");
 
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
             this.format = format;
-            this.rowStride = rowStride;
+            this.RowStride = rowStride;
             this.BufferStride = bufferStride;
             this.DataPointer = dataPointer;
-            this.pixelSize = SharpDX.DXGI.FormatHelper.SizeOfInBytes(this.format);
-            this.isStrictRowStride = (pixelSize * width) == rowStride;
+            this.PixelSize = SharpDX.DXGI.FormatHelper.SizeOfInBytes(this.format);
+            this.isStrictRowStride = (PixelSize * width) == rowStride;
         }
 
         /// <summary>
         /// Gets the width.
         /// </summary>
         /// <value>The width.</value>
-        public int Width { get { return width; } }
+        public int Width { get; }
 
         /// <summary>
         /// Gets the height.
         /// </summary>
         /// <value>The height.</value>
-        public int Height { get { return height; } }
+        public int Height { get; }
 
         /// <summary>
         /// Gets the format (this value can be changed)
@@ -121,13 +113,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the pixel size in bytes.
         /// </summary>
         /// <value>The pixel size in bytes.</value>
-        public int PixelSize { get { return this.pixelSize; } }
+        public int PixelSize { get; }
 
         /// <summary>
         /// Gets the row stride in number of bytes.
         /// </summary>
         /// <value>The row stride in number of bytes.</value>
-        public int RowStride { get { return this.rowStride; } }
+        public int RowStride { get; }
 
         /// <summary>
         /// Gets the total size in bytes of this pixel buffer.
@@ -204,8 +196,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             var description = new ImageDescription()
             {
-                Width = this.width,
-                Height = this.height,
+                Width = this.Width,
+                Height = this.Height,
                 Depth = 1,
                 ArraySize = 1,
                 Dimension = TextureDimension.Texture2D,
@@ -255,7 +247,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public T[] GetPixels<T>(int yOffset = 0) where T : struct
         {
             var sizeOfOutputPixel = SDX.Utilities.SizeOf<T>();
-            var totalSize = Width * Height * pixelSize;
+            var totalSize = Width * Height * PixelSize;
             if ((totalSize % sizeOfOutputPixel) != 0)
                 throw new ArgumentException(string.Format("Invalid sizeof(T), not a multiple of current size [{0}]in bytes ", totalSize));
 
@@ -292,7 +284,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// </remarks>
         public unsafe void GetPixels<T>(T[] pixels, int yOffset, int pixelIndex, int pixelCount) where T : struct
         {
-            var pixelPointer = (byte*)this.DataPointer + yOffset * rowStride;
+            var pixelPointer = (byte*)this.DataPointer + yOffset * RowStride;
             if (isStrictRowStride)
             {
                 SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, 0, pixelCount);
@@ -305,7 +297,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 for (int i = 0; i < sizePerWidth; i++)
                 {
                     SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, pixelIndex, Width);
-                    pixelPointer += rowStride;
+                    pixelPointer += RowStride;
                     pixelIndex += Width;
                 }
                 if (remainingPixels > 0)
@@ -346,7 +338,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// </remarks>
         public unsafe void SetPixels<T>(T[] sourcePixels, int yOffset, int pixelIndex, int pixelCount) where T : struct
         {
-            var pixelPointer = (byte*)this.DataPointer + yOffset * rowStride;
+            var pixelPointer = (byte*)this.DataPointer + yOffset * RowStride;
             if (isStrictRowStride)
             {
                 SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, 0, pixelCount);
@@ -359,7 +351,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 for (int i = 0; i < sizePerWidth; i++)
                 {
                     SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, pixelIndex, Width);
-                    pixelPointer += rowStride;
+                    pixelPointer += RowStride;
                     pixelIndex += Width;
                 }
                 if (remainingPixels > 0)

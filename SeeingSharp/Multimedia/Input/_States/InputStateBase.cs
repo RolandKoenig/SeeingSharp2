@@ -37,7 +37,6 @@ namespace SeeingSharp.Multimedia.Input
     public abstract class InputStateBase
     {
         #region state related data
-        private ViewInformation m_relatedView;
 
         #endregion
 
@@ -70,11 +69,7 @@ namespace SeeingSharp.Multimedia.Input
         /// The view object this input state was queried on.
         /// Null, if this InputState does not depend on a view.
         /// </summary>
-        public ViewInformation RelatedView
-        {
-            get{ return m_relatedView; }
-            internal set { m_relatedView = value; }
-        }
+        public ViewInformation RelatedView { get; internal set; }
 
         /// <summary>
         /// The view index this input state was queried on.
@@ -84,8 +79,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(m_relatedView == null) { return -1; }
-                else { return m_relatedView.ViewIndex; }
+                if(RelatedView == null) { return -1; }
+                else { return RelatedView.ViewIndex; }
             }
         }
 

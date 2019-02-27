@@ -49,10 +49,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         #region Configuration
         private GradientStop[] m_gradientStops;
-        private ExtendMode m_extendMode;
-        private Gamma m_gamma;
-        private Vector2 m_startPoint;
-        private Vector2 m_endPoint;
         private float m_opacity;
         #endregion
 
@@ -76,10 +72,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
 
             m_gradientStops = gradientStops;
-            m_startPoint = startPoint;
-            m_endPoint = endPoint;
-            m_extendMode = extendMode;
-            m_gamma = gamma;
+            StartPoint = startPoint;
+            EndPoint = endPoint;
+            ExtendMode = extendMode;
+            Gamma = gamma;
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
@@ -137,8 +133,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GradientStops = new D2D.GradientStopCollection(
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
-                        (D2D.Gamma) m_gamma,
-                        (D2D.ExtendMode) m_extendMode)
+                        (D2D.Gamma) Gamma,
+                        (D2D.ExtendMode) ExtendMode)
                 };
 
                 unsafe
@@ -148,8 +144,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         engineDevice.FakeRenderTarget2D,
                         new D2D.LinearGradientBrushProperties()
                         {
-                            StartPoint = m_startPoint,
-                            EndPoint = m_endPoint
+                            StartPoint = StartPoint,
+                            EndPoint = EndPoint
                         },
                         new D2D.BrushProperties()
                         {
@@ -165,25 +161,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result.Brush;
         }
 
-        public Gamma Gamma
-        {
-            get { return m_gamma; }
-        }
+        public Gamma Gamma { get; }
 
-        public ExtendMode ExtendMode
-        {
-            get { return m_extendMode; }
-        }
+        public ExtendMode ExtendMode { get; }
 
-        public Vector2 StartPoint
-        {
-            get { return m_startPoint; }
-        }
+        public Vector2 StartPoint { get; }
 
-        public Vector2 EndPoint
-        {
-            get { return m_endPoint; }
-        }
+        public Vector2 EndPoint { get; }
 
         //*********************************************************************
         //*********************************************************************

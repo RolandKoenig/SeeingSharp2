@@ -32,8 +32,6 @@ namespace SeeingSharp.Util
 
     public abstract class PerformanceAnalyzeResultBase
     {
-        private PerformanceCalculatorBase m_calculator;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzeResultBase"/> class.
         /// </summary>
@@ -41,24 +39,21 @@ namespace SeeingSharp.Util
         /// <param name="keyTimestamp">The key of this result object..</param>
         internal PerformanceAnalyzeResultBase(PerformanceCalculatorBase calculator, DateTime keyTimestamp)
         {
-            m_calculator = calculator;
+            Calculator = calculator;
             KeyTimestamp = keyTimestamp;
         }
 
         /// <summary>
         /// Gets the calculator this value was generated on.
         /// </summary>
-        public PerformanceCalculatorBase Calculator
-        {
-            get { return m_calculator; }
-        }
+        public PerformanceCalculatorBase Calculator { get; }
 
         /// <summary>
         /// Gets the name of the calculator.
         /// </summary>
         public string CalculatorName
         {
-            get { return m_calculator.CalculatorName; }
+            get { return Calculator.CalculatorName; }
         }
 
         /// <summary>

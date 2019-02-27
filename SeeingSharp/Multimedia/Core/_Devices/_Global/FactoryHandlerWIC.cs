@@ -26,27 +26,22 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerWIC
     {
-        private SharpDX.WIC.ImagingFactory m_imagingFactory;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
         /// </summary>
         internal FactoryHandlerWIC(DeviceLoadSettings deviceLoadSettings)
         {
-            m_imagingFactory = new SharpDX.WIC.ImagingFactory();
+            Factory = new SharpDX.WIC.ImagingFactory();
         }
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal SharpDX.WIC.ImagingFactory Factory
-        {
-            get { return m_imagingFactory; }
-        }
+        internal SharpDX.WIC.ImagingFactory Factory { get; }
 
         public bool IsInitialized
         {
-            get { return m_imagingFactory != null; }
+            get { return Factory != null; }
         }
     }
 }

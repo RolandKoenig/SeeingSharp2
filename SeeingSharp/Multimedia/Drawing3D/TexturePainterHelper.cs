@@ -50,9 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         #region Configuration
         private NamedOrGenericKey m_texture;
-        private float m_scaling;
-        private float m_opacity;
-        private float m_accentuationFactor;
+
         #endregion
 
         #region Used resources
@@ -70,9 +68,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal TexturePainterHelper(NamedOrGenericKey textureKey)
         {
             m_texture = textureKey;
-            m_scaling = 1f;
-            m_opacity = 1f;
-            m_accentuationFactor = 0f;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
         }
 
         /// <summary>
@@ -136,12 +134,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Apply rendering parameters
             m_renderParameters.UpdateValues(renderState, new CBPerObject()
             {
-                AccentuationFactor = m_accentuationFactor,
+                AccentuationFactor = AccentuationFactor,
                 BorderMultiplyer = 0f,
                 BorderPart = 0f,
                 Color = Vector4.Zero,
-                Opacity = m_opacity,
-                SpriteScaling = m_scaling,
+                Opacity = Opacity,
+                SpriteScaling = Scaling,
                 World = Matrix.Identity
             });
 
@@ -181,23 +179,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets or sets the scaling.
         /// </summary>
-        public float Scaling
-        {
-            get { return m_scaling; }
-            set { m_scaling = value; }
-        }
+        public float Scaling { get; set; }
 
-        public float AccentuationFactor
-        {
-            get { return m_accentuationFactor; }
-            set { m_accentuationFactor = value; }
-        }
+        public float AccentuationFactor { get; set; }
 
-        public float Opacity
-        {
-            get { return m_opacity; }
-            set { m_opacity = value; }
-        }
+        public float Opacity { get; set; }
 
         /// <summary>
         /// Are resources loaded?

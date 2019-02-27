@@ -45,7 +45,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
 
         //Some configuration
-        private NamedOrGenericKey m_textureKey;
 
         //Resource members
         private TextureResource m_textureResource;
@@ -59,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureKey">The name of the texture to be rendered.</param>
         public SpriteMaterialResource(NamedOrGenericKey textureKey)
         {
-            m_textureKey = textureKey;
+            TextureKey = textureKey;
         }
 
         /// <summary>
@@ -79,10 +78,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
             //Load the texture if any configured.
-            if (!m_textureKey.IsEmpty)
+            if (!TextureKey.IsEmpty)
             {
                 //Get texture resource
-                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(m_textureKey);
+                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(TextureKey);
             }
         }
 
@@ -152,10 +151,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the key of the texture resource.
         /// </summary>
-        public NamedOrGenericKey TextureKey
-        {
-            get { return m_textureKey; }
-        }
+        public NamedOrGenericKey TextureKey { get; }
 
         /// <summary>
         /// Is the resource loaded?

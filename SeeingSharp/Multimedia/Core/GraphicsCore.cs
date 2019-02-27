@@ -66,21 +66,16 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Hardware 
         private EngineFactory m_engineFactory;
-        private EngineHardwareInfo m_hardwareInfo;
         private List<EngineDevice> m_devices;
         private EngineDevice m_defaultDevice;
         #endregion
 
         #region Some helpers
-        private static UniqueGenericKeyGenerator s_resourceKeyGenerator;
-        private GraphicsCoreConfiguration m_configuration;
-        private PerformanceAnalyzer m_performanceCalculator;
 
         #endregion
 
         #region Members for input
 
-        private InputGathererThread m_inputGatherer;
         #endregion
 
         #region Global device handlers
@@ -92,7 +87,6 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Members for threading
         private static Task m_defaultInitTask;
-        private EngineMainLoop m_mainLoop;
         private Task m_mainLoopTask;
         private CancellationTokenSource m_mainLoopCancelTokenSource;
         #endregion
@@ -127,7 +121,7 @@ namespace SeeingSharp.Multimedia.Core
             s_internalExListenersLock = new object();
 
             // Create the key generator for resource keys
-            s_resourceKeyGenerator = new UniqueGenericKeyGenerator();
+            ResourceKeyGenerator = new UniqueGenericKeyGenerator();
         }
 
         private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
@@ -137,16 +131,16 @@ namespace SeeingSharp.Multimedia.Core
                 // Upate RK.Common members
                 m_devices = new List<EngineDevice>();
 
-                m_performanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
                 {
                     SyncContext = SynchronizationContext.Current
                 };
 
                 // <-- TODO
-                m_performanceCalculator.RunAsync(CancellationToken.None)
+                PerformanceCalculator.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
-                m_configuration = new GraphicsCoreConfiguration
+                Configuration = new GraphicsCoreConfiguration
                 {
                     DebugEnabled = loadSettings.DebugEnabled
                 };
@@ -184,16 +178,16 @@ namespace SeeingSharp.Multimedia.Core
                 this.FactoryWIC = m_factoryHandlerWIC.Factory;
 
                 // Create the object containing all hardware information
-                m_hardwareInfo = new EngineHardwareInfo();
+                HardwareInfo = new EngineHardwareInfo();
                 int actIndex = 0;
 
-                foreach(var actAdapterInfo in m_hardwareInfo.Adapters)
+                foreach(var actAdapterInfo in HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(
                         loadSettings,
                         loader,
                         m_engineFactory,
-                        m_configuration,
+                        Configuration,
                         actAdapterInfo.Adapter,
                         actAdapterInfo.IsSoftwareAdapter);
 
@@ -209,24 +203,24 @@ namespace SeeingSharp.Multimedia.Core
                 m_defaultDevice = m_devices.FirstOrDefault();
 
                 // Start input gathering
-                m_inputGatherer = new InputGathererThread();
-                m_inputGatherer.Start();
+                InputGatherer = new InputGathererThread();
+                InputGatherer.Start();
 
                 // Start main loop
-                m_mainLoop = new EngineMainLoop(this);
+                MainLoop = new EngineMainLoop(this);
                 if (m_devices.Count > 0)
                 {
                     m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = m_mainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
                 }
             }
             catch (Exception ex2)
             {
                 m_initException = ex2;
 
-                m_hardwareInfo = null;
+                HardwareInfo = null;
                 m_devices.Clear();
-                m_configuration = null;
+                Configuration = null;
             }
         }
 
@@ -355,9 +349,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Resume()
         {
-            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
+            if (MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
-            m_mainLoop.Resume();
+            MainLoop.Resume();
         }
 
         /// <summary>
@@ -365,9 +359,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task SuspendAsync()
         {
-            if (m_mainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
+            if (MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
-            return m_mainLoop.SuspendAsync();
+            return MainLoop.SuspendAsync();
         }
 
         /// <summary>
@@ -440,7 +434,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static NamedOrGenericKey GetNextGenericResourceKey()
         {
-            return s_resourceKeyGenerator.GetNextGeneric();
+            return ResourceKeyGenerator.GetNextGeneric();
         }
 
         /// <summary>
@@ -478,10 +472,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the dxgi factory object.
         /// </summary>
-        public EngineHardwareInfo HardwareInfo
-        {
-            get { return m_hardwareInfo; }
-        }
+        public EngineHardwareInfo HardwareInfo { get; }
 
         /// <summary>
         /// Gets the first output monitor.
@@ -490,7 +481,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                return m_hardwareInfo.Adapters
+                return HardwareInfo.Adapters
                     .FirstOrDefault()?
                     .Outputs.FirstOrDefault();
             }
@@ -526,18 +517,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current resource key generator.
         /// </summary>
-        public static UniqueGenericKeyGenerator ResourceKeyGenerator
-        {
-            get { return s_resourceKeyGenerator; }
-        }
+        public static UniqueGenericKeyGenerator ResourceKeyGenerator { get; }
 
         /// <summary>
         /// Gets current graphics configuration.
         /// </summary>
-        public GraphicsCoreConfiguration Configuration
-        {
-            get { return m_configuration; }
-        }
+        public GraphicsCoreConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the default device.
@@ -577,8 +562,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_mainLoop == null) { return 0; }
-                return m_mainLoop.RegisteredRenderLoopCount;
+                if (MainLoop == null) { return 0; }
+                return MainLoop.RegisteredRenderLoopCount;
             }
         }
 
@@ -615,23 +600,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current main loop object of the graphics engine.
         /// </summary>
-        public EngineMainLoop MainLoop
-        {
-            get { return m_mainLoop; }
-        }
+        public EngineMainLoop MainLoop { get; }
 
-        public InputGathererThread InputGatherer
-        {
-            get { return m_inputGatherer; }
-        }
+        public InputGathererThread InputGatherer { get; }
 
         /// <summary>
         /// Gets the current performance calculator.
         /// </summary>
-        public PerformanceAnalyzer PerformanceCalculator
-        {
-            get { return m_performanceCalculator; }
-        }
+        public PerformanceAnalyzer PerformanceCalculator { get; }
 
         /// <summary>
         /// Gets the WIC factory object.

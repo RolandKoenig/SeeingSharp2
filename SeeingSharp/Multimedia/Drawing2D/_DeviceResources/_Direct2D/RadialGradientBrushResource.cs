@@ -49,12 +49,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         #region Configuration
         private GradientStop[] m_gradientStops;
-        private ExtendMode m_extendMode;
-        private Gamma m_gamma;
-        private Vector2 m_center;
-        private Vector2 m_gradientOriginOffset;
-        private float m_radiusX;
-        private float m_radiusY;
         private float m_opacity;
         #endregion
 
@@ -74,12 +68,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusY.EnsurePositive(nameof(radiusY));
 
             m_gradientStops = gradientStops;
-            m_center = center;
-            m_gradientOriginOffset = gradientOriginOffset;
-            m_radiusX = radiusX;
-            m_radiusY = radiusY;
-            m_extendMode = extendMode;
-            m_gamma = gamma;
+            Center = center;
+            GradientOriginOffset = gradientOriginOffset;
+            RadiusX = radiusX;
+            RadiusY = radiusY;
+            ExtendMode = extendMode;
+            Gamma = gamma;
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
@@ -137,18 +131,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GradientStops = new D2D.GradientStopCollection(
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
-                        (D2D.Gamma) m_gamma,
-                        (D2D.ExtendMode) m_extendMode)
+                        (D2D.Gamma) Gamma,
+                        (D2D.ExtendMode) ExtendMode)
                 };
 
                 result.Brush = new D2D.RadialGradientBrush(
                     engineDevice.FakeRenderTarget2D,
                     new D2D.RadialGradientBrushProperties()
                     {
-                        Center = m_center,
-                        GradientOriginOffset = m_gradientOriginOffset,
-                        RadiusX = m_radiusX,
-                        RadiusY = m_radiusY
+                        Center = Center,
+                        GradientOriginOffset = GradientOriginOffset,
+                        RadiusX = RadiusX,
+                        RadiusY = RadiusY
                     },
                     new D2D.BrushProperties()
                     {
@@ -163,35 +157,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result.Brush;
         }
 
-        public Gamma Gamma
-        {
-            get { return m_gamma; }
-        }
+        public Gamma Gamma { get; }
 
-        public ExtendMode ExtendMode
-        {
-            get { return m_extendMode; }
-        }
+        public ExtendMode ExtendMode { get; }
 
-        public Vector2 Center
-        {
-            get { return m_center; }
-        }
+        public Vector2 Center { get; }
 
-        public Vector2 GradientOriginOffset
-        {
-            get { return m_gradientOriginOffset; }
-        }
+        public Vector2 GradientOriginOffset { get; }
 
-        public float RadiusX
-        {
-            get { return m_radiusX; }
-        }
+        public float RadiusX { get; }
 
-        public float RadiusY
-        {
-            get { return m_radiusY; }
-        }
+        public float RadiusY { get; }
 
         //*********************************************************************
         //*********************************************************************

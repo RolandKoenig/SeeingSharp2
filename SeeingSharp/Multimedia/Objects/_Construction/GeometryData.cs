@@ -34,16 +34,13 @@ namespace SeeingSharp.Multimedia.Objects
     [StructLayout(LayoutKind.Sequential)]
     public struct GeometryData
     {
-        private Vector3 m_position;
-        private Vector3 m_normal;
-
         /// <summary>
         /// Initializes a new geometry data structure
         /// </summary>
         public GeometryData(Vector3 position)
         {
-            m_position = position;
-            m_normal = Vector3.Zero;
+            Position = position;
+            Normal = Vector3.Zero;
             Tangent = Vector3.Zero;
             Color = Color4.White;
             Tangent = Vector3.Zero;
@@ -55,8 +52,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData(Vector3 position, Color4 color)
         {
-            m_position = position;
-            m_normal = Vector3.Zero;
+            Position = position;
+            Normal = Vector3.Zero;
             Color = color;
             Tangent = Vector3.Zero;
             Binormal = Vector3.Zero;
@@ -67,8 +64,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData(Vector3 position, Vector3 normal, Color4 color)
         {
-            m_position = position;
-            m_normal = normal;
+            Position = position;
+            Normal = normal;
             Color = color;
             Tangent = Vector3.Zero;
             Binormal = Vector3.Zero;
@@ -79,8 +76,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData(Vector3 position, Vector3 normal)
         {
-            m_position = position;
-            m_normal = normal;
+            Position = position;
+            Normal = normal;
             Color = Color4.White;
             Tangent = Vector3.Zero;
             Binormal = Vector3.Zero;
@@ -92,7 +89,7 @@ namespace SeeingSharp.Multimedia.Objects
         public GeometryData Copy(Vector3 newPosition)
         {
             var result = this;
-            result.m_position = newPosition;
+            result.Position = newPosition;
             return result;
         }
 
@@ -102,28 +99,20 @@ namespace SeeingSharp.Multimedia.Objects
         public GeometryData Copy(Vector3 newPosition, Vector3 newNormal)
         {
             var result = this;
-            result.m_position = newPosition;
-            result.m_normal = newNormal;
+            result.Position = newPosition;
+            result.Normal = newNormal;
             return result;
         }
 
         /// <summary>
         /// Retrieves or sets the position of the vertex
         /// </summary>
-        public Vector3 Position
-        {
-            get { return m_position; }
-            set { m_position = value; }
-        }
+        public Vector3 Position { get; set; }
 
         /// <summary>
         /// Retrieves or sets the normal of the vertex
         /// </summary>
-        public Vector3 Normal
-        {
-            get { return m_normal; }
-            set { m_normal = value; }
-        }
+        public Vector3 Normal { get; set; }
 
         /// <summary>
         /// Retrieves or sets the color of the vertex

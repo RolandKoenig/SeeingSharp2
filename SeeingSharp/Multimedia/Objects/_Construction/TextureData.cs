@@ -34,14 +34,12 @@ namespace SeeingSharp.Multimedia.Objects
     [StructLayout(LayoutKind.Sequential)]
     public struct TextureData
     {
-        private Vector2 m_coordiante1;
-
         /// <summary>
         /// Initializes a new TextureData structure
         /// </summary>
         public TextureData(Vector2 coord1)
         {
-            m_coordiante1 = coord1;
+            Coordinate1 = coord1;
             TextureFactor = 0f;
         }
 
@@ -51,7 +49,7 @@ namespace SeeingSharp.Multimedia.Objects
         public TextureData Copy(Vector2 newCoord1)
         {
             var result = this;
-            result.m_coordiante1 = newCoord1;
+            result.Coordinate1 = newCoord1;
             return result;
         }
 
@@ -65,10 +63,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves or sets first texture coordinate
         /// </summary>
-        public Vector2 Coordinate1
-        {
-            get { return m_coordiante1; }
-            set { m_coordiante1 = value; }
-        }
+        public Vector2 Coordinate1 { get; set; }
     }
 }

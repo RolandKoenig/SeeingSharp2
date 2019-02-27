@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
     public class WirePainterHostObject : SceneObject
     {
         #region Configuration
-        private Action<WirePainter> m_paintAction;
+
         #endregion
 
         #region Direct3D resources
@@ -121,13 +121,13 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var resourceData = m_localResources[renderState.DeviceIndex];
 
-            if (m_paintAction != null)
+            if (PaintAction != null)
             {
                 var wirePainter = new WirePainter(renderState, resourceData);
 
                 try
                 {
-                    m_paintAction(wirePainter);
+                    PaintAction(wirePainter);
                 }
                 finally
                 {
@@ -136,10 +136,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
         }
 
-        public Action<WirePainter> PaintAction
-        {
-            get { return m_paintAction; }
-            set { m_paintAction = value; }
-        }
+        public Action<WirePainter> PaintAction { get; set; }
     }
 }

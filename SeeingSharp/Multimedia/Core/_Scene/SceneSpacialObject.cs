@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion Resource keys
 
         #region Resources for rendering
-        private IndexBasedDynamicCollection<ObjectRenderParameters> m_renderParameters;
+
         #endregion Resources for rendering
 
         #region Spacial parameters
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public SceneSpacialObject()
         {
-            m_renderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
+            RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
 
             m_rotationUp = Vector3.UnitY;
             m_rotationForward = Vector3.UnitZ;
@@ -412,7 +412,7 @@ namespace SeeingSharp.Multimedia.Core
         private void TriggerRecreateOfParameters()
         {
             // Notify, that all render parameters need a refresh on next render
-            foreach (var actRenderParameters in m_renderParameters)
+            foreach (var actRenderParameters in RenderParameters)
             {
                 actRenderParameters.NeedsRefresh = true;
             }
@@ -426,11 +426,11 @@ namespace SeeingSharp.Multimedia.Core
             base.UnloadResources();
 
             // Mark all local resources for unloading
-            foreach (var actRenderParameters in m_renderParameters)
+            foreach (var actRenderParameters in RenderParameters)
             {
                 actRenderParameters.MarkForUnloading();
             }
-            m_renderParameters.Clear();
+            RenderParameters.Clear();
         }
 
         /// <summary>
@@ -440,14 +440,14 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateAndApplyRenderParameters(RenderState renderState)
         {
             // Get or create RenderParamters object on object level
-            var renderParameters = m_renderParameters[renderState.DeviceIndex];
+            var renderParameters = RenderParameters[renderState.DeviceIndex];
 
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded<ObjectRenderParameters>(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new ObjectRenderParameters());
-                m_renderParameters.AddObject(renderParameters, renderState.DeviceIndex);
+                RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
             }
 
             if (renderParameters.NeedsRefresh)
@@ -485,10 +485,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets all local render parameters.
         /// </summary>
-        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters
-        {
-            get { return m_renderParameters; }
-        }
+        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
 
         /// <summary>
         /// Gets current AnimationHandler object.

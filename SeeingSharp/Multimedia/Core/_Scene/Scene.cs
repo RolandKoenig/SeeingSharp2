@@ -69,9 +69,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Members for 2D rendering
-        private Graphics2DTransformMode m_transformMode2D;
-        private Size2F m_virtualScreenSize2D;
-        private Matrix3x2 m_customTransform2D;
+
         private List<Custom2DDrawingLayer> m_drawing2DLayers;
         #endregion Members for 2D rendering
 
@@ -103,9 +101,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_perFrameData = new CBPerFrame();
 
-            m_transformMode2D = Graphics2DTransformMode.Custom;
-            m_customTransform2D = Matrix3x2.Identity;
-            m_virtualScreenSize2D = new Size2F();
+            TransformMode2D = Graphics2DTransformMode.Custom;
+            CustomTransform2D = Matrix3x2.Identity;
+            VirtualScreenSize2D = new Size2F();
 
             m_sceneComponents = new SceneComponentFlyweight(this);
 
@@ -1069,9 +1067,9 @@ namespace SeeingSharp.Multimedia.Core
 
             graphics.PushTransformSettings(new Graphics2DTransformSettings()
             {
-                CustomTransform = m_customTransform2D,
-                TransformMode = m_transformMode2D,
-                VirtualScreenSize = m_virtualScreenSize2D
+                CustomTransform = CustomTransform2D,
+                TransformMode = TransformMode2D,
+                VirtualScreenSize = VirtualScreenSize2D
             });
 
             try
@@ -1222,23 +1220,11 @@ namespace SeeingSharp.Multimedia.Core
             set;
         }
 
-        public Graphics2DTransformMode TransformMode2D
-        {
-            get { return m_transformMode2D; }
-            set { m_transformMode2D = value; }
-        }
+        public Graphics2DTransformMode TransformMode2D { get; set; }
 
-        public Size2F VirtualScreenSize2D
-        {
-            get { return m_virtualScreenSize2D; }
-            set { m_virtualScreenSize2D = value; }
-        }
+        public Size2F VirtualScreenSize2D { get; set; }
 
-        public Matrix3x2 CustomTransform2D
-        {
-            get { return m_customTransform2D; }
-            set { m_customTransform2D = value; }
-        }
+        public Matrix3x2 CustomTransform2D { get; set; }
 
         internal SceneRelatedUpdateState CachedUpdateState
         {

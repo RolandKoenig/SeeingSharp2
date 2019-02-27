@@ -42,7 +42,6 @@ namespace SeeingSharp
     {
         #region Outer parameters
         private MovementSpeed m_speed;
-        private Vector3 m_movementDistance;
         private Vector3 m_movementNormal;
         #endregion
 
@@ -64,7 +63,7 @@ namespace SeeingSharp
         public MovementAnimationHelper(MovementSpeed speed, Vector3 movementDistance)
         {
             // Store main parameters
-            m_movementDistance = movementDistance;
+            MovementVector = movementDistance;
             m_speed = speed;
             m_speed.ValidateWithException();
 
@@ -150,7 +149,7 @@ namespace SeeingSharp
             else
             {
                 // Movement is finished
-                return this.m_movementDistance;
+                return this.MovementVector;
             }
 
             // Generate the full movement vector
@@ -192,9 +191,6 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the full movement vector.
         /// </summary>
-        public Vector3 MovementVector
-        {
-            get { return m_movementDistance; }
-        }
+        public Vector3 MovementVector { get; }
     }
 }

@@ -33,16 +33,13 @@ namespace SeeingSharp.Util
 
     public class AssemblyResourceInfo
     {
-        private Assembly m_targetAssembly;
-        private string m_resourcePath;
-
         /// <summary>
         /// Creates a new AssemblyResourceInfo object
         /// </summary>
         internal AssemblyResourceInfo(Assembly targetAssembly, string resourcePath, string key)
         {
-            m_targetAssembly = targetAssembly;
-            m_resourcePath = resourcePath;
+            TargetAssembly = targetAssembly;
+            ResourcePath = resourcePath;
             Key = key;
         }
 
@@ -51,24 +48,18 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead()
         {
-            return m_targetAssembly.GetManifestResourceStream(m_resourcePath);
+            return TargetAssembly.GetManifestResourceStream(ResourcePath);
         }
 
         /// <summary>
         /// Gets the path to the resource
         /// </summary>
-        public string ResourcePath
-        {
-            get { return m_resourcePath; }
-        }
+        public string ResourcePath { get; }
 
         /// <summary>
         /// Gets the target assembly
         /// </summary>
-        public Assembly TargetAssembly
-        {
-            get { return m_targetAssembly; }
-        }
+        public Assembly TargetAssembly { get; }
 
         /// <summary>
         /// Gets the key of this object

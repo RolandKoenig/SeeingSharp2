@@ -45,7 +45,6 @@ namespace SeeingSharp.Util
         private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)d
 
         // The maximum concurrency level allowed by this scheduler.
-        private readonly int _maxDegreeOfParallelism;
 
         // Indicates whether the scheduler is currently processing work items.
         private int _delegatesQueuedOrRunning = 0;
@@ -54,7 +53,7 @@ namespace SeeingSharp.Util
         public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
         {
             if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
-            _maxDegreeOfParallelism = maxDegreeOfParallelism;
+            MaximumConcurrencyLevel = maxDegreeOfParallelism;
         }
 
         // Queues a task to the scheduler.
@@ -65,7 +64,7 @@ namespace SeeingSharp.Util
             lock (_tasks)
             {
                 _tasks.AddLast(task);
-                if (_delegatesQueuedOrRunning < _maxDegreeOfParallelism)
+                if (_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
                 {
                     ++_delegatesQueuedOrRunning;
                     NotifyThreadPoolOfPendingWork();
@@ -137,7 +136,7 @@ namespace SeeingSharp.Util
         }
 
         // Gets the maximum concurrency level supported by this scheduler.
-        public sealed override int MaximumConcurrencyLevel { get { return _maxDegreeOfParallelism; } }
+        public sealed override int MaximumConcurrencyLevel { get; }
 
         // Gets an enumerable of the tasks currently scheduled on this scheduler.
         protected sealed override IEnumerable<Task> GetScheduledTasks()

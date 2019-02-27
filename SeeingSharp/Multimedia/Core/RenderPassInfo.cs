@@ -47,7 +47,6 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Render pass properties
-        private string m_name;
 
         #endregion
 
@@ -71,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal RenderPassInfo(string name, bool isSorted = false)
         {
-            m_name = name;
+            Name = name;
             IsSorted = isSorted;
         }
 
@@ -83,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         /// <summary>
@@ -94,10 +93,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the name of this pass.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; }
 
         public bool IsSorted { get; }
     }

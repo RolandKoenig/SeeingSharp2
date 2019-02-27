@@ -41,14 +41,12 @@ namespace SeeingSharp.Util
         private const int STANDARD_HEARTBEAT = 500;
 
         #region Members for thread configuration
-        private string m_name;
-        private int m_heartBeat;
+
         private bool m_createMessenger;
         #endregion
 
         #region Members for thread runtime
         private volatile ObjectThreadState m_currentState;
-        private ObjectThreadTimer m_timer;
         private Thread m_mainThread;
         private CultureInfo m_culture;
         private CultureInfo m_uiCulture;
@@ -100,13 +98,13 @@ namespace SeeingSharp.Util
             m_taskQueue = new ConcurrentQueue<Action>();
             m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
 
-            m_name = name;
-            m_heartBeat = heartBeat;
+            Name = name;
+            HeartBeat = heartBeat;
 
             m_culture = Thread.CurrentThread.CurrentCulture;
             m_uiCulture = Thread.CurrentThread.CurrentUICulture;
 
-            m_timer = new ObjectThreadTimer();
+            Timer = new ObjectThreadTimer();
             m_createMessenger = createMessenger;
         }
 
@@ -135,7 +133,7 @@ namespace SeeingSharp.Util
             m_mainThread = new Thread(ObjectThreadMainMethod)
             {
                 IsBackground = true,
-                Name = m_name
+                Name = Name
             };
 
             m_mainThread.Start();
@@ -326,11 +324,11 @@ namespace SeeingSharp.Util
                         try
                         {
                             //Wait for next action to perform
-                            m_mainLoopSynchronizeObject.Wait(m_heartBeat);
+                            m_mainLoopSynchronizeObject.Wait(HeartBeat);
 
                             //Measure current time
                             stopWatch.Stop();
-                            m_timer.Add(stopWatch.Elapsed);
+                            Timer.Add(stopWatch.Elapsed);
                             stopWatch.Reset();
                             stopWatch.Start();
 
@@ -394,16 +392,13 @@ namespace SeeingSharp.Util
         /// </summary>
         public DateTime ThreadTime
         {
-            get { return m_timer.Now; }
+            get { return Timer.Now; }
         }
 
         /// <summary>
         /// Gets current timer of the thread.
         /// </summary>
-        public ObjectThreadTimer Timer
-        {
-            get { return m_timer; }
-        }
+        public ObjectThreadTimer Timer { get; }
 
         /// <summary>
         /// Gets the current SynchronizationContext object.
@@ -416,19 +411,12 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the name of this thread.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Gets or sets the thread's heartbeat.
         /// </summary>
-        protected int HeartBeat
-        {
-            get { return m_heartBeat; }
-            set { m_heartBeat = value; }
-        }
+        protected int HeartBeat { get; set; }
 
         //*********************************************************************
         //*********************************************************************

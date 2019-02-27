@@ -41,7 +41,6 @@ namespace SeeingSharp.Multimedia.Core
 
     public class ResourceDictionary : IEnumerable<Resource>
     {
-        private EngineDevice m_device;
         private List<IRenderableResource> m_renderableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
@@ -52,8 +51,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal ResourceDictionary(EngineDevice device)
         {
-            m_device = device;
-            this.DeviceIndex = m_device.DeviceIndex;
+            Device = device;
+            this.DeviceIndex = Device.DeviceIndex;
 
             m_lastRenderBlockID = -1;
 
@@ -490,10 +489,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the device this resource dictionary belongs to.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return m_device; }
-        }
+        public EngineDevice Device { get; }
 
         /// <summary>
         /// Gets the device index.

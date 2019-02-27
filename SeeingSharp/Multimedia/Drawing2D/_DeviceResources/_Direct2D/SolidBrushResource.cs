@@ -48,8 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #endregion
 
         #region Configuration
-        private Color4 m_singleColor;
-        private float m_opacity;
+
         #endregion
 
         /// <summary>
@@ -65,8 +64,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
 
-            m_opacity = opacity;
-            m_singleColor = singleColor;
+            Opacity = opacity;
+            Color = singleColor;
         }
 
         /// <summary>
@@ -102,10 +101,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Load the brush
                 result = new D2D.SolidColorBrush(
                     engineDevice.FakeRenderTarget2D,
-                    m_singleColor,
+                    Color,
                     new D2D.BrushProperties()
                     {
-                        Opacity = m_opacity,
+                        Opacity = Opacity,
                         Transform = Matrix3x2.Identity
                     });
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
@@ -114,14 +113,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result;
         }
 
-        public Color4 Color
-        {
-            get { return m_singleColor; }
-        }
+        public Color4 Color { get; }
 
-        public float Opacity
-        {
-            get { return m_opacity; }
-        }
+        public float Opacity { get; }
     }
 }

@@ -43,7 +43,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         private const string TRANSLATABLE_GROUP_COMMON_HARDWARE_INFO = "Common hardware information";
 
-        private List<EngineOutputInfo> m_outputs;
         private SharpDX.DXGI.Adapter1 m_adapter;
         private D3D.FeatureLevel m_d3d11FeatureLevel;
         private SharpDX.DXGI.AdapterDescription m_adapterDescription;
@@ -53,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineAdapterInfo(int adapterIndex, SharpDX.DXGI.Adapter1 adapter)
         {
-            m_outputs = new List<EngineOutputInfo>();
+            Outputs = new List<EngineOutputInfo>();
             m_adapter = adapter;
             AdapterIndex = adapterIndex;
 
@@ -75,7 +74,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     try
                     {
-                        m_outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
+                        Outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
                     }
                     finally
                     {
@@ -93,16 +92,13 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_adapter);
-            m_outputs.Clear();
+            Outputs.Clear();
         }
 
         /// <summary>
         /// Gets all outputs supported by this adapter.
         /// </summary>
-        public List<EngineOutputInfo> Outputs
-        {
-            get { return m_outputs; }
-        }
+        public List<EngineOutputInfo> Outputs { get; }
 
         /// <summary>
         /// Gets the corresponding adapter.

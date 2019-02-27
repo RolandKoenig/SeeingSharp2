@@ -43,10 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
     {
         #region Configuration
         private NamedOrGenericKey m_resTexture;
-        private TexturePainterAlphaBlendMode m_alphaMode;
-        private float m_scaling;
-        private float m_accentuationFactor;
-        private float m_opacity;
+
         #endregion
 
         #region Device dependent resources
@@ -60,10 +57,10 @@ namespace SeeingSharp.Multimedia.Objects
         public FullscreenTextureObject(NamedOrGenericKey texture)
         {
             m_resTexture = texture;
-            m_scaling = 1f;
-            m_opacity = 1f;
-            m_accentuationFactor = 0f;
-            m_alphaMode = TexturePainterAlphaBlendMode.AlphaBlend;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
+            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
 
             m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
         }
@@ -124,14 +121,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderPlain(RenderState renderState)
         {
-            if (m_opacity >= 1f)
+            if (Opacity >= 1f)
             {
                 // Get and configure helper object
                 var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
-                actHelper.Scaling = m_scaling;
-                actHelper.Opacity = m_opacity;
-                actHelper.AccentuationFactor = m_accentuationFactor;
-                actHelper.AlphaBlendMode = m_alphaMode;
+                actHelper.Scaling = Scaling;
+                actHelper.Opacity = Opacity;
+                actHelper.AccentuationFactor = AccentuationFactor;
+                actHelper.AlphaBlendMode = AlphaBlendMode;
 
                 // Render the object
                 actHelper.RenderPlain(renderState);
@@ -144,14 +141,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderTransparent(RenderState renderState)
         {
-            if (m_opacity < 1f)
+            if (Opacity < 1f)
             {
                 // Get and configure helper object
                 var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
-                actHelper.Scaling = m_scaling;
-                actHelper.Opacity = m_opacity;
-                actHelper.AccentuationFactor = m_accentuationFactor;
-                actHelper.AlphaBlendMode = m_alphaMode;
+                actHelper.Scaling = Scaling;
+                actHelper.Opacity = Opacity;
+                actHelper.AccentuationFactor = AccentuationFactor;
+                actHelper.AlphaBlendMode = AlphaBlendMode;
 
                 // Render the object
                 actHelper.RenderPlain(renderState);
@@ -176,31 +173,15 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the scaling factor.
         /// </summary>
-        public float Scaling
-        {
-            get { return m_scaling; }
-            set { m_scaling = value; }
-        }
+        public float Scaling { get; set; }
 
-        public float AccentuationFactor
-        {
-            get { return m_accentuationFactor; }
-            set { m_accentuationFactor = value; }
-        }
+        public float AccentuationFactor { get; set; }
 
-        public float Opacity
-        {
-            get { return m_opacity; }
-            set { m_opacity = value; }
-        }
+        public float Opacity { get; set; }
 
         /// <summary>
         /// Gets or sets the alpha blend mode.
         /// </summary>
-        public TexturePainterAlphaBlendMode AlphaBlendMode
-        {
-            get { return m_alphaMode; }
-            set { m_alphaMode = value; }
-        }
+        public TexturePainterAlphaBlendMode AlphaBlendMode { get; set; }
     }
 }

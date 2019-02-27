@@ -42,7 +42,6 @@ namespace SeeingSharp.Multimedia.Input
 
         #region Generic info
 
-        private MouseOrPointerType m_mouseOrPointerType;
         #endregion
 
         #region Current state
@@ -193,7 +192,7 @@ namespace SeeingSharp.Multimedia.Input
             targetStateCasted.m_positionPixel = m_positionPixel;
             targetStateCasted.m_wheelDelta = m_wheelDelta;
             targetStateCasted.m_isInside = m_isInside;
-            targetStateCasted.m_mouseOrPointerType = m_mouseOrPointerType;
+            targetStateCasted.Type = Type;
             for (int loop = 0; loop < BUTTON_COUNT; loop++)
             {
                 targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
@@ -298,11 +297,7 @@ namespace SeeingSharp.Multimedia.Input
             get { return m_isInside; }
         }
 
-        public MouseOrPointerType Type
-        {
-            get { return m_mouseOrPointerType; }
-            internal set { m_mouseOrPointerType = value; }
-        }
+        public MouseOrPointerType Type { get; internal set; }
 
         public MouseOrPointerStateInternals Internals { get; }
 

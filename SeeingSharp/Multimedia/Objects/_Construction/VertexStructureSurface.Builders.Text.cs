@@ -132,11 +132,11 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Append all vertices
-            int baseIndex = m_owner.CountVertices;
+            int baseIndex = Owner.CountVertices;
 
             for (int loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
-                m_owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
+                Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
             }
 
             //Append all indices

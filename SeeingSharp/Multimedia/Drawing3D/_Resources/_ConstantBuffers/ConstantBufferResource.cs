@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Configuration
-        private int m_bufferSize;
+
         #endregion
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ConstantBufferResource(int bufferSize)
         {
             if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
-            m_bufferSize = bufferSize;
+            BufferSize = bufferSize;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             return new D3D11.Buffer(
                 device.DeviceD3D11_1,
-                m_bufferSize,
+                BufferSize,
                 D3D11.ResourceUsage.Dynamic,
                 D3D11.BindFlags.ConstantBuffer,
                 D3D11.CpuAccessFlags.Write,
@@ -108,9 +108,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the total size of the constant buffer.
         /// </summary>
-        public int BufferSize
-        {
-            get { return m_bufferSize; }
-        }
+        public int BufferSize { get; }
     }
 }

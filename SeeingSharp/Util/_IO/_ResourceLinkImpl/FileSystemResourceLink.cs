@@ -34,8 +34,6 @@ namespace SeeingSharp.Util
 
     public class FileSystemResourceLink : ResourceLink
     {
-        private string m_filePath;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
         /// </summary>
@@ -44,7 +42,7 @@ namespace SeeingSharp.Util
         {
             filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
 
-            m_filePath = filePath;
+            FilePath = filePath;
         }
 
         /// <summary>
@@ -60,12 +58,12 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "File-Resource: " + m_filePath;
+            return "File-Resource: " + FilePath;
         }
 
         public override bool Exists()
         {
-            return File.Exists(m_filePath);
+            return File.Exists(FilePath);
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace SeeingSharp.Util
             }
 
             // Return new ResourceLink pointing to the other file
-            string directoryName = Path.GetDirectoryName(m_filePath);
+            string directoryName = Path.GetDirectoryName(FilePath);
             if (!string.IsNullOrEmpty(directoryName))
             {
                 return new FileSystemResourceLink(Path.Combine(directoryName, subdirectoryPath + newFileName));
@@ -101,7 +99,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            return new FileStream(m_filePath, FileMode.Create, FileAccess.Write);
+            return new FileStream(FilePath, FileMode.Create, FileAccess.Write);
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Task<Stream> OpenInputStreamAsync()
         {
-            return Task.FromResult<Stream>(File.OpenRead(m_filePath));
+            return Task.FromResult<Stream>(File.OpenRead(FilePath));
         }
 
         /// <summary>
@@ -117,7 +115,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            return File.OpenRead(m_filePath);
+            return File.OpenRead(FilePath);
         }
 
         /// <summary>
@@ -125,20 +123,17 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string FileExtension
         {
-            get { return base.GetExtensionFromFileName(m_filePath); }
+            get { return base.GetExtensionFromFileName(FilePath); }
         }
 
         /// <summary>
         /// Gets the path to the file.
         /// </summary>
-        public string FilePath
-        {
-            get { return m_filePath; }
-        }
+        public string FilePath { get; }
 
         public string FileName
         {
-            get { return Path.GetFileName(m_filePath); }
+            get { return Path.GetFileName(FilePath); }
         }
 
         /// <summary>

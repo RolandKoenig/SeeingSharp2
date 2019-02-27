@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         #region Main properties of this animation
         private AnimationType m_animationType;
-        private object m_targetObject;
+
         #endregion
 
         #region Control members for AnimationTypes
@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public AnimationBase(object targetObject)
         {
-            m_targetObject = targetObject;
+            TargetObject = targetObject;
             m_fixedTime = TimeSpan.Zero;
             m_currentTime = TimeSpan.Zero;
             m_animationType = AnimationType.FinishedByEvent;
@@ -195,8 +195,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetObject">The object to check for.</param>
         public bool IsObjectAnimated(object targetObject)
         {
-            if (m_targetObject == null) { return false; }
-            return m_targetObject == targetObject;
+            if (TargetObject == null) { return false; }
+            return TargetObject == targetObject;
         }
 
         /// <summary>
@@ -347,10 +347,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the target object.
         /// </summary>
-        public object TargetObject
-        {
-            get { return m_targetObject; }
-        }
+        public object TargetObject { get; }
 
         /// <summary>
         /// Is this animation canceled?

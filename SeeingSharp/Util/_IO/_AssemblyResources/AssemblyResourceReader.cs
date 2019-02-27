@@ -37,8 +37,6 @@ namespace SeeingSharp.Util
     {
         private static Type s_attribType;
 
-        private Type m_targetType;
-        private Assembly m_targetAssembly;
         private List<AssemblyResourceInfo> m_resources;
         private Dictionary<string, AssemblyResourceInfo> m_resourcesDict;
 
@@ -55,21 +53,21 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceReader(Type targetType)
         {
-            m_targetType = targetType;
+            TargetType = targetType;
 
-            var targetTypeInfo = m_targetType.GetTypeInfo();
-            m_targetAssembly = targetTypeInfo.Assembly;
+            var targetTypeInfo = TargetType.GetTypeInfo();
+            TargetAssembly = targetTypeInfo.Assembly;
 
             m_resources = new List<AssemblyResourceInfo>();
             m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
 
             foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
             {
-                var resInfo = m_targetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
 
                 if (resInfo != null)
                 {
-                    var fileInfo = new AssemblyResourceInfo(m_targetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
                     m_resources.Add(fileInfo);
 
                     if ((actAttrib.Key != null) && (!m_resourcesDict.ContainsKey(actAttrib.Key)))
@@ -161,18 +159,12 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the target type
         /// </summary>
-        public Type TargetType
-        {
-            get { return m_targetType; }
-        }
+        public Type TargetType { get; }
 
         /// <summary>
         /// Gets the target assembly
         /// </summary>
-        public Assembly TargetAssembly
-        {
-            get { return m_targetAssembly; }
-        }
+        public Assembly TargetAssembly { get; }
 
         /// <summary>
         /// Gets a collection contaning all resource files

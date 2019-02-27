@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Configuration
-        private NamedOrGenericKey m_postprocessEffectKey;
+
         #endregion
 
         #region Resources
@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resourceDictionary">The resource dictionary where to load the effect.</param>
         internal PostprocessEffectResource GetPostprocessEffect(NamedOrGenericKey namedOrGenericKey, ResourceDictionary resourceDictionary)
         {
-            m_postprocessEffectKey = namedOrGenericKey;
+            PostprocessEffectKey = namedOrGenericKey;
 
             // Handle empty key
             if (namedOrGenericKey.IsEmpty)
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             m_postprocessEffect = resourceDictionary.GetResourceAndEnsureLoaded<PostprocessEffectResource>(namedOrGenericKey);
-            m_postprocessEffectKey = namedOrGenericKey;
+            PostprocessEffectKey = namedOrGenericKey;
             return m_postprocessEffect;
         }
 
@@ -135,11 +135,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets or sets the key of the postprocess effect.
         /// </summary>
-        internal NamedOrGenericKey PostprocessEffectKey
-        {
-            get { return m_postprocessEffectKey; }
-            set { m_postprocessEffectKey = value; }
-        }
+        internal NamedOrGenericKey PostprocessEffectKey { get; set; }
 
         /// <summary>
         /// Is the resource loaded?

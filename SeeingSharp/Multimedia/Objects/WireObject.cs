@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Objects
         #region Configuration
         private bool m_forceReloadLineData;
         private Line[] m_lineData;
-        private Color4 m_lineColor;
+
         #endregion
 
         #region Direct3D resources
@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public WireObject()
         {
-            m_lineColor = Color4.Black;
+            LineColor = Color4.Black;
             m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
 
@@ -157,7 +157,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Render all lines finally
             resourceData.LineRenderResources.RenderLines(
-                renderState, viewProj, m_lineColor,
+                renderState, viewProj, LineColor,
                 resourceData.LineVertexBuffer, m_lineData.Length * 2);
         }
 
@@ -180,11 +180,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the line's color.
         /// </summary>
-        public Color4 LineColor
-        {
-            get { return m_lineColor; }
-            set { m_lineColor = value; }
-        }
+        public Color4 LineColor { get; set; }
 
         //*********************************************************************
         //*********************************************************************

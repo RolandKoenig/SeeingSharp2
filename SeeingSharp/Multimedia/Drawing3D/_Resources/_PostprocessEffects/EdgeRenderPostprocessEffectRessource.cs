@@ -57,8 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Configuration
-        private float m_thickness;
-        private bool m_drawOriginalObject;
+
         private Color4 m_borderColor;
         #endregion
 
@@ -67,9 +66,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public EdgeDetectPostprocessEffectResource()
         {
-            m_thickness = 2f;
+            Thickness = 2f;
             m_borderColor = Color4Ex.BlueColor;
-            m_drawOriginalObject = true;
+            DrawOriginalObject = true;
         }
 
         /// <summary>
@@ -168,9 +167,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
             m_constantBufferData.Opacity = 0.9f;
             m_constantBufferData.Threshold = 0.2f;
-            m_constantBufferData.Thickness = m_thickness;
+            m_constantBufferData.Thickness = Thickness;
             m_constantBufferData.BorderColor = m_borderColor.ToVector3();
-            m_constantBufferData.OriginalColorAlpha = m_drawOriginalObject ? 1f : 0f;
+            m_constantBufferData.OriginalColorAlpha = DrawOriginalObject ? 1f : 0f;
             m_constantBuffer.SetData(deviceContext, m_constantBufferData);
 
             // Render result of current pass to the main render target
@@ -208,11 +207,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        public float Thickness
-        {
-            get { return m_thickness; }
-            set { m_thickness = value; }
-        }
+        public float Thickness { get; set; }
 
         public Color4 BorderColor
         {
@@ -220,11 +215,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             set { m_borderColor = value; }
         }
 
-        public bool DrawOriginalObject
-        {
-            get { return m_drawOriginalObject; }
-            set { m_drawOriginalObject = value; }
-        }
+        public bool DrawOriginalObject { get; set; }
 
         //*********************************************************************
         //*********************************************************************

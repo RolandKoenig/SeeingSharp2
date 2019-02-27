@@ -35,20 +35,19 @@ namespace SeeingSharp.WpfSamples
 
     public class SampleViewModel : PropertyChangedBase
     {
-        private SampleMetadata m_sample;
         private BitmapSource m_bitmapSource;
         private Task m_bitmapSourceTask;
 
         public SampleViewModel(SampleMetadata sample)
         {
-            m_sample = sample;
+            SampleMetadata = sample;
         }
 
-        public SampleMetadata SampleMetadata => m_sample;
+        public SampleMetadata SampleMetadata { get; }
 
-        public string Name => m_sample.Name;
+        public string Name => SampleMetadata.Name;
 
-        public string Group => m_sample.Group;
+        public string Group => SampleMetadata.Group;
 
         public BitmapSource BitmapSource
         {
@@ -56,7 +55,7 @@ namespace SeeingSharp.WpfSamples
             {
                 if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
                 {
-                    var sourceLink = m_sample.TryGetSampleImageLink();
+                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
 
                     if (sourceLink == null)
                     {

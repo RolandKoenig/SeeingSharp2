@@ -41,8 +41,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Main members
         #region
-        private Scene m_owner;
-        private bool m_isValid;
+
         #endregion
 
         // Objects that remember all changes on object/resource collections
@@ -57,8 +56,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="owner">The scene which will be manipulated.</param>
         internal SceneManipulator(Scene owner)
         {
-            m_owner = owner;
-            m_isValid = false;
+            Owner = owner;
+            IsValid = false;
 
             m_createdObjects = new List<SceneObject>();
             m_createdResources = new List<NamedOrGenericKey>();
@@ -81,7 +80,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.Clear(true);
+            Owner.Clear(true);
         }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.Clear(clearResource);
+            Owner.Clear(clearResource);
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            var result = m_owner.AddResource(resourceFactory, NamedOrGenericKey.Empty);
+            var result = Owner.AddResource(resourceFactory, NamedOrGenericKey.Empty);
             m_createdResources.Add(result);
             return result;
         }
@@ -123,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            var result = m_owner.AddResource(resourceFactory, resourceKey);
+            var result = Owner.AddResource(resourceFactory, resourceKey);
             m_createdResources.Add(result);
             return result;
         }
@@ -136,7 +135,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            return m_owner.ContainsResource(resourceKey);
+            return Owner.ContainsResource(resourceKey);
         }
 
         /// <summary>
@@ -150,9 +149,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            if (!m_owner.ContainsResource(resourceKey))
+            if (!Owner.ContainsResource(resourceKey))
             {
-                var result = m_owner.AddResource(resourceFactory, resourceKey);
+                var result = Owner.AddResource(resourceFactory, resourceKey);
                 m_createdResources.Add(result);
                 return result;
             }
@@ -170,7 +169,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.ManipulateResource(manipulateAction, resourceKey);
+            Owner.ManipulateResource(manipulateAction, resourceKey);
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.RemoveResource(resourceKey);
+            Owner.RemoveResource(resourceKey);
         }
 
         /// <summary>
@@ -192,7 +191,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.TriggerNewFilter(sceneObjectLocal);
+            Owner.TriggerNewFilter(sceneObjectLocal);
         }
 
         /// <summary>
@@ -203,7 +202,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.AddDrawingLayer(drawingLayer);
+            Owner.AddDrawingLayer(drawingLayer);
         }
 
         /// <summary>
@@ -223,7 +222,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.RemoveDrawingLayer(drawingLayer);
+            Owner.RemoveDrawingLayer(drawingLayer);
         }
 
         /// <summary>
@@ -235,7 +234,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            var result = m_owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
+            var result = Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
             m_createdObjects.Add(result);
             return result;
         }
@@ -250,7 +249,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            var result = m_owner.Add(sceneObject, layer);
+            var result = Owner.Add(sceneObject, layer);
             m_createdObjects.Add(result);
             return result;
         }
@@ -401,7 +400,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.Remove(sceneObject);
+            Owner.Remove(sceneObject);
         }
 
         /// <summary>
@@ -413,21 +412,21 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.Remove(sceneObject, layerName);
+            Owner.Remove(sceneObject, layerName);
         }
 
         public void RemoveRange(IEnumerable<SceneObject> sceneObjects)
         {
             CheckValid();
 
-            m_owner.RemoveRange(sceneObjects);
+            Owner.RemoveRange(sceneObjects);
         }
 
         public void RemoveRange(IEnumerable<SceneObject> sceneObjects, string layerName)
         {
             CheckValid();
 
-            m_owner.RemoveRange(sceneObjects, layerName);
+            Owner.RemoveRange(sceneObjects, layerName);
         }
 
 
@@ -439,7 +438,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            return m_owner.AddLayer(name);
+            return Owner.AddLayer(name);
         }
 
         /// <summary>
@@ -450,7 +449,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.RemoveLayer(layerName);
+            Owner.RemoveLayer(layerName);
         }
 
         /// <summary>
@@ -461,7 +460,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.RemoveLayer(layer);
+            Owner.RemoveLayer(layer);
         }
 
         /// <summary>
@@ -473,8 +472,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            var layerObject = m_owner.GetLayer(layer);
-            m_owner.SetLayerOrderID(layerObject, oderID);
+            var layerObject = Owner.GetLayer(layer);
+            Owner.SetLayerOrderID(layerObject, oderID);
         }
 
         /// <summary>
@@ -486,7 +485,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.SetLayerOrderID(layerObject, oderID);
+            Owner.SetLayerOrderID(layerObject, oderID);
         }
 
         /// <summary>
@@ -497,7 +496,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.ClearLayer(layerName);
+            Owner.ClearLayer(layerName);
         }
 
         /// <summary>
@@ -508,7 +507,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            m_owner.ClearLayer(layer);
+            Owner.ClearLayer(layer);
         }
 
         /// <summary>
@@ -517,7 +516,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">The name of the layer.</param>
         public IEnumerable<SceneObject> GetSceneObjects(string layerName)
         {
-            return m_owner.GetLayer(layerName).Objects;
+            return Owner.GetLayer(layerName).Objects;
         }
 
         /// <summary>
@@ -527,19 +526,19 @@ namespace SeeingSharp.Multimedia.Core
         public SceneLayer GetLayer(string layerName)
         {
             CheckValid();
-            return m_owner.GetLayer(layerName);
+            return Owner.GetLayer(layerName);
         }
 
         public bool ContainsLayer(string layerName)
         {
             CheckValid();
-            return m_owner.TryGetLayer(layerName) != null;
+            return Owner.TryGetLayer(layerName) != null;
         }
 
         public SceneLayer TryGetLayer(string layerName)
         {
             CheckValid();
-            return m_owner.TryGetLayer(layerName);
+            return Owner.TryGetLayer(layerName);
         }
 
         /// <summary>
@@ -547,25 +546,18 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void CheckValid()
         {
-            if (!m_isValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
+            if (!IsValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
         }
 
         /// <summary>
         /// Gets the owner of this manipulator object.
         /// </summary>
-        public Scene Owner
-        {
-            get { return m_owner; }
-        }
+        public Scene Owner { get; }
 
         /// <summary>
         /// Is this manipulator still valid?
         /// </summary>
-        public bool IsValid
-        {
-            get { return m_isValid; }
-            internal set { m_isValid = value; }
-        }
+        public bool IsValid { get; internal set; }
 
         /// <summary>
         /// Gets a list containing all created objects.

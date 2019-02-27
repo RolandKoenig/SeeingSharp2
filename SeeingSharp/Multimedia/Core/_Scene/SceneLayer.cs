@@ -45,11 +45,7 @@ namespace SeeingSharp.Multimedia.Core
         #region All generic members
         private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
         private List<SceneObject> m_sceneObjectsNotStatic;
-        private List<SceneObject> m_sceneObjects;
         private List<SceneObject> m_sceneObjectsNotSpacial;
-        private List<SceneSpacialObject> m_sceneObjectsSpacial;
-        private Scene m_scene;
-        private string m_name;
         private bool m_isInUpdate;
         private bool m_isInUpdateBeside;
         #endregion
@@ -65,18 +61,18 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="parentScene">Parent scene.</param>
         internal SceneLayer(string name, Scene parentScene)
         {
-            m_name = name;
-            m_scene = parentScene;
+            Name = name;
+            Scene = parentScene;
 
             //Create list holding all information for individual views
             m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
 
             //Create standard collections
-            m_sceneObjects = new List<SceneObject>();
-            Objects = new ReadOnlyCollection<SceneObject>(m_sceneObjects);
+            ObjectsInternal = new List<SceneObject>();
+            Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
 
             //Create specialized collections
-            m_sceneObjectsSpacial = new List<SceneSpacialObject>(1024);
+            SpacialObjects = new List<SceneSpacialObject>(1024);
             m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
             m_sceneObjectsNotStatic = new List<SceneObject>(1024);
             m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
@@ -97,7 +93,7 @@ namespace SeeingSharp.Multimedia.Core
                 newLayerViewSubset,
                 viewIndex);
 
-            newLayerViewSubset.RegisterObjectRange(m_sceneObjects.ToArray());
+            newLayerViewSubset.RegisterObjectRange(ObjectsInternal.ToArray());
         }
 
         /// <summary>
@@ -107,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="notSpacialObjects">An array containing all not spacial objects.</param>
         internal void GetSpecializedCollectionsCopy(out SceneSpacialObject[] spacialObjects, out SceneObject[] notSpacialObjects)
         {
-            spacialObjects = m_sceneObjectsSpacial.ToArray();
+            spacialObjects = SpacialObjects.ToArray();
             notSpacialObjects = m_sceneObjectsNotSpacial.ToArray();
         }
 
@@ -123,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (viewSubset != null)
             {
-                viewSubset.ClearAllSubscriptions(m_sceneObjects);
+                viewSubset.ClearAllSubscriptions(ObjectsInternal);
                 viewSubset.Dispose();
             }
 
@@ -139,7 +135,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            return "Layer " + m_name;
+            return "Layer " + Name;
         }
 
         /// <summary>
@@ -150,20 +146,20 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_isInUpdate || m_isInUpdateBeside) { throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!"); }
             if (sceneObject == null) { throw new ArgumentNullException("sceneObject"); }
-            if (sceneObject.Scene == m_scene) { return false; }
+            if (sceneObject.Scene == Scene) { return false; }
             if (sceneObject.Scene != null) { throw new ArgumentException("Given object does already belong to another scene!", "sceneObject"); }
             if (sceneObject.SceneLayer == this) { return false; }
             if (sceneObject.SceneLayer != null) { throw new ArgumentException("Given object does already belong to another scene layer!", "sceneObject"); }
 
-            m_sceneObjects.Add(sceneObject);
-            sceneObject.SetSceneAndLayer(m_scene, this);
+            ObjectsInternal.Add(sceneObject);
+            sceneObject.SetSceneAndLayer(Scene, this);
 
             //Append object to specialized collections
             var spacialObject = sceneObject as SceneSpacialObject;
 
             if (spacialObject != null)
             {
-                m_sceneObjectsSpacial.Add(spacialObject);
+                SpacialObjects.Add(spacialObject);
             }
             else
             {
@@ -197,20 +193,20 @@ namespace SeeingSharp.Multimedia.Core
             // Clear objects on all view subsets
             foreach (var actViewSubset in m_viewSubsets)
             {
-                actViewSubset.ClearAllSubscriptions(m_sceneObjects);
+                actViewSubset.ClearAllSubscriptions(ObjectsInternal);
             }
 
-            foreach (var actObject in m_sceneObjects)
+            foreach (var actObject in ObjectsInternal)
             {
                 actObject.UnloadResources();
                 actObject.ResetSceneAndLayer();
             }
 
-            m_sceneObjects.Clear();
+            ObjectsInternal.Clear();
 
             // Clear specialized collections
             m_sceneObjectsNotSpacial.Clear();
-            m_sceneObjectsSpacial.Clear();
+            SpacialObjects.Clear();
             m_sceneObjectsNotStatic.Clear();
         }
 
@@ -234,11 +230,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_isInUpdate || m_isInUpdateBeside) { throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!"); }
 
-            if (m_sceneObjects.Contains(sceneObject))
+            if (ObjectsInternal.Contains(sceneObject))
             {
                 sceneObject.UnloadResources();
 
-                m_sceneObjects.Remove(sceneObject);
+                ObjectsInternal.Remove(sceneObject);
                 sceneObject.ResetSceneAndLayer();
 
                 // Remove object from specialized collections
@@ -246,7 +242,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if (spacialObject != null)
                 {
-                    m_sceneObjectsSpacial.Remove(spacialObject);
+                    SpacialObjects.Remove(spacialObject);
                 }
                 else
                 {
@@ -273,7 +269,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void UnloadResources()
         {
             //Unload resources of all scene objects
-            foreach (var actObject in m_sceneObjects)
+            foreach (var actObject in ObjectsInternal)
             {
                 actObject.UnloadResources();
             }
@@ -288,8 +284,8 @@ namespace SeeingSharp.Multimedia.Core
             List<SceneObject> invalidObjects = null;
 
             // Load all resources
-            int sceneObjectArrayLength = m_sceneObjects.Count;
-            SceneObject[] sceneObjectArray = m_sceneObjects.GetBackingArray();
+            int sceneObjectArrayLength = ObjectsInternal.Count;
+            SceneObject[] sceneObjectArray = ObjectsInternal.GetBackingArray();
 
             for (var loop = 0; loop < sceneObjectArrayLength; loop++)
             {
@@ -466,18 +462,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the name of this layer.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Gets parent scene.
         /// </summary>
-        public Scene Scene
-        {
-            get { return m_scene; }
-        }
+        public Scene Scene { get; }
 
         /// <summary>
         /// Gets or sets an integer which controls the order
@@ -544,25 +534,19 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all scene objects (internal accessor to the complete list).
         /// </summary>
-        internal List<SceneObject> ObjectsInternal
-        {
-            get { return m_sceneObjects; }
-        }
+        internal List<SceneObject> ObjectsInternal { get; }
 
         /// <summary>
         /// Gets a list containing all spacial objects.
         /// </summary>
-        internal List<SceneSpacialObject> SpacialObjects
-        {
-            get { return m_sceneObjectsSpacial; }
-        }
+        internal List<SceneSpacialObject> SpacialObjects { get; }
 
         /// <summary>
         /// Gets total count of objects within the scene.
         /// </summary>
         public int CountObjects
         {
-            get { return m_sceneObjects.Count; }
+            get { return ObjectsInternal.Count; }
         }
     }
 }

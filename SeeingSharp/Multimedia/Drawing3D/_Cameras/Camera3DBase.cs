@@ -41,8 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Vector3 m_upVector = new Vector3(0, 1, 0);
         private float m_hRotation = 0.0f;
         private float m_vRotation = 0.0f;
-        private int m_screenWidth;
-        private int m_screenHeight;
+
         #endregion
 
         #region State
@@ -58,7 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Additional parameters
         private float m_zNear = 0.1f;
         private float m_zFar = 500f;
-        private bool m_invertScreenMove;
+
         #endregion
 
         #region Animation
@@ -81,8 +80,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="height">Height of the renderwindow.</param>
         public Camera3DBase(int width, int height)
         {
-            m_screenWidth = width;
-            m_screenHeight = height;
+            ScreenWidth = width;
+            ScreenHeight = height;
 
             AnimationHandler = new AnimationHandler(this);
 
@@ -121,14 +120,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var newTarget = m_relativeTarget;
             newTarget = Vector3.Add(newTarget, m_position);
 
-            if (m_screenHeight == 0f)
+            if (ScreenHeight == 0f)
             {
-                m_screenHeight = 1;
+                ScreenHeight = 1;
             }
 
             // Calculate matrices
             CalculateViewProjectionMatrices(
-                m_position, newTarget, m_upVector, m_zNear, m_zFar, m_screenWidth, m_screenHeight,
+                m_position, newTarget, m_upVector, m_zNear, m_zFar, ScreenWidth, ScreenHeight,
                 out m_view, out m_project);
             m_viewProj = m_view * m_project;
 
@@ -169,8 +168,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="height">Height of the renderwindow.</param>
         public void SetScreenSize(int width, int height)
         {
-            m_screenWidth = width;
-            m_screenHeight = height;
+            ScreenWidth = width;
+            ScreenHeight = height;
 
             UpdateCamera();
         }
@@ -180,7 +179,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector2 GetScreenSize()
         {
-            return new Vector2(m_screenWidth, m_screenHeight);
+            return new Vector2(ScreenWidth, ScreenHeight);
         }
 
         /// <summary>
@@ -241,7 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpDown(float points)
         {
-            if (!m_invertScreenMove)
+            if (!InvertScreenMove)
             {
                 m_position.X = m_position.X + m_up.X * points;
                 m_position.Y = m_position.Y + m_up.Y * points;
@@ -272,7 +271,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Strave(float points)
         {
-            if (!m_invertScreenMove)
+            if (!InvertScreenMove)
             {
                 m_position.X = m_position.X + m_right.X * points;
                 m_position.Y = m_position.Y + m_right.Y * points;
@@ -299,11 +298,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             UpdateCamera();
         }
 
-        public bool InvertScreenMove
-        {
-            get { return m_invertScreenMove; }
-            set { m_invertScreenMove = value; }
-        }
+        public bool InvertScreenMove { get; set; }
 
         /// <summary>
         /// Retrieves the view-matrix.
@@ -468,20 +463,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Width of the screen.
         /// </summary>
-        public int ScreenWidth
-        {
-            get { return m_screenWidth; }
-            set { m_screenWidth = value; }
-        }
+        public int ScreenWidth { get; set; }
 
         /// <summary>
         /// Height of the screen.
         /// </summary>
-        public int ScreenHeight
-        {
-            get { return m_screenHeight; }
-            set { m_screenHeight = value; }
-        }
+        public int ScreenHeight { get; set; }
 
         /// <summary>
         /// Did the state of the camera change last time?

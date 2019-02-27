@@ -51,11 +51,9 @@ namespace SeeingSharp.Multimedia.Core
 
         private SharpDX.DXGI.Adapter1 m_adapter1;
         private SharpDX.DXGI.AdapterDescription1 m_adapterDesc1;
-        private GraphicsDeviceConfiguration m_configuration;
         private DeviceLoadSettings m_deviceLoadSettings;
         private EngineFactory m_engineFactory;
-        private bool m_isSoftwareAdapter;
-        private Exception m_initializationException;
+
         #endregion
 
         #region Some configuration
@@ -102,8 +100,8 @@ namespace SeeingSharp.Multimedia.Core
             m_deviceLoadSettings = loadSettings;
             m_adapter1 = adapter;
             m_adapterDesc1 = m_adapter1.Description1;
-            m_isSoftwareAdapter = isSoftwareAdapter;
-            m_configuration = new GraphicsDeviceConfiguration(coreConfiguration);
+            IsSoftware = isSoftwareAdapter;
+            Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
 
             // Set default antialiasing configurations
             m_sampleDescWithAntialiasing = new SharpDX.DXGI.SampleDescription(1, 0);
@@ -116,17 +114,17 @@ namespace SeeingSharp.Multimedia.Core
             }
             catch (Exception ex)
             {
-                m_initializationException = ex;
+                InitializationException = ex;
                 m_handlerD3D11 = null;
                 m_handlerDXGI = null;
             }
 
             // Set default configuration
-            m_configuration.TextureQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? TextureQuality.Hight : TextureQuality.Low;
-            m_configuration.GeometryQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? GeometryQuality.Hight : GeometryQuality.Low;
+            Configuration.TextureQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? TextureQuality.Hight : TextureQuality.Low;
+            Configuration.GeometryQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? GeometryQuality.Hight : GeometryQuality.Low;
 
             // Initialize handlers for feature support information
-            if (m_initializationException == null)
+            if (InitializationException == null)
             {
                 IsStandardAntialiasingPossible = CheckIsStandardAntialiasingPossible();
             }
@@ -281,10 +279,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the exception occurred during initialization of the driver (if any).
         /// </summary>
-        public Exception InitializationException
-        {
-            get { return m_initializationException; }
-        }
+        public Exception InitializationException { get; }
 
         /// <summary>
         /// Gets the description of this adapter.
@@ -299,13 +294,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool IsLoadedSuccessfully
         {
-            get { return m_initializationException == null; }
+            get { return InitializationException == null; }
         }
 
-        public bool IsSoftware
-        {
-            get { return m_isSoftwareAdapter; }
-        }
+        public bool IsSoftware { get; }
 
         /// <summary>
         /// Gets the supported detail level of this device.
@@ -316,7 +308,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (m_isDetailLevelForced) { return m_forcedDetailLevel; }
 
-                if (m_isSoftwareAdapter) { return DetailLevel.Low; }
+                if (IsSoftware) { return DetailLevel.Low; }
                 else { return DetailLevel.High; }
             }
         }
@@ -463,10 +455,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current device configuration.
         /// </summary>
-        public GraphicsDeviceConfiguration Configuration
-        {
-            get { return m_configuration; }
-        }
+        public GraphicsDeviceConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the DXGI factory object.

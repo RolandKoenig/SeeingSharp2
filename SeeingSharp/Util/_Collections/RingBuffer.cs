@@ -41,7 +41,6 @@ namespace SeeingSharp.Util
     {
         #region all buffer properties
         private T[] m_buffer;
-        private int m_bufferLength;
         private int m_itemStart;
         private int m_itemLength;
         #endregion
@@ -55,7 +54,7 @@ namespace SeeingSharp.Util
             maxItemCount.EnsureInRange(2, Int32.MaxValue, nameof(maxItemCount));
 
             m_buffer = new T[maxItemCount];
-            m_bufferLength = maxItemCount;
+            Count = maxItemCount;
             m_itemStart = 0;
             m_itemLength = 0;
         }
@@ -67,17 +66,17 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void AddWithOverride(T newItem)
         {
-            if(m_itemLength < m_bufferLength)
+            if(m_itemLength < Count)
             {
-                m_buffer[(m_itemStart + m_itemLength) % m_bufferLength] = newItem;
+                m_buffer[(m_itemStart + m_itemLength) % Count] = newItem;
                 m_itemLength++;
             }
             else
             {
-                m_itemStart = (m_itemStart + 1) % m_bufferLength;
+                m_itemStart = (m_itemStart + 1) % Count;
 
                 int nextIndex = m_itemStart - 1;
-                if(nextIndex < 0) { nextIndex = m_bufferLength - 1; }
+                if(nextIndex < 0) { nextIndex = Count - 1; }
                 m_buffer[nextIndex] = newItem;
             }
         }
@@ -89,14 +88,14 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void AddWithException(T newItem)
         {
-            if (m_itemLength < m_bufferLength)
+            if (m_itemLength < Count)
             {
-                m_buffer[(m_itemStart + m_itemLength) % m_bufferLength] = newItem;
+                m_buffer[(m_itemStart + m_itemLength) % Count] = newItem;
                 m_itemLength++;
             }
             else
             {
-                throw new SeeingSharpException("The RingBuffer reached the maximum count of items (" + m_bufferLength + ")!");
+                throw new SeeingSharpException("The RingBuffer reached the maximum count of items (" + Count + ")!");
             }
         }
 
@@ -111,7 +110,7 @@ namespace SeeingSharp.Util
                 targetObservable.PushNext(m_buffer[m_itemStart]);
                 m_buffer[m_itemStart] = default(T);
 
-                m_itemStart = (m_itemStart + 1) % m_bufferLength;
+                m_itemStart = (m_itemStart + 1) % Count;
                 m_itemLength--;
             }
             m_itemLength--;
@@ -122,7 +121,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for(int loop=0; loop<m_bufferLength; loop++)
+            for(int loop=0; loop<Count; loop++)
             {
                 m_buffer[loop] = default(T);
             }
@@ -139,16 +138,13 @@ namespace SeeingSharp.Util
             get
             {
                 if (index >= m_itemLength) { throw new IndexOutOfRangeException(); }
-                return m_buffer[(m_itemStart + index) % m_bufferLength];
+                return m_buffer[(m_itemStart + index) % Count];
             }
         }
 
         /// <summary>
         /// Gets the total count of items.
         /// </summary>
-        public int Count
-        {
-            get { return m_bufferLength; }
-        }
+        public int Count { get; }
     }
 }
