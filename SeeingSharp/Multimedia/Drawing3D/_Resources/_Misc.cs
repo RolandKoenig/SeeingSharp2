@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         TopToBottom,
 
-        Directional,
+        Directional
     }
 
     public delegate void TextureChangedHandler(object sender, TextureChangedEventArgs e);

@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Luminance = 0x00020000, // DDPF_LUMINANCE
             LuminanceAlpha = 0x00020001, // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
             Alpha = 0x00000002, // DDPF_ALPHA
-            Pal8 = 0x00000020, // DDPF_PALETTEINDEXED8
+            Pal8 = 0x00000020 // DDPF_PALETTEINDEXED8
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Pitch = 0x00000008, // DDSD_PITCH
             LinearSize = 0x00080000, // DDSD_LINEARSIZE
             Height = 0x00000002, // DDSD_HEIGHT
-            Width = 0x00000004, // DDSD_WIDTH
+            Width = 0x00000004 // DDSD_WIDTH
         };
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             Texture = 0x00001000, // DDSCAPS_TEXTURE
             Mipmap = 0x00400008,  // DDSCAPS_COMPLEX | DDSCAPS_MIPMAP
-            Cubemap = 0x00000008, // DDSCAPS_COMPLEX
+            Cubemap = 0x00000008 // DDSCAPS_COMPLEX
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             PositiveZ = 0x00004200, // DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEZ
             NegativeZ = 0x00008200, // DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ
 
-            AllFaces = PositiveX | NegativeX | PositiveY | NegativeY | PositiveZ | NegativeZ,
+            AllFaces = PositiveX | NegativeX | PositiveY | NegativeY | PositiveZ | NegativeZ
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]

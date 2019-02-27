@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Format8332 = 0x400, // Source is a 8:3:3:2 (16bpp) format
             FormatA8P8 = 0x800, // Has an 8-bit palette with an alpha channel
             CopyMemory = 0x1000, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
-            DX10 = 0x10000, // Has the 'DX10' extension header
+            DX10 = 0x10000 // Has the 'DX10' extension header
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -699,7 +699,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             P8,
             A8P8,
             A4L4,
-            B4G4R4A4,
+            B4G4R4A4
         };
 
         private static TEXP_LEGACY_FORMAT FindLegacyFormat(ConversionFlags flags)
@@ -1159,7 +1159,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             None = 0,
             SetAlpha = 0x1, // Set alpha channel to known opaque value
-            Legacy = 0x2, // Enables specific legacy format conversion cases
+            Legacy = 0x2 // Enables specific legacy format conversion cases
         };
 
         /// <summary>

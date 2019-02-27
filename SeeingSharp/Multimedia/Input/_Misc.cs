@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// No default input processing at all.
         /// </summary>
-        NoInput,
+        NoInput
     }
 
     /// <summary>

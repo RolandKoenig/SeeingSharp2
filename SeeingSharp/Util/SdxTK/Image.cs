@@ -779,7 +779,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             LegacyDword = 0x1,  // Assume pitch is DWORD aligned instead of BYTE aligned
             Bpp24 = 0x10000,    // Override with a legacy 24 bits-per-pixel format size
             Bpp16 = 0x20000,    // Override with a legacy 16 bits-per-pixel format size
-            Bpp8 = 0x40000,     // Override with a legacy 8 bits-per-pixel format size
+            Bpp8 = 0x40000     // Override with a legacy 8 bits-per-pixel format size
         };
 
         internal static void ComputePitch(SharpDX.DXGI.Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)

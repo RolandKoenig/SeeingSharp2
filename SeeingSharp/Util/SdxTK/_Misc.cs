@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <summary>
         /// The texture dimension is a CubeMap.
         /// </summary>
-        TextureCube,
+        TextureCube
     }
 
     public enum ImageFileType
@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         FilterPoint = 0x100000,
         FilterLinear = 0x200000,
         FilterCubic = 0x300000,
-        FilterFant = 0x400000, // Combination of Linear and Box filter
+        FilterFant = 0x400000 // Combination of Linear and Box filter
         // Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
     };
 
@@ -148,6 +148,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         ForceRgb = 0x8, // Convert DXGI 1.1 BGR formats to Format.R8G8B8A8_UNorm to avoid use of optional WDDM 1.1 formats
         No16Bpp = 0x10, // Conversions avoid use of 565, 5551, and 4444 formats and instead expand to 8888 to avoid use of optional WDDM 1.2 formats
         CopyMemory = 0x20, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
-        ForceDX10Ext = 0x10000, // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
+        ForceDX10Ext = 0x10000 // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
     };
 }
