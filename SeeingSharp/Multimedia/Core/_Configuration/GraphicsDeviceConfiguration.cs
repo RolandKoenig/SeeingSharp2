@@ -26,15 +26,13 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class GraphicsDeviceConfiguration
     {
-        private GraphicsCoreConfiguration m_coreConfig;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsDeviceConfiguration" /> class.
         /// </summary>
         /// <param name="coreConfig">The core configuration object.</param>
         public GraphicsDeviceConfiguration(GraphicsCoreConfiguration coreConfig)
         {
-            m_coreConfig = coreConfig;
+            CoreConfiguration = coreConfig;
         }
 
         /// <summary>
@@ -58,9 +56,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current core configuration.
         /// </summary>
-        public GraphicsCoreConfiguration CoreConfiguration
-        {
-            get { return m_coreConfig; }
-        }
+        public GraphicsCoreConfiguration CoreConfiguration { get; }
     }
 }

@@ -43,12 +43,12 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Static collection which holds all render passes
         private static List<RenderPassInfo> s_renderPasses;
-        private static ReadOnlyCollection<RenderPassInfo> s_renderPassesPublic;
+
         #endregion
 
         #region Render pass properties
         private string m_name;
-        private bool m_isSorted;
+
         #endregion
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         static RenderPassInfo()
         {
             s_renderPasses = new List<RenderPassInfo>();
-            s_renderPassesPublic = new ReadOnlyCollection<RenderPassInfo>(s_renderPasses);
+            AllRenderPasses = new ReadOnlyCollection<RenderPassInfo>(s_renderPasses);
 
             s_renderPasses.Add(PASS_PLAIN_RENDER);
             s_renderPasses.Add(PASS_LINE_RENDER);
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Core
         internal RenderPassInfo(string name, bool isSorted = false)
         {
             m_name = name;
-            m_isSorted = isSorted;
+            IsSorted = isSorted;
         }
 
         /// <summary>
@@ -89,10 +89,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all render passes.
         /// </summary>
-        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses
-        {
-            get { return s_renderPassesPublic; }
-        }
+        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses { get; }
 
         /// <summary>
         /// Gets the name of this pass.
@@ -102,9 +99,6 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_name; }
         }
 
-        public bool IsSorted
-        {
-            get { return m_isSorted; }
-        }
+        public bool IsSorted { get; }
     }
 }

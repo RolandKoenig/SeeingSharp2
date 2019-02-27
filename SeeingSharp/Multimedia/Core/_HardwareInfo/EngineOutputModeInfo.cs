@@ -34,7 +34,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         public static readonly EngineOutputModeInfo Empty = default(EngineOutputModeInfo);
 
-        private EngineOutputInfo m_hostOutput;
         private int m_pixelWidth;
         private int m_pixelHeight;
         private int m_refreshRateNumerator;
@@ -42,7 +41,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal EngineOutputModeInfo(EngineOutputInfo hostOutput, SharpDX.DXGI.ModeDescription modeDescription)
         {
-            m_hostOutput = hostOutput;
+            HostOutput = hostOutput;
             m_pixelWidth = modeDescription.Width;
             m_pixelHeight = modeDescription.Height;
             m_refreshRateNumerator = modeDescription.RefreshRate.Numerator;
@@ -96,10 +95,7 @@ namespace SeeingSharp.Multimedia.Core
             return Equals((EngineOutputInfo)value);
         }
 
-        public EngineOutputInfo HostOutput
-        {
-            get { return m_hostOutput; }
-        }
+        public EngineOutputInfo HostOutput { get; }
 
         public int PixelWidth
         {

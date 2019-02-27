@@ -48,7 +48,6 @@ namespace SeeingSharp.Multimedia.Core
         private List<SceneObject> m_sceneObjects;
         private List<SceneObject> m_sceneObjectsNotSpacial;
         private List<SceneSpacialObject> m_sceneObjectsSpacial;
-        private ReadOnlyCollection<SceneObject> m_sceneObjectsPublic;
         private Scene m_scene;
         private string m_name;
         private bool m_isInUpdate;
@@ -74,7 +73,7 @@ namespace SeeingSharp.Multimedia.Core
 
             //Create standard collections
             m_sceneObjects = new List<SceneObject>();
-            m_sceneObjectsPublic = new ReadOnlyCollection<SceneObject>(m_sceneObjects);
+            Objects = new ReadOnlyCollection<SceneObject>(m_sceneObjects);
 
             //Create specialized collections
             m_sceneObjectsSpacial = new List<SceneSpacialObject>(1024);
@@ -540,10 +539,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all objects.
         /// </summary>
-        public ReadOnlyCollection<SceneObject> Objects
-        {
-            get { return m_sceneObjectsPublic; }
-        }
+        public ReadOnlyCollection<SceneObject> Objects { get; }
 
         /// <summary>
         /// Gets a list containing all scene objects (internal accessor to the complete list).

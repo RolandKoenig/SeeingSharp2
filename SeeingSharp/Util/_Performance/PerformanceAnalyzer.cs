@@ -60,10 +60,7 @@ namespace SeeingSharp.Util
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
 
         // Collections for UI
-        private ObservableCollection<DurationPerformanceResult> m_uiDurationKpisHistorical;
         private ObservableCollection<DurationPerformanceResult> m_uiDurationKpisCurrents;
-        private ObservableCollection<FlowRatePerformanceResult> m_uiFlowRateKpisHistorical;
-        private ObservableCollection<FlowRatePerformanceResult> m_uiFlowRateKpisCurrents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
@@ -86,10 +83,10 @@ namespace SeeingSharp.Util
             m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
-            m_uiDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
+            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
             m_uiDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            m_uiFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            m_uiFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
+            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
+            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
         }
 
         /// <summary>
@@ -417,10 +414,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets historical duration results (if activated).
         /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisHistorical
-        {
-            get { return m_uiDurationKpisHistorical; }
-        }
+        public ObservableCollection<DurationPerformanceResult> UIDurationKpisHistorical { get; }
 
         /// <summary>
         /// Gets current duration results (if activated).
@@ -433,18 +427,12 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets historical flowrate results (if activated).
         /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisHistorical
-        {
-            get { return m_uiFlowRateKpisHistorical; }
-        }
+        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisHistorical { get; }
 
         /// <summary>
         /// Gets current flowrate results (if activated).
         /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisCurrents
-        {
-            get { return m_uiFlowRateKpisCurrents; }
-        }
+        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisCurrents { get; }
 
         //*********************************************************************
         //*********************************************************************

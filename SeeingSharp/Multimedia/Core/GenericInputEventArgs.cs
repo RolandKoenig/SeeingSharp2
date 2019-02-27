@@ -34,20 +34,15 @@ namespace SeeingSharp.Multimedia.Core
 
     public class GenericInputEventArgs : EventArgs
     {
-        private List<InputFrame> m_inputFrames;
-
         internal GenericInputEventArgs(IEnumerable<InputFrame> inputFrames)
         {
             // Reset input states
-            m_inputFrames = new List<InputFrame>(inputFrames);
+            InputFrames = new List<InputFrame>(inputFrames);
         }
 
         /// <summary>
         /// Gets a list containing all InputFrames.
         /// </summary>
-        public List<InputFrame> InputFrames
-        {
-            get { return m_inputFrames; }
-        }
+        public List<InputFrame> InputFrames { get; }
     }
 }

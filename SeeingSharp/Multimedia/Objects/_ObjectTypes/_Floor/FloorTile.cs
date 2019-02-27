@@ -32,8 +32,6 @@ namespace SeeingSharp.Multimedia.Objects
 
     public class FloorTile
     {
-        private int m_xPos;
-        private int m_yPos;
         private FloorTileInfo m_tileInfo;
 
         /// <summary>
@@ -43,8 +41,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="yPos">The y pos.</param>
         internal FloorTile(int xPos, int yPos)
         {
-            m_xPos = xPos;
-            m_yPos = yPos;
+            XPos = xPos;
+            YPos = yPos;
             m_tileInfo = new FloorTileInfo(NamedOrGenericKey.Empty);
         }
 
@@ -56,8 +54,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="tileInfo">Gets some generic information about the tile.</param>
         internal FloorTile(int xPos, int yPos, FloorTileInfo tileInfo)
         {
-            m_xPos = xPos;
-            m_yPos = yPos;
+            XPos = xPos;
+            YPos = yPos;
             m_tileInfo = tileInfo;
         }
 
@@ -72,17 +70,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the x-position of the tile.
         /// </summary>
-        public int XPos
-        {
-            get { return m_xPos; }
-        }
+        public int XPos { get; }
 
         /// <summary>
         /// Gets the y-position of the tile.
         /// </summary>
-        public int YPos
-        {
-            get { return m_yPos; }
-        }
+        public int YPos { get; }
     }
 }

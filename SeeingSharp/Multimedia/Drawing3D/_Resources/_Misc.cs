@@ -60,23 +60,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class TextureChangedEventArgs : EventArgs
     {
-        private RenderState m_renderState;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureChangedEventArgs"/> class.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
         internal TextureChangedEventArgs(RenderState renderState)
         {
-            m_renderState = renderState;
+            RenderState = renderState;
         }
 
         /// <summary>
         /// Gets current renderstate object.
         /// </summary>
-        public RenderState RenderState
-        {
-            get { return m_renderState; }
-        }
+        public RenderState RenderState { get; }
     }
 }

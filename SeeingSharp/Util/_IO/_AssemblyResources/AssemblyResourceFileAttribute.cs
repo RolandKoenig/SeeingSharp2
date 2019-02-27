@@ -33,16 +33,13 @@ namespace SeeingSharp.Util
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
     public class AssemblyResourceFileAttribute : Attribute
     {
-        private string m_resourcePath;
-        private string m_key;
-
         /// <summary>
         /// Links the given resource
         /// </summary>
         public AssemblyResourceFileAttribute(string resourcePath)
         {
-            m_resourcePath = resourcePath;
-            m_key = null;
+            ResourcePath = resourcePath;
+            Key = null;
         }
 
         /// <summary>
@@ -50,24 +47,18 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceFileAttribute(string resourcePath, string key)
         {
-            m_resourcePath = resourcePath;
-            m_key = key;
+            ResourcePath = resourcePath;
+            Key = key;
         }
 
         /// <summary>
         /// Gets the path to the resource
         /// </summary>
-        public string ResourcePath
-        {
-            get { return m_resourcePath; }
-        }
+        public string ResourcePath { get; }
 
         /// <summary>
         /// Gets the key (may be null)
         /// </summary>
-        public string Key
-        {
-            get { return m_key; }
-        }
+        public string Key { get; }
     }
 }

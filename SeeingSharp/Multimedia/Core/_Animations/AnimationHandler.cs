@@ -26,15 +26,13 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class AnimationHandler : AnimationSequence
     {
-        private object m_owner;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
         /// </summary>
         /// <param name="owner">The owner object of this AnimationHandler.</param>
         public AnimationHandler(object owner)
         {
-            m_owner = owner;
+            Owner = owner;
         }
 
         /// <summary>
@@ -69,9 +67,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the owner object.
         /// </summary>
-        public object Owner
-        {
-            get { return m_owner; }
-        }
+        public object Owner { get; }
     }
 }

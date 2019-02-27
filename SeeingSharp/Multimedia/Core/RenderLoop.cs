@@ -62,7 +62,6 @@ namespace SeeingSharp.Multimedia.Core
         private ObservableCollection<SceneComponentBase> m_sceneComponents;
         private bool m_discardRendering;
         private bool m_discardPresent;
-        private Color4 m_clearColor;
         private Camera3DBase m_camera;
         #endregion
 
@@ -84,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Values needed for runtime
-        private RenderLoopInternals m_internals;
+
         private bool m_lastRenderSuccessfully;
         private bool m_nextRenderAllowed;
         private int m_totalRenderCount;
@@ -152,7 +151,7 @@ namespace SeeingSharp.Multimedia.Core
             IRenderLoopHost renderLoopHost,
             bool isDesignMode = false)
         {
-            m_internals = new RenderLoopInternals(this);
+            Internals = new RenderLoopInternals(this);
 
             m_afterPresentActions = new ThreadSaveQueue<Action>();
 
@@ -185,7 +184,7 @@ namespace SeeingSharp.Multimedia.Core
             m_renderLoopHost = renderLoopHost;
 
             // Create default objects
-            m_clearColor = Color4.White;
+            ClearColor = Color4.White;
 
             // Set initial target parameters
             m_lastTargetParametersChanged = DateTime.MinValue;
@@ -1392,11 +1391,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets or sets the current clear color.
         /// </summary>
-        public Color4 ClearColor
-        {
-            get => m_clearColor;
-            set => m_clearColor = value;
-        }
+        public Color4 ClearColor { get; set; }
 
         /// <summary>
         /// Gets the collection containing all filters.
@@ -1490,7 +1485,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Internal properties and methods that sould be used with care.
         /// </summary>
-        public RenderLoopInternals Internals => m_internals;
+        public RenderLoopInternals Internals { get; }
 
         /// <summary>
         /// Internal field that is used to count visible objects.

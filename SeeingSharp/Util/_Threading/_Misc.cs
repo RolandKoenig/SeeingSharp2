@@ -58,9 +58,6 @@ namespace SeeingSharp.Util
 
     public class ObjectThreadExceptionEventArgs : EventArgs
     {
-        private Exception m_innerException;
-        private ObjectThreadState m_threadState;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadExceptionEventArgs"/> class.
         /// </summary>
@@ -68,24 +65,18 @@ namespace SeeingSharp.Util
         /// <param name="innerException">The inner exception.</param>
         public ObjectThreadExceptionEventArgs(ObjectThreadState threadState, Exception innerException)
         {
-            m_innerException = innerException;
-            m_threadState = threadState;
+            Exception = innerException;
+            State = threadState;
         }
 
         /// <summary>
         /// Gets the occurred exception.
         /// </summary>
-        public Exception Exception
-        {
-            get { return m_innerException; }
-        }
+        public Exception Exception { get; }
 
         /// <summary>
         /// Gets current state of the thread.
         /// </summary>
-        public ObjectThreadState State
-        {
-            get { return m_threadState; }
-        }
+        public ObjectThreadState State { get; }
     }
 }

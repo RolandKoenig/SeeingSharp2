@@ -32,23 +32,18 @@ namespace SeeingSharp.Multimedia.Objects
 
     public class FloorTileInfo
     {
-        private NamedOrGenericKey m_material;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FloorTileInfo"/> class.
         /// </summary>
         /// <param name="material">The material to use for the tile (string.Empty or null to use default material).</param>
         public FloorTileInfo(NamedOrGenericKey material)
         {
-            m_material = material;
+            Material = material;
         }
 
         /// <summary>
         /// Gets the material used for this tile.
         /// </summary>
-        public NamedOrGenericKey Material
-        {
-            get { return m_material; }
-        }
+        public NamedOrGenericKey Material { get; }
     }
 }

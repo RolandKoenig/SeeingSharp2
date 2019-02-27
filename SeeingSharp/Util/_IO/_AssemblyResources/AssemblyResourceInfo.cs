@@ -35,7 +35,6 @@ namespace SeeingSharp.Util
     {
         private Assembly m_targetAssembly;
         private string m_resourcePath;
-        private string m_key;
 
         /// <summary>
         /// Creates a new AssemblyResourceInfo object
@@ -44,7 +43,7 @@ namespace SeeingSharp.Util
         {
             m_targetAssembly = targetAssembly;
             m_resourcePath = resourcePath;
-            m_key = key;
+            Key = key;
         }
 
         /// <summary>
@@ -74,9 +73,6 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the key of this object
         /// </summary>
-        public string Key
-        {
-            get { return m_key; }
-        }
+        public string Key { get; }
     }
 }

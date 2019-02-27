@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_initialized;
         private string m_name;
         private List<SceneLayer> m_sceneLayers;
-        private ReadOnlyCollection<SceneLayer> m_sceneLayersPublic;
+
         #endregion
 
         #region Some other logical parts of the scene object
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Core
 
             m_sceneLayers = new List<SceneLayer>();
             m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
-            m_sceneLayersPublic = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
+            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
 
             m_drawing2DLayers = new List<Custom2DDrawingLayer>();
 
@@ -1158,7 +1158,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all layers.
         /// </summary>
-        internal ReadOnlyCollection<SceneLayer> Layers => m_sceneLayersPublic;
+        internal ReadOnlyCollection<SceneLayer> Layers { get; }
 
         /// <summary>
         /// Gets total count of objects within the scene.

@@ -32,8 +32,6 @@ namespace SeeingSharp.Util
 
     public class FlowRatePerformanceResult : PerformanceAnalyzeResultBase
     {
-        private double m_value;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FlowRatePerformanceResult"/> class.
         /// </summary>
@@ -43,15 +41,12 @@ namespace SeeingSharp.Util
         public FlowRatePerformanceResult(FlowRatePerformanceCalculator calculator, DateTime keyTimestamp, double value)
             : base(calculator, keyTimestamp)
         {
-            m_value = value;
+            Value = value;
         }
 
         /// <summary>
         /// Gets the value that was calculated.
         /// </summary>
-        public double Value
-        {
-            get { return m_value; }
-        }
+        public double Value { get; }
     }
 }

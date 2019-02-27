@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Main members
-        private EngineDeviceInternals m_internals;
+
         private SharpDX.DXGI.Adapter1 m_adapter1;
         private SharpDX.DXGI.AdapterDescription1 m_adapterDesc1;
         private GraphicsDeviceConfiguration m_configuration;
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Members for antialiasing
-        private bool m_isStandardAntialiasingSupported;
+
         private SharpDX.DXGI.SampleDescription m_sampleDescWithAntialiasing;
         #endregion
 
@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Core
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
             adapter.EnsureNotNull(nameof(adapter));
 
-            m_internals = new EngineDeviceInternals(this);
+            Internals = new EngineDeviceInternals(this);
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Core
             // Initialize handlers for feature support information
             if (m_initializationException == null)
             {
-                m_isStandardAntialiasingSupported = CheckIsStandardAntialiasingPossible();
+                IsStandardAntialiasingPossible = CheckIsStandardAntialiasingPossible();
             }
 
             // Initialize direct2D handler finally
@@ -273,13 +273,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Checks for standard antialiasing support.
         /// </summary>
-        public bool IsStandardAntialiasingPossible
-        {
-            get
-            {
-                return m_isStandardAntialiasingSupported;
-            }
-        }
+        public bool IsStandardAntialiasingPossible { get; }
 
         /// <summary>
         /// Gets the exception occurred during initialization of the driver (if any).
@@ -508,7 +502,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Internal members, use with care.
         /// </summary>
-        public EngineDeviceInternals Internals => m_internals;
+        public EngineDeviceInternals Internals { get; }
 
         //*********************************************************************
         //*********************************************************************

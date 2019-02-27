@@ -47,9 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
         #region All model data
         private int m_importID = 0;
         private ImportOptions m_importOptions;
-        private List<SceneObject> m_objects;
-        private List<Tuple<SceneObject, SceneObject>> m_parentChildRelationships;
-        private List<ImportedResourceInfo> m_importedResources;
+
         #endregion
 
         /// <summary>
@@ -58,9 +56,9 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer(ImportOptions importOptions)
         {
             m_importOptions = importOptions;
-            m_objects = new List<SceneObject>();
-            m_parentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            m_importedResources = new List<ImportedResourceInfo>();
+            Objects = new List<SceneObject>();
+            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
+            ImportedResources = new List<ImportedResourceInfo>();
 
             m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
@@ -118,26 +116,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
-        public List<SceneObject> Objects
-        {
-            get { return m_objects; }
-        }
+        public List<SceneObject> Objects { get; }
 
         /// <summary>
         /// Gets the hierarchy information of the imported objects.
         /// </summary>
-        public List<Tuple<SceneObject, SceneObject>> ParentChildRelationships
-        {
-            get { return m_parentChildRelationships; }
-        }
+        public List<Tuple<SceneObject, SceneObject>> ParentChildRelationships { get; }
 
         /// <summary>
         /// Gets a collection containing all imported resources.
         /// </summary>
-        public List<ImportedResourceInfo> ImportedResources
-        {
-            get { return m_importedResources; }
-        }
+        public List<ImportedResourceInfo> ImportedResources { get; }
 
         /// <summary>
         /// Should triangle order be changes by the import logic?

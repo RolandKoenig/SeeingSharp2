@@ -41,7 +41,6 @@ namespace SeeingSharp.Util
         private Assembly m_targetAssembly;
         private List<AssemblyResourceInfo> m_resources;
         private Dictionary<string, AssemblyResourceInfo> m_resourcesDict;
-        private ResourceInfoCollection m_publicResources;
 
         /// <summary>
         /// Static constructor
@@ -84,7 +83,7 @@ namespace SeeingSharp.Util
                 }
             }
 
-            m_publicResources = new ResourceInfoCollection(this);
+            ResourceFiles = new ResourceInfoCollection(this);
         }
 
         /// <summary>
@@ -178,10 +177,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets a collection contaning all resource files
         /// </summary>
-        public ResourceInfoCollection ResourceFiles
-        {
-            get { return m_publicResources; }
-        }
+        public ResourceInfoCollection ResourceFiles { get; }
 
         //*********************************************************************
         //*********************************************************************

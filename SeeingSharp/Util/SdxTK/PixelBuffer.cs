@@ -54,10 +54,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         private int rowStride;
 
-        private int bufferStride;
-
-        private readonly IntPtr dataPointer;
-
         private int pixelSize;
 
         /// <summary>
@@ -83,8 +79,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             this.height = height;
             this.format = format;
             this.rowStride = rowStride;
-            this.bufferStride = bufferStride;
-            this.dataPointer = dataPointer;
+            this.BufferStride = bufferStride;
+            this.DataPointer = dataPointer;
             this.pixelSize = SharpDX.DXGI.FormatHelper.SizeOfInBytes(this.format);
             this.isStrictRowStride = (pixelSize * width) == rowStride;
         }
@@ -137,13 +133,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the total size in bytes of this pixel buffer.
         /// </summary>
         /// <value>The size in bytes of the pixel buffer.</value>
-        public int BufferStride { get { return this.bufferStride; } }
+        public int BufferStride { get; }
 
         /// <summary>
         /// Gets the pointer to the pixel buffer.
         /// </summary>
         /// <value>The pointer to the pixel buffer.</value>
-        public IntPtr DataPointer { get { return this.dataPointer; } }
+        public IntPtr DataPointer { get; }
 
         /// <summary>
         /// Copies this pixel buffer to a destination pixel buffer.

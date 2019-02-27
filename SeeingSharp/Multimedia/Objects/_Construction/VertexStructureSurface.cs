@@ -47,7 +47,6 @@ namespace SeeingSharp.Multimedia.Objects
 
         #region Geometry information
         private List<int> m_indices;
-        private IndexCollection m_indexCollection;
         private TriangleCollection m_triangleCollection;
         #endregion
 
@@ -60,7 +59,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_owner = owner;
             m_indices = new List<int>(triangleCapacity * 3);
-            m_indexCollection = new IndexCollection(m_indices);
+            Indices = new IndexCollection(m_indices);
             m_triangleCollection = new TriangleCollection(m_indices, m_owner.VerticesInternal);
             m_materialProperties = new MaterialProperties();
         }
@@ -719,10 +718,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection containing all indices.
         /// </summary>
-        public IndexCollection Indices
-        {
-            get { return m_indexCollection; }
-        }
+        public IndexCollection Indices { get; }
 
         /// <summary>
         /// Retrieves total count of all indexes within this structure

@@ -45,8 +45,6 @@ namespace SeeingSharp.Multimedia.Core
 
         private List<EngineOutputInfo> m_outputs;
         private SharpDX.DXGI.Adapter1 m_adapter;
-        private int m_adapterIndex;
-        private bool m_isSoftware;
         private D3D.FeatureLevel m_d3d11FeatureLevel;
         private SharpDX.DXGI.AdapterDescription m_adapterDescription;
 
@@ -57,10 +55,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_outputs = new List<EngineOutputInfo>();
             m_adapter = adapter;
-            m_adapterIndex = adapterIndex;
+            AdapterIndex = adapterIndex;
 
             m_adapterDescription = adapter.Description;
-            m_isSoftware =
+            IsSoftwareAdapter =
                 (m_adapterDescription.Description == "Microsoft Basic Render Driver") ||
                 ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Software")) ||
                 ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Microsoft Basic Render Driver"));
@@ -117,20 +115,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the index of the adapter.
         /// </summary>
-        public int AdapterIndex
-        {
-            get { return m_adapterIndex; }
-        }
+        public int AdapterIndex { get; }
 
         public string MaxFeatureLevelD3D11
         {
             get { return m_d3d11FeatureLevel.ToString(); }
         }
 
-        public bool IsSoftwareAdapter
-        {
-            get { return m_isSoftware; }
-        }
+        public bool IsSoftwareAdapter { get; }
 
         /// <summary>
         /// Gets the description of the adapter.

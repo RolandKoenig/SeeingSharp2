@@ -35,8 +35,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
-        private int m_adapterIndex;
-        private int m_outputIndex;
         private SharpDX.DXGI.OutputDescription m_outputDescription;
         private EngineOutputModeInfo[] m_outputInfos;
 
@@ -45,8 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineOutputInfo(int adapterIndex, int outputIndex, SharpDX.DXGI.Output output)
         {
-            m_adapterIndex = adapterIndex;
-            m_outputIndex = outputIndex;
+            AdapterIndex = adapterIndex;
+            OutputIndex = outputIndex;
             m_outputDescription = output.Description;
 
             // Get all supported modes
@@ -92,15 +90,9 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_outputDescription.DeviceName; }
         }
 
-        public int AdapterIndex
-        {
-            get { return m_adapterIndex; }
-        }
+        public int AdapterIndex { get; }
 
-        public int OutputIndex
-        {
-            get { return m_outputIndex; }
-        }
+        public int OutputIndex { get; }
 
         public bool IsAttachedToDesktop
         {

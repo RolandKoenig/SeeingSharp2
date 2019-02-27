@@ -42,9 +42,6 @@ namespace SeeingSharp.Multimedia.Core
         #region Generic members
         private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
         private DetailLevel m_targetDetailLevel;
-        private dynamic m_customData;
-        private object m_tag1;
-        private object m_tag2;
         private bool m_isStatic;
         #endregion Generic members
 
@@ -81,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
 
             //Create a dynamic container for custom data
-            m_customData = new ExpandoObject();
+            CustomData = new ExpandoObject();
 
             this.TransormationChanged = true;
             this.IsPickingTestVisible = true;
@@ -580,28 +577,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a dynamic container for custom data.
         /// </summary>
-        public dynamic CustomData
-        {
-            get { return m_customData; }
-        }
+        public dynamic CustomData { get; }
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag1
-        {
-            get { return m_tag1; }
-            set { m_tag1 = value; }
-        }
+        public object Tag1 { get; set; }
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag2
-        {
-            get { return m_tag2; }
-            set { m_tag2 = value; }
-        }
+        public object Tag2 { get; set; }
 
         /// <summary>
         /// Is this object visible for picking-test?

@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
         #region Parameters of created device
         private D3D11.DeviceCreationFlags m_creationFlags;
         private D3D.FeatureLevel m_featureLevel;
-        private HardwareDriverLevel m_driverLevel;
+
         #endregion
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Core
                     // Device successfully created, save all parameters and break this loop
                     m_featureLevel = featureLevel;
                     m_creationFlags = direct3D11Flags;
-                    m_driverLevel = actDriverLevel;
+                    DriverLevel = actDriverLevel;
                     break;
                 }
                 catch (Exception) { }
@@ -258,10 +258,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the driver level.
         /// </summary>
-        public HardwareDriverLevel DriverLevel
-        {
-            get { return m_driverLevel; }
-        }
+        public HardwareDriverLevel DriverLevel { get; }
 
         /// <summary>
         /// Are Direct2D textures possible?

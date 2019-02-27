@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
     public abstract class SeeingSharpVideoWriter
     {
         #region Configuration
-        private ResourceLink m_targetFile;
+
         #endregion
 
         #region Runtime values
@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <param name="targetFile">The target file to write to.</param>
         public SeeingSharpVideoWriter(ResourceLink targetFile)
         {
-            m_targetFile = targetFile;
+            TargetFile = targetFile;
         }
 
         /// <summary>
@@ -184,10 +184,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <summary>
         /// Gets the target file this VideoWriter is writing to.
         /// </summary>
-        public ResourceLink TargetFile
-        {
-            get { return m_targetFile; }
-        }
+        public ResourceLink TargetFile { get; }
 
         /// <summary>
         /// Has rendering started?

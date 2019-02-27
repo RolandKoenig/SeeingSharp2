@@ -44,15 +44,14 @@ namespace SeeingSharp.Multimedia.Objects
         #region Description
         private string m_name;
         private string m_description;
-        private Assembly m_resourceSourceAssembly;
-        private ResourceLink m_resourceLink;
+
         #endregion
 
         #region Geometry
         private List<Vertex> m_vertices;
         private List<VertexStructureSurface> m_surfaces;
         private VertexCollection m_vertexCollection;
-        private SurfaceCollection m_surfaceCollection;
+
         #endregion
 
         #region Members for build time transform
@@ -81,7 +80,7 @@ namespace SeeingSharp.Multimedia.Objects
             m_surfaces = new List<VertexStructureSurface>();
 
             m_vertexCollection = new VertexCollection(m_vertices);
-            m_surfaceCollection = new SurfaceCollection(m_surfaces);
+            Surfaces = new SurfaceCollection(m_surfaces);
         }
 
         /// <summary>
@@ -726,10 +725,7 @@ namespace SeeingSharp.Multimedia.Objects
             get { return m_vertices; }
         }
 
-        public SurfaceCollection Surfaces
-        {
-            get { return m_surfaceCollection; }
-        }
+        public SurfaceCollection Surfaces { get; }
 
         public int CountSurfaces
         {
@@ -765,20 +761,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the resource source assembly.
         /// </summary>
-        public Assembly ResourceSourceAssembly
-        {
-            get { return m_resourceSourceAssembly; }
-            set { m_resourceSourceAssembly = value; }
-        }
+        public Assembly ResourceSourceAssembly { get; set; }
 
         /// <summary>
         /// Gets or sets the original source of this geometry.
         /// </summary>
-        public ResourceLink ResourceLink
-        {
-            get { return m_resourceLink; }
-            set { m_resourceLink = value; }
-        }
+        public ResourceLink ResourceLink { get; set; }
 
         //*********************************************************************
         //*********************************************************************

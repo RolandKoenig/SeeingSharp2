@@ -38,7 +38,6 @@ namespace SeeingSharp.Multimedia.Objects
 
         private GeometryData m_geoData;
         private TextureData m_textureData;
-        private AnimationData m_animationData;
 
         /// <summary>
         /// Creates a new vertex
@@ -47,7 +46,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position);
             m_textureData = new TextureData();
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData();
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData(texCoord1);
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, normal, color);
             m_textureData = new TextureData(texCoord1);
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -163,11 +162,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets all animation related data of the vertex.
         /// </summary>
-        public AnimationData Animation
-        {
-            get { return m_animationData; }
-            set { m_animationData = value; }
-        }
+        public AnimationData Animation { get; set; }
 
         /// <summary>
         /// Retrieves or sets texture data

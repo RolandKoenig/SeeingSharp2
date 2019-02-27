@@ -33,7 +33,6 @@ namespace SeeingSharp.Util
     public abstract class PerformanceAnalyzeResultBase
     {
         private PerformanceCalculatorBase m_calculator;
-        private DateTime m_keyTimestamp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzeResultBase"/> class.
@@ -43,7 +42,7 @@ namespace SeeingSharp.Util
         internal PerformanceAnalyzeResultBase(PerformanceCalculatorBase calculator, DateTime keyTimestamp)
         {
             m_calculator = calculator;
-            m_keyTimestamp = keyTimestamp;
+            KeyTimestamp = keyTimestamp;
         }
 
         /// <summary>
@@ -65,9 +64,6 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the key of this kpi.
         /// </summary>
-        public DateTime KeyTimestamp
-        {
-            get { return m_keyTimestamp; }
-        }
+        public DateTime KeyTimestamp { get; }
     }
 }

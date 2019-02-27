@@ -35,9 +35,6 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public class ExportGeometryInfo
     {
-        private NamedOrGenericKey m_key;
-        private ObjectType m_objectType;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportGeometryInfo"/> class.
         /// </summary>
@@ -45,18 +42,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="objType">Type of the object.</param>
         public ExportGeometryInfo(NamedOrGenericKey key, ObjectType objType)
         {
-            m_key = key;
-            m_objectType = objType;
+            Key = key;
+            ObjectType = objType;
         }
 
-        public NamedOrGenericKey Key
-        {
-            get { return m_key; }
-        }
+        public NamedOrGenericKey Key { get; }
 
-        public ObjectType ObjectType
-        {
-            get { return m_objectType; }
-        }
+        public ObjectType ObjectType { get; }
     }
 }

@@ -35,7 +35,6 @@ namespace SeeingSharp.Multimedia.Objects
     public struct TextureData
     {
         private Vector2 m_coordiante1;
-        private float m_textureFactor;
 
         /// <summary>
         /// Initializes a new TextureData structure
@@ -43,7 +42,7 @@ namespace SeeingSharp.Multimedia.Objects
         public TextureData(Vector2 coord1)
         {
             m_coordiante1 = coord1;
-            m_textureFactor = 0f;
+            TextureFactor = 0f;
         }
 
         /// <summary>
@@ -61,11 +60,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// This value decides wether a texture is displayed on this vertex or not.
         /// A value greater or equal 0 will show the texture, all negatives will hide it.
         /// </summary>
-        public float TextureFactor
-        {
-            get { return m_textureFactor; }
-            set { m_textureFactor = value; }
-        }
+        public float TextureFactor { get; set; }
 
         /// <summary>
         /// Retrieves or sets first texture coordinate

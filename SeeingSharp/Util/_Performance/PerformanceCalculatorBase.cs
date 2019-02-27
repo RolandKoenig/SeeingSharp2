@@ -32,16 +32,13 @@ namespace SeeingSharp.Util
 
     public abstract class PerformanceCalculatorBase
     {
-        private PerformanceAnalyzer m_parent;
-        private string m_calculatorName;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceCalculatorBase"/> class.
         /// </summary>
         /// <param name="calculatorName">Name of the calculator.</param>
         internal PerformanceCalculatorBase(string calculatorName)
         {
-            m_calculatorName = calculatorName;
+            CalculatorName = calculatorName;
         }
 
         /// <summary>
@@ -62,18 +59,11 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the parent kpi container.
         /// </summary>
-        public PerformanceAnalyzer Parent
-        {
-            get { return m_parent; }
-            internal set { m_parent = value; }
-        }
+        public PerformanceAnalyzer Parent { get; internal set; }
 
         /// <summary>
         /// Gets the name of this calculator.
         /// </summary>
-        public string CalculatorName
-        {
-            get { return m_calculatorName; }
-        }
+        public string CalculatorName { get; }
     }
 }

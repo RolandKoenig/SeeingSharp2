@@ -36,7 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         private NamedOrGenericKey m_key;
         private ResourceDictionary m_resourceDictionary;
         private EngineDevice m_device;
-        private Type m_resourceType;
         private bool m_markedForReloading;
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected Resource()
         {
-            m_resourceType = this.GetType();
+            ResourceType = this.GetType();
             m_key = new NamedOrGenericKey();
         }
 
@@ -174,9 +173,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the type of this resource.
         /// </summary>
-        public Type ResourceType
-        {
-            get { return m_resourceType; }
-        }
+        public Type ResourceType { get; }
     }
 }

@@ -43,7 +43,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         private EngineDevice m_device;
         private List<IRenderableResource> m_renderableResources;
-        private ReadOnlyCollection<IRenderableResource> m_renderableResourcesPublic;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
         private int m_lastRenderBlockID;
@@ -59,7 +58,7 @@ namespace SeeingSharp.Multimedia.Core
             m_lastRenderBlockID = -1;
 
             m_renderableResources = new List<IRenderableResource>();
-            m_renderableResourcesPublic = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
+            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
 
             m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
             m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
@@ -524,10 +523,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets an enumeration containing all renderable resources.
         /// </summary>
-        public ReadOnlyCollection<IRenderableResource> RenderableResources
-        {
-            get { return m_renderableResourcesPublic; }
-        }
+        public ReadOnlyCollection<IRenderableResource> RenderableResources { get; }
 
         /// <summary>
         /// Gets a reference to default resources object.

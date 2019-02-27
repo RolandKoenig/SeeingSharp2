@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Input
         private static readonly int BUTTON_COUNT = Enum.GetValues(typeof(MouseButton)).Length;
 
         #region Generic info
-        private MouseOrPointerStateInternals m_internals;
+
         private MouseOrPointerType m_mouseOrPointerType;
         #endregion
 
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Input
                 buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
             }
 
-            m_internals = new MouseOrPointerStateInternals(this);
+            Internals = new MouseOrPointerStateInternals(this);
 
             m_buttonsHit = new bool[buttonCount];
             m_buttonsDown = new bool[buttonCount];
@@ -304,7 +304,7 @@ namespace SeeingSharp.Multimedia.Input
             internal set { m_mouseOrPointerType = value; }
         }
 
-        public MouseOrPointerStateInternals Internals => m_internals;
+        public MouseOrPointerStateInternals Internals { get; }
 
         //*********************************************************************
         //*********************************************************************

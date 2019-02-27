@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Input
     {
         #region state related data
         private ViewInformation m_relatedView;
-        private Type m_currentType;
+
         #endregion
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected InputStateBase()
         {
-            m_currentType = this.GetType();
+            CurrentType = this.GetType();
         }
 
         /// <summary>
@@ -89,9 +89,6 @@ namespace SeeingSharp.Multimedia.Input
             }
         }
 
-        internal Type CurrentType
-        {
-            get { return m_currentType; }
-        }
+        internal Type CurrentType { get; }
     }
 }

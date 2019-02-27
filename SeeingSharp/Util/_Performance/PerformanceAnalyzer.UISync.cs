@@ -45,7 +45,7 @@ namespace SeeingSharp.Util
             {
                 HandleResultForUIForFlowRateKpi(
                     actDurationResult,
-                    m_uiDurationKpisHistorical, m_uiDurationKpisCurrents);
+                    UIDurationKpisHistorical, m_uiDurationKpisCurrents);
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace SeeingSharp.Util
             {
                 HandleResultForUIForFlowRateKpi(
                     actFlowRateResult,
-                    m_uiFlowRateKpisHistorical, m_uiFlowRateKpisCurrents);
+                    UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
                 return;
             }
         }

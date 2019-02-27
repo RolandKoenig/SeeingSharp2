@@ -35,8 +35,6 @@ namespace SeeingSharp.Multimedia.Core
 
     public class SceneObjectInfo
     {
-        private SceneObject m_sceneObject;
-        private SceneObjectInfoType m_sceneObjectType;
         private List<SceneObjectInfo> m_childs;
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace SeeingSharp.Multimedia.Core
             obj.EnsureNotNull(nameof(obj));
             obj.Scene.EnsureNotNull($"{nameof(obj)}.{nameof(obj.Scene)}");
 
-            m_sceneObject = obj;
+            OriginalObject = obj;
 
             // Build child list
             m_childs = new List<SceneObjectInfo>(obj.CountChildren);
@@ -63,16 +61,16 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Set the type of this object
-            m_sceneObjectType = SceneObjectInfoType.Other;
+            Type = SceneObjectInfoType.Other;
             var clrType = obj.GetType();
 
             if (clrType == typeof(GenericObject))
             {
-                m_sceneObjectType = SceneObjectInfoType.GenericObject;
+                Type = SceneObjectInfoType.GenericObject;
             }
             else if (clrType == typeof(ScenePivotObject))
             {
-                m_sceneObjectType = SceneObjectInfoType.Pivot;
+                Type = SceneObjectInfoType.Pivot;
             }
         }
 
@@ -81,15 +79,9 @@ namespace SeeingSharp.Multimedia.Core
             return $"Type:{this.Type}, #Childs:{this.Childs.Count}";
         }
 
-        public SceneObject OriginalObject
-        {
-            get { return m_sceneObject; }
-        }
+        public SceneObject OriginalObject { get; }
 
-        public SceneObjectInfoType Type
-        {
-            get { return m_sceneObjectType; }
-        }
+        public SceneObjectInfoType Type { get; }
 
         public IReadOnlyList<SceneObjectInfo> Childs
         {

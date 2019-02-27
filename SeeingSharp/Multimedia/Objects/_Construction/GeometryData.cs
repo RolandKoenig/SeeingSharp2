@@ -36,9 +36,6 @@ namespace SeeingSharp.Multimedia.Objects
     {
         private Vector3 m_position;
         private Vector3 m_normal;
-        private Vector3 m_tangent;
-        private Vector3 m_binormal;
-        private Color4 m_color;
 
         /// <summary>
         /// Initializes a new geometry data structure
@@ -47,10 +44,10 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_position = position;
             m_normal = Vector3.Zero;
-            m_tangent = Vector3.Zero;
-            m_color = Color4.White;
-            m_tangent = Vector3.Zero;
-            m_binormal = Vector3.Zero;
+            Tangent = Vector3.Zero;
+            Color = Color4.White;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -60,9 +57,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_position = position;
             m_normal = Vector3.Zero;
-            m_color = color;
-            m_tangent = Vector3.Zero;
-            m_binormal = Vector3.Zero;
+            Color = color;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -72,9 +69,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_position = position;
             m_normal = normal;
-            m_color = color;
-            m_tangent = Vector3.Zero;
-            m_binormal = Vector3.Zero;
+            Color = color;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -84,9 +81,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_position = position;
             m_normal = normal;
-            m_color = Color4.White;
-            m_tangent = Vector3.Zero;
-            m_binormal = Vector3.Zero;
+            Color = Color4.White;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -131,28 +128,16 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves or sets the color of the vertex
         /// </summary>
-        public Color4 Color
-        {
-            get { return m_color; }
-            set { m_color = value; }
-        }
+        public Color4 Color { get; set; }
 
         /// <summary>
         /// Gets or sets the tangent vector.
         /// </summary>
-        public Vector3 Tangent
-        {
-            get { return m_tangent; }
-            set { m_tangent = value; }
-        }
+        public Vector3 Tangent { get; set; }
 
         /// <summary>
         /// Gets or sets the binormal vector.
         /// </summary>
-        public Vector3 Binormal
-        {
-            get { return m_binormal; }
-            set { m_binormal = value; }
-        }
+        public Vector3 Binormal { get; set; }
     }
 }

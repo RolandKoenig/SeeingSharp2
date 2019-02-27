@@ -75,11 +75,11 @@ namespace SeeingSharp.Multimedia.Core
         private static UniqueGenericKeyGenerator s_resourceKeyGenerator;
         private GraphicsCoreConfiguration m_configuration;
         private PerformanceAnalyzer m_performanceCalculator;
-        private ImporterExporterRepository m_importExporters;
+
         #endregion
 
         #region Members for input
-        private InputHandlerFactory m_inputHandlerFactory;
+
         private InputGathererThread m_inputGatherer;
         #endregion
 
@@ -98,8 +98,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Configurations
-        private bool m_debugEnabled;
-        private bool m_force2DFallback;
+
         #endregion
 
         public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCachedException
@@ -146,8 +145,8 @@ namespace SeeingSharp.Multimedia.Core
                 m_configuration.DebugEnabled = loadSettings.DebugEnabled;
 
                 // Create container object for all input handlers
-                m_inputHandlerFactory = new InputHandlerFactory(loader);
-                m_importExporters = new ImporterExporterRepository(loader);
+                InputHandlers = new InputHandlerFactory(loader);
+                ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
                 try
@@ -515,10 +514,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is debug enabled?
         /// </summary>
-        public bool IsDebugEnabled
-        {
-            get { return m_debugEnabled; }
-        }
+        public bool IsDebugEnabled { get; }
 
         /// <summary>
         /// Gets the current resource key generator.
@@ -602,18 +598,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all input handlers.
         /// </summary>
-        public InputHandlerFactory InputHandlers
-        {
-            get { return m_inputHandlerFactory; }
-        }
+        public InputHandlerFactory InputHandlers { get; }
 
         /// <summary>
         /// Gets an object which manages all importers and exporters.
         /// </summary>
-        public ImporterExporterRepository ImportersAndExporters
-        {
-            get { return m_importExporters; }
-        }
+        public ImporterExporterRepository ImportersAndExporters { get; }
 
         /// <summary>
         /// Gets the current main loop object of the graphics engine.
@@ -656,9 +646,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal DWrite.Factory FactoryDWrite;
 
-        internal bool Force2DFallbackMethod
-        {
-            get { return m_force2DFallback; }
-        }
+        internal bool Force2DFallbackMethod { get; }
     }
 }

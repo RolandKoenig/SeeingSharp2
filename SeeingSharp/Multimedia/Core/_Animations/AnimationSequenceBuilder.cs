@@ -36,7 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         where TargetType : class
     {
         private AnimationHandler m_ownerAnimationHandler;
-        private TargetType m_animatedObject;
         private List<IAnimation> m_sequenceList;
         private bool m_applied;
 
@@ -49,7 +48,7 @@ namespace SeeingSharp.Multimedia.Core
             : this()
         {
             m_ownerAnimationHandler = owner;
-            m_animatedObject = owner.Owner as TargetType;
+            TargetObject = owner.Owner as TargetType;
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
             : this()
         {
             m_ownerAnimationHandler = owner;
-            m_animatedObject = animatedObject;
+            TargetObject = animatedObject;
         }
 
 
@@ -261,10 +260,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the target object of this animation
         /// </summary>
-        public TargetType TargetObject
-        {
-            get { return m_animatedObject; }
-        }
+        public TargetType TargetObject { get; }
 
         /// <summary>
         /// Gets the item count.

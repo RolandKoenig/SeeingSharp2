@@ -36,7 +36,6 @@ namespace SeeingSharp
     public class Polygon2D
     {
         private Vector2[] m_vertices;
-        private ReadOnlyCollection<Vector2> m_verticesPublic;
         private Lazy<BoundingBox2D> m_boundingBox2D;
         private Lazy<EdgeOrder> m_edgeOrder;
 
@@ -59,7 +58,7 @@ namespace SeeingSharp
                 m_vertices = newArray;
             }
 
-            m_verticesPublic = new ReadOnlyCollection<Vector2>(m_vertices);
+            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
             m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
             m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
         }
@@ -295,10 +294,7 @@ namespace SeeingSharp
         /// <summary>
         /// Gets all vertices defined by this polygon.
         /// </summary>
-        public ReadOnlyCollection<Vector2> Vertices
-        {
-            get { return m_verticesPublic; }
-        }
+        public ReadOnlyCollection<Vector2> Vertices { get; }
 
         /// <summary>
         /// Gets the bounding box of this polygon.

@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public abstract class Camera3DBase : IAnimatableObject
     {
         #region Configuration
-        private object m_associatedRenderLoop;
+
         private Vector3 m_position = new Vector3(0, 0, 0);
         private Vector3 m_relativeTarget = new Vector3(0, 0, 1);
         private Vector3 m_upVector = new Vector3(0, 1, 0);
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Animation
-        private AnimationHandler m_animHandler;
+
         #endregion
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_screenWidth = width;
             m_screenHeight = height;
 
-            m_animHandler = new AnimationHandler(this);
+            AnimationHandler = new AnimationHandler(this);
 
             UpdateCamera();
         }
@@ -493,21 +493,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the current AnimationHandler for this camera.
         /// </summary>
-        public AnimationHandler AnimationHandler
-        {
-            get { return m_animHandler; }
-        }
+        public AnimationHandler AnimationHandler { get; }
 
         /// <summary>
         /// Gets the currently associated RenderLoop object.
         /// </summary>
-        public object AssociatedRenderLoop
-        {
-            get { return m_associatedRenderLoop; }
-            internal set
-            {
-                m_associatedRenderLoop = value;
-            }
-        }
+        public object AssociatedRenderLoop { get; internal set; }
     }
 }
