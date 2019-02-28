@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,21 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
+
+#region using
 
 // Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System;
+    using Core;
+    using Drawing3D;
+    using SharpDX;
+
+    #endregion
+
     public class WirePainter
     {
         #region All members required for painting
@@ -64,7 +68,7 @@ namespace SeeingSharp.Multimedia.Objects
             if (!m_isValid) { throw new SeeingSharpGraphicsException($"This {nameof(WirePainter)} is only valid in the rendering pass that created it!"); }
 
             // Load and render the given line
-            using (D3D11.Buffer lineBuffer = GraphicsHelper.CreateImmutableVertexBuffer(m_renderState.Device, new Vector3[] { start, destination }))
+            using (var lineBuffer = GraphicsHelper.CreateImmutableVertexBuffer(m_renderState.Device, new Vector3[] { start, destination }))
             {
                 m_renderResources.RenderLines(
                     m_renderState, m_worldViewPojCreator.Value, lineColor, lineBuffer, 2);
@@ -78,7 +82,10 @@ namespace SeeingSharp.Multimedia.Objects
 
         public void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3, Color4 lineColor)
         {
-            if (!m_isValid) { throw new SeeingSharpGraphicsException($"This {nameof(WirePainter)} is only valid in the rendering pass that created it!"); }
+            if (!m_isValid)
+            {
+                throw new SeeingSharpGraphicsException($"This {nameof(WirePainter)} is only valid in the rendering pass that created it!");
+            }
 
             Line[] lineData = new Line[]
             {
@@ -88,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
             };
 
             // Load and render the given lines
-            using (D3D11.Buffer lineBuffer = GraphicsHelper.CreateImmutableVertexBuffer(m_renderState.Device, lineData))
+            using (var lineBuffer = GraphicsHelper.CreateImmutableVertexBuffer(m_renderState.Device, lineData))
             {
                 m_renderResources.RenderLines(
                     m_renderState, m_worldViewPojCreator.Value, lineColor, lineBuffer, lineData.Length * 2);

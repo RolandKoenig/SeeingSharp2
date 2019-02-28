@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,41 +21,43 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 
-//Some namespace mappings
-using DXGI = SharpDX.DXGI;
+#region using
+
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
-using SeeingSharp.Util;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class EngineAdapterInfo : IDisposable, ICheckDisposed
     {
         private const string TRANSLATABLE_GROUP_COMMON_HARDWARE_INFO = "Common hardware information";
 
-        private List<EngineOutputInfo> m_outputs;
-        private DXGI.Adapter1 m_adapter;
-        private int m_adapterIndex;
-        private bool m_isSoftware;
+        private SharpDX.DXGI.Adapter1 m_adapter;
         private D3D.FeatureLevel m_d3d11FeatureLevel;
-        private DXGI.AdapterDescription m_adapterDescription;
+        private SharpDX.DXGI.AdapterDescription m_adapterDescription;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineAdapterInfo" /> class.
         /// </summary>
-        internal EngineAdapterInfo(int adapterIndex, DXGI.Adapter1 adapter)
+        internal EngineAdapterInfo(int adapterIndex, SharpDX.DXGI.Adapter1 adapter)
         {
-            m_outputs = new List<EngineOutputInfo>();
+            Outputs = new List<EngineOutputInfo>();
             m_adapter = adapter;
-            m_adapterIndex = adapterIndex;
+            AdapterIndex = adapterIndex;
 
             m_adapterDescription = adapter.Description;
-            m_isSoftware =
+            IsSoftwareAdapter =
                 (m_adapterDescription.Description == "Microsoft Basic Render Driver") ||
                 ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Software")) ||
                 ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Microsoft Basic Render Driver"));
@@ -63,15 +65,16 @@ namespace SeeingSharp.Multimedia.Core
             m_d3d11FeatureLevel = D3D11.Device.GetSupportedFeatureLevel(adapter);
 
             //Query for output information
-            DXGI.Output[] outputs = adapter.Outputs;
+            SharpDX.DXGI.Output[] outputs = adapter.Outputs;
             for (int loop = 0; loop < outputs.Length; loop++)
             {
                 try
                 {
-                    DXGI.Output actOutput = outputs[loop];
+                    var actOutput = outputs[loop];
+
                     try
                     {
-                        m_outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
+                        Outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
                     }
                     finally
                     {
@@ -89,21 +92,18 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_adapter);
-            m_outputs.Clear();
+            Outputs.Clear();
         }
 
         /// <summary>
         /// Gets all outputs supported by this adapter.
         /// </summary>
-        public List<EngineOutputInfo> Outputs
-        {
-            get { return m_outputs; }
-        }
+        public List<EngineOutputInfo> Outputs { get; }
 
         /// <summary>
         /// Gets the corresponding adapter.
         /// </summary>
-        internal DXGI.Adapter1 Adapter
+        internal SharpDX.DXGI.Adapter1 Adapter
         {
             get { return m_adapter; }
         }
@@ -111,20 +111,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the index of the adapter.
         /// </summary>
-        public int AdapterIndex
-        {
-            get { return m_adapterIndex; }
-        }
+        public int AdapterIndex { get; }
 
         public string MaxFeatureLevelD3D11
         {
             get { return m_d3d11FeatureLevel.ToString(); }
         }
 
-        public bool IsSoftwareAdapter
-        {
-            get { return m_isSoftware; }
-        }
+        public bool IsSoftwareAdapter { get; }
 
         /// <summary>
         /// Gets the description of the adapter.

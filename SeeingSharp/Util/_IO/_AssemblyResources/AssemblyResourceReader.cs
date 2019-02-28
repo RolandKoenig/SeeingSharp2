@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.IO;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+
+    #endregion
+
     public class AssemblyResourceReader
     {
         private static Type s_attribType;
 
-        private Type m_targetType;
-        private Assembly m_targetAssembly;
         private List<AssemblyResourceInfo> m_resources;
         private Dictionary<string, AssemblyResourceInfo> m_resourcesDict;
-        private ResourceInfoCollection m_publicResources;
 
         /// <summary>
         /// Static constructor
@@ -53,19 +53,21 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceReader(Type targetType)
         {
-            m_targetType = targetType;
+            TargetType = targetType;
 
-            TypeInfo targetTypeInfo = m_targetType.GetTypeInfo();
-            m_targetAssembly = targetTypeInfo.Assembly;
+            var targetTypeInfo = TargetType.GetTypeInfo();
+            TargetAssembly = targetTypeInfo.Assembly;
 
             m_resources = new List<AssemblyResourceInfo>();
             m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
-            foreach (AssemblyResourceFileAttribute actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
+
+            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
             {
-                ManifestResourceInfo resInfo = m_targetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+
                 if (resInfo != null)
                 {
-                    AssemblyResourceInfo fileInfo = new AssemblyResourceInfo(m_targetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
                     m_resources.Add(fileInfo);
 
                     if ((actAttrib.Key != null) && (!m_resourcesDict.ContainsKey(actAttrib.Key)))
@@ -79,7 +81,7 @@ namespace SeeingSharp.Util
                 }
             }
 
-            m_publicResources = new ResourceInfoCollection(this);
+            ResourceFiles = new ResourceInfoCollection(this);
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead(int index)
         {
-            AssemblyResourceInfo info = m_resources[index];
+            var info = m_resources[index];
             return info.OpenRead();
         }
 
@@ -96,7 +98,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead(string key)
         {
-            AssemblyResourceInfo info = m_resourcesDict[key];
+            var info = m_resourcesDict[key];
             return info.OpenRead();
         }
 
@@ -106,8 +108,8 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public string GetText(string key)
         {
-            using(Stream inStream = OpenRead(key))
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = OpenRead(key))
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -119,8 +121,8 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public string GetText(int index)
         {
-            using (Stream inStream = OpenRead(index))
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = OpenRead(index))
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -132,7 +134,7 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public byte[] GetBytes(string key)
         {
-            using (Stream inStream = OpenRead(key))
+            using (var inStream = OpenRead(key))
             {
                 byte[] result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
@@ -146,7 +148,7 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public byte[] GetBytes(int index)
         {
-            using (Stream inStream = OpenRead(index))
+            using (var inStream = OpenRead(index))
             {
                 byte[] result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
@@ -157,26 +159,17 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the target type
         /// </summary>
-        public Type TargetType
-        {
-            get { return m_targetType; }
-        }
+        public Type TargetType { get; }
 
         /// <summary>
         /// Gets the target assembly
         /// </summary>
-        public Assembly TargetAssembly
-        {
-            get { return m_targetAssembly; }
-        }
+        public Assembly TargetAssembly { get; }
 
         /// <summary>
         /// Gets a collection contaning all resource files
         /// </summary>
-        public ResourceInfoCollection ResourceFiles
-        {
-            get { return m_publicResources; }
-        }
+        public ResourceInfoCollection ResourceFiles { get; }
 
         //*********************************************************************
         //*********************************************************************

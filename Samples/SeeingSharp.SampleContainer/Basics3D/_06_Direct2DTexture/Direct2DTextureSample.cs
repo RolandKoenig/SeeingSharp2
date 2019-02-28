@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,22 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 {
+    #region using
+
+    using System;
+    using System.ComponentModel;
+    using System.Threading.Tasks;
+    using Checking;
+    using Multimedia.Components;
+    using Multimedia.Core;
+    using Multimedia.Drawing2D;
+    using Multimedia.Drawing3D;
+    using Multimedia.Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     [SampleDescription(
         "Direct2D Texture", 6, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName:"PreviewImage.png",
@@ -55,20 +58,25 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            Direct2DTextureSampleSettings castedSettings = settings as Direct2DTextureSampleSettings;
-            if(castedSettings == null) { castedSettings = new Direct2DTextureSampleSettings(); }
+            var castedSettings = settings as Direct2DTextureSampleSettings;
+
+            if (castedSettings == null)
+            {
+                castedSettings = new Direct2DTextureSampleSettings();
+            }
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
             m_textFormat = new TextFormatResource("Arial", 36);
             m_textBrush = new SolidBrushResource(Color4Ex.RedColor);
-            Custom2DDrawingLayer d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+
+            var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
             {
-                RectangleF d2dRectangle = new RectangleF(10, 10, 236, 236);
+                var d2dRectangle = new RectangleF(10, 10, 236, 236);
                 graphics.Clear(Color4Ex.LightBlue);
                 graphics.FillRoundedRectangle(
                     d2dRectangle, 30, 30,
@@ -76,7 +84,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 
                 d2dRectangle.Inflate(-10, -10);
                 graphics.DrawText(
-                    castedSettings.DisplayText.Replace("\\n", Environment.NewLine), 
+                    castedSettings.DisplayText.Replace("\\n", Environment.NewLine),
                     m_textFormat, d2dRectangle, m_textBrush);
             });
 
@@ -93,13 +101,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
-                var pType = new CubeType();
-                pType.Material = resD2DMaterial;
+                var pType = new CubeType
+                {
+                    Material = resD2DMaterial
+                };
+
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                     () => new GeometryResource(pType));
 
                 // Create cube object
-                GenericObject cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.YPos = 0.5f;
                 cubeObject.EnableShaderGeneratedBorder();

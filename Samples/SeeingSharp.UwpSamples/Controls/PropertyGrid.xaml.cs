@@ -1,20 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+﻿#region License information
+/*
+    Seeing# and all games/applications distributed together with it. 
+    Exception are projects where it is noted otherwhise.
+    More info at 
+     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
+     - http://www.rolandk.de (the autors homepage, german)
+    Copyright (C) 2019 Roland König (RolandK)
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/.
+*/
+#endregion
 
 namespace SeeingSharp.UwpSamples.Controls
 {
+    #region using
+
+    using System.Collections.Generic;
+    using System.Linq;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Data;
+    using Windows.UI.Xaml.Media;
+
+    #endregion
+
     public sealed partial class PropertyGrid : UserControl
     {
         public static readonly DependencyProperty SelectedObjectProperty =
@@ -59,8 +79,11 @@ namespace SeeingSharp.UwpSamples.Controls
                 {
                     actCategory = actProperty.CategoryName;
 
-                    TextBlock txtHeader = new TextBlock();
-                    txtHeader.Text = actCategory;
+                    var txtHeader = new TextBlock
+                    {
+                        Text = actCategory
+                    };
+
                     txtHeader.SetValue(Grid.RowProperty, (double)actRowIndex);
                     txtHeader.SetValue(Grid.ColumnSpanProperty, 2d);
                     txtHeader.SetValue(Grid.ColumnProperty, 0d);
@@ -69,11 +92,14 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.FontWeight = Windows.UI.Text.FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    Windows.UI.Xaml.Shapes.Rectangle rect = new Windows.UI.Xaml.Shapes.Rectangle();
-                    rect.Height = 2d;
-                    rect.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
-                    rect.VerticalAlignment = VerticalAlignment.Bottom;
-                    rect.Margin = new Thickness(5d, 5d, 5d, 0d);
+                    var rect = new Windows.UI.Xaml.Shapes.Rectangle
+                    {
+                        Height = 2d,
+                        Fill = new SolidColorBrush(Windows.UI.Colors.Black),
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Margin = new Thickness(5d, 5d, 5d, 0d)
+                    };
+
                     rect.SetValue(Grid.RowProperty, (double)actRowIndex);
                     rect.SetValue(Grid.ColumnSpanProperty, 2d);
                     rect.SetValue(Grid.ColumnProperty, 0d);
@@ -82,8 +108,11 @@ namespace SeeingSharp.UwpSamples.Controls
                     actRowIndex++;
                 }
 
-                TextBlock ctrlText = new TextBlock();
-                ctrlText.Text = actProperty.PropertyDisplayName;
+                var ctrlText = new TextBlock
+                {
+                    Text = actProperty.PropertyDisplayName
+                };
+
                 ctrlText.SetValue(Grid.RowProperty, (double)actRowIndex);
                 ctrlText.SetValue(Grid.ColumnProperty, 0d);
                 ctrlText.Margin = new Thickness(5d, 5d, 50d, 5d);
@@ -91,10 +120,12 @@ namespace SeeingSharp.UwpSamples.Controls
                 GridMain.Children.Add(ctrlText);
 
                 FrameworkElement ctrlValueEdit = null;
+
                 switch (actProperty.ValueType)
                 {
                     case PropertyValueType.Bool:
-                        CheckBox ctrlCheckBox = new CheckBox();
+                        var ctrlCheckBox = new CheckBox();
+
                         ctrlCheckBox.SetBinding(CheckBox.IsCheckedProperty, new Binding()
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
@@ -102,11 +133,12 @@ namespace SeeingSharp.UwpSamples.Controls
                             Source = actProperty,
                             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                         });
+
                         ctrlValueEdit = ctrlCheckBox;
                         break;
 
                     case PropertyValueType.String:
-                        TextBox ctrlTextBox = new TextBox();
+                        var ctrlTextBox = new TextBox();
                         ctrlTextBox.SetBinding(TextBox.TextProperty, new Binding()
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
@@ -119,7 +151,7 @@ namespace SeeingSharp.UwpSamples.Controls
                         break;
 
                     case PropertyValueType.Enum:
-                        ComboBox ctrlComboBox = new ComboBox();
+                        var ctrlComboBox = new ComboBox();
                         ctrlComboBox.ItemsSource = actProperty.GetEnumMembers();
                         ctrlComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
                         {
@@ -128,7 +160,7 @@ namespace SeeingSharp.UwpSamples.Controls
                             Source = actProperty,
                             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                         });
-                        ctrlComboBox.Width = 200d;                  
+                        ctrlComboBox.Width = 200d;
                         ctrlValueEdit = ctrlComboBox;
                         break;
                 }

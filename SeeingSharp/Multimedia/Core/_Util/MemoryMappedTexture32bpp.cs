@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,25 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+    using SharpDX;
+
+    #endregion
+
     public unsafe class MemoryMappedTexture32bpp : IDisposable
     {
         #region The native structure of this texture
         private IntPtr m_pointer;
         private int* m_pointerNative;
         private Size2 m_size;
-        private int m_countInts;
+
         #endregion
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
             m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
             m_pointerNative = (int*)m_pointer.ToPointer();
             m_size = size;
-            m_countInts = m_size.Width * m_size.Height;
+            CountInts = m_size.Width * m_size.Height;
         }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             uint alphaByteValue = 0xFF000000;
             uint* pointerUInt = (uint*)m_pointerNative;
-            for (int loopIndex = 0; loopIndex < m_countInts; loopIndex++)
+            for (int loopIndex = 0; loopIndex < CountInts; loopIndex++)
             {
                 pointerUInt[loopIndex] |= alphaByteValue;
             }
@@ -109,10 +108,7 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public int CountInts
-        {
-            get { return m_countInts; }
-        }
+        public int CountInts { get; }
 
         /// <summary>
         /// Gets the width of the buffer.
@@ -164,10 +160,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public IntPtr Pointer
         {
-            get 
+            get
             {
                 if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException("MemoryMappedTextureFloat"); }
-                return m_pointer; 
+                return m_pointer;
             }
         }
     }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class TextureUploader : IDisposable
     {
         // Given parameters
@@ -42,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.Texture2D m_texture;
         private int m_width;
         private int m_height;
-        private DXGI.Format m_format;
+        private SharpDX.DXGI.Format m_format;
         private bool m_isMultisampled;
 
         //Direct3D resources for rendertarget capturing
@@ -113,16 +117,17 @@ namespace SeeingSharp.Multimedia.Core
             CopyTextureToStagingResource();
 
             // Read the data into the .Net data block
-            SharpDX.DataBox dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
+            var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
                 m_copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
-                int rowPitchSource = dataBox.RowPitch;
-                int rowPitchDestination = intBuffer.Width * 4;
+                var rowPitchSource = dataBox.RowPitch;
+                var rowPitchDestination = intBuffer.Width * 4;
+
                 if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
                     (rowPitchDestination > 0) && (rowPitchDestination < 20000))
                 {
-                    for (int loopY = 0; loopY < m_height; loopY++)
+                    for (var loopY = 0; loopY < m_height; loopY++)
                     {
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
@@ -143,7 +148,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public unsafe MemoryMappedTextureFloat UploadToFloatBuffer()
         {
-            MemoryMappedTextureFloat result = new MemoryMappedTextureFloat(
+            var result = new MemoryMappedTextureFloat(
                 new Size2(m_width, m_height));
             UploadToFloatBuffer(result);
             return result;
@@ -161,24 +166,33 @@ namespace SeeingSharp.Multimedia.Core
             {
                 throw new SeeingSharpGraphicsException("Invalid format for texture uploading to gdi bitmap (" + m_format + ")!");
             }
-            if (floatBuffer.Width != m_width) { throw new SeeingSharpGraphicsException("The width of the textures during texture upload does not match!"); }
-            if (floatBuffer.Height != m_height) { throw new SeeingSharpGraphicsException("The height of the textures during texture upload does not match!"); }
+
+            if (floatBuffer.Width != m_width)
+            {
+                throw new SeeingSharpGraphicsException("The width of the textures during texture upload does not match!");
+            }
+
+            if (floatBuffer.Height != m_height)
+            {
+                throw new SeeingSharpGraphicsException("The height of the textures during texture upload does not match!");
+            }
 
             // Upload the texture
             CopyTextureToStagingResource();
 
             // Read the data into the .Net data block
-            SharpDX.DataBox dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
+            var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
                 m_copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
 
                 int rowPitchSource = dataBox.RowPitch;
                 int rowPitchDestination = floatBuffer.Width * 4;
+
                 if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
                     (rowPitchDestination > 0) && (rowPitchDestination < 20000))
                 {
-                    for (int loopY = 0; loopY < m_height; loopY++)
+                    for (var loopY = 0; loopY < m_height; loopY++)
                     {
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,

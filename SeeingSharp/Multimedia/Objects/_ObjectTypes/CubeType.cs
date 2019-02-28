@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,39 +21,39 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class CubeType : ObjectType
     {
         public CubeType()
         {
-
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            MaterialProperties matProperties = new MaterialProperties();
-            matProperties.Key = Material;
+            var matProperties = new MaterialProperties
+            {
+                Key = Material
+            };
 
-            float size = this.Size;
-            float halfSize = size / 2f;
+            var size = this.Size;
+            var halfSize = size / 2f;
 
-            VertexStructure result = new VertexStructure();
+            var result = new VertexStructure();
             result.CreateOrGetExistingSurface(matProperties)
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),
                     new Vector3(size, size, size),
                     Color4Ex.Transparent);
-            
+
             return result;
         }
 

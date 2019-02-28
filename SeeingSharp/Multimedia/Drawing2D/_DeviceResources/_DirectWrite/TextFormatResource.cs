@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Some namespace mappings
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class TextFormatResource : Drawing2DResourceBase
     {
         #region Fixed resource parameters (passed on constructor)
@@ -63,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="fontStretch">The stretch parameter for the font.</param>
         /// <param name="fontStyle">The style parameter for the font.</param>
         public TextFormatResource(
-            string fontFamilyName, float fontSize, 
+            string fontFamilyName, float fontSize,
             FontWeight fontWeight = FontWeight.Normal,
             FontStyle fontStyle = FontStyle.Normal,
             FontStretch fontStretch = FontStretch.Normal)
@@ -88,7 +93,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            DWrite.TextFormat textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
+
             if (textFormat != null)
             {
                 SeeingSharpTools.DisposeObject(textFormat);
@@ -103,9 +109,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal DWrite.TextFormat GetTextFormat(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            DWrite.TextFormat result = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var result = m_loadedTextFormats[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the TextFormat object
@@ -140,7 +150,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (ParagraphAlignment)m_paragraphAlignment; }
             set
             {
-                DWrite.ParagraphAlignment castedValue = (DWrite.ParagraphAlignment)value;
+                var castedValue = (DWrite.ParagraphAlignment)value;
+
                 if(castedValue != m_paragraphAlignment)
                 {
                     m_paragraphAlignment = castedValue;
@@ -157,7 +168,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (TextAlignment)m_textAlignment; }
             set
             {
-                DWrite.TextAlignment castedValue = (DWrite.TextAlignment)value;
+                var castedValue = (DWrite.TextAlignment)value;
+
                 if(castedValue != m_textAlignment)
                 {
                     m_textAlignment = castedValue;
@@ -174,7 +186,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (WordWrapping)m_wordWrapping; }
             set
             {
-                DWrite.WordWrapping castedValue = (DWrite.WordWrapping)value;
+                var castedValue = (DWrite.WordWrapping)value;
+
                 if(castedValue != m_wordWrapping)
                 {
                     m_wordWrapping = castedValue;
@@ -191,7 +204,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get { return (ReadingDirection)m_readingDirection; }
             set
             {
-                DWrite.ReadingDirection castedValue = (DWrite.ReadingDirection)value;
+                var castedValue = (DWrite.ReadingDirection)value;
+
                 if(castedValue != m_readingDirection)
                 {
                     m_readingDirection = castedValue;

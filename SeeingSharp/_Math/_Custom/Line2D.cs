@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using SharpDX;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System;
+    using SharpDX;
+
+    #endregion
+
     public struct Line2D
     {
         public Vector2 StartPosition;
@@ -83,18 +88,30 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Line2D other)
         {
             //Perform simple ray to ray intersection first
-            Ray2D ray1 = this.ToRay();
-            Ray2D ray2 = other.ToRay();
+            var ray1 = this.ToRay();
+            var ray2 = other.ToRay();
             Tuple<bool, Vector2> intersectionResult = ray1.Intersect(ray2);
-            if (!intersectionResult.Item1) { return intersectionResult; }
+
+            if (!intersectionResult.Item1)
+            {
+                return intersectionResult;
+            }
 
             //Is intersection point within line 1?
             float distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
-            if (distanceTo1 > this.Length) { return Tuple.Create(false, Vector2.Zero); }
+
+            if (distanceTo1 > this.Length)
+            {
+                return Tuple.Create(false, Vector2.Zero);
+            }
 
             //Is intersection point within line 2?
             float distanceTo2 = Vector2.Distance(ray2.Origin, intersectionResult.Item2);
-            if (distanceTo2 > other.Length) { return Tuple.Create(false, Vector2.Zero); }
+
+            if (distanceTo2 > other.Length)
+            {
+                return Tuple.Create(false, Vector2.Zero);
+            }
 
             return intersectionResult;
         }
@@ -106,7 +123,7 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Ray2D other)
         {
             //Perform simple ray to ray intersection first
-            Ray2D ray1 = this.ToRay();
+            var ray1 = this.ToRay();
             Tuple<bool, Vector2> intersectionResult = ray1.Intersect(other);
             if (!intersectionResult.Item1) { return intersectionResult; }
 
@@ -124,7 +141,7 @@ namespace SeeingSharp
         {
             get
             {
-                Vector2 lengthVector = this.EndPosition - this.StartPosition;
+                var lengthVector = this.EndPosition - this.StartPosition;
                 return lengthVector.Length();
             }
         }

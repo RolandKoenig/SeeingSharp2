@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,14 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+
+    #endregion
+
     /// <summary>
     /// Enumeration containing all possible states of a ObjectThread object.
     /// </summary>
@@ -57,9 +58,6 @@ namespace SeeingSharp.Util
 
     public class ObjectThreadExceptionEventArgs : EventArgs
     {
-        private Exception m_innerException;
-        private ObjectThreadState m_threadState;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadExceptionEventArgs"/> class.
         /// </summary>
@@ -67,24 +65,18 @@ namespace SeeingSharp.Util
         /// <param name="innerException">The inner exception.</param>
         public ObjectThreadExceptionEventArgs(ObjectThreadState threadState, Exception innerException)
         {
-            m_innerException = innerException;
-            m_threadState = threadState;
+            Exception = innerException;
+            State = threadState;
         }
 
         /// <summary>
         /// Gets the occurred exception.
         /// </summary>
-        public Exception Exception
-        {
-            get { return m_innerException; }
-        }
+        public Exception Exception { get; }
 
         /// <summary>
         /// Gets current state of the thread.
         /// </summary>
-        public ObjectThreadState State
-        {
-            get { return m_threadState; }
-        }
+        public ObjectThreadState State { get; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,26 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Threading;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using Checking;
+    using Input;
+    using Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public abstract partial class SceneObject : IDisposable, IAnimatableObject
     {
         #region Generic members
         private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
         private DetailLevel m_targetDetailLevel;
-        private dynamic m_customData;
-        private object m_tag1;
-        private object m_tag2;
         private bool m_isStatic;
         #endregion Generic members
 
@@ -77,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
 
             //Create a dynamic container for custom data
-            m_customData = new ExpandoObject();
+            CustomData = new ExpandoObject();
 
             this.TransormationChanged = true;
             this.IsPickingTestVisible = true;
@@ -121,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayer.EnsureNotNull(nameof(m_sceneLayer));
 
             // Remember old scene
-            Scene oldScene = m_scene;
+            var oldScene = m_scene;
 
             // Clear references
             m_scene = null;
@@ -148,11 +149,16 @@ namespace SeeingSharp.Multimedia.Core
         public BehaviorType GetBehavior<BehaviorType>()
             where BehaviorType : SceneObjectBehavior
         {
-            Type typeToSearch = typeof(BehaviorType);
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            var typeToSearch = typeof(BehaviorType);
+
+            foreach (var actBehavior in m_behaviors)
             {
-                if (actBehavior.GetType() == typeToSearch) { return actBehavior as BehaviorType; }
+                if (actBehavior.GetType() == typeToSearch)
+                {
+                    return actBehavior as BehaviorType;
+                }
             }
+
             return null;
         }
 
@@ -162,10 +168,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="behaviorType">The type of the behavior to get.</param>
         public SceneObjectBehavior GetBehavior(Type behaviorType)
         {
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
-                if (actBehavior.GetType() == behaviorType) { return actBehavior; }
+                if (actBehavior.GetType() == behaviorType)
+                {
+                    return actBehavior;
+                }
             }
+
             return null;
         }
 
@@ -181,10 +191,15 @@ namespace SeeingSharp.Multimedia.Core
             // Caution: This method must be thread safe because
             //          it is callable on the SceneObject class directly
 
-            SceneObject actParent = other.m_parent;
+            var actParent = other.m_parent;
+
             while(actParent != null)
             {
-                if(actParent == this) { return true; }
+                if (actParent == this)
+                {
+                    return true;
+                }
+
                 actParent = actParent.m_parent;
             }
 
@@ -210,11 +225,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal IEnumerable<SceneObject> GetAllChildrenInternal()
         {
-            foreach (SceneObject actChild in m_children)
+            foreach (var actChild in m_children)
             {
                 yield return actChild;
 
-                foreach (SceneObject actLowerChild in actChild.GetAllChildrenInternal())
+                foreach (var actLowerChild in actChild.GetAllChildrenInternal())
                 {
                     yield return actLowerChild;
                 }
@@ -261,8 +276,12 @@ namespace SeeingSharp.Multimedia.Core
             if (viewInfo.Scene == null) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to any scene!"); }
             if (viewInfo.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
-            VisibilityCheckData checkData = m_visibilityData[viewInfo.ViewIndex];
-            if (checkData == null) { return false; }
+            var checkData = m_visibilityData[viewInfo.ViewIndex];
+
+            if (checkData == null)
+            {
+                return false;
+            }
 
             return checkData.IsVisible;
         }
@@ -272,7 +291,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ClearVisibilityStageData()
         {
-            foreach (VisibilityCheckData actCheckData in m_visibilityData)
+            foreach (var actCheckData in m_visibilityData)
             {
                 actCheckData.FilterStageData.Clear();
             }
@@ -284,19 +303,21 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The VisibilityCheckData for this object for the given view.</param>
         internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
         {
-            VisibilityCheckData checkData = m_visibilityData[viewInfo.ViewIndex];
+            var checkData = m_visibilityData[viewInfo.ViewIndex];
+
             if (checkData == null)
             {
                 checkData = m_visibilityData.AddObject(
                     new VisibilityCheckData(),
                     viewInfo.ViewIndex);
             }
+
             return checkData;
         }
 
         /// <summary>
         /// Tries to set the visibility of this object on the given view.
-        /// This method can be used to force rendering on the next frame after adding 
+        /// This method can be used to force rendering on the next frame after adding
         /// an object to the scene.
         /// </summary>
         /// <param name="viewInfo">The view on which to set the visibility.</param>
@@ -305,7 +326,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             if(viewInfo.ViewIndex < 0) { return false; }
 
-            VisibilityCheckData checkData = this.GetVisibilityCheckData(viewInfo);
+            var checkData = this.GetVisibilityCheckData(viewInfo);
+
             if (checkData.IsVisible) { return true; }
 
             if ((checkData.IsVisible != isVisible) &&
@@ -404,7 +426,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void Update(SceneRelatedUpdateState updateState)
         {
             // Update all behaviors first
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
                 actBehavior.Update(updateState);
             }
@@ -440,7 +462,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update all behaviors first
-            foreach (SceneObjectBehavior actBehavior in m_behaviors)
+            foreach (var actBehavior in m_behaviors)
             {
                 actBehavior.UpdateOverall(updateState);
             }
@@ -515,7 +537,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (SceneObject actDependency in m_children)
+            foreach (var actDependency in m_children)
             {
                 actDependency.Update(updateState);
             }
@@ -529,7 +551,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenOverallInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (SceneObject actDependency in m_children)
+            foreach (var actDependency in m_children)
             {
                 actDependency.UpdateOverall(updateState);
             }
@@ -555,28 +577,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a dynamic container for custom data.
         /// </summary>
-        public dynamic CustomData
-        {
-            get { return m_customData; }
-        }
+        public dynamic CustomData { get; }
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag1
-        {
-            get { return m_tag1; }
-            set { m_tag1 = value; }
-        }
+        public object Tag1 { get; set; }
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag2
-        {
-            get { return m_tag2; }
-            set { m_tag2 = value; }
-        }
+        public object Tag2 { get; set; }
 
         /// <summary>
         /// Is this object visible for picking-test?

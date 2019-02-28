@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using SeeingSharp.Multimedia.Objects;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.InteropServices;
+    using Objects;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// The default structure for sending vertex data to the GPU.
     /// </summary>
@@ -43,13 +51,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public static readonly int Size = Marshal.SizeOf<StandardVertex>();
         public static readonly D3D11.InputElement[] InputElements = new D3D11.InputElement[]
         {
-            new D3D11.InputElement("POSITION", 0, DXGI.Format.R32G32B32_Float, 0, 0),
-            new D3D11.InputElement("NORMAL", 0, DXGI.Format.R32G32B32_Float, 12, 0),
-            new D3D11.InputElement("TANGENT", 0, DXGI.Format.R32G32B32_Float, 24, 0),
-            new D3D11.InputElement("BINORMAL", 0, DXGI.Format.R32G32B32_Float, 36, 0),
-            new D3D11.InputElement("COLOR", 0, DXGI.Format.R8G8B8A8_UNorm, 48, 0),
-            new D3D11.InputElement("TEXCOORD", 0, DXGI.Format.R32G32_Float, 52, 0),
-            new D3D11.InputElement("TEXCOORD", 1, DXGI.Format.R32_Float, 60, 0)
+            new D3D11.InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0, 0),
+            new D3D11.InputElement("NORMAL", 0, SharpDX.DXGI.Format.R32G32B32_Float, 12, 0),
+            new D3D11.InputElement("TANGENT", 0, SharpDX.DXGI.Format.R32G32B32_Float, 24, 0),
+            new D3D11.InputElement("BINORMAL", 0, SharpDX.DXGI.Format.R32G32B32_Float, 36, 0),
+            new D3D11.InputElement("COLOR", 0, SharpDX.DXGI.Format.R8G8B8A8_UNorm, 48, 0),
+            new D3D11.InputElement("TEXCOORD", 0, SharpDX.DXGI.Format.R32G32_Float, 52, 0),
+            new D3D11.InputElement("TEXCOORD", 1, SharpDX.DXGI.Format.R32_Float, 60, 0)
         };
         #endregion
 
@@ -133,14 +141,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="source">The VertexStructure object.</param>
         public static StandardVertex[] FromVertexStructure(VertexStructure source)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             int vertexCount = source.CountVertices;
 
             //Create result array
             StandardVertex[] result = new StandardVertex[vertexCount];
-            for (int loop = 0; loop < source.CountVertices; loop++)
+
+            for (var loop = 0; loop < source.CountVertices; loop++)
             {
-                Vertex vertex = source.Vertices[loop];
+                var vertex = source.Vertices[loop];
                 result[loop] = new StandardVertex(vertex);
             }
 
@@ -152,11 +165,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public static StandardVertex[] FromVertexStructure(VertexStructure[] structures)
         {
-            if (structures == null) { throw new ArgumentNullException("structures"); }
+            if (structures == null)
+            {
+                throw new ArgumentNullException("structures");
+            }
 
             //Get total vertex count
             int vertexCount = 0;
-            for (int loop = 0; loop < structures.Length; loop++)
+
+            for (var loop = 0; loop < structures.Length; loop++)
             {
                 vertexCount += structures[loop].CountVertices;
             }
@@ -164,11 +181,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             //create result array
             StandardVertex[] result = new StandardVertex[vertexCount];
             int actVertexPos = 0;
-            for (int loop = 0; loop < structures.Length; loop++)
+
+            for (var loop = 0; loop < structures.Length; loop++)
             {
-                VertexStructure actStructure = structures[loop];
+                var actStructure = structures[loop];
                 int structureVertexCount = actStructure.CountVertices;
-                for (int innerLoop = 0; innerLoop < structureVertexCount; innerLoop++)
+
+                for (var innerLoop = 0; innerLoop < structureVertexCount; innerLoop++)
                 {
                     result[actVertexPos] = new StandardVertex(actStructure.Vertices[innerLoop]);
                     actVertexPos++;
@@ -205,14 +224,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="lineList">List containing the lines.</param>
         public static StandardVertex[] FromLineList(Color4 lineColor, params Vector3[] lineList)
         {
-            if ((lineList == null) || (lineList.Length == 0)) { return new StandardVertex[0]; }
+            if ((lineList == null) || (lineList.Length == 0))
+            {
+                return new StandardVertex[0];
+            }
 
             StandardVertex[] result = new StandardVertex[lineList.Length];
-            for (int loop = 0; loop < lineList.Length; loop++)
+
+            for (var loop = 0; loop < lineList.Length; loop++)
             {
-                StandardVertex actVertex = new StandardVertex(lineList[loop], lineColor.ToRgba());
+                var actVertex = new StandardVertex(lineList[loop], lineColor.ToRgba());
                 result[loop] = actVertex;
             }
+
             return result;
         }
     }

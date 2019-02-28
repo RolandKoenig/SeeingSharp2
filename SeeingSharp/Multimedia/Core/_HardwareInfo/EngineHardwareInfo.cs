@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
 
-//Some namespace mappings
-using DXGI = SharpDX.DXGI;
+#region using
+
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class EngineHardwareInfo : IDisposable, ICheckDisposed
     {
-        private DXGI.Factory1 m_dxgiFactory;
+        private SharpDX.DXGI.Factory1 m_dxgiFactory;
         private List<EngineAdapterInfo> m_adapters;
 
         /// <summary>
@@ -54,9 +58,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void CreateFactory()
         {
-            m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory4());
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory2()); }
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory1()); }
+            m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory4());
+            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory2()); }
+            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory1()); }
             if (m_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
         }
 
@@ -67,12 +71,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_adapters = new List<EngineAdapterInfo>();
 
-            int adapterCount = m_dxgiFactory.GetAdapterCount1();
-            for (int loop = 0; loop < adapterCount; loop++)
+            var adapterCount = m_dxgiFactory.GetAdapterCount1();
+
+            for (var loop = 0; loop < adapterCount; loop++)
             {
                 try
                 {
-                    DXGI.Adapter1 actAdapter = m_dxgiFactory.GetAdapter1(loop);
+                    var actAdapter = m_dxgiFactory.GetAdapter1(loop);
                     m_adapters.Add(new EngineAdapterInfo(loop, actAdapter));
                 }
                 catch (Exception)
@@ -83,15 +88,23 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        internal DXGI.Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
+        internal SharpDX.DXGI.Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
         {
             int adapterCount = m_dxgiFactory.GetAdapterCount1();
-            if(outputInfo.AdapterIndex >= adapterCount) { throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!"); }
 
-            using (DXGI.Adapter1 adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
+            if (outputInfo.AdapterIndex >= adapterCount)
+            {
+                throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!");
+            }
+
+            using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
             {
                 int outputCount = adapter.GetOutputCount();
-                if(outputInfo.OutputIndex >= outputCount) { throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!"); }
+
+                if (outputInfo.OutputIndex >= outputCount)
+                {
+                    throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!");
+                }
 
                 return adapter.GetOutput(outputInfo.OutputIndex);
             }
@@ -100,10 +113,12 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
+
             foreach(var actAdapter in m_adapters)
             {
                 SeeingSharpUtil.DisposeObject(actAdapter);
             }
+
             m_adapters.Clear();
         }
 

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,14 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Core;
+    using SharpDX;
+
+    #endregion
+
     public class TypeSafeConstantBufferResource<T> : ConstantBufferResource
         where T : struct
     {
@@ -64,7 +73,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="dataToSet">The data to set.</param>
         internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
         {
-            DataBox dataBox = deviceContext.MapSubresource(base.ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
+            var dataBox = deviceContext.MapSubresource(base.ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
             SharpDX.Utilities.Write(dataBox.DataPointer, ref dataToSet);
             deviceContext.UnmapSubresource(base.ConstantBuffer, 0);
         }

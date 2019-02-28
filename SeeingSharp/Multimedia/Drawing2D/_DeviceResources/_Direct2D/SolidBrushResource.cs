@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,22 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D2D = SharpDX.Direct2D1;
-using System.Numerics;
-using SeeingSharp.Util;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using Checking;
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class SolidBrushResource : BrushResource
     {
         #region Resources
@@ -44,8 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #endregion
 
         #region Configuration
-        private Color4 m_singleColor;
-        private float m_opacity;
+
         #endregion
 
         /// <summary>
@@ -61,8 +64,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
 
-            m_opacity = opacity;
-            m_singleColor = singleColor;
+            Opacity = opacity;
+            Color = singleColor;
         }
 
         /// <summary>
@@ -86,18 +89,22 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            D2D.SolidColorBrush result = m_loadedBrushes[engineDevice.DeviceIndex];
+            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the brush
                 result = new D2D.SolidColorBrush(
                     engineDevice.FakeRenderTarget2D,
-                    m_singleColor,
+                    Color,
                     new D2D.BrushProperties()
                     {
-                        Opacity = m_opacity,
+                        Opacity = Opacity,
                         Transform = Matrix3x2.Identity
                     });
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
@@ -106,14 +113,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result;
         }
 
-        public Color4 Color
-        {
-            get { return m_singleColor; }
-        }
+        public Color4 Color { get; }
 
-        public float Opacity
-        {
-            get { return m_opacity; }
-        }
+        public float Opacity { get; }
     }
 }

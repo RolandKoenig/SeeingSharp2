@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,22 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System;
-using System.Numerics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System.Runtime.InteropServices;
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class EdgeDetectPostprocessEffectResource : PostprocessEffectResource
     {
         #region Resource keys
@@ -54,8 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Configuration
-        private float m_thickness;
-        private bool m_drawOriginalObject;
+
         private Color4 m_borderColor;
         #endregion
 
@@ -64,9 +66,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public EdgeDetectPostprocessEffectResource()
         {
-            m_thickness = 2f;
+            Thickness = 2f;
             m_borderColor = Color4Ex.BlueColor;
-            m_drawOriginalObject = true;
+            DrawOriginalObject = true;
         }
 
         /// <summary>
@@ -152,7 +154,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         internal override bool NotifyAfterRender(RenderState renderState, int passID)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Reset settings made on render state (needed for all passes)
             deviceContext.Rasterizer.State = m_defaultResources.RasterStateDefault;
@@ -165,9 +167,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
             m_constantBufferData.Opacity = 0.9f;
             m_constantBufferData.Threshold = 0.2f;
-            m_constantBufferData.Thickness = m_thickness;
+            m_constantBufferData.Thickness = Thickness;
             m_constantBufferData.BorderColor = m_borderColor.ToVector3();
-            m_constantBufferData.OriginalColorAlpha = m_drawOriginalObject ? 1f : 0f;
+            m_constantBufferData.OriginalColorAlpha = DrawOriginalObject ? 1f : 0f;
             m_constantBuffer.SetData(deviceContext, m_constantBufferData);
 
             // Render result of current pass to the main render target
@@ -205,11 +207,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        public float Thickness
-        {
-            get { return m_thickness; }
-            set { m_thickness = value; }
-        }
+        public float Thickness { get; set; }
 
         public Color4 BorderColor
         {
@@ -217,11 +215,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             set { m_borderColor = value; }
         }
 
-        public bool DrawOriginalObject
-        {
-            get { return m_drawOriginalObject; }
-            set { m_drawOriginalObject = value; }
-        }
+        public bool DrawOriginalObject { get; set; }
 
         //*********************************************************************
         //*********************************************************************

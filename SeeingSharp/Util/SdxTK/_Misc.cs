@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+
+    #endregion
+
     /// <summary>
     /// Defines the dimension of a texture.
     /// </summary>
@@ -55,7 +56,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <summary>
         /// The texture dimension is a CubeMap.
         /// </summary>
-        TextureCube,
+        TextureCube
     }
 
     public enum ImageFileType
@@ -130,7 +131,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         FilterPoint = 0x100000,
         FilterLinear = 0x200000,
         FilterCubic = 0x300000,
-        FilterFant = 0x400000, // Combination of Linear and Box filter
+        FilterFant = 0x400000 // Combination of Linear and Box filter
         // Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
     };
 
@@ -142,11 +143,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     {
         None = 0x0,
         LegacyDword = 0x1, // Assume pitch is DWORD aligned instead of BYTE aligned (used by some legacy DDS files)
-        NoLegacyExpansion = 0x2, // Do not implicitly convert legacy formats that result in larger pixel sizes (24 bpp, 3:3:2, A8L8, A4L4, P8, A8P8) 
+        NoLegacyExpansion = 0x2, // Do not implicitly convert legacy formats that result in larger pixel sizes (24 bpp, 3:3:2, A8L8, A4L4, P8, A8P8)
         NoR10B10G10A2Fixup = 0x4, // Do not use work-around for long-standing D3DX DDS file format issue which reversed the 10:10:10:2 color order masks
         ForceRgb = 0x8, // Convert DXGI 1.1 BGR formats to Format.R8G8B8A8_UNorm to avoid use of optional WDDM 1.1 formats
         No16Bpp = 0x10, // Conversions avoid use of 565, 5551, and 4444 formats and instead expand to 8888 to avoid use of optional WDDM 1.2 formats
         CopyMemory = 0x20, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
-        ForceDX10Ext = 0x10000, // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
+        ForceDX10Ext = 0x10000 // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
     };
 }

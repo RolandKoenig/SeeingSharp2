@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,27 +21,32 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Tests.Util;
-using SeeingSharp.Util;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
+#region using
 
 using GDI = System.Drawing;
 
+#endregion
+
 namespace SeeingSharp.Tests
 {
+    #region using
+
+    using System;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Multimedia.Core;
+    using Multimedia.Drawing2D;
+    using Multimedia.Drawing3D;
+    using Multimedia.Objects;
+    using Multimedia.Views;
+    using SeeingSharp.Util;
+    using SharpDX;
+    using Util;
+
+    #endregion
+
     [TestClass]
     [DoNotParallelize]
     public class ErrorHandlingTests
@@ -64,23 +69,24 @@ namespace SeeingSharp.Tests
                 Assert.IsTrue(GraphicsCore.IsLoaded);
                 Assert.IsFalse(GraphicsCore.Current.DefaultDevice.Supports2D);
 
-                using (SolidBrushResource solidBrush = new SolidBrushResource(Color4Ex.Gray))
-                using (TextFormatResource textFormat = new TextFormatResource("Arial", 36))
-                using (SolidBrushResource textBrush = new SolidBrushResource(Color4Ex.RedColor))
-                using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+                using (var solidBrush = new SolidBrushResource(Color4Ex.Gray))
+                using (var textFormat = new TextFormatResource("Arial", 36))
+                using (var textBrush = new SolidBrushResource(Color4Ex.RedColor))
+
+                using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
                 {
                     memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
 
                     // Get and configure the camera
-                    PerspectiveCamera3D camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                    var camera = memRenderTarget.Camera as PerspectiveCamera3D;
                     camera.Position = new Vector3(0f, 5f, -7f);
                     camera.Target = new Vector3(0f, 0f, 0f);
                     camera.UpdateCamera();
 
                     // 2D rendering is made here
-                    Custom2DDrawingLayer d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+                    var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
                     {
-                        SharpDX.RectangleF d2dRectangle = new SharpDX.RectangleF(10, 10, 236, 236);
+                        var d2dRectangle = new SharpDX.RectangleF(10, 10, 236, 236);
                         graphics.Clear(Color4Ex.LightBlue);
                         graphics.FillRoundedRectangle(
                             d2dRectangle, 30, 30,
@@ -99,7 +105,7 @@ namespace SeeingSharp.Tests
                         var geoResource = manipulator.AddResource<GeometryResource>(
                             () => new GeometryResource(new CubeType() { Material = resD2DMaterial }));
 
-                        GenericObject newObject = manipulator.AddGeneric(geoResource);
+                        var newObject = manipulator.AddGeneric(geoResource);
                         newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                         newObject.Scaling = new Vector3(2f, 2f, 2f);
                     });
@@ -129,12 +135,13 @@ namespace SeeingSharp.Tests
             bool isGraphicsCoreInitialized = true;
             int registeredRenderLoopCount = 1;
             using (GraphicsCore.AutomatedTest_NewTestEnviornment())
+
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
             {
                 await GraphicsCore.Loader
                     .LoadAsync();
 
-                using (MemoryRenderTarget memRenderTarget = new MemoryRenderTarget(1024, 1024))
+                using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
                 {
                     isRenderTargetOperational = memRenderTarget.IsOperational;
                     isGraphicsCoreInitialized = GraphicsCore.IsLoaded;
@@ -159,20 +166,28 @@ namespace SeeingSharp.Tests
             int stepID = 0;
             Exception fakeUIThreadException = null;
 
-            ObjectThread fakeUIThread = new ObjectThread("Fake-UI", 100);
+            var fakeUIThread = new ObjectThread("Fake-UI", 100);
+
             fakeUIThread.ThreadException += (sender, eArgs) =>
             {
                 fakeUIThreadException = eArgs.Exception;
             };
             fakeUIThread.Starting += (sender, eArgs) =>
             {
-                hostPanel1 = new System.Windows.Forms.Panel();
-                hostPanel1.Size = new Size(500, 500);
-                hostPanel2 = new System.Windows.Forms.Panel();
-                hostPanel2.Size = new Size(500, 500);
+                hostPanel1 = new System.Windows.Forms.Panel
+                {
+                    Size = new GDI.Size(500, 500)
+                };
 
-                renderControl = new SeeingSharpRendererControl();
-                renderControl.Dock = System.Windows.Forms.DockStyle.Fill;
+                hostPanel2 = new System.Windows.Forms.Panel
+                {
+                    Size = new GDI.Size(500, 500)
+                };
+
+                renderControl = new SeeingSharpRendererControl
+                {
+                    Dock = System.Windows.Forms.DockStyle.Fill
+                };
 
                 hostPanel1.CreateControl();
                 hostPanel2.CreateControl();

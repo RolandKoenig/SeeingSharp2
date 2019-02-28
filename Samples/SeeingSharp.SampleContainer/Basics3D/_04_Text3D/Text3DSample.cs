@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
 {
+    #region using
+
+    using System;
+    using System.Threading.Tasks;
+    using Checking;
+    using Multimedia.Components;
+    using Multimedia.Core;
+    using Multimedia.Drawing3D;
+    using Multimedia.Objects;
+    using SharpDX;
+
+    #endregion
+
     [SampleDescription(
         "Text 3D", 4, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName: "PreviewImage.png",
@@ -49,8 +51,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             // Build dummy scene
-            Scene scene = targetRenderLoop.Scene;
-            Camera3DBase camera = targetRenderLoop.Camera as Camera3DBase;
+            var scene = targetRenderLoop.Scene;
+            var camera = targetRenderLoop.Camera as Camera3DBase;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
@@ -59,14 +61,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Configure text geometry
-                TextGeometryOptions textOptions = TextGeometryOptions.Default;
+                var textOptions = TextGeometryOptions.Default;
                 textOptions.FontSize = 50;
                 textOptions.MakeVolumetricText = true;
                 textOptions.SurfaceVertexColor = Color.Blue;
                 textOptions.VolumetricSideSurfaceVertexColor = Color4Ex.CornflowerBlue;
 
                 // Create text geometry and object
-                GenericObject textObject = manipulator.Add3DText($"Seeing# 2 {Environment.NewLine} Text3D Sample", textOptions);
+                var textObject = manipulator.Add3DText($"Seeing# 2 {Environment.NewLine} Text3D Sample", textOptions);
                 textObject.YPos = textOptions.VolumetricTextDepth;
             });
 

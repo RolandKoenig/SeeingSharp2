@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,14 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System.IO;
-using SharpDX.D3DCompiler;
-using System.Text;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System.IO;
+    using System.Text;
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX.D3DCompiler;
+
+    #endregion
+
     public abstract class ShaderResource : Resource
     {
         #region Generic members
@@ -69,19 +74,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
             switch(resourceKind)
             {
                 case ShaderResourceKind.Bytecode:
-                    using (Stream inStream = resourceLink.OpenInputStream())
+                    using (var inStream = resourceLink.OpenInputStream())
                     {
                         return inStream.ReadAllBytes();
                     }
 
                 case ShaderResourceKind.HlsFile:
-                    using (ReusableStringBuilders.Current.UseStringBuilder(out StringBuilder singleShaderSourceBuilder, requiredCapacity: 10024))
+                    using (ReusableStringBuilders.Current.UseStringBuilder(out var singleShaderSourceBuilder, requiredCapacity: 10024))
                     {
                         SingleShaderFileBuilder.ReadShaderFileAndResolveIncludes(
                             resourceLink,
                             singleShaderSourceBuilder);
 
-                        string shaderSource = singleShaderSourceBuilder.ToString();
+                        var shaderSource = singleShaderSourceBuilder.ToString();
                         var compileResult = SharpDX.D3DCompiler.ShaderBytecode.Compile(
                             shaderSource,
                             "main",
@@ -97,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 default:
                     throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
-            }            
+            }
         }
 
         /// <summary>

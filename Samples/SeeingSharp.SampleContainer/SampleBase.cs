@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer
 {
+    #region using
+
+    using System.Threading.Tasks;
+    using Multimedia.Core;
+    using Multimedia.Drawing3D;
+    using Multimedia.Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public abstract class SampleBase
     {
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
@@ -47,7 +49,7 @@ namespace SeeingSharp.SampleContainer
         /// </summary>
         protected void BuildStandardFloor(SceneManipulator manipulator, string sceneLayer)
         {
-            SceneLayer bgLayer = manipulator.AddLayer("BACKGROUND");
+            var bgLayer = manipulator.AddLayer("BACKGROUND");
             manipulator.SetLayerOrderID(bgLayer, 0);
             manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 1);
             ResourceLink sourceBackgroundTexture = new AssemblyResourceLink(
@@ -65,10 +67,13 @@ namespace SeeingSharp.SampleContainer
             var resTileMaterial = manipulator.AddResource(() => new SimpleColoredMaterialResource(resTileTexture));
 
             // Define floor geometry
-            FloorType floorType = new FloorType(new Vector2(4f, 4f), 0f);
-            floorType.BottomMaterial = resTileMaterial;
-            floorType.DefaultFloorMaterial = resTileMaterial;
-            floorType.SideMaterial = resTileMaterial;
+            var floorType = new FloorType(new Vector2(4f, 4f), 0f)
+            {
+                BottomMaterial = resTileMaterial,
+                DefaultFloorMaterial = resTileMaterial,
+                SideMaterial = resTileMaterial
+            };
+
             floorType.SetTilemap(25, 25);
 
             // Add floor to scene

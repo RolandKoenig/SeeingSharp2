@@ -1,11 +1,11 @@
 #region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Runtime.InteropServices;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Runtime.InteropServices;
+    using SharpDX;
+
+    #endregion
+
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex
     {
@@ -33,7 +38,6 @@ namespace SeeingSharp.Multimedia.Objects
 
         private GeometryData m_geoData;
         private TextureData m_textureData;
-        private AnimationData m_animationData;
 
         /// <summary>
         /// Creates a new vertex
@@ -42,7 +46,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position);
             m_textureData = new TextureData();
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -52,7 +56,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData();
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -62,7 +66,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData(texCoord1);
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -72,7 +76,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, normal, color);
             m_textureData = new TextureData(texCoord1);
-            m_animationData = new AnimationData();
+            Animation = new AnimationData();
         }
 
         /// <summary>
@@ -91,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition);
             return result;
         }
@@ -102,14 +106,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="actTexCoord">The texture coordinate to be set.</param>
         public Vertex Copy(Vector2 actTexCoord)
         {
-            Vertex result = this;
+            var result = this;
             result.m_textureData.Coordinate1 = actTexCoord;
             return result;
         }
 
         internal Vertex Copy(Color4 Color4)
         {
-            Vertex result = this;
+            var result = this;
             result.Color = Color4;
             return result;
         }
@@ -119,7 +123,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector2 newTexCoord1)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition);
             result.m_textureData = result.m_textureData.Copy(newTexCoord1);
             return result;
@@ -130,7 +134,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal, Vector2 newTexCoord1)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
             result.m_textureData = result.m_textureData.Copy(newTexCoord1);
             return result;
@@ -141,7 +145,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal)
         {
-            Vertex result = this;
+            var result = this;
             result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
             return result;
         }
@@ -158,11 +162,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets all animation related data of the vertex.
         /// </summary>
-        public AnimationData Animation
-        {
-            get { return m_animationData; }
-            set { m_animationData = value; }
-        }
+        public AnimationData Animation { get; set; }
 
         /// <summary>
         /// Retrieves or sets texture data

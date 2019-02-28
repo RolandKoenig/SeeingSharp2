@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public abstract class Resource : IDisposable
     {
         private NamedOrGenericKey m_key;
         private ResourceDictionary m_resourceDictionary;
         private EngineDevice m_device;
-        private Type m_resourceType;
         private bool m_markedForReloading;
 
         /// <summary>
@@ -39,7 +43,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected Resource()
         {
-            m_resourceType = this.GetType();
+            ResourceType = this.GetType();
             m_key = new NamedOrGenericKey();
         }
 
@@ -158,8 +162,8 @@ namespace SeeingSharp.Multimedia.Core
         public ResourceDictionary Dictionary
         {
             get { return m_resourceDictionary; }
-            internal set 
-            { 
+            internal set
+            {
                 m_resourceDictionary = value;
                 if (m_resourceDictionary != null) { m_device = m_resourceDictionary.Device; }
                 else { m_device = null; }
@@ -169,9 +173,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the type of this resource.
         /// </summary>
-        public Type ResourceType
-        {
-            get { return m_resourceType; }
-        }
+        public Type ResourceType { get; }
     }
 }

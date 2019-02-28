@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System.Collections.ObjectModel;
+
+    #endregion
+
     public partial class PerformanceAnalyzer
     {
         /// <summary>
@@ -39,22 +39,24 @@ namespace SeeingSharp.Util
         private void HandleResultForUI(PerformanceAnalyzeResultBase actResult)
         {
             // Handle duration kpi results
-            DurationPerformanceResult actDurationResult = actResult as DurationPerformanceResult;
+            var actDurationResult = actResult as DurationPerformanceResult;
+
             if (actDurationResult != null)
             {
                 HandleResultForUIForFlowRateKpi(
                     actDurationResult,
-                    m_uiDurationKpisHistorical, m_uiDurationKpisCurrents);
+                    UIDurationKpisHistorical, UIDurationKpisCurrents);
                 return;
             }
 
             // Put here other result handlers
-            FlowRatePerformanceResult actFlowRateResult = actResult as FlowRatePerformanceResult;
+            var actFlowRateResult = actResult as FlowRatePerformanceResult;
+
             if (actFlowRateResult != null)
             {
                 HandleResultForUIForFlowRateKpi(
                     actFlowRateResult,
-                    m_uiFlowRateKpisHistorical, m_uiFlowRateKpisCurrents);
+                    UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
                 return;
             }
         }
@@ -71,11 +73,15 @@ namespace SeeingSharp.Util
             // Handle historical entries
             if (m_generateHistoricalCollection)
             {
-                int actResultCount = 1;
+                var actResultCount = 1;
                 kpisHistorical.Add(kpiResult);
-                for (int loop = kpisHistorical.Count - 1; loop >= 0; loop--)
+                for (var loop = kpisHistorical.Count - 1; loop >= 0; loop--)
                 {
-                    if (kpisHistorical[loop].Calculator == kpiResult.Calculator) { actResultCount++; }
+                    if (kpisHistorical[loop].Calculator == kpiResult.Calculator)
+                    {
+                        actResultCount++;
+                    }
+
                     if (actResultCount > m_maxCountHistoricalEntries)
                     {
                         kpisHistorical.RemoveAt(loop);
@@ -87,7 +93,7 @@ namespace SeeingSharp.Util
             if (m_generateCurrentValueCollection)
             {
                 kpisCurrents.Add(kpiResult);
-                for (int loop = kpisCurrents.Count - 1; loop >= 0; loop--)
+                for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
                 {
                     if ((kpisCurrents[loop] != kpiResult) &&
                         (kpisCurrents[loop].Calculator == kpiResult.Calculator))

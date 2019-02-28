@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    #endregion
+
     public partial class PerformanceAnalyzer
     {
         private const double DEFAULT_KPI_INTERVAL_SEC = 5.0;
@@ -49,7 +51,6 @@ namespace SeeingSharp.Util
         private DateTime m_startupTimestamp;
 
         // Members for threading
-        private SynchronizationContext m_syncContext;
         private volatile int m_delayTimeMS;
         private Task m_runningTask;
 
@@ -58,10 +59,6 @@ namespace SeeingSharp.Util
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
 
         // Collections for UI
-        private ObservableCollection<DurationPerformanceResult> m_uiDurationKpisHistorical;
-        private ObservableCollection<DurationPerformanceResult> m_uiDurationKpisCurrents;
-        private ObservableCollection<FlowRatePerformanceResult> m_uiFlowRateKpisHistorical;
-        private ObservableCollection<FlowRatePerformanceResult> m_uiFlowRateKpisCurrents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
@@ -78,16 +75,16 @@ namespace SeeingSharp.Util
             m_generateHistoricalCollection = true;
             m_generateCurrentValueCollection = true;
 
-            m_syncContext = SynchronizationContext.Current;
+            SyncContext = SynchronizationContext.Current;
             m_delayTimeMS = 1000;
 
             m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
-            m_uiDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            m_uiDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            m_uiFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            m_uiFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
+            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
+            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
+            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
+            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
         }
 
         /// <summary>
@@ -96,7 +93,7 @@ namespace SeeingSharp.Util
         /// <param name="calculatorName">The name of the calculator this occurrence belongs to.</param>
         public void NotifyFlowRateOccurrence(string calculatorName)
         {
-            FlowRatePerformanceCalculator kpiCalculator = GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
+            var kpiCalculator = GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
             kpiCalculator.NotifyOccurrence();
         }
 
@@ -107,7 +104,7 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
         public void NotifyActivityDuration(string activity, long durationTicks)
         {
-            DurationPerformanceCalculator kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
             kpiCalculator.NotifyActivityDuration(durationTicks);
         }
 
@@ -118,9 +115,10 @@ namespace SeeingSharp.Util
         /// <param name="actionToExecute">The action to be executed and measured.</param>
         public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
-            DurationPerformanceCalculator kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
-            Stopwatch stopwatch = new Stopwatch();
+            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
+
             try
             {
                 actionToExecute();
@@ -137,7 +135,7 @@ namespace SeeingSharp.Util
         /// <param name="activity">The activity name to be measured.</param>
         public IDisposable BeginMeasureActivityDuration(string activity)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             return new DummyDisposable(() =>
@@ -168,8 +166,12 @@ namespace SeeingSharp.Util
                         await Task.Delay(m_delayTimeMS);
 
                         // Do we have anything to do?
-                        DateTime utcNow = DateTime.UtcNow;
-                        if (utcNow - m_valueInterval < m_lastValueTimestamp) { continue; }
+                        var utcNow = DateTime.UtcNow;
+
+                        if (utcNow - m_valueInterval < m_lastValueTimestamp)
+                        {
+                            continue;
+                        }
 
                         // Calculate values now
                         this.CalculateValuesAsync(utcNow);
@@ -194,11 +196,11 @@ namespace SeeingSharp.Util
         public async Task RefreshUICollectionsAsync()
         {
             // Trigger UI synchronization
-            await m_syncContext.PostAlsoIfNullAsync(
+            await SyncContext.PostAlsoIfNullAsync(
                 () =>
                 {
                     this.RefreshUICollections();
-                }, 
+                },
                 ActionIfSyncContextIsNull.InvokeSynchronous);
         }
 
@@ -207,11 +209,12 @@ namespace SeeingSharp.Util
         /// </summary>
         public void RefreshUICollections()
         {
-            m_uiDurationKpisCurrents.Clear();
+            UIDurationKpisCurrents.Clear();
 
-            foreach (CalculatorInfo actCalculatorInfo in m_calculatorsBag)
+            foreach (var actCalculatorInfo in m_calculatorsBag)
             {
                 PerformanceAnalyzeResultBase actResult = null;
+
                 while (actCalculatorInfo.Results.TryTake(out actResult))
                 {
                     this.HandleResultForUI(actResult);
@@ -220,24 +223,29 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Triggers calculation of 
+        /// Triggers calculation of
         /// </summary>
         /// <param name="timestamp"></param>
         /// <returns></returns>
         internal void CalculateValuesAsync(DateTime timestamp)
         {
             // Trigger kpi calculation
-            DateTime actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+            var actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+
             while (actKeyTimestamp < timestamp)
             {
-                DateTime actMaxTimestamp = actKeyTimestamp;
-                DateTime actMinTimestamp = actKeyTimestamp - m_calculationInterval;
-                if (actMinTimestamp < m_startupTimestamp) { actMinTimestamp = m_startupTimestamp; }
+                var actMaxTimestamp = actKeyTimestamp;
+                var actMinTimestamp = actKeyTimestamp - m_calculationInterval;
+
+                if (actMinTimestamp < m_startupTimestamp)
+                {
+                    actMinTimestamp = m_startupTimestamp;
+                }
 
                 // Calculate reporting values
-                foreach (CalculatorInfo actCalculatorInfo in m_calculatorsBag)
+                foreach (var actCalculatorInfo in m_calculatorsBag)
                 {
-                    PerformanceAnalyzeResultBase actResult = actCalculatorInfo.Calculator.Calculate(
+                    var actResult = actCalculatorInfo.Calculator.Calculate(
                         actKeyTimestamp,
                         actMinTimestamp, actMaxTimestamp,
                         m_calculationInterval);
@@ -258,14 +266,14 @@ namespace SeeingSharp.Util
         private T GetKpiCalculator<T>(string activity)
             where T : PerformanceCalculatorBase
         {
-            CalculatorInfo newCalculatorInfo = m_calculatorsDict.GetOrAdd(
+            var newCalculatorInfo = m_calculatorsDict.GetOrAdd(
                 activity,
                 (key) =>
                 {
-                    PerformanceCalculatorBase newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
+                    var newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
                     newCalculator.Parent = this;
 
-                    CalculatorInfo calcInfo = new CalculatorInfo(newCalculator);
+                    var calcInfo = new CalculatorInfo(newCalculator);
                     m_calculatorsBag.Add(calcInfo);
                     return calcInfo;
                 });
@@ -277,7 +285,8 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }
 
-            T result = newCalculatorInfo.Calculator as T;
+            var result = newCalculatorInfo.Calculator as T;
+
             if(result == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
@@ -309,11 +318,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets or sets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext
-        {
-            get { return m_syncContext; }
-            set { m_syncContext = value; }
-        }
+        public SynchronizationContext SyncContext { get; set; }
 
         /// <summary>
         /// Is the main loop currently running?
@@ -403,34 +408,22 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets historical duration results (if activated).
         /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisHistorical
-        {
-            get { return m_uiDurationKpisHistorical; }
-        }
+        public ObservableCollection<DurationPerformanceResult> UIDurationKpisHistorical { get; }
 
         /// <summary>
         /// Gets current duration results (if activated).
         /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisCurrents
-        {
-            get { return m_uiDurationKpisCurrents; }
-        }
+        public ObservableCollection<DurationPerformanceResult> UIDurationKpisCurrents { get; }
 
         /// <summary>
         /// Gets historical flowrate results (if activated).
         /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisHistorical
-        {
-            get { return m_uiFlowRateKpisHistorical; }
-        }
+        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisHistorical { get; }
 
         /// <summary>
         /// Gets current flowrate results (if activated).
         /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisCurrents
-        {
-            get { return m_uiFlowRateKpisCurrents; }
-        }
+        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisCurrents { get; }
 
         //*********************************************************************
         //*********************************************************************

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using SharpDX;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System;
+    using System.Runtime.CompilerServices;
+    using SharpDX;
+
+    #endregion
+
     public static class MatrixEx
     {
         /// <summary>
@@ -177,7 +177,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix RotationDirection(Vector3 upVector, Vector3 forwardVector)
         {
-            Vector3 right = Vector3.Cross(upVector, forwardVector);
+            var right = Vector3.Cross(upVector, forwardVector);
             return new Matrix(
                 right.X, right.Y, right.Z, 0f,
                 upVector.X, upVector.Y, upVector.Z, 0f,
@@ -329,14 +329,16 @@ namespace SeeingSharp
         {
             float zRange = zfar / (zfar - znear);
 
-            result = new Matrix();
-            result.M11 = 2.0f * znear / (right - left);
-            result.M22 = 2.0f * znear / (top - bottom);
-            result.M31 = (left + right) / (left - right);
-            result.M32 = (top + bottom) / (bottom - top);
-            result.M33 = zRange;
-            result.M34 = 1.0f;
-            result.M43 = -znear * zRange;
+            result = new Matrix
+            {
+                M11 = 2.0f * znear / (right - left),
+                M22 = 2.0f * znear / (top - bottom),
+                M31 = (left + right) / (left - right),
+                M32 = (top + bottom) / (bottom - top),
+                M33 = zRange,
+                M34 = 1.0f,
+                M43 = -znear * zRange
+            };
         }
 
         /// <summary>

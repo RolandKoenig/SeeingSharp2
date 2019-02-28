@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX.DXGI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+    using SharpDX.DXGI;
+
+    #endregion
+
     /// <summary>
     /// PixelFormat is equivalent to <see cref="SharpDX.DXGI.Format"/>.
     /// </summary>
@@ -43,9 +44,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// Usage is slightly different from <see cref="SharpDX.DXGI.Format"/>, as you have to select the type of the pixel format first (Typeless, SInt...etc)
     /// and then access the available pixel formats for this type. Example: PixelFormat.UNorm.R8.
     /// </remarks>
-    /// <msdn-id>bb173059</msdn-id>	
-    /// <unmanaged>DXGI_FORMAT</unmanaged>	
-    /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>	
+    /// <msdn-id>bb173059</msdn-id>
+    /// <unmanaged>DXGI_FORMAT</unmanaged>
+    /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public struct PixelFormat : IEquatable<PixelFormat>
     {

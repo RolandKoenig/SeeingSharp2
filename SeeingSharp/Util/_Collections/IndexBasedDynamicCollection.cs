@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+
+    #endregion
+
     public class IndexBasedDynamicCollection<T> : IEnumerable<T>
         where T : class
     {
@@ -112,10 +117,14 @@ namespace SeeingSharp.Util
         /// <param name="throwIfIndexAlreadyUsed">Throw an exception if the item does already exist? If false, the existing value will be overwritten.</param>
         public void AddObject(T objectToAdd, int index, bool throwIfIndexAlreadyUsed)
         {
-            T currentObject = this[index];
+            var currentObject = this[index];
+
             if (currentObject != null)
             {
-                if (throwIfIndexAlreadyUsed) { throw new SeeingSharpException("There is already an object at the given index!"); }
+                if (throwIfIndexAlreadyUsed)
+                {
+                    throw new SeeingSharpException("There is already an object at the given index!");
+                }
 
                 this.RemoveObject(currentObject);
             }
@@ -187,7 +196,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index of the object to remove.</param>
         public void RemoveObject(int index)
         {
-            T objectToRemove = m_list[index];
+            var objectToRemove = m_list[index];
             RemoveObject(objectToRemove);
         }
 
@@ -211,12 +220,20 @@ namespace SeeingSharp.Util
         public IEnumerator<T> GetEnumerator()
         {
             int max = m_list.Count;
-            for (int loop = 0; loop < max; loop++)
-            {
-                if (m_list.Count != max) { throw new InvalidOperationException("Collection was modified!"); }
 
-                T actObject = m_list[loop];
-                if (actObject != null) { yield return actObject; }
+            for (var loop = 0; loop < max; loop++)
+            {
+                if (m_list.Count != max)
+                {
+                    throw new InvalidOperationException("Collection was modified!");
+                }
+
+                var actObject = m_list[loop];
+
+                if (actObject != null)
+                {
+                    yield return actObject;
+                }
             }
         }
 

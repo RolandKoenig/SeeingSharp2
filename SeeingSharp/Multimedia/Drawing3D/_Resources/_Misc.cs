@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System;
+    using Core;
+
+    #endregion
+
     public enum ShaderResourceKind
     {
         /// <summary>
@@ -45,7 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         TopToBottom,
 
-        Directional,
+        Directional
     }
 
     public delegate void TextureChangedHandler(object sender, TextureChangedEventArgs e);
@@ -55,23 +60,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class TextureChangedEventArgs : EventArgs
     {
-        private RenderState m_renderState;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureChangedEventArgs"/> class.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
         internal TextureChangedEventArgs(RenderState renderState)
         {
-            m_renderState = renderState;
+            RenderState = renderState;
         }
 
         /// <summary>
         /// Gets current renderstate object.
         /// </summary>
-        public RenderState RenderState
-        {
-            get { return m_renderState; }
-        }
+        public RenderState RenderState { get; }
     }
 }

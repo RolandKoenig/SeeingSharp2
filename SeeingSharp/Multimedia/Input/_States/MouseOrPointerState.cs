@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using Checking;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// A state object describing current mouse or pointer input.
     /// </summary>
@@ -40,8 +41,7 @@ namespace SeeingSharp.Multimedia.Input
         private static readonly int BUTTON_COUNT = Enum.GetValues(typeof(MouseButton)).Length;
 
         #region Generic info
-        private MouseOrPointerStateInternals m_internals;
-        private MouseOrPointerType m_mouseOrPointerType;
+
         #endregion
 
         #region Current state
@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Input
                 buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
             }
 
-            m_internals = new MouseOrPointerStateInternals(this);
+            Internals = new MouseOrPointerStateInternals(this);
 
             m_buttonsHit = new bool[buttonCount];
             m_buttonsDown = new bool[buttonCount];
@@ -178,13 +178,13 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            MouseOrPointerState targetStateCasted = targetState as MouseOrPointerState;
+            var targetStateCasted = targetState as MouseOrPointerState;
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
             targetStateCasted.m_moveDistancePixel = m_moveDistancePixel;
@@ -192,7 +192,7 @@ namespace SeeingSharp.Multimedia.Input
             targetStateCasted.m_positionPixel = m_positionPixel;
             targetStateCasted.m_wheelDelta = m_wheelDelta;
             targetStateCasted.m_isInside = m_isInside;
-            targetStateCasted.m_mouseOrPointerType = m_mouseOrPointerType;
+            targetStateCasted.Type = Type;
             for (int loop = 0; loop < BUTTON_COUNT; loop++)
             {
                 targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Input
             for(int loop=0; loop<BUTTON_COUNT; loop++)
             {
                 m_buttonsUp[loop] = false;
-                
+
                 if(m_buttonsHit[loop] || m_buttonsDown[loop])
                 {
                     m_buttonsHit[loop] = false;
@@ -297,13 +297,9 @@ namespace SeeingSharp.Multimedia.Input
             get { return m_isInside; }
         }
 
-        public MouseOrPointerType Type
-        {
-            get { return m_mouseOrPointerType; }
-            internal set { m_mouseOrPointerType = value; }
-        }
+        public MouseOrPointerType Type { get; internal set; }
 
-        public MouseOrPointerStateInternals Internals => m_internals;
+        public MouseOrPointerStateInternals Internals { get; }
 
         //*********************************************************************
         //*********************************************************************
@@ -311,7 +307,7 @@ namespace SeeingSharp.Multimedia.Input
         public class MouseOrPointerStateInternals
         {
             private MouseOrPointerState m_host;
-            
+
             internal MouseOrPointerStateInternals(MouseOrPointerState host)
             {
                 m_host = host;

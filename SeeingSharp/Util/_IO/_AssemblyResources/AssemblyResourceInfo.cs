@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,29 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.IO;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System.IO;
+    using System.Reflection;
+
+    #endregion
+
     public class AssemblyResourceInfo
     {
-        private Assembly m_targetAssembly;
-        private string m_resourcePath;
-        private string m_key;
-
         /// <summary>
         /// Creates a new AssemblyResourceInfo object
         /// </summary>
         internal AssemblyResourceInfo(Assembly targetAssembly, string resourcePath, string key)
         {
-            m_targetAssembly = targetAssembly;
-            m_resourcePath = resourcePath;
-            m_key = key;
+            TargetAssembly = targetAssembly;
+            ResourcePath = resourcePath;
+            Key = key;
         }
 
         /// <summary>
@@ -51,31 +48,22 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead()
         {
-            return m_targetAssembly.GetManifestResourceStream(m_resourcePath);
+            return TargetAssembly.GetManifestResourceStream(ResourcePath);
         }
 
         /// <summary>
         /// Gets the path to the resource
         /// </summary>
-        public string ResourcePath
-        {
-            get { return m_resourcePath; }
-        }
+        public string ResourcePath { get; }
 
         /// <summary>
         /// Gets the target assembly
         /// </summary>
-        public Assembly TargetAssembly
-        {
-            get { return m_targetAssembly; }
-        }
+        public Assembly TargetAssembly { get; }
 
         /// <summary>
         /// Gets the key of this object
         /// </summary>
-        public string Key
-        {
-            get { return m_key; }
-        }
+        public string Key { get; }
     }
 }

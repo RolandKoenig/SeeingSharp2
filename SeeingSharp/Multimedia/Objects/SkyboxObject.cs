@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,27 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Numerics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using Core;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class SkyboxObject : SceneObject
     {
-        private NamedOrGenericKey m_cubeTextureKey;
-
         //Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
 
@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
         public SkyboxObject(NamedOrGenericKey cubeTextureKey)
         {
             m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
-            m_cubeTextureKey = cubeTextureKey;
+            CubeTextureKey = cubeTextureKey;
         }
 
         /// <summary>
@@ -113,17 +113,19 @@ namespace SeeingSharp.Multimedia.Objects
             };
 
             // Create and fill resource container object
-            SkyboxLocalResources localResources = new SkyboxLocalResources();
-            localResources.DefaultResources = resourceDictionary.DefaultResources;
-            localResources.CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(m_cubeTextureKey);
-            localResources.VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices);
-            localResources.IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices);
-            localResources.VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
-                () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader"));
-            localResources.PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
-                () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"));
+            var localResources = new SkyboxLocalResources
+            {
+                DefaultResources = resourceDictionary.DefaultResources,
+                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(CubeTextureKey),
+                VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices),
+                IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices),
+                VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
+                    () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader")),
+                PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
+                    () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"))
+            };
 
             // Store resource container object
             m_localResources.AddObject(localResources, device.DeviceIndex);
@@ -177,11 +179,22 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="device">The device for which to check.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex)) { return false; }
+            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            {
+                return false;
+            }
 
-            SkyboxLocalResources geoResource = m_localResources[device.DeviceIndex];
-            if (geoResource.CubeTexture == null) { return false; }
-            if (geoResource.CubeTexture.Key != m_cubeTextureKey) { return false; }
+            var geoResource = m_localResources[device.DeviceIndex];
+
+            if (geoResource.CubeTexture == null)
+            {
+                return false;
+            }
+
+            if (geoResource.CubeTexture.Key != CubeTextureKey)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -194,8 +207,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             renderState.ClearChachedAppliedMaterial();
 
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            SkyboxLocalResources localResources = m_localResources[renderState.DeviceIndex];
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var localResources = m_localResources[renderState.DeviceIndex];
 
             // Apply constants and shader resources
             deviceContext.VertexShader.Set(localResources.VertexShader.VertexShader);
@@ -203,9 +216,9 @@ namespace SeeingSharp.Multimedia.Objects
             deviceContext.PixelShader.SetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, DXGI.Format.R32_UInt, 0);
+            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
-                localResources.VertexBuffer, 
+                localResources.VertexBuffer,
                 StandardVertex.Size, 0));
 
             // Draw the skybox
@@ -215,11 +228,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the key of the cube texture.
         /// </summary>
-        public NamedOrGenericKey CubeTextureKey
-        {
-            get { return m_cubeTextureKey; }
-            set { m_cubeTextureKey = value; }
-        }
+        public NamedOrGenericKey CubeTextureKey { get; set; }
 
         //*********************************************************************
         //*********************************************************************

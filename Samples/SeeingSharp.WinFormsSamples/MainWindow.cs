@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.SampleContainer;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.WinFormsSamples
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Windows.Forms;
+    using Checking;
+    using Multimedia.Core;
+    using SampleContainer;
+    using SharpDX;
+
+    #endregion
+
     public partial class MainWindow : Form
     {
         private bool m_isChangingSample;
@@ -58,49 +62,72 @@ namespace SeeingSharp.WinFormsSamples
 
             foreach (var actDevice in GraphicsCore.Current.Devices)
             {
-                var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}");
-                newButton.Tag = actDevice;
+                var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}")
+                {
+                    Tag = actDevice
+                };
+
                 newButton.Click += OnCmdChangeDevice_Click;
                 m_mnuChangeDevice.DropDownItems.Add(newButton);
             }
 
             // Add all sample pages
-            SampleRepository sampleRepo = new SampleRepository();
+            var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
             TabPage firstTabPage = null;
             ListView firstListView = null;
             ListViewItem firstListViewItem = null;
             Dictionary<string, ListView> generatedTabs = new Dictionary<string, ListView>();
+
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
-                TabPage actTabPage = new TabPage(actSampleGroup.GroupName);
+                var actTabPage = new TabPage(actSampleGroup.GroupName);
                 m_tabControlSamples.TabPages.Add(actTabPage);
-                if(firstTabPage == null) { firstTabPage = actTabPage; }
 
-                ListView actListView = new ListView();
-                actListView.Dock = DockStyle.Fill;
-                actListView.Activation = ItemActivation.OneClick;
+                if (firstTabPage == null)
+                {
+                    firstTabPage = actTabPage;
+                }
+
+                var actListView = new ListView
+                {
+                    Dock = DockStyle.Fill,
+                    Activation = ItemActivation.OneClick
+                };
+
                 actListView.ItemSelectionChanged += OnListView_ItemSelectionChanged;
                 actListView.MultiSelect = false;
                 actListView.LargeImageList = m_images;
                 actListView.SmallImageList = m_images;
                 actTabPage.Controls.Add(actListView);
-                if(firstListView == null) { firstListView = actListView; }
+
+                if (firstListView == null)
+                {
+                    firstListView = actListView;
+                }
 
                 foreach (var actSample in actSampleGroup.Samples)
                 {
                     // Generate the new list entry for the current sample
-                    ListViewItem newListItem = new ListViewItem();
-                    newListItem.Text = actSample.Name;
-                    newListItem.Tag = actSample;
+                    var newListItem = new ListViewItem
+                    {
+                        Text = actSample.Name,
+                        Tag = actSample
+                    };
+
                     actListView.Items.Add(newListItem);
-                    if(firstListViewItem == null) { firstListViewItem = newListItem; }
+
+                    if (firstListViewItem == null)
+                    {
+                        firstListViewItem = newListItem;
+                    }
 
                     // Load the item's image
                     var sampleImageLink = actSample.TryGetSampleImageLink();
+
                     if (sampleImageLink != null)
                     {
-                        using (Stream inStream = sampleImageLink.OpenRead())
+                        using (var inStream = sampleImageLink.OpenRead())
                         {
                             m_images.Images.Add(Image.FromStream(inStream));
                             newListItem.ImageIndex = m_images.Images.Count - 1;
@@ -109,8 +136,15 @@ namespace SeeingSharp.WinFormsSamples
                 }
             }
 
-            if(firstTabPage != null) { m_tabControlSamples.SelectedTab = firstTabPage; }
-            if(firstListViewItem != null) { firstListView.SelectedIndices.Add(0); }
+            if (firstTabPage != null)
+            {
+                m_tabControlSamples.SelectedTab = firstTabPage;
+            }
+
+            if (firstListViewItem != null)
+            {
+                firstListView.SelectedIndices.Add(0);
+            }
 
             UpdateWindowState();
         }
@@ -123,14 +157,18 @@ namespace SeeingSharp.WinFormsSamples
         private void ChangeRenderResolution(int width, int height)
         {
             var renderControl = m_ctrlRenderPanel;
-            if (renderControl == null) { return; }
 
-            Size2 currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            Size2 currentWindowSize = new Size2(this.Width, this.Height);
-            Size2 difference = new Size2(
+            if (renderControl == null)
+            {
+                return;
+            }
+
+            var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
+            var currentWindowSize = new Size2(this.Width, this.Height);
+            var difference = new Size2(
                 currentWindowSize.Width - currentViewSize.Width,
                 currentWindowSize.Height - currentViewSize.Height);
-            Size2 newWindowSize = new Size2(width + difference.Width, height + difference.Height);
+            var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
 
             this.WindowState = FormWindowState.Normal;
             this.Width = newWindowSize.Width;
@@ -151,7 +189,7 @@ namespace SeeingSharp.WinFormsSamples
 
                 if (m_actSampleInfo == sampleInfo) { return; }
 
-                // Clear previous sample 
+                // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
                     await m_ctrlRenderPanel.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
@@ -170,7 +208,7 @@ namespace SeeingSharp.WinFormsSamples
                 // Apply new sample
                 if (sampleInfo != null)
                 {
-                    SampleBase sampleObject = sampleInfo.CreateSampleObject();
+                    var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
@@ -221,7 +259,7 @@ namespace SeeingSharp.WinFormsSamples
             foreach(var actCommand in settings.GetCommands())
             {
                 var actCommandInner = actCommand;
-                
+
                 if(isFirst)
                 {
                     var separator = new ToolStripSeparator();
@@ -260,7 +298,7 @@ namespace SeeingSharp.WinFormsSamples
                 e.Item.BackColor = System.Drawing.Color.LightBlue;
             }
 
-            ListView actListView = sender as ListView;
+            var actListView = sender as ListView;
             actListView.EnsureNotNull(nameof(actListView));
             e.Item.EnsureNotNull($"{nameof(e)}.{nameof(e.Item)}");
 
@@ -268,9 +306,13 @@ namespace SeeingSharp.WinFormsSamples
             sampleInfo.EnsureNotNull(nameof(sampleInfo));
 
             // Clear selection on other ListViews
-            foreach (ListView actOtherListView in m_generatedListViews)
+            foreach (var actOtherListView in m_generatedListViews)
             {
-                if (actOtherListView == actListView) { continue; }
+                if (actOtherListView == actListView)
+                {
+                    continue;
+                }
+
                 actOtherListView.SelectedItems.Clear();
             }
 
@@ -288,10 +330,12 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnCmdChangeResolution_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            var menuItem = sender as ToolStripMenuItem;
+
             if (menuItem?.Tag == null) { return; }
 
             var splittedResolution = menuItem.Tag.ToString().Split('x');
+
             if (splittedResolution.Length != 2) { return; }
             if (!int.TryParse(splittedResolution[0], out int width)) { return; }
             if (!int.TryParse(splittedResolution[1], out int height)) { return; }
@@ -301,7 +345,7 @@ namespace SeeingSharp.WinFormsSamples
 
         private async void OnCmdCopyScreenshot_Click(object sender, EventArgs e)
         {
-            Bitmap bitmap = await m_ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
+            var bitmap = await m_ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
             Clipboard.SetImage(bitmap);
         }
 

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Checking;
+
+    #endregion
+
     public class StreamFactoryResourceLink : ResourceLink
     {
         private Func<Stream> m_streamFactory;
@@ -87,12 +89,14 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            Stream result = m_streamFactory();
+            var result = m_streamFactory();
+
             if(!result.CanWrite)
             {
                 result.Dispose();
                 throw new SeeingSharpException("Can not write to created stream!");
             }
+
             return result;
         }
 
@@ -109,12 +113,14 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            Stream result = m_streamFactory();
+            var result = m_streamFactory();
+
             if (!result.CanRead)
             {
                 result.Dispose();
                 throw new SeeingSharpException("Can not read from created stream!");
             }
+
             return result;
         }
 

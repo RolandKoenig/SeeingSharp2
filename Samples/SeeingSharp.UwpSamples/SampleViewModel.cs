@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,48 +21,49 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.SampleContainer;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Storage.Streams;
-using Windows.Storage;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.UwpSamples
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Windows.UI.Xaml.Media.Imaging;
+    using SampleContainer;
+    using Util;
+
+    #endregion
+
     public class SampleViewModel : ViewModelBase
     {
-        private SampleMetadata m_sample;
         private BitmapSource m_bitmapSource;
         private Task m_bitmapSourceTask;
 
         public SampleViewModel(SampleMetadata sample)
         {
-            m_sample = sample;
+            SampleMetadata = sample;
         }
-        
+
         private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
         {
-            BitmapImage source = new BitmapImage();
+            var source = new BitmapImage();
+
             using (var randomAccessStream = sourceLink.OpenRead().AsRandomAccessStream())
             {
                 await source.SetSourceAsync(randomAccessStream);
             }
+
             m_bitmapSource = source;
 
             RaisePropertyChanged(nameof(BitmapSource));
         }
 
-        public SampleMetadata SampleMetadata => m_sample;
+        public SampleMetadata SampleMetadata { get; }
 
-        public string Name => m_sample.Name;
+        public string Name => SampleMetadata.Name;
 
-        public string Group => m_sample.Group;
+        public string Group => SampleMetadata.Group;
 
         public BitmapSource BitmapSource
         {
@@ -70,7 +71,7 @@ namespace SeeingSharp.UwpSamples
             {
                 if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
                 {
-                    var sourceLink = m_sample.TryGetSampleImageLink();
+                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
                     if(sourceLink == null) { return null; }
 
                     m_bitmapSourceTask = LoadSampleImageAsync(sourceLink);

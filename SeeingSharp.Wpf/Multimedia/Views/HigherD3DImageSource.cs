@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,21 +21,28 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
+#region using
 
 //Some namespace Mappings
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Windows;
+    using System.Windows.Interop;
+    using Checking;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class HigherD3DImageSource : D3DImage, IDisposable
     {
         private static volatile int s_activeClients;
@@ -106,13 +113,15 @@ namespace SeeingSharp.Multimedia.Views
                 throw new ArgumentException("texture must be created with ResourceOptionFlags.Shared");
             }
 
-            D3D9.Format format = HigherD3DImageSource.TranslateFormat(renderTarget);
+            var format = HigherD3DImageSource.TranslateFormat(renderTarget);
+
             if (format == D3D9.Format.Unknown)
             {
                 throw new ArgumentException("texture format is not compatible with OpenSharedResource");
             }
 
-            IntPtr handle = GetSharedHandle(renderTarget);
+            var handle = GetSharedHandle(renderTarget);
+
             if (handle == IntPtr.Zero)
             {
                 throw new ArgumentNullException(nameof(handle));
@@ -127,7 +136,8 @@ namespace SeeingSharp.Multimedia.Views
                 renderTarget.Description.Width,
                 renderTarget.Description.Height,
                 1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
-            using (D3D9.Surface surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
+
+            using (var surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
             {
                 base.Lock();
                 base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
@@ -143,7 +153,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             texture.EnsureNotNull(nameof(texture));
 
-            using (DXGI.Resource resource = texture.QueryInterface<DXGI.Resource>())
+            using (var resource = texture.QueryInterface<SharpDX.DXGI.Resource>())
             {
                 return resource.SharedHandle;
             }

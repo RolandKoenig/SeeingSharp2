@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-// Some namespace mappings
-using WIC = SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class WicBitmapSource : IDisposable
     {
         #region Native resources
@@ -57,7 +56,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public static async Task<WicBitmapSource> FromResourceSourceAsync(ResourceLink resourceLink)
         {
             WicBitmapSourceInternal wicBitmapSource = null;
-            using (Stream inStream = await resourceLink.OpenInputStreamAsync())
+
+            using (var inStream = await resourceLink.OpenInputStreamAsync())
             {
                 wicBitmapSource = await SeeingSharpTools.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream));
             }
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public int Width
         {
-            get 
+            get
             {
                 if (m_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
                 return m_wicBitmapSource.Converter.Size.Width;
@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
         }
 
-        internal WIC.BitmapSource BitmapSource
+        internal SharpDX.WIC.BitmapSource BitmapSource
         {
             get { return m_wicBitmapSource.Converter; }
         }

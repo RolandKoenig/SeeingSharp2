@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,21 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Core;
+    using Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     internal class TexturePainterHelper
     {
         #region Resource keys
@@ -46,9 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         #region Configuration
         private NamedOrGenericKey m_texture;
-        private float m_scaling;
-        private float m_opacity;
-        private float m_accentuationFactor;
+
         #endregion
 
         #region Used resources
@@ -66,9 +68,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal TexturePainterHelper(NamedOrGenericKey textureKey)
         {
             m_texture = textureKey;
-            m_scaling = 1f;
-            m_opacity = 1f;
-            m_accentuationFactor = 0f;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 KEY_GEOMETRY,
                 () =>
                 {
-                    VertexStructure structure = new VertexStructure();
+                    var structure = new VertexStructure();
                     structure.FirstSurface.BuildRect4V(
                         new Vector3(-1f, -1f, 0f),
                         new Vector3(1f, -1f, 0f),
@@ -132,12 +134,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Apply rendering parameters
             m_renderParameters.UpdateValues(renderState, new CBPerObject()
             {
-                AccentuationFactor = m_accentuationFactor,
+                AccentuationFactor = AccentuationFactor,
                 BorderMultiplyer = 0f,
                 BorderPart = 0f,
                 Color = Vector4.Zero,
-                Opacity = m_opacity,
-                SpriteScaling = m_scaling,
+                Opacity = Opacity,
+                SpriteScaling = Scaling,
                 World = Matrix.Identity
             });
 
@@ -151,13 +153,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">The current render state.</param>
         private void RenderInternal(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply all current rendering parameters
             m_renderParameters.Apply(renderState);
 
             // Render the object
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
+
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
@@ -169,29 +172,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             }
+
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
         }
 
         /// <summary>
         /// Gets or sets the scaling.
         /// </summary>
-        public float Scaling
-        {
-            get { return m_scaling; }
-            set { m_scaling = value; }
-        }
+        public float Scaling { get; set; }
 
-        public float AccentuationFactor
-        {
-            get { return m_accentuationFactor; }
-            set { m_accentuationFactor = value; }
-        }
+        public float AccentuationFactor { get; set; }
 
-        public float Opacity
-        {
-            get { return m_opacity; }
-            set { m_opacity = value; }
-        }
+        public float Opacity { get; set; }
 
         /// <summary>
         /// Are resources loaded?
@@ -204,9 +196,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets or sets the alpha blend mode.
         /// </summary>
-        public TexturePainterAlphaBlendMode AlphaBlendMode 
-        { 
-            get; set; 
+        public TexturePainterAlphaBlendMode AlphaBlendMode
+        {
+            get; set;
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,28 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mapping
 using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
-using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    #endregion
+
     internal class DDS
     {
         /// <summary>
@@ -146,7 +150,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Luminance = 0x00020000, // DDPF_LUMINANCE
             LuminanceAlpha = 0x00020001, // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
             Alpha = 0x00000002, // DDPF_ALPHA
-            Pal8 = 0x00000020, // DDPF_PALETTEINDEXED8            
+            Pal8 = 0x00000020 // DDPF_PALETTEINDEXED8
         }
 
         /// <summary>
@@ -155,13 +159,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         [Flags]
         public enum HeaderFlags
         {
-            Texture = 0x00001007, // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT 
+            Texture = 0x00001007, // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
             Mipmap = 0x00020000, // DDSD_MIPMAPCOUNT
             Volume = 0x00800000, // DDSD_DEPTH
             Pitch = 0x00000008, // DDSD_PITCH
             LinearSize = 0x00080000, // DDSD_LINEARSIZE
             Height = 0x00000002, // DDSD_HEIGHT
-            Width = 0x00000004, // DDSD_WIDTH
+            Width = 0x00000004 // DDSD_WIDTH
         };
 
         /// <summary>
@@ -172,7 +176,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             Texture = 0x00001000, // DDSCAPS_TEXTURE
             Mipmap = 0x00400008,  // DDSCAPS_COMPLEX | DDSCAPS_MIPMAP
-            Cubemap = 0x00000008, // DDSCAPS_COMPLEX
+            Cubemap = 0x00000008 // DDSCAPS_COMPLEX
         }
 
         /// <summary>
@@ -190,7 +194,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             PositiveZ = 0x00004200, // DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEZ
             NegativeZ = 0x00008200, // DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ
 
-            AllFaces = PositiveX | NegativeX | PositiveY | NegativeY | PositiveZ | NegativeZ,
+            AllFaces = PositiveX | NegativeX | PositiveY | NegativeY | PositiveZ | NegativeZ
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -229,9 +233,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderDXT10
         {
-            public DXGI.Format DXGIFormat;
+            public SharpDX.DXGI.Format DXGIFormat;
             public D3D11.ResourceDimension ResourceDimension;
-            public D3D11.ResourceOptionFlags MiscFlags; 
+            public D3D11.ResourceOptionFlags MiscFlags;
             public int ArraySize;
 
             private readonly uint Unused;

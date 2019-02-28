@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,25 +21,29 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System;
+    using Core;
+    using Drawing3D;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class WirePainterHostObject : SceneObject
     {
         #region Configuration
-        private Action<WirePainter> m_paintAction;
+
         #endregion
 
         #region Direct3D resources
@@ -115,14 +119,15 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void RenderLines(RenderState renderState)
         {
-            LineRenderResources resourceData = m_localResources[renderState.DeviceIndex];
+            var resourceData = m_localResources[renderState.DeviceIndex];
 
-            if (m_paintAction != null)
+            if (PaintAction != null)
             {
-                WirePainter wirePainter = new WirePainter(renderState, resourceData);
+                var wirePainter = new WirePainter(renderState, resourceData);
+
                 try
                 {
-                    m_paintAction(wirePainter);
+                    PaintAction(wirePainter);
                 }
                 finally
                 {
@@ -131,10 +136,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
         }
 
-        public Action<WirePainter> PaintAction
-        {
-            get { return m_paintAction; }
-            set { m_paintAction = value; }
-        }
+        public Action<WirePainter> PaintAction { get; set; }
     }
 }

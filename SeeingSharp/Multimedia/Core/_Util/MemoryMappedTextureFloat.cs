@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+    using SharpDX;
+
+    #endregion
+
     public unsafe class MemoryMappedTextureFloat : IDisposable
     {
         // Some query steps, relevant for QueryForObjectID method
@@ -76,10 +77,11 @@ namespace SeeingSharp.Multimedia.Core
             int currentX = xPos;
             int currentY = yPos;
             float lastObjID = m_pointerNative[currentY * m_size.Width + currentX];
-            for (int loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
+
+            for (var loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
             {
                 // Calculate current query location
-                Point currentStep = QUERY_OBJECT_ID_STEPS[loopActQueryStep];
+                var currentStep = QUERY_OBJECT_ID_STEPS[loopActQueryStep];
                 currentX = currentX + currentStep.X;
                 currentY = currentY + currentStep.Y;
 

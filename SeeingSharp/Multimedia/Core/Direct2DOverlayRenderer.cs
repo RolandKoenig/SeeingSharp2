@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using Drawing2D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// This class makes a Direct3D 11 texture available for 2D rendering with Direct2D.
     /// </summary>
@@ -97,12 +100,12 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates all resources 
+        /// Creates all resources
         /// </summary>
         private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {
             // Calculate the screen size in device independent units
-            Size2F scaledScreenSize = new Size2F(
+            var scaledScreenSize = new Size2F(
                 (float)viewWidth / dpiScaling.ScaleFactorX,
                 (float)viewHeight / dpiScaling.ScaleFactorY);
 
@@ -114,13 +117,16 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Create the render target
-            using (DXGI.Surface dxgiSurface = m_renderTarget3D.QueryInterface<DXGI.Surface>())
+            using (var dxgiSurface = m_renderTarget3D.QueryInterface<SharpDX.DXGI.Surface>())
             {
-                D2D.BitmapProperties1 bitmapProperties = new D2D.BitmapProperties1();
-                bitmapProperties.DpiX = dpiScaling.DpiX;
-                bitmapProperties.DpiY = dpiScaling.DpiY;
-                bitmapProperties.BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw;
-                bitmapProperties.PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, D2D.AlphaMode.Premultiplied);
+                var bitmapProperties = new D2D.BitmapProperties1
+                {
+                    DpiX = dpiScaling.DpiX,
+                    DpiY = dpiScaling.DpiY,
+                    BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
+                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                        D2D.AlphaMode.Premultiplied)
+                };
 
                 m_renderTargetBitmap = new SharpDX.Direct2D1.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
                 m_renderTarget2D = m_device.DeviceContextD2D;

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class AnimationHandler : AnimationSequence
     {
-        private object m_owner;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
         /// </summary>
         /// <param name="owner">The owner object of this AnimationHandler.</param>
         public AnimationHandler(object owner)
         {
-            m_owner = owner;
+            Owner = owner;
         }
 
         /// <summary>
@@ -72,9 +67,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the owner object.
         /// </summary>
-        public object Owner
-        {
-            get { return m_owner; }
-        }
+        public object Owner { get; }
     }
 }

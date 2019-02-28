@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,29 +21,32 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    #endregion
+
     public class ObjectThread
     {
         private const int STANDARD_HEARTBEAT = 500;
 
         #region Members for thread configuration
-        private string m_name;
-        private int m_heartBeat;
+
         private bool m_createMessenger;
         #endregion
 
         #region Members for thread runtime
         private volatile ObjectThreadState m_currentState;
-        private ObjectThreadTimer m_timer;
         private Thread m_mainThread;
         private CultureInfo m_culture;
         private CultureInfo m_uiCulture;
@@ -95,13 +98,13 @@ namespace SeeingSharp.Util
             m_taskQueue = new ConcurrentQueue<Action>();
             m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
 
-            m_name = name;
-            m_heartBeat = heartBeat;
+            Name = name;
+            HeartBeat = heartBeat;
 
             m_culture = Thread.CurrentThread.CurrentCulture;
             m_uiCulture = Thread.CurrentThread.CurrentUICulture;
 
-            m_timer = new ObjectThreadTimer();
+            Timer = new ObjectThreadTimer();
             m_createMessenger = createMessenger;
         }
 
@@ -116,19 +119,23 @@ namespace SeeingSharp.Util
             m_mainLoopSynchronizeObject.Release();
 
             // Create stop semaphore
-            if (m_threadStopSynchronizeObject != null) 
+            if (m_threadStopSynchronizeObject != null)
             {
                 m_threadStopSynchronizeObject.Dispose();
                 m_threadStopSynchronizeObject = null;
             }
+
             m_threadStopSynchronizeObject = new SemaphoreSlim(0);
 
             //Go into starting state
             m_currentState = ObjectThreadState.Starting;
 
-            m_mainThread = new Thread(ObjectThreadMainMethod);
-            m_mainThread.IsBackground = true;
-            m_mainThread.Name = m_name;
+            m_mainThread = new Thread(ObjectThreadMainMethod)
+            {
+                IsBackground = true,
+                Name = Name
+            };
+
             m_mainThread.Start();
         }
 
@@ -203,7 +210,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public virtual void Trigger()
         {
-            SemaphoreSlim synchronizationObject = m_mainLoopSynchronizeObject;
+            var synchronizationObject = m_mainLoopSynchronizeObject;
+
             if (synchronizationObject != null)
             {
                 synchronizationObject.Release();
@@ -216,10 +224,14 @@ namespace SeeingSharp.Util
         /// <param name="actionToInvoke">The delegate to invoke.</param>
         public Task InvokeAsync(Action actionToInvoke)
         {
-            if (actionToInvoke == null) { throw new ArgumentNullException("actionToInvoke"); }
+            if (actionToInvoke == null)
+            {
+                throw new ArgumentNullException("actionToInvoke");
+            }
 
             //Enqueues the given action
             TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+
             m_taskQueue.Enqueue(() =>
             {
                 try
@@ -232,6 +244,7 @@ namespace SeeingSharp.Util
                     taskCompletionSource.SetException(ex);
                 }
             });
+
             Task result = taskCompletionSource.Task;
 
             //Triggers the main loop
@@ -283,7 +296,7 @@ namespace SeeingSharp.Util
                 m_mainThread.CurrentCulture = m_culture;
                 m_mainThread.CurrentUICulture = m_uiCulture;
 
-                Stopwatch stopWatch = new Stopwatch();
+                var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
                 //Set synchronization context for this thread
@@ -291,7 +304,10 @@ namespace SeeingSharp.Util
                 SynchronizationContext.SetSynchronizationContext(m_syncContext);
 
                 //Notify start process
-                try { OnStarting(EventArgs.Empty); }
+                try
+                {
+                    OnStarting(EventArgs.Empty);
+                }
                 catch (Exception ex)
                 {
                     OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
@@ -308,11 +324,11 @@ namespace SeeingSharp.Util
                         try
                         {
                             //Wait for next action to perform
-                            m_mainLoopSynchronizeObject.Wait(m_heartBeat);
+                            m_mainLoopSynchronizeObject.Wait(HeartBeat);
 
                             //Measure current time
                             stopWatch.Stop();
-                            m_timer.Add(stopWatch.Elapsed);
+                            Timer.Add(stopWatch.Elapsed);
                             stopWatch.Reset();
                             stopWatch.Start();
 
@@ -325,9 +341,12 @@ namespace SeeingSharp.Util
                             }
 
                             //Execute all tasks
-                            foreach (Action actTask in localTaskQueue)
+                            foreach (var actTask in localTaskQueue)
                             {
-                                try { actTask(); }
+                                try
+                                {
+                                    actTask();
+                                }
                                 catch (Exception ex)
                                 {
                                     OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
@@ -373,16 +392,13 @@ namespace SeeingSharp.Util
         /// </summary>
         public DateTime ThreadTime
         {
-            get { return m_timer.Now; }
+            get { return Timer.Now; }
         }
 
         /// <summary>
         /// Gets current timer of the thread.
         /// </summary>
-        public ObjectThreadTimer Timer
-        {
-            get { return m_timer; }
-        }
+        public ObjectThreadTimer Timer { get; }
 
         /// <summary>
         /// Gets the current SynchronizationContext object.
@@ -395,19 +411,12 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the name of this thread.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Gets or sets the thread's heartbeat.
         /// </summary>
-        protected int HeartBeat
-        {
-            get { return m_heartBeat; }
-            set { m_heartBeat = value; }
-        }
+        protected int HeartBeat { get; set; }
 
         //*********************************************************************
         //*********************************************************************

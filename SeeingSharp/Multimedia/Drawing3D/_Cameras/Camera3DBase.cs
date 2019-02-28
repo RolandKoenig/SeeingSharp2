@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,29 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System;
+    using Core;
+    using SharpDX;
+
+    #endregion
 
     public abstract class Camera3DBase : IAnimatableObject
     {
         #region Configuration
-        private object m_associatedRenderLoop;
+
         private Vector3 m_position = new Vector3(0, 0, 0);
         private Vector3 m_relativeTarget = new Vector3(0, 0, 1);
         private Vector3 m_upVector = new Vector3(0, 1, 0);
         private float m_hRotation = 0.0f;
         private float m_vRotation = 0.0f;
-        private int m_screenWidth;
-        private int m_screenHeight;
+
         #endregion
 
         #region State
@@ -55,15 +53,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Matrix m_project;
         private Matrix m_viewProj;
         #endregion
-        
+
         #region Additional parameters
         private float m_zNear = 0.1f;
         private float m_zFar = 500f;
-        private bool m_invertScreenMove;
+
         #endregion
 
         #region Animation
-        private AnimationHandler m_animHandler;
+
         #endregion
 
         /// <summary>
@@ -82,10 +80,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="height">Height of the renderwindow.</param>
         public Camera3DBase(int width, int height)
         {
-            m_screenWidth = width;
-            m_screenHeight = height;
+            ScreenWidth = width;
+            ScreenHeight = height;
 
-            m_animHandler = new AnimationHandler(this);
+            AnimationHandler = new AnimationHandler(this);
 
             UpdateCamera();
         }
@@ -105,9 +103,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public virtual Camera3DViewPoint GetViewPoint()
         {
-            Camera3DViewPoint result = new Camera3DViewPoint();
-            result.Position = this.Position;
-            result.Rotation = this.TargetRotation;
+            var result = new Camera3DViewPoint
+            {
+                Position = this.Position,
+                Rotation = this.TargetRotation
+            };
+
             return result;
         }
 
@@ -116,14 +117,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpdateCamera()
         {
-            Vector3 newTarget = m_relativeTarget;
+            var newTarget = m_relativeTarget;
             newTarget = Vector3.Add(newTarget, m_position);
 
-            if (m_screenHeight == 0f) { m_screenHeight = 1; }
+            if (ScreenHeight == 0f)
+            {
+                ScreenHeight = 1;
+            }
 
             // Calculate matrices
             CalculateViewProjectionMatrices(
-                m_position, newTarget, m_upVector, m_zNear, m_zFar, m_screenWidth, m_screenHeight,
+                m_position, newTarget, m_upVector, m_zNear, m_zFar, ScreenWidth, ScreenHeight,
                 out m_view, out m_project);
             m_viewProj = m_view * m_project;
 
@@ -164,8 +168,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="height">Height of the renderwindow.</param>
         public void SetScreenSize(int width, int height)
         {
-            m_screenWidth = width;
-            m_screenHeight = height;
+            ScreenWidth = width;
+            ScreenHeight = height;
 
             UpdateCamera();
         }
@@ -175,7 +179,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector2 GetScreenSize()
         {
-            return new Vector2(m_screenWidth, m_screenHeight);
+            return new Vector2(ScreenWidth, ScreenHeight);
         }
 
         /// <summary>
@@ -236,7 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpDown(float points)
         {
-            if (!m_invertScreenMove)
+            if (!InvertScreenMove)
             {
                 m_position.X = m_position.X + m_up.X * points;
                 m_position.Y = m_position.Y + m_up.Y * points;
@@ -267,7 +271,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Strave(float points)
         {
-            if (!m_invertScreenMove)
+            if (!InvertScreenMove)
             {
                 m_position.X = m_position.X + m_right.X * points;
                 m_position.Y = m_position.Y + m_right.Y * points;
@@ -294,11 +298,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             UpdateCamera();
         }
 
-        public bool InvertScreenMove
-        {
-            get { return m_invertScreenMove; }
-            set { m_invertScreenMove = value; }
-        }
+        public bool InvertScreenMove { get; set; }
 
         /// <summary>
         /// Retrieves the view-matrix.
@@ -346,7 +346,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Vector3 UpVector
         {
             get { return m_upVector; }
-            set 
+            set
             {
                 if (m_upVector != value)
                 {
@@ -367,7 +367,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get { return new Vector2(m_hRotation, m_vRotation); }
             set
             {
-                Vector2 v = value;
+                var v = value;
 
                 m_hRotation = v.X;
                 m_vRotation = v.Y;
@@ -416,7 +416,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get { return m_zNear; }
             set
-            { 
+            {
                 m_zNear = value;
                 UpdateCamera();
             }
@@ -428,7 +428,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public float ZFar
         {
             get { return m_zFar; }
-            set 
+            set
             {
                 m_zFar = value;
                 UpdateCamera();
@@ -463,20 +463,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Width of the screen.
         /// </summary>
-        public int ScreenWidth
-        {
-            get { return m_screenWidth; }
-            set { m_screenWidth = value; }
-        }
+        public int ScreenWidth { get; set; }
 
         /// <summary>
         /// Height of the screen.
         /// </summary>
-        public int ScreenHeight
-        {
-            get { return m_screenHeight; }
-            set { m_screenHeight = value; }
-        }
+        public int ScreenHeight { get; set; }
 
         /// <summary>
         /// Did the state of the camera change last time?
@@ -491,21 +483,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the current AnimationHandler for this camera.
         /// </summary>
-        public AnimationHandler AnimationHandler
-        {
-            get { return m_animHandler; }
-        }
+        public AnimationHandler AnimationHandler { get; }
 
         /// <summary>
         /// Gets the currently associated RenderLoop object.
         /// </summary>
-        public object AssociatedRenderLoop
-        {
-            get { return m_associatedRenderLoop; }
-            internal set
-            {
-                m_associatedRenderLoop = value;
-            }
-        }
+        public object AssociatedRenderLoop { get; internal set; }
     }
 }

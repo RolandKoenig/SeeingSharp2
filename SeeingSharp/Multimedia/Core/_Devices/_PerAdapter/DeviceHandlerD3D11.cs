@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using SeeingSharp.Util;
 
-//Some namespace mappings
+#region using
+
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SeeingSharp.Util;
+
+    #endregion
+
     // Overview Feature levels:
     //http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx
 
@@ -44,7 +51,7 @@ namespace SeeingSharp.Multimedia.Core
     public class DeviceHandlerD3D11
     {
         #region Resources from Direct3D11 api
-        private DXGI.Adapter1 m_dxgiAdapter;
+        private SharpDX.DXGI.Adapter1 m_dxgiAdapter;
         private D3D11.Device1 m_device1;
         private D3D11.Device3 m_device3;
         private D3D11.DeviceContext m_immediateContext;
@@ -54,19 +61,20 @@ namespace SeeingSharp.Multimedia.Core
         #region Parameters of created device
         private D3D11.DeviceCreationFlags m_creationFlags;
         private D3D.FeatureLevel m_featureLevel;
-        private HardwareDriverLevel m_driverLevel;
+
         #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
-        internal DeviceHandlerD3D11(DeviceLoadSettings deviceLoadSettings, DXGI.Adapter1 dxgiAdapter)
+        internal DeviceHandlerD3D11(DeviceLoadSettings deviceLoadSettings, SharpDX.DXGI.Adapter1 dxgiAdapter)
         {
             m_dxgiAdapter = dxgiAdapter;
 
             // Define possible create flags
-            D3D11.DeviceCreationFlags createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
-            D3D11.DeviceCreationFlags createFlags = D3D11.DeviceCreationFlags.None;
+            var createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
+            var createFlags = D3D11.DeviceCreationFlags.None;
+
             if (deviceLoadSettings.DebugEnabled)
             {
                 createFlagsBgra |= D3D11.DeviceCreationFlags.Debug;
@@ -102,17 +110,18 @@ namespace SeeingSharp.Multimedia.Core
             // Try to create the device, each defined configuration step by step
             foreach (Tuple<D3D.FeatureLevel, D3D11.DeviceCreationFlags, HardwareDriverLevel> actInitParameters in initParameterQueue)
             {
-                D3D.FeatureLevel featureLevel = actInitParameters.Item1;
-                D3D11.DeviceCreationFlags direct3D11Flags = actInitParameters.Item2;
-                HardwareDriverLevel actDriverLevel = actInitParameters.Item3;
+                var featureLevel = actInitParameters.Item1;
+                var direct3D11Flags = actInitParameters.Item2;
+                var actDriverLevel = actInitParameters.Item3;
 
                 try
                 {
                     // Try to create the device using current parameters
-                    using (D3D11.Device device = new D3D11.Device(dxgiAdapter, direct3D11Flags, featureLevel))
+                    using (var device = new D3D11.Device(dxgiAdapter, direct3D11Flags, featureLevel))
                     {
                         m_device1 = device.QueryInterface<D3D11.Device1>();
                         m_device3 = SeeingSharpUtil.TryExecute(() => m_device1.QueryInterface<D3D11.Device3>());
+
                         if(m_device3 != null)
                         {
                             m_immediateContext3 = m_device3.ImmediateContext3;
@@ -122,16 +131,16 @@ namespace SeeingSharp.Multimedia.Core
                     // Device successfully created, save all parameters and break this loop
                     m_featureLevel = featureLevel;
                     m_creationFlags = direct3D11Flags;
-                    m_driverLevel = actDriverLevel;
+                    DriverLevel = actDriverLevel;
                     break;
                 }
                 catch (Exception) { }
             }
 
             // Throw exception on failure
-            if (m_device1 == null) 
-            { 
-                throw new SeeingSharpGraphicsException("Unable to initialize d3d11 device!"); 
+            if (m_device1 == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to initialize d3d11 device!");
             }
 
             // Get immediate context from the device
@@ -249,10 +258,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the driver level.
         /// </summary>
-        public HardwareDriverLevel DriverLevel
-        {
-            get { return m_driverLevel; }
-        }
+        public HardwareDriverLevel DriverLevel { get; }
 
         /// <summary>
         /// Are Direct2D textures possible?

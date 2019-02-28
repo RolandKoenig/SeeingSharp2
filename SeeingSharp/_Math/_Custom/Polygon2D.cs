@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using SharpDX;
+
+    #endregion
+
     public class Polygon2D
     {
         private Vector2[] m_vertices;
-        private ReadOnlyCollection<Vector2> m_verticesPublic;
         private Lazy<BoundingBox2D> m_boundingBox2D;
         private Lazy<EdgeOrder> m_edgeOrder;
 
@@ -57,7 +58,7 @@ namespace SeeingSharp
                 m_vertices = newArray;
             }
 
-            m_verticesPublic = new ReadOnlyCollection<Vector2>(m_vertices);
+            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
             m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
             m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
         }
@@ -86,9 +87,10 @@ namespace SeeingSharp
             //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
             //Find the hole vertex with the highest x value
-            Vector2 holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
+            var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
             int holeVertexIndexWithHighestX = -1;
-            for (int loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
+
+            for (var loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
             {
                 if (actHole.m_vertices[loopVertex].X > holeVertexWithHighestX.X)
                 {
@@ -96,23 +98,30 @@ namespace SeeingSharp
                     holeVertexIndexWithHighestX = loopVertex;
                 }
             }
-            if (cutPoints != null) { cutPoints.Add(holeVertexWithHighestX); }
+
+            if (cutPoints != null)
+            {
+                cutPoints.Add(holeVertexWithHighestX);
+            }
 
             //Define a ray from the found vertex pointing in x direction
-            Ray2D ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
+            var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
             //Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
             int actLineIndex = 0;
-            foreach (Line2D actLine in this.Lines)
+
+            foreach (var actLine in this.Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
+
                 if (actIntersection.Item1)
                 {
-                    Ray2D rayToIntersectionPoint = new Ray2D(
+                    var rayToIntersectionPoint = new Ray2D(
                         ray2D.Origin,
                         Vector2.Normalize(actIntersection.Item2 - ray2D.Origin));
                     float lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
+
                     if ((lengthToIntersectionPoint > 0f) &&
                         (rayToIntersectionPoint.EqualsWithTolerance(ray2D)))
                     {
@@ -138,7 +147,7 @@ namespace SeeingSharp
                 throw new SeeingSharpException("No point found on which given polygons can be combinded!");
             }
 
-            //Now generate result polygon 
+            //Now generate result polygon
             List<Vector2> resultBuilder = new List<Vector2>(this.m_vertices.Length + actHole.m_vertices.Length + 2);
             for (int loopFillVertex = 0; loopFillVertex < this.m_vertices.Length; loopFillVertex++)
             {
@@ -207,10 +216,10 @@ namespace SeeingSharp
             }
             else
             {
-                Vector2 minimum = new Vector2(float.MaxValue, float.MaxValue);
-                Vector2 maximum = new Vector2(float.MinValue, float.MinValue);
+                var minimum = new Vector2(float.MaxValue, float.MaxValue);
+                var maximum = new Vector2(float.MinValue, float.MinValue);
 
-                for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+                for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
                 {
                     if (m_vertices[loopVertex].X < minimum.X) { minimum.X = m_vertices[loopVertex].X; }
                     if (m_vertices[loopVertex].Y < minimum.Y) { minimum.Y = m_vertices[loopVertex].Y; }
@@ -228,7 +237,7 @@ namespace SeeingSharp
         private EdgeOrder CalculateEdgeOrder()
         {
             //Calculation method taken from http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
-            //Formula: 
+            //Formula:
             // For each Edge: (x2-x1)(y2+y1)
             // Take sum from each result
             // If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise
@@ -285,10 +294,7 @@ namespace SeeingSharp
         /// <summary>
         /// Gets all vertices defined by this polygon.
         /// </summary>
-        public ReadOnlyCollection<Vector2> Vertices
-        {
-            get { return m_verticesPublic; }
-        }
+        public ReadOnlyCollection<Vector2> Vertices { get; }
 
         /// <summary>
         /// Gets the bounding box of this polygon.

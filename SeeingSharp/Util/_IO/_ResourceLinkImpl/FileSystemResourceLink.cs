@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System.IO;
+    using System.Threading.Tasks;
+    using Checking;
+
+    #endregion
+
     public class FileSystemResourceLink : ResourceLink
     {
-        private string m_filePath;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
         /// </summary>
@@ -43,7 +42,7 @@ namespace SeeingSharp.Util
         {
             filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
 
-            m_filePath = filePath;
+            FilePath = filePath;
         }
 
         /// <summary>
@@ -59,12 +58,12 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "File-Resource: " + m_filePath;
+            return "File-Resource: " + FilePath;
         }
 
         public override bool Exists()
         {
-            return File.Exists(m_filePath);
+            return File.Exists(FilePath);
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace SeeingSharp.Util
             }
 
             // Return new ResourceLink pointing to the other file
-            string directoryName = Path.GetDirectoryName(m_filePath);
+            string directoryName = Path.GetDirectoryName(FilePath);
             if (!string.IsNullOrEmpty(directoryName))
             {
                 return new FileSystemResourceLink(Path.Combine(directoryName, subdirectoryPath + newFileName));
@@ -100,7 +99,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            return new FileStream(m_filePath, FileMode.Create, FileAccess.Write);
+            return new FileStream(FilePath, FileMode.Create, FileAccess.Write);
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Task<Stream> OpenInputStreamAsync()
         {
-            return Task.FromResult<Stream>(File.OpenRead(m_filePath));
+            return Task.FromResult<Stream>(File.OpenRead(FilePath));
         }
 
         /// <summary>
@@ -116,7 +115,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            return File.OpenRead(m_filePath);
+            return File.OpenRead(FilePath);
         }
 
         /// <summary>
@@ -124,20 +123,17 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string FileExtension
         {
-            get { return base.GetExtensionFromFileName(m_filePath); }
+            get { return base.GetExtensionFromFileName(FilePath); }
         }
 
         /// <summary>
         /// Gets the path to the file.
         /// </summary>
-        public string FilePath
-        {
-            get { return m_filePath; }
-        }
+        public string FilePath { get; }
 
         public string FileName
         {
-            get { return Path.GetFileName(m_filePath); }
+            get { return Path.GetFileName(FilePath); }
         }
 
         /// <summary>

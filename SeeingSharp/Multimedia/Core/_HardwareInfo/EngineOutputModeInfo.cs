@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,45 +21,39 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-// Namespace mappings
-using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+
+    #endregion
+
     public struct EngineOutputModeInfo : IEquatable<EngineOutputModeInfo>
     {
         public static readonly EngineOutputModeInfo Empty = default(EngineOutputModeInfo);
 
-        private EngineOutputInfo m_hostOutput;
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        private int m_refreshRateNumerator;
-        private int m_refreshRateDenominator;
-
-        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, DXGI.ModeDescription modeDescription)
+        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, SharpDX.DXGI.ModeDescription modeDescription)
         {
-            m_hostOutput = hostOutput;
-            m_pixelWidth = modeDescription.Width;
-            m_pixelHeight = modeDescription.Height;
-            m_refreshRateNumerator = modeDescription.RefreshRate.Numerator;
-            m_refreshRateDenominator = modeDescription.RefreshRate.Denominator;
+            HostOutput = hostOutput;
+            PixelWidth = modeDescription.Width;
+            PixelHeight = modeDescription.Height;
+            RefreshRateNumerator = modeDescription.RefreshRate.Numerator;
+            RefreshRateDenominator = modeDescription.RefreshRate.Denominator;
         }
 
         public override string ToString()
         {
-            return $"{m_pixelWidth} x {m_pixelHeight}  {m_refreshRateNumerator / m_refreshRateDenominator} Hz";
+            return $"{PixelWidth} x {PixelHeight}  {RefreshRateNumerator / RefreshRateDenominator} Hz";
         }
 
         public override int GetHashCode()
         {
-            return m_pixelWidth.GetHashCode() +
-                m_pixelHeight.GetHashCode() +
-                m_refreshRateNumerator.GetHashCode() +
-                m_refreshRateDenominator.GetHashCode();
+            return PixelWidth.GetHashCode() +
+                PixelHeight.GetHashCode() +
+                RefreshRateNumerator.GetHashCode() +
+                RefreshRateDenominator.GetHashCode();
         }
 
         /// <summary>
@@ -72,10 +66,10 @@ namespace SeeingSharp.Multimedia.Core
         public bool Equals(EngineOutputModeInfo other)
         {
             return
-                (m_pixelWidth == other.m_pixelWidth) &&
-                (m_pixelHeight == other.m_pixelHeight) &&
-                (m_refreshRateNumerator == other.m_refreshRateNumerator) &&
-                (m_refreshRateDenominator == other.m_refreshRateDenominator);
+                (PixelWidth == other.PixelWidth) &&
+                (PixelHeight == other.PixelHeight) &&
+                (RefreshRateNumerator == other.RefreshRateNumerator) &&
+                (RefreshRateDenominator == other.RefreshRateDenominator);
         }
 
         /// <summary>
@@ -96,34 +90,19 @@ namespace SeeingSharp.Multimedia.Core
             return Equals((EngineOutputInfo)value);
         }
 
-        public EngineOutputInfo HostOutput
-        {
-            get { return m_hostOutput; }
-        }
+        public EngineOutputInfo HostOutput { get; }
 
-        public int PixelWidth
-        {
-            get { return m_pixelWidth; }
-        }
+        public int PixelWidth { get; }
 
-        public int PixelHeight
-        {
-            get { return m_pixelHeight; }
-        }
+        public int PixelHeight { get; }
 
         public int PixelCount
         {
-            get { return m_pixelWidth * m_pixelHeight; }
+            get { return PixelWidth * PixelHeight; }
         }
 
-        public int RefreshRateNumerator
-        {
-            get { return m_refreshRateNumerator; }
-        }
+        public int RefreshRateNumerator { get; }
 
-        public int RefreshRateDenominator
-        {
-            get { return m_refreshRateDenominator; }
-        }
+        public int RefreshRateDenominator { get; }
     }
 }

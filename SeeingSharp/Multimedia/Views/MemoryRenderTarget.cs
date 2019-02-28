@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,29 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.ComponentModel;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Core;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     //For handling of staging resource see
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
@@ -48,7 +54,7 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Reference to the render loop
-        private RenderLoop m_renderLoop;
+
         #endregion
 
         #region All needed direct3d resources
@@ -81,9 +87,9 @@ namespace SeeingSharp.Multimedia.Views
             if (syncContext == null) { syncContext = new SynchronizationContext(); }
 
             //Create the RenderLoop object
-            m_renderLoop = new RenderLoop(syncContext, this);
-            m_renderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
-            m_renderLoop.RegisterRenderLoop();
+            RenderLoop = new RenderLoop(syncContext, this);
+            RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
+            RenderLoop.RegisterRenderLoop();
         }
 
         /// <summary>
@@ -94,11 +100,11 @@ namespace SeeingSharp.Multimedia.Views
             if (!this.IsOperational) { return Task.Delay(100); }
 
             TaskCompletionSource<object> result = new TaskCompletionSource<object>();
-            m_renderLoop.EnqueueAfterPresentAction(() =>
+            RenderLoop.EnqueueAfterPresentAction(() =>
             {
                 result.TrySetResult(null);
             });
-            
+
             return result.Task;
         }
 
@@ -107,7 +113,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void Dispose()
         {
-            m_renderLoop.Dispose();
+            RenderLoop.Dispose();
         }
 
         /// <summary>
@@ -138,15 +144,15 @@ namespace SeeingSharp.Multimedia.Views
             m_deviceContext = m_device.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_renderTarget = GraphicsHelper.CreateRenderTargetTexture(device, width, height, m_renderLoop.ViewConfiguration);
+            m_renderTarget = GraphicsHelper.CreateRenderTargetTexture(device, width, height, RenderLoop.ViewConfiguration);
             m_renderTargetView = new D3D11.RenderTargetView(m_device, m_renderTarget);
 
             //Create the depth buffer
-            m_renderTargetDepth = GraphicsHelper.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
+            m_renderTargetDepth = GraphicsHelper.CreateDepthBufferTexture(device, width, height, RenderLoop.ViewConfiguration);
             m_renderTargetDepthView = new D3D11.DepthStencilView(m_device, m_renderTargetDepth);
 
             //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
 
             //Return all generated objects
             return Tuple.Create(m_renderTarget, m_renderTargetView, m_renderTargetDepth, m_renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);
@@ -157,15 +163,18 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
         {
-            CancelEventArgs eventArgs = new CancelEventArgs(false);
-            if (BeforeRender != null) { BeforeRender(this, eventArgs); }
+            var eventArgs = new CancelEventArgs(false);
+
+            if (BeforeRender != null)
+            {
+                BeforeRender(this, eventArgs);
+            }
 
             return !eventArgs.Cancel;
         }
 
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
-            
         }
 
         /// <summary>
@@ -191,38 +200,35 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get { return m_renderLoop.Scene; }
-            set { m_renderLoop.SetScene(value); }
+            get { return RenderLoop.Scene; }
+            set { RenderLoop.SetScene(value); }
         }
 
         public Camera3DBase Camera
         {
-            get { return m_renderLoop.Camera; }
-            set { m_renderLoop.Camera = value; }
+            get { return RenderLoop.Camera; }
+            set { RenderLoop.Camera = value; }
         }
 
         public Color4 ClearColor
         {
-            get { return m_renderLoop.ClearColor; }
-            set { m_renderLoop.ClearColor = value; }
+            get { return RenderLoop.ClearColor; }
+            set { RenderLoop.ClearColor = value; }
         }
 
         public SynchronizationContext UISynchronizationContext
         {
-            get { return m_renderLoop.UISynchronizationContext; }
+            get { return RenderLoop.UISynchronizationContext; }
         }
 
         /// <summary>
         /// Gets the renderloop object.
         /// </summary>
-        public RenderLoop RenderLoop
-        {
-            get { return m_renderLoop; }
-        }
+        public RenderLoop RenderLoop { get; }
 
         public bool IsOperational
         {
-            get { return m_renderLoop.IsOperational; }
+            get { return RenderLoop.IsOperational; }
         }
     }
 }

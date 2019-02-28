@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,32 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Checking;
+    using Drawing2D;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public partial class Scene
     {
         #region Constants
@@ -48,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_initialized;
         private string m_name;
         private List<SceneLayer> m_sceneLayers;
-        private ReadOnlyCollection<SceneLayer> m_sceneLayersPublic;
+
         #endregion
 
         #region Some other logical parts of the scene object
@@ -60,9 +69,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region Members for 2D rendering
-        private Graphics2DTransformMode m_transformMode2D;
-        private Size2F m_virtualScreenSize2D;
-        private Matrix3x2 m_customTransform2D;
+
         private List<Custom2DDrawingLayer> m_drawing2DLayers;
         #endregion Members for 2D rendering
 
@@ -94,15 +101,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_perFrameData = new CBPerFrame();
 
-            m_transformMode2D = Graphics2DTransformMode.Custom;
-            m_customTransform2D = Matrix3x2.Identity;
-            m_virtualScreenSize2D = new Size2F();
+            TransformMode2D = Graphics2DTransformMode.Custom;
+            CustomTransform2D = Matrix3x2.Identity;
+            VirtualScreenSize2D = new Size2F();
 
             m_sceneComponents = new SceneComponentFlyweight(this);
 
             m_sceneLayers = new List<SceneLayer>();
             m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
-            m_sceneLayersPublic = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
+            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
 
             m_drawing2DLayers = new List<Custom2DDrawingLayer>();
 
@@ -276,7 +283,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             manipulatorAction.EnsureNotNull(nameof(manipulatorAction));
 
-            SceneManipulator manipulator = new SceneManipulator(this);
+            var manipulator = new SceneManipulator(this);
+
             return this.PerformBeforeUpdateAsync(() =>
             {
                 try
@@ -305,11 +313,16 @@ namespace SeeingSharp.Multimedia.Core
 
             InitializeResourceDictionaries();
 
-            if (resourceKey == NamedOrGenericKey.Empty) { resourceKey = GraphicsCore.GetNextGenericResourceKey(); }
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            if (resourceKey == NamedOrGenericKey.Empty)
+            {
+                resourceKey = GraphicsCore.GetNextGenericResourceKey();
+            }
+
+            foreach (var actResourceDict in m_registeredResourceDicts)
             {
                 actResourceDict.AddResource(resourceKey, resourceFactory());
             }
+
             return resourceKey;
         }
 
@@ -319,11 +332,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceKey">The key to check for.</param>
         internal bool ContainsResource(NamedOrGenericKey resourceKey)
         {
-            if (resourceKey == NamedOrGenericKey.Empty) { throw new ArgumentException("Given resource key is empty!"); }
-
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            if (resourceKey == NamedOrGenericKey.Empty)
             {
-                if (actResourceDict.ContainsResource(resourceKey)) { return true; }
+                throw new ArgumentException("Given resource key is empty!");
+            }
+
+            foreach (var actResourceDict in m_registeredResourceDicts)
+            {
+                if (actResourceDict.ContainsResource(resourceKey))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -342,10 +361,14 @@ namespace SeeingSharp.Multimedia.Core
 
             InitializeResourceDictionaries();
 
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            foreach (var actResourceDict in m_registeredResourceDicts)
             {
-                ResourceType actResource = actResourceDict.GetResource<ResourceType>(resourceKey);
-                if (actResource == null) { throw new SeeingSharpGraphicsException("Resource " + resourceKey + " of type " + typeof(ResourceType).FullName + " not found on device " + actResourceDict.Device.AdapterDescription + "!"); }
+                var actResource = actResourceDict.GetResource<ResourceType>(resourceKey);
+
+                if (actResource == null)
+                {
+                    throw new SeeingSharpGraphicsException("Resource " + resourceKey + " of type " + typeof(ResourceType).FullName + " not found on device " + actResourceDict.Device.AdapterDescription + "!");
+                }
 
                 manipulateAction(actResource);
             }
@@ -359,7 +382,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             InitializeResourceDictionaries();
 
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            foreach (var actResourceDict in m_registeredResourceDicts)
             {
                 actResourceDict.RemoveResource(resourceKey);
             }
@@ -376,14 +399,16 @@ namespace SeeingSharp.Multimedia.Core
 
             // Query for all objects below the cursor
             List<Tuple<SceneObject, float>> pickedObjects = new List<Tuple<SceneObject, float>>();
-            foreach (SceneLayer actLayer in m_sceneLayers)
+
+            foreach (var actLayer in m_sceneLayers)
             {
-                foreach (SceneObject actObject in actLayer.Objects)
+                foreach (var actObject in actLayer.Objects)
                 {
                     if (!actObject.IsVisible(viewInformation)) { continue; }
                     if (!actObject.IsPickingTestVisible) { continue; }
 
                     float actDistance = actObject.Pick(rayStart, rayDirection, viewInformation, pickingOptions);
+
                     if (!float.IsNaN(actDistance))
                     {
                         pickedObjects.Add(Tuple.Create(actObject, actDistance));
@@ -447,8 +472,12 @@ namespace SeeingSharp.Multimedia.Core
 
             InitializeResourceDictionaries();
 
-            SceneLayer layerObject = GetLayer(layer);
-            if (!layerObject.AddObject(sceneObject)) { return null; }
+            var layerObject = GetLayer(layer);
+
+            if (!layerObject.AddObject(sceneObject))
+            {
+                return null;
+            }
 
             return sceneObject;
         }
@@ -468,7 +497,8 @@ namespace SeeingSharp.Multimedia.Core
 
             // Register device on this scene if not done before
             //  -> This registration is forever, no deregister is made!
-            EngineDevice givenDevice = viewInformation.Device;
+            var givenDevice = viewInformation.Device;
+
             if (!m_registeredResourceDicts.HasObjectAt(givenDevice.DeviceIndex))
             {
                 throw new SeeingSharpGraphicsException("ResourceDictionary of device " + givenDevice.AdapterDescription + " not loaded in this scene!");
@@ -483,10 +513,12 @@ namespace SeeingSharp.Multimedia.Core
 
             // Register this view on this scene and on all layers
             int viewIndex = m_registeredViews.AddObject(viewInformation);
-            foreach (SceneLayer actLayer in m_sceneLayers)
+
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.RegisterView(viewIndex, viewInformation, m_registeredResourceDicts[givenDevice.DeviceIndex]);
             }
+
             viewInformation.ViewIndex = viewIndex;
 
             // Mark this scene for deletion if we don't have any other view registered
@@ -526,7 +558,8 @@ namespace SeeingSharp.Multimedia.Core
             // Deregister the view on this scene and all layers
             int viewIndex = m_registeredViews.IndexOf(viewInformation);
             m_registeredViews.RemoveObject(viewInformation);
-            foreach (SceneLayer actLayer in m_sceneLayers)
+
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.DeregisterView(viewIndex, viewInformation);
             }
@@ -550,12 +583,19 @@ namespace SeeingSharp.Multimedia.Core
         {
             name.EnsureNotNullOrEmpty(nameof(name));
 
-            SceneLayer currentLayer = TryGetLayer(name);
-            if (currentLayer != null) { throw new ArgumentException("There is already a SceneLayer with the given name!", "name"); }
+            var currentLayer = TryGetLayer(name);
+
+            if (currentLayer != null)
+            {
+                throw new ArgumentException("There is already a SceneLayer with the given name!", "name");
+            }
 
             // Create the new layer
-            SceneLayer newLayer = new SceneLayer(name, this);
-            newLayer.OrderID = m_sceneLayers.Max((actLayer) => actLayer.OrderID) + 1;
+            var newLayer = new SceneLayer(name, this)
+            {
+                OrderID = m_sceneLayers.Max((actLayer) => actLayer.OrderID) + 1
+            };
+
             m_sceneLayers.Add(newLayer);
 
             // Sort local layer list
@@ -581,7 +621,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            SceneLayer layerToRemove = TryGetLayer(layerName);
+            var layerToRemove = TryGetLayer(layerName);
+
             if (layerToRemove != null)
             {
                 RemoveLayer(layerToRemove);
@@ -633,7 +674,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            SceneLayer layerToClear = GetLayer(layerName);
+            var layerToClear = GetLayer(layerName);
             ClearLayer(layerToClear);
         }
 
@@ -659,11 +700,17 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            if (string.IsNullOrEmpty(layerName)) { throw new ArgumentException("Given layer name is not valid!", "layerName"); }
-
-            foreach (SceneLayer actLayer in m_sceneLayers)
+            if (string.IsNullOrEmpty(layerName))
             {
-                if (actLayer.Name == layerName) { return actLayer; }
+                throw new ArgumentException("Given layer name is not valid!", "layerName");
+            }
+
+            foreach (var actLayer in m_sceneLayers)
+            {
+                if (actLayer.Name == layerName)
+                {
+                    return actLayer;
+                }
             }
 
             return null;
@@ -677,11 +724,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            SceneLayer result = TryGetLayer(layerName);
+            var result = TryGetLayer(layerName);
+
             if (result == null)
             {
                 throw new ArgumentException($"Layer {layerName} not found!");
             }
+
             return result;
         }
 
@@ -692,9 +741,9 @@ namespace SeeingSharp.Multimedia.Core
         internal void Clear(bool clearResources)
         {
             // Clear all layers
-            for (int loop = 0; loop < m_sceneLayers.Count; loop++)
+            for (var loop = 0; loop < m_sceneLayers.Count; loop++)
             {
-                SceneLayer actLayer = m_sceneLayers[loop];
+                var actLayer = m_sceneLayers[loop];
                 actLayer.ClearObjects();
 
                 if (actLayer.Name != DEFAULT_LAYER_NAME)
@@ -710,13 +759,14 @@ namespace SeeingSharp.Multimedia.Core
             // Clear all resources
             if (clearResources)
             {
-                foreach (ResourceDictionary actDictionary in m_registeredResourceDicts)
+                foreach (var actDictionary in m_registeredResourceDicts)
                 {
                     actDictionary.Clear();
                 }
+
                 m_renderParameters.Clear();
 
-                for (int loop = 0; loop < m_sceneLayers.Count; loop++)
+                for (var loop = 0; loop < m_sceneLayers.Count; loop++)
                 {
                     SceneLayer actLayer = m_sceneLayers[loop];
                     actLayer.ClearResources();
@@ -728,7 +778,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
 
-            foreach(SceneObject actObject in sceneObjects)
+            foreach(var actObject in sceneObjects)
             {
                 this.Remove(actObject);
             }
@@ -738,7 +788,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
 
-            foreach (SceneObject actObject in sceneObjects)
+            foreach (var actObject in sceneObjects)
             {
                 this.Remove(actObject, layerName);
             }
@@ -752,7 +802,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
-            foreach (SceneLayer actLayer in m_sceneLayers)
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.RemoveObject(sceneObject);
             }
@@ -768,7 +818,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureNotNull(nameof(sceneObject));
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            SceneLayer layerObject = GetLayer(layerName);
+            var layerObject = GetLayer(layerName);
             layerObject.RemoveObject(sceneObject);
         }
 
@@ -839,16 +889,18 @@ namespace SeeingSharp.Multimedia.Core
                 m_perFrameData.Time = m_perFrameData.Time % SeeingSharpConstants.MAX_PER_FRAME_TIME_VALUE;
             }
 
-            // Update all scene components first 
+            // Update all scene components first
             //  These may trigger some further manipulation actions
             m_sceneComponents.UpdateSceneComponents(updateState);
 
             // Invoke all async action attached to this scene
             int asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
+
             if (asyncActionsBeforeUpdateCount > 0)
             {
                 Action actAsyncAction = null;
                 int actIndex = 0;
+
                 while ((actIndex < asyncActionsBeforeUpdateCount) &&
                        m_asyncInvokesBeforeUpdate.Dequeue(out actAsyncAction))
                 {
@@ -858,9 +910,9 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Render all renderable resources
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            foreach (var actResourceDict in m_registeredResourceDicts)
             {
-                foreach (IRenderableResource actRenderableResource in actResourceDict.RenderableResources)
+                foreach (var actRenderableResource in actResourceDict.RenderableResources)
                 {
                     if (actRenderableResource.IsLoaded)
                     {
@@ -870,7 +922,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update all standard objects.
-            foreach (SceneLayer actLayer in m_sceneLayers)
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.Update(updateState);
             }
@@ -883,6 +935,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Invoke all async action attached to this scene
             Action actAsyncAction = null;
+
             while (m_asyncInvokesUpdateBesideRendering.Dequeue(out actAsyncAction))
             {
                 actAsyncAction();
@@ -891,7 +944,7 @@ namespace SeeingSharp.Multimedia.Core
             // Reset all filter flags before continue to next step
             foreach (var actView in m_registeredViews)
             {
-                foreach (SceneObjectFilter actFilter in actView.Filters)
+                foreach (var actFilter in actView.Filters)
                 {
                     actFilter.ConfigurationChanged = actFilter.ConfigurationChangedUI;
                     actFilter.ConfigurationChangedUI = false;
@@ -899,7 +952,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Performs update logic beside rendering
-            foreach (SceneLayer actLayer in m_sceneLayers)
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.UpdateBesideRender(updateState);
             }
@@ -915,15 +968,19 @@ namespace SeeingSharp.Multimedia.Core
             //renderState.LastRenderBlockID = -1;
 
             // Get current resource dictionary
-            ResourceDictionary resources = m_registeredResourceDicts[renderState.DeviceIndex];
-            if (resources == null) { throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!"); }
+            var resources = m_registeredResourceDicts[renderState.DeviceIndex];
+
+            if (resources == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");
+            }
 
             // Unload all resources that are marked for unloading
             resources.UnloadAllMarkedResources();
 
             // Render all renderable resources first
             // (ensure here that we don't corrup device state)
-            foreach (IRenderableResource actRenderableResource in resources.RenderableResources)
+            foreach (var actRenderableResource in resources.RenderableResources)
             {
                 if (actRenderableResource.IsLoaded)
                 {
@@ -939,12 +996,16 @@ namespace SeeingSharp.Multimedia.Core
         internal void Render(RenderState renderState)
         {
             // Get current resource dictionary
-            ResourceDictionary resources = m_registeredResourceDicts[renderState.DeviceIndex];
-            if (resources == null) { throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!"); }
+            var resources = m_registeredResourceDicts[renderState.DeviceIndex];
+
+            if (resources == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");
+            }
 
             // Apply default states on the device
-            DefaultResources defaultResource = resources.DefaultResources;
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var defaultResource = resources.DefaultResources;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             deviceContext.OutputMerger.BlendState = defaultResource.DefaultBlendState;
             deviceContext.OutputMerger.DepthStencilState = defaultResource.DepthStencilStateDefault;
 
@@ -959,7 +1020,8 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Get or create RenderParamters object on scene level
-            SceneRenderParameters renderParameters = m_renderParameters[renderState.DeviceIndex];
+            var renderParameters = m_renderParameters[renderState.DeviceIndex];
+
             if (renderParameters == null)
             {
                 renderParameters = resources.GetResourceAndEnsureLoaded<SceneRenderParameters>(
@@ -979,13 +1041,13 @@ namespace SeeingSharp.Multimedia.Core
                 renderParameters.Apply(renderState);
 
                 //Prepare rendering on each layer
-                foreach (SceneLayer actLayer in m_sceneLayers)
+                foreach (var actLayer in m_sceneLayers)
                 {
                     actLayer.PrepareRendering(renderState);
                 }
 
                 //Render all layers in current order
-                foreach (SceneLayer actLayer in m_sceneLayers)
+                foreach (var actLayer in m_sceneLayers)
                 {
                     if (actLayer.CountObjects > 0)
                     {
@@ -1001,25 +1063,30 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The current render state.</param>
         internal void Render2DOverlay(RenderState renderState)
         {
-            Graphics2D graphics = renderState.Graphics2D;
+            var graphics = renderState.Graphics2D;
+
             graphics.PushTransformSettings(new Graphics2DTransformSettings()
             {
-                CustomTransform = m_customTransform2D,
-                TransformMode = m_transformMode2D,
-                VirtualScreenSize = m_virtualScreenSize2D
+                CustomTransform = CustomTransform2D,
+                TransformMode = TransformMode2D,
+                VirtualScreenSize = VirtualScreenSize2D
             });
 
             try
             {
                 // Get current resource dictionary
-                ResourceDictionary resources = m_registeredResourceDicts[renderState.DeviceIndex];
-                if (resources == null) { throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!"); }
+                var resources = m_registeredResourceDicts[renderState.DeviceIndex];
+
+                if (resources == null)
+                {
+                    throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");
+                }
 
                 // Start rendering
                 using (renderState.PushScene(this, resources))
                 {
                     //Render all layers in current order
-                    foreach (SceneLayer actLayer in m_sceneLayers)
+                    foreach (var actLayer in m_sceneLayers)
                     {
                         if (actLayer.CountObjects > 0)
                         {
@@ -1029,7 +1096,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Render drawing layers
-                foreach (Custom2DDrawingLayer actDrawingLayer in m_drawing2DLayers)
+                foreach (var actDrawingLayer in m_drawing2DLayers)
                 {
                     actDrawingLayer.Draw2DInternal(renderState.Graphics2D);
                 }
@@ -1046,13 +1113,13 @@ namespace SeeingSharp.Multimedia.Core
         internal void UnloadResources()
         {
             //Unload resources of all scene objects
-            foreach (SceneLayer actLayer in m_sceneLayers)
+            foreach (var actLayer in m_sceneLayers)
             {
                 actLayer.UnloadResources();
             }
 
             //Unload resources of all resources
-            foreach (ResourceDictionary actResourceDict in m_registeredResourceDicts)
+            foreach (var actResourceDict in m_registeredResourceDicts)
             {
                 actResourceDict.UnloadResources();
             }
@@ -1071,7 +1138,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Create all ResourceDictionary objects
-            foreach (EngineDevice actDevice in GraphicsCore.Current.LoadedDevices)
+            foreach (var actDevice in GraphicsCore.Current.LoadedDevices)
             {
                 m_registeredResourceDicts.AddObject(
                     new ResourceDictionary(actDevice),
@@ -1092,7 +1159,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all layers.
         /// </summary>
-        internal ReadOnlyCollection<SceneLayer> Layers => m_sceneLayersPublic;
+        internal ReadOnlyCollection<SceneLayer> Layers { get; }
 
         /// <summary>
         /// Gets total count of objects within the scene.
@@ -1102,10 +1169,12 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 int result = 0;
-                foreach (SceneLayer actLayer in m_sceneLayers)
+
+                foreach (var actLayer in m_sceneLayers)
                 {
                     result += actLayer.CountObjects;
                 }
+
                 return result;
             }
         }
@@ -1119,9 +1188,16 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                ResourceDictionary firstResourceDict = m_registeredResourceDicts.FirstOrDefault();
-                if (firstResourceDict != null) { return firstResourceDict.Count; }
-                else { return 0; }
+                var firstResourceDict = m_registeredResourceDicts.FirstOrDefault();
+
+                if (firstResourceDict != null)
+                {
+                    return firstResourceDict.Count;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
 
@@ -1144,23 +1220,11 @@ namespace SeeingSharp.Multimedia.Core
             set;
         }
 
-        public Graphics2DTransformMode TransformMode2D
-        {
-            get { return m_transformMode2D; }
-            set { m_transformMode2D = value; }
-        }
+        public Graphics2DTransformMode TransformMode2D { get; set; }
 
-        public Size2F VirtualScreenSize2D
-        {
-            get { return m_virtualScreenSize2D; }
-            set { m_virtualScreenSize2D = value; }
-        }
+        public Size2F VirtualScreenSize2D { get; set; }
 
-        public Matrix3x2 CustomTransform2D
-        {
-            get { return m_customTransform2D; }
-            set { m_customTransform2D = value; }
-        }
+        public Matrix3x2 CustomTransform2D { get; set; }
 
         internal SceneRelatedUpdateState CachedUpdateState
         {

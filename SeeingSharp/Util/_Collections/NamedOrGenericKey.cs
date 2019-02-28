@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+
+    #endregion
+
     public struct NamedOrGenericKey : IEquatable<NamedOrGenericKey>, IComparable<NamedOrGenericKey>
     {
         public static readonly NamedOrGenericKey Empty = new NamedOrGenericKey();
 
-        private long m_genericKey;
-        private string m_nameKey;
         private string m_hint;
         private int m_hashCode;
 
@@ -42,8 +45,8 @@ namespace SeeingSharp.Util
         {
             if (keyValue == 0) { throw new ArgumentException("Key value can not be 0!"); }
 
-            m_genericKey = keyValue;
-            m_nameKey = null;
+            GenericKey = keyValue;
+            NameKey = null;
             m_hashCode = keyValue.GetHashCode();
             m_hint = null;
         }
@@ -56,8 +59,8 @@ namespace SeeingSharp.Util
         {
             if (string.IsNullOrEmpty(nameKey)) { throw new ArgumentException("Path key can not be null!"); }
 
-            m_genericKey = 0;
-            m_nameKey = nameKey;
+            GenericKey = 0;
+            NameKey = nameKey;
             m_hashCode = nameKey.GetHashCode();
             m_hint = null;
         }
@@ -91,14 +94,14 @@ namespace SeeingSharp.Util
         /// </returns>
         public bool Equals(NamedOrGenericKey other)
         {
-            if (m_nameKey != null)
+            if (NameKey != null)
             {
-                if (other.m_nameKey == null) { return false; }
-                return m_nameKey == other.m_nameKey;
+                if (other.NameKey == null) { return false; }
+                return NameKey == other.NameKey;
             }
             else
             {
-                return m_genericKey == other.m_genericKey;
+                return GenericKey == other.GenericKey;
             }
         }
 
@@ -111,15 +114,15 @@ namespace SeeingSharp.Util
             int result = m_hashCode.CompareTo(other.m_hashCode);
             if(result == 0)
             {
-                if (m_nameKey != null)
+                if (NameKey != null)
                 {
-                    if (other.m_nameKey == null) { result = -1; }
-                    else { result = m_nameKey.CompareTo(other.m_nameKey); }
+                    if (other.NameKey == null) { result = -1; }
+                    else { result = NameKey.CompareTo(other.NameKey); }
                 }
                 else
                 {
-                    if (other.m_nameKey != null) { result = 1; }
-                    else { result = m_genericKey.CompareTo(other.m_genericKey); }
+                    if (other.NameKey != null) { result = 1; }
+                    else { result = GenericKey.CompareTo(other.GenericKey); }
                 }
             }
             return result;
@@ -136,7 +139,7 @@ namespace SeeingSharp.Util
         {
             if (obj is NamedOrGenericKey)
             {
-                NamedOrGenericKey other = (NamedOrGenericKey)obj;
+                var other = (NamedOrGenericKey)obj;
                 return this.Equals(other);
             }
             else
@@ -149,7 +152,7 @@ namespace SeeingSharp.Util
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -185,7 +188,7 @@ namespace SeeingSharp.Util
         {
             get
             {
-                return (m_genericKey == 0) && (m_nameKey == null);
+                return (GenericKey == 0) && (NameKey == null);
             }
         }
 
@@ -196,9 +199,18 @@ namespace SeeingSharp.Util
         {
             get
             {
-                string result = m_hint;
-                if (string.IsNullOrEmpty(result)) { result = m_nameKey; }
-                if (string.IsNullOrEmpty(result)) { result = string.Empty; }
+                var result = m_hint;
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = NameKey;
+                }
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = string.Empty;
+                }
+
                 return result;
             }
             set
@@ -214,25 +226,19 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (m_nameKey != null) { return "Name: " + m_nameKey; }
-                else { return "Generic ID: " + m_genericKey; }
+                if (NameKey != null) { return "Name: " + NameKey; }
+                else { return "Generic ID: " + GenericKey; }
             }
         }
 
         /// <summary>
         /// Gets the named key.
         /// </summary>
-        public string NameKey
-        {
-            get { return m_nameKey; }
-        }
+        public string NameKey { get; }
 
         /// <summary>
         /// Gets the generic key.
         /// </summary>
-        public long GenericKey
-        {
-            get { return m_genericKey; }
-        }
+        public long GenericKey { get; }
     }
 }

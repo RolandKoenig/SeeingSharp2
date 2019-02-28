@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using SharpDX;
+
+    #endregion
+
     public class Polygon
     {
         private Vector3[] m_vertices;
-        private ReadOnlyCollection<Vector3> m_verticesPublic;
         private Lazy<Vector3> m_normal;
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace SeeingSharp
             if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
 
             m_vertices = vertices;
-            m_verticesPublic = new ReadOnlyCollection<Vector3>(m_vertices);
+            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
 
             //Define normal calculation method
             m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
@@ -62,10 +63,10 @@ namespace SeeingSharp
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
             //Calculate transform matrix
-            Vector3 upVector = m_normal.Value;
-            Vector3 right = Vector3.Cross(
+            var upVector = m_normal.Value;
+            var right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
-            Vector3 backward = Vector3.Cross(right, upVector);
+            var backward = Vector3.Cross(right, upVector);
             var m = new Matrix(
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
@@ -90,17 +91,14 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            Polygon2D surface2D = this.Flattern();
+            var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 
         /// <summary>
         /// Gets a collection containing all vertices.
         /// </summary>
-        public ReadOnlyCollection<Vector3> Vertices
-        {
-            get { return m_verticesPublic; }
-        }
+        public ReadOnlyCollection<Vector3> Vertices { get; }
 
         /// <summary>
         /// Gets the normal of this polygon.

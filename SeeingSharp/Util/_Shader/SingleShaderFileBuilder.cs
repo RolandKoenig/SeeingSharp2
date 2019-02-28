@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,13 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Text;
+
+    #endregion
+
     public static class SingleShaderFileBuilder
     {
         /// <summary>
@@ -37,7 +41,7 @@ namespace SeeingSharp.Util
         /// <param name="target">The target <see cref="StringBuilder"/> to write the shader source to.</param>
         public static void ReadShaderFileAndResolveIncludes(ResourceLink resourceLink, StringBuilder target)
         {
-            using (StringWriter stringWriter = new StringWriter(target))
+            using (var stringWriter = new StringWriter(target))
             {
                 ReadShaderFileAndResolveIncludes(resourceLink, stringWriter);
             }
@@ -50,7 +54,7 @@ namespace SeeingSharp.Util
         /// <param name="target">The target <see cref="StringWriter"/> to write the shader source to.</param>
         public static void ReadShaderFileAndResolveIncludes(ResourceLink resourceLink, StringWriter target)
         {
-            using (StreamReader streamReader = new StreamReader(resourceLink.OpenInputStream()))
+            using (var streamReader = new StreamReader(resourceLink.OpenInputStream()))
             {
                 string actLine = null;
                 while(null != (actLine = streamReader.ReadLine()))

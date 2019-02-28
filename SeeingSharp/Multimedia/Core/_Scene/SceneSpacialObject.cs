@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,14 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public abstract class SceneSpacialObject :
         SceneObject,
         IAnimatableObjectEulerRotation, IAnimatableObjectPosition, IAnimatableObjectQuaternion, IAnimatableObjectScaling,
@@ -39,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         #endregion Resource keys
 
         #region Resources for rendering
-        private IndexBasedDynamicCollection<ObjectRenderParameters> m_renderParameters;
+
         #endregion Resources for rendering
 
         #region Spacial parameters
@@ -70,7 +75,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public SceneSpacialObject()
         {
-            m_renderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
+            RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
 
             m_rotationUp = Vector3.UnitY;
             m_rotationForward = Vector3.UnitZ;
@@ -138,7 +143,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dist">The Distance you want to zoom.</param>
         public void MoveForward(float dist)
         {
-            Vector3 look = this.Look;
+            var look = this.Look;
 
             m_position.X += dist * look.X;
             m_position.Y += dist * look.Y;
@@ -165,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDown(float points)
         {
-            Vector3 up = this.Up;
+            var up = this.Up;
 
             m_position.X = m_position.X + up.X * points;
             m_position.Y = m_position.Y + up.Y * points;
@@ -179,7 +184,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDownWithoutMoving(float points)
         {
-            Vector3 up = this.Up;
+            var up = this.Up;
 
             m_position.Y = m_position.Y + up.Y * points;
 
@@ -191,7 +196,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Strave(float points)
         {
-            Vector3 right = this.Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Y = m_position.Y + right.Y * points;
@@ -205,7 +210,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void StraveAtPlane(float points)
         {
-            Vector3 right = this.Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Z = m_position.Z + right.Z * points;
@@ -270,7 +275,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             //Calculates local transform matrix (transforms local space to world space)
             bool doRecreateShaderParameters = false;
-            base.TransormationChanged = 
+            base.TransormationChanged =
                 m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds;
 
             // Update local transform matrix if transform values have changed
@@ -378,11 +383,13 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 int childCount = children.Count;
-                for (int loop = 0; loop < childCount; loop++)
+
+                for (var loop = 0; loop < childCount; loop++)
                 {
                     // Forward current transform matrix to child objects
-                    Matrix4Stack currentWorld = updateState.World;
+                    var currentWorld = updateState.World;
                     currentWorld.Push(m_transform);
+
                     try
                     {
                         children[loop].Update(updateState);
@@ -405,7 +412,7 @@ namespace SeeingSharp.Multimedia.Core
         private void TriggerRecreateOfParameters()
         {
             // Notify, that all render parameters need a refresh on next render
-            foreach (var actRenderParameters in m_renderParameters)
+            foreach (var actRenderParameters in RenderParameters)
             {
                 actRenderParameters.NeedsRefresh = true;
             }
@@ -419,11 +426,11 @@ namespace SeeingSharp.Multimedia.Core
             base.UnloadResources();
 
             // Mark all local resources for unloading
-            foreach (var actRenderParameters in m_renderParameters)
+            foreach (var actRenderParameters in RenderParameters)
             {
                 actRenderParameters.MarkForUnloading();
             }
-            m_renderParameters.Clear();
+            RenderParameters.Clear();
         }
 
         /// <summary>
@@ -433,26 +440,31 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateAndApplyRenderParameters(RenderState renderState)
         {
             // Get or create RenderParamters object on object level
-            ObjectRenderParameters renderParameters = m_renderParameters[renderState.DeviceIndex];
+            var renderParameters = RenderParameters[renderState.DeviceIndex];
+
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded<ObjectRenderParameters>(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new ObjectRenderParameters());
-                m_renderParameters.AddObject(renderParameters, renderState.DeviceIndex);
+                RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
             }
 
             if (renderParameters.NeedsRefresh)
             {
                 // Create constant buffer structure
-                CBPerObject cbPerObject = new CBPerObject();
-                cbPerObject.AccentuationFactor = m_accentuationFactor;
-                cbPerObject.Color = m_color.ToVector4();
-                cbPerObject.Opacity = m_opacity;
-                cbPerObject.World = Matrix.Transpose(m_transform);
-                cbPerObject.BorderPart = m_borderPart;
-                cbPerObject.BorderMultiplyer = m_borderMultiplyer;
-                cbPerObject.ObjectScaling = m_scaling;//Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
+                CBPerObject cbPerObject = new CBPerObject
+                {
+                    AccentuationFactor = m_accentuationFactor,
+                    Color = m_color.ToVector4(),
+                    Opacity = m_opacity,
+                    World = Matrix.Transpose(m_transform),
+                    BorderPart = m_borderPart,
+                    BorderMultiplyer = m_borderMultiplyer,
+                    ObjectScaling = m_scaling
+                };
+
+                //Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
 
                 // Update constant buffer
                 renderParameters.UpdateValues(renderState, cbPerObject);
@@ -473,10 +485,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets all local render parameters.
         /// </summary>
-        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters
-        {
-            get { return m_renderParameters; }
-        }
+        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
 
         /// <summary>
         /// Gets current AnimationHandler object.

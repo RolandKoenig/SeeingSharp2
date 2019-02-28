@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,13 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class FloorType : ObjectType
     {
         public const float DEFAULT_HEIGHT = 0.1f;
@@ -82,13 +87,13 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Generate all tiles
             m_groundTiles.Clear();
-            for (int loopX = 0; loopX < tilesX; loopX++)
+            for (var loopX = 0; loopX < tilesX; loopX++)
             {
-                for (int loopY = 0; loopY < tilesY; loopY++)
+                for (var loopY = 0; loopY < tilesY; loopY++)
                 {
                     if (tileMap[loopX, loopY] != null)
                     {
-                        FloorTile newTile = new FloorTile(loopX, loopY, tileMap[loopX, loopY]);
+                        var newTile = new FloorTile(loopX, loopY, tileMap[loopX, loopY]);
                         m_groundTiles.Add(newTile);
                     }
                 }
@@ -138,13 +143,14 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Generate all tiles
             m_groundTiles.Clear();
-            for (int loopX = 0; loopX < tilesX; loopX++)
+
+            for (var loopX = 0; loopX < tilesX; loopX++)
             {
-                for (int loopY = 0; loopY < tilesY; loopY++)
+                for (var loopY = 0; loopY < tilesY; loopY++)
                 {
                     if (tileMap[loopX, loopY])
                     {
-                        FloorTile newTile = new FloorTile(loopX, loopY);
+                        var newTile = new FloorTile(loopX, loopY);
                         m_groundTiles.Add(newTile);
                     }
                 }
@@ -166,8 +172,8 @@ namespace SeeingSharp.Multimedia.Objects
             if ((yPos < 0) || (yPos >= m_tilesY)) { throw new ArgumentException("Invalid y position!", "yPos"); }
 
             //Calculate half sizes
-            Vector2 totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
-            Vector2 tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
+            var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
+            var tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
 
             //Get position of the tile
             return new Vector3(
@@ -181,30 +187,38 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            VertexStructure result = new VertexStructure();
+            var result = new VertexStructure();
 
             // Hold dictionary containg materials and corresponding structures
             Dictionary<NamedOrGenericKey, VertexStructureSurface> materialRelated = new Dictionary<NamedOrGenericKey, VertexStructureSurface>();
 
             // Build bottom structure
-            VertexStructureSurface bottomSurface = result.CreateSurface();
+            var bottomSurface = result.CreateSurface();
             bottomSurface.Material = m_bottomMaterial;
             materialRelated[m_bottomMaterial] = bottomSurface;
 
             // Calculate half vector of total ground size.
-            Vector2 totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
-            Vector2 tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
+            var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
+            var tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
 
             // Build all tiles
-            foreach (FloorTile actTile in m_groundTiles)
+            foreach (var actTile in m_groundTiles)
             {
                 // Get the material of the tile
-                NamedOrGenericKey actMaterial = actTile.Material;
-                if (actMaterial.IsEmpty) { actMaterial = m_groundMaterial; }
+                var actMaterial = actTile.Material;
+
+                if (actMaterial.IsEmpty)
+                {
+                    actMaterial = m_groundMaterial;
+                }
 
                 // Get surface object
                 VertexStructureSurface actSurface = null;
-                if (materialRelated.ContainsKey(actMaterial)) { actSurface = materialRelated[actMaterial]; }
+
+                if (materialRelated.ContainsKey(actMaterial))
+                {
+                    actSurface = materialRelated[actMaterial];
+                }
                 else
                 {
                     actSurface = result.CreateSurface();
@@ -213,7 +227,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Get position of the tile
-                Vector3 tilePosition = new Vector3(
+                var tilePosition = new Vector3(
                     (actTile.XPos * m_tileSize.X) - totalHalfSize.X,
                     0f,
                     (actTile.YPos * m_tileSize.Y) - totalHalfSize.Y);
@@ -238,11 +252,11 @@ namespace SeeingSharp.Multimedia.Objects
                 borderSurface.Material = m_borderMaterial;
                 materialRelated[m_borderMaterial] = borderSurface;
             }
-            foreach (BorderInformation actBorder in m_borders)
+            foreach (var actBorder in m_borders)
             {
                 if (m_borderSize <= 0f)
                 {
-                    Vector3 tilePosition = new Vector3(
+                    var tilePosition = new Vector3(
                         (actBorder.TileXPos * m_tileSize.X) - totalHalfSize.X,
                         0f,
                         (actBorder.TileYPos * m_tileSize.Y) - totalHalfSize.Y);

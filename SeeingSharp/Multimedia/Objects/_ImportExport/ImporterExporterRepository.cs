@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class ImporterExporterRepository
     {
         private Dictionary<string, SupportedFileFormatAttribute> m_infoByFileType;
@@ -58,7 +62,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Get format support on each importer
             m_importersByFileType = new Dictionary<string, IModelImporter>();
-            foreach(IModelImporter actImporter in m_importers)
+
+            foreach(var actImporter in m_importers)
             {
                 foreach(var actSupportedFile in actImporter
                     .GetType().GetTypeInfo()
@@ -69,10 +74,11 @@ namespace SeeingSharp.Multimedia.Objects
                     m_infoByFileType[actFileFormat] = actSupportedFile;
                 }
             }
-            
+
             // Get format support on each exporter
             m_exportersByFileType = new Dictionary<string, IModelExporter>();
-            foreach (IModelExporter actExporter in m_exporters)
+
+            foreach (var actExporter in m_exporters)
             {
                 foreach (var actSupportedFile in actExporter
                     .GetType().GetTypeInfo()
@@ -98,17 +104,25 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public string GetOpenFileDialogFilter()
         {
-            if (m_infoByFileType.Count <= 0) { return string.Empty; }
+            if (m_infoByFileType.Count <= 0)
+            {
+                return string.Empty;
+            }
 
             // Build the filter string for the open file dialog
-            StringBuilder filterBuilder = new StringBuilder(1024);
+            var filterBuilder = new StringBuilder(1024);
 
             // Write first item (all formats)
             filterBuilder.Append("All supported files|");
             bool isFirst = true;
+
             foreach (var actSupportedFormat in this.GetSupportedImportFormats())
             {
-                if (!isFirst) { filterBuilder.Append(';'); }
+                if (!isFirst)
+                {
+                    filterBuilder.Append(';');
+                }
+
                 filterBuilder.Append("*." + actSupportedFormat.ShortFormatName);
                 isFirst = false;
             }
@@ -117,7 +131,6 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actSupportedFormat in this.GetSupportedImportFormats())
             {
                 filterBuilder.Append('|');
-
                 filterBuilder.Append("." + actSupportedFormat.ShortFormatName);
                 filterBuilder.Append(" (" + actSupportedFormat.ShortDescription + ")");
                 filterBuilder.Append("|*." + actSupportedFormat.ShortFormatName);
@@ -132,7 +145,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="source">The source of the resource.</param>
         public ImportOptions CreateImportOptions(ResourceLink source)
         {
-            IModelImporter importer = GetImporterBySource(source);
+            var importer = GetImporterBySource(source);
             return importer.CreateDefaultImportOptions();
         }
 
@@ -142,7 +155,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="fileExtension">The extension of the file to be imported.</param>
         public ImportOptions CreateImportOptionsByFileType(string fileExtension)
         {
-            IModelImporter importer = GetImporterByFileType(fileExtension);
+            var importer = GetImporterByFileType(fileExtension);
             return importer.CreateDefaultImportOptions();
         }
 
@@ -162,8 +175,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="importOptions">The import options.</param>
         public Task<ImportedModelContainer> ImportAsync(ResourceLink source, ImportOptions importOptions)
         {
-            IModelImporter importer = GetImporterBySource(source);
-            if (importOptions == null) { importOptions = importer.CreateDefaultImportOptions(); }
+            var importer = GetImporterBySource(source);
+
+            if (importOptions == null)
+            {
+                importOptions = importer.CreateDefaultImportOptions();
+            }
 
             // Start the loading task
             return Task.Factory.StartNew<ImportedModelContainer>(() =>

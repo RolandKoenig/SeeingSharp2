@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,9 +21,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX;
-using System.Collections.Generic;
-using System.Numerics;
 
 #if DESKTOP
 using System.Windows.Media.Media3D;
@@ -31,6 +28,13 @@ using System.Windows.Media.Media3D;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System.Collections.Generic;
+    using SharpDX;
+
+    #endregion
+
     public static class MathExtensions
     {
         public static bool IsEmpty(this ref Vector2 vector)
@@ -44,10 +48,14 @@ namespace SeeingSharp
         /// <param name="lines">A list containing all lines.</param>
         public static IEnumerable<Vector3> GetAllPoints(this IEnumerable<Line> lines)
         {
-            Vector3 lastVector = Vector3Ex.MinValue;
-            foreach (Line actLine in lines)
+            var lastVector = Vector3Ex.MinValue;
+
+            foreach (var actLine in lines)
             {
-                if (lastVector != actLine.StartPosition) { yield return actLine.StartPosition; }
+                if (lastVector != actLine.StartPosition)
+                {
+                    yield return actLine.StartPosition;
+                }
 
                 yield return actLine.EndPosition;
 

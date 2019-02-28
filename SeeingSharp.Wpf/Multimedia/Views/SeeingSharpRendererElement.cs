@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,37 +21,37 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Threading;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Interop;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using Core;
+    using Drawing2D;
+    using Drawing3D;
+    using Input;
+    using Microsoft.Win32;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public partial class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
         #region Dependency properties
@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Views
         private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
 
         #region Some members..
-        private RenderLoop m_renderLoop;
+
         private HigherD3DImageSource m_d3dImageSource;
         private WriteableBitmap m_fallbackWpfImageSource;
         private int m_lastRecreateWidth;
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.Texture2D m_depthBuffer;
         private D3D11.RenderTargetView m_renderTarget;
         private D3D11.DepthStencilView m_renderTargetDepth;
-        private DXGI.Surface m_renderTarget2DDxgi;
+        private SharpDX.DXGI.Surface m_renderTarget2DDxgi;
         #endregion
 
         #region Some size related properties
@@ -120,16 +120,16 @@ namespace SeeingSharp.Multimedia.Views
             this.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
 
             // Create the RenderLoop object
-            m_renderLoop = new RenderLoop(
+            RenderLoop = new RenderLoop(
                 SynchronizationContext.Current, this, isDesignMode: this.IsInDesignMode());
-            m_renderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
-            m_renderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
+            RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+            RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
 
             // Break here if we are in design mode
             if (this.IsInDesignMode()) { return; }
 
-            m_renderLoop.ClearColor = Color4Ex.Transparent;
-            m_renderLoop.Internals.CallPresentInUIThread = true;
+            RenderLoop.ClearColor = Color4Ex.Transparent;
+            RenderLoop.Internals.CallPresentInUIThread = true;
 
             // Create new scene and camera object
             this.Scene = new Core.Scene();
@@ -149,16 +149,17 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public DpiScaling GetDpiScaling()
         {
-            PresentationSource source = PresentationSource.FromVisual(this);
+            var source = PresentationSource.FromVisual(this);
             double dpiScaleFactorX = 1.0;
             double dpiScaleFactorY = 1.0;
+
             if (source != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
             }
 
-            DpiScaling result = DpiScaling.Default;
+            var result = DpiScaling.Default;
             result.DpiX = (float)(result.DpiX * dpiScaleFactorX);
             result.DpiY = (float)(result.DpiY * dpiScaleFactorY);
             return result;
@@ -198,7 +199,7 @@ namespace SeeingSharp.Multimedia.Views
             SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
 
             // Calculate pixel with and high of this visual
-            Size pixelSize = new Size(
+            var pixelSize = new Size(
                 Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
                 Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
             int width = (int)pixelSize.Width;
@@ -206,12 +207,13 @@ namespace SeeingSharp.Multimedia.Views
 
             // Get references to current render device
             D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
-            D3D11.DeviceContext renderDeviceContext = renderDevice.ImmediateContext;
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
+            var renderDeviceContext = renderDevice.ImmediateContext;
+            var viewPort = default(SharpDX.Mathematics.Interop.RawViewportF);
 
             bool initializedSuccessfully = false;
             bool forceFallbackSolution = false;
             int tryCount = 0;
+
             do
             {
                 tryCount++;
@@ -251,12 +253,12 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Create the swap chain and the render target
-                m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
+                m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, RenderLoop.ViewConfiguration);
                 m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
                 m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
 
                 // Create the depth buffer
-                m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, m_renderLoop.ViewConfiguration);
+                m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, RenderLoop.ViewConfiguration);
                 m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
 
                 // Apply render target size values
@@ -335,7 +337,7 @@ namespace SeeingSharp.Multimedia.Views
                     m_isDirtyCount++;
                     if (m_isDirtyCount > 20)
                     {
-                        m_renderLoop.ViewConfiguration.ViewNeedsRefresh = true;
+                        RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
                         return true;
                     }
                     return false;
@@ -363,7 +365,7 @@ namespace SeeingSharp.Multimedia.Views
                 SeeingSharpWpfTools.GetDpiScalingFactor(this, out double dpiScaleFactorX, out double dpiScaleFactorY);
 
                 // Calculate pixel with and high of this visual
-                Size pixelSize = new Size(
+                var pixelSize = new Size(
                     Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
                     Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
                 int width = (int)pixelSize.Width;
@@ -371,7 +373,7 @@ namespace SeeingSharp.Multimedia.Views
 
                 if ((width > 0) && (height > 0))
                 {
-                    m_renderLoop.SetCurrentViewSize(width, height);
+                    RenderLoop.SetCurrentViewSize(width, height);
                 }
             }
         }
@@ -389,12 +391,17 @@ namespace SeeingSharp.Multimedia.Views
                 GraphicsCore.Current.PerformanceCalculator.ExecuteAndMeasureActivityDuration(
                     "Render.Lock",
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
-                if (!isLocked) { return; }
+
+                if (!isLocked)
+                {
+                    return;
+                }
+
                 try
                 {
                     // Draw current 3d scene to wpf
-                    D3D11.DeviceContext deviceContext = engineDevice.DeviceImmediateContextD3D11;
-                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, DXGI.Format.B8G8R8A8_UNorm);
+                    var deviceContext = engineDevice.DeviceImmediateContextD3D11;
+                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, SharpDX.DXGI.Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
 
@@ -415,25 +422,25 @@ namespace SeeingSharp.Multimedia.Views
             else if(m_fallbackWpfImageSource != null)
             {
                 // Get and read data from the gpu (create copy helper texture on demand)
-                if (m_renderLoop.Internals.CopyHelperTextureStaging == null)
+                if (RenderLoop.Internals.CopyHelperTextureStaging == null)
                 {
-                    m_renderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
-                    m_renderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    RenderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    RenderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
                 }
 
                 // Copy resources
                 engineDevice.DeviceImmediateContextD3D11.ResolveSubresource(
-                    m_renderLoop.Internals.RenderTarget, 0,
-                    m_renderLoop.Internals.CopyHelperTextureStandard, 0,
+                    RenderLoop.Internals.RenderTarget, 0,
+                    RenderLoop.Internals.CopyHelperTextureStandard, 0,
                     GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
                 engineDevice.DeviceImmediateContextD3D11.CopyResource(
-                    m_renderLoop.Internals.CopyHelperTextureStandard,
-                    m_renderLoop.Internals.CopyHelperTextureStaging);
+                    RenderLoop.Internals.CopyHelperTextureStandard,
+                    RenderLoop.Internals.CopyHelperTextureStaging);
 
                 // Copy texture into wpf bitmap
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(
                     engineDevice,
-                    m_renderLoop.Internals.CopyHelperTextureStaging,
+                    RenderLoop.Internals.CopyHelperTextureStaging,
                     m_fallbackWpfImageSource,
                     TimeSpan.FromMilliseconds(500.0));
             }
@@ -458,10 +465,10 @@ namespace SeeingSharp.Multimedia.Views
             if (this.IsInDesignMode()) { return; }
 
             // Update render size
-            m_renderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
+            RenderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
 
             // Now connect this view with the main renderloop
-            m_renderLoop.RegisterRenderLoop();
+            RenderLoop.RegisterRenderLoop();
         }
 
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
@@ -488,14 +495,14 @@ namespace SeeingSharp.Multimedia.Views
             if (this.IsInDesignMode()) { return; }
 
             // Update render size
-            m_renderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
+            RenderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
 
             //Resize render target only on greater size changes
             double resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
             double resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
             if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
             {
-                m_renderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
+                RenderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
             }
 
             m_lastSizeChange = DateTime.UtcNow;
@@ -508,7 +515,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="SessionSwitchEventArgs"/> instance containing the event data.</param>
         private void OnSystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (m_renderLoop == null) { return; }
+            if (RenderLoop == null) { return; }
             if (this.IsInDesignMode()) { return; }
 
             switch (e.Reason)
@@ -518,9 +525,9 @@ namespace SeeingSharp.Multimedia.Views
                 case SessionSwitchReason.SessionUnlock:
                 case SessionSwitchReason.SessionLock:
                 case SessionSwitchReason.SessionLogon:
-                    if (m_renderLoop.IsRegisteredOnMainLoop)
+                    if (RenderLoop.IsRegisteredOnMainLoop)
                     {
-                        m_renderLoop.ViewConfiguration.ViewNeedsRefresh = true;
+                        RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
                     }
                     break;
             }
@@ -538,18 +545,18 @@ namespace SeeingSharp.Multimedia.Views
 
             if (e.Property == SeeingSharpRendererElement.SceneProperty)
             {
-                m_renderLoop.SetScene(this.Scene);
+                RenderLoop.SetScene(this.Scene);
                 SceneChanged?.Invoke(this, EventArgs.Empty);
             }
             else if (e.Property == SeeingSharpRendererElement.CameraProperty)
             {
-                m_renderLoop.Camera = this.Camera;
+                RenderLoop.Camera = this.Camera;
                 CameraChanged?.Invoke(this, EventArgs.Empty);
             }
             else if (e.Property == SeeingSharpRendererElement.DrawingLayer2DProperty)
             {
-                if (e.OldValue != null) { await m_renderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
-                if (e.NewValue != null) { await m_renderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
+                if (e.OldValue != null) { await RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
+                if (e.NewValue != null) { await RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
                 DrawingLayer2DChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -564,7 +571,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!GraphicsCore.IsLoaded) { return; }
             if (this.IsInDesignMode()) { return; }
 
-            m_renderLoop.DeregisterRenderLoop();
+            RenderLoop.DeregisterRenderLoop();
         }
 
         /// <summary>
@@ -572,8 +579,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public bool DiscardRendering
         {
-            get { return m_renderLoop.DiscardRendering; }
-            set { m_renderLoop.DiscardRendering = value; }
+            get { return RenderLoop.DiscardRendering; }
+            set { RenderLoop.DiscardRendering = value; }
         }
 
         /// <summary>
@@ -607,10 +614,7 @@ namespace SeeingSharp.Multimedia.Views
         /// Gets the RenderLoop that is currently in use.
         /// </summary>
         [Browsable(false)]
-        public RenderLoop RenderLoop
-        {
-            get { return m_renderLoop; }
-        }
+        public RenderLoop RenderLoop { get; }
 
         /// <summary>
         /// Gets or sets the clear color of this 3D view.
@@ -619,16 +623,16 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                var clearColor = m_renderLoop.ClearColor;
-                System.Windows.Media.Color result = new System.Windows.Media.Color();
+                var clearColor = RenderLoop.ClearColor;
+                var result = new System.Windows.Media.Color();
                 SeeingSharpWpfTools.WpfColorFromColor4(ref clearColor, ref result);
                 return result;
             }
             set
             {
-                Color4 clearColor = new Color4();
+                var clearColor = new Color4();
                 SeeingSharpWpfTools.Color4FromWpfColor(ref value, ref clearColor);
-                m_renderLoop.ClearColor = clearColor;
+                RenderLoop.ClearColor = clearColor;
             }
         }
 
@@ -649,24 +653,28 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                return m_renderLoop.IsOperational;
+                return RenderLoop.IsOperational;
             }
         }
 
         public EngineDevice SelectedDevice
         {
-            get => m_renderLoop.Device;
-            set => m_renderLoop.SetRenderingDevice(value);
+            get => RenderLoop.Device;
+            set => RenderLoop.SetRenderingDevice(value);
         }
 
         public Size CurrentViewSize
         {
             get
             {
-                var currentViewSize = m_renderLoop.CurrentViewSize;
-                Size result = new Size();
-                result.Width = currentViewSize.Width;
-                result.Height = currentViewSize.Height;
+                var currentViewSize = RenderLoop.CurrentViewSize;
+
+                var result = new Size
+                {
+                    Width = currentViewSize.Width,
+                    Height = currentViewSize.Height
+                };
+
                 return result;
             }
         }
@@ -675,7 +683,11 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (!GraphicsCore.IsLoaded) { return new EngineDevice[0]; }
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return new EngineDevice[0];
+                }
+
                 return GraphicsCore.Current.Devices;
             }
         }

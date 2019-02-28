@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,92 +21,56 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Runtime.InteropServices;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Runtime.InteropServices;
+
+    #endregion
+
     [StructLayout(LayoutKind.Sequential)]
     public struct AnimationData
     {
-        private uint m_boneIndex01;
-        private uint m_boneIndex02;
-        private uint m_boneIndex03;
-        private uint m_boneIndex04;
-        private float m_boneWeight01;
-        private float m_boneWeight02;
-        private float m_boneWeight03;
-        private float m_boneWeight04;
-
         /// <summary>
         /// Gets or sets the first bone index.
         /// </summary>
-        public uint BoneIndex01
-        {
-            get { return m_boneIndex01; }
-            set { m_boneIndex01 = value; }
-        }
+        public uint BoneIndex01 { get; set; }
 
         /// <summary>
         /// Gets or sets the second bone index.
         /// </summary>
-        public uint BoneIndex02
-        {
-            get { return m_boneIndex02; }
-            set { m_boneIndex02 = value; }
-        }
+        public uint BoneIndex02 { get; set; }
 
         /// <summary>
         /// Gets or sets the third bone index.
         /// </summary>
-        public uint BoneIndex03
-        {
-            get { return m_boneIndex03; }
-            set { m_boneIndex03 = value; }
-        }
+        public uint BoneIndex03 { get; set; }
 
         /// <summary>
         /// Gets or sets the fourth bone index.
         /// </summary>
-        public uint BoneIndex04
-        {
-            get { return m_boneIndex04; }
-            set { m_boneIndex04 = value; }
-        }
+        public uint BoneIndex04 { get; set; }
 
         /// <summary>
         /// Gets or sets the first bone weight.
         /// </summary>
-        public float BoneWeight01
-        {
-            get { return m_boneWeight01; }
-            set { m_boneWeight01 = value; }
-        }
+        public float BoneWeight01 { get; set; }
 
         /// <summary>
         /// Gets or sets the second bone weight.
         /// </summary>
-        public float BoneWeight02
-        {
-            get { return m_boneWeight02; }
-            set { m_boneWeight02 = value; }
-        }
+        public float BoneWeight02 { get; set; }
 
         /// <summary>
         /// Gets or sets the third bone weight.
         /// </summary>
-        public float BoneWeight03
-        {
-            get { return m_boneWeight03; }
-            set { m_boneWeight03 = value; }
-        }
+        public float BoneWeight03 { get; set; }
 
         /// <summary>
         /// Gets or sets the fourth bone weight.
         /// </summary>
-        public float BoneWeight04
-        {
-            get { return m_boneWeight04; }
-            set { m_boneWeight04 = value; }
-        }
+        public float BoneWeight04 { get; set; }
     }
 }

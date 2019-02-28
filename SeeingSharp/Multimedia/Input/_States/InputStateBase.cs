@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using Core;
+
+    #endregion
+
     /// <summary>
     /// Base class for all input states.
     /// </summary>
     public abstract class InputStateBase
     {
         #region state related data
-        private ViewInformation m_relatedView;
-        private Type m_currentType;
+
         #endregion
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected InputStateBase()
         {
-            m_currentType = this.GetType();
+            CurrentType = this.GetType();
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it 
+        /// Copies this object and then resets it
         /// in preparation of the next update pass.
         /// Called by update-render loop.
         /// </summary>
@@ -69,11 +69,7 @@ namespace SeeingSharp.Multimedia.Input
         /// The view object this input state was queried on.
         /// Null, if this InputState does not depend on a view.
         /// </summary>
-        public ViewInformation RelatedView
-        {
-            get{ return m_relatedView; }
-            internal set { m_relatedView = value; }
-        }
+        public ViewInformation RelatedView { get; internal set; }
 
         /// <summary>
         /// The view index this input state was queried on.
@@ -83,14 +79,11 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(m_relatedView == null) { return -1; }
-                else { return m_relatedView.ViewIndex; }
+                if(RelatedView == null) { return -1; }
+                else { return RelatedView.ViewIndex; }
             }
         }
 
-        internal Type CurrentType
-        {
-            get { return m_currentType; }
-        }
+        internal Type CurrentType { get; }
     }
 }

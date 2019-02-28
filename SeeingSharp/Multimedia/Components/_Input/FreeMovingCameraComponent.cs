@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
 {
+    #region using
+
+    using Core;
+    using Drawing3D;
+    using Input;
+    using SharpDX;
+
+    #endregion
+
     public class FreeMovingCameraComponent : SceneComponent
     {
         #region Constants
@@ -73,16 +72,21 @@ namespace SeeingSharp.Multimedia.Components
         /// <param name="correspondingView">The view which attached this component (may be null).</param>
         protected override void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView)
         {
-            Camera3DBase actCamera = correspondingView.Camera;
-            if(actCamera == null) { return; }
+            var actCamera = correspondingView.Camera;
 
-            foreach (InputFrame actInputFrame in updateState.InputFrames)
+            if (actCamera == null)
+            {
+                return;
+            }
+
+            foreach (var actInputFrame in updateState.InputFrames)
             {
                 foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
                 {
                     // Handle keyboard
-                    KeyboardState actKeyboardState = actInputState as KeyboardState;
-                    bool isControlKeyDown = false;
+                    var actKeyboardState = actInputState as KeyboardState;
+                    var isControlKeyDown = false;
+
                     if (actKeyboardState != null)
                     {
                         UpdateForKeyboard(actCamera, actKeyboardState, out isControlKeyDown);
@@ -90,7 +94,8 @@ namespace SeeingSharp.Multimedia.Components
                     }
 
                     // Handle mouse (or pointer)
-                    MouseOrPointerState mouseState = actInputState as MouseOrPointerState;
+                    var mouseState = actInputState as MouseOrPointerState;
+
                     if (mouseState != null)
                     {
                         UpdateForMouse(actCamera, isControlKeyDown, mouseState);
@@ -103,12 +108,13 @@ namespace SeeingSharp.Multimedia.Components
         /// Update camera for keyboard input.
         /// </summary>
         private static void UpdateForKeyboard(
-            Camera3DBase actCamera, KeyboardState actKeyboardState, 
+            Camera3DBase actCamera, KeyboardState actKeyboardState,
             out bool isControlKeyDown)
         {
             // Define multiplyer
             float multiplyer = 1f;
             isControlKeyDown = false;
+
             if (actKeyboardState.IsKeyDown(WinVirtualKey.ControlKey) ||
                 actKeyboardState.IsKeyDown(WinVirtualKey.LControlKey) ||
                 actKeyboardState.IsKeyDown(WinVirtualKey.RControlKey))
@@ -117,7 +123,7 @@ namespace SeeingSharp.Multimedia.Components
                 isControlKeyDown = true;
             }
 
-            foreach (WinVirtualKey actKey in actKeyboardState.KeysDown)
+            foreach (var actKey in actKeyboardState.KeysDown)
             {
                 switch (actKey)
                 {
@@ -178,7 +184,8 @@ namespace SeeingSharp.Multimedia.Components
             // Handle mouse move
             if (mouseState.MoveDistanceDip != Vector2.Zero)
             {
-                Vector2 moving = mouseState.MoveDistanceDip;
+                var moving = mouseState.MoveDistanceDip;
+
                 if (mouseState.IsButtonDown(MouseButton.Left) &&
                     mouseState.IsButtonDown(MouseButton.Right))
                 {

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using Checking;
+
+    #endregion
+
     /// <summary>
-    /// A base class for components which we can easily attach to a scene. 
+    /// A base class for components which we can easily attach to a scene.
     /// </summary>
     public abstract class SceneComponent : SceneComponentBase
     {
@@ -71,19 +70,18 @@ namespace SeeingSharp.Multimedia.Core
         protected abstract void Detach(SceneManipulator manipulator, ViewInformation correspondingView);
 
         /// <summary>
-        /// This update method gets called on each update pass for each scenes 
+        /// This update method gets called on each update pass for each scenes
         /// this component is attached to.
         /// </summary>
         /// <param name="updateState">Current update state.</param>
         /// <param name="correspondingView">The view which attached this component (may be null).</param>
         protected virtual void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView)
         {
-
         }
     }
 
     /// <summary>
-    /// A base class for components which we can easily attach to a scene. 
+    /// A base class for components which we can easily attach to a scene.
     /// </summary>
     /// <typeparam name="TContextType">An object of this type holds all members hold per scene.</typeparam>
     public abstract class SceneComponent<TContextType> : SceneComponentBase
@@ -96,7 +94,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
         {
-            TContextType componentContextCasted = componentContext as TContextType;
+            var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
             this.Detach(manipulator, correspondingView, componentContextCasted);
@@ -104,7 +102,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
         {
-            TContextType componentContextCasted = componentContext as TContextType;
+            var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
             this.Update(updateState, correspondingView, componentContextCasted);
@@ -130,7 +128,7 @@ namespace SeeingSharp.Multimedia.Core
         protected abstract void Detach(SceneManipulator manipulator, ViewInformation correspondingView, TContextType componentContext);
 
         /// <summary>
-        /// This update method gets called on each update pass for each scenes 
+        /// This update method gets called on each update pass for each scenes
         /// this component is attached to.
         /// </summary>
         /// <param name="updateState">Current update state.</param>
@@ -138,7 +136,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="componentContext">The current context generating during Attach call.</param>
         protected virtual void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView, TContextType componentContext)
         {
-
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,22 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System.Collections.Generic;
+    using SharpDX;
+
+    #endregion
+
     public static class BoundingBoxEx
     {
         public static BoundingBox Create(IEnumerable<Vector3> containedLocations)
         {
-            Vector3 minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-            bool anyInteration = false;
-            foreach (Vector3 actContainedLocation in containedLocations)
+            var anyInteration = false;
+
+            foreach (var actContainedLocation in containedLocations)
             {
                 anyInteration = true;
 
@@ -71,9 +75,10 @@ namespace SeeingSharp
         /// <param name="points">All points to apply.</param>
         public static void Redefine(this ref BoundingBox boundingBox, Vector3[] points)
         {
-            Vector3 min = new Vector3(float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue);
-            for (int i = 0; i < points.Length; ++i)
+            var min = new Vector3(float.MaxValue);
+            var max = new Vector3(float.MinValue);
+
+            for (var i = 0; i < points.Length; ++i)
             {
                 min = Vector3.Min(min, points[i]);
                 max = Vector3.Max(max, points[i]);
@@ -107,13 +112,13 @@ namespace SeeingSharp
         /// </summary>
         public static void MergeWith(this ref BoundingBox boundingBox, BoundingBox other)
         {
-            Vector3 minimum1 = boundingBox.Minimum;
-            Vector3 minimum2 = other.Minimum;
-            Vector3 maximum1 = boundingBox.Maximum;
-            Vector3 maximum2 = other.Maximum;
+            var minimum1 = boundingBox.Minimum;
+            var minimum2 = other.Minimum;
+            var maximum1 = boundingBox.Maximum;
+            var maximum2 = other.Maximum;
 
-            Vector3 newMinimum = Vector3.Min(minimum1, minimum2);
-            Vector3 newMaximum = Vector3.Max(maximum1, maximum2);
+            var newMinimum = Vector3.Min(minimum1, minimum2);
+            var newMaximum = Vector3.Max(maximum1, maximum2);
 
             boundingBox.Minimum = newMinimum;
             boundingBox.Maximum = newMaximum;
@@ -124,7 +129,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBottomLeftMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Minimum.Y;
             result.X = boundingBox.Minimum.X;
             return result;
@@ -135,7 +140,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBottomRightMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Minimum.Y;
             result.X = boundingBox.Maximum.X;
             return result;
@@ -146,7 +151,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBottomFrontMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Minimum.Y;
             result.Z = boundingBox.Minimum.Z;
             return result;
@@ -157,7 +162,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBottomBackMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Minimum.Y;
             result.Z = boundingBox.Maximum.Z;
             return result;
@@ -176,7 +181,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetTopMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Maximum.Y;
             return result;
         }
@@ -186,7 +191,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetTopLeftMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Maximum.Y;
             result.X = boundingBox.Minimum.X;
             return result;
@@ -197,7 +202,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetTopRightMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Maximum.Y;
             result.X = boundingBox.Maximum.X;
             return result;
@@ -208,7 +213,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetTopFrontMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Maximum.Y;
             result.Z = boundingBox.Minimum.Z;
             return result;
@@ -219,7 +224,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetTopBackMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Y = boundingBox.Maximum.Y;
             result.Z = boundingBox.Maximum.Z;
             return result;
@@ -230,7 +235,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetFrontMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Z = boundingBox.Minimum.Z;
             return result;
         }
@@ -240,7 +245,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBackMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.Z = boundingBox.Maximum.Z;
             return result;
         }
@@ -250,7 +255,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetLeftMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Minimum.X;
             return result;
         }
@@ -260,7 +265,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetLeftFrontMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Minimum.X;
             result.Z = boundingBox.Minimum.Z;
             return result;
@@ -271,7 +276,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetLeftBackMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Minimum.X;
             result.Z = boundingBox.Maximum.Z;
             return result;
@@ -282,7 +287,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetRightMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Maximum.X;
             return result;
         }
@@ -292,7 +297,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetRightFrontMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Maximum.X;
             result.Z = boundingBox.Minimum.Z;
             return result;
@@ -303,7 +308,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetRightBackMiddleCoordinate(this ref BoundingBox boundingBox)
         {
-            Vector3 result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
+            var result = boundingBox.Minimum + (boundingBox.Maximum - boundingBox.Minimum) / 2f;
             result.X = boundingBox.Maximum.X;
             result.Z = boundingBox.Maximum.Z;
             return result;
@@ -314,7 +319,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetMiddleCenter(this ref BoundingBox boundingBox)
         {
-            Vector3 size = boundingBox.Size;
+            var size = boundingBox.Size;
             return new Vector3(
                 boundingBox.Minimum.X + size.X / 2f,
                 boundingBox.Minimum.Y + size.Y / 2f,
@@ -326,7 +331,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetBottomCenter(this ref BoundingBox boundingBox)
         {
-            Vector3 size = boundingBox.Size;
+            var size = boundingBox.Size;
             return new Vector3(
                 boundingBox.Minimum.X + size.X / 2f,
                 boundingBox.Minimum.Y,
@@ -339,7 +344,7 @@ namespace SeeingSharp
         public static List<Vector3> BuildLineListForBorders(this ref BoundingBox boundingBox)
         {
             List<Vector3> result = new List<Vector3>();
-            Vector3 size = boundingBox.Size;
+            var size = boundingBox.Size;
 
             //Add front face
             result.Add(boundingBox.Minimum);
@@ -395,7 +400,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerB(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -403,7 +408,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerC(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -411,7 +416,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerD(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -419,7 +424,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerE(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -427,7 +432,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerF(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
         }
 
         /// <summary>
@@ -435,7 +440,7 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerG(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
         }
 
         /// <summary>
@@ -443,42 +448,42 @@ namespace SeeingSharp
         /// </summary>
         public static Vector3 GetCornerH(this ref BoundingBox boundingBox)
         {
-            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z); 
+            return new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
         }
 
         public static Vector3 GetLowerA(this ref BoundingBox boundingBox)
         {
-            return boundingBox.Minimum; 
+            return boundingBox.Minimum;
         }
 
         public static Vector3 GetLowerB(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerB(); 
+            return boundingBox.GetCornerB();
         }
 
         public static Vector3 GetLowerC(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerC(); 
+            return boundingBox.GetCornerC();
         }
 
         public static Vector3 GetLowerD(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerD(); 
+            return boundingBox.GetCornerD();
         }
 
         public static Vector3 GetUpperA(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerE(); 
+            return boundingBox.GetCornerE();
         }
 
         public static Vector3 GetUpperB(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerF(); 
+            return boundingBox.GetCornerF();
         }
 
         public static Vector3 GetUpperC(this ref BoundingBox boundingBox)
         {
-            return boundingBox.GetCornerG(); 
+            return boundingBox.GetCornerG();
         }
 
         public static Vector3 GetUpperD(this ref BoundingBox boundingBox)

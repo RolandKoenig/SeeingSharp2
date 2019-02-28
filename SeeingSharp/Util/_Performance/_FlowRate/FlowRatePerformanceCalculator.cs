@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,14 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Linq;
+
+    #endregion
+
     public class FlowRatePerformanceCalculator : PerformanceCalculatorBase
     {
         // Values used for calculation
@@ -70,7 +72,7 @@ namespace SeeingSharp.Util
         /// <param name="calculationInterval">The interval from which to take all values from.</param>
         /// <returns></returns>
         internal override PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp, 
+            DateTime keyTimeStamp,
             DateTime minTimeStamp, DateTime maxTimeStamp,
             TimeSpan calculationInterval)
         {
@@ -93,9 +95,10 @@ namespace SeeingSharp.Util
                 double resultValue = (double)(m_lastReportedTimestamps
                     .PeekWhile((actTuple) => actTuple < maxTimeStamp)
                     .Count());
-              
+
                 // Handle case where measured timespan in more less than the calculation timespan
-                TimeSpan currentValueTimespan = maxTimeStamp - minTimeStamp;
+                var currentValueTimespan = maxTimeStamp - minTimeStamp;
+
                 if(currentValueTimespan != calculationInterval)
                 {
                     double timespanFactor = (double)calculationInterval.Ticks / (double)currentValueTimespan.Ticks;

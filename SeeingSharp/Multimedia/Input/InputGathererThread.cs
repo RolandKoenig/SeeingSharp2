@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Checking;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     /// <summary>
     /// This class is responsible for input gathering.
     /// </summary>
@@ -97,7 +99,8 @@ namespace SeeingSharp.Multimedia.Input
                 if(m_viewInputHandlers.ContainsKey(view))
                 {
                     List<IInputHandler> oldList = m_viewInputHandlers[view];
-                    foreach(IInputHandler actOldInputHanlder in oldList)
+
+                    foreach(var actOldInputHanlder in oldList)
                     {
                         actOldInputHanlder.Stop();
                     }
@@ -106,7 +109,8 @@ namespace SeeingSharp.Multimedia.Input
 
                 // Register new ones
                 m_viewInputHandlers[view] = inputHandlers;
-                foreach(IInputHandler actInputHandler in inputHandlers)
+
+                foreach(var actInputHandler in inputHandlers)
                 {
                     actInputHandler.Start(view);
                 }
@@ -125,10 +129,12 @@ namespace SeeingSharp.Multimedia.Input
                 if (m_viewInputHandlers.ContainsKey(view))
                 {
                     List<IInputHandler> oldList = m_viewInputHandlers[view];
-                    foreach (IInputHandler actOldInputHanlder in oldList)
+
+                    foreach (var actOldInputHanlder in oldList)
                     {
                         actOldInputHanlder.Stop();
                     }
+
                     m_viewInputHandlers.Remove(view);
                 }
             });
@@ -138,13 +144,17 @@ namespace SeeingSharp.Multimedia.Input
         {
             base.OnTick(eArgs);
 
-            if (!GraphicsCore.IsLoaded) { return; }
+            if (!GraphicsCore.IsLoaded)
+            {
+                return;
+            }
 
             // Query for all input handlers on first tick
             if(m_globalInputHandlers == null)
             {
                 m_globalInputHandlers = InputHandlerFactory.CreateInputHandlersForGlobal();
-                foreach (IInputHandler actInputHandler in m_globalInputHandlers)
+
+                foreach (var actInputHandler in m_globalInputHandlers)
                 {
                     actInputHandler.Start(null);
                 }
@@ -154,6 +164,7 @@ namespace SeeingSharp.Multimedia.Input
             if(m_commandQueue.Count > 0)
             {
                 Action actCommand = null;
+
                 while(m_commandQueue.Dequeue(out actCommand))
                 {
                     actCommand();
@@ -165,6 +176,7 @@ namespace SeeingSharp.Multimedia.Input
 
             // Create new InputFrame object or reuse an old one
             InputFrame newInputFrame = null;
+
             if(m_recoveredInputFrames.Dequeue(out newInputFrame))
             {
                 newInputFrame.Reset(expectedStateCount, SINGLE_FRAME_DURATION);
@@ -175,32 +187,35 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Gather all input states
-            foreach(IInputHandler actInputHandler in m_globalInputHandlers)
+            foreach(var actInputHandler in m_globalInputHandlers)
             {
-                foreach(InputStateBase actInputState in actInputHandler.GetInputStates())
+                foreach(var actInputState in actInputHandler.GetInputStates())
                 {
                     actInputState.EnsureNotNull(nameof(actInputState));
-
                     newInputFrame.AddCopyOfState(actInputState, null);
                 }
             }
+
             foreach(KeyValuePair<IInputEnabledView, List<IInputHandler>> actViewSpecificHandlers in m_viewInputHandlers)
             {
-                RenderLoop renderLoop = actViewSpecificHandlers.Key.RenderLoop;
-                if (renderLoop == null) { continue; }
+                var renderLoop = actViewSpecificHandlers.Key.RenderLoop;
 
-                foreach (IInputHandler actInputHandler in actViewSpecificHandlers.Value)
+                if (renderLoop == null)
                 {
-                    foreach (InputStateBase actInputState in actInputHandler.GetInputStates())
+                    continue;
+                }
+
+                foreach (var actInputHandler in actViewSpecificHandlers.Value)
+                {
+                    foreach (var actInputState in actInputHandler.GetInputStates())
                     {
                         actInputState.EnsureNotNull(nameof(actInputState));
-
                         newInputFrame.AddCopyOfState(actInputState, renderLoop.ViewInformation);
                     }
                 }
             }
 
-            // Store the generated InputFrame 
+            // Store the generated InputFrame
             m_lastInputFrame = newInputFrame;
             m_gatheredInputFrames.Enqueue(newInputFrame);
 

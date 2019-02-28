@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,13 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using System;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Core;
+    using Objects;
+    using SeeingSharp.Util;
+
+    #endregion
+
     internal static class ResourceDictionaryExtensions
     {
         /// <summary>
@@ -35,7 +39,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static MaterialResource GetOrCreateMaterialResourceAndEnsureLoaded(this ResourceDictionary resourceDict, VertexStructureSurface targetSurface)
         {
-            MaterialResource materialResource = GetOrCreateMaterialResource(resourceDict, targetSurface);
+            var materialResource = GetOrCreateMaterialResource(resourceDict, targetSurface);
+
             if (!materialResource.IsLoaded)
             {
                 materialResource.LoadResource();
@@ -49,11 +54,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static MaterialResource GetOrCreateMaterialResource(this ResourceDictionary resourceDict, VertexStructureSurface targetSurface)
         {
-            NamedOrGenericKey materialKey = targetSurface.Material;
-            NamedOrGenericKey textureKey = targetSurface.TextureKey;
+            var materialKey = targetSurface.Material;
+            var textureKey = targetSurface.TextureKey;
 
             // Get the material if it is already created
-            if ((!materialKey.IsEmpty) && (resourceDict.ContainsResource(materialKey))) { return resourceDict.GetResource<MaterialResource>(materialKey); }
+            if ((!materialKey.IsEmpty) && (resourceDict.ContainsResource(materialKey)))
+            {
+                return resourceDict.GetResource<MaterialResource>(materialKey);
+            }
 
             // Generate a dynamic material key
             if (materialKey.IsEmpty)
@@ -62,12 +70,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Get the material if it is already created
-            if (resourceDict.ContainsResource(materialKey)) { return resourceDict.GetResource<MaterialResource>(materialKey); }
+            if (resourceDict.ContainsResource(materialKey))
+            {
+                return resourceDict.GetResource<MaterialResource>(materialKey);
+            }
 
             if(textureKey.IsEmpty)
             {
                 // Create a default material without any texture
-                SimpleColoredMaterialResource result = resourceDict.AddResource<SimpleColoredMaterialResource>(materialKey, new SimpleColoredMaterialResource());
+                var result = resourceDict.AddResource<SimpleColoredMaterialResource>(materialKey, new SimpleColoredMaterialResource());
                 result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
                 return result;
             }
@@ -83,7 +94,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         if (targetSurface.ResourceLink != null)
                         {
                             var textureResourceLink = targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey);
-                           
+
                             resourceDict.AddResource<StandardTextureResource>(
                                 textureKey,
                                 new StandardTextureResource(
@@ -116,18 +127,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
                 catch { }
 
-                // Create a default textured material 
+                // Create a default textured material
                 if (!textureKey.IsEmpty)
                 {
-                    SimpleColoredMaterialResource result = resourceDict.AddResource<SimpleColoredMaterialResource>(
-                        materialKey, 
+                    var result = resourceDict.AddResource<SimpleColoredMaterialResource>(
+                        materialKey,
                         new SimpleColoredMaterialResource(textureKey));
                     result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
                     return result;
                 }
                 else
                 {
-                    SimpleColoredMaterialResource result = resourceDict.AddResource<SimpleColoredMaterialResource>(
+                    var result = resourceDict.AddResource<SimpleColoredMaterialResource>(
                         materialKey,
                         new SimpleColoredMaterialResource());
                     result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
@@ -189,7 +200,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            VertexStructure newStructure = new VertexStructure();
+            var newStructure = new VertexStructure();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDiciontary.AddGeometry(newStructure);
@@ -200,7 +211,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            VertexStructure newStructure = new VertexStructure();
+            var newStructure = new VertexStructure();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDiciontary.AddGeometry(resourceKey, newStructure);

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Input;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Checking;
+    using Input;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// A UpdateState object which holds special variables for a Scene.
     /// </summary>
@@ -47,10 +49,7 @@ namespace SeeingSharp.Multimedia.Core
 
         #region parameters for single update step
         private bool m_isPaused;
-        private bool m_ignorePauseState;
         private UpdateState m_updateState;
-        private Matrix4Stack m_world;
-        private SceneLayer m_sceneLayer;
         private IEnumerable<InputFrame> m_inputFrames;
         #endregion
 
@@ -60,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneRelatedUpdateState(Scene owner)
         {
             m_owner = owner;
-            m_world = new Matrix4Stack(Matrix.Identity);
+            World = new Matrix4Stack(Matrix.Identity);
             m_inputFrames = null;
         }
 
@@ -76,12 +75,12 @@ namespace SeeingSharp.Multimedia.Core
             updateState.EnsureNotNull(nameof(updateState));
 
             m_isPaused = targetScene.IsPaused;
-            m_ignorePauseState = updateState.IgnorePauseState;
+            IgnorePauseState = updateState.IgnorePauseState;
 
-            m_world.ResetStackToIdentity();
+            World.ResetStackToIdentity();
 
             m_updateState = updateState;
-            m_sceneLayer = null;
+            SceneLayer = null;
 
             m_inputFrames = inputFrames;
             if(m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
@@ -96,7 +95,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!m_ignorePauseState)) { return TimeSpan.Zero; }
+                if (m_isPaused && (!IgnorePauseState)) { return TimeSpan.Zero; }
                 return m_updateState.UpdateTime;
             }
         }
@@ -110,28 +109,21 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!m_ignorePauseState)) { return 0; }
+                if (m_isPaused && (!IgnorePauseState)) { return 0; }
                 return m_updateState.UpdateTimeMilliseconds;
             }
         }
 
-        public Matrix4Stack World
-        {
-            get { return m_world; }
-        }
+        public Matrix4Stack World { get; }
 
-        public SceneLayer SceneLayer
-        {
-            get { return m_sceneLayer; }
-            internal set { m_sceneLayer = value; }
-        }
+        public SceneLayer SceneLayer { get; internal set; }
 
         public Scene Scene
         {
             get
             {
-                if (m_sceneLayer == null) { return null; }
-                else { return m_sceneLayer.Scene; }
+                if (SceneLayer == null) { return null; }
+                else { return SceneLayer.Scene; }
             }
         }
 
@@ -140,11 +132,7 @@ namespace SeeingSharp.Multimedia.Core
             get { return m_isPaused; }
         }
 
-        public bool IgnorePauseState
-        {
-            get { return m_ignorePauseState; }
-            set { m_ignorePauseState = value; }
-        }
+        public bool IgnorePauseState { get; set; }
 
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.

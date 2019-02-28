@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,13 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+
+    #endregion
+
     /// <summary>
     /// A queue object that performs each action using methods of the Interlocked class and therefore does not need any locking mechanism.
     /// </summary>
@@ -59,7 +63,7 @@ namespace SeeingSharp.Util
         /// <param name="items">The items to be enqueued.</param>
         public void Enqueue(IEnumerable<T> items)
         {
-            foreach(T actItem in items)
+            foreach(var actItem in items)
             {
                 m_backingQueue.Enqueue(actItem);
             }
@@ -93,9 +97,12 @@ namespace SeeingSharp.Util
 
             // Peek all following items on which checkPeekItem returns true
             //         .. and stop on first "false"
-            foreach (T loopItem in enumarableForPeek)
+            foreach (var loopItem in enumarableForPeek)
             {
-                if (!checkPeekItem(loopItem)) { break; }
+                if (!checkPeekItem(loopItem))
+                {
+                    break;
+                }
 
                 yield return loopItem;
             }
@@ -118,7 +125,7 @@ namespace SeeingSharp.Util
         public IEnumerable<T> DequeueWhile(Func<T, bool> checkDequeueItem)
         {
             // Dequeue and return items as long as checkDequeueItem returns true
-            T actItem = default(T);
+            var actItem = default(T);
             while (m_backingQueue.TryPeek(out actItem) &&
                   checkDequeueItem(actItem) &&
                   m_backingQueue.TryDequeue(out actItem))
@@ -138,13 +145,13 @@ namespace SeeingSharp.Util
             Func<T, bool> checkPeekItem)
         {
             // Execute dequeuing first
-            foreach(T actItem in DequeueWhile(checkDequeueItem))
+            foreach(var actItem in DequeueWhile(checkDequeueItem))
             {
                 yield return actItem;
             }
 
             // Execute peeking at last
-            foreach(T actItem in PeekWhile(checkPeekItem))
+            foreach(var actItem in PeekWhile(checkPeekItem))
             {
                 yield return actItem;
             }
@@ -157,7 +164,8 @@ namespace SeeingSharp.Util
         {
             List<T> result = new List<T>(m_backingQueue.Count);
 
-            T actItem = default(T);
+            var actItem = default(T);
+
             while (this.Dequeue(out actItem))
             {
                 result.Add(actItem);
@@ -171,7 +179,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public void DequeueAll(List<T> targetList)
         {
-            T actItem = default(T);
+            var actItem = default(T);
+
             while (this.Dequeue(out actItem))
             {
                 targetList.Add(actItem);
@@ -183,7 +192,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            T actItem = default(T);
+            var actItem = default(T);
             while (this.Dequeue(out actItem)) { }
         }
 

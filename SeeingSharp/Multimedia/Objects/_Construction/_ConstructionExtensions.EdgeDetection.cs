@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,12 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Collections.Generic;
-using System.Linq;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Collections.Generic;
+    using SharpDX;
+
+    #endregion
+
     public static partial class ConstructionExtensions
     {
         /// <summary>
@@ -34,17 +38,18 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public static VertexStructure GenerateShadowVolume(this IEnumerable<VertexStructure> structures, Vector3 lightDirection, float shadowVolumeLength)
         {
-            VertexStructure result = new VertexStructure();
+            var result = new VertexStructure();
 
             //Find all edges from given view direction
             List<Line> shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
 
             //Build the structure based on the found edges
-            Vector3 lightNormal = Vector3.Normalize(lightDirection);
-            VertexStructureSurface actSurface = result.FirstSurface;
-            foreach (Line actEdge in shadowVolumeEdges)
+            var lightNormal = Vector3.Normalize(lightDirection);
+            var actSurface = result.FirstSurface;
+
+            foreach (var actEdge in shadowVolumeEdges)
             {
-                Line targetEdge = new Line(
+                var targetEdge = new Line(
                     actEdge.StartPosition + lightNormal * shadowVolumeLength,
                     actEdge.EndPosition + lightNormal * shadowVolumeLength);
 
@@ -71,22 +76,25 @@ namespace SeeingSharp.Multimedia.Objects
             //Find all shadow volume edges
             List<Line> foundEndges = new List<Line>(2048);
             List<Line> edgesToRemove = new List<Line>(2048);
-            foreach (VertexStructure actStructure in structures)
-            { 
-                foreach (VertexStructureSurface actSurface in actStructure.Surfaces)
+
+            foreach (var actStructure in structures)
+            {
+                foreach (var actSurface in actStructure.Surfaces)
                 {
-                    foreach (Triangle actTriangle in actSurface.Triangles)
+                    foreach (var actTriangle in actSurface.Triangles)
                     {
                         if (Vector3.Dot(viewDirection, actStructure.Vertices[actTriangle.Index1].Normal) >= 0)
                         {
                             Line[] actEdges = actTriangle.GetEdges(actStructure);
-                            for (int loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
+
+                            for (var loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
                             {
-                                Line actEdge = actEdges[loopEdge];
+                                var actEdge = actEdges[loopEdge];
 
                                 //Was this edge already removed?
-                                bool alreadyRemoved = false;
-                                foreach (Line edgesRemoved in edgesToRemove)
+                                var alreadyRemoved = false;
+
+                                foreach (var edgesRemoved in edgesToRemove)
                                 {
                                     if (edgesRemoved.EqualsWithTolerance(actEdge))
                                     {
@@ -94,11 +102,16 @@ namespace SeeingSharp.Multimedia.Objects
                                         break;
                                     }
                                 }
-                                if (alreadyRemoved) { continue; }
+
+                                if (alreadyRemoved)
+                                {
+                                    continue;
+                                }
 
                                 //Was this edge already added?
-                                bool alreadyAdded = false;
-                                for (int loopShadowEdge = 0; loopShadowEdge < foundEndges.Count; loopShadowEdge++)
+                                var alreadyAdded = false;
+
+                                for (var loopShadowEdge = 0; loopShadowEdge < foundEndges.Count; loopShadowEdge++)
                                 {
                                     if (foundEndges[loopShadowEdge].EqualsWithTolerance(actEdge))
                                     {

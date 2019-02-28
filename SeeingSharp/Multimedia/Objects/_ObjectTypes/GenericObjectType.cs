@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,23 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class GenericObjectType : ObjectType
     {
-        private VertexStructure m_vertexStructure;
-        private VertexStructure m_vertexStructureLowDetail;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericObjectType"/> class.
         /// </summary>
         /// <param name="vertexStructure">The vertex structures.</param>
         public GenericObjectType(VertexStructure vertexStructure)
         {
-            m_vertexStructure = vertexStructure;
-            m_vertexStructureLowDetail = vertexStructure;
+            VertexStructure = vertexStructure;
+            VertexStructureLowDetail = vertexStructure;
         }
 
         /// <summary>
@@ -47,8 +49,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="vertexStructureLowDetail">The vertex structures for low detail level.</param>
         public GenericObjectType(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
         {
-            m_vertexStructure = vertexStructure;
-            m_vertexStructureLowDetail = vertexStructureLowDetail;
+            VertexStructure = vertexStructure;
+            VertexStructureLowDetail = vertexStructureLowDetail;
         }
 
         /// <summary>
@@ -57,8 +59,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for structure building</param>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            if (buildOptions.IsHighDetail) { return m_vertexStructure; }
-            else { return m_vertexStructureLowDetail; }
+            if (buildOptions.IsHighDetail) { return VertexStructure; }
+            else { return VertexStructureLowDetail; }
         }
 
         /// <summary>
@@ -67,12 +69,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialToApply">The materials to apply.</param>
         public void ApplyMaterialForAll(NamedOrGenericKey materialToApply)
         {
-            foreach (VertexStructureSurface actSurface in m_vertexStructure.Surfaces)
+            foreach (var actSurface in VertexStructure.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
 
-            foreach (VertexStructureSurface actSurface in m_vertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in VertexStructureLowDetail.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
@@ -85,7 +87,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialNameNew">The new material to be converted to.</param>
         public void ConvertMaterial(NamedOrGenericKey materialNameOld, NamedOrGenericKey materialNameNew)
         {
-            foreach (VertexStructureSurface actSurface in m_vertexStructure.Surfaces)
+            foreach (var actSurface in VertexStructure.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -93,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            foreach (VertexStructureSurface actSurface in m_vertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in VertexStructureLowDetail.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -105,17 +107,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the array containing all loaded vertex structures.
         /// </summary>
-        public VertexStructure VertexStructure
-        {
-            get { return m_vertexStructure; }
-        }
+        public VertexStructure VertexStructure { get; }
 
         /// <summary>
         /// Gets an array containing all loaded vertex structures for low detail level.
         /// </summary>
-        public VertexStructure VertexStructureLowDetail
-        {
-            get { return m_vertexStructureLowDetail; }
-        }
+        public VertexStructure VertexStructureLowDetail { get; }
     }
 }

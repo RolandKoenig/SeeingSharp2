@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System.Collections.Generic;
+    using Checking;
+    using SeeingSharp.Util;
+
+    #endregion
+
     /// <summary>
-    /// This is mostly logic of the Scene class but experted here 
+    /// This is mostly logic of the Scene class but experted here
     /// following the Flyweight pattern.
     /// </summary>
     internal class SceneComponentFlyweight
@@ -116,7 +117,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Update all components
             int attachedComponentsCount = m_attachedComponents.Count;
-            for (int loop = 0; loop < attachedComponentsCount; loop++)
+
+            for (var loop = 0; loop < attachedComponentsCount; loop++)
             {
                 m_attachedComponents[loop].Component.UpdateInternal(
                     updateState,
@@ -124,19 +126,25 @@ namespace SeeingSharp.Multimedia.Core
                     m_attachedComponents[loop].Context);
             }
 
-            // Attach all components which are comming in 
-            SceneComponentRequest actRequest = default(SceneComponentRequest);
+            // Attach all components which are comming in
+            var actRequest = default(SceneComponentRequest);
             int actIndex = 0;
+
             while (m_componentRequests.Dequeue(out actRequest))
             {
                 SceneComponentInfo actComponent;
                 int actComponentIndex;
+
                 switch (actRequest.RequestType)
                 {
                     case SceneComponentRequestType.Attach:
-                        if (actRequest.Component == null) { continue; }
+                        if (actRequest.Component == null)
+                        {
+                            continue;
+                        }
+
                         if(TryGetAttachedComponent(
-                            actRequest.Component, actRequest.CorrespondingView, 
+                            actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
                         {
                             // We've already attached this component, so skip this request
@@ -147,8 +155,8 @@ namespace SeeingSharp.Multimedia.Core
                         //  (new components replace old components with same group name)
                         if(!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
                         {
-                            foreach(SceneComponentInfo actObsoleteComponent in GetExistingComponentsByGroup(
-                                actRequest.Component.ComponentGroup, 
+                            foreach(var actObsoleteComponent in GetExistingComponentsByGroup(
+                                actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
                                 m_componentRequests.Enqueue(new SceneComponentRequest()
@@ -160,15 +168,19 @@ namespace SeeingSharp.Multimedia.Core
                             }
                         }
 
-                        SceneManipulator actManipulator = new SceneManipulator(m_owner);
+                        var actManipulator = new SceneManipulator(m_owner);
                         actManipulator.IsValid = true;
+
                         try
                         {
-                            SceneComponentInfo newRegisteredComponentInfo = new SceneComponentInfo();
-                            newRegisteredComponentInfo.Component = actRequest.Component;
-                            newRegisteredComponentInfo.CorrespondingView = actRequest.CorrespondingView;
-                            newRegisteredComponentInfo.Context = actRequest.Component.AttachInternal(
-                                actManipulator, actRequest.CorrespondingView);
+                            var newRegisteredComponentInfo = new SceneComponentInfo
+                            {
+                                Component = actRequest.Component,
+                                CorrespondingView = actRequest.CorrespondingView,
+                                Context = actRequest.Component.AttachInternal(
+                                    actManipulator, actRequest.CorrespondingView)
+                            };
+
                             actIndex++;
 
                             // Register the component on local list of attached ones
@@ -197,7 +209,7 @@ namespace SeeingSharp.Multimedia.Core
                             actComponent.Component.DetachInternal(
                                 actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                            // Remove the component 
+                            // Remove the component
                             m_attachedComponents.RemoveAt(actComponentIndex);
                         }
                         finally
@@ -209,15 +221,18 @@ namespace SeeingSharp.Multimedia.Core
                     case SceneComponentRequestType.DetachAll:
                         while(m_attachedComponents.Count > 0)
                         {
-                            actManipulator = new SceneManipulator(m_owner);
-                            actManipulator.IsValid = true;
+                            actManipulator = new SceneManipulator(m_owner)
+                            {
+                                IsValid = true
+                            };
+
                             try
                             {
                                 actComponent = m_attachedComponents[0];
                                 actComponent.Component.DetachInternal(
                                     actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                                // Remove the component 
+                                // Remove the component
                                 m_attachedComponents.RemoveAt(0);
                             }
                             finally

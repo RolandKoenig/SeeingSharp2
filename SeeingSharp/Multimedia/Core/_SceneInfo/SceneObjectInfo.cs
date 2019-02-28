@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Checking;
+    using Objects;
+
+    #endregion
+
     public class SceneObjectInfo
     {
-        private SceneObject m_sceneObject;
-        private SceneObjectInfoType m_sceneObjectType;
         private List<SceneObjectInfo> m_childs;
 
         /// <summary>
@@ -47,23 +47,31 @@ namespace SeeingSharp.Multimedia.Core
             obj.EnsureNotNull(nameof(obj));
             obj.Scene.EnsureNotNull($"{nameof(obj)}.{nameof(obj.Scene)}");
 
-            m_sceneObject = obj;
+            OriginalObject = obj;
 
             // Build child list
             m_childs = new List<SceneObjectInfo>(obj.CountChildren);
+
             if(buildFullChildTree)
             {
-                foreach(SceneObject actChildObject in obj.GetAllChildrenInternal())
+                foreach(var actChildObject in obj.GetAllChildrenInternal())
                 {
                     m_childs.Add(new SceneObjectInfo(actChildObject));
                 }
             }
 
             // Set the type of this object
-            m_sceneObjectType = SceneObjectInfoType.Other;
-            Type clrType = obj.GetType();
-            if(clrType == typeof(GenericObject)) { m_sceneObjectType = SceneObjectInfoType.GenericObject; }
-            else if(clrType == typeof(ScenePivotObject)) { m_sceneObjectType = SceneObjectInfoType.Pivot; }
+            Type = SceneObjectInfoType.Other;
+            var clrType = obj.GetType();
+
+            if (clrType == typeof(GenericObject))
+            {
+                Type = SceneObjectInfoType.GenericObject;
+            }
+            else if (clrType == typeof(ScenePivotObject))
+            {
+                Type = SceneObjectInfoType.Pivot;
+            }
         }
 
         public override string ToString()
@@ -71,15 +79,9 @@ namespace SeeingSharp.Multimedia.Core
             return $"Type:{this.Type}, #Childs:{this.Childs.Count}";
         }
 
-        public SceneObject OriginalObject
-        {
-            get { return m_sceneObject; }
-        }
+        public SceneObject OriginalObject { get; }
 
-        public SceneObjectInfoType Type
-        {
-            get { return m_sceneObjectType; }
-        }
+        public SceneObjectInfoType Type { get; }
 
         public IReadOnlyList<SceneObjectInfo> Childs
         {

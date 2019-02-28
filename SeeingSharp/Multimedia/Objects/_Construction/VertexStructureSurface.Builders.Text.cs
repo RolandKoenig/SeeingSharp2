@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,15 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using System.Collections.Generic;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
 using DWrite = SharpDX.DirectWrite;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Collections.Generic;
+    using Core;
+    using SharpDX;
+
+    #endregion
+
     public partial class VertexStructureSurface
     {
         /// <summary>
@@ -48,12 +57,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="geometryOptions">Some configuration for geometry creation.</param>
         public void BuildTextGeometry(string stringToBuild, TextGeometryOptions geometryOptions)
         {
-            DWrite.Factory writeFactory = GraphicsCore.Current.FactoryDWrite;
+            var writeFactory = GraphicsCore.Current.FactoryDWrite;
 
             //TODO: Cache font objects
 
             //Get DirectWrite font weight
-            DWrite.FontWeight fontWeight = DWrite.FontWeight.Normal;
+            var fontWeight = DWrite.FontWeight.Normal;
+
             switch (geometryOptions.FontWeight)
             {
                 case FontGeometryWeight.Bold:
@@ -66,7 +76,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Get DirectWrite font style
-            DWrite.FontStyle fontStyle = DWrite.FontStyle.Normal;
+            var fontStyle = DWrite.FontStyle.Normal;
+
             switch (geometryOptions.FontStyle)
             {
                 case FontGeometryStyle.Italic:
@@ -85,14 +96,14 @@ namespace SeeingSharp.Multimedia.Objects
             //Create the text layout object
             try
             {
-                DWrite.TextLayout textLayout = new DWrite.TextLayout(
+                var textLayout = new DWrite.TextLayout(
                     writeFactory, stringToBuild,
                     new DWrite.TextFormat(
                         writeFactory, geometryOptions.FontFamily, fontWeight, fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
                 //Render the text using the vertex structure text renderer
-                using (VertexStructureTextRenderer textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
+                using (var textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
                 {
                     textLayout.Draw(textRenderer, 0f, 0f);
                 }
@@ -110,17 +121,22 @@ namespace SeeingSharp.Multimedia.Objects
         public void BuildPlainPolygon(Vector3[] coordinates)
         {
             //Build the polygon
-            Polygon polygon = new Polygon(coordinates);
+            var polygon = new Polygon(coordinates);
 
             //Try to triangulate it
             IEnumerable<int> indices = polygon.TriangulateUsingCuttingEars();
-            if (indices == null) { throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!"); }
+
+            if (indices == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
+            }
 
             //Append all vertices
-            int baseIndex = m_owner.CountVertices;
+            int baseIndex = Owner.CountVertices;
+
             for (int loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
-                m_owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
+                Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
             }
 
             //Append all indices

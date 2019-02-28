@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using System;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using Checking;
+    using Core;
+    using Drawing3D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class GenericObject : SceneSpacialObject
     {
         #region Configuration members
@@ -81,11 +87,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            GeometryResource geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+
             if ((geometryResource != null) &&
                 (geometryResource.IsLoaded))
             {
-                BoundingBox result = geometryResource.BoundingBox;
+                var result = geometryResource.BoundingBox;
                 result.Transform(this.Transform);
                 return result;
             }
@@ -102,12 +109,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            GeometryResource geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+
             if ((geometryResource != null) &&
                 (geometryResource.IsLoaded))
             {
                 // Get BoundingBox object
-                BoundingBox boundingBox = geometryResource.BoundingBox;
+                var boundingBox = geometryResource.BoundingBox;
 
                 // Calculate bounding sphare
                 BoundingSphere result;
@@ -138,7 +146,8 @@ namespace SeeingSharp.Multimedia.Objects
             var exportDevice = exportOptions.ExportDevice;
             exportOptions.EnsureNotNull(nameof(exportDevice));
 
-            GeometryResource geometryResource = m_localResources[exportDevice.DeviceIndex];
+            var geometryResource = m_localResources[exportDevice.DeviceIndex];
+
             if (geometryResource != null)
             {
                 // Ensure that we have geometry infos for the exporter
@@ -146,7 +155,7 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     modelContainer.AddExportGeometry(geometryResource.PrepareForExport());
 
-                    foreach(MaterialResource actMaterial in geometryResource.GetReferencedMaterials())
+                    foreach(var actMaterial in geometryResource.GetReferencedMaterials())
                     {
                         if(!modelContainer.ContainsExportMaterial(actMaterial.Key))
                         {
@@ -154,7 +163,6 @@ namespace SeeingSharp.Multimedia.Objects
                         }
                     }
                 }
-                
 
                 //base.UpdateAndApplyRenderParameters(renderState);
                 //geometryResource.Render(renderState);
@@ -173,25 +181,31 @@ namespace SeeingSharp.Multimedia.Objects
         /// </returns>
         internal override float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
         {
-            GeometryResource geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+
             if ((geometryResource != null) &&
                 (geometryResource.IsLoaded))
             {
-                BoundingBox boundingBox = geometryResource.BoundingBox;
+                var boundingBox = geometryResource.BoundingBox;
+
                 if (!boundingBox.IsEmpty())
                 {
                     // Transform picking ray to local space
-                    Ray pickingRay = new Ray(rayStart, rayDirection);
+                    var pickingRay = new Ray(rayStart, rayDirection);
                     Matrix temp;
-                    Matrix localTransform = base.Transform;
+                    var localTransform = base.Transform;
                     Matrix.Invert(ref localTransform, out temp);
                     pickingRay.Transform(temp);
 
                     // Check for intersection on the bounding box
                     float distance = 0f;
+
                     if (pickingRay.Intersects(ref boundingBox, out distance))
                     {
-                        if (pickingOptions.OnlyCheckBoundingBoxes) { return distance; }
+                        if (pickingOptions.OnlyCheckBoundingBoxes)
+                        {
+                            return distance;
+                        }
 
                         // Perform picking on polygon level
                         if (geometryResource.Intersects(pickingRay, pickingOptions, out distance))
@@ -213,11 +227,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         internal override bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
         {
-            BoundingSphere boundingSphere = this.TryGetBoundingSphere(viewInfo);
+            var boundingSphere = this.TryGetBoundingSphere(viewInfo);
+
             if (boundingSphere != default(BoundingSphere))
             {
                 return boundingFrustum.Contains(ref boundingSphere) != ContainmentType.Disjoint;
             }
+
             return true;
         }
 
@@ -250,7 +266,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_localResources.AddObject(
                 resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
-                device.DeviceIndex, 
+                device.DeviceIndex,
                 false);
         }
 
@@ -260,10 +276,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="device">The device to check for.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex)) { return false; }
+            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            {
+                return false;
+            }
 
-            GeometryResource geoResource = m_localResources[device.DeviceIndex];
-            if (geoResource.Key != m_resGeometryKey) { return false; }
+            var geoResource = m_localResources[device.DeviceIndex];
+
+            if (geoResource.Key != m_resGeometryKey)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -327,7 +350,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderPlain(RenderState renderState)
         {
-            GeometryResource geometryResource = m_localResources[renderState.DeviceIndex];
+            var geometryResource = m_localResources[renderState.DeviceIndex];
+
             if (geometryResource != null)
             {
                 base.UpdateAndApplyRenderParameters(renderState);
@@ -341,7 +365,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderTransparent(RenderState renderState)
         {
-            GeometryResource geometryResource = m_localResources[renderState.DeviceIndex];
+            var geometryResource = m_localResources[renderState.DeviceIndex];
+
             if (geometryResource != null)
             {
                 base.UpdateAndApplyRenderParameters(renderState);

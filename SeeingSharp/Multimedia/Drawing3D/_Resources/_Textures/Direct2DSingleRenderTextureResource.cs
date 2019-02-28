@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
-// Namespace mappings
+#region using
+
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
-using DXGI = SharpDX.DXGI;
 
-namespace SeeingSharp.Multimedia.Drawing3D 
+#endregion
+
+namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Checking;
+    using Core;
+    using Drawing2D;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// A Direct2D texture which performs it's rendering only
     /// on load time. So Draw2D is called only once per device!
@@ -104,19 +106,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 
             // Create resources for rendering on the texture
-            using (Direct2DOverlayRenderer overlayRenderer = new Direct2DOverlayRenderer(
+            using (var overlayRenderer = new Direct2DOverlayRenderer(
                 device,
                 m_renderTargetTexture,
                 m_width, m_height,
                 DpiScaling.Default))
             {
-                Graphics2D graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
+                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
 
                 // Start drawing
                 overlayRenderer.BeginDraw();
+
                 try
                 {
-                    if (m_drawingLayer != null) { m_drawingLayer.Draw2DInternal(graphics2D); }
+                    if (m_drawingLayer != null)
+                    {
+                        m_drawingLayer.Draw2DInternal(graphics2D);
+                    }
                     else if (m_fillBrush != null)
                     {
                         graphics2D.FillRectangle(

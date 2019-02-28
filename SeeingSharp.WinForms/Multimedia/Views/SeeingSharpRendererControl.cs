@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,30 +21,34 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Util;
-using SharpDX;
+
+#region using
 
 //Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using GDI = System.Drawing;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using Core;
+    using Drawing3D;
+    using Input;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public partial class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
         private const string TEXT_GRAPHICS_NOT_INITIALIZED = "Graphics not initialized!";
@@ -54,8 +58,8 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Resources for Direct3D 11
-        private DXGI.Factory m_factory;
-        private DXGI.SwapChain1 m_swapChain;
+        private SharpDX.DXGI.Factory m_factory;
+        private SharpDX.DXGI.SwapChain1 m_swapChain;
         private D3D11.Device m_renderDevice;
         private D3D11.DeviceContext m_renderDeviceContext;
         private D3D11.RenderTargetView m_renderTarget;
@@ -65,10 +69,10 @@ namespace SeeingSharp.Multimedia.Views
         #endregion
 
         #region Generic members
-        private Brush m_backBrush;
-        private Brush m_foreBrushText;
-        private Brush m_backBrushText;
-        private Pen m_borderPen;
+        private GDI.Brush m_backBrush;
+        private GDI.Brush m_foreBrushText;
+        private GDI.Brush m_backBrushText;
+        private GDI.Pen m_borderPen;
         #endregion
 
         #region Misc
@@ -104,7 +108,7 @@ namespace SeeingSharp.Multimedia.Views
             m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
 
             // Create the render loop
-            GDI.Color backColor = this.BackColor;
+            var backColor = this.BackColor;
             m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
             m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
             m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
@@ -147,7 +151,10 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public async Task<List<SceneObject>> GetObjectsBelowCursorAsync()
         {
-            if (!m_isMouseInside) { return new List<SceneObject>(); }
+            if (!m_isMouseInside)
+            {
+                return new List<SceneObject>();
+            }
 
             return await m_renderLoop.PickObjectAsync(
                 SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
@@ -162,7 +169,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                var screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile);
             }
         }
@@ -176,7 +183,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_backBuffer != null)
             {
-                Bitmap screenshot = await m_renderLoop.GetScreenshotGdiAsync();
+                var screenshot = await m_renderLoop.GetScreenshotGdiAsync();
                 screenshot.Save(targetFile, imageFormat);
             }
         }
@@ -198,8 +205,8 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a simple grid on the background to have something for the Designer
                 if (!GraphicsCore.IsLoaded)
                 {
-                    GDI.SizeF targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
-                    GDI.RectangleF targetRect = new GDI.RectangleF(
+                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
+                    var targetRect = new GDI.RectangleF(
                         10f, 10f, targetSize.Width, targetSize.Height);
                     if ((targetRect.Width > 10) &&
                        (targetRect.Height > 10))
@@ -262,9 +269,9 @@ namespace SeeingSharp.Multimedia.Views
             m_backBrush = new System.Drawing.Drawing2D.HatchBrush(
                 GDI.Drawing2D.HatchStyle.DottedGrid,
                 GDI.Color.Gray, this.BackColor);
-            m_backBrushText = new SolidBrush(GDI.Color.White);
-            m_foreBrushText = new SolidBrush(GDI.Color.Black);
-            m_borderPen = new Pen(GDI.Color.DarkGray);
+            m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
+            m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
+            m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
         }
 
         /// <summary>
@@ -370,11 +377,12 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
 
             //Define the viewport for rendering
-            SharpDX.Mathematics.Interop.RawViewportF viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
 
             // Query for current dpi value
-            DpiScaling dpiScaling = DpiScaling.Default;
-            using (Graphics graphics = this.CreateGraphics())
+            var dpiScaling = DpiScaling.Default;
+
+            using (var graphics = this.CreateGraphics())
             {
                 dpiScaling.DpiX = graphics.DpiX;
                 dpiScaling.DpiY = graphics.DpiY;
@@ -413,7 +421,8 @@ namespace SeeingSharp.Multimedia.Views
             if (this.Height <= 0) { return false; }
 
             Form parentForm = null;
-            Control actParent = this.Parent;
+            var actParent = this.Parent;
+
             while((parentForm == null) && (actParent != null))
             {
                 parentForm = actParent as Form;
@@ -466,13 +475,13 @@ namespace SeeingSharp.Multimedia.Views
             //Present all rendered stuff on screen
             try
             {
-                m_swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
+                m_swapChain.Present(0, SharpDX.DXGI.PresentFlags.DoNotWait, new SharpDX.DXGI.PresentParameters());
             }
             catch(SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware
-                if (ex.ResultCode == DXGI.ResultCode.WasStillDrawing) { return; }
+                if (ex.ResultCode == SharpDX.DXGI.ResultCode.WasStillDrawing) { return; }
 
                 throw;
             }
@@ -512,7 +521,7 @@ namespace SeeingSharp.Multimedia.Views
                 if (((int)e.Button | (int)actButton) != (int)actButton) { continue; }
                 if (!m_mouseButtonDownTime.ContainsKey(actButton)) { continue; }
 
-                DateTime downTimeStamp = m_mouseButtonDownTime[actButton];
+                var downTimeStamp = m_mouseButtonDownTime[actButton];
                 m_mouseButtonDownTime.Remove(actButton);
 
                 if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)

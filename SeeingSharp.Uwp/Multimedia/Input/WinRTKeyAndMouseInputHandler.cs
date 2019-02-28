@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,25 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using Windows.System;
+    using Windows.UI.Core;
+    using Windows.UI.Input;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Input;
+    using Core;
+    using SharpDX;
+    using Views;
+
+    #endregion
+
     class WinRTKeyAndMouseInputHandler : IInputHandler
     {
         private const float MOVEMENT = 0.3f;
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Input
             foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
             {
                 short actVirtualKeyCode = (short)actVirtualKey;
-                WinVirtualKey actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
+                var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
                 s_keyMappingDict[actVirtualKey] = actWinVirtualKey;
             }
         }
@@ -135,12 +135,15 @@ namespace SeeingSharp.Multimedia.Input
 
                 // Create the dummy button for focus management
                 //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
-                m_dummyButtonForFocus = new Button();
-                m_dummyButtonForFocus.Content = "Button";
-                m_dummyButtonForFocus.Width = 0;
-                m_dummyButtonForFocus.Height = 0;
-                m_dummyButtonForFocus.HorizontalAlignment = HorizontalAlignment.Left;
-                m_dummyButtonForFocus.VerticalAlignment = VerticalAlignment.Top;
+                m_dummyButtonForFocus = new Button
+                {
+                    Content = "Button",
+                    Width = 0,
+                    Height = 0,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+
                 m_dummyButtonForFocus.KeyDown += OnDummyButtonForFocus_KeyDown;
                 m_dummyButtonForFocus.KeyUp += OnDummyButtonForFocus_KeyUp;
                 m_dummyButtonForFocus.LostFocus += OnDummyButtonForFocus_LostFocus;
@@ -151,7 +154,7 @@ namespace SeeingSharp.Multimedia.Input
                 m_coreWindow.KeyDown += OnCoreWindow_KeyDown;
                 m_coreWindow.KeyUp += OnCoreWindow_KeyUp;
 
-                // Set focus on the target 
+                // Set focus on the target
                 m_dummyButtonForFocus.Focus(FocusState.Programmatic);
             });
         }
@@ -166,9 +169,10 @@ namespace SeeingSharp.Multimedia.Input
             if(m_dispatcher == null) { return; }
 
             // Deregister all events on UI thread
-            Button dummyButtonForFocus = m_dummyButtonForFocus;
-            SeeingSharpPanelPainter painter = m_painter;
-            CoreWindow coreWindow = m_coreWindow;
+            var dummyButtonForFocus = m_dummyButtonForFocus;
+            var painter = m_painter;
+            var coreWindow = m_coreWindow;
+
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Remove the dummy button
@@ -273,8 +277,9 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -300,8 +305,9 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -311,6 +317,7 @@ namespace SeeingSharp.Multimedia.Input
                     pointProperties.IsXButton1Pressed,
                     pointProperties.IsXButton2Pressed);
             }
+
             m_lastDragPoint = currentPoint;
 
             // Needed here because we loose focus again by default on left mouse button
@@ -319,20 +326,29 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnTargetPanel_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (m_painter == null) { return; }
+            if (m_painter == null)
+            {
+                return;
+            }
 
             // Calculate move distance
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            if(m_lastDragPoint == null) { m_lastDragPoint = currentPoint; }
-            Vector2 moveDistance = new Vector2(
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+
+            if (m_lastDragPoint == null)
+            {
+                m_lastDragPoint = currentPoint;
+            }
+
+            var moveDistance = new Vector2(
                 (float)(currentPoint.Position.X - m_lastDragPoint.Position.X),
                 (float)(currentPoint.Position.Y - m_lastDragPoint.Position.Y));
-            Vector2 currentLocation = new Vector2(
+            var currentLocation = new Vector2(
                 (float)currentPoint.Position.X,
                 (float)currentPoint.Position.Y);
 
             // Track mouse/pointer state
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var pointProperties = currentPoint.Properties;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(
@@ -357,9 +373,10 @@ namespace SeeingSharp.Multimedia.Input
             if (!m_hasFocus) { return; }
 
             // Track mouse/pointer state
-            PointerPoint currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
-            PointerPointProperties pointProperties = currentPoint.Properties;
+            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var pointProperties = currentPoint.Properties;
             int wheelDelta = pointProperties.MouseWheelDelta;
+
             if (pointProperties.IsPrimary)
             {
                 m_stateMouseOrPointer.Internals.NotifyButtonStates(

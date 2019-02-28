@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,29 +21,36 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
 
-// Some namespace mappings
-using DXGI = SharpDX.DXGI;
+#region using
+
 using D3D11 = SharpDX.Direct3D11;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class DeviceHandlerDXGI
     {
-        private DXGI.Factory2 m_factory;
-        private DXGI.Adapter1 m_adapter;
-        private DXGI.Device3 m_device;
+        private SharpDX.DXGI.Factory2 m_factory;
+        private SharpDX.DXGI.Adapter1 m_adapter;
+        private SharpDX.DXGI.Device3 m_device;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
         /// </summary>
-        internal DeviceHandlerDXGI(DXGI.Adapter1 adapter, D3D11.Device device)
+        internal DeviceHandlerDXGI(SharpDX.DXGI.Adapter1 adapter, D3D11.Device device)
         {
-            m_device = device.QueryInterface<DXGI.Device3>();
+            m_device = device.QueryInterface<SharpDX.DXGI.Device3>();
             m_adapter = adapter;
 
-            m_factory = m_adapter.GetParent<DXGI.Factory2>();
+            m_factory = m_adapter.GetParent<SharpDX.DXGI.Factory2>();
         }
 
         /// <summary>
@@ -60,7 +67,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets current factory object.
         /// </summary>
         /// <value>The factory.</value>
-        internal DXGI.Factory2 Factory
+        internal SharpDX.DXGI.Factory2 Factory
         {
             get { return m_factory; }
         }
@@ -68,7 +75,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DXGI device.
         /// </summary>
-        internal DXGI.Device3 Device
+        internal SharpDX.DXGI.Device3 Device
         {
             get { return m_device; }
         }
@@ -76,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current adapter used for drawing.
         /// </summary>
-        internal DXGI.Adapter1 Adapter
+        internal SharpDX.DXGI.Adapter1 Adapter
         {
             get { return m_adapter; }
         }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,21 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+
+#region using
 
 // Some namespace mappings
-using DXGI = SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
-using SeeingSharp.Util;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class WriteableBitmapResource : BitmapResource
     {
         #region Resources
@@ -53,15 +57,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Initializes a new instance of the <see cref="WriteableBitmapResource"/> class.
         /// </summary>
         public WriteableBitmapResource(
-            Size2 bitmapSize, 
-            BitmapFormat format = BitmapFormat.Bgra, 
+            Size2 bitmapSize,
+            BitmapFormat format = BitmapFormat.Bgra,
             AlphaMode alphaMode = AlphaMode.Straight,
             double dpiX = 96.0, double dpiY = 96.0)
         {
             m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
             m_bitmapSize = bitmapSize;
             m_pixelFormat = new D2D.PixelFormat(
-                (DXGI.Format)format,
+                (SharpDX.DXGI.Format)format,
                 (D2D.AlphaMode)alphaMode);
             m_dpiX = dpiX;
             m_dpiY = dpiY;
@@ -75,8 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="pitch"></param>
         public void SetBitmapContent(Graphics2D graphics, IntPtr pointer, int pitch)
         {
-            D2D.Bitmap bitmap = this.GetBitmap(graphics.Device);
-
+            var bitmap = this.GetBitmap(graphics.Device);
             bitmap.CopyFromMemory(pointer, pitch);
         }
 
@@ -87,15 +90,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (base.IsDisposed)
+            {
+                throw new ObjectDisposedException(this.GetType().Name);
+            }
 
-            D2D.Bitmap result = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var result = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (result == null)
             {
                 // Load the bitmap initially
                 result = new D2D.Bitmap(
                     engineDevice.FakeRenderTarget2D,
-                    m_bitmapSize, 
+                    m_bitmapSize,
                     new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
                 m_loadedBitmaps[engineDevice.DeviceIndex] = result;
             }
@@ -109,7 +116,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Bitmap brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+
             if (brush != null)
             {
                 SeeingSharpTools.DisposeObject(brush);

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class DebugDrawingLayer : Custom2DDrawingLayer, IDisposable
     {
         #region Drawing resources
@@ -45,11 +45,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DebugDrawingLayer()
         {
-            m_textFormat = new TextFormatResource("Arial", 30f);
-            m_textFormat.TextAlignment = TextAlignment.Center;
-            m_textFormat.ParagraphAlignment = ParagraphAlignment.Center;
+            m_textFormat = new TextFormatResource("Arial", 30f)
+            {
+                TextAlignment = TextAlignment.Center,
+                ParagraphAlignment = ParagraphAlignment.Center
+            };
 
-            Color4 grayColor = Color4Ex.LightGray;
+            var grayColor = Color4Ex.LightGray;
             grayColor.ChangeAlphaTo(0.8f);
             m_solidBrushBackground = new SolidBrushResource(grayColor);
             m_solidBrushForeground = new SolidBrushResource(Color4Ex.RedColor);
@@ -75,7 +77,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if (m_textFormat == null) { return; }
 
             // Check for minimum screen size
-            Size2F screenSize = graphics.ScreenSize;
+            var screenSize = graphics.ScreenSize;
+
             if((screenSize.Width < 300f) ||
                (screenSize.Height < 100f))
             {
@@ -83,7 +86,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             // Draw the debug message on the upper right corner
-            RectangleF targetRect = new RectangleF(
+            var targetRect = new RectangleF(
                 screenSize.Width - 300f, 10f,
                 280f, 80f);
             graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);

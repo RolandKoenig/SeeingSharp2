@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-
-// Some namespace mappings
-using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using SharpDX;
+
+    #endregion
+
     public enum Graphics2DTransformMode
     {
         Custom,
@@ -60,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Text is clipped to the layout rectangle.
         /// </summary>
-        Clip = 2,
+        Clip = 2
     }
 
     /// <summary>
@@ -84,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Specifies that text is measured using the same glyph display metrics as
         /// text measured by GDI using a font created with CLEARTYPE_NATURAL_QUALITY.
         /// </summary>
-        GdiNatural = 2,
+        GdiNatural = 2
     }
 
     /// <summary>
@@ -94,7 +92,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Normal = 0,
         Oblique = 1,
-        Italic = 2,
+        Italic = 2
     }
 
     /// <summary>
@@ -117,7 +115,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         Heavy = 900,
         Black = 900,
         ExtraBlack = 950,
-        UltraBlack = 950,
+        UltraBlack = 950
     }
 
     /// <summary>
@@ -135,7 +133,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         SemiExpanded = 6,
         Expanded = 7,
         ExtraExpanded = 8,
-        UltraExpanded = 9,
+        UltraExpanded = 9
     }
 
     /// <summary>
@@ -145,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Near = 0,
         Far = 1,
-        Center = 2,
+        Center = 2
     }
 
     /// <summary>
@@ -155,7 +153,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Leading = 0,
         Trailing = 1,
-        Center = 2,
+        Center = 2
     }
 
     /// <summary>
@@ -164,7 +162,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum WordWrapping : int
     {
         Wrap = 0,
-        NoWrap = 1,
+        NoWrap = 1
     }
 
     /// <summary>
@@ -173,7 +171,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum ReadingDirection : int
     {
         LeftToRight = 0,
-        RightToLeft = 1,
+        RightToLeft = 1
     }
 
     /// <summary>
@@ -205,7 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// The alpha value is ignored.
         /// </summary>
-        Ignore = 3,
+        Ignore = 3
     }
 
     /// <summary>
@@ -214,7 +212,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum BitmapInterpolationMode : int
     {
         NearestNeighbor = 0,
-        Linear = 1,
+        Linear = 1
     }
 
     /// <summary>
@@ -223,7 +221,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// </summary>
     public enum BitmapFormat : int
     {
-        Bgra = DXGI.Format.B8G8R8A8_UNorm
+        Bgra = SharpDX.DXGI.Format.B8G8R8A8_UNorm
     }
 
     /// <summary>
@@ -235,7 +233,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Repeat the edge pixels of the brush's content for all regions outside the normal
         /// content area.
-        /// </summary>  
+        /// </summary>
         Clamp = 0,
 
         /// <summary>
@@ -273,7 +271,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Interpolation is performed in the linear-gamma color space.
-        /// </summary>  
+        /// </summary>
         Linear = 1
     }
 
@@ -297,7 +295,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// a two-stop gradient 0.0f, Black}, {2.0f, White is indistinguishable visually
     /// from 0.0f, Black}, {1.0f, Mid-level gray. Also, the colors are clamped before
     /// interpolation.
-    /// </summary> 
+    /// </summary>
     public struct GradientStop
     {
         public GradientStop(Color4 color, float position)
@@ -315,7 +313,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// A value that indicates the relative position of the gradient stop in the brush.
         /// This value must be in the [0.0f, 1.0f] range if the gradient stop is to be seen
         ///  explicitly.
-        /// </summary> 
+        /// </summary>
         public float Position;
     }
 }

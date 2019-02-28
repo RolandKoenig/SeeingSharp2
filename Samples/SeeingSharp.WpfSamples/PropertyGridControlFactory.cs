@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using PropertyTools.DataAnnotations;
-using PropertyTools.Wpf;
 
 namespace SeeingSharp.WpfSamples
 {
+    #region using
+
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using PropertyTools.DataAnnotations;
+    using PropertyTools.Wpf;
+
+    #endregion
+
     public class PropertyGridControlFactory : PropertyTools.Wpf.PropertyGridControlFactory
     {
         public override FrameworkElement CreateControl(PropertyItem property, PropertyControlFactoryOptions options)

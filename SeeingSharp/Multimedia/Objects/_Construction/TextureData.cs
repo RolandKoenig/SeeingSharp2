@@ -1,11 +1,11 @@
 #region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Runtime.InteropServices;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System.Runtime.InteropServices;
+    using SharpDX;
+
+    #endregion
+
     [StructLayout(LayoutKind.Sequential)]
     public struct TextureData
     {
-        private Vector2 m_coordiante1;
-        private float m_textureFactor;
-
         /// <summary>
         /// Initializes a new TextureData structure
         /// </summary>
         public TextureData(Vector2 coord1)
         {
-            m_coordiante1 = coord1;
-            m_textureFactor = 0f;
+            Coordinate1 = coord1;
+            TextureFactor = 0f;
         }
 
         /// <summary>
@@ -46,8 +48,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public TextureData Copy(Vector2 newCoord1)
         {
-            TextureData result = this;
-            result.m_coordiante1 = newCoord1;
+            var result = this;
+            result.Coordinate1 = newCoord1;
             return result;
         }
 
@@ -56,19 +58,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// This value decides wether a texture is displayed on this vertex or not.
         /// A value greater or equal 0 will show the texture, all negatives will hide it.
         /// </summary>
-        public float TextureFactor
-        {
-            get { return m_textureFactor; }
-            set { m_textureFactor = value; }
-        }
+        public float TextureFactor { get; set; }
 
         /// <summary>
         /// Retrieves or sets first texture coordinate
         /// </summary>
-        public Vector2 Coordinate1
-        {
-            get { return m_coordiante1; }
-            set { m_coordiante1 = value; }
-        }
+        public Vector2 Coordinate1 { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using System;
+    using Checking;
+    using Core;
+    using SharpDX;
+
+    #endregion
+
     public class CameraStraightMoveAnimation : AnimationBase
     {
         #region Configuration
@@ -53,7 +54,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             targetCamera.EnsureNotNull(nameof(targetCamera));
             targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
- 
 
             m_camera = targetCamera;
             m_cameraPerspective = m_camera as PerspectiveCamera3D;
@@ -78,8 +78,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             float actFrameFactor = (float)(currentMillis / maxMilliseconds);
 
             // Transform position and rotation
-            Vector3 moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
-            Vector2 rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
+            var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
+            var rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
             m_camera.Position = m_viewPointSource.Position + (moveVector * actFrameFactor);
             m_camera.TargetRotation = m_viewPointSource.Rotation + (rotationVector * actFrameFactor);
 

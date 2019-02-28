@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System;
-using System.Numerics;
-using System.Collections.Generic;
-using System.Threading;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using Core;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     /// <summary>
     /// Container for imported model data.
     /// </summary>
@@ -43,9 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
         #region All model data
         private int m_importID = 0;
         private ImportOptions m_importOptions;
-        private List<SceneObject> m_objects;
-        private List<Tuple<SceneObject, SceneObject>> m_parentChildRelationships;
-        private List<ImportedResourceInfo> m_importedResources;
+
         #endregion
 
         /// <summary>
@@ -54,9 +56,9 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer(ImportOptions importOptions)
         {
             m_importOptions = importOptions;
-            m_objects = new List<SceneObject>();
-            m_parentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            m_importedResources = new List<ImportedResourceInfo>();
+            Objects = new List<SceneObject>();
+            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
+            ImportedResources = new List<ImportedResourceInfo>();
 
             m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
@@ -67,7 +69,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ScenePivotObject CreateAndAddRootObject()
         {
             // Append an object which transform the whole coordinate system
-            ScenePivotObject rootObject = new ScenePivotObject();
+            var rootObject = new ScenePivotObject();
 
             // Handle base transformation
             switch(m_importOptions.ResourceCoordinateSystem)
@@ -114,26 +116,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
-        public List<SceneObject> Objects
-        {
-            get { return m_objects; }
-        }
+        public List<SceneObject> Objects { get; }
 
         /// <summary>
         /// Gets the hierarchy information of the imported objects.
         /// </summary>
-        public List<Tuple<SceneObject, SceneObject>> ParentChildRelationships
-        {
-            get { return m_parentChildRelationships; }
-        }
+        public List<Tuple<SceneObject, SceneObject>> ParentChildRelationships { get; }
 
         /// <summary>
         /// Gets a collection containing all imported resources.
         /// </summary>
-        public List<ImportedResourceInfo> ImportedResources
-        {
-            get { return m_importedResources; }
-        }
+        public List<ImportedResourceInfo> ImportedResources { get; }
 
         /// <summary>
         /// Should triangle order be changes by the import logic?
@@ -148,12 +141,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// The resize factor for imported geometry.
         /// (This property is handled by the importer)
         /// </summary>
-        public float ResizeFactor 
-        { 
-            get 
-            { 
+        public float ResizeFactor
+        {
+            get
+            {
                 return m_importOptions.ResizeFactor;
-            } 
+            }
         }
     }
 }

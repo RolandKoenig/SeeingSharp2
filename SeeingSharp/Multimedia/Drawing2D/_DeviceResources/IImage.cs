@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using Core;
+
+    #endregion
+
     public interface IImage
     {
-
     }
 
     internal interface IImageInternal
@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         IDisposable GetImageObject(EngineDevice device);
 
         /// <summary>
-        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image. 
+        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
         /// </summary>
         BitmapResource TryGetSourceBitmap();
     }

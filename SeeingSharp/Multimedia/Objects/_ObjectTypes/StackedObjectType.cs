@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,16 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
+    #region using
+
+    using Checking;
+    using SharpDX;
+
+    #endregion
+
     public class StackedObjectType : ObjectType
     {
         #region Main parameters
@@ -53,14 +53,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for structure building</param>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            VertexStructure structureFromChild = m_objTypeToStack.BuildStructure(buildOptions);
+            var structureFromChild = m_objTypeToStack.BuildStructure(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));
 
-            BoundingBox childStructBox = structureFromChild.GenerateBoundingBox();
-            Vector3 correctionVector = -childStructBox.GetBottomCenter();
+            var childStructBox = structureFromChild.GenerateBoundingBox();
+            var correctionVector = -childStructBox.GetBottomCenter();
 
             // Copy metadata infomration of the VertexStructures
-            VertexStructure result = structureFromChild.Clone(
+            var result = structureFromChild.Clone(
                 copyGeometryData: false,
                 capacityMultiplier: m_stackSize);
 
@@ -68,17 +68,19 @@ namespace SeeingSharp.Multimedia.Objects
             for (int loop = 0; loop < m_stackSize; loop++)
             {
                 float actYCorrection = childStructBox.Height * loop;
-                Vector3 localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
+                var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
 
                 int baseVertex = loop * structureFromChild.CountVertices;
-                foreach (Vertex actVertex in structureFromChild.Vertices)
+
+                foreach (var actVertex in structureFromChild.Vertices)
                 {
                     // Change vertex properties based on stack position
-                    Vertex changedVertex = actVertex;
+                    var changedVertex = actVertex;
                     changedVertex.Position = changedVertex.Position + localCorrection;
+
                     if (loop % 2 == 1)
                     {
-                        var color = changedVertex.Color; 
+                        var color = changedVertex.Color;
                         color.ChangeColorByLight(0.05f);
                         changedVertex.Color = color;
                     }
@@ -88,10 +90,11 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Clone all surfaces
-                foreach (VertexStructureSurface actSurfaceFromChild in structureFromChild.Surfaces)
+                foreach (var actSurfaceFromChild in structureFromChild.Surfaces)
                 {
-                    VertexStructureSurface newSurface = result.CreateSurface(actSurfaceFromChild.CountTriangles);
-                    foreach (Triangle actTriangle in actSurfaceFromChild.Triangles)
+                    var newSurface = result.CreateSurface(actSurfaceFromChild.CountTriangles);
+
+                    foreach (var actTriangle in actSurfaceFromChild.Triangles)
                     {
                         newSurface.AddTriangle(
                             baseVertex + actTriangle.Index1,
@@ -99,7 +102,6 @@ namespace SeeingSharp.Multimedia.Objects
                             baseVertex + actTriangle.Index3);
                     }
                 }
-
             }
 
             return result;

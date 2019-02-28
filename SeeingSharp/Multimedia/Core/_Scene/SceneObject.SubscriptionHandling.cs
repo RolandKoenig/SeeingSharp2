@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,15 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public abstract partial class SceneObject
     {
         // This collection is synchronized with corresponding ViewRelatedSceneLayerSubsets
@@ -54,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The ViewRelatedSceneLayerSubset to which to subscribe.</param>
         /// <param name="zOrder">The z order if sorting is enabled for this pass (default = 0).</param>
         protected internal void SubscribeToPass(
-            RenderPassInfo renderPass, 
+            RenderPassInfo renderPass,
             ViewRelatedSceneLayerSubset layerViewSubset, Action<RenderState> renderAction,
             int zOrder = 0)
         {
@@ -79,9 +81,11 @@ namespace SeeingSharp.Multimedia.Core
             // Update the corresponding subscription entry
             int subscriptionCount = subscriptionList.Count;
             int entryCount = 0;
+
             for (int loop = 0; loop < subscriptionCount; loop++)
             {
-                RenderPassSubscription currentSubscriptionInfo = subscriptionList[loop];
+                var currentSubscriptionInfo = subscriptionList[loop];
+
                 if ((currentSubscriptionInfo.SceneObject == newSubscriptionInfo.SceneObject) &&
                     (currentSubscriptionInfo.RenderPass == newSubscriptionInfo.RenderPass) &&
                     (currentSubscriptionInfo.RenderMethod == newSubscriptionInfo.RenderMethod))
@@ -90,7 +94,11 @@ namespace SeeingSharp.Multimedia.Core
                     entryCount++;
                 }
             }
-            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
+
+            if (entryCount > 1)
+            {
+                throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!");
+            }
         }
 
         /// <summary>
@@ -128,14 +136,20 @@ namespace SeeingSharp.Multimedia.Core
             // Get the subscription list
             // (may be null if object was removed from the layer)
             List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-            if (subscriptionList == null) { return; }
+
+            if (subscriptionList == null)
+            {
+                return;
+            }
 
             // Remove the given entry from subscription list
             int subscriptionCount = subscriptionList.Count;
             int entryCount = 0;
-            for (int loop = 0; loop < subscriptionCount; loop++)
+
+            for (var loop = 0; loop < subscriptionCount; loop++)
             {
-                RenderPassSubscription currentSubscriptionInfo = subscriptionList[loop];
+                var currentSubscriptionInfo = subscriptionList[loop];
+
                 if ((currentSubscriptionInfo.SceneObject == subscription.SceneObject) &&
                    (currentSubscriptionInfo.RenderPass == subscription.RenderPass) &&
                    (currentSubscriptionInfo.RenderMethod == subscription.RenderMethod))
@@ -146,7 +160,11 @@ namespace SeeingSharp.Multimedia.Core
                     entryCount++;
                 }
             }
-            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
+
+            if (entryCount > 1)
+            {
+                throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!");
+            }
         }
 
         /// <summary>

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Objects;
+
+#region using
 
 // Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
+    #region using
+
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class ViewRenderParameters : Resource
     {
         #region Resource keys
@@ -42,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Configuration
-        private NamedOrGenericKey m_postprocessEffectKey;
+
         #endregion
 
         #region Resources
@@ -65,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resourceDictionary">The resource dictionary where to load the effect.</param>
         internal PostprocessEffectResource GetPostprocessEffect(NamedOrGenericKey namedOrGenericKey, ResourceDictionary resourceDictionary)
         {
-            m_postprocessEffectKey = namedOrGenericKey;
+            PostprocessEffectKey = namedOrGenericKey;
 
             // Handle empty key
             if (namedOrGenericKey.IsEmpty)
@@ -85,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             m_postprocessEffect = resourceDictionary.GetResourceAndEnsureLoaded<PostprocessEffectResource>(namedOrGenericKey);
-            m_postprocessEffectKey = namedOrGenericKey;
+            PostprocessEffectKey = namedOrGenericKey;
             return m_postprocessEffect;
         }
 
@@ -103,7 +106,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">The render state on which to apply.</param>
         internal void Apply(RenderState renderState)
         {
-            D3D11.DeviceContext deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
             deviceContext.VertexShader.SetConstantBuffer(1, m_cbPerView.ConstantBuffer);
@@ -132,11 +135,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets or sets the key of the postprocess effect.
         /// </summary>
-        internal NamedOrGenericKey PostprocessEffectKey
-        {
-            get { return m_postprocessEffectKey; }
-            set { m_postprocessEffectKey = value; }
-        }
+        internal NamedOrGenericKey PostprocessEffectKey { get; set; }
 
         /// <summary>
         /// Is the resource loaded?

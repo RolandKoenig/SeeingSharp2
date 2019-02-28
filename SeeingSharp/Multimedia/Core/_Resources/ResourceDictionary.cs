@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Collections.ObjectModel;
-using SeeingSharp.Util;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Reflection;
+    using Drawing3D;
+    using Objects;
+    using SeeingSharp.Util;
+    using SharpDX;
+
+    #endregion
+
     public class ResourceDictionary : IEnumerable<Resource>
     {
-        private EngineDevice m_device;
         private List<IRenderableResource> m_renderableResources;
-        private ReadOnlyCollection<IRenderableResource> m_renderableResourcesPublic;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
         private int m_lastRenderBlockID;
@@ -48,13 +51,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal ResourceDictionary(EngineDevice device)
         {
-            m_device = device;
-            this.DeviceIndex = m_device.DeviceIndex;
+            Device = device;
+            this.DeviceIndex = Device.DeviceIndex;
 
             m_lastRenderBlockID = -1;
 
             m_renderableResources = new List<IRenderableResource>();
-            m_renderableResourcesPublic = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
+            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
 
             m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
             m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
@@ -78,11 +81,14 @@ namespace SeeingSharp.Multimedia.Core
         internal static T CreateDefaultResource<T>()
             where T : Resource
         {
-            Type resourceType = typeof(T);
+            var resourceType = typeof(T);
             T result = null;
 
             // Try to create default resources
-            if (resourceType == typeof(MaterialResource)) { result = new SimpleColoredMaterialResource() as T; }
+            if (resourceType == typeof(MaterialResource))
+            {
+                result = new SimpleColoredMaterialResource() as T;
+            }
             else if (resourceType == typeof(TextureResource))
             {
 #if DESKTOP
@@ -100,7 +106,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             else if(resourceType == typeof(GeometryResource))
             {
-                VertexStructure dummyStructure = new VertexStructure();
+                var dummyStructure = new VertexStructure();
                 dummyStructure.FirstSurface.BuildCube24V(
                     Vector3.Zero,
                     new Vector3(1f, 1f, 1f),
@@ -116,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
                     null, Type.EmptyTypes, null);
 #else
-                ConstructorInfo standardConstructor = 
+                var standardConstructor =
                     resourceType.GetTypeInfo().DeclaredConstructors
                     .FirstOrDefault((actConstructor) => actConstructor.GetParameters().Length <= 0);
 #endif
@@ -135,7 +141,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void Clear()
         {
-            foreach (ResourceInfo actResource in m_resources.Values)
+            foreach (var actResource in m_resources.Values)
             {
                 if (actResource.Resource.IsLoaded)
                 {
@@ -193,14 +199,24 @@ namespace SeeingSharp.Multimedia.Core
             //Apply a valid key on the given resource object
             if (resource.Key.IsEmpty)
             {
-                if (resourceKey.IsEmpty) { resource.Key = GraphicsCore.GetNextGenericResourceKey(); }
-                else { resource.Key = resourceKey; }
+                if (resourceKey.IsEmpty)
+                {
+                    resource.Key = GraphicsCore.GetNextGenericResourceKey();
+                }
+                else
+                {
+                    resource.Key = resourceKey;
+                }
             }
 
             //Add the resource
-            ResourceInfo newResource = new ResourceInfo(resource);
+            var newResource = new ResourceInfo(resource);
             m_resources[resource.Key] = newResource;
-            if (newResource.RenderableResource != null) { m_renderableResources.Add(newResource.RenderableResource); }
+
+            if (newResource.RenderableResource != null)
+            {
+                m_renderableResources.Add(newResource.RenderableResource);
+            }
 
             //Register this dictionary on the resource
             resource.Dictionary = this;
@@ -289,7 +305,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_resources.ContainsKey(key))
             {
-                ResourceInfo resourceInfo = m_resources[key];
+                var resourceInfo = m_resources[key];
 
                 //Unload the resource
                 if (resourceInfo.Resource.IsLoaded) { resourceInfo.Resource.UnloadResource(); }
@@ -324,14 +340,24 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_resources.ContainsKey(resourceKey))
             {
-                T result = m_resources[resourceKey].Resource as T;
+                var result = m_resources[resourceKey].Resource as T;
 
-                if(result != null) { return result; }
-                else { m_resources.Remove(resourceKey); }
+                if (result != null)
+                {
+                    return result;
+                }
+                else
+                {
+                    m_resources.Remove(resourceKey);
+                }
             }
 
-            T newResource = createMethod();
-            if (newResource == null) { return null; }
+            var newResource = createMethod();
+
+            if (newResource == null)
+            {
+                return null;
+            }
 
             AddResource(resourceKey, newResource);
             return newResource;
@@ -385,8 +411,13 @@ namespace SeeingSharp.Multimedia.Core
         internal T GetResourceAndEnsureLoaded<T>(NamedOrGenericKey resourceKey, Func<T> createMethod)
             where T : Resource
         {
-            T resource = GetResource(resourceKey, createMethod);
-            if (!resource.IsLoaded) { resource.LoadResource(); }
+            var resource = GetResource(resourceKey, createMethod);
+
+            if (!resource.IsLoaded)
+            {
+                resource.LoadResource();
+            }
+
             return resource;
         }
 
@@ -398,8 +429,13 @@ namespace SeeingSharp.Multimedia.Core
         internal T GetResourceAndEnsureLoaded<T>(NamedOrGenericKey resourceKey)
             where T : Resource
         {
-            T resource = GetResource<T>(resourceKey);
-            if (!resource.IsLoaded) { resource.LoadResource(); }
+            var resource = GetResource<T>(resourceKey);
+
+            if (!resource.IsLoaded)
+            {
+                resource.LoadResource();
+            }
+
             return resource;
         }
 
@@ -409,7 +445,8 @@ namespace SeeingSharp.Multimedia.Core
         public void LoadResources()
         {
             List<ResourceInfo> allResources = new List<ResourceInfo>(m_resources.Values);
-            foreach (ResourceInfo actResourceInfo in allResources)
+
+            foreach (var actResourceInfo in allResources)
             {
                 //Load the resource
                 if (!actResourceInfo.Resource.IsLoaded)
@@ -431,7 +468,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UnloadResources()
         {
-            foreach (ResourceInfo actResourceInfo in m_resources.Values)
+            foreach (var actResourceInfo in m_resources.Values)
             {
                 if (actResourceInfo.Resource.IsLoaded)
                 {
@@ -452,10 +489,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the device this resource dictionary belongs to.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return m_device; }
-        }
+        public EngineDevice Device { get; }
 
         /// <summary>
         /// Gets the device index.
@@ -485,10 +519,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets an enumeration containing all renderable resources.
         /// </summary>
-        public ReadOnlyCollection<IRenderableResource> RenderableResources
-        {
-            get { return m_renderableResourcesPublic; }
-        }
+        public ReadOnlyCollection<IRenderableResource> RenderableResources { get; }
 
         /// <summary>
         /// Gets a reference to default resources object.

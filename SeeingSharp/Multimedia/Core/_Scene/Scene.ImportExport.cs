@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Checking;
+    using Objects;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public partial class Scene
     {
         public async Task<ExportModelContainer> PrepareForExportAsync(
@@ -42,26 +44,32 @@ namespace SeeingSharp.Multimedia.Core
             objectsToExport.EnsureMoreThanZeroElements(nameof(objectsToExport));
 
             // Create result object container
-            ExportModelContainer result = new ExportModelContainer();
-            
+            var result = new ExportModelContainer();
+
             // Fill export container beside rendering
             //  (there it is ensured that no one changes the scene)
             await this.PerformBeforeUpdateAsync(() =>
             {
                 // First step: Register all objects which we want to export
-                foreach (SceneObject actObject in objectsToExport)
+                foreach (var actObject in objectsToExport)
                 {
                     actObject.EnsureObjectOfScene(this, nameof(objectsToExport));
 
-                    if (!actObject.IsExportable) { continue; }
+                    if (!actObject.IsExportable)
+                    {
+                        continue;
+                    }
 
                     result.RegisterOriginalObject(actObject);
                 }
 
                 // Second step: Store all needed data into the container
-                foreach(SceneObject actObject in objectsToExport)
+                foreach(var actObject in objectsToExport)
                 {
-                    if (!actObject.IsExportable) { continue; }
+                    if (!actObject.IsExportable)
+                    {
+                        continue;
+                    }
 
                     actObject.PrepareForExport(result, exportOptions);
                 }
@@ -90,7 +98,7 @@ namespace SeeingSharp.Multimedia.Core
             List<SceneObject> result = new List<SceneObject>();
 
             // Import all data
-            ImportedModelContainer modelContainer = await GraphicsCore.Current.ImportersAndExporters
+            var modelContainer = await GraphicsCore.Current.ImportersAndExporters
                 .ImportAsync(objSource, importOptions);
 
             // Append all data to the scene

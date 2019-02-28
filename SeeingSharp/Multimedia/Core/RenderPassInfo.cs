@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
+    #endregion
+
     public class RenderPassInfo
     {
         #region All available render passes
@@ -38,12 +43,11 @@ namespace SeeingSharp.Multimedia.Core
 
         #region Static collection which holds all render passes
         private static List<RenderPassInfo> s_renderPasses;
-        private static ReadOnlyCollection<RenderPassInfo> s_renderPassesPublic;
+
         #endregion
 
         #region Render pass properties
-        private string m_name;
-        private bool m_isSorted;
+
         #endregion
 
         /// <summary>
@@ -52,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
         static RenderPassInfo()
         {
             s_renderPasses = new List<RenderPassInfo>();
-            s_renderPassesPublic = new ReadOnlyCollection<RenderPassInfo>(s_renderPasses);
+            AllRenderPasses = new ReadOnlyCollection<RenderPassInfo>(s_renderPasses);
 
             s_renderPasses.Add(PASS_PLAIN_RENDER);
             s_renderPasses.Add(PASS_LINE_RENDER);
@@ -66,8 +70,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal RenderPassInfo(string name, bool isSorted = false)
         {
-            m_name = name;
-            m_isSorted = isSorted;
+            Name = name;
+            IsSorted = isSorted;
         }
 
         /// <summary>
@@ -78,28 +82,19 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         /// <summary>
         /// Gets a collection containing all render passes.
         /// </summary>
-        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses
-        {
-            get { return s_renderPassesPublic; }
-        }
+        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses { get; }
 
         /// <summary>
         /// Gets the name of this pass.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; }
 
-        public bool IsSorted
-        {
-            get { return m_isSorted; }
-        }
+        public bool IsSorted { get; }
     }
 }

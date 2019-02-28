@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,36 +21,37 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mappings
 using SDX = SharpDX;
+
+#endregion
 
 namespace SeeingSharp.Util
 {
     public static class SeeingSharpUwpTools
     {
-        public static Color4 Color4FromUIColor(ref Windows.UI.Color uiColor)
+        public static SDX.Color4 Color4FromUIColor(ref Windows.UI.Color uiColor)
         {
-            return new Color4(
+            return new SDX.Color4(
                 (float)uiColor.R / 255f,
                 (float)uiColor.G / 255f,
                 (float)uiColor.B / 255f,
                 (float)uiColor.A / 255f);
         }
 
-        public static Windows.UI.Color UIColorFromColor4(ref Color4 color)
+        public static Windows.UI.Color UIColorFromColor4(ref SDX.Color4 color)
         {
-            var uiColor = new Windows.UI.Color();
-            uiColor.A = (byte)EngineMath.Clamp(0f, 255f, color.Alpha * 255f);
-            uiColor.R = (byte)EngineMath.Clamp(0f, 255f, color.Red * 255f);
-            uiColor.G = (byte)EngineMath.Clamp(0f, 255f, color.Green * 255f);
-            uiColor.B = (byte)EngineMath.Clamp(0f, 255f, color.Blue * 255f);
+            var uiColor = new Windows.UI.Color
+            {
+                A = (byte) EngineMath.Clamp(0f, 255f, color.Alpha * 255f),
+                R = (byte) EngineMath.Clamp(0f, 255f, color.Red * 255f),
+                G = (byte) EngineMath.Clamp(0f, 255f, color.Green * 255f),
+                B = (byte) EngineMath.Clamp(0f, 255f, color.Blue * 255f)
+            };
+
             return uiColor;
         }
     }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Checking;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Checking;
+
+    #endregion
+
     public abstract class ResourceLink
     {
         /// <summary>
@@ -39,21 +40,21 @@ namespace SeeingSharp.Util
         /// </summary>
         protected ResourceLink()
         {
-
         }
- 
+
         /// <summary>
         /// Writes the contents of this resource to the given dummy file.
         /// </summary>
         /// <param name="fileName">Name of the dummy file.</param>
         public void WriteAllBytesToDummyFile(string fileName)
         {
-            using(Stream inStream = this.OpenInputStream())
-            using(Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            using (var inStream = this.OpenInputStream())
+
+            using (Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 byte[] buffer = new byte[1024];
                 int readBytes = inStream.Read(buffer, 0, buffer.Length);
-                while(readBytes > 0)
+                while (readBytes > 0)
                 {
                     outStream.Write(buffer, 0, readBytes);
                     readBytes = inStream.Read(buffer, 0, buffer.Length);
@@ -66,8 +67,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public string ReadCompleteToString()
         {
-            using(Stream inStream = this.OpenInputStream())
-            using(StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = this.OpenInputStream())
+
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }
@@ -78,8 +80,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task<string> ReadCompleteToStringAsync()
         {
-            using (Stream inStream = await this.OpenInputStreamAsync())
-            using (StreamReader inStreamReader = new StreamReader(inStream))
+            using (var inStream = await this.OpenInputStreamAsync())
+
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return await inStreamReader.ReadToEndAsync();
             }

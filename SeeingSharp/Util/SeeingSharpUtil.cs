@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,24 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
-using System.Reflection;
-using System.Collections;
-using System.Text;
 
 namespace SeeingSharp.Util
 {
+    #region using
+
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+
+    #endregion
+
     public static partial class SeeingSharpUtil
     {
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {
-            FieldInfo fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
             return (T)fInfo.GetValue(sourceObject);
         }
 
@@ -49,7 +51,7 @@ namespace SeeingSharp.Util
         public static T[] GetBackingArray<T>(List<T> lst)
         {
 #if !WINRT && !UNIVERSAL
-            FieldInfo fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
             return fInfo.GetValue(lst) as T[];
 #else
             return lst.ToArray();
@@ -63,12 +65,11 @@ namespace SeeingSharp.Util
         public static T[] GetBackingArray<T>(Queue<T> queue)
         {
 #if !WINRT && !UNIVERSAL
-            FieldInfo fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
+            var fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
             return fInfo.GetValue(queue) as T[];
 #else
             return queue.ToArray();
 #endif
-
         }
 
         public static T TryExecute<T>(Func<T> funcToExec)
@@ -89,7 +90,9 @@ namespace SeeingSharp.Util
             {
                 actionToExecute();
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -162,11 +165,14 @@ namespace SeeingSharp.Util
         /// <param name="delayMilliseconds">Total delay time.</param>
         public static async Task MaximumDelayAsync(double delayMilliseconds)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             // Ensure initial short delay
-            if (delayMilliseconds > 5.0) { await Task.Delay(2); }
+            if (delayMilliseconds > 5.0)
+            {
+                await Task.Delay(2);
+            }
 
             // Do short delay pahses until we reach a point where we are "near" the target value
             while(stopwatch.GetTrueElapsedMilliseconds() < delayMilliseconds - 10.0)
@@ -198,7 +204,8 @@ namespace SeeingSharp.Util
             }
             else
             {
-                ICollection simpleCollection = collection as ICollection;
+                var simpleCollection = collection as ICollection;
+
                 if (simpleCollection != null)
                 {
                     return simpleCollection.Count > 0;
@@ -206,10 +213,11 @@ namespace SeeingSharp.Util
                 else
                 {
                     // Try to loop forward to the first element
-                    foreach(T actElement in collection)
+                    foreach(var actElement in collection)
                     {
                         return true;
                     }
+
                     return false;
                 }
             }
@@ -221,13 +229,15 @@ namespace SeeingSharp.Util
         public static int GetCollectionCount<T>(IEnumerable<T> collection)
         {
             IReadOnlyCollection<T> readonlyCollection = collection as IReadOnlyCollection<T>;
+
             if (readonlyCollection != null)
             {
                 return readonlyCollection.Count;
             }
             else
             {
-                ICollection simpleCollection = collection as ICollection;
+                var simpleCollection = collection as ICollection;
+
                 if (simpleCollection != null)
                 {
                     return simpleCollection.Count;
@@ -273,7 +283,7 @@ namespace SeeingSharp.Util
                 targetList.Insert(~targetIndex, newItem);
                 return ~targetIndex;
             }
-            else 
+            else
             {
                 targetList.Insert(targetIndex, newItem);
                 return targetIndex;
@@ -348,9 +358,12 @@ namespace SeeingSharp.Util
         public static void DisposeObjects<T>(IEnumerable<T> enumeration)
             where T : class, IDisposable
         {
-            if (enumeration == null) { throw new ArgumentNullException("enumeration"); }
+            if (enumeration == null)
+            {
+                throw new ArgumentNullException("enumeration");
+            }
 
-            foreach (T actItem in enumeration)
+            foreach (var actItem in enumeration)
             {
                 DisposeObject(actItem);
             }

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,12 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using SharpDX;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using SharpDX;
+
+    #endregion
+
     public class Matrix3x2Stack
     {
         #region Stack data
@@ -137,16 +142,18 @@ namespace SeeingSharp
         /// </summary>
         public Object Clone()
         {
-            Matrix3x2Stack cloned = new Matrix3x2Stack();
+            var cloned = new Matrix3x2Stack();
 
             Matrix3x2[] allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix3x2>();
-            for (int loop = 0; loop < allElements.Length; loop++)
+
+            for (var loop = 0; loop < allElements.Length; loop++)
             {
                 cloned.m_stack.Push(allElements[loop]);
                 cloned.m_pushTimes++;
             }
+
             cloned.m_top = m_top;
 
             return cloned;

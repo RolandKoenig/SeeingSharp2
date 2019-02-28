@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,11 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SharpDX;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp
 {
+    #region using
+
+    using Checking;
+    using SharpDX;
+
+    #endregion
+
     public static class Color4Ex
     {
         /// <summary>
@@ -33,11 +38,14 @@ namespace SeeingSharp
         /// </summary>
         public static Color4 FromRgba(int red, int green, int blue, int alpha)
         {
-            Color4 result = new Color4();
-            result.Alpha = alpha / 255f;
-            result.Red = red / 255f;
-            result.Green = green / 255f;
-            result.Blue = blue / 255f;
+            var result = new Color4
+            {
+                Alpha = alpha / 255f,
+                Red = red / 255f,
+                Green = green / 255f,
+                Blue = blue / 255f
+            };
+
             return result;
         }
 
@@ -46,14 +54,16 @@ namespace SeeingSharp
         /// </summary>
         public static Color4 FromRgb(int red, int green, int blue)
         {
-            Color4 result = new Color4();
-            result.Alpha = 1f;
-            result.Red = red / 255f;
-            result.Green = green / 255f;
-            result.Blue = blue / 255f;
+            var result = new Color4
+            {
+                Alpha = 1f,
+                Red = red / 255f,
+                Green = green / 255f,
+                Blue = blue / 255f
+            };
+
             return result;
         }
-        
 
         public static void ChangeAlphaTo(this ref Color4 color, float newAlpha)
         {

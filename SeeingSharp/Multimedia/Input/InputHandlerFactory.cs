@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
+    #region using
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Checking;
+    using Core;
+
+    #endregion
+
     public class InputHandlerFactory
     {
         private List<IInputHandler> m_inputHandlers;
@@ -121,7 +124,7 @@ namespace SeeingSharp.Multimedia.Input
         public List<IInputHandler> GetInputHandler<ViewType>(IInputEnabledView viewObject)
             where ViewType : class
         {
-            Type givenViewType = typeof(ViewType);
+            var givenViewType = typeof(ViewType);
 
             return GetInputHandler(givenViewType);
         }
@@ -134,6 +137,7 @@ namespace SeeingSharp.Multimedia.Input
         public List<IInputHandler> GetInputHandler(Type givenViewType)
         {
             List<IInputHandler> result = new List<IInputHandler>();
+
             foreach (var actInputHandler in m_inputHandlers)
             {
                 // Query for the input handler's information
@@ -147,7 +151,7 @@ namespace SeeingSharp.Multimedia.Input
                 }
                 else if(givenViewType != null)
                 {
-                    foreach (Type actViewType in actSupportedViewTypes)
+                    foreach (var actViewType in actSupportedViewTypes)
                     {
                         if (actViewType.GetTypeInfo().IsAssignableFrom(givenViewType.GetTypeInfo()))
                         {
@@ -156,7 +160,11 @@ namespace SeeingSharp.Multimedia.Input
                         }
                     }
                 }
-                if (!viewTypeSupported) { continue; }
+
+                if (!viewTypeSupported)
+                {
+                    continue;
+                }
 
                 // Create a new input handler
                 result.Add(Activator.CreateInstance(actInputHandler.GetType()) as IInputHandler);

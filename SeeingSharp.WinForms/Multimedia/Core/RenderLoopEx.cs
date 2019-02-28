@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,17 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#region using
 
 // Namespace mappings
 using GDI = System.Drawing;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Threading.Tasks;
+
+    #endregion
+
     public static class RenderLoopEx
     {
         /// <summary>
@@ -45,7 +51,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 try
                 {
-                    GDI.Bitmap resultBitmap = GetScreenshotGdiInternal(renderLoop);
+                    var resultBitmap = GetScreenshotGdiInternal(renderLoop);
                     result.SetResult(resultBitmap);
                 }
                 catch (Exception ex)
@@ -82,14 +88,14 @@ namespace SeeingSharp.Multimedia.Core
             // Copy resources
             currentDevice.DeviceImmediateContextD3D11.ResolveSubresource(
                 renderLoop.Internals.RenderTarget, 0,
-                renderLoop.Internals.CopyHelperTextureStandard, 0, 
+                renderLoop.Internals.CopyHelperTextureStandard, 0,
                 GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
             currentDevice.DeviceImmediateContextD3D11.CopyResource(
                 renderLoop.Internals.CopyHelperTextureStandard,
                 renderLoop.Internals.CopyHelperTextureStaging);
 
             // Load the bitmap
-            GDI.Bitmap resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
+            var resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);
             return resultBitmap;
         }
     }

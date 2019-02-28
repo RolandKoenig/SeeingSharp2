@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Threading.Tasks;
+    using Checking;
+
+    #endregion
+
     public abstract class AnimationBase : IAnimation
     {
         #region Main properties of this animation
         private AnimationType m_animationType;
-        private object m_targetObject;
+
         #endregion
 
         #region Control members for AnimationTypes
@@ -49,7 +53,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public AnimationBase(object targetObject)
         {
-            m_targetObject = targetObject;
+            TargetObject = targetObject;
             m_fixedTime = TimeSpan.Zero;
             m_currentTime = TimeSpan.Zero;
             m_animationType = AnimationType.FinishedByEvent;
@@ -191,8 +195,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetObject">The object to check for.</param>
         public bool IsObjectAnimated(object targetObject)
         {
-            if (m_targetObject == null) { return false; }
-            return m_targetObject == targetObject;
+            if (TargetObject == null) { return false; }
+            return TargetObject == targetObject;
         }
 
         /// <summary>
@@ -343,10 +347,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the target object.
         /// </summary>
-        public object TargetObject
-        {
-            get { return m_targetObject; }
-        }
+        public object TargetObject { get; }
 
         /// <summary>
         /// Is this animation canceled?

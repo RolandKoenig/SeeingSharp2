@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using SeeingSharp.Util;
-using System;
-using System.Runtime.InteropServices;
+
+#region using
 
 //Some namespace mappings
 using D3D9 = SharpDX.Direct3D9;
-using DXGI = SharpDX.DXGI;
+
+#endregion
 
 namespace SeeingSharp.Multimedia.Core
 {
+    #region using
+
+    using System;
+    using System.Runtime.InteropServices;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private DXGI.Adapter1 m_dxgiAdapter;
+        private SharpDX.DXGI.Adapter1 m_dxgiAdapter;
         private D3D9.Direct3DEx m_direct3DEx;
         private D3D9.DeviceEx m_deviceEx;
         private int m_adapterIndex;
@@ -44,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dxgiAdapter">The target adapter.</param>
         /// <param name="isSoftwareAdapter">Are we in software mode?</param>
         /// <param name="debugEnabled">Is debug mode enabled?</param>
-        internal DeviceHandlerD3D9(DXGI.Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
+        internal DeviceHandlerD3D9(SharpDX.DXGI.Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
         {
             // Update member variables
             m_dxgiAdapter = dxgiAdapter;
@@ -55,17 +63,20 @@ namespace SeeingSharp.Multimedia.Core
                 if (!isSoftwareAdapter)
                 {
                     //Prepare device creation
-                    D3D9.CreateFlags createFlags =
+                    var createFlags =
                         D3D9.CreateFlags.HardwareVertexProcessing |
                         D3D9.CreateFlags.PureDevice |
                         D3D9.CreateFlags.FpuPreserve |
                         D3D9.CreateFlags.Multithreaded;
-                    D3D9.PresentParameters presentparams = new D3D9.PresentParameters();
-                    presentparams.Windowed = true;
-                    presentparams.SwapEffect = D3D9.SwapEffect.Discard;
-                    presentparams.DeviceWindowHandle = GetDesktopWindow();
-                    presentparams.PresentationInterval = D3D9.PresentInterval.Default;
-                    presentparams.BackBufferCount = 1;
+
+                    var presentparams = new D3D9.PresentParameters
+                    {
+                        Windowed = true,
+                        SwapEffect = D3D9.SwapEffect.Discard,
+                        DeviceWindowHandle = GetDesktopWindow(),
+                        PresentationInterval = D3D9.PresentInterval.Default,
+                        BackBufferCount = 1
+                    };
 
                     //Create the device finally
                     m_direct3DEx = new D3D9.Direct3DEx();

@@ -1,11 +1,11 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-	Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2018 Roland König (RolandK)
+    Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -21,19 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
+#region using
 
 // Namespace mappings
 using D2D = SharpDX.Direct2D1;
 
+#endregion
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
+    #region using
+
+    using System;
+    using Core;
+    using SeeingSharp.Util;
+
+    #endregion
+
     public abstract class EffectResource : Drawing2DResourceBase, IImage, IImageInternal
     {
         #region Resources
@@ -64,7 +69,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image. 
+        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
         /// </summary>
         BitmapResource IImageInternal.TryGetSourceBitmap()
         {
@@ -72,6 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 return m_effectInputs[0].TryGetSourceBitmap();
             }
+
             return null;
         }
 
@@ -81,16 +87,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device for which to get the input.</param>
         IDisposable IImageInternal.GetImageObject(EngineDevice device)
         {
-            D2D.Effect effect = m_loadedEffects[device.DeviceIndex];
+            var effect = m_loadedEffects[device.DeviceIndex];
+
             if(effect == null)
             {
                 // Create the effect
                 effect = BuildEffect(device);
 
                 // Set input values
-                for(int loop=0; loop<m_effectInputs.Length; loop++)
+                for(var loop =0; loop<m_effectInputs.Length; loop++)
                 {
-                    using (D2D.Image actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
+                    using (var actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
                     {
                         effect.SetInput(loop, actInput, new SharpDX.Mathematics.Interop.RawBool(false));
                     }
@@ -115,7 +122,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Effect actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+            var actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+
             if (actEffect != null)
             {
                 SeeingSharpTools.DisposeObject(actEffect);
