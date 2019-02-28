@@ -47,7 +47,6 @@ namespace SeeingSharp.SampleContainer
             foreach (var actType in Assembly.GetExecutingAssembly().GetTypes())
             {
                 var sampleDesc = actType.GetCustomAttribute<SampleDescriptionAttribute>();
-
                 if (sampleDesc == null)
                 {
                     continue;
@@ -64,13 +63,11 @@ namespace SeeingSharp.SampleContainer
             }
 
             // Sort sample groups
-            Dictionary<string, int> groupOrder = new Dictionary<string, int>
-            {
-                [nameof(Basics3D)] = 1,
-                [nameof(Basics2D)] = 2,
-                [nameof(Postprocessing)] = 3
-            };
-
+            Dictionary<string, int> groupOrder = new Dictionary<string, int>();
+            groupOrder[nameof(Basics3D)] = 1;
+            groupOrder[nameof(Primitives3D)] = 2;
+            groupOrder[nameof(Basics2D)] = 3;
+            groupOrder[nameof(Postprocessing)] = 4;
             Func<string, int> tryGetGroupOrderID = (groupName) =>
             {
                 groupOrder.TryGetValue(groupName, out int orderID);

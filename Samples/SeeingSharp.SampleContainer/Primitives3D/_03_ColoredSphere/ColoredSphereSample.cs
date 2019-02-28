@@ -22,7 +22,7 @@
 */
 #endregion
 
-namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
+namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
 {
     #region using
 
@@ -38,9 +38,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
     #endregion
 
     [SampleDescription(
-        "Colored Sphere", 1, nameof(Basics3D),
+        "Colored Sphere", 3, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_11_ColoredSphere")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_03_ColoredSphere")]
     public class ColoredSphereSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)

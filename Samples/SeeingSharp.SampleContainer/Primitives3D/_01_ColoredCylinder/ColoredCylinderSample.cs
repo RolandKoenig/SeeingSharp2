@@ -22,7 +22,7 @@
 */
 #endregion
 
-namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
+namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 {
     #region using
 
@@ -38,9 +38,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
     #endregion
 
     [SampleDescription(
-        "Colored Cylinder", 1, nameof(Basics3D),
+        "Colored Cylinder", 1, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_09_ColoredCylinder")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
     public class ColoredCylinderSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)

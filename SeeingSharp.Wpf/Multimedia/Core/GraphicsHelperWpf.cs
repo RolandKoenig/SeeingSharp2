@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     // Copy data row by row
-                    //  => Rows form datasource may have more pixels because driver changes the size of textures
+                    //  => Rows from datasource may have more pixels because driver changes the size of textures
                     ulong rowPitch = (ulong)(width * 4);
 
                     for (int loopRow = 0; loopRow < height; loopRow++)
