@@ -22,7 +22,7 @@
 */
 #endregion
 
-namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
+namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
 {
     #region using
 
@@ -32,16 +32,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
     using Multimedia.Components;
     using Multimedia.Core;
     using Multimedia.Drawing3D;
-    using Multimedia.Objects._ObjectTypes;
+    using Multimedia.Objects;
     using SharpDX;
 
     #endregion
 
     [SampleDescription(
-        "Colored Sphere", 1, nameof(Basics3D),
+        "Colored Cone", 2, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_11_ColoredSphere")]
-    public class ColoredSphereSample : SampleBase
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_02_ColoredCone")]
+    public class ColoredConeSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
@@ -57,34 +57,29 @@ namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create Sphere geometry resource
-                var sphereType = new SphereType
-                {
-                    tDiv = 30,
-                    pDiv = 30,
-                    Radius = 1
-                };
+                // Create cone geometry resource
+                var coneType = new ConeType { CountOfSegments = 50 };
 
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(sphereType));
+                    () => new GeometryResource(coneType));
 
-                // Create Sphere object
-                var sphereObject = manipulator.AddGeneric(resPalletGeometry);
-                sphereObject.Color = Color4Ex.BlueColor;
-                sphereObject.Position = new Vector3(0f, 2.5f, 0f);
-                sphereObject.EnableShaderGeneratedBorder();
-                sphereObject.BuildAnimationSequence()
+                // Create cone object
+                var coneObject = manipulator.AddGeneric(resPalletGeometry);
+                coneObject.Color = Color4Ex.BlueColor;
+                coneObject.Position = new Vector3(0f, 0.5f, 0f);
+                coneObject.EnableShaderGeneratedBorder();
+                coneObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => sphereObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => coneObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);
-            camera.Target = new Vector3(0f, 2.5f, 0f);
+            camera.Target = new Vector3(0f, 0.5f, 0f);
             camera.UpdateCamera();
 
             // Append camera behavior

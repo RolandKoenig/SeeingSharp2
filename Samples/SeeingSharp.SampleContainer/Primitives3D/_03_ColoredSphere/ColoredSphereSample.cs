@@ -22,7 +22,7 @@
 */
 #endregion
 
-namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
+namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
 {
     #region using
 
@@ -32,16 +32,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
     using Multimedia.Components;
     using Multimedia.Core;
     using Multimedia.Drawing3D;
-    using Multimedia.Objects;
+    using Multimedia.Objects._ObjectTypes;
     using SharpDX;
 
     #endregion
 
     [SampleDescription(
-        "Colored Cylinder", 1, nameof(Basics3D),
+        "Colored Sphere", 3, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_09_ColoredCylinder")]
-    public class ColoredCylinderSample : SampleBase
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_03_ColoredSphere")]
+    public class ColoredSphereSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
@@ -57,29 +57,34 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create cylinder geometry resource
-                var cylinderType = new CylinderType { CountOfSegments = 50 };
+                // Create Sphere geometry resource
+                var sphereType = new SphereType
+                {
+                    tDiv = 30,
+                    pDiv = 30,
+                    Radius = 1
+                };
 
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cylinderType));
+                    () => new GeometryResource(sphereType));
 
-                // Create cylinder object
-                var cylinderObject = manipulator.AddGeneric(resPalletGeometry);
-                cylinderObject.Color = Color4Ex.BlueColor;
-                cylinderObject.Position = new Vector3(0f, 0.5f, 0f);
-                cylinderObject.EnableShaderGeneratedBorder();
-                cylinderObject.BuildAnimationSequence()
+                // Create Sphere object
+                var sphereObject = manipulator.AddGeneric(resPalletGeometry);
+                sphereObject.Color = Color4Ex.BlueColor;
+                sphereObject.Position = new Vector3(0f, 2.5f, 0f);
+                sphereObject.EnableShaderGeneratedBorder();
+                sphereObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cylinderObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => sphereObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);
-            camera.Target = new Vector3(0f, 0.5f, 0f);
+            camera.Target = new Vector3(0f, 2.5f, 0f);
             camera.UpdateCamera();
 
             // Append camera behavior

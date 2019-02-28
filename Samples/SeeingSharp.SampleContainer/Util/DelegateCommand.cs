@@ -32,7 +32,9 @@ namespace SeeingSharp.SampleContainer.Util
 {
     public class DelegateCommand : ICommand
     {
+#pragma warning disable
         public event EventHandler CanExecuteChanged;
+#pragma warning restore
 
         private Action m_executeAction;
         private Func<bool> m_canExecuteAction;

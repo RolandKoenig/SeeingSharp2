@@ -22,7 +22,7 @@
 */
 #endregion
 
-namespace SeeingSharp.SampleContainer.Basics3D._10_ColoredCone
+namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 {
     #region using
 
@@ -38,10 +38,10 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ColoredCone
     #endregion
 
     [SampleDescription(
-        "Colored Cone", 1, nameof(Basics3D),
+        "Colored Cylinder", 1, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_10_ColoredCone")]
-    public class ColoredConeSample : SampleBase
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
+    public class ColoredCylinderSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
@@ -57,23 +57,23 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ColoredCone
                 base.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create cone geometry resource
-                var coneType = new ConeType { CountOfSegments = 50 };
+                // Create cylinder geometry resource
+                var cylinderType = new CylinderType { CountOfSegments = 50 };
 
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(coneType));
+                    () => new GeometryResource(cylinderType));
 
-                // Create cone object
-                var coneObject = manipulator.AddGeneric(resPalletGeometry);
-                coneObject.Color = Color4Ex.BlueColor;
-                coneObject.Position = new Vector3(0f, 0.5f, 0f);
-                coneObject.EnableShaderGeneratedBorder();
-                coneObject.BuildAnimationSequence()
+                // Create cylinder object
+                var cylinderObject = manipulator.AddGeneric(resPalletGeometry);
+                cylinderObject.Color = Color4Ex.BlueColor;
+                cylinderObject.Position = new Vector3(0f, 0.5f, 0f);
+                cylinderObject.EnableShaderGeneratedBorder();
+                cylinderObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => coneObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cylinderObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
 
