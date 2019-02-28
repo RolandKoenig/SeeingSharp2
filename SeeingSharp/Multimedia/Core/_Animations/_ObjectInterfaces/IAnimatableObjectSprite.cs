@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
-    Seeing# and all games/applications distributed together with it. 
-    Exception are projects where it is noted otherwhise.
+    Seeing# and all applications distributed together with it. 
+	Exceptions are projects where it is noted otherwhise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -21,7 +21,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
     public interface IAnimatableObjectSprite
