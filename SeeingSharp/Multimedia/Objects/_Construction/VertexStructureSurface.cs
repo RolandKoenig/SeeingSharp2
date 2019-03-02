@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,16 @@ namespace SeeingSharp.Multimedia.Objects
     {
         // Material information
         private Dictionary<Type, object> m_materialPropertiesExtended;
- 
+
+        internal VertexStructureSurface(VertexStructure owner, int triangleCapacity)
+        {
+            Owner = owner;
+            IndicesInternal = new List<int>(triangleCapacity * 3);
+            Indices = new IndexCollection(IndicesInternal);
+            Triangles = new TriangleCollection(IndicesInternal, Owner.VerticesInternal);
+            MaterialProperties = new MaterialProperties();
+        }
+
         /// <summary>
         /// Clones this object.
         /// </summary>
@@ -456,65 +466,6 @@ namespace SeeingSharp.Multimedia.Objects
             return null;
         }
 
-        private IEnumerable<int> AddPolygonByCuttingEarsInternal(IList<int> vertexIndices, bool twoSided)
-        {
-            //Get all coordinates
-            var coordinates = new Vector3[vertexIndices.Count];
-
-            for (var loop = 0; loop < vertexIndices.Count; loop++)
-            {
-                coordinates[loop] = Owner.VerticesInternal[vertexIndices[loop]].Position;
-            }
-
-            //Triangulate all data
-            var polygon = new Polygon(coordinates);
-            var triangleIndices = polygon.TriangulateUsingCuttingEars();
-
-            if (triangleIndices == null)
-            {
-                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
-            }
-
-            //Add all triangle data
-            var indexEnumerator = triangleIndices.GetEnumerator();
-
-            while (indexEnumerator.MoveNext())
-            {
-                var index1 = indexEnumerator.Current;
-                var index2 = 0;
-                var index3 = 0;
-
-                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
-                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
-
-                AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
-                if(twoSided)
-                {
-                    AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
-                }
-
-            }
-
-            //Return found indices
-            return triangleIndices;
-        }
-
-        /// <summary>
-        /// Toggles all vertices and indexes from left to right handed or right to left handed system.
-        /// </summary>
-        internal void ToggleCoordinateSystemInternal()
-        {
-            for (var loopTriangle = 0; loopTriangle + 3 <= IndicesInternal.Count; loopTriangle += 3)
-            {
-                var index1 = IndicesInternal[loopTriangle];
-                var index2 = IndicesInternal[loopTriangle + 1];
-                var index3 = IndicesInternal[loopTriangle + 2];
-                IndicesInternal[loopTriangle] = index3;
-                IndicesInternal[loopTriangle + 1] = index2;
-                IndicesInternal[loopTriangle + 2] = index1;
-            }
-        }
-
         /// <summary>
         /// Gets an index array
         /// </summary>
@@ -632,13 +583,63 @@ namespace SeeingSharp.Multimedia.Objects
             }
         }
 
-        internal VertexStructureSurface(VertexStructure owner, int triangleCapacity)
+        /// <summary>
+        /// Toggles all vertices and indexes from left to right handed or right to left handed system.
+        /// </summary>
+        internal void ToggleCoordinateSystemInternal()
         {
-            Owner = owner;
-            IndicesInternal = new List<int>(triangleCapacity * 3);
-            Indices = new IndexCollection(IndicesInternal);
-            Triangles = new TriangleCollection(IndicesInternal, Owner.VerticesInternal);
-            MaterialProperties = new MaterialProperties();
+            for (var loopTriangle = 0; loopTriangle + 3 <= IndicesInternal.Count; loopTriangle += 3)
+            {
+                var index1 = IndicesInternal[loopTriangle];
+                var index2 = IndicesInternal[loopTriangle + 1];
+                var index3 = IndicesInternal[loopTriangle + 2];
+                IndicesInternal[loopTriangle] = index3;
+                IndicesInternal[loopTriangle + 1] = index2;
+                IndicesInternal[loopTriangle + 2] = index1;
+            }
+        }
+
+        private IEnumerable<int> AddPolygonByCuttingEarsInternal(IList<int> vertexIndices, bool twoSided)
+        {
+            //Get all coordinates
+            var coordinates = new Vector3[vertexIndices.Count];
+
+            for (var loop = 0; loop < vertexIndices.Count; loop++)
+            {
+                coordinates[loop] = Owner.VerticesInternal[vertexIndices[loop]].Position;
+            }
+
+            //Triangulate all data
+            var polygon = new Polygon(coordinates);
+            var triangleIndices = polygon.TriangulateUsingCuttingEars();
+
+            if (triangleIndices == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
+            }
+
+            //Add all triangle data
+            var indexEnumerator = triangleIndices.GetEnumerator();
+
+            while (indexEnumerator.MoveNext())
+            {
+                var index1 = indexEnumerator.Current;
+                var index2 = 0;
+                var index3 = 0;
+
+                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
+                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
+
+                AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
+                if(twoSided)
+                {
+                    AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
+                }
+
+            }
+
+            //Return found indices
+            return triangleIndices;
         }
 
         /// <summary>
@@ -697,13 +698,6 @@ namespace SeeingSharp.Multimedia.Objects
         public IndexCollection Indices { get; }
 
         /// <summary>
-        /// Retrieves total count of all indexes within this structure
-        /// </summary>
-        internal int CountIndices => IndicesInternal.Count;
-
-        internal List<int> IndicesInternal { get; }
-
-        /// <summary>
         /// Retrieves total count of all triangles within this structure
         /// </summary>
         public int CountTriangles => IndicesInternal.Count / 3;
@@ -719,6 +713,13 @@ namespace SeeingSharp.Multimedia.Objects
         public ResourceLink ResourceLink => Owner.ResourceLink;
 
         public VertexStructure Owner { get; }
+
+        /// <summary>
+        /// Retrieves total count of all indexes within this structure
+        /// </summary>
+        internal int CountIndices => IndicesInternal.Count;
+
+        internal List<int> IndicesInternal { get; }
 
         //*****************************************************************
         //*****************************************************************
@@ -772,12 +773,12 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             ///
             /// </summary>
-            object IEnumerator.Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
+            public Triangle Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
 
             /// <summary>
             ///
             /// </summary>
-            public Triangle Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
+            object IEnumerator.Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
         }
 
         //*********************************************************************
@@ -790,6 +791,15 @@ namespace SeeingSharp.Multimedia.Objects
         {
             private List<int> m_indices;
             private List<Vertex> m_vertices;
+
+            /// <summary>
+            ///
+            /// </summary>
+            internal TriangleCollection(List<int> indices, List<Vertex> vertices)
+            {
+                m_indices = indices;
+                m_vertices = vertices;
+            }
 
             /// <summary>
             /// Adds a treangle to this vertex structure
@@ -841,16 +851,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             ///
             /// </summary>
-            internal TriangleCollection(List<int> indices, List<Vertex> vertices)
-            {
-                m_indices = indices;
-                m_vertices = vertices;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
-            IEnumerator IEnumerable.GetEnumerator()
+            public IEnumerator<Triangle> GetEnumerator()
             {
                 return new Enumerator(m_indices);
             }
@@ -858,7 +859,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             ///
             /// </summary>
-            public IEnumerator<Triangle> GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return new Enumerator(m_indices);
             }
@@ -894,7 +895,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             ///
             /// </summary>
-            IEnumerator IEnumerable.GetEnumerator()
+            public IEnumerator<int> GetEnumerator()
             {
                 return m_indices.GetEnumerator();
             }
@@ -902,7 +903,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             ///
             /// </summary>
-            public IEnumerator<int> GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return m_indices.GetEnumerator();
             }

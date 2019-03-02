@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -26,6 +27,11 @@ namespace SeeingSharp.SampleContainer
 {
     public class SampleRepository
     {
+        public SampleRepository()
+        {
+            SampleGroups = new List<SampleGroupMetadata>();
+        }
+
         public void LoadSampleData()
         {
             // Search for all samples
@@ -68,11 +74,6 @@ namespace SeeingSharp.SampleContainer
             {
                 actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
             }
-        }
-
-        public SampleRepository()
-        {
-            SampleGroups = new List<SampleGroupMetadata>();
         }
 
         public List<SampleGroupMetadata> SampleGroups

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,14 +35,85 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class ResourceDictionary : IEnumerable<Resource>
     {
-        /// <summary>
-        /// Gets the device index.
-        /// </summary>
-        internal int DeviceIndex;
         private int m_lastRenderBlockID;
         private List<IRenderableResource> m_renderableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
+        /// </summary>
+        internal ResourceDictionary(EngineDevice device)
+        {
+            Device = device;
+            DeviceIndex = Device.DeviceIndex;
+
+            m_lastRenderBlockID = -1;
+
+            m_renderableResources = new List<IRenderableResource>();
+            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
+
+            m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
+            m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
+        }
+
+        /// <summary>
+        /// Loads all resources.
+        /// </summary>
+        public void LoadResources()
+        {
+            var allResources = new List<ResourceInfo>(m_resources.Values);
+
+            foreach (var actResourceInfo in allResources)
+            {
+                //Load the resource
+                if (!actResourceInfo.Resource.IsLoaded)
+                {
+                    actResourceInfo.Resource.LoadResource();
+                }
+
+                //Reload the resource
+                if (actResourceInfo.Resource.IsMarkedForReloading)
+                {
+                    actResourceInfo.Resource.UnloadResource();
+                    actResourceInfo.Resource.LoadResource();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        public void UnloadResources()
+        {
+            foreach (var actResourceInfo in m_resources.Values)
+            {
+                if (actResourceInfo.Resource.IsLoaded)
+                {
+                    actResourceInfo.Resource.UnloadResource();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Is there a resource with the given key?
+        /// </summary>
+        /// <param name="key">Key of the resource.</param>
+        public bool ContainsResource(NamedOrGenericKey key)
+        {
+            return m_resources.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator<Resource> GetEnumerator()
+        {
+            return new ResourceEnumerator(m_resources.Values.GetEnumerator());
+        }
 
         /// <summary>
         /// Gets the next render block id.
@@ -406,81 +478,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Loads all resources.
-        /// </summary>
-        public void LoadResources()
-        {
-            var allResources = new List<ResourceInfo>(m_resources.Values);
-
-            foreach (var actResourceInfo in allResources)
-            {
-                //Load the resource
-                if (!actResourceInfo.Resource.IsLoaded)
-                {
-                    actResourceInfo.Resource.LoadResource();
-                }
-
-                //Reload the resource
-                if (actResourceInfo.Resource.IsMarkedForReloading)
-                {
-                    actResourceInfo.Resource.UnloadResource();
-                    actResourceInfo.Resource.LoadResource();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        public void UnloadResources()
-        {
-            foreach (var actResourceInfo in m_resources.Values)
-            {
-                if (actResourceInfo.Resource.IsLoaded)
-                {
-                    actResourceInfo.Resource.UnloadResource();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Is there a resource with the given key?
-        /// </summary>
-        /// <param name="key">Key of the resource.</param>
-        public bool ContainsResource(NamedOrGenericKey key)
-        {
-            return m_resources.ContainsKey(key);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
-        /// </summary>
-        internal ResourceDictionary(EngineDevice device)
-        {
-            Device = device;
-            DeviceIndex = Device.DeviceIndex;
-
-            m_lastRenderBlockID = -1;
-
-            m_renderableResources = new List<IRenderableResource>();
-            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
-
-            m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
-            m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-        /// </returns>
-        public IEnumerator<Resource> GetEnumerator()
-        {
-            return new ResourceEnumerator(m_resources.Values.GetEnumerator());
-        }
-
-        /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
         /// <returns>
@@ -517,14 +514,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public int Count => m_resources.Count;
 
+        /// <summary>
+        /// Gets the device index.
+        /// </summary>
+        internal int DeviceIndex;
+
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         private class ResourceInfo
         {
-            public IRenderableResource RenderableResource;
-            public Resource Resource;
-
             /// <summary>
             /// Initializes a new instance of the <see cref="ResourceInfo"/> class.
             /// </summary>
@@ -534,6 +533,9 @@ namespace SeeingSharp.Multimedia.Core
                 Resource = resource;
                 RenderableResource = resource as IRenderableResource;
             }
+
+            public IRenderableResource RenderableResource;
+            public Resource Resource;
         }
 
         //*********************************************************************

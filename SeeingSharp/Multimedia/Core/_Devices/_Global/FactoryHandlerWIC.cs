@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Core
@@ -33,11 +34,11 @@ namespace SeeingSharp.Multimedia.Core
             Factory = new ImagingFactory();
         }
 
+        public bool IsInitialized => Factory != null;
+
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
         internal ImagingFactory Factory { get; }
-
-        public bool IsInitialized => Factory != null;
     }
 }

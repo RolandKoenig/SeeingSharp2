@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
@@ -34,6 +35,17 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_enableYFilter;
         private float m_yFilterMin;
         private float m_yFilterMax;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
+        /// </summary>
+        public SceneViewboxObjectFilter()
+        {
+            // Default configuration of the y-filter
+            m_enableYFilter = false;
+            m_yFilterMin = 0f;
+            m_yFilterMax = 10f;
+        }
 
         /// <summary>
         /// Sets current environment data.
@@ -97,17 +109,6 @@ namespace SeeingSharp.Multimedia.Core
 
             // Object is visible
             return true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
-        /// </summary>
-        public SceneViewboxObjectFilter()
-        {
-            // Default configuration of the y-filter
-            m_enableYFilter = false;
-            m_yFilterMin = 0f;
-            m_yFilterMax = 10f;
         }
 
         /// <summary>

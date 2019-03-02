@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -101,6 +102,24 @@ namespace SeeingSharp.Util
         /// </summary>
         public abstract Stream OpenInputStream();
 
+        public static implicit operator ResourceLink(AssemblyResourceLink streamFactory)
+        {
+            return new AssemblyResourceLinkSource(streamFactory);
+        }
+
+        public static implicit operator ResourceLink(Func<Stream> streamFactory)
+        {
+            return new StreamFactoryResourceLink(streamFactory);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="ResourceLink"/>.
+        /// </summary>
+        public static implicit operator ResourceLink(string fileName)
+        {
+            return new FileSystemResourceLink(fileName);
+        }
+
         /// <summary>
         /// Gets the name of the extension from the given file name.
         /// </summary>
@@ -119,24 +138,6 @@ namespace SeeingSharp.Util
                 return fileName.Substring(indexLastDot + 1).ToLower();
             }
             return string.Empty;
-        }
-
-        public static implicit operator ResourceLink(AssemblyResourceLink streamFactory)
-        {
-            return new AssemblyResourceLinkSource(streamFactory);
-        }
-
-        public static implicit operator ResourceLink(Func<Stream> streamFactory)
-        {
-            return new StreamFactoryResourceLink(streamFactory);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="ResourceLink"/>.
-        /// </summary>
-        public static implicit operator ResourceLink(string fileName)
-        {
-            return new FileSystemResourceLink(fileName);
         }
 
         /// <summary>

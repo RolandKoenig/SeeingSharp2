@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Checking;
 
@@ -27,6 +28,17 @@ namespace SeeingSharp.Multimedia.Core
     public class WaitForConditionPassedAnimation : AnimationBase
     {
         private Func<bool> m_checkFunction;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitForConditionPassedAnimation" /> class.
+        /// </summary>
+        public WaitForConditionPassedAnimation(Func<bool> checkFunction)
+            : base(null)
+        {
+            checkFunction.EnsureNotNull(nameof(checkFunction));
+
+            m_checkFunction = checkFunction;
+        }
 
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
@@ -48,17 +60,6 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             if (m_checkFunction()) { NotifyAnimationFinished(); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaitForConditionPassedAnimation" /> class.
-        /// </summary>
-        public WaitForConditionPassedAnimation(Func<bool> checkFunction)
-            : base(null)
-        {
-            checkFunction.EnsureNotNull(nameof(checkFunction));
-
-            m_checkFunction = checkFunction;
         }
 
         /// <summary>

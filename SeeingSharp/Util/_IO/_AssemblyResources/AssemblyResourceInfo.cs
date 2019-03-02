@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.IO;
 using System.Reflection;
 
@@ -27,14 +28,6 @@ namespace SeeingSharp.Util
     public class AssemblyResourceInfo
     {
         /// <summary>
-        /// Opens a reading stream
-        /// </summary>
-        public Stream OpenRead()
-        {
-            return TargetAssembly.GetManifestResourceStream(ResourcePath);
-        }
-
-        /// <summary>
         /// Creates a new AssemblyResourceInfo object
         /// </summary>
         internal AssemblyResourceInfo(Assembly targetAssembly, string resourcePath, string key)
@@ -42,6 +35,14 @@ namespace SeeingSharp.Util
             TargetAssembly = targetAssembly;
             ResourcePath = resourcePath;
             Key = key;
+        }
+
+        /// <summary>
+        /// Opens a reading stream
+        /// </summary>
+        public Stream OpenRead()
+        {
+            return TargetAssembly.GetManifestResourceStream(ResourcePath);
         }
 
         /// <summary>

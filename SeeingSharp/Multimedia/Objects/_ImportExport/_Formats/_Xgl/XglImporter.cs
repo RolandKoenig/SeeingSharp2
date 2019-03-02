@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -121,6 +122,119 @@ namespace SeeingSharp.Multimedia.Objects
         private const string NODE_NAME_TRANSFORM = "TRANSFORM";
         private const string NODE_NAME_TRANS_UP = "UP";
         private const string NODE_NAME_TRANS_POSITION = "POSITION";
+
+        /// <summary>
+        /// Imports a model from the given file.
+        /// </summary>
+        /// <param name="sourceFile">The source file to be loaded.</param>
+        /// <param name="importOptions">Some configuration for the importer.</param>
+        public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
+        {
+            // Get import options
+            var xglImportOptions = importOptions as XglImportOptions;
+
+            if (xglImportOptions == null)
+            {
+                throw new SeeingSharpException("Invalid import options for ACImporter!");
+            }
+
+            var result = new ImportedModelContainer(importOptions);
+
+            // Append an object which transform the whole coordinate system
+            var rootObject = result.CreateAndAddRootObject();
+
+            // Load current model by walking through xml nodes
+            using (var inStream = sourceFile.OpenInputStream())
+            {
+                // Handle compressed xgl files (extension zgl)
+                var nextStream = inStream;
+
+                if (sourceFile.FileExtension.Equals("zgl", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Skip the first bytes in case of compression
+                    //  see https://github.com/assimp/assimp/blob/master/code/XGLLoader.cpp
+                    inStream.ReadByte();
+                    inStream.ReadByte();
+                    nextStream = new DeflateStream(inStream, CompressionMode.Decompress);
+                }
+
+                // Read all xml data
+                try
+                {
+                    using (var inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings { CloseInput = false }))
+                    {
+                        while (inStreamXml.Read())
+                        {
+                            try
+                            {
+                                if (inStreamXml.NodeType != XmlNodeType.Element) { continue; }
+
+                                switch (inStreamXml.Name)
+                                {
+                                    case NODE_NAME_DATA:
+                                        break;
+
+                                    case NODE_NAME_BACKGROUND:
+                                        break;
+
+                                    case NODE_NAME_LIGHTING:
+                                        break;
+
+                                    case NODE_NAME_TEXTURE:
+                                        ImportTexture(inStreamXml, result);
+                                        break;
+
+                                    case NODE_NAME_MESH:
+                                        ImportMesh(inStreamXml, result, xglImportOptions);
+                                        break;
+
+                                    case NODE_NAME_OBJECT:
+                                        ImportObject(inStreamXml, result, rootObject, xglImportOptions);
+                                        break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // Get current line and column
+                                var currentLine = 0;
+                                var currentColumn = 0;
+                                var lineInfo = inStreamXml as IXmlLineInfo;
+
+                                if (lineInfo != null)
+                                {
+                                    currentLine = lineInfo.LineNumber;
+                                    currentColumn = lineInfo.LinePosition;
+                                }
+
+                                // Throw an exception with more detail where the error was raised originally
+                                throw new SeeingSharpGraphicsException(
+                                    $"Unable to read file {sourceFile} because of an error while reading xml at {currentLine + ", " + currentColumn}", ex);
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    if (inStream != nextStream) { nextStream.Dispose(); }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a default import options object for this importer.
+        /// </summary>
+        public ImportOptions CreateDefaultImportOptions()
+        {
+            var options = new XglImportOptions
+            {
+                ResizeFactor = 0.01f,
+                ResourceCoordinateSystem = CoordinateSystem.RightHanded_UpZ
+            };
+
+            return options;
+        }
 
         /// <summary>
         /// Imports the texture node where the xml reader is currently located.
@@ -532,119 +646,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             // finalize object here
             actionFinalizeObject();
-        }
-
-        /// <summary>
-        /// Imports a model from the given file.
-        /// </summary>
-        /// <param name="sourceFile">The source file to be loaded.</param>
-        /// <param name="importOptions">Some configuration for the importer.</param>
-        public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
-        {
-            // Get import options
-            var xglImportOptions = importOptions as XglImportOptions;
-
-            if (xglImportOptions == null)
-            {
-                throw new SeeingSharpException("Invalid import options for ACImporter!");
-            }
-
-            var result = new ImportedModelContainer(importOptions);
-
-            // Append an object which transform the whole coordinate system
-            var rootObject = result.CreateAndAddRootObject();
-
-            // Load current model by walking through xml nodes
-            using (var inStream = sourceFile.OpenInputStream())
-            {
-                // Handle compressed xgl files (extension zgl)
-                var nextStream = inStream;
-
-                if (sourceFile.FileExtension.Equals("zgl", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Skip the first bytes in case of compression
-                    //  see https://github.com/assimp/assimp/blob/master/code/XGLLoader.cpp
-                    inStream.ReadByte();
-                    inStream.ReadByte();
-                    nextStream = new DeflateStream(inStream, CompressionMode.Decompress);
-                }
-
-                // Read all xml data
-                try
-                {
-                    using (var inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings { CloseInput = false }))
-                    {
-                        while (inStreamXml.Read())
-                        {
-                            try
-                            {
-                                if (inStreamXml.NodeType != XmlNodeType.Element) { continue; }
-
-                                switch (inStreamXml.Name)
-                                {
-                                    case NODE_NAME_DATA:
-                                        break;
-
-                                    case NODE_NAME_BACKGROUND:
-                                        break;
-
-                                    case NODE_NAME_LIGHTING:
-                                        break;
-
-                                    case NODE_NAME_TEXTURE:
-                                        ImportTexture(inStreamXml, result);
-                                        break;
-
-                                    case NODE_NAME_MESH:
-                                        ImportMesh(inStreamXml, result, xglImportOptions);
-                                        break;
-
-                                    case NODE_NAME_OBJECT:
-                                        ImportObject(inStreamXml, result, rootObject, xglImportOptions);
-                                        break;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                // Get current line and column
-                                var currentLine = 0;
-                                var currentColumn = 0;
-                                var lineInfo = inStreamXml as IXmlLineInfo;
-
-                                if (lineInfo != null)
-                                {
-                                    currentLine = lineInfo.LineNumber;
-                                    currentColumn = lineInfo.LinePosition;
-                                }
-
-                                // Throw an exception with more detail where the error was raised originally
-                                throw new SeeingSharpGraphicsException(
-                                    $"Unable to read file {sourceFile} because of an error while reading xml at {currentLine + ", " + currentColumn}", ex);
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    if (inStream != nextStream) { nextStream.Dispose(); }
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a default import options object for this importer.
-        /// </summary>
-        public ImportOptions CreateDefaultImportOptions()
-        {
-            var options = new XglImportOptions
-            {
-                ResizeFactor = 0.01f,
-                ResourceCoordinateSystem = CoordinateSystem.RightHanded_UpZ
-            };
-
-            return options;
         }
     }
 }

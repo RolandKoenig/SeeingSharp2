@@ -19,12 +19,32 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class AnimationHandler : AnimationSequence
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
+        /// </summary>
+        /// <param name="owner">The owner object of this AnimationHandler.</param>
+        public AnimationHandler(object owner)
+        {
+            Owner = owner;
+        }
+
+        /// <summary>
+        /// Called when an animation throws an exception during execution.
+        /// </summary>
+        /// <param name="animation">The failed animation.</param>
+        /// <param name="ex">The exception thrown.</param>
+        protected override AnimationFailedReaction OnAnimationFailed(IAnimation animation, Exception ex)
+        {
+            return AnimationFailedReaction.RemoveAndContinue;
+        }
+
         /// <summary>
         /// Starts building an animation sequence for the current target object.
         /// </summary>
@@ -42,25 +62,6 @@ namespace SeeingSharp.Multimedia.Core
             where TargetObject : class
         {
             return new AnimationSequenceBuilder<TargetObject>(this, animatedObject);
-        }
-
-        /// <summary>
-        /// Called when an animation throws an exception during execution.
-        /// </summary>
-        /// <param name="animation">The failed animation.</param>
-        /// <param name="ex">The exception thrown.</param>
-        protected override AnimationFailedReaction OnAnimationFailed(IAnimation animation, Exception ex)
-        {
-            return AnimationFailedReaction.RemoveAndContinue;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
-        /// </summary>
-        /// <param name="owner">The owner object of this AnimationHandler.</param>
-        public AnimationHandler(object owner)
-        {
-            Owner = owner;
         }
 
         /// <summary>

@@ -29,8 +29,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SimpleColoredMaterialResource : MaterialResource
     {
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
         // Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
@@ -49,6 +47,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private PixelShaderResource m_pixelShader;
         private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
         private DefaultResources m_defaultResources;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleColoredMaterialResource"/> class.
+        /// </summary>
+        /// <param name="textureKey">The name of the texture to be rendered.</param>
+        public SimpleColoredMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey())
+        {
+            TextureKey = textureKey;
+            m_maxClipDistance = 1000f;
+            m_adjustTextureCoordinates = false;
+            m_addToAlpha = 0f;
+            m_materialDiffuseColor = Color4.White;
+        }
 
         /// <summary>
         /// Loads the resource.
@@ -166,19 +177,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleColoredMaterialResource"/> class.
-        /// </summary>
-        /// <param name="textureKey">The name of the texture to be rendered.</param>
-        public SimpleColoredMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey())
-        {
-            TextureKey = textureKey;
-            m_maxClipDistance = 1000f;
-            m_adjustTextureCoordinates = false;
-            m_addToAlpha = 0f;
-            m_materialDiffuseColor = Color4.White;
-        }
-
-        /// <summary>
         /// Gets the key of the texture resource.
         /// </summary>
         public NamedOrGenericKey TextureKey { get; }
@@ -265,5 +263,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
+
+        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

@@ -39,6 +39,34 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private float m_opacity;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RadialGradientBrushResource" /> class.
+        /// </summary>
+        public RadialGradientBrushResource(
+            Vector2 center, Vector2 gradientOriginOffset, float radiusX, float radiusY,
+            GradientStop[] gradientStops,
+            ExtendMode extendMode = ExtendMode.Clamp,
+            Gamma gamma = Gamma.StandardRgb,
+            float opacity = 1f)
+        {;
+            gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
+            opacity.EnsureInRange(0f, 1f, nameof(opacity));
+            radiusX.EnsurePositive(nameof(radiusX));
+            radiusY.EnsurePositive(nameof(radiusY));
+
+            m_gradientStops = gradientStops;
+            Center = center;
+            GradientOriginOffset = gradientOriginOffset;
+            RadiusX = radiusX;
+            RadiusY = radiusY;
+            ExtendMode = extendMode;
+            Gamma = gamma;
+            m_opacity = opacity;
+
+            m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
+
+        }
+
+        /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to unload the resource.</param>
@@ -113,34 +141,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return result.Brush;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RadialGradientBrushResource" /> class.
-        /// </summary>
-        public RadialGradientBrushResource(
-            Vector2 center, Vector2 gradientOriginOffset, float radiusX, float radiusY,
-            GradientStop[] gradientStops,
-            ExtendMode extendMode = ExtendMode.Clamp,
-            Gamma gamma = Gamma.StandardRgb,
-            float opacity = 1f)
-        {;
-            gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
-            opacity.EnsureInRange(0f, 1f, nameof(opacity));
-            radiusX.EnsurePositive(nameof(radiusX));
-            radiusY.EnsurePositive(nameof(radiusY));
-
-            m_gradientStops = gradientStops;
-            Center = center;
-            GradientOriginOffset = gradientOriginOffset;
-            RadiusX = radiusX;
-            RadiusY = radiusY;
-            ExtendMode = extendMode;
-            Gamma = gamma;
-            m_opacity = opacity;
-
-            m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
-
         }
 
         public Gamma Gamma { get; }

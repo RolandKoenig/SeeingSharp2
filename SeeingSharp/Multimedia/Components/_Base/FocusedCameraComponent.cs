@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -36,7 +37,20 @@ namespace SeeingSharp.Multimedia.Components
 
         // Configuration
         private Vector2 m_hvRotation;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
+        /// </summary>
+        public FocusedCameraComponent()
+        {
+            CameraDistanceInitial = 4f;
+            CameraDistanceMin = 3f;
+            CameraDistanceMax = 10f;
+            m_hvRotation = new Vector2(
+                EngineMath.RAD_45DEG,
+                EngineMath.RAD_45DEG);
+        }
+
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -124,6 +138,8 @@ namespace SeeingSharp.Multimedia.Components
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;
             actCamera.Target = focusedLocation;
         }
+
+        protected abstract Vector3 GetFocusedLocation();
 
         /// <summary>
         /// Update camera for keyboard input.
@@ -223,21 +239,6 @@ namespace SeeingSharp.Multimedia.Components
 
                 componentContext.CameraDistance = componentContext.CameraDistance * multiplyer;
             }
-        }
-
-        protected abstract Vector3 GetFocusedLocation();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
-        /// </summary>
-        public FocusedCameraComponent()
-        {
-            CameraDistanceInitial = 4f;
-            CameraDistanceMin = 3f;
-            CameraDistanceMax = 10f;
-            m_hvRotation = new Vector2(
-                EngineMath.RAD_45DEG,
-                EngineMath.RAD_45DEG);
         }
 
         public float CameraDistanceInitial

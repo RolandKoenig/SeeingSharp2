@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Threading;
 
 namespace SeeingSharp.Util
@@ -28,6 +29,14 @@ namespace SeeingSharp.Util
         private long m_nextGenericKey;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="UniqueGenericKeyGenerator" /> class.
+        /// </summary>
+        public UniqueGenericKeyGenerator()
+        {
+            m_nextGenericKey = long.MinValue;
+        }
+
+        /// <summary>
         /// Generates the next generic key.
         /// </summary>
         public NamedOrGenericKey GetNextGeneric()
@@ -35,14 +44,6 @@ namespace SeeingSharp.Util
             var result = Interlocked.Increment(ref m_nextGenericKey);
             result--;
             return new NamedOrGenericKey(result);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UniqueGenericKeyGenerator" /> class.
-        /// </summary>
-        public UniqueGenericKeyGenerator()
-        {
-            m_nextGenericKey = long.MinValue;
         }
     }
 }

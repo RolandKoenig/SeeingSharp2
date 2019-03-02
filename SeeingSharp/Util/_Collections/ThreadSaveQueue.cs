@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,6 +33,14 @@ namespace SeeingSharp.Util
     public class ThreadSaveQueue<T>
     {
         private ConcurrentQueue<T> m_backingQueue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadSaveQueue&lt;T&gt;"/> class.
+        /// </summary>
+        public ThreadSaveQueue()
+        {
+            m_backingQueue = new ConcurrentQueue<T>();
+        }
 
         /// <summary>
         /// Enqueues the specified item.
@@ -179,14 +188,6 @@ namespace SeeingSharp.Util
         {
             var actItem = default(T);
             while (Dequeue(out actItem)) { }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadSaveQueue&lt;T&gt;"/> class.
-        /// </summary>
-        public ThreadSaveQueue()
-        {
-            m_backingQueue = new ConcurrentQueue<T>();
         }
 
         /// <summary>

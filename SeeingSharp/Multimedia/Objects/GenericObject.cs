@@ -33,15 +33,36 @@ namespace SeeingSharp.Multimedia.Objects
     {
         // Resources
         private IndexBasedDynamicCollection<GeometryResource> m_localResources;
-        
-
         private float m_opacity;
         private bool m_passRelevantValuesChanged;
-        
 
         // Configuration members
         private NamedOrGenericKey m_resGeometryKey;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericObject"/> class.
+        /// </summary>
+        /// <param name="geometryResource">The geometry resource.</param>
+        public GenericObject(NamedOrGenericKey geometryResource)
+        {
+            m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
+
+            m_resGeometryKey = geometryResource;
+
+            //m_opacity = 1f;
+            m_passRelevantValuesChanged = true;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericObject" /> class.
+        /// </summary>
+        /// <param name="geometryResource">The geometry resource.</param>
+        /// <param name="position">The initial position.</param>
+        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
+            : this(geometryResource)
+        {
+            Position = position;
+        }
 
         /// <summary>
         /// Tries to get the bounding box for the given render-loop.
@@ -89,6 +110,70 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return "GenericObject (Geometry: " + m_resGeometryKey + ")";
+        }
+
+        /// <summary>
+        /// Changes the geometry to the given one.
+        /// </summary>
+        /// <param name="newGeometry">The new geometry to set.</param>
+        public void ChangeGeometry(NamedOrGenericKey newGeometry)
+        {
+            m_resGeometryKey = newGeometry;
+        }
+
+        /// <summary>
+        /// Loads all resources of the object.
+        /// </summary>
+        /// <param name="device">Current graphics device.</param>
+        /// <param name="resourceDictionary">Current resource dicionary.</param>
+        public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
+        {
+            m_localResources.AddObject(
+                resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
+                device.DeviceIndex,
+                false);
+        }
+
+        /// <summary>
+        /// Are resources loaded for the given device?
+        /// </summary>
+        /// <param name="device">The device to check for.</param>
+        public override bool IsLoaded(EngineDevice device)
+        {
+            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            {
+                return false;
+            }
+
+            var geoResource = m_localResources[device.DeviceIndex];
+
+            if (geoResource.Key != m_resGeometryKey)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Unloads all resources of the object.
+        /// </summary>
+        public override void UnloadResources()
+        {
+            base.UnloadResources();
+
+            m_localResources.Clear();
+        }
+
+        /// <summary>
         /// This methode stores all data related to this object into the given <see cref="ExportModelContainer" />.
         /// </summary>
         /// <param name="modelContainer">The target container.</param>
@@ -124,6 +209,49 @@ namespace SeeingSharp.Multimedia.Objects
                 //base.UpdateAndApplyRenderParameters(renderState);
                 //geometryResource.Render(renderState);
             }
+        }
+
+        /// <summary>
+        /// Updates this object for the given view.
+        /// </summary>
+        /// <param name="updateState">Current state of the update pass.</param>
+        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            //Subscribe to render passes
+            if (m_passRelevantValuesChanged ||
+                CountRenderPassSubscriptions(layerViewSubset) == 0)
+            {
+                //Unsubscribe from all passes first
+                UnsubsribeFromAllPasses(layerViewSubset);
+
+                //Now subscribe to needed pass
+                if (Opacity < 1f)
+                {
+                    SubscribeToPass(
+                        RenderPassInfo.PASS_TRANSPARENT_RENDER,
+                        layerViewSubset, OnRenderTransparent);
+                }
+                else
+                {
+                    SubscribeToPass(
+                        RenderPassInfo.PASS_PLAIN_RENDER,
+                        layerViewSubset, OnRenderPlain);
+                }
+
+                //Update local flag
+                m_passRelevantValuesChanged = false;
+            }
+        }
+
+        /// <summary>
+        /// Called when opacity has changed.
+        /// </summary>
+        protected override void OnOpacityChanged()
+        {
+            base.OnOpacityChanged();
+
+            m_passRelevantValuesChanged = true;
         }
 
         /// <summary>
@@ -195,113 +323,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return "GenericObject (Geometry: " + m_resGeometryKey + ")";
-        }
-
-        /// <summary>
-        /// Changes the geometry to the given one.
-        /// </summary>
-        /// <param name="newGeometry">The new geometry to set.</param>
-        public void ChangeGeometry(NamedOrGenericKey newGeometry)
-        {
-            m_resGeometryKey = newGeometry;
-        }
-
-        /// <summary>
-        /// Loads all resources of the object.
-        /// </summary>
-        /// <param name="device">Current graphics device.</param>
-        /// <param name="resourceDictionary">Current resource dicionary.</param>
-        public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
-        {
-            m_localResources.AddObject(
-                resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
-                device.DeviceIndex,
-                false);
-        }
-
-        /// <summary>
-        /// Are resources loaded for the given device?
-        /// </summary>
-        /// <param name="device">The device to check for.</param>
-        public override bool IsLoaded(EngineDevice device)
-        {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex))
-            {
-                return false;
-            }
-
-            var geoResource = m_localResources[device.DeviceIndex];
-
-            if (geoResource.Key != m_resGeometryKey)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Unloads all resources of the object.
-        /// </summary>
-        public override void UnloadResources()
-        {
-            base.UnloadResources();
-
-            m_localResources.Clear();
-        }
-
-        /// <summary>
-        /// Updates this object for the given view.
-        /// </summary>
-        /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
-        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            //Subscribe to render passes
-            if (m_passRelevantValuesChanged ||
-                CountRenderPassSubscriptions(layerViewSubset) == 0)
-            {
-                //Unsubscribe from all passes first
-                UnsubsribeFromAllPasses(layerViewSubset);
-
-                //Now subscribe to needed pass
-                if (Opacity < 1f)
-                {
-                    SubscribeToPass(
-                        RenderPassInfo.PASS_TRANSPARENT_RENDER,
-                        layerViewSubset, OnRenderTransparent);
-                }
-                else
-                {
-                    SubscribeToPass(
-                        RenderPassInfo.PASS_PLAIN_RENDER,
-                        layerViewSubset, OnRenderPlain);
-                }
-
-                //Update local flag
-                m_passRelevantValuesChanged = false;
-            }
-        }
-
-        /// <summary>
-        /// Called when opacity has changed.
-        /// </summary>
-        protected override void OnOpacityChanged()
-        {
-            base.OnOpacityChanged();
-
-            m_passRelevantValuesChanged = true;
-        }
-
-        /// <summary>
         /// Renders the object.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
@@ -329,31 +350,6 @@ namespace SeeingSharp.Multimedia.Objects
                 UpdateAndApplyRenderParameters(renderState);
                 geometryResource.Render(renderState);
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject"/> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        public GenericObject(NamedOrGenericKey geometryResource)
-        {
-            m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
-
-            m_resGeometryKey = geometryResource;
-
-            //m_opacity = 1f;
-            m_passRelevantValuesChanged = true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject" /> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        /// <param name="position">The initial position.</param>
-        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
-            : this(geometryResource)
-        {
-            Position = position;
         }
 
         /// <summary>

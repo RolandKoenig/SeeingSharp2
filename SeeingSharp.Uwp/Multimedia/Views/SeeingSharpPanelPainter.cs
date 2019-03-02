@@ -62,6 +62,43 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.DepthStencilView m_renderTargetDepth;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter" /> class.
+        /// </summary>
+        public SeeingSharpPanelPainter()
+        {
+            m_lastSizeChange = DateTime.MinValue;
+
+            // Create the RenderLoop object
+            RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
+            {
+                ClearColor = Color4Ex.White
+            };
+
+            RenderLoop.Internals.CallPresentInUIThread = false;
+            DetachOnUnload = true;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter"/> class.
+        /// </summary>
+        /// <param name="targetPanel">The target panel.</param>
+        public SeeingSharpPanelPainter(SwapChainBackgroundPanel targetPanel)
+            : this()
+        {
+            Attach(targetPanel);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter"/> class.
+        /// </summary>
+        /// <param name="targetPanel">The target panel.</param>
+        public SeeingSharpPanelPainter(SwapChainPanel targetPanel)
+            : this()
+        {
+            Attach(targetPanel);
+        }
+
+        /// <summary>
         /// Attaches the renderer to the given SwapChainBackgroundPanel.
         /// </summary>
         /// <param name="targetPanel">The target panel to attach to.</param>
@@ -107,6 +144,45 @@ namespace SeeingSharp.Multimedia.Views
             catch(Exception ex)
             {
                 throw new SeeingSharpException($"Error while detaching from view: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Detach();
+        }
+
+        /// <summary>
+        /// Called when the size of the target panel has changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="Windows.UI.Xaml.SizeChangedEventArgs" /> instance containing the event data.</param>
+        protected virtual void OnTargetPanelThrottled_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            try
+            {
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return;
+                }
+
+                // Ignore event, if nothing has changed..
+                var actSize = GetTargetRenderPixelSize();
+
+                if ((int)m_lastRefreshTargetSize.Width == actSize.Width &&
+                    (int)m_lastRefreshTargetSize.Height == actSize.Height)
+                {
+                    return;
+                }
+
+                UpdateRenderLoopViewSize();
+            }
+            catch (Exception ex)
+            {
+                throw new SeeingSharpException($"Error during resize of the view: {ex.Message}", ex);
             }
         }
 
@@ -201,37 +277,6 @@ namespace SeeingSharp.Multimedia.Views
         /// Called when the size of the target panel has changed.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="Windows.UI.Xaml.SizeChangedEventArgs" /> instance containing the event data.</param>
-        protected virtual void OnTargetPanelThrottled_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            try
-            {
-                if (!GraphicsCore.IsLoaded)
-                {
-                    return;
-                }
-
-                // Ignore event, if nothing has changed..
-                var actSize = GetTargetRenderPixelSize();
-
-                if ((int)m_lastRefreshTargetSize.Width == actSize.Width &&
-                    (int)m_lastRefreshTargetSize.Height == actSize.Height)
-                {
-                    return;
-                }
-
-                UpdateRenderLoopViewSize();
-            }
-            catch (Exception ex)
-            {
-                throw new SeeingSharpException($"Error during resize of the view: {ex.Message}", ex);
-            }
-        }
-
-        /// <summary>
-        /// Called when the size of the target panel has changed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
         private void OnTargetPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -264,57 +309,6 @@ namespace SeeingSharp.Multimedia.Views
 
             m_compositionScaleChanged = true;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter" /> class.
-        /// </summary>
-        public SeeingSharpPanelPainter()
-        {
-            m_lastSizeChange = DateTime.MinValue;
-
-            // Create the RenderLoop object
-            RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
-            {
-                ClearColor = Color4Ex.White
-            };
-
-            RenderLoop.Internals.CallPresentInUIThread = false;
-            DetachOnUnload = true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter"/> class.
-        /// </summary>
-        /// <param name="targetPanel">The target panel.</param>
-        public SeeingSharpPanelPainter(SwapChainBackgroundPanel targetPanel)
-            : this()
-        {
-            Attach(targetPanel);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter"/> class.
-        /// </summary>
-        /// <param name="targetPanel">The target panel.</param>
-        public SeeingSharpPanelPainter(SwapChainPanel targetPanel)
-            : this()
-        {
-            Attach(targetPanel);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Detach();
-        }
-
-        /// <summary>
-        /// Does the target control have focus?
-        /// (Return true here if rendering runs, because in winrt we are everytime at fullscreen)
-        /// </summary>
-        bool IInputEnabledView.Focused => RenderLoop.IsRegisteredOnMainLoop;
 
         /// <summary>
         /// Disposes all loaded view resources.
@@ -531,5 +525,11 @@ namespace SeeingSharp.Multimedia.Views
         public bool IsOperational => RenderLoop.IsOperational;
 
         public CoreDispatcher Disptacher => m_targetPanel?.Dispatcher;
+
+        /// <summary>
+        /// Does the target control have focus?
+        /// (Return true here if rendering runs, because in winrt we are everytime at fullscreen)
+        /// </summary>
+        bool IInputEnabledView.Focused => RenderLoop.IsRegisteredOnMainLoop;
     }
 }

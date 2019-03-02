@@ -19,12 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
 {
     public abstract class PerformanceCalculatorBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerformanceCalculatorBase"/> class.
+        /// </summary>
+        /// <param name="calculatorName">Name of the calculator.</param>
+        internal PerformanceCalculatorBase(string calculatorName)
+        {
+            CalculatorName = calculatorName;
+        }
+
         /// <summary>
         /// Calculates a new kpi value based on given timestamp parameters.
         /// </summary>
@@ -38,15 +48,6 @@ namespace SeeingSharp.Util
             TimeSpan calculationInterval)
         {
             return null;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerformanceCalculatorBase"/> class.
-        /// </summary>
-        /// <param name="calculatorName">Name of the calculator.</param>
-        internal PerformanceCalculatorBase(string calculatorName)
-        {
-            CalculatorName = calculatorName;
         }
 
         /// <summary>

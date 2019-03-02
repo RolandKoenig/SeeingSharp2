@@ -36,12 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         private Adapter1 m_dxgiAdapter;
 
         /// <summary>
-        /// Gets current desktop window.
-        /// </summary>
-        [DllImport("user32.dll", SetLastError = false)]
-        private static extern IntPtr GetDesktopWindow();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
         /// </summary>
         /// <param name="dxgiAdapter">The target adapter.</param>
@@ -111,6 +105,12 @@ namespace SeeingSharp.Multimedia.Core
             m_deviceEx = SeeingSharpTools.DisposeObject(m_deviceEx);
             m_direct3DEx = SeeingSharpTools.DisposeObject(m_direct3DEx);
         }
+
+        /// <summary>
+        /// Gets current desktop window.
+        /// </summary>
+        [DllImport("user32.dll", SetLastError = false)]
+        private static extern IntPtr GetDesktopWindow();
 
         /// <summary>
         /// Is the device successfully initialized?

@@ -31,14 +31,6 @@ namespace SeeingSharp.Multimedia.Core
         private D2D.Factory2 m_factory2;
 
         /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        internal void UnloadResources()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_factory2);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerD2D"/> class.
         /// </summary>
         internal FactoryHandlerD2D(DeviceLoadSettings deviceLoadSettings)
@@ -48,11 +40,19 @@ namespace SeeingSharp.Multimedia.Core
                 deviceLoadSettings.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
         }
 
-        internal D2D.Factory2 Factory2 => m_factory2;
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        internal void UnloadResources()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_factory2);
+        }
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
         public bool IsInitialized => m_factory2 != null;
+
+        internal D2D.Factory2 Factory2 => m_factory2;
     }
 }

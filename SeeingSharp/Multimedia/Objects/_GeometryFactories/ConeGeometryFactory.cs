@@ -19,12 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
     public class ConeGeometryFactory : GeometryFactory
     {
+        public ConeGeometryFactory()
+        {
+            Radius = 0.5f;
+            Height = 1f;
+            CountOfSegments = 10;
+        }
+
         public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var result = new VertexStructure();
@@ -32,13 +40,6 @@ namespace SeeingSharp.Multimedia.Objects
             mainSurface.BuildConeFullV(Vector3.Zero, Radius, Height, CountOfSegments, Color4Ex.Transparent);
 
             return result;
-        }
-
-        public ConeGeometryFactory()
-        {
-            Radius = 0.5f;
-            Height = 1f;
-            CountOfSegments = 10;
         }
 
         public float Radius

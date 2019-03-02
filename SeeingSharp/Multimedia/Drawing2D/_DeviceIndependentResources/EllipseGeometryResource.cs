@@ -40,6 +40,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.EllipseGeometry m_geometry;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
+        /// </summary>
+        /// <param name="center">The center of the ellipse.</param>
+        /// <param name="radiusX">The radius in x direction.</param>
+        /// <param name="radiusY">The radius in y direction.</param>
+        public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
+        {
+            SetContent(center, radiusX, radiusY);
+        }
+
+        /// <summary>
         /// Sets the content to all lines in the given polygon.
         /// </summary>
         /// <param name="center">The center of the ellipse.</param>
@@ -62,6 +73,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     radiusX, radiusY));
         }
 
+        public override void Dispose()
+        {
+            SeeingSharpTools.SafeDispose(ref m_geometry);
+        }
+
         /// <summary>
         /// Gets the geometry object.
         /// </summary>
@@ -70,22 +86,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed(nameof(m_geometry));
 
             return m_geometry;
-        }
-
-        public override void Dispose()
-        {
-            SeeingSharpTools.SafeDispose(ref m_geometry);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
-        /// </summary>
-        /// <param name="center">The center of the ellipse.</param>
-        /// <param name="radiusX">The radius in x direction.</param>
-        /// <param name="radiusY">The radius in y direction.</param>
-        public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
-        {
-            SetContent(center, radiusX, radiusY);
         }
 
         public override bool IsDisposed => m_geometry == null;

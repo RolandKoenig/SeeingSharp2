@@ -53,6 +53,8 @@ namespace SeeingSharp.Multimedia.Views
         public static readonly DependencyProperty DrawingLayer2DProperty =
             DependencyProperty.Register(nameof(DrawingLayer2D), typeof(Custom2DDrawingLayer), typeof(SeeingSharpRendererElement), new PropertyMetadata(null));
 
+        private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
+
         // Some members..
         private HigherD3DImageSource m_d3dImageSource;
         private WriteableBitmap m_fallbackWpfImageSource;
@@ -75,166 +77,14 @@ namespace SeeingSharp.Multimedia.Views
         private DateTime m_lastSizeChange;
         private WpfSeeingSharpCompositionMode m_compositionMode;
 
-        // Change events
-        public event EventHandler SceneChanged;
+        // State members for handling rendering problems
+        private int m_isDirtyCount;
         public event EventHandler CameraChanged;
         public event EventHandler DrawingLayer2DChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
-
-        // State members for handling rendering problems
-        private int m_isDirtyCount;
-        
-
-        /// <summary>
-        /// Is this object in design mode?
-        /// </summary>
-        private bool IsInDesignMode()
-        {
-            return DesignerProperties.GetIsInDesignMode(this);
-        }
-
-        /// <summary>
-        /// Gets the current DpiScaling mode.
-        /// </summary>
-        public DpiScaling GetDpiScaling()
-        {
-            var source = PresentationSource.FromVisual(this);
-            var dpiScaleFactorX = 1.0;
-            var dpiScaleFactorY = 1.0;
-
-            if (source != null)
-            {
-                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
-                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
-            }
-
-            var result = DpiScaling.Default;
-            result.DpiX = (float)(result.DpiX * dpiScaleFactorX);
-            result.DpiY = (float)(result.DpiY * dpiScaleFactorY);
-            return result;
-        }
-
-        /// <summary>
-        /// Called when the image is loaded.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (!GraphicsCore.IsLoaded) { return; }
-            if (IsInDesignMode()) { return; }
-
-            // Update render size
-            RenderLoop.Camera.SetScreenSize((int)RenderSize.Width, (int)RenderSize.Height);
-
-            // Now connect this view with the main renderloop
-            RenderLoop.RegisterRenderLoop();
-        }
-
-        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
-        }
-
-        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentViewSize)));
-        }
-
-        /// <summary>
-        /// Called when the render size has changed.
-        /// </summary>
-        /// <param name="sizeInfo">New size information.</param>
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            if (!GraphicsCore.IsLoaded) { return; }
-
-            // Break here if we are in design mode
-            if (IsInDesignMode()) { return; }
-
-            // Update render size
-            RenderLoop.Camera.SetScreenSize((int)RenderSize.Width, (int)RenderSize.Height);
-
-            //Resize render target only on greater size changes
-            var resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
-            var resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
-            if (resizeFactorWidth > 1.3 || resizeFactorHeight > 1.3)
-            {
-                RenderLoop.SetCurrentViewSize((int)RenderSize.Width, (int)RenderSize.Height);
-            }
-
-            m_lastSizeChange = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Called when the current session was switched.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="SessionSwitchEventArgs"/> instance containing the event data.</param>
-        private void OnSystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            if (RenderLoop == null) { return; }
-            if (IsInDesignMode()) { return; }
-
-            switch (e.Reason)
-            {
-                    // Handle session lock/unload events
-                    //  => Force recreation of view resources in that case
-                case SessionSwitchReason.SessionUnlock:
-                case SessionSwitchReason.SessionLock:
-                case SessionSwitchReason.SessionLogon:
-                    if (RenderLoop.IsRegisteredOnMainLoop)
-                    {
-                        RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
-                    }
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Called when one of the dependency properties has changed.
-        /// </summary>
-        protected override async void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-
-            if (!GraphicsCore.IsLoaded) { return; }
-            if (IsInDesignMode()) { return; }
-
-            if (e.Property == SceneProperty)
-            {
-                RenderLoop.SetScene(Scene);
-                SceneChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else if (e.Property == CameraProperty)
-            {
-                RenderLoop.Camera = Camera;
-                CameraChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else if (e.Property == DrawingLayer2DProperty)
-            {
-                if (e.OldValue != null) { await RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
-                if (e.NewValue != null) { await RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
-                DrawingLayer2DChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// Called when the image is unloaded.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
-        private void OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (!GraphicsCore.IsLoaded) { return; }
-            if (IsInDesignMode()) { return; }
-
-            RenderLoop.DeregisterRenderLoop();
-        }
+        // Change events
+        public event EventHandler SceneChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpRendererElement"/> class.
@@ -271,15 +121,153 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Gets the RenderLoop that is currently in use.
+        /// Gets the current DpiScaling mode.
         /// </summary>
-        [Browsable(false)]
-        public RenderLoop RenderLoop { get; }
+        public DpiScaling GetDpiScaling()
+        {
+            var source = PresentationSource.FromVisual(this);
+            var dpiScaleFactorX = 1.0;
+            var dpiScaleFactorY = 1.0;
+
+            if (source != null)
+            {
+                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
+                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+            }
+
+            var result = DpiScaling.Default;
+            result.DpiX = (float)(result.DpiX * dpiScaleFactorX);
+            result.DpiY = (float)(result.DpiY * dpiScaleFactorY);
+            return result;
+        }
 
         /// <summary>
-        /// Does the target control have focus?
+        /// Called when the render size has changed.
         /// </summary>
-        public bool Focused => IsFocused;
+        /// <param name="sizeInfo">New size information.</param>
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            if (!GraphicsCore.IsLoaded) { return; }
+
+            // Break here if we are in design mode
+            if (IsInDesignMode()) { return; }
+
+            // Update render size
+            RenderLoop.Camera.SetScreenSize((int)RenderSize.Width, (int)RenderSize.Height);
+
+            //Resize render target only on greater size changes
+            var resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
+            var resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
+            if (resizeFactorWidth > 1.3 || resizeFactorHeight > 1.3)
+            {
+                RenderLoop.SetCurrentViewSize((int)RenderSize.Width, (int)RenderSize.Height);
+            }
+
+            m_lastSizeChange = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Called when one of the dependency properties has changed.
+        /// </summary>
+        protected override async void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (!GraphicsCore.IsLoaded) { return; }
+            if (IsInDesignMode()) { return; }
+
+            if (e.Property == SceneProperty)
+            {
+                RenderLoop.SetScene(Scene);
+                SceneChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else if (e.Property == CameraProperty)
+            {
+                RenderLoop.Camera = Camera;
+                CameraChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else if (e.Property == DrawingLayer2DProperty)
+            {
+                if (e.OldValue != null) { await RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
+                if (e.NewValue != null) { await RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
+                DrawingLayer2DChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Is this object in design mode?
+        /// </summary>
+        private bool IsInDesignMode()
+        {
+            return DesignerProperties.GetIsInDesignMode(this);
+        }
+
+        /// <summary>
+        /// Called when the image is loaded.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!GraphicsCore.IsLoaded) { return; }
+            if (IsInDesignMode()) { return; }
+
+            // Update render size
+            RenderLoop.Camera.SetScreenSize((int)RenderSize.Width, (int)RenderSize.Height);
+
+            // Now connect this view with the main renderloop
+            RenderLoop.RegisterRenderLoop();
+        }
+
+        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
+        }
+
+        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentViewSize)));
+        }
+
+        /// <summary>
+        /// Called when the current session was switched.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SessionSwitchEventArgs"/> instance containing the event data.</param>
+        private void OnSystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (RenderLoop == null) { return; }
+            if (IsInDesignMode()) { return; }
+
+            switch (e.Reason)
+            {
+                    // Handle session lock/unload events
+                    //  => Force recreation of view resources in that case
+                case SessionSwitchReason.SessionUnlock:
+                case SessionSwitchReason.SessionLock:
+                case SessionSwitchReason.SessionLogon:
+                    if (RenderLoop.IsRegisteredOnMainLoop)
+                    {
+                        RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Called when the image is unloaded.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (!GraphicsCore.IsLoaded) { return; }
+            if (IsInDesignMode()) { return; }
+
+            RenderLoop.DeregisterRenderLoop();
+        }
 
         /// <summary>
         /// Disposes all loaded view resources.
@@ -566,6 +554,17 @@ namespace SeeingSharp.Multimedia.Views
         {
 
         }
+
+        /// <summary>
+        /// Gets the RenderLoop that is currently in use.
+        /// </summary>
+        [Browsable(false)]
+        public RenderLoop RenderLoop { get; }
+
+        /// <summary>
+        /// Does the target control have focus?
+        /// </summary>
+        public bool Focused => IsFocused;
 
         /// <summary>
         /// Gets or sets the currently applied scene.

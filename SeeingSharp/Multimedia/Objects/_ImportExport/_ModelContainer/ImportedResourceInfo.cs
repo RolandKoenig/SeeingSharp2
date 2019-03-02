@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -27,11 +28,6 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class ImportedResourceInfo
     {
-        public override string ToString()
-        {
-            return ResourceKey.ToString();
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedResourceInfo"/> class.
         /// </summary>
@@ -41,6 +37,11 @@ namespace SeeingSharp.Multimedia.Objects
         {
             ResourceKey = resourceKey;
             ResourceFactory = resourceFactory;
+        }
+
+        public override string ToString()
+        {
+            return ResourceKey.ToString();
         }
 
         public NamedOrGenericKey ResourceKey

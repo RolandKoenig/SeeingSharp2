@@ -79,23 +79,18 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public bool IsDisposed => m_adapter == null;
-
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_adapter);
             Outputs.Clear();
         }
 
+        public bool IsDisposed => m_adapter == null;
+
         /// <summary>
         /// Gets all outputs supported by this adapter.
         /// </summary>
         public List<EngineOutputInfo> Outputs { get; }
-
-        /// <summary>
-        /// Gets the corresponding adapter.
-        /// </summary>
-        internal Adapter1 Adapter => m_adapter;
 
         /// <summary>
         /// Gets the index of the adapter.
@@ -116,5 +111,10 @@ namespace SeeingSharp.Multimedia.Core
         public string DedicatedVideoMemory => m_adapterDescription.DedicatedVideoMemory.ToString();
 
         public string SharedSystemMemory => m_adapterDescription.SharedSystemMemory.ToString();
+
+        /// <summary>
+        /// Gets the corresponding adapter.
+        /// </summary>
+        internal Adapter1 Adapter => m_adapter;
     }
 }

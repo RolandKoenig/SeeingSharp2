@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SharpDX;
 
@@ -30,6 +31,26 @@ namespace SeeingSharp
         private Stack<Matrix> m_stack;
 
         private Matrix m_top;
+
+        /// <summary>
+        /// Cretaes a new matrix stack using 4x4 matrices
+        /// </summary>
+        public Matrix4Stack()
+        {
+            m_stack = new Stack<Matrix>();
+            m_top = Matrix.Identity;
+
+            m_pushTimes = 0;
+        }
+
+        /// <summary>
+        /// Creates a new matrix stack usin 4x4 matrices
+        /// </summary>
+        public Matrix4Stack(Matrix top)
+            : this()
+        {
+            m_top = top;
+        }
 
         /// <summary>
         /// Resets this object to single identity matrix.
@@ -194,26 +215,6 @@ namespace SeeingSharp
                 m_top = m_stack.Pop();
                 m_pushTimes--;
             }
-        }
-
-        /// <summary>
-        /// Cretaes a new matrix stack using 4x4 matrices
-        /// </summary>
-        public Matrix4Stack()
-        {
-            m_stack = new Stack<Matrix>();
-            m_top = Matrix.Identity;
-
-            m_pushTimes = 0;
-        }
-
-        /// <summary>
-        /// Creates a new matrix stack usin 4x4 matrices
-        /// </summary>
-        public Matrix4Stack(Matrix top)
-            : this()
-        {
-            m_top = top;
         }
 
         /// <summary>

@@ -50,96 +50,38 @@ namespace SeeingSharp.Multimedia.Core
         private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
 
         /// <summary>
-        /// Forces the use of the given material.
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
         /// </summary>
-        /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
-        internal void ForceMaterial(MaterialResource material)
+        /// <param name="device">The device object.</param>
+        /// <param name="performanceCalculator">The object used to calculate performance values</param>
+        private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
         {
-            m_lastAppliedMaterial = null;
-            m_forcedMaterial = material;
+            //Set device members
+            Device = device;
+            DeviceIndex = device.DeviceIndex;
+
+            //Initialize world matrix
+            m_world = new Matrix4Stack(Matrix.Identity);
+
+            //Create settings stack
+            m_renderSettingsStack = new Stack<RenderStackEntry>();
+            m_sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
+
+            m_perfomanceCalculator = performanceCalculator;
         }
 
         /// <summary>
-        /// Applies the given material to the renderer.
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
         /// </summary>
-        /// <param name="resourceToApply">The material to apply.</param>
-        internal void ApplyMaterial(MaterialResource resourceToApply)
-        {
-            ApplyMaterial(resourceToApply, MaterialApplyInstancingMode.SingleObject);
-        }
-
-        /// <summary>
-        /// Applies the given material to the renderer.
-        /// </summary>
-        /// <param name="resourceToApply">The material to apply.</param>
-        /// <param name="instancingMode">The instancing mode for which to apply the material.</param>
-        internal void ApplyMaterial(MaterialResource resourceToApply, MaterialApplyInstancingMode instancingMode)
-        {
-            // Use forced material if any set
-            if (m_forcedMaterial != null &&
-                resourceToApply != m_forcedMaterial)
-            {
-                resourceToApply = m_forcedMaterial;
-            }
-
-            // Disable logic if given material is null
-            if (resourceToApply == null)
-            {
-                m_lastAppliedMaterial = null;
-                return;
-            }
-
-            if (m_lastAppliedMaterial != resourceToApply || m_lastMaterialInstancingMode != instancingMode)
-            {
-                // Apply material (material or instancing mode has changed)
-                resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
-
-                m_lastAppliedMaterial = resourceToApply;
-                m_lastMaterialInstancingMode = instancingMode;
-            }
-        }
-
-        /// <summary>
-        /// An internal helper method which tells the RenderState to clear
-        /// the cached material resource, which was applied lastly.
-        /// This method musst be called if other parts (e. g. postprocessing) work
-        /// with shaders or such like outside of the renderstate.
-        /// </summary>
-        internal void ClearChachedAppliedMaterial()
-        {
-            m_lastAppliedMaterial = null;
-            m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
-        }
-
-        /// <summary>
-        /// Resets the render state.
-        /// </summary>
-        /// <param name="viewport">The viewport.</param>
-        /// <param name="camera">The camera for the new render target.</param>
-        /// <param name="viewInformation">The view information.</param>
-        /// <param name="renderTargets">The render targets used for rendering.</param>
-        internal void Reset(
+        internal RenderState(
+            EngineDevice device,
+            PerformanceAnalyzer performanceCalculator,
             RenderTargets renderTargets,
             RawViewportF viewport,
             Camera3DBase camera, ViewInformation viewInformation)
+            : this(device, performanceCalculator)
         {
-            m_renderSettingsStack.Clear();
-            m_sceneStack.Clear();
-            m_currentScene = null;
-            m_world = new Matrix4Stack(Matrix.Identity);
-
-            //Inititialize current render properties
-            m_currentRenderSettings = new RenderStackEntry
-            {
-                Matrix4Stack = new Matrix4Stack(),
-                RenderTargets = renderTargets,
-                SingleViewport = viewport,
-                Camera = camera,
-                ViewInformation = viewInformation
-            };
-
-            //Apply initial render properties
-            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
+            Reset(renderTargets, viewport, camera, viewInformation);
         }
 
         /// <summary>
@@ -261,42 +203,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Pushes a new render target onto the render target stack.
-        /// </summary>
-        /// <param name="viewport">The viewport object.</param>
-        /// <param name="renderTargets">A structure containing all relevant render targets.</param>
-        /// <param name="camera">The camera for the new render target.</param>
-        /// <param name="viewInformation">The view information.</param>
-        /// <exception cref="System.ObjectDisposedException">RenderState</exception>
-        internal void PushRenderTarget(
-            RenderTargets renderTargets,
-            RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
-        {
-            if (m_disposed)
-            {
-                throw new ObjectDisposedException("RenderState");
-            }
-
-            //Build new render stack entry
-            var newEntry = new RenderStackEntry
-            {
-                Matrix4Stack = new Matrix4Stack(),
-                Camera = camera,
-                RenderTargets = renderTargets,
-                SingleViewport = viewport,
-                ViewInformation = viewInformation
-            };
-
-            //Overtake device settings
-            newEntry.Apply(Device.DeviceImmediateContextD3D11);
-
-            //Push new entry onto the stack
-            m_renderSettingsStack.Push(m_currentRenderSettings);
-            m_currentRenderSettings = newEntry;
-        }
-
-        /// <summary>
         /// Pops a render target from the render target stack.
         /// </summary>
         public void PopRenderTarget()
@@ -336,41 +242,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
-        /// </summary>
-        /// <param name="device">The device object.</param>
-        /// <param name="performanceCalculator">The object used to calculate performance values</param>
-        private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
-        {
-            //Set device members
-            Device = device;
-            DeviceIndex = device.DeviceIndex;
-
-            //Initialize world matrix
-            m_world = new Matrix4Stack(Matrix.Identity);
-
-            //Create settings stack
-            m_renderSettingsStack = new Stack<RenderStackEntry>();
-            m_sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
-
-            m_perfomanceCalculator = performanceCalculator;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
-        /// </summary>
-        internal RenderState(
-            EngineDevice device,
-            PerformanceAnalyzer performanceCalculator,
-            RenderTargets renderTargets,
-            RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
-            : this(device, performanceCalculator)
-        {
-            Reset(renderTargets, viewport, camera, viewInformation);
-        }
-
-        /// <summary>
         /// Disposes all resources of this object.
         /// </summary>
         public void Dispose()
@@ -378,6 +249,135 @@ namespace SeeingSharp.Multimedia.Core
             if (m_disposed) { return; }
 
             m_disposed = true;
+        }
+
+        /// <summary>
+        /// Forces the use of the given material.
+        /// </summary>
+        /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
+        internal void ForceMaterial(MaterialResource material)
+        {
+            m_lastAppliedMaterial = null;
+            m_forcedMaterial = material;
+        }
+
+        /// <summary>
+        /// Applies the given material to the renderer.
+        /// </summary>
+        /// <param name="resourceToApply">The material to apply.</param>
+        internal void ApplyMaterial(MaterialResource resourceToApply)
+        {
+            ApplyMaterial(resourceToApply, MaterialApplyInstancingMode.SingleObject);
+        }
+
+        /// <summary>
+        /// Applies the given material to the renderer.
+        /// </summary>
+        /// <param name="resourceToApply">The material to apply.</param>
+        /// <param name="instancingMode">The instancing mode for which to apply the material.</param>
+        internal void ApplyMaterial(MaterialResource resourceToApply, MaterialApplyInstancingMode instancingMode)
+        {
+            // Use forced material if any set
+            if (m_forcedMaterial != null &&
+                resourceToApply != m_forcedMaterial)
+            {
+                resourceToApply = m_forcedMaterial;
+            }
+
+            // Disable logic if given material is null
+            if (resourceToApply == null)
+            {
+                m_lastAppliedMaterial = null;
+                return;
+            }
+
+            if (m_lastAppliedMaterial != resourceToApply || m_lastMaterialInstancingMode != instancingMode)
+            {
+                // Apply material (material or instancing mode has changed)
+                resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
+
+                m_lastAppliedMaterial = resourceToApply;
+                m_lastMaterialInstancingMode = instancingMode;
+            }
+        }
+
+        /// <summary>
+        /// An internal helper method which tells the RenderState to clear
+        /// the cached material resource, which was applied lastly.
+        /// This method musst be called if other parts (e. g. postprocessing) work
+        /// with shaders or such like outside of the renderstate.
+        /// </summary>
+        internal void ClearChachedAppliedMaterial()
+        {
+            m_lastAppliedMaterial = null;
+            m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
+        }
+
+        /// <summary>
+        /// Resets the render state.
+        /// </summary>
+        /// <param name="viewport">The viewport.</param>
+        /// <param name="camera">The camera for the new render target.</param>
+        /// <param name="viewInformation">The view information.</param>
+        /// <param name="renderTargets">The render targets used for rendering.</param>
+        internal void Reset(
+            RenderTargets renderTargets,
+            RawViewportF viewport,
+            Camera3DBase camera, ViewInformation viewInformation)
+        {
+            m_renderSettingsStack.Clear();
+            m_sceneStack.Clear();
+            m_currentScene = null;
+            m_world = new Matrix4Stack(Matrix.Identity);
+
+            //Inititialize current render properties
+            m_currentRenderSettings = new RenderStackEntry
+            {
+                Matrix4Stack = new Matrix4Stack(),
+                RenderTargets = renderTargets,
+                SingleViewport = viewport,
+                Camera = camera,
+                ViewInformation = viewInformation
+            };
+
+            //Apply initial render properties
+            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
+        }
+
+        /// <summary>
+        /// Pushes a new render target onto the render target stack.
+        /// </summary>
+        /// <param name="viewport">The viewport object.</param>
+        /// <param name="renderTargets">A structure containing all relevant render targets.</param>
+        /// <param name="camera">The camera for the new render target.</param>
+        /// <param name="viewInformation">The view information.</param>
+        /// <exception cref="System.ObjectDisposedException">RenderState</exception>
+        internal void PushRenderTarget(
+            RenderTargets renderTargets,
+            RawViewportF viewport,
+            Camera3DBase camera, ViewInformation viewInformation)
+        {
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
+
+            //Build new render stack entry
+            var newEntry = new RenderStackEntry
+            {
+                Matrix4Stack = new Matrix4Stack(),
+                Camera = camera,
+                RenderTargets = renderTargets,
+                SingleViewport = viewport,
+                ViewInformation = viewInformation
+            };
+
+            //Overtake device settings
+            newEntry.Apply(Device.DeviceImmediateContextD3D11);
+
+            //Push new entry onto the stack
+            m_renderSettingsStack.Push(m_currentRenderSettings);
+            m_currentRenderSettings = newEntry;
         }
 
         /// <summary>
@@ -431,18 +431,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the current main viewport.
-        /// </summary>
-        internal RawViewportF Viewport
-        {
-            get
-            {
-                if (m_currentRenderSettings == null) { return new RawViewportF(); }
-                return m_currentRenderSettings.SingleViewport;
-            }
-        }
-
-        /// <summary>
         /// Is this object disposed?
         /// </summary>
         public bool Disposed => m_disposed;
@@ -459,6 +447,18 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Gets the current main viewport.
+        /// </summary>
+        internal RawViewportF Viewport
+        {
+            get
+            {
+                if (m_currentRenderSettings == null) { return new RawViewportF(); }
+                return m_currentRenderSettings.SingleViewport;
+            }
         }
 
         /// <summary>
@@ -496,14 +496,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private class RenderStackEntry
         {
-            public Camera3DBase Camera;
-
             // Local array which store alls rendertargets for usage
             private D3D11.RenderTargetView[] m_targetArray;
-            public Matrix4Stack Matrix4Stack;
-            public RenderTargets RenderTargets;
-            public RawViewportF SingleViewport;
-            public ViewInformation ViewInformation;
 
             /// <summary>
             /// Applies all properties.
@@ -530,6 +524,12 @@ namespace SeeingSharp.Multimedia.Core
             /// Gets the current view projection matrix.
             /// </summary>
             public Matrix ViewProj => Camera.ViewProjection;
+
+            public Camera3DBase Camera;
+            public Matrix4Stack Matrix4Stack;
+            public RenderTargets RenderTargets;
+            public RawViewportF SingleViewport;
+            public ViewInformation ViewInformation;
         }
     }
 }

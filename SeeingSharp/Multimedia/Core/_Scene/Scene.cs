@@ -67,6 +67,44 @@ namespace SeeingSharp.Multimedia.Core
         private List<SceneLayer> m_sceneLayers;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Scene" /> class.
+        /// </summary>
+        /// <param name="name">The global name of this scene.</param>
+        /// <param name="registerOnMessenger">
+        /// Do register this scene for application messaging?
+        /// If true, then the caller has to ensure that the name is only used once
+        /// across the currently executed application.
+        /// </param>
+        public Scene()
+        {
+            m_perFrameData = new CBPerFrame();
+
+            TransformMode2D = Graphics2DTransformMode.Custom;
+            CustomTransform2D = Matrix3x2.Identity;
+            VirtualScreenSize2D = new Size2F();
+
+            m_sceneComponents = new SceneComponentFlyweight(this);
+
+            m_sceneLayers = new List<SceneLayer>();
+            m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
+            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
+
+            m_drawing2DLayers = new List<Custom2DDrawingLayer>();
+
+            m_asyncInvokesBeforeUpdate = new ThreadSaveQueue<Action>();
+            m_asyncInvokesUpdateBesideRendering = new ThreadSaveQueue<Action>();
+
+            m_registeredResourceDicts = new IndexBasedDynamicCollection<ResourceDictionary>();
+            m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
+            m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
+
+            CachedUpdateState = new SceneRelatedUpdateState(this);
+
+            // Try to initialize this scene object
+            InitializeResourceDictionaries();
+        }
+
+        /// <summary>
         /// Waits until the given object is visible on the given view.
         /// </summary>
         /// <param name="sceneObject">The scene object to be checked.</param>
@@ -237,6 +275,62 @@ namespace SeeingSharp.Multimedia.Core
                     manipulator.IsValid = false;
                 }
             });
+        }
+
+        /// <summary>
+        /// Performs the given action before updating the scene.
+        /// (given action gets called by update thread, no other actions on the scene during this time.)
+        /// </summary>
+        /// <param name="actionToInvoke">The action to be invoked.</param>
+        public Task PerformBeforeUpdateAsync(Action actionToInvoke)
+        {
+            actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
+
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+
+            m_asyncInvokesBeforeUpdate.Enqueue(() =>
+            {
+                try
+                {
+                    actionToInvoke();
+
+                    taskCompletionSource.TrySetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    taskCompletionSource.TrySetException(ex);
+                }
+            });
+
+            return taskCompletionSource.Task;
+        }
+
+        /// <summary>
+        /// Performs the given action beside rendering process.
+        /// (given action gets called by update thread while render threads are rendering.)
+        /// </summary>
+        /// <param name="actionToInvoke">The action to be invoked.</param>
+        public Task PerformBesideRenderingAsync(Action actionToInvoke)
+        {
+            actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
+
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+
+            m_asyncInvokesUpdateBesideRendering.Enqueue(() =>
+            {
+                try
+                {
+                    actionToInvoke();
+
+                    taskCompletionSource.TrySetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    taskCompletionSource.TrySetException(ex);
+                }
+            });
+
+            return taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -763,62 +857,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Performs the given action before updating the scene.
-        /// (given action gets called by update thread, no other actions on the scene during this time.)
-        /// </summary>
-        /// <param name="actionToInvoke">The action to be invoked.</param>
-        public Task PerformBeforeUpdateAsync(Action actionToInvoke)
-        {
-            actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
-
-            var taskCompletionSource = new TaskCompletionSource<bool>();
-
-            m_asyncInvokesBeforeUpdate.Enqueue(() =>
-            {
-                try
-                {
-                    actionToInvoke();
-
-                    taskCompletionSource.TrySetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    taskCompletionSource.TrySetException(ex);
-                }
-            });
-
-            return taskCompletionSource.Task;
-        }
-
-        /// <summary>
-        /// Performs the given action beside rendering process.
-        /// (given action gets called by update thread while render threads are rendering.)
-        /// </summary>
-        /// <param name="actionToInvoke">The action to be invoked.</param>
-        public Task PerformBesideRenderingAsync(Action actionToInvoke)
-        {
-            actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
-
-            var taskCompletionSource = new TaskCompletionSource<bool>();
-
-            m_asyncInvokesUpdateBesideRendering.Enqueue(() =>
-            {
-                try
-                {
-                    actionToInvoke();
-
-                    taskCompletionSource.TrySetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    taskCompletionSource.TrySetException(ex);
-                }
-            });
-
-            return taskCompletionSource.Task;
-        }
-
-        /// <summary>
         /// Updates the scene.
         /// </summary>
         internal void Update(SceneRelatedUpdateState updateState)
@@ -1097,49 +1135,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Scene" /> class.
-        /// </summary>
-        /// <param name="name">The global name of this scene.</param>
-        /// <param name="registerOnMessenger">
-        /// Do register this scene for application messaging?
-        /// If true, then the caller has to ensure that the name is only used once
-        /// across the currently executed application.
-        /// </param>
-        public Scene()
-        {
-            m_perFrameData = new CBPerFrame();
-
-            TransformMode2D = Graphics2DTransformMode.Custom;
-            CustomTransform2D = Matrix3x2.Identity;
-            VirtualScreenSize2D = new Size2F();
-
-            m_sceneComponents = new SceneComponentFlyweight(this);
-
-            m_sceneLayers = new List<SceneLayer>();
-            m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
-            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
-
-            m_drawing2DLayers = new List<Custom2DDrawingLayer>();
-
-            m_asyncInvokesBeforeUpdate = new ThreadSaveQueue<Action>();
-            m_asyncInvokesUpdateBesideRendering = new ThreadSaveQueue<Action>();
-
-            m_registeredResourceDicts = new IndexBasedDynamicCollection<ResourceDictionary>();
-            m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
-            m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
-
-            CachedUpdateState = new SceneRelatedUpdateState(this);
-
-            // Try to initialize this scene object
-            InitializeResourceDictionaries();
-        }
-
-        /// <summary>
-        /// Gets a collection containing all layers.
-        /// </summary>
-        internal ReadOnlyCollection<SceneLayer> Layers { get; }
-
-        /// <summary>
         /// Gets total count of objects within the scene.
         /// </summary>
         public int CountObjects
@@ -1201,12 +1196,6 @@ namespace SeeingSharp.Multimedia.Core
 
         public Matrix3x2 CustomTransform2D { get; set; }
 
-        internal SceneRelatedUpdateState CachedUpdateState
-        {
-            get;
-            private set;
-        }
-
         /// <summary>
         /// Discard automatic scene unloading.
         /// (normally the scene gets cleared automatically after the last view
@@ -1216,6 +1205,17 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets a collection containing all layers.
+        /// </summary>
+        internal ReadOnlyCollection<SceneLayer> Layers { get; }
+
+        internal SceneRelatedUpdateState CachedUpdateState
+        {
+            get;
+            private set;
         }
     }
 }

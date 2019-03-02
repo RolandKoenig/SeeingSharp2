@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +34,50 @@ namespace SeeingSharp.Util
 
         private List<AssemblyResourceInfo> m_resources;
         private Dictionary<string, AssemblyResourceInfo> m_resourcesDict;
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static AssemblyResourceReader()
+        {
+            s_attribType = typeof(AssemblyResourceFileAttribute);
+        }
+
+        /// <summary>
+        /// Creates a new AssemblyResourceReader object
+        /// </summary>
+        public AssemblyResourceReader(Type targetType)
+        {
+            TargetType = targetType;
+
+            var targetTypeInfo = TargetType.GetTypeInfo();
+            TargetAssembly = targetTypeInfo.Assembly;
+
+            m_resources = new List<AssemblyResourceInfo>();
+            m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
+
+            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
+            {
+                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+
+                if (resInfo != null)
+                {
+                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    m_resources.Add(fileInfo);
+
+                    if (actAttrib.Key != null && !m_resourcesDict.ContainsKey(actAttrib.Key))
+                    {
+                        m_resourcesDict.Add(actAttrib.Key, fileInfo);
+                    }
+                }
+                else
+                {
+                    throw new SeeingSharpException("Resource " + actAttrib.ResourcePath + " not found!");
+                }
+            }
+
+            ResourceFiles = new ResourceInfoCollection(this);
+        }
 
         /// <summary>
         /// Opens the resource at the given index for reading
@@ -107,50 +152,6 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Static constructor
-        /// </summary>
-        static AssemblyResourceReader()
-        {
-            s_attribType = typeof(AssemblyResourceFileAttribute);
-        }
-
-        /// <summary>
-        /// Creates a new AssemblyResourceReader object
-        /// </summary>
-        public AssemblyResourceReader(Type targetType)
-        {
-            TargetType = targetType;
-
-            var targetTypeInfo = TargetType.GetTypeInfo();
-            TargetAssembly = targetTypeInfo.Assembly;
-
-            m_resources = new List<AssemblyResourceInfo>();
-            m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
-
-            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
-            {
-                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
-
-                if (resInfo != null)
-                {
-                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
-                    m_resources.Add(fileInfo);
-
-                    if (actAttrib.Key != null && !m_resourcesDict.ContainsKey(actAttrib.Key))
-                    {
-                        m_resourcesDict.Add(actAttrib.Key, fileInfo);
-                    }
-                }
-                else
-                {
-                    throw new SeeingSharpException("Resource " + actAttrib.ResourcePath + " not found!");
-                }
-            }
-
-            ResourceFiles = new ResourceInfoCollection(this);
-        }
-
-        /// <summary>
         /// Gets the target type
         /// </summary>
         public Type TargetType { get; }
@@ -176,19 +177,19 @@ namespace SeeingSharp.Util
             private AssemblyResourceReader m_owner;
 
             /// <summary>
-            /// Is the given resource file available?
-            /// </summary>
-            public bool ContainsResourceFile(string key)
-            {
-                return m_owner.m_resourcesDict.ContainsKey(key);
-            }
-
-            /// <summary>
             /// 
             /// </summary>
             public ResourceInfoCollection(AssemblyResourceReader owner)
             {
                 m_owner = owner;
+            }
+
+            /// <summary>
+            /// Is the given resource file available?
+            /// </summary>
+            public bool ContainsResourceFile(string key)
+            {
+                return m_owner.m_resourcesDict.ContainsKey(key);
             }
 
             /// <summary>

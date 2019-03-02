@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -45,44 +46,6 @@ namespace SeeingSharp
         private double m_fullSpeedLength;
         private double m_fullSpeedSeconds;
         private double m_reachedMaxSpeed;
-
-        /// <summary>
-        /// Gets the move distance by the given timespan.
-        /// </summary>
-        /// <param name="elapsedTime"></param>
-        public Vector3 GetPartialMoveDistance(TimeSpan elapsedTime)
-        {
-            var elapsedSeconds = elapsedTime.TotalSeconds;
-
-            var movedLength = 0.0;
-            if (elapsedSeconds < m_accelerationSeconds)
-            {
-                // We are in acceleration phase
-                movedLength = 0.5 * m_speed.Acceleration * Math.Pow(elapsedSeconds, 2.0);
-            }
-            else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds)
-            {
-                // We are in full-speed phase
-                var elapsedSecondsFullSpeed = elapsedSeconds - m_accelerationSeconds;
-                movedLength = m_accelerationLength + m_speed.MaximumSpeed * elapsedSecondsFullSpeed;
-            }
-            else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds + m_decelerationSeconds)
-            {
-                // We are in deceleration phase
-                var elapsedSecondsDeceleration = elapsedSeconds - (m_accelerationSeconds + m_fullSpeedSeconds);
-                movedLength =
-                    m_accelerationLength + m_fullSpeedLength +
-                    0.5 * m_speed.Decelration * Math.Pow(elapsedSecondsDeceleration, 2.0) + m_reachedMaxSpeed * elapsedSecondsDeceleration;
-            }
-            else
-            {
-                // Movement is finished
-                return MovementVector;
-            }
-
-            // Generate the full movement vector
-            return m_movementNormal * (float)movedLength;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementAnimationHelper" /> class.
@@ -145,6 +108,44 @@ namespace SeeingSharp
                 m_fullSpeedLength = m_fullSpeedLength - fullAccDecLength;
             }
             m_fullSpeedSeconds = m_fullSpeedLength / m_speed.MaximumSpeed;
+        }
+
+        /// <summary>
+        /// Gets the move distance by the given timespan.
+        /// </summary>
+        /// <param name="elapsedTime"></param>
+        public Vector3 GetPartialMoveDistance(TimeSpan elapsedTime)
+        {
+            var elapsedSeconds = elapsedTime.TotalSeconds;
+
+            var movedLength = 0.0;
+            if (elapsedSeconds < m_accelerationSeconds)
+            {
+                // We are in acceleration phase
+                movedLength = 0.5 * m_speed.Acceleration * Math.Pow(elapsedSeconds, 2.0);
+            }
+            else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds)
+            {
+                // We are in full-speed phase
+                var elapsedSecondsFullSpeed = elapsedSeconds - m_accelerationSeconds;
+                movedLength = m_accelerationLength + m_speed.MaximumSpeed * elapsedSecondsFullSpeed;
+            }
+            else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds + m_decelerationSeconds)
+            {
+                // We are in deceleration phase
+                var elapsedSecondsDeceleration = elapsedSeconds - (m_accelerationSeconds + m_fullSpeedSeconds);
+                movedLength =
+                    m_accelerationLength + m_fullSpeedLength +
+                    0.5 * m_speed.Decelration * Math.Pow(elapsedSecondsDeceleration, 2.0) + m_reachedMaxSpeed * elapsedSecondsDeceleration;
+            }
+            else
+            {
+                // Movement is finished
+                return MovementVector;
+            }
+
+            // Generate the full movement vector
+            return m_movementNormal * (float)movedLength;
         }
 
         /// <summary>

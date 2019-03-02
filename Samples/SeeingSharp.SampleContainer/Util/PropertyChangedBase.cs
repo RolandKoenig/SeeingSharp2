@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -26,11 +27,11 @@ namespace SeeingSharp.SampleContainer.Util
 {
     public class PropertyChangedBase : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         protected void RaisePropertyChanged([CallerMemberName] string propName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Util;
@@ -46,6 +47,18 @@ namespace SeeingSharp.Multimedia.Objects
         private int m_tilesY;
 
         private Vector2 m_totalSizeWithoutBorder;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
+        /// </summary>
+        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
+        {
+            m_height = DEFAULT_HEIGHT;
+            m_groundTiles = new List<FloorTile>();
+            m_borders = new List<BorderInformation>();
+            m_tileSize = tileSize;
+            m_borderSize = borderSize;
+        }
 
         /// <summary>
         /// Sets the tilemap.
@@ -343,18 +356,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
-        /// </summary>
-        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
-        {
-            m_height = DEFAULT_HEIGHT;
-            m_groundTiles = new List<FloorTile>();
-            m_borders = new List<BorderInformation>();
-            m_tileSize = tileSize;
-            m_borderSize = borderSize;
-        }
-
-        /// <summary>
         /// Gets or sets the border material
         /// </summary>
         public NamedOrGenericKey BorderMaterial
@@ -434,16 +435,16 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class BorderInformation
         {
-            public BorderLocation Location;
-            public int TileXPos;
-            public int TileYPos;
-
             public BorderInformation(int xPos, int yPos, BorderLocation location)
             {
                 TileXPos = xPos;
                 TileYPos = yPos;
                 Location = location;
             }
+
+            public BorderLocation Location;
+            public int TileXPos;
+            public int TileYPos;
         }
     }
 }

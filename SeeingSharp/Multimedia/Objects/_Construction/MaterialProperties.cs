@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Text;
 using SeeingSharp.Util;
@@ -32,6 +33,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// Gets an empty material.
         /// </summary>
         public static readonly MaterialProperties Empty = new MaterialProperties();
+
+        public MaterialProperties()
+        {
+            DiffuseColor = Color4.White;
+            Name = string.Empty;
+        }
 
         /// <summary>
         /// Gets a key string which is equal for all materials which share the same properties.
@@ -94,12 +101,6 @@ namespace SeeingSharp.Multimedia.Objects
             if (ReferenceEquals(left, null)) { return true; }
 
             return !left.Equals(right);
-        }
-
-        public MaterialProperties()
-        {
-            DiffuseColor = Color4.White;
-            Name = string.Empty;
         }
 
         /// <summary>

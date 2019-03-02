@@ -32,28 +32,6 @@ namespace SeeingSharp.Multimedia.Core
         private LineRenderResources m_lineRenderResources;
 
         /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        /// <param name="device">The target device.</param>
-        /// <param name="resources">Parent ResourceDictionary.</param>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
-            m_lineRenderResources = resources.GetResourceAndEnsureLoaded<LineRenderResources>(LineRenderResources.RESOURCE_KEY);
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        /// <param name="device">The target device.</param>
-        /// <param name="resources">Parent ResourceDictionary.</param>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_defaultResources = null;
-            m_lineRenderResources = null;
-        }
-
-        /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
         /// </summary>
         /// <param name="renderState">The current render state.</param>
@@ -79,6 +57,28 @@ namespace SeeingSharp.Multimedia.Core
 
             device.DeviceImmediateContextD3D11.Rasterizer.State = m_defaultResources.RasterStateDefault;
             device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;
+        }
+
+        /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        /// <param name="device">The target device.</param>
+        /// <param name="resources">Parent ResourceDictionary.</param>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
+            m_lineRenderResources = resources.GetResourceAndEnsureLoaded<LineRenderResources>(LineRenderResources.RESOURCE_KEY);
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        /// <param name="device">The target device.</param>
+        /// <param name="resources">Parent ResourceDictionary.</param>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_defaultResources = null;
+            m_lineRenderResources = null;
         }
 
         /// <summary>

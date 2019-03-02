@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,44 @@ namespace SeeingSharp.Util
     /// </summary>
     public class AssemblyResourceLink
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
+        /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
+        /// <param name="resourceNamespace">The namespace of the resource.</param>
+        /// <param name="resourceFile">The resource file.</param>
+        public AssemblyResourceLink(Assembly targetAssembly, string resourceNamespace, string resourceFile)
+        {
+            targetAssembly.EnsureNotNull(nameof(targetAssembly));
+            resourceNamespace.EnsureNotNullOrEmpty(nameof(resourceNamespace));
+            resourceFile.EnsureNotNullOrEmpty(nameof(resourceFile));
+
+            TargetAssembly = targetAssembly;
+            ResourceNamespace = resourceNamespace;
+            ResourceFile = resourceFile;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
+        /// </summary>
+        /// <param name="type">The type from which to get the assembly and namespace.</param>
+        /// <param name="resourceFile">The resource file.</param>
+        public AssemblyResourceLink(Type type, string resourceFile)
+            : this(type.GetTypeInfo().Assembly, type.Namespace, resourceFile)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
+        /// </summary>
+        /// <param name="type">The type from which to get the assembly and namespace.</param>
+        /// <param name="deeperNamespace">The deeper namespace onwards from the given type's namespace.</param>
+        /// <param name="resourceFile">The resource file.</param>
+        public AssemblyResourceLink(Type type, string deeperNamespace, string resourceFile)
+            : this(type.GetTypeInfo().Assembly, type.Namespace + "." + deeperNamespace, resourceFile)
+        {
+        }
+
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
@@ -142,44 +181,6 @@ namespace SeeingSharp.Util
             {
                 return inStreamReader.ReadToEnd();
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
-        /// </summary>
-        /// <param name="targetAssembly">The target assembly.</param>
-        /// <param name="resourceNamespace">The namespace of the resource.</param>
-        /// <param name="resourceFile">The resource file.</param>
-        public AssemblyResourceLink(Assembly targetAssembly, string resourceNamespace, string resourceFile)
-        {
-            targetAssembly.EnsureNotNull(nameof(targetAssembly));
-            resourceNamespace.EnsureNotNullOrEmpty(nameof(resourceNamespace));
-            resourceFile.EnsureNotNullOrEmpty(nameof(resourceFile));
-
-            TargetAssembly = targetAssembly;
-            ResourceNamespace = resourceNamespace;
-            ResourceFile = resourceFile;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
-        /// </summary>
-        /// <param name="type">The type from which to get the assembly and namespace.</param>
-        /// <param name="resourceFile">The resource file.</param>
-        public AssemblyResourceLink(Type type, string resourceFile)
-            : this(type.GetTypeInfo().Assembly, type.Namespace, resourceFile)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
-        /// </summary>
-        /// <param name="type">The type from which to get the assembly and namespace.</param>
-        /// <param name="deeperNamespace">The deeper namespace onwards from the given type's namespace.</param>
-        /// <param name="resourceFile">The resource file.</param>
-        public AssemblyResourceLink(Type type, string deeperNamespace, string resourceFile)
-            : this(type.GetTypeInfo().Assembly, type.Namespace + "." + deeperNamespace, resourceFile)
-        {
         }
 
         /// <summary>

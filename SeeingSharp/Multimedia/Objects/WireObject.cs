@@ -40,7 +40,16 @@ namespace SeeingSharp.Multimedia.Objects
 
         // Direct3D resources
         private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject()
+        {
+            LineColor = Color4.Black;
+            m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
+        }
+
         /// <summary>
         /// Loads all resources of the object.
         /// </summary>
@@ -135,15 +144,6 @@ namespace SeeingSharp.Multimedia.Objects
             resourceData.LineRenderResources.RenderLines(
                 renderState, viewProj, LineColor,
                 resourceData.LineVertexBuffer, m_lineData.Length * 2);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WireObject" /> class.
-        /// </summary>
-        public WireObject()
-        {
-            LineColor = Color4.Black;
-            m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
 
         /// <summary>

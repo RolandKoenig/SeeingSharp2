@@ -27,6 +27,15 @@ namespace SeeingSharp.Multimedia.Core
         private SceneObject m_pickedObject;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PickingInformation" /> class.
+        /// </summary>
+        public PickingInformation()
+        {
+            m_pickedObject = null;
+            m_distance = float.NaN;
+        }
+
+        /// <summary>
         /// Notifies a pick for the given object with the given distance.
         /// </summary>
         /// <param name="pickedObject">The object that was picked.</param>
@@ -39,15 +48,6 @@ namespace SeeingSharp.Multimedia.Core
                 m_distance = distance;
                 m_pickedObject = pickedObject;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PickingInformation" /> class.
-        /// </summary>
-        public PickingInformation()
-        {
-            m_pickedObject = null;
-            m_distance = float.NaN;
         }
 
         /// <summary>

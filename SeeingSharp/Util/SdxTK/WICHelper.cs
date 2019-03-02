@@ -129,6 +129,107 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 // We don't support n-channel formats
             };
 
+        public static void Dispose()
+        {
+            SDX.Utilities.Dispose(ref _factory);
+        }
+
+        //-------------------------------------------------------------------------------------
+        // Load a WIC-supported file in memory
+        //-------------------------------------------------------------------------------------
+        internal static Image LoadFromWICMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
+        {
+            var flags = WICFlags.AllFrames;
+
+            Image image = null;
+            // Create input stream for memory
+            using (var stream = new WICStream(Factory, new SDX.DataPointer(pSource, size)))
+            {
+                // If the decoder is unable to decode the image, than return null
+                BitmapDecoder decoder = null;
+                try
+                {
+                    decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand);
+                    using (var frame = decoder.GetFrame(0))
+                    {
+                        // Get metadata
+                        Guid convertGuid;
+                        var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
+
+                        // If not supported.
+                        if (!tempDesc.HasValue)
+                        {
+                            return null;
+                        }
+
+                        var mdata = tempDesc.Value;
+
+                        if (mdata.ArraySize > 1 && (flags & WICFlags.AllFrames) != 0)
+                        {
+                            return DecodeMultiframe(flags, mdata, decoder);
+                        }
+
+                        image = DecodeSingleFrame(flags, mdata, convertGuid, frame);
+                    }
+                }
+                catch
+                {
+                    image = null;
+                }
+                finally
+                {
+                    if (decoder != null)
+                    {
+                        decoder.Dispose();
+                    }
+                }
+            }
+
+            // For WIC, we are not keeping the original buffer.
+            if (image != null && !makeACopy)
+            {
+                if (handle.HasValue)
+                {
+                    handle.Value.Free();
+                }
+                else
+                {
+                    SDX.Utilities.FreeMemory(pSource);
+                }
+            }
+            return image;
+        }
+
+        internal static void SaveGifToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Gif, imageStream);
+        }
+
+        internal static void SaveTiffToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Tiff, imageStream);
+        }
+
+        internal static void SaveBmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Bmp, imageStream);
+        }
+
+        internal static void SaveJpgToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Jpg, imageStream);
+        }
+
+        internal static void SavePngToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Png, imageStream);
+        }
+
+        internal static void SaveWmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Wmp, imageStream);
+        }
+
         /// <summary>
         /// Converts a WIC <see cref="SharpDX.WIC.PixelFormat"/> to a <see cref="SharpDX.DXGI.Format"/>.
         /// </summary>
@@ -442,72 +543,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         }
 
         //-------------------------------------------------------------------------------------
-        // Load a WIC-supported file in memory
-        //-------------------------------------------------------------------------------------
-        internal static Image LoadFromWICMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
-        {
-            var flags = WICFlags.AllFrames;
-
-            Image image = null;
-            // Create input stream for memory
-            using (var stream = new WICStream(Factory, new SDX.DataPointer(pSource, size)))
-            {
-                // If the decoder is unable to decode the image, than return null
-                BitmapDecoder decoder = null;
-                try
-                {
-                    decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand);
-                    using (var frame = decoder.GetFrame(0))
-                    {
-                        // Get metadata
-                        Guid convertGuid;
-                        var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
-
-                        // If not supported.
-                        if (!tempDesc.HasValue)
-                        {
-                            return null;
-                        }
-
-                        var mdata = tempDesc.Value;
-
-                        if (mdata.ArraySize > 1 && (flags & WICFlags.AllFrames) != 0)
-                        {
-                            return DecodeMultiframe(flags, mdata, decoder);
-                        }
-
-                        image = DecodeSingleFrame(flags, mdata, convertGuid, frame);
-                    }
-                }
-                catch
-                {
-                    image = null;
-                }
-                finally
-                {
-                    if (decoder != null)
-                    {
-                        decoder.Dispose();
-                    }
-                }
-            }
-
-            // For WIC, we are not keeping the original buffer.
-            if (image != null && !makeACopy)
-            {
-                if (handle.HasValue)
-                {
-                    handle.Value.Free();
-                }
-                else
-                {
-                    SDX.Utilities.FreeMemory(pSource);
-                }
-            }
-            return image;
-        }
-
-        //-------------------------------------------------------------------------------------
         // Encodes a single frame
         //-------------------------------------------------------------------------------------
         private static void EncodeImage(PixelBuffer image, WICFlags flags, BitmapFrameEncode frame)
@@ -646,36 +681,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
         }
 
-        internal static void SaveGifToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Gif, imageStream);
-        }
-
-        internal static void SaveTiffToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, ImageFileType.Tiff, imageStream);
-        }
-
-        internal static void SaveBmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Bmp, imageStream);
-        }
-
-        internal static void SaveJpgToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Jpg, imageStream);
-        }
-
-        internal static void SavePngToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Png, imageStream);
-        }
-
-        internal static void SaveWmpToWICMemory(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToWICMemory(pixelBuffers, 1, WICFlags.None, ImageFileType.Wmp, imageStream);
-        }
-
         private static void SaveToWICMemory(PixelBuffer[] pixelBuffer, int count, WICFlags flags, ImageFileType fileType, Stream stream)
         {
             if (count > 1)
@@ -686,11 +691,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 EncodeSingleFrame(pixelBuffer[0], flags, GetContainerFormatFromFileType(fileType), stream);
             }
-        }
-
-        public static void Dispose()
-        {
-            SDX.Utilities.Dispose(ref _factory);
         }
 
         private static ImagingFactory Factory => _factory ?? (_factory = new ImagingFactory());

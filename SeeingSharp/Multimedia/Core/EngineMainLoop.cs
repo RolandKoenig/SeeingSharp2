@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // Common
         private GraphicsCore m_host;
-             
+
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
         /// input states (like Gampepad).
@@ -68,6 +69,24 @@ namespace SeeingSharp.Multimedia.Core
         /// See http://www.codeproject.com/Articles/37474/Threadsafe-Events
         /// </summary>
         public event EventHandler<GenericInputEventArgs> GenericInput;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="EngineMainLoop"/> class from being created.
+        /// </summary>
+        internal EngineMainLoop(GraphicsCore graphicsCore)
+        {
+            m_host = graphicsCore;
+
+            m_globalLoopAwaiters = new ConcurrentQueue<Action>();
+            m_registeredRenderLoops = new List<RenderLoop>();
+            m_unregisteredRenderLoops = new List<RenderLoop>();
+            m_registeredRenderLoopsLock = new object();
+
+            m_drawing2DResourcesToUnload = new ConcurrentQueue<Drawing2DResourceBase>();
+
+            m_scenesForUnload = new List<Scene>();
+            m_scenesForUnloadLock = new object();
+        }
 
         /// <summary>
         /// Suspends rendering completely.
@@ -314,6 +333,29 @@ namespace SeeingSharp.Multimedia.Core
             });
 
             return m_runningTask;
+        }
+
+        /// <summary>
+        /// Registers the given scene for unload.
+        /// </summary>
+        /// <param name="scene">The scene to be registered.</param>
+        internal void RegisterSceneForUnload(Scene scene)
+        {
+            lock (m_scenesForUnloadLock)
+            {
+                if (!m_scenesForUnload.Contains(scene))
+                {
+                    m_scenesForUnload.Add(scene);
+                }
+            }
+        }
+
+        internal void DeregisterSceneForUnload(Scene scene)
+        {
+            lock(m_scenesForUnloadLock)
+            {
+                while (m_scenesForUnload.Remove(scene)) { }
+            }
         }
 
         /// <summary>
@@ -639,47 +681,6 @@ namespace SeeingSharp.Multimedia.Core
                     devicesInUse.Add(actDevice);
                 }
             }
-        }
-
-        /// <summary>
-        /// Registers the given scene for unload.
-        /// </summary>
-        /// <param name="scene">The scene to be registered.</param>
-        internal void RegisterSceneForUnload(Scene scene)
-        {
-            lock (m_scenesForUnloadLock)
-            {
-                if (!m_scenesForUnload.Contains(scene))
-                {
-                    m_scenesForUnload.Add(scene);
-                }
-            }
-        }
-
-        internal void DeregisterSceneForUnload(Scene scene)
-        {
-            lock(m_scenesForUnloadLock)
-            {
-                while (m_scenesForUnload.Remove(scene)) { }
-            }
-        }
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="EngineMainLoop"/> class from being created.
-        /// </summary>
-        internal EngineMainLoop(GraphicsCore graphicsCore)
-        {
-            m_host = graphicsCore;
-
-            m_globalLoopAwaiters = new ConcurrentQueue<Action>();
-            m_registeredRenderLoops = new List<RenderLoop>();
-            m_unregisteredRenderLoops = new List<RenderLoop>();
-            m_registeredRenderLoopsLock = new object();
-
-            m_drawing2DResourcesToUnload = new ConcurrentQueue<Drawing2DResourceBase>();
-
-            m_scenesForUnload = new List<Scene>();
-            m_scenesForUnloadLock = new object();
         }
 
         /// <summary>

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -50,27 +51,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Lazy<D3D11.SamplerState> m_samplerStateLow;
         private Lazy<D3D11.SamplerState> m_samplerStateMedium;
         private Lazy<D3D11.SamplerState> m_samplerStateHigh;
-
-        /// <summary>
-        /// Gets the sampler state with the given requested quality level.
-        /// </summary>
-        /// <param name="qualityLevel">The quality level to get the sampler state for.</param>
-        internal D3D11.SamplerState GetSamplerState(TextureSamplerQualityLevel qualityLevel)
-        {
-            switch (qualityLevel)
-            {
-                case TextureSamplerQualityLevel.High:
-                    return m_samplerStateHigh.Value;
-
-                case TextureSamplerQualityLevel.Medium:
-                    return m_samplerStateMedium.Value;
-
-                case TextureSamplerQualityLevel.Low:
-                    return m_samplerStateLow.Value;
-            }
-
-            return m_samplerStateLow.Value;
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -204,9 +184,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Gets the sampler state with the given requested quality level.
+        /// </summary>
+        /// <param name="qualityLevel">The quality level to get the sampler state for.</param>
+        internal D3D11.SamplerState GetSamplerState(TextureSamplerQualityLevel qualityLevel)
+        {
+            switch (qualityLevel)
+            {
+                case TextureSamplerQualityLevel.High:
+                    return m_samplerStateHigh.Value;
+
+                case TextureSamplerQualityLevel.Medium:
+                    return m_samplerStateMedium.Value;
+
+                case TextureSamplerQualityLevel.Low:
+                    return m_samplerStateLow.Value;
+            }
+
+            return m_samplerStateLow.Value;
+        }
+
+        /// <summary>
         /// Are resources loaded?
         /// </summary>
         public bool ResourcesLoaded => m_defaultBlendState != null;
+
+        public override bool IsLoaded => m_defaultBlendState != null;
 
         internal D3D11.BlendState DefaultBlendState
         {
@@ -306,7 +309,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 return m_samplerStateMedium.Value;
             }
         }
-
-        public override bool IsLoaded => m_defaultBlendState != null;
     }
 }

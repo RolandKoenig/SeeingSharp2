@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using SeeingSharp.Multimedia.Core;
@@ -35,20 +36,6 @@ namespace SeeingSharp.WpfSamples
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
 
-        private void UpdateSampleCollection()
-        {
-            var sampleGroup = m_sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
-            if (sampleGroup == null) { return; }
-
-            Samples.Clear();
-            foreach(var actSampleMetadata in sampleGroup.Samples)
-            {
-                Samples.Add(new SampleViewModel(actSampleMetadata));
-            }
-            SelectedSample = Samples.FirstOrDefault();
-        }
-
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             m_selectedGroup = string.Empty;
@@ -64,6 +51,20 @@ namespace SeeingSharp.WpfSamples
                 SampleGroups.Add(actSampleGroupName);
             }
             SelectedGroup = SampleGroups.FirstOrDefault();
+        }
+
+        private void UpdateSampleCollection()
+        {
+            var sampleGroup = m_sampleRepo.SampleGroups
+                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
+            if (sampleGroup == null) { return; }
+
+            Samples.Clear();
+            foreach(var actSampleMetadata in sampleGroup.Samples)
+            {
+                Samples.Add(new SampleViewModel(actSampleMetadata));
+            }
+            SelectedSample = Samples.FirstOrDefault();
         }
 
         public ObservableCollection<string> SampleGroups

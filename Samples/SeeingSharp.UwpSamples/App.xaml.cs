@@ -34,6 +34,20 @@ namespace SeeingSharp.UwpSamples
 {
     sealed partial class App : Application
     {
+        public App()
+        {
+            InitializeComponent();
+
+            PlatformDependentMethods.SetOpenUrlInBrowser(async url =>
+            {
+                var targetUrl = new Uri(url);
+                await Launcher.LaunchUriAsync(targetUrl);
+            });
+
+            Suspending += OnSuspending;
+            Resuming += OnResuming;
+        }
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Initialize graphics
@@ -82,20 +96,6 @@ namespace SeeingSharp.UwpSamples
         private void OnResuming(object sender, object e)
         {
             GraphicsCore.Current.Resume();
-        }
-
-        public App()
-        {
-            InitializeComponent();
-
-            PlatformDependentMethods.SetOpenUrlInBrowser(async url =>
-            {
-                var targetUrl = new Uri(url);
-                await Launcher.LaunchUriAsync(targetUrl);
-            });
-
-            Suspending += OnSuspending;
-            Resuming += OnResuming;
         }
     }
 }

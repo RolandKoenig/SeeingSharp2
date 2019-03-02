@@ -26,18 +26,6 @@ namespace SeeingSharp.Multimedia.Core
         private SceneObject m_host;
 
         /// <summary>
-        /// Sets the host object for this behavior.
-        /// </summary>
-        /// <param name="hostObject">The object that hosts this behavior.</param>
-        internal void SetHostObject(SceneObject hostObject)
-        {
-            var oldHostObject = m_host;
-            m_host = hostObject;
-
-            OnHostObjectChanged(oldHostObject, m_host);
-        }
-
-        /// <summary>
         /// Update logic for per object updates.
         /// Be careful: This method is called in parallel with these methods on other objects.
         /// For methods that depend on other object, use UpdateOverall.
@@ -61,6 +49,18 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void OnHostObjectChanged(SceneObject previousHostObject, SceneObject newHostObject)
         {
 
+        }
+
+        /// <summary>
+        /// Sets the host object for this behavior.
+        /// </summary>
+        /// <param name="hostObject">The object that hosts this behavior.</param>
+        internal void SetHostObject(SceneObject hostObject)
+        {
+            var oldHostObject = m_host;
+            m_host = hostObject;
+
+            OnHostObjectChanged(oldHostObject, m_host);
         }
 
         /// <summary>

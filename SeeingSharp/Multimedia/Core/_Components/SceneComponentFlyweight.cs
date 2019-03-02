@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
@@ -35,6 +36,16 @@ namespace SeeingSharp.Multimedia.Core
         private Scene m_owner;
         private ThreadSaveQueue<SceneComponentRequest> m_componentRequests;
         private List<SceneComponentInfo> m_attachedComponents;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneComponentFlyweight"/> class.
+        /// </summary>
+        internal SceneComponentFlyweight(Scene owner)
+        {
+            m_owner = owner;
+            m_componentRequests = new ThreadSaveQueue<SceneComponentRequest>();
+            m_attachedComponents = new List<SceneComponentInfo>();
+        }
 
         /// <summary>
         /// Attaches the given component to this scene.
@@ -278,16 +289,6 @@ namespace SeeingSharp.Multimedia.Core
             componentInfo = default;
             componentIndex = -1;
             return false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneComponentFlyweight"/> class.
-        /// </summary>
-        internal SceneComponentFlyweight(Scene owner)
-        {
-            m_owner = owner;
-            m_componentRequests = new ThreadSaveQueue<SceneComponentRequest>();
-            m_attachedComponents = new List<SceneComponentInfo>();
         }
 
         internal int CountAttached => m_attachedComponents.Count;

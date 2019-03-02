@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
@@ -59,15 +60,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Updates this object for the given view.
-        /// </summary>
-        /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
-        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-        }
-
-        /// <summary>
         /// Are resources loaded for the given device?
         /// </summary>
         /// <param name="device"></param>
@@ -75,6 +67,15 @@ namespace SeeingSharp.Multimedia.Core
         public override bool IsLoaded(EngineDevice device)
         {
             return true;
+        }
+
+        /// <summary>
+        /// Updates this object for the given view.
+        /// </summary>
+        /// <param name="updateState">Current state of the update pass.</param>
+        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
         }
     }
 }

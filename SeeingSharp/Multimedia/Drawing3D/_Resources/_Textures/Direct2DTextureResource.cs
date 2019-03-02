@@ -45,38 +45,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Direct2DOverlayRenderer m_overlayRenderer;
 
         /// <summary>
-        /// Loads all resource.
-        /// </summary>
-        /// <param name="device">The device on which to load all resources.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
-                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
-            m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
-
-            m_overlayRenderer = new Direct2DOverlayRenderer(
-                device,
-                m_renderTargetTexture,
-                m_width, m_height,
-                DpiScaling.Default);
-            m_graphics2D = new Graphics2D(device, m_overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
-        }
-
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        /// <param name="device">The device on which the resources where loaded.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_graphics2D = null;
-            SeeingSharpTools.SafeDispose(ref m_overlayRenderer);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DTextureResource"/> class.
         /// </summary>
         /// <param name="drawingLayer">The drawing layer.</param>
@@ -120,6 +88,38 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 m_overlayRenderer.EndDraw();
             }
+        }
+
+        /// <summary>
+        /// Loads all resource.
+        /// </summary>
+        /// <param name="device">The device on which to load all resources.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
+                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
+            m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
+
+            m_overlayRenderer = new Direct2DOverlayRenderer(
+                device,
+                m_renderTargetTexture,
+                m_width, m_height,
+                DpiScaling.Default);
+            m_graphics2D = new Graphics2D(device, m_overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
+        }
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        /// <param name="device">The device on which the resources where loaded.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_graphics2D = null;
+            SeeingSharpTools.SafeDispose(ref m_overlayRenderer);
+            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
+            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
         }
 
         /// <summary>

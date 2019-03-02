@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
@@ -28,22 +29,6 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public abstract class SceneComponent : SceneComponentBase
     {
-        internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
-        {
-            Attach(manipulator, correspondingView);
-            return null;
-        }
-
-        internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
-        {
-            Detach(manipulator, correspondingView);
-        }
-
-        internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
-        {
-            Update(updateState, correspondingView);
-        }
-
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -71,6 +56,22 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView)
         {
         }
+
+        internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
+        {
+            Attach(manipulator, correspondingView);
+            return null;
+        }
+
+        internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
+        {
+            Detach(manipulator, correspondingView);
+        }
+
+        internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
+        {
+            Update(updateState, correspondingView);
+        }
     }
 
     /// <summary>
@@ -80,27 +81,6 @@ namespace SeeingSharp.Multimedia.Core
     public abstract class SceneComponent<TContextType> : SceneComponentBase
         where TContextType : class
     {
-        internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
-        {
-            return Attach(manipulator, correspondingView);
-        }
-
-        internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
-        {
-            var componentContextCasted = componentContext as TContextType;
-            componentContextCasted.EnsureNotNull(nameof(componentContext));
-
-            Detach(manipulator, correspondingView, componentContextCasted);
-        }
-
-        internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
-        {
-            var componentContextCasted = componentContext as TContextType;
-            componentContextCasted.EnsureNotNull(nameof(componentContext));
-
-            Update(updateState, correspondingView, componentContextCasted);
-        }
-
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -129,6 +109,27 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="componentContext">The current context generating during Attach call.</param>
         protected virtual void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView, TContextType componentContext)
         {
+        }
+
+        internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
+        {
+            return Attach(manipulator, correspondingView);
+        }
+
+        internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
+        {
+            var componentContextCasted = componentContext as TContextType;
+            componentContextCasted.EnsureNotNull(nameof(componentContext));
+
+            Detach(manipulator, correspondingView, componentContextCasted);
+        }
+
+        internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
+        {
+            var componentContextCasted = componentContext as TContextType;
+            componentContextCasted.EnsureNotNull(nameof(componentContext));
+
+            Update(updateState, correspondingView, componentContextCasted);
         }
     }
 }

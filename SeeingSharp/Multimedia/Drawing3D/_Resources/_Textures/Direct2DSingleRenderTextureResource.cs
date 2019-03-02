@@ -48,6 +48,40 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.ShaderResourceView m_renderTargetTextureView;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// </summary>
+        /// <param name="drawingLayer">The drawing layer.</param>
+        /// <param name="height">The width of the generated texture.</param>
+        /// <param name="width">The height of the generated texture.</param>
+        public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
+        {
+            drawingLayer.EnsureNotNull(nameof(drawingLayer));
+            width.EnsurePositive(nameof(width));
+            height.EnsurePositive(nameof(height));
+
+            m_drawingLayer = drawingLayer;
+            m_width = width;
+            m_height = height;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// </summary>
+        /// <param name="fillBrush">The brush which gets used when painting the texture on load time.</param>
+        /// <param name="height">The width of the generated texture.</param>
+        /// <param name="width">The height of the generated texture.</param>
+        public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
+        {
+            fillBrush.EnsureNotNull(nameof(fillBrush));
+            width.EnsurePositive(nameof(width));
+            height.EnsurePositive(nameof(height));
+
+            m_fillBrush = fillBrush;
+            m_width = width;
+            m_height = height;
+        }
+
+        /// <summary>
         /// Loads all resource.
         /// </summary>
         /// <param name="device">The device on which to load all resources.</param>
@@ -99,40 +133,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
             SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
-        /// </summary>
-        /// <param name="drawingLayer">The drawing layer.</param>
-        /// <param name="height">The width of the generated texture.</param>
-        /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
-        {
-            drawingLayer.EnsureNotNull(nameof(drawingLayer));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
-
-            m_drawingLayer = drawingLayer;
-            m_width = width;
-            m_height = height;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
-        /// </summary>
-        /// <param name="fillBrush">The brush which gets used when painting the texture on load time.</param>
-        /// <param name="height">The width of the generated texture.</param>
-        /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
-        {
-            fillBrush.EnsureNotNull(nameof(fillBrush));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
-
-            m_fillBrush = fillBrush;
-            m_width = width;
-            m_height = height;
         }
 
         /// <summary>

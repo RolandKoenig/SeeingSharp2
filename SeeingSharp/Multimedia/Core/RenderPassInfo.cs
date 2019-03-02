@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -35,17 +36,6 @@ namespace SeeingSharp.Multimedia.Core
 
         // Static collection which holds all render passes
         private static List<RenderPassInfo> s_renderPasses;
-
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return Name;
-        }
 
         /// <summary>
         /// Initializes the <see cref="RenderPassInfo" /> class.
@@ -69,6 +59,17 @@ namespace SeeingSharp.Multimedia.Core
         {
             Name = name;
             IsSorted = isSorted;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return Name;
         }
 
         /// <summary>

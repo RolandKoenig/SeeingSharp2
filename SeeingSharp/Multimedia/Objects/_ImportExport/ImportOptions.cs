@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SharpDX;
 
@@ -26,6 +27,16 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class ImportOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportOptions"/> class.
+        /// </summary>
+        public ImportOptions()
+        {
+            ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
+            ResizeFactor = 1f;
+            TwoSidedSurfaces = false;
+        }
+
         /// <summary>
         /// Gets the transform matrix for coordinate system.
         /// </summary>
@@ -71,16 +82,6 @@ namespace SeeingSharp.Multimedia.Objects
                 default:
                     throw new SeeingSharpGraphicsException($"Unknown coordinate system {ResourceCoordinateSystem}!");
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportOptions"/> class.
-        /// </summary>
-        public ImportOptions()
-        {
-            ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            ResizeFactor = 1f;
-            TwoSidedSurfaces = false;
         }
 
         /// <summary>

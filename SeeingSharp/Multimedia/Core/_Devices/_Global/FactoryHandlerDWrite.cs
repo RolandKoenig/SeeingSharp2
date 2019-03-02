@@ -29,14 +29,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Resources for DirectWrite
         private DWrite.Factory m_factory;
-        
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        internal void UnloadResources()
-        {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
@@ -49,13 +41,21 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the Factory object.
+        /// Unloads all resources.
         /// </summary>
-        internal DWrite.Factory Factory => m_factory;
+        internal void UnloadResources()
+        {
+            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+        }
 
         /// <summary>
         /// Is DirectWrite initialized successfully?
         /// </summary>
         public bool IsInitialized => m_factory != null;
+
+        /// <summary>
+        /// Gets the Factory object.
+        /// </summary>
+        internal DWrite.Factory Factory => m_factory;
     }
 }

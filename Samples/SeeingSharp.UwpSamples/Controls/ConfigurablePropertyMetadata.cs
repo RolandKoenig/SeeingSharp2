@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -30,27 +31,6 @@ namespace SeeingSharp.UwpSamples.Controls
         private object m_hostObject;
         private Type m_hostType;
         private PropertyInfo m_propertyInfo;
-
-        public override string ToString()
-        {
-            return $"{CategoryName} - {PropertyDisplayName} (type {ValueType})";
-        }
-
-        public Array GetEnumMembers()
-        {
-            if(ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(GetEnumMembers)} not supported on value type {ValueType}!"); }
-            return Enum.GetValues(m_propertyInfo.PropertyType);
-        }
-
-        public object GetValue()
-        {
-            return m_propertyInfo.GetValue(m_hostObject);
-        }
-
-        public void SetValue(object value)
-        {
-            m_propertyInfo.SetValue(m_hostObject, value);
-        }
 
         internal ConfigurablePropertyMetadata(PropertyInfo propertyInfo, object hostObject)
         {
@@ -85,6 +65,27 @@ namespace SeeingSharp.UwpSamples.Controls
             {
                 throw new ApplicationException($"Unsupported property type {propertyType.FullName}!");
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{CategoryName} - {PropertyDisplayName} (type {ValueType})";
+        }
+
+        public Array GetEnumMembers()
+        {
+            if(ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(GetEnumMembers)} not supported on value type {ValueType}!"); }
+            return Enum.GetValues(m_propertyInfo.PropertyType);
+        }
+
+        public object GetValue()
+        {
+            return m_propertyInfo.GetValue(m_hostObject);
+        }
+
+        public void SetValue(object value)
+        {
+            m_propertyInfo.SetValue(m_hostObject, value);
         }
 
         public object ValueAccessor

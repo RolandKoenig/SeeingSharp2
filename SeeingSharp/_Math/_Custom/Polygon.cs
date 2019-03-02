@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,20 @@ namespace SeeingSharp
     {
         private Lazy<Vector3> m_normal;
         private Vector3[] m_vertices;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polygon" /> class.
+        /// </summary>
+        public Polygon(params Vector3[] vertices)
+        {
+            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+
+            m_vertices = vertices;
+            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
+
+            //Define normal calculation method
+            m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
+        }
 
         /// <summary>
         /// Flatterns this polygon.
@@ -72,20 +87,6 @@ namespace SeeingSharp
         {
             var surface2D = Flattern();
             return surface2D.TriangulateUsingCuttingEars();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Polygon" /> class.
-        /// </summary>
-        public Polygon(params Vector3[] vertices)
-        {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
-
-            m_vertices = vertices;
-            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
-
-            //Define normal calculation method
-            m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
         }
 
         /// <summary>

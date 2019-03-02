@@ -41,48 +41,20 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.DeviceContext m_deviceContext;
 
         /// <summary>
-        /// Sets current transform settings on this graphics object.
-        /// (be carefull, the state is changed on device level!)
+        /// Initializes a new instance of the <see cref="Graphics2D"/> class.
         /// </summary>
-        /// <param name="transformSettings">The settings to be set.</param>
-        internal void PushTransformSettings(Graphics2DTransformSettings transformSettings)
+        /// <param name="device">The hardware device which is used for rendering.</param>
+        /// <param name="renderTarget">The render target which is used by this graphics object.</param>
+        /// <param name="screenSize">The size of the screen in device independent pixels.</param>
+        internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
         {
-            m_transformSettings = transformSettings;
+            m_transformSettings = Graphics2DTransformSettings.Default;
+            TransformStack = new Matrix3x2Stack();
 
-            switch(transformSettings.TransformMode)
-            {
-                    // Overtake given scaling matrix
-                case Graphics2DTransformMode.Custom:
-                    TransformStack.Push(transformSettings.CustomTransform);
-                    break;
-
-                    // Calculate scaling matrix here
-                case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                    var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
-                    var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
-                    if(virtualWidth == 0f) { virtualWidth = ScreenPixelSize.Width; }
-                    if(virtualHeight == 0f) { virtualHeight = ScreenPixelSize.Height; }
-
-                    var scaleFactorX = ScreenPixelSize.Width / virtualWidth;
-                    var scaleFactorY = ScreenPixelSize.Height / virtualHeight;
-                    var combinedScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
-                    var truePixelWidth = virtualWidth * combinedScaleFactor;
-                    var truePixelHeight = virtualHeight * combinedScaleFactor;
-
-                    TransformStack.Push();
-                    TransformStack.TransformLocal(
-                        Matrix3x2.Scaling(combinedScaleFactor) *
-                        Matrix3x2.Translation(
-                            ScreenPixelSize.Width / 2f - truePixelWidth / 2f,
-                            ScreenPixelSize.Height / 2f - truePixelHeight / 2f));
-                    break;
-
-                default:
-                    throw new SeeingSharpGraphicsException($"Unable to handle transform mode {transformSettings.TransformMode}");
-            }
-
-            // Apply current transform
-            ApplyTransformStack();
+            Device = device;
+            m_renderTarget = renderTarget;
+            ScreenPixelSize = screenSize;
+            m_deviceContext = m_renderTarget as D2D.DeviceContext;
         }
 
         /// <summary>
@@ -98,17 +70,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var top = TransformStack.Top;
             m_renderTarget.Transform =
                 *(SDXM.RawMatrix3x2*)&top;
-        }
-
-        /// <summary>
-        /// Resets the transform setting son this graphics object.
-        /// (be carefull, the state is changed on device level!)
-        /// </summary>
-        internal void PopTransformSettings()
-        {
-            TransformStack.Pop();
-
-            ApplyTransformStack();
         }
 
         /// <summary>
@@ -587,20 +548,59 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Graphics2D"/> class.
+        /// Sets current transform settings on this graphics object.
+        /// (be carefull, the state is changed on device level!)
         /// </summary>
-        /// <param name="device">The hardware device which is used for rendering.</param>
-        /// <param name="renderTarget">The render target which is used by this graphics object.</param>
-        /// <param name="screenSize">The size of the screen in device independent pixels.</param>
-        internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
+        /// <param name="transformSettings">The settings to be set.</param>
+        internal void PushTransformSettings(Graphics2DTransformSettings transformSettings)
         {
-            m_transformSettings = Graphics2DTransformSettings.Default;
-            TransformStack = new Matrix3x2Stack();
+            m_transformSettings = transformSettings;
 
-            Device = device;
-            m_renderTarget = renderTarget;
-            ScreenPixelSize = screenSize;
-            m_deviceContext = m_renderTarget as D2D.DeviceContext;
+            switch(transformSettings.TransformMode)
+            {
+                    // Overtake given scaling matrix
+                case Graphics2DTransformMode.Custom:
+                    TransformStack.Push(transformSettings.CustomTransform);
+                    break;
+
+                    // Calculate scaling matrix here
+                case Graphics2DTransformMode.AutoScaleToVirtualScreen:
+                    var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
+                    var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
+                    if(virtualWidth == 0f) { virtualWidth = ScreenPixelSize.Width; }
+                    if(virtualHeight == 0f) { virtualHeight = ScreenPixelSize.Height; }
+
+                    var scaleFactorX = ScreenPixelSize.Width / virtualWidth;
+                    var scaleFactorY = ScreenPixelSize.Height / virtualHeight;
+                    var combinedScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
+                    var truePixelWidth = virtualWidth * combinedScaleFactor;
+                    var truePixelHeight = virtualHeight * combinedScaleFactor;
+
+                    TransformStack.Push();
+                    TransformStack.TransformLocal(
+                        Matrix3x2.Scaling(combinedScaleFactor) *
+                        Matrix3x2.Translation(
+                            ScreenPixelSize.Width / 2f - truePixelWidth / 2f,
+                            ScreenPixelSize.Height / 2f - truePixelHeight / 2f));
+                    break;
+
+                default:
+                    throw new SeeingSharpGraphicsException($"Unable to handle transform mode {transformSettings.TransformMode}");
+            }
+
+            // Apply current transform
+            ApplyTransformStack();
+        }
+
+        /// <summary>
+        /// Resets the transform setting son this graphics object.
+        /// (be carefull, the state is changed on device level!)
+        /// </summary>
+        internal void PopTransformSettings()
+        {
+            TransformStack.Pop();
+
+            ApplyTransformStack();
         }
 
         /// <summary>

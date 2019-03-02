@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,14 @@ namespace SeeingSharp.Multimedia.Core
     public class SeeingSharpLoader
     {
         private List<ISeeingSharpExtensions> m_extensions;
+
+        internal SeeingSharpLoader()
+        {
+            m_extensions = new List<ISeeingSharpExtensions>();
+            m_extensions.Add(new DefaultImporterExporterExtensions());
+
+            LoadSettings = new DeviceLoadSettings();
+        }
 
         public void RegisterExtensions(ISeeingSharpExtensions extensions)
         {
@@ -68,14 +77,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             return Configure(
                 loadSettings => loadSettings.DebugEnabled = true);
-        }
-
-        internal SeeingSharpLoader()
-        {
-            m_extensions = new List<ISeeingSharpExtensions>();
-            m_extensions.Add(new DefaultImporterExporterExtensions());
-
-            LoadSettings = new DeviceLoadSettings();
         }
 
         public IEnumerable<ISeeingSharpExtensions> Extensions => m_extensions;

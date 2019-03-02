@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Text;
@@ -28,6 +29,16 @@ namespace SeeingSharp.Util
     public class ReusableStringBuilders
     {
         private ConcurrentStack<StringBuilder> s_stringBuilders;
+
+        static ReusableStringBuilders()
+        {
+            Current = new ReusableStringBuilders();
+        }
+
+        public ReusableStringBuilders()
+        {
+            s_stringBuilders = new ConcurrentStack<StringBuilder>();
+        }
 
         public IDisposable UseStringBuilder(out StringBuilder stringBuilder, int requiredCapacity = 128)
         {
@@ -60,16 +71,6 @@ namespace SeeingSharp.Util
         public void Clear()
         {
             s_stringBuilders.Clear();
-        }
-
-        static ReusableStringBuilders()
-        {
-            Current = new ReusableStringBuilders();
-        }
-
-        public ReusableStringBuilders()
-        {
-            s_stringBuilders = new ConcurrentStack<StringBuilder>();
         }
 
         public int Count => s_stringBuilders.Count;

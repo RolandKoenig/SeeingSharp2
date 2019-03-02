@@ -72,9 +72,61 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_anythingUnsubscribed;
 
         /// <summary>
-        /// Gets or sets the index of this view subset within the scene.
+        /// Initializes a new instance of the <see cref="ViewRelatedSceneLayerSubset" /> class.
         /// </summary>
-        public int ViewIndex;
+        internal ViewRelatedSceneLayerSubset(SceneLayer sceneLayer, ViewInformation viewInformation, ResourceDictionary resources, int viewIndex)
+        {
+            m_scene = sceneLayer.Scene;
+            m_sceneLayer = sceneLayer;
+            ViewInformation = viewInformation;
+            m_device = ViewInformation.Device;
+            m_resources = resources;
+            ViewIndex = viewIndex;
+
+            m_invalidObjects = new Dictionary<SceneObject, object>();
+            m_invalidObjectsToDeregister = new Queue<SceneObject>();
+
+            // Create temporary collections
+            m_tmpChangedVisibilities = new List<Tuple<SceneObject, bool, bool>>();
+
+            // Create all specialized render pass lists
+            m_objectsPassPlainRender = new PassSubscribionProperties();
+            m_objectsPassLineRender = new PassSubscribionProperties();
+            m_objectsPassTransparentRender = new PassSubscribionProperties();
+            m_objectsPassSpriteBatchRender = new PassSubscribionProperties();
+            m_objectsPass2DOverlay = new PassSubscribionProperties();
+
+            // Create dictionary for fast access to all render pass list
+            m_objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscribionProperties>
+            {
+                [RenderPassInfo.PASS_PLAIN_RENDER] = m_objectsPassPlainRender,
+                [RenderPassInfo.PASS_LINE_RENDER] = m_objectsPassLineRender,
+                [RenderPassInfo.PASS_TRANSPARENT_RENDER] = m_objectsPassTransparentRender,
+                [RenderPassInfo.PASS_SPRITE_BATCH] = m_objectsPassSpriteBatchRender,
+                [RenderPassInfo.PASS_2D_OVERLAY] = m_objectsPass2DOverlay
+            };
+
+            m_objectsPerPass = new List<PassSubscribionProperties>(m_objectsPerPassDict.Values);
+
+            m_anythingUnsubscribed = false;
+
+            // Create and load all render pass relevant resources
+            RefreshDeviceDependentResources();
+        }
+
+        /// <summary>
+        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_disposed) { return; }
+
+            m_renderParameters = null;
+            m_renderPassLineRender = null;
+            m_renderPassTransparent = null;
+
+            m_disposed = true;
+        }
 
         /// <summary>
         /// Registers the given collection of objects on this view subset.
@@ -593,6 +645,28 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Renders the 2D overlay of this view subset.
+        /// </summary>
+        /// <param name="renderState">The RenderState object holding all relevant data for current render pass</param>
+        internal void Render2DOverlay(RenderState renderState)
+        {
+            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (m_objectsPass2DOverlay.Subscriptions.Count == 0) { return; }
+
+            // Render all 2D objects
+            List<SceneObject> invalidObjects = null;
+            RenderPass(
+                m_renderPass2DOverlay, m_objectsPass2DOverlay,
+                renderState, ref invalidObjects);
+
+            // Remove all invalid objects
+            if (invalidObjects != null)
+            {
+                HandleInvalidObjects(invalidObjects);
+            }
+        }
+
+        /// <summary>
         /// Main method for object filtering. This method checks whether an object is visible or not.
         /// </summary>
         /// <param name="actObject">The object to be tested.</param>
@@ -786,28 +860,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Renders the 2D overlay of this view subset.
-        /// </summary>
-        /// <param name="renderState">The RenderState object holding all relevant data for current render pass</param>
-        internal void Render2DOverlay(RenderState renderState)
-        {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
-            if (m_objectsPass2DOverlay.Subscriptions.Count == 0) { return; }
-
-            // Render all 2D objects
-            List<SceneObject> invalidObjects = null;
-            RenderPass(
-                m_renderPass2DOverlay, m_objectsPass2DOverlay,
-                renderState, ref invalidObjects);
-
-            // Remove all invalid objects
-            if (invalidObjects != null)
-            {
-                HandleInvalidObjects(invalidObjects);
-            }
-        }
-
-        /// <summary>
         /// Handles invalid objects.
         /// </summary>
         /// <param name="invalidObjects">List containing all invalid objects to handle.</param>
@@ -822,66 +874,14 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewRelatedSceneLayerSubset" /> class.
-        /// </summary>
-        internal ViewRelatedSceneLayerSubset(SceneLayer sceneLayer, ViewInformation viewInformation, ResourceDictionary resources, int viewIndex)
-        {
-            m_scene = sceneLayer.Scene;
-            m_sceneLayer = sceneLayer;
-            ViewInformation = viewInformation;
-            m_device = ViewInformation.Device;
-            m_resources = resources;
-            ViewIndex = viewIndex;
-
-            m_invalidObjects = new Dictionary<SceneObject, object>();
-            m_invalidObjectsToDeregister = new Queue<SceneObject>();
-
-            // Create temporary collections
-            m_tmpChangedVisibilities = new List<Tuple<SceneObject, bool, bool>>();
-
-            // Create all specialized render pass lists
-            m_objectsPassPlainRender = new PassSubscribionProperties();
-            m_objectsPassLineRender = new PassSubscribionProperties();
-            m_objectsPassTransparentRender = new PassSubscribionProperties();
-            m_objectsPassSpriteBatchRender = new PassSubscribionProperties();
-            m_objectsPass2DOverlay = new PassSubscribionProperties();
-
-            // Create dictionary for fast access to all render pass list
-            m_objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscribionProperties>
-            {
-                [RenderPassInfo.PASS_PLAIN_RENDER] = m_objectsPassPlainRender,
-                [RenderPassInfo.PASS_LINE_RENDER] = m_objectsPassLineRender,
-                [RenderPassInfo.PASS_TRANSPARENT_RENDER] = m_objectsPassTransparentRender,
-                [RenderPassInfo.PASS_SPRITE_BATCH] = m_objectsPassSpriteBatchRender,
-                [RenderPassInfo.PASS_2D_OVERLAY] = m_objectsPass2DOverlay
-            };
-
-            m_objectsPerPass = new List<PassSubscribionProperties>(m_objectsPerPassDict.Values);
-
-            m_anythingUnsubscribed = false;
-
-            // Create and load all render pass relevant resources
-            RefreshDeviceDependentResources();
-        }
-
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_disposed) { return; }
-
-            m_renderParameters = null;
-            m_renderPassLineRender = null;
-            m_renderPassTransparent = null;
-
-            m_disposed = true;
-        }
-
-        /// <summary>
         /// Gets the corresponding ViewInformation object.
         /// </summary>
         public ViewInformation ViewInformation { get; }
+
+        /// <summary>
+        /// Gets or sets the index of this view subset within the scene.
+        /// </summary>
+        public int ViewIndex;
 
         //*********************************************************************
         //*********************************************************************
@@ -909,6 +909,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 return x.ZOrder.CompareTo(y.ZOrder);
             }
-        }       
+        }
     }
 }

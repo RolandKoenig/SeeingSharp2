@@ -28,11 +28,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SceneRenderParameters : Resource
     {
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-        
         // Resources
         private TypeSafeConstantBufferResource<CBPerFrame> m_cbPerFrame;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneRenderParameters" /> class.
+        /// </summary>
+        internal SceneRenderParameters()
+        {
+
+        }
+
+        /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerFrame = resources.GetResourceAndEnsureLoaded(
+                KEY_CONSTANT_BUFFER,
+                () => new TypeSafeConstantBufferResource<CBPerFrame>());
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerFrame = null;
+
+            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
+        }
 
         /// <summary>
         /// Updates all parameters.
@@ -58,36 +83,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerFrame = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<CBPerFrame>());
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerFrame = null;
-
-            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneRenderParameters" /> class.
-        /// </summary>
-        internal SceneRenderParameters()
-        {
-
-        }
-
-        /// <summary>
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded => m_cbPerFrame != null;
+
+        // Resource keys
+        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

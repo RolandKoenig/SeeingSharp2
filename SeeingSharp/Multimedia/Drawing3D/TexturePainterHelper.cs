@@ -46,6 +46,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private ObjectRenderParameters m_renderParameters;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
+        /// </summary>
+        /// <param name="textureKey">The texture key.</param>
+        internal TexturePainterHelper(NamedOrGenericKey textureKey)
+        {
+            m_texture = textureKey;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
+        }
+
+        /// <summary>
         /// Loads all resources of this texture painter object.
         /// </summary>
         /// <param name="resources">The target resource dictionary.</param>
@@ -149,18 +161,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
-        /// </summary>
-        /// <param name="textureKey">The texture key.</param>
-        internal TexturePainterHelper(NamedOrGenericKey textureKey)
-        {
-            m_texture = textureKey;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
-        }
-
-        /// <summary>
         /// Gets or sets the scaling.
         /// </summary>
         public float Scaling { get; set; }
@@ -180,6 +180,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public TexturePainterAlphaBlendMode AlphaBlendMode
         {
             get; set;
-        }      
+        }
     }
 }

@@ -34,15 +34,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private int m_structureSize;
 
         /// <summary>
-        /// Sets given content to the constant buffer.
+        /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
         /// </summary>
-        /// <param name="deviceContext">The context used for updating the constant buffer.</param>
-        /// <param name="dataToSet">The data to set.</param>
-        internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
+        public TypeSafeConstantBufferResource()
+            : base(Utilities.SizeOf<T>())
         {
-            var dataBox = deviceContext.MapSubresource(ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
-            Utilities.Write(dataBox.DataPointer, ref dataToSet);
-            deviceContext.UnmapSubresource(ConstantBuffer, 0);
+            m_initialData = new T();
+            m_structureSize = Utilities.SizeOf<T>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
+        /// </summary>
+        public TypeSafeConstantBufferResource(T initialData)
+            : base(Utilities.SizeOf<T>())
+        {
+            m_initialData = initialData;
+            m_structureSize = Utilities.SizeOf<T>();
         }
 
         /// <summary>
@@ -69,23 +77,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
+        /// Sets given content to the constant buffer.
         /// </summary>
-        public TypeSafeConstantBufferResource()
-            : base(Utilities.SizeOf<T>())
+        /// <param name="deviceContext">The context used for updating the constant buffer.</param>
+        /// <param name="dataToSet">The data to set.</param>
+        internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
         {
-            m_initialData = new T();
-            m_structureSize = Utilities.SizeOf<T>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
-        /// </summary>
-        public TypeSafeConstantBufferResource(T initialData)
-            : base(Utilities.SizeOf<T>())
-        {
-            m_initialData = initialData;
-            m_structureSize = Utilities.SizeOf<T>();
+            var dataBox = deviceContext.MapSubresource(ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
+            Utilities.Write(dataBox.DataPointer, ref dataToSet);
+            deviceContext.UnmapSubresource(ConstantBuffer, 0);
         }
     }
 }

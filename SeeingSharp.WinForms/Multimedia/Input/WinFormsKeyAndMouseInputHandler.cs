@@ -50,6 +50,160 @@ namespace SeeingSharp.Multimedia.Input
         private bool m_isMouseInside;
 
         /// <summary>
+        /// Initializes the <see cref="WinFormsKeyAndMouseInputHandler"/> class.
+        /// </summary>
+        static WinFormsKeyAndMouseInputHandler()
+        {
+            // First look for all key codes we have
+            var supportedKeyCodes = new Dictionary<int, WinVirtualKey>();
+            foreach(WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
+            {
+                supportedKeyCodes[(int)actVirtualKey] = actVirtualKey;
+            }
+
+            // Build the mapping dictionary
+            s_keyMappingDict = new Dictionary<WinForms.Keys, WinVirtualKey>();
+            foreach (WinForms.Keys actKeyMember in Enum.GetValues(typeof(WinForms.Keys)))
+            {
+                var actKeyCode = (int)actKeyMember;
+                if(supportedKeyCodes.ContainsKey(actKeyCode))
+                {
+                    s_keyMappingDict[actKeyMember] = supportedKeyCodes[actKeyCode];
+                }
+                else
+                {
+                    s_keyMappingDict[actKeyMember] = WinVirtualKey.None;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WinFormsKeyAndMouseInputHandler"/> class.
+        /// </summary>
+        public WinFormsKeyAndMouseInputHandler()
+        {
+            m_stateMouseOrPointer = new MouseOrPointerState();
+            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
+
+            m_stateKeyboard = new KeyboardState();
+        }
+
+        /// <summary>
+        /// Gets a list containing all supported view types.
+        /// </summary>
+        public Type[] GetSupportedViewTypes()
+        {
+            return new[] { typeof(WinForms.Control), typeof(IInputControlHost) };
+        }
+
+        /// <summary>
+        /// Starts input handling.
+        /// </summary>
+        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
+        public void Start(IInputEnabledView viewObject)
+        {
+            m_currentControl = viewObject as WinForms.Control;
+
+            if (m_currentControl == null)
+            {
+                var inputControlHost = viewObject as IInputControlHost;
+                m_currentControl = inputControlHost?.GetWinFormsInputControl();
+
+                if (m_currentControl == null)
+                {
+                    throw new ArgumentException("Unable to handle given view object!");
+                }
+            }
+
+            m_focusHandler = viewObject;
+
+            if (m_focusHandler == null)
+            {
+                throw new ArgumentException("Unable to handle given view object!");
+            }
+
+            m_renderLoop = m_focusHandler.RenderLoop;
+
+            if (m_renderLoop == null)
+            {
+                throw new ArgumentException("Unable to handle given view object!");
+            }
+
+            // Perform event registrations on UI thread
+            viewObject.RenderLoop.UISynchronizationContext.Post(arg =>
+            {
+                if (m_currentControl == null)
+                {
+                    return;
+                }
+
+                m_currentControl.MouseEnter += OnMouseEnter;
+                m_currentControl.MouseClick += OnMouseClick;
+                m_currentControl.MouseUp += OnMouseUp;
+                m_currentControl.MouseDown += OnMouseDown;
+                m_currentControl.MouseLeave += OnMouseLeave;
+                m_currentControl.MouseMove += OnMouseMove;
+                m_currentControl.MouseWheel += OnMouseWheel;
+                m_currentControl.KeyUp += OnKeyUp;
+                m_currentControl.KeyDown += OnKeyDown;
+                m_currentControl.LostFocus += OnLostFocus;
+                m_currentControl.GotFocus += OnGotFocus;
+
+                // Handle initial focus state
+                if (m_currentControl.Focused || m_currentControl.ContainsFocus)
+                {
+                    m_stateKeyboard.Internals.NotifyFocusGot();
+                }
+            }, null);
+        }
+
+        /// <summary>
+        /// Stops input handling.
+        /// </summary>
+        public void Stop()
+        {
+            // Perform event deregistrations on UI thread
+            if (m_currentControl != null)
+            {
+                var currentControl = m_currentControl;
+
+                var removeEventRegistrationsAction = new Action(() =>
+                {
+                    if(currentControl == null) { return; }
+
+                    currentControl.MouseEnter -= OnMouseEnter;
+                    currentControl.MouseClick -= OnMouseClick;
+                    currentControl.MouseLeave -= OnMouseLeave;
+                    currentControl.MouseMove -= OnMouseMove;
+                    currentControl.MouseWheel -= OnMouseWheel;
+                    currentControl.MouseUp -= OnMouseUp;
+                    currentControl.MouseDown -= OnMouseDown;
+                    currentControl.KeyUp -= OnKeyUp;
+                    currentControl.KeyDown -= OnKeyDown;
+                    currentControl.LostFocus -= OnLostFocus;
+                    currentControl.GotFocus -= OnGotFocus;
+                });
+
+                if (m_currentControl.IsHandleCreated) { m_currentControl.BeginInvoke(removeEventRegistrationsAction); }
+                else { removeEventRegistrationsAction(); }
+            }
+
+            // Set local references to zero
+            m_currentControl = null;
+            m_focusHandler = null;
+            m_renderLoop = null;
+        }
+
+        /// <summary>
+        /// Querries all current input states.
+        /// </summary>
+        public IEnumerable<InputStateBase> GetInputStates()
+        {
+            yield return m_stateMouseOrPointer;
+            yield return m_stateKeyboard;
+        }
+
+        /// <summary>
         /// Called when the mouse enters the screen.
         /// </summary>
         private void OnMouseEnter(object sender, EventArgs e)
@@ -235,160 +389,6 @@ namespace SeeingSharp.Multimedia.Input
             if (m_currentControl == null) { return; }
 
             m_stateKeyboard.Internals.NotifyFocusGot();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="WinFormsKeyAndMouseInputHandler"/> class.
-        /// </summary>
-        static WinFormsKeyAndMouseInputHandler()
-        {
-            // First look for all key codes we have
-            var supportedKeyCodes = new Dictionary<int, WinVirtualKey>();
-            foreach(WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
-            {
-                supportedKeyCodes[(int)actVirtualKey] = actVirtualKey;
-            }
-
-            // Build the mapping dictionary
-            s_keyMappingDict = new Dictionary<WinForms.Keys, WinVirtualKey>();
-            foreach (WinForms.Keys actKeyMember in Enum.GetValues(typeof(WinForms.Keys)))
-            {
-                var actKeyCode = (int)actKeyMember;
-                if(supportedKeyCodes.ContainsKey(actKeyCode))
-                {
-                    s_keyMappingDict[actKeyMember] = supportedKeyCodes[actKeyCode];
-                }
-                else
-                {
-                    s_keyMappingDict[actKeyMember] = WinVirtualKey.None;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WinFormsKeyAndMouseInputHandler"/> class.
-        /// </summary>
-        public WinFormsKeyAndMouseInputHandler()
-        {
-            m_stateMouseOrPointer = new MouseOrPointerState();
-            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
-
-            m_stateKeyboard = new KeyboardState();
-        }
-
-        /// <summary>
-        /// Gets a list containing all supported view types.
-        /// </summary>
-        public Type[] GetSupportedViewTypes()
-        {
-            return new[] { typeof(WinForms.Control), typeof(IInputControlHost) };
-        }
-
-        /// <summary>
-        /// Starts input handling.
-        /// </summary>
-        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
-        {
-            m_currentControl = viewObject as WinForms.Control;
-
-            if (m_currentControl == null)
-            {
-                var inputControlHost = viewObject as IInputControlHost;
-                m_currentControl = inputControlHost?.GetWinFormsInputControl();
-
-                if (m_currentControl == null)
-                {
-                    throw new ArgumentException("Unable to handle given view object!");
-                }
-            }
-
-            m_focusHandler = viewObject;
-
-            if (m_focusHandler == null)
-            {
-                throw new ArgumentException("Unable to handle given view object!");
-            }
-
-            m_renderLoop = m_focusHandler.RenderLoop;
-
-            if (m_renderLoop == null)
-            {
-                throw new ArgumentException("Unable to handle given view object!");
-            }
-
-            // Perform event registrations on UI thread
-            viewObject.RenderLoop.UISynchronizationContext.Post(arg =>
-            {
-                if (m_currentControl == null)
-                {
-                    return;
-                }
-
-                m_currentControl.MouseEnter += OnMouseEnter;
-                m_currentControl.MouseClick += OnMouseClick;
-                m_currentControl.MouseUp += OnMouseUp;
-                m_currentControl.MouseDown += OnMouseDown;
-                m_currentControl.MouseLeave += OnMouseLeave;
-                m_currentControl.MouseMove += OnMouseMove;
-                m_currentControl.MouseWheel += OnMouseWheel;
-                m_currentControl.KeyUp += OnKeyUp;
-                m_currentControl.KeyDown += OnKeyDown;
-                m_currentControl.LostFocus += OnLostFocus;
-                m_currentControl.GotFocus += OnGotFocus;
-
-                // Handle initial focus state
-                if (m_currentControl.Focused || m_currentControl.ContainsFocus)
-                {
-                    m_stateKeyboard.Internals.NotifyFocusGot();
-                }
-            }, null);
-        }
-
-        /// <summary>
-        /// Stops input handling.
-        /// </summary>
-        public void Stop()
-        {
-            // Perform event deregistrations on UI thread
-            if (m_currentControl != null)
-            {
-                var currentControl = m_currentControl;
-
-                var removeEventRegistrationsAction = new Action(() =>
-                {
-                    if(currentControl == null) { return; }
-
-                    currentControl.MouseEnter -= OnMouseEnter;
-                    currentControl.MouseClick -= OnMouseClick;
-                    currentControl.MouseLeave -= OnMouseLeave;
-                    currentControl.MouseMove -= OnMouseMove;
-                    currentControl.MouseWheel -= OnMouseWheel;
-                    currentControl.MouseUp -= OnMouseUp;
-                    currentControl.MouseDown -= OnMouseDown;
-                    currentControl.KeyUp -= OnKeyUp;
-                    currentControl.KeyDown -= OnKeyDown;
-                    currentControl.LostFocus -= OnLostFocus;
-                    currentControl.GotFocus -= OnGotFocus;
-                });
-
-                if (m_currentControl.IsHandleCreated) { m_currentControl.BeginInvoke(removeEventRegistrationsAction); }
-                else { removeEventRegistrationsAction(); }
-            }
-
-            // Set local references to zero
-            m_currentControl = null;
-            m_focusHandler = null;
-            m_renderLoop = null;
-        }
-
-        /// <summary>
-        /// Querries all current input states.
-        /// </summary>
-        public IEnumerable<InputStateBase> GetInputStates()
-        {
-            yield return m_stateMouseOrPointer;
-            yield return m_stateKeyboard;
         }
     }
 }

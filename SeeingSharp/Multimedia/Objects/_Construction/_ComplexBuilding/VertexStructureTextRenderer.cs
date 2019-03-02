@@ -35,6 +35,15 @@ namespace SeeingSharp.Multimedia.Objects
         private VertexStructureSurface m_targetSurface;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VertexStructureTextRenderer" /> class.
+        /// </summary>
+        public VertexStructureTextRenderer(VertexStructureSurface targetSurface, TextGeometryOptions textGeometryOptions)
+        {
+            m_targetSurface = targetSurface;
+            m_geometryOptions = textGeometryOptions;
+        }
+
+        /// <summary>
         /// IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs.
         /// </summary>
         /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="M:SharpDX.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" />.</param>
@@ -347,15 +356,6 @@ namespace SeeingSharp.Multimedia.Objects
         public override SDX.Result DrawUnderline(object clientDrawingContext, float baselineOriginX, float baselineOriginY, ref Underline underline, SDX.ComObject clientDrawingEffect)
         {
             return SDX.Result.Ok;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexStructureTextRenderer" /> class.
-        /// </summary>
-        public VertexStructureTextRenderer(VertexStructureSurface targetSurface, TextGeometryOptions textGeometryOptions)
-        {
-            m_targetSurface = targetSurface;
-            m_geometryOptions = textGeometryOptions;
         }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.D3DCompiler;
@@ -34,6 +35,29 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private ShaderResourceKind m_resourceKind;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ShaderResource"/> class.
+        /// </summary>
+        /// <param name="shaderProfile">Shader profile used for compilation.</param>
+        /// <param name="resourceLink">The source of the resource.</param>
+        /// <param name="resourceKind">Kind of the shader resource.</param>
+        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
+        {
+            m_resourceKind = resourceKind;
+            m_shaderProfile = shaderProfile;
+            m_resourceLink = resourceLink;
+        }
+
+        /// <summary>
+        /// Loads a shader using the given bytecode.
+        /// </summary>
+        protected internal abstract void LoadShader(EngineDevice device, byte[] shaderBytecode);
+
+        /// <summary>
+        /// Unloads the shader.
+        /// </summary>
+        protected internal abstract void UnloadShader();
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
@@ -44,6 +68,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             LoadShader(device, m_shaderBytecode);
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            UnloadShader();
         }
 
         private static byte[] GetShaderBytecode(EngineDevice device, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel)
@@ -80,37 +112,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 default:
                     throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
             }
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            UnloadShader();
-        }
-
-        /// <summary>
-        /// Loads a shader using the given bytecode.
-        /// </summary>
-        protected internal abstract void LoadShader(EngineDevice device, byte[] shaderBytecode);
-
-        /// <summary>
-        /// Unloads the shader.
-        /// </summary>
-        protected internal abstract void UnloadShader();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShaderResource"/> class.
-        /// </summary>
-        /// <param name="shaderProfile">Shader profile used for compilation.</param>
-        /// <param name="resourceLink">The source of the resource.</param>
-        /// <param name="resourceKind">Kind of the shader resource.</param>
-        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
-        {
-            m_resourceKind = resourceKind;
-            m_shaderProfile = shaderProfile;
-            m_resourceLink = resourceLink;
         }
 
         /// <summary>

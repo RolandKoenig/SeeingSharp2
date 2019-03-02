@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.IO;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
@@ -27,6 +28,17 @@ namespace SeeingSharp.Util
 {
     public class FileSystemResourceLink : ResourceLink
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
+        /// </summary>
+        /// <param name="filePath">The path to the physical file.</param>
+        public FileSystemResourceLink(string filePath)
+        {
+            filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
+
+            FilePath = filePath;
+        }
+
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="FileSystemResourceLink"/>.
         /// </summary>
@@ -95,17 +107,6 @@ namespace SeeingSharp.Util
         public override Stream OpenInputStream()
         {
             return File.OpenRead(FilePath);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
-        /// </summary>
-        /// <param name="filePath">The path to the physical file.</param>
-        public FileSystemResourceLink(string filePath)
-        {
-            filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
-
-            FilePath = filePath;
         }
 
         /// <summary>

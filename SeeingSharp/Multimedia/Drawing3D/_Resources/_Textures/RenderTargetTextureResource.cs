@@ -61,6 +61,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
+        /// </summary>
+        /// <param name="creationMode">Tells this object which texture to create.</param>
+        public RenderTargetTextureResource(RenderTargetCreationMode creationMode)
+        {
+            m_creationMode = creationMode;
+            m_width = -1;
+            m_heigth = -1;
+            m_viewportF = new RawViewportF();
+            m_shaderResourceCreated = false;
+        }
+
+        /// <summary>
         /// Applies the given size.
         /// </summary>
         /// <param name="renderState">The render state used for creating all resources.</param>
@@ -159,6 +172,40 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="resources">Parent ResourceDictionary.</param>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="resources">Parent ResourceDictionary.</param>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            SeeingSharpTools.SafeDispose(ref m_depthBufferView);
+            SeeingSharpTools.SafeDispose(ref m_colorBufferRenderTargetView);
+            SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResourceView);
+            SeeingSharpTools.SafeDispose(ref m_depthBuffer);
+            SeeingSharpTools.SafeDispose(ref m_colorBuffer);
+            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferRenderTargetView);
+            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResourceView);
+            SeeingSharpTools.SafeDispose(ref m_normalDepthBuffer);
+
+            // Unload shader resource if it was created explecitely
+            if (m_shaderResourceCreated)
+            {
+                SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResource);
+                SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResource);
+                m_shaderResourceCreated = false;
+            }
+        }
+
+        /// <summary>
         /// Pushes this render target on the given render state.
         /// </summary>
         /// <param name="renderState">The render state to push to.</param>
@@ -243,53 +290,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="resources">Parent ResourceDictionary.</param>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="resources">Parent ResourceDictionary.</param>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            SeeingSharpTools.SafeDispose(ref m_depthBufferView);
-            SeeingSharpTools.SafeDispose(ref m_colorBufferRenderTargetView);
-            SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResourceView);
-            SeeingSharpTools.SafeDispose(ref m_depthBuffer);
-            SeeingSharpTools.SafeDispose(ref m_colorBuffer);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferRenderTargetView);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResourceView);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBuffer);
-
-            // Unload shader resource if it was created explecitely
-            if (m_shaderResourceCreated)
-            {
-                SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResource);
-                SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResource);
-                m_shaderResourceCreated = false;
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
-        /// </summary>
-        /// <param name="creationMode">Tells this object which texture to create.</param>
-        public RenderTargetTextureResource(RenderTargetCreationMode creationMode)
-        {
-            m_creationMode = creationMode;
-            m_width = -1;
-            m_heigth = -1;
-            m_viewportF = new RawViewportF();
-            m_shaderResourceCreated = false;
-        }
-
-        /// <summary>
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded => true;
@@ -304,6 +304,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public override D3D11.ShaderResourceView TextureView => m_colorBufferShaderResourceView;
 
+        public override int ArraySize => 1;
+
         internal D3D11.Texture2D TextureColor => m_colorBuffer;
 
         internal D3D11.ShaderResourceView TextureViewColor => m_colorBufferShaderResourceView;
@@ -312,7 +314,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the shader resource view to the normal-depth texture.
         /// </summary>
         internal D3D11.ShaderResourceView TextureViewNormalDepth => m_normalDepthBufferShaderResourceView;
-
-        public override int ArraySize => 1;
     }
 }

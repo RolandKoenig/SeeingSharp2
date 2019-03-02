@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -173,12 +174,10 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
-        
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositive' for all common numeric variables
 
-        
         [Conditional("DEBUG")]
         public static void EnsurePositive(
             this int numValue, string checkedVariableName,
@@ -283,12 +282,10 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
-        
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositiveAndNotZero' for all common numeric variables
 
-        
         [Conditional("DEBUG")]
         public static void EnsurePositiveAndNotZero(
             this int numValue, string checkedVariableName,
@@ -378,6 +375,5 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
-        
     }
 }

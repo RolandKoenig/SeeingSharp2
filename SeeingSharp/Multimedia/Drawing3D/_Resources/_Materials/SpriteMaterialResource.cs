@@ -39,6 +39,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private VertexShaderResource m_vertexShader;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
+        /// </summary>
+        /// <param name="textureKey">The name of the texture to be rendered.</param>
+        public SpriteMaterialResource(NamedOrGenericKey textureKey)
+        {
+            TextureKey = textureKey;
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
@@ -123,15 +132,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Set shader resources
             deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
             deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
-        /// </summary>
-        /// <param name="textureKey">The name of the texture to be rendered.</param>
-        public SpriteMaterialResource(NamedOrGenericKey textureKey)
-        {
-            TextureKey = textureKey;
         }
 
         /// <summary>

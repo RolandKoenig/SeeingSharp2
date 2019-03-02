@@ -44,6 +44,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private bool m_isRenderTarget;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        public StandardTextureResource(ResourceLink textureSource)
+        {
+            m_resourceLinkHighQuality = textureSource;
+            m_resourceLinkLowQuality = textureSource;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        internal StandardTextureResource(MemoryMappedTexture32bpp inMemoryTexture)
+        {
+            inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
+
+            m_inMemoryTexture = inMemoryTexture;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        /// <param name="highQualityTextureSource">High quality version of the texture.</param>
+        /// <param name="lowQualityTextureSource">Low quality version of the texture.</param>
+        public StandardTextureResource(ResourceLink highQualityTextureSource, ResourceLink lowQualityTextureSource)
+        {
+            m_resourceLinkHighQuality = highQualityTextureSource;
+            m_resourceLinkLowQuality = lowQualityTextureSource;
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
@@ -91,36 +121,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             m_isCubeTexture = false;
             m_isRenderTarget = false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        public StandardTextureResource(ResourceLink textureSource)
-        {
-            m_resourceLinkHighQuality = textureSource;
-            m_resourceLinkLowQuality = textureSource;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        internal StandardTextureResource(MemoryMappedTexture32bpp inMemoryTexture)
-        {
-            inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
-
-            m_inMemoryTexture = inMemoryTexture;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        /// <param name="highQualityTextureSource">High quality version of the texture.</param>
-        /// <param name="lowQualityTextureSource">Low quality version of the texture.</param>
-        public StandardTextureResource(ResourceLink highQualityTextureSource, ResourceLink lowQualityTextureSource)
-        {
-            m_resourceLinkHighQuality = highQualityTextureSource;
-            m_resourceLinkLowQuality = lowQualityTextureSource;
         }
 
         /// <summary>

@@ -38,11 +38,6 @@ namespace SeeingSharp.Multimedia.Views
 
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
     {
-        /// <summary>
-        /// Raises before the render target starts rendering.
-        /// </summary>
-        public event CancelEventHandler BeforeRender;
-
         // Configuration
         private int m_pixelWidth;
         private int m_pixelHeight;
@@ -57,20 +52,9 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.DepthStencilView m_renderTargetDepthView;
 
         /// <summary>
-        /// Awaits next render.
+        /// Raises before the render target starts rendering.
         /// </summary>
-        public Task AwaitRenderAsync()
-        {
-            if (!IsOperational) { return Task.Delay(100); }
-
-            var result = new TaskCompletionSource<object>();
-            RenderLoop.EnqueueAfterPresentAction(() =>
-            {
-                result.TrySetResult(null);
-            });
-
-            return result.Task;
-        }
+        public event CancelEventHandler BeforeRender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryRenderTarget" /> class.
@@ -90,6 +74,22 @@ namespace SeeingSharp.Multimedia.Views
             RenderLoop = new RenderLoop(syncContext, this);
             RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
             RenderLoop.RegisterRenderLoop();
+        }
+
+        /// <summary>
+        /// Awaits next render.
+        /// </summary>
+        public Task AwaitRenderAsync()
+        {
+            if (!IsOperational) { return Task.Delay(100); }
+
+            var result = new TaskCompletionSource<object>();
+            RenderLoop.EnqueueAfterPresentAction(() =>
+            {
+                result.TrySetResult(null);
+            });
+
+            return result.Task;
         }
 
         /// <summary>

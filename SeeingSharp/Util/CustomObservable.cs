@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -29,6 +30,15 @@ namespace SeeingSharp.Util
     {
         private bool m_isFinished;
         private List<IObserver<T>> m_observers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomObservable{T}"/> class.
+        /// </summary>
+        public CustomObservable()
+        {
+            m_observers = new List<IObserver<T>>();
+            m_isFinished = false;
+        }
 
         public void PushNext(T nextObject)
         {
@@ -58,15 +68,6 @@ namespace SeeingSharp.Util
             {
                 m_observers[loop].OnCompleted();
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomObservable{T}"/> class.
-        /// </summary>
-        public CustomObservable()
-        {
-            m_observers = new List<IObserver<T>>();
-            m_isFinished = false;
         }
 
         /// <summary>

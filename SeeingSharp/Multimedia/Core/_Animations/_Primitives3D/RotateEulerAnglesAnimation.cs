@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -37,6 +38,27 @@ namespace SeeingSharp.Multimedia.Core
         private Vector3 m_startRotation;
         private Vector3 m_targetRotation;
         private Vector3 m_changeRotation;
+
+        /// <summary>
+        /// Rotates the object to the target rotation vector.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetVector">The target rotation vector.</param>
+        /// <param name="duration">Total duration of the animation.</param>
+        /// <param name="calculationComponent">The components which are to be modified.</param>
+        /// <param name="stateChangeMode">The state-change mode (to or by).</param>
+        public RotateEulerAnglesAnimation(
+            IAnimatableObjectEulerRotation targetObject, Vector3 targetVector, TimeSpan duration,
+            RotationCalculationComponent calculationComponent = RotationCalculationComponent.All,
+            AnimationStateChangeMode stateChangeMode = AnimationStateChangeMode.ChangeStateTo)
+            : base(targetObject, AnimationType.FixedTime, duration)
+        {
+            m_targetObject = targetObject;
+            m_paramRotation = targetVector;
+            m_duration = duration;
+            m_calculationComponents = calculationComponent;
+            m_stateChangeMode = stateChangeMode;
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -104,27 +126,6 @@ namespace SeeingSharp.Multimedia.Core
             m_startRotation = Vector3.Zero;
             m_changeRotation = Vector3.Zero;
             m_targetRotation = Vector3.Zero;
-        }
-
-        /// <summary>
-        /// Rotates the object to the target rotation vector.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetVector">The target rotation vector.</param>
-        /// <param name="duration">Total duration of the animation.</param>
-        /// <param name="calculationComponent">The components which are to be modified.</param>
-        /// <param name="stateChangeMode">The state-change mode (to or by).</param>
-        public RotateEulerAnglesAnimation(
-            IAnimatableObjectEulerRotation targetObject, Vector3 targetVector, TimeSpan duration,
-            RotationCalculationComponent calculationComponent = RotationCalculationComponent.All,
-            AnimationStateChangeMode stateChangeMode = AnimationStateChangeMode.ChangeStateTo)
-            : base(targetObject, AnimationType.FixedTime, duration)
-        {
-            m_targetObject = targetObject;
-            m_paramRotation = targetVector;
-            m_duration = duration;
-            m_calculationComponents = calculationComponent;
-            m_stateChangeMode = stateChangeMode;
         }
     }
 }

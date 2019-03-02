@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
@@ -33,31 +34,24 @@ namespace SeeingSharp.Multimedia.Input
         private GamepadReportedState m_currentState;
         private bool m_isConnected;
 
-        internal void NotifyConnected(bool isConnected)
+        /// <summary>
+        /// Prevents a default instance of the <see cref="GamepadState"/> class from being created.
+        /// </summary>
+        public GamepadState()
         {
-            m_isConnected = isConnected;
-        }
+            m_prevState = new GamepadReportedState();
+            m_currentState = new GamepadReportedState();
 
-        internal void NotifyState(GamepadReportedState controllerState)
-        {
-            m_prevState = m_currentState;
-            m_currentState = controllerState;
+            Internals = new GamepadStateInternals(this);
         }
 
         /// <summary>
-        /// Copies this object and then resets it
-        /// in preparation of the next update pass.
-        /// Called by update-render loop.
+        /// Initializes a new instance of the <see cref="GamepadState"/> class.
         /// </summary>
-        protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
+        internal GamepadState(int controllerIndex)
+            : this()
         {
-            var targetStateCasted = targetState as GamepadState;
-            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
-
-            targetStateCasted.m_controllerIndex = m_controllerIndex;
-            targetStateCasted.m_isConnected = m_isConnected;
-            targetStateCasted.m_prevState = m_prevState;
-            targetStateCasted.m_currentState = m_currentState;
+            m_controllerIndex = controllerIndex;
         }
 
         /// <summary>
@@ -86,23 +80,30 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="GamepadState"/> class from being created.
+        /// Copies this object and then resets it
+        /// in preparation of the next update pass.
+        /// Called by update-render loop.
         /// </summary>
-        public GamepadState()
+        protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            m_prevState = new GamepadReportedState();
-            m_currentState = new GamepadReportedState();
+            var targetStateCasted = targetState as GamepadState;
+            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
-            Internals = new GamepadStateInternals(this);
+            targetStateCasted.m_controllerIndex = m_controllerIndex;
+            targetStateCasted.m_isConnected = m_isConnected;
+            targetStateCasted.m_prevState = m_prevState;
+            targetStateCasted.m_currentState = m_currentState;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GamepadState"/> class.
-        /// </summary>
-        internal GamepadState(int controllerIndex)
-            : this()
+        internal void NotifyConnected(bool isConnected)
         {
-            m_controllerIndex = controllerIndex;
+            m_isConnected = isConnected;
+        }
+
+        internal void NotifyState(GamepadReportedState controllerState)
+        {
+            m_prevState = m_currentState;
+            m_currentState = controllerState;
         }
 
         /// <summary>
@@ -165,6 +166,11 @@ namespace SeeingSharp.Multimedia.Input
         {
             private GamepadState m_host;
 
+            internal GamepadStateInternals(GamepadState host)
+            {
+                m_host = host;
+            }
+
             public void NotifyConnected(bool isConnected)
             {
                 m_host.NotifyConnected(isConnected);
@@ -174,12 +180,6 @@ namespace SeeingSharp.Multimedia.Input
             {
                 m_host.NotifyState(controllerState);
             }
-
-            internal GamepadStateInternals(GamepadState host)
-            {
-                m_host = host;
-            }
         }
-       
     }
 }

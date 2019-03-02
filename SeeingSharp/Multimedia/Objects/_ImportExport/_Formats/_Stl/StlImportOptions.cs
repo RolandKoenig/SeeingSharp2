@@ -22,7 +22,5 @@
 namespace SeeingSharp.Multimedia.Objects
 {
     public class StlImportOptions : ImportOptions
-    {
-
-    }
+    {}
 }

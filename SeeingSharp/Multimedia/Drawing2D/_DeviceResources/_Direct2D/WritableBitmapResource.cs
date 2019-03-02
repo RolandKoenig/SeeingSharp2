@@ -41,6 +41,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.Bitmap[] m_loadedBitmaps;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WriteableBitmapResource"/> class.
+        /// </summary>
+        public WriteableBitmapResource(
+            Size2 bitmapSize,
+            BitmapFormat format = BitmapFormat.Bgra,
+            AlphaMode alphaMode = AlphaMode.Straight,
+            double dpiX = 96.0, double dpiY = 96.0)
+        {
+            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            m_bitmapSize = bitmapSize;
+            m_pixelFormat = new D2D.PixelFormat(
+                (Format)format,
+                (D2D.AlphaMode)alphaMode);
+            m_dpiX = dpiX;
+            m_dpiY = dpiY;
+        }
+
+        /// <summary>
         /// Sets the bitmap's contents.
         /// </summary>
         /// <param name="graphics">The graphics object.</param>
@@ -92,24 +110,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 SeeingSharpTools.DisposeObject(brush);
                 m_loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WriteableBitmapResource"/> class.
-        /// </summary>
-        public WriteableBitmapResource(
-            Size2 bitmapSize,
-            BitmapFormat format = BitmapFormat.Bgra,
-            AlphaMode alphaMode = AlphaMode.Straight,
-            double dpiX = 96.0, double dpiY = 96.0)
-        {
-            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
-            m_bitmapSize = bitmapSize;
-            m_pixelFormat = new D2D.PixelFormat(
-                (Format)format,
-                (D2D.AlphaMode)alphaMode);
-            m_dpiX = dpiX;
-            m_dpiY = dpiY;
         }
 
         public override int PixelWidth => m_bitmapSize.Width;

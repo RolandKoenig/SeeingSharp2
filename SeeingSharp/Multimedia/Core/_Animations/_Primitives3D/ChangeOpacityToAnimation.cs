@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Checking;
 
@@ -32,6 +33,30 @@ namespace SeeingSharp.Multimedia.Core
         private float m_moveOpacity;
         private float m_targetOpacity;
         private IAnimatableObjectOpacity m_targetObject;
+
+        /// <summary>
+        /// Initialize a new Instance of the <see cref="Move3DByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetOpacity">The target opacity.</param>
+        /// <param name="duration">The duration.</param>
+        /// <exception cref="System.Exception">Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!</exception>
+        public ChangeOpacityToAnimation(IAnimatableObjectOpacity targetObject, float targetOpacity, TimeSpan duration)
+            : base(targetObject, AnimationType.FixedTime, duration)
+        {
+            targetObject.EnsureNotNull(nameof(targetObject));
+            targetOpacity.EnsureInRange(0f, 1f, nameof(targetOpacity));
+            duration.EnsureLongerThanZero(nameof(duration));
+
+            m_targetObject = targetObject;
+            m_duration = duration;
+            m_targetOpacity = targetOpacity;
+
+            if (targetOpacity < 0f || targetOpacity > 1f)
+            {
+                throw new Exception("Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!");
+            }
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -61,30 +86,6 @@ namespace SeeingSharp.Multimedia.Core
 
             m_moveOpacity = 0;
             m_startOpacity = 1;
-        }
-
-        /// <summary>
-        /// Initialize a new Instance of the <see cref="Move3DByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetOpacity">The target opacity.</param>
-        /// <param name="duration">The duration.</param>
-        /// <exception cref="System.Exception">Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!</exception>
-        public ChangeOpacityToAnimation(IAnimatableObjectOpacity targetObject, float targetOpacity, TimeSpan duration)
-            : base(targetObject, AnimationType.FixedTime, duration)
-        {
-            targetObject.EnsureNotNull(nameof(targetObject));
-            targetOpacity.EnsureInRange(0f, 1f, nameof(targetOpacity));
-            duration.EnsureLongerThanZero(nameof(duration));
-
-            m_targetObject = targetObject;
-            m_duration = duration;
-            m_targetOpacity = targetOpacity;
-
-            if (targetOpacity < 0f || targetOpacity > 1f)
-            {
-                throw new Exception("Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!");
-            }
         }
     }
 }

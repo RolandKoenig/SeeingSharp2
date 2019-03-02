@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Runtime.InteropServices;
 using SharpDX;
@@ -31,6 +32,18 @@ namespace SeeingSharp.Multimedia.Core
         private IntPtr m_pointer;
         private int* m_pointerNative;
         private Size2 m_size;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryMappedTexture32bpp"/> class.
+        /// </summary>
+        /// <param name="size">The total size of the texture.</param>
+        public MemoryMappedTexture32bpp(Size2 size)
+        {
+            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
+            m_pointerNative = (int*)m_pointer.ToPointer();
+            m_size = size;
+            CountInts = m_size.Width * m_size.Height;
+        }
 
         /// <summary>
         /// Converts the underlying buffer to a managed byte array.
@@ -63,18 +76,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 pointerUInt[loopIndex] |= alphaByteValue;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryMappedTexture32bpp"/> class.
-        /// </summary>
-        /// <param name="size">The total size of the texture.</param>
-        public MemoryMappedTexture32bpp(Size2 size)
-        {
-            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
-            m_pointerNative = (int*)m_pointer.ToPointer();
-            m_size = size;
-            CountInts = m_size.Width * m_size.Height;
         }
 
         /// <summary>

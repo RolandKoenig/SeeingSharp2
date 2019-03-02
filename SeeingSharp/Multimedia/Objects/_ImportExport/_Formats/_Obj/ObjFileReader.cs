@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -58,6 +59,36 @@ namespace SeeingSharp.Multimedia.Objects
         private int[] m_dummyIntArguments_3 = new int[3];
         private FaceIndices[] m_dummyFaceIndices_3 = new FaceIndices[3];
         private FaceIndices[] m_dummyFaceIndices_4 = new FaceIndices[4];
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjFileReader"/> class.
+        /// </summary>
+        /// <param name="resource">The resource to be loaded.</param>
+        /// <param name="targetContainer">The target ModelContainer into which to put the generated objects and resources.</param>
+        /// <param name="importOptions">Current import settings.</param>
+        public ObjFileReader(ResourceLink resource, ImportedModelContainer targetContainer, ObjImportOptions importOptions)
+        {
+            resource.EnsureNotNull(nameof(resource));
+            targetContainer.EnsureNotNull(nameof(targetContainer));
+            importOptions.EnsureNotNull(nameof(importOptions));
+
+            m_resource = resource;
+            m_targetContainer = targetContainer;
+            m_importOptions = importOptions;
+
+            m_rawVertices = new List<Vector3>(1024);
+            m_rawNormals = new List<Vector3>(1014);
+            m_rawTextureCoordinates = new List<Vector2>(1024);
+            TargetVertexStructure = new VertexStructure();
+
+            // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
+            var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
+
+            if(coordSpaceTransformMatrix != Matrix.Identity)
+            {
+                TargetVertexStructure.EnableBuildTimeTransform(coordSpaceTransformMatrix);
+            }
+        }
 
         /// <summary>
         /// Creates all objects and puts them into the given ModelContainer.
@@ -766,36 +797,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Return current color value
             return new Color4(m_dummyFloatArguments_3[0], m_dummyFloatArguments_3[1], m_dummyFloatArguments_3[2], 1f);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjFileReader"/> class.
-        /// </summary>
-        /// <param name="resource">The resource to be loaded.</param>
-        /// <param name="targetContainer">The target ModelContainer into which to put the generated objects and resources.</param>
-        /// <param name="importOptions">Current import settings.</param>
-        public ObjFileReader(ResourceLink resource, ImportedModelContainer targetContainer, ObjImportOptions importOptions)
-        {
-            resource.EnsureNotNull(nameof(resource));
-            targetContainer.EnsureNotNull(nameof(targetContainer));
-            importOptions.EnsureNotNull(nameof(importOptions));
-
-            m_resource = resource;
-            m_targetContainer = targetContainer;
-            m_importOptions = importOptions;
-
-            m_rawVertices = new List<Vector3>(1024);
-            m_rawNormals = new List<Vector3>(1014);
-            m_rawTextureCoordinates = new List<Vector2>(1024);
-            TargetVertexStructure = new VertexStructure();
-
-            // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
-            var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
-
-            if(coordSpaceTransformMatrix != Matrix.Identity)
-            {
-                TargetVertexStructure.EnableBuildTimeTransform(coordSpaceTransformMatrix);
-            }
         }
 
         public VertexStructure TargetVertexStructure { get; }

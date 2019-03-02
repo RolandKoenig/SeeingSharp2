@@ -43,32 +43,12 @@ namespace SeeingSharp.Multimedia.Views
         // Configuration
         private float m_currentDpiX;
         private float m_currentDpiY;
+        public event EventHandler CompositionScaleChanged;
+        public event EventHandler<RoutedEventArgs> Loaded;
+        public event EventHandler<SizeChangedEventArgs> SizeChanged;
 
         // Forwarded events
         public event EventHandler<RoutedEventArgs> Unloaded;
-        public event EventHandler<RoutedEventArgs> Loaded;
-        public event EventHandler<SizeChangedEventArgs> SizeChanged;
-        public event EventHandler CompositionScaleChanged;
-
-        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Unloaded?.Invoke(sender, e);
-        }
-
-        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded?.Invoke(sender, e);
-        }
-
-        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SizeChanged?.Invoke(sender, e);
-        }
-
-        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
-        {
-            CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
-        }
 
         public SwapChainPanelWrapper()
         {
@@ -115,6 +95,26 @@ namespace SeeingSharp.Multimedia.Views
         {
             SeeingSharpTools.SafeDispose(ref m_bgPanelNative);
             SeeingSharpTools.SafeDispose(ref m_panelNative);
+        }
+
+        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded?.Invoke(sender, e);
+        }
+
+        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded?.Invoke(sender, e);
+        }
+
+        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SizeChanged?.Invoke(sender, e);
+        }
+
+        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public Size RenderSize => Panel.RenderSize;

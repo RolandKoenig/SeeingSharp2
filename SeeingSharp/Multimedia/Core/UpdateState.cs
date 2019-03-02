@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -32,6 +33,24 @@ namespace SeeingSharp.Multimedia.Core
         // Parameters passed by global loop
         private int m_updateTimeMilliseconds;
         private TimeSpan m_updateTime;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
+        /// </summary>
+        private UpdateState()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateState"/> class.
+        /// </summary>
+        /// <param name="updateTime">The update time.</param>
+        public UpdateState(TimeSpan updateTime)
+            : this()
+        {
+            m_updateTime = updateTime;
+            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+        }
 
         /// <summary>
         /// Called internally by EngineMainLoop and creates a copy of this object
@@ -53,24 +72,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="updateTime">The update time.</param>
         internal void Reset(TimeSpan updateTime)
-        {
-            m_updateTime = updateTime;
-            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
-        }
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
-        /// </summary>
-        private UpdateState()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateState"/> class.
-        /// </summary>
-        /// <param name="updateTime">The update time.</param>
-        public UpdateState(TimeSpan updateTime)
-            : this()
         {
             m_updateTime = updateTime;
             m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;

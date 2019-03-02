@@ -34,6 +34,14 @@ namespace SeeingSharp.Multimedia.Objects
         private IndexBasedDynamicCollection<LineRenderResources> m_localResources;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WirePainterHostObject()
+        {
+            m_localResources = new IndexBasedDynamicCollection<LineRenderResources>();
+        }
+
+        /// <summary>
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
@@ -109,14 +117,6 @@ namespace SeeingSharp.Multimedia.Objects
                     wirePainter.SetInvalid();
                 }
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WireObject" /> class.
-        /// </summary>
-        public WirePainterHostObject()
-        {
-            m_localResources = new IndexBasedDynamicCollection<LineRenderResources>();
         }
 
         public Action<WirePainter> PaintAction { get; set; }

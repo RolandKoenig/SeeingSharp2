@@ -32,7 +32,26 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // resources
         private D2D.PathGeometry m_d2dGeometry;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
+        /// </summary>
+        public PolygonGeometryResource()
+        {
+            m_d2dGeometry = new D2D.PathGeometry(
+                GraphicsCore.Current.FactoryD2D);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
+        /// </summary>
+        /// <param name="polygon">The data which populates the geometry.</param>
+        public PolygonGeometryResource(Polygon2D polygon)
+            : this()
+        {
+            SetContent(polygon);
+        }
+
         /// <summary>
         /// Sets the content to all lines in the given polygon.
         /// </summary>
@@ -84,14 +103,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Gets the geometry object.
-        /// </summary>
-        internal override D2D.Geometry GetGeometry()
-        {
-            return m_d2dGeometry;
-        }
-
-        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public override void Dispose()
@@ -100,22 +111,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
+        /// Gets the geometry object.
         /// </summary>
-        public PolygonGeometryResource()
+        internal override D2D.Geometry GetGeometry()
         {
-            m_d2dGeometry = new D2D.PathGeometry(
-                GraphicsCore.Current.FactoryD2D);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
-        /// </summary>
-        /// <param name="polygon">The data which populates the geometry.</param>
-        public PolygonGeometryResource(Polygon2D polygon)
-            : this()
-        {
-            SetContent(polygon);
+            return m_d2dGeometry;
         }
 
         public override bool IsDisposed => m_d2dGeometry == null;

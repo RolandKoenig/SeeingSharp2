@@ -38,6 +38,16 @@ namespace SeeingSharp.UwpSamples.Controls
         public static readonly DependencyProperty SelectedObjectProperty =
             DependencyProperty.Register(nameof(SelectedObject), typeof(object), typeof(PropertyGrid), new PropertyMetadata(null, OnSelectedObjectChanged));
 
+        private PropertyGridViewModel m_propertyGridVM;
+
+        public PropertyGrid()
+        {
+            InitializeComponent();
+
+            m_propertyGridVM = new PropertyGridViewModel();
+            GridMain.DataContext = m_propertyGridVM;
+        }
+
         private static void OnSelectedObjectChanged(DependencyObject sender, DependencyPropertyChangedEventArgs eArgs)
         {
             if(!(sender is PropertyGrid propGrid)) { return; }
@@ -45,14 +55,6 @@ namespace SeeingSharp.UwpSamples.Controls
             propGrid.m_propertyGridVM.SelectedObject = eArgs.NewValue;
             propGrid.UpdatePropertiesView();
         }
-
-        public object SelectedObject
-        {
-            get => GetValue(SelectedObjectProperty);
-            set => SetValue(SelectedObjectProperty, value);
-        }
-
-        private PropertyGridViewModel m_propertyGridVM;
 
         private void UpdatePropertiesView()
         {
@@ -182,12 +184,10 @@ namespace SeeingSharp.UwpSamples.Controls
             }
         }
 
-        public PropertyGrid()
+        public object SelectedObject
         {
-            InitializeComponent();
-
-            m_propertyGridVM = new PropertyGridViewModel();
-            GridMain.DataContext = m_propertyGridVM;
+            get => GetValue(SelectedObjectProperty);
+            set => SetValue(SelectedObjectProperty, value);
         }
     }
 }

@@ -23,16 +23,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public abstract class SceneLogicalObject : SceneObject
     {
-        protected override void UpdateInternal(SceneRelatedUpdateState updateState)
-        {
-        }
-
         public sealed override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
-        {
-            // No resources, so nothing to be done
-        }
-
-        protected sealed override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             // No resources, so nothing to be done
         }
@@ -41,6 +32,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             // No resources, so nothing to be done
             return true;
+        }
+
+        protected override void UpdateInternal(SceneRelatedUpdateState updateState)
+        {
+        }
+
+        protected sealed override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            // No resources, so nothing to be done
         }
     }
 }

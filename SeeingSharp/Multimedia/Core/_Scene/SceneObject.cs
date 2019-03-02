@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -52,51 +53,24 @@ namespace SeeingSharp.Multimedia.Core
         private List<SceneObjectBehavior> m_behaviors;
 
         /// <summary>
-        /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
+        /// Initializes a new instance of the <see cref="SceneObject"/> class.
         /// </summary>
-        /// <param name="modelContainer">The target container.</param>
-        /// <param name="exportOptions">Options for export.</param>
-        internal void PrepareForExport(ExportModelContainer modelContainer, ExportOptions exportOptions)
+        protected SceneObject()
         {
-            PrepareForExportInternal(modelContainer, exportOptions);
-        }
+            m_targetDetailLevel = DetailLevel.All;
 
-        /// <summary>
-        /// Registers the given scene and layer on this object.
-        /// </summary>
-        /// <param name="scene">The scene.</param>
-        /// <param name="sceneLayer">The scene layer.</param>
-        internal void SetSceneAndLayer(Scene scene, SceneLayer sceneLayer)
-        {
-            scene.EnsureNotNull(nameof(scene));
-            sceneLayer.EnsureNotNull(nameof(sceneLayer));
-            m_scene.EnsureNull(nameof(m_scene));
-            m_sceneLayer.EnsureNull(nameof(m_sceneLayer));
+            m_children = new List<SceneObject>();
+            m_parent = null;
 
-            m_scene = scene;
-            m_sceneLayer = sceneLayer;
+            m_behaviors = new List<SceneObjectBehavior>();
+            m_animationHandler = new AnimationHandler(this);
+            m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
 
-            // Call virtual event
-            OnAddedToScene(m_scene);
-        }
+            //Create a dynamic container for custom data
+            CustomData = new ExpandoObject();
 
-        /// <summary>
-        /// Deregisters the current scene and layer from this object.
-        /// </summary>
-        internal void ResetSceneAndLayer()
-        {
-            m_scene.EnsureNotNull(nameof(m_scene));
-            m_sceneLayer.EnsureNotNull(nameof(m_sceneLayer));
-
-            // Remember old scene
-            var oldScene = m_scene;
-
-            // Clear references
-            m_scene = null;
-            m_sceneLayer = null;
-
-            // Call virtual event
-            OnRemovedFromScene(oldScene);
+            TransormationChanged = true;
+            IsPickingTestVisible = true;
         }
 
         /// <summary>
@@ -188,52 +162,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Queries for all children (also lower level).
-        /// </summary>
-        internal IEnumerable<SceneObject> GetAllChildrenInternal()
-        {
-            foreach (var actChild in m_children)
-            {
-                yield return actChild;
-
-                foreach (var actLowerChild in actChild.GetAllChildrenInternal())
-                {
-                    yield return actLowerChild;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds the given object as a child.
-        /// </summary>
-        /// <param name="childToAdd">The object which is be be located under this one within object hierarchy.</param>
-        internal void AddChildInternal(SceneObject childToAdd)
-        {
-            if (childToAdd == this) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
-            if (childToAdd.Scene != Scene) { throw new SeeingSharpGraphicsException("Child musst have the same scene!"); }
-            if (childToAdd.m_parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
-            if (childToAdd.IsParentOf(this)) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
-            if (m_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
-
-            // Create parent/child relation
-            m_children.Add(childToAdd);
-            childToAdd.m_parent = this;
-        }
-
-        /// <summary>
-        /// Removes the given object from the list of children.
-        /// </summary>
-        /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
-        internal void RemoveChildInternal(SceneObject childToRemove)
-        {
-            if (childToRemove.Scene != Scene) { throw new ArgumentException("Child musst have the same scene!"); }
-
-            // Destroy parent/child relation
-            m_children.Remove(childToRemove);
-            if (childToRemove.m_parent == this) { childToRemove.m_parent = this; }
-        }
-
-        /// <summary>
         /// Is this object visible in the given view?
         /// </summary>
         /// <param name="viewInfo">The view info to check.</param>
@@ -251,35 +179,6 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             return checkData.IsVisible;
-        }
-
-        /// <summary>
-        /// Clears current visibility data.
-        /// </summary>
-        internal void ClearVisibilityStageData()
-        {
-            foreach (var actCheckData in m_visibilityData)
-            {
-                actCheckData.FilterStageData.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Gets the data object used for visibility checking.
-        /// </summary>
-        /// <param name="viewInfo">The VisibilityCheckData for this object for the given view.</param>
-        internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
-        {
-            var checkData = m_visibilityData[viewInfo.ViewIndex];
-
-            if (checkData == null)
-            {
-                checkData = m_visibilityData.AddObject(
-                    new VisibilityCheckData(),
-                    viewInfo.ViewIndex);
-            }
-
-            return checkData;
         }
 
         /// <summary>
@@ -307,59 +206,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Picks an object in 3D-World.
-        /// </summary>
-        /// <param name="rayStart">Start of picking ray.</param>
-        /// <param name="rayDirection"></param>
-        /// <param name="viewInfo">Information about the view that triggered picking.</param>
-        /// <param name="pickingOptions">Some additional options for picking calculations.</param>
-        /// <returns>Returns the distance to the object or float.NaN if object is not picked.</returns>
-        internal virtual float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
-        {
-            return float.NaN;
-        }
-
-        /// <summary>
-        /// Is this object visible currently?
-        /// </summary>
-        /// <param name="viewInfo">Information about the view that triggered bounding volume testing.</param>
-        /// <param name="boundingFrustum">The bounding frustum to check.</param>
-        internal virtual bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Registers a layer view subset with the given index.
-        /// </summary>
-        /// <param name="layerViewSubset">The layer view subset to register.</param>
-        internal void RegisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            m_viewRelatedSubscriptions.AddObject(new List<RenderPassSubscription>(), layerViewSubset.ViewIndex);
-        }
-
-        /// <summary>
-        /// Deregisters a layer view subset with the given index.
-        /// </summary>
-        /// <param name="layerViewSubset">The layer view subset to deregister.</param>
-        internal void DeregisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            if (m_viewRelatedSubscriptions.HasObjectAt(layerViewSubset.ViewIndex))
-            {
-                m_viewRelatedSubscriptions.RemoveObject(layerViewSubset.ViewIndex);
-            }
-        }
-
-        /// <summary>
-        /// Is the given view index registered on this object?
-        /// </summary>
-        /// <param name="viewIndex">The index to check for.</param>
-        internal bool IsLayerViewSubsetRegistered(int viewIndex)
-        {
-            return m_viewRelatedSubscriptions.HasObjectAt(viewIndex);
-        }
-
-        /// <summary>
         /// Fills the given collection with all referenced resources.
         /// </summary>
         /// <param name="resourceCollection">The collection to be filled,</param>
@@ -375,79 +221,24 @@ namespace SeeingSharp.Multimedia.Core
         public abstract void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary);
 
         /// <summary>
-        /// Processes the given input frame.
-        /// </summary>
-        /// <param name="inputFrame">The input frame.</param>
-        internal void ProcessInput(InputFrame inputFrame)
-        {
-            ProcessInputInternal(inputFrame);
-        }
-
-        /// <summary>
-        /// Updates this object.
-        /// </summary>
-        /// <param name="updateState">State of update process.</param>
-        internal void Update(SceneRelatedUpdateState updateState)
-        {
-            // Update all behaviors first
-            foreach (var actBehavior in m_behaviors)
-            {
-                actBehavior.Update(updateState);
-            }
-
-            // Update current animation state
-            if (m_animationHandler != null)
-            {
-                m_animationHandler.Update(updateState);
-            }
-
-            // Update the object
-            UpdateInternal(updateState);
-
-            // Update all dependencies finally
-            if (m_children.Count > 0)
-            {
-                UpdateChildrenInternal(updateState, m_children);
-            }
-        }
-
-        /// <summary>
-        /// Update logic for overall updates.
-        /// This method should be used for update logic that also depends on other object.
-        /// UpdateOverall methods are called sequentially object by object.
-        /// </summary>
-        /// <param name="updateState">Current update state of the scene.</param>
-        internal void UpdateOverall(SceneRelatedUpdateState updateState)
-        {
-            // Update all dependencies finally
-            if (m_children.Count > 0)
-            {
-                UpdateChildrenOverallInternal(updateState, m_children);
-            }
-
-            // Update all behaviors first
-            foreach (var actBehavior in m_behaviors)
-            {
-                actBehavior.UpdateOverall(updateState);
-            }
-        }
-
-        /// <summary>
-        /// Updates this object for the given view.
-        /// </summary>
-        /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
-        internal void UpdateForView(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            UpdateForViewInternal(updateState, layerViewSubset);
-        }
-
-        /// <summary>
         /// Unloads all resources of the object.
         /// </summary>
         public virtual void UnloadResources()
         {
 
+        }
+
+        /// <summary>
+        /// Are resources loaded for the given device?
+        /// </summary>
+        public abstract bool IsLoaded(EngineDevice device);
+
+        /// <summary>
+        /// Disposes all unmanaged resources of this object.
+        /// </summary>
+        public void Dispose()
+        {
+            UnloadResources();
         }
 
         /// <summary>
@@ -526,43 +317,253 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Are resources loaded for the given device?
+        /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
         /// </summary>
-        public abstract bool IsLoaded(EngineDevice device);
+        /// <param name="modelContainer">The target container.</param>
+        /// <param name="exportOptions">Options for export.</param>
+        internal void PrepareForExport(ExportModelContainer modelContainer, ExportOptions exportOptions)
+        {
+            PrepareForExportInternal(modelContainer, exportOptions);
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SceneObject"/> class.
+        /// Registers the given scene and layer on this object.
         /// </summary>
-        protected SceneObject()
+        /// <param name="scene">The scene.</param>
+        /// <param name="sceneLayer">The scene layer.</param>
+        internal void SetSceneAndLayer(Scene scene, SceneLayer sceneLayer)
         {
-            m_targetDetailLevel = DetailLevel.All;
+            scene.EnsureNotNull(nameof(scene));
+            sceneLayer.EnsureNotNull(nameof(sceneLayer));
+            m_scene.EnsureNull(nameof(m_scene));
+            m_sceneLayer.EnsureNull(nameof(m_sceneLayer));
 
-            m_children = new List<SceneObject>();
-            m_parent = null;
+            m_scene = scene;
+            m_sceneLayer = sceneLayer;
 
-            m_behaviors = new List<SceneObjectBehavior>();
-            m_animationHandler = new AnimationHandler(this);
-            m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
+            // Call virtual event
+            OnAddedToScene(m_scene);
+        }
 
-            //Create a dynamic container for custom data
-            CustomData = new ExpandoObject();
+        /// <summary>
+        /// Deregisters the current scene and layer from this object.
+        /// </summary>
+        internal void ResetSceneAndLayer()
+        {
+            m_scene.EnsureNotNull(nameof(m_scene));
+            m_sceneLayer.EnsureNotNull(nameof(m_sceneLayer));
 
-            TransormationChanged = true;
-            IsPickingTestVisible = true;
+            // Remember old scene
+            var oldScene = m_scene;
+
+            // Clear references
+            m_scene = null;
+            m_sceneLayer = null;
+
+            // Call virtual event
+            OnRemovedFromScene(oldScene);
+        }
+
+        /// <summary>
+        /// Queries for all children (also lower level).
+        /// </summary>
+        internal IEnumerable<SceneObject> GetAllChildrenInternal()
+        {
+            foreach (var actChild in m_children)
+            {
+                yield return actChild;
+
+                foreach (var actLowerChild in actChild.GetAllChildrenInternal())
+                {
+                    yield return actLowerChild;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the given object as a child.
+        /// </summary>
+        /// <param name="childToAdd">The object which is be be located under this one within object hierarchy.</param>
+        internal void AddChildInternal(SceneObject childToAdd)
+        {
+            if (childToAdd == this) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
+            if (childToAdd.Scene != Scene) { throw new SeeingSharpGraphicsException("Child musst have the same scene!"); }
+            if (childToAdd.m_parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
+            if (childToAdd.IsParentOf(this)) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
+            if (m_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
+
+            // Create parent/child relation
+            m_children.Add(childToAdd);
+            childToAdd.m_parent = this;
+        }
+
+        /// <summary>
+        /// Removes the given object from the list of children.
+        /// </summary>
+        /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
+        internal void RemoveChildInternal(SceneObject childToRemove)
+        {
+            if (childToRemove.Scene != Scene) { throw new ArgumentException("Child musst have the same scene!"); }
+
+            // Destroy parent/child relation
+            m_children.Remove(childToRemove);
+            if (childToRemove.m_parent == this) { childToRemove.m_parent = this; }
+        }
+
+        /// <summary>
+        /// Clears current visibility data.
+        /// </summary>
+        internal void ClearVisibilityStageData()
+        {
+            foreach (var actCheckData in m_visibilityData)
+            {
+                actCheckData.FilterStageData.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Gets the data object used for visibility checking.
+        /// </summary>
+        /// <param name="viewInfo">The VisibilityCheckData for this object for the given view.</param>
+        internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
+        {
+            var checkData = m_visibilityData[viewInfo.ViewIndex];
+
+            if (checkData == null)
+            {
+                checkData = m_visibilityData.AddObject(
+                    new VisibilityCheckData(),
+                    viewInfo.ViewIndex);
+            }
+
+            return checkData;
+        }
+
+        /// <summary>
+        /// Picks an object in 3D-World.
+        /// </summary>
+        /// <param name="rayStart">Start of picking ray.</param>
+        /// <param name="rayDirection"></param>
+        /// <param name="viewInfo">Information about the view that triggered picking.</param>
+        /// <param name="pickingOptions">Some additional options for picking calculations.</param>
+        /// <returns>Returns the distance to the object or float.NaN if object is not picked.</returns>
+        internal virtual float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
+        {
+            return float.NaN;
+        }
+
+        /// <summary>
+        /// Is this object visible currently?
+        /// </summary>
+        /// <param name="viewInfo">Information about the view that triggered bounding volume testing.</param>
+        /// <param name="boundingFrustum">The bounding frustum to check.</param>
+        internal virtual bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Registers a layer view subset with the given index.
+        /// </summary>
+        /// <param name="layerViewSubset">The layer view subset to register.</param>
+        internal void RegisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            m_viewRelatedSubscriptions.AddObject(new List<RenderPassSubscription>(), layerViewSubset.ViewIndex);
+        }
+
+        /// <summary>
+        /// Deregisters a layer view subset with the given index.
+        /// </summary>
+        /// <param name="layerViewSubset">The layer view subset to deregister.</param>
+        internal void DeregisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            if (m_viewRelatedSubscriptions.HasObjectAt(layerViewSubset.ViewIndex))
+            {
+                m_viewRelatedSubscriptions.RemoveObject(layerViewSubset.ViewIndex);
+            }
+        }
+
+        /// <summary>
+        /// Is the given view index registered on this object?
+        /// </summary>
+        /// <param name="viewIndex">The index to check for.</param>
+        internal bool IsLayerViewSubsetRegistered(int viewIndex)
+        {
+            return m_viewRelatedSubscriptions.HasObjectAt(viewIndex);
+        }
+
+        /// <summary>
+        /// Processes the given input frame.
+        /// </summary>
+        /// <param name="inputFrame">The input frame.</param>
+        internal void ProcessInput(InputFrame inputFrame)
+        {
+            ProcessInputInternal(inputFrame);
+        }
+
+        /// <summary>
+        /// Updates this object.
+        /// </summary>
+        /// <param name="updateState">State of update process.</param>
+        internal void Update(SceneRelatedUpdateState updateState)
+        {
+            // Update all behaviors first
+            foreach (var actBehavior in m_behaviors)
+            {
+                actBehavior.Update(updateState);
+            }
+
+            // Update current animation state
+            if (m_animationHandler != null)
+            {
+                m_animationHandler.Update(updateState);
+            }
+
+            // Update the object
+            UpdateInternal(updateState);
+
+            // Update all dependencies finally
+            if (m_children.Count > 0)
+            {
+                UpdateChildrenInternal(updateState, m_children);
+            }
+        }
+
+        /// <summary>
+        /// Update logic for overall updates.
+        /// This method should be used for update logic that also depends on other object.
+        /// UpdateOverall methods are called sequentially object by object.
+        /// </summary>
+        /// <param name="updateState">Current update state of the scene.</param>
+        internal void UpdateOverall(SceneRelatedUpdateState updateState)
+        {
+            // Update all dependencies finally
+            if (m_children.Count > 0)
+            {
+                UpdateChildrenOverallInternal(updateState, m_children);
+            }
+
+            // Update all behaviors first
+            foreach (var actBehavior in m_behaviors)
+            {
+                actBehavior.UpdateOverall(updateState);
+            }
+        }
+
+        /// <summary>
+        /// Updates this object for the given view.
+        /// </summary>
+        /// <param name="updateState">Current state of the update pass.</param>
+        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        internal void UpdateForView(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            UpdateForViewInternal(updateState, layerViewSubset);
         }
 
         /// <summary>
         /// Gets current AnimationHandler object.
         /// </summary>
         public virtual AnimationHandler AnimationHandler => m_animationHandler;
-
-        /// <summary>
-        /// Disposes all unmanaged resources of this object.
-        /// </summary>
-        public void Dispose()
-        {
-            UnloadResources();
-        }
 
         /// <summary>
         /// Gets a dynamic container for custom data.

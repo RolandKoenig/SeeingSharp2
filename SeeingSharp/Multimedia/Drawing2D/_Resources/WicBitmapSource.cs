@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
@@ -31,7 +32,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // Native resources
         private WicBitmapSourceInternal m_wicBitmapSource;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
+        /// </summary>
+        /// <param name="bitmapSource">The bitmap source.</param>
+        private WicBitmapSource(WicBitmapSourceInternal bitmapSource)
+        {
+            m_wicBitmapSource = bitmapSource;
+        }
+
         /// <summary>
         /// Creates a WIC BitmapSource object from the given source.
         /// </summary>
@@ -46,15 +56,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return new WicBitmapSource(wicBitmapSource);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
-        /// </summary>
-        /// <param name="bitmapSource">The bitmap source.</param>
-        private WicBitmapSource(WicBitmapSourceInternal bitmapSource)
-        {
-            m_wicBitmapSource = bitmapSource;
         }
 
         /// <summary>

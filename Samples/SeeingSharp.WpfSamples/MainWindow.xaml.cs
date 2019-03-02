@@ -11,6 +11,13 @@ namespace SeeingSharp.WpfSamples
         private SampleMetadata m_actSampleInfo;
         private bool m_isChangingSample;
 
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            Loaded += OnLoaded;
+        }
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
@@ -77,13 +84,6 @@ namespace SeeingSharp.WpfSamples
             {
                 m_isChangingSample = false;
             }
-        }
-
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            Loaded += OnLoaded;
         }
     }
 }

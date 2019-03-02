@@ -35,6 +35,49 @@ namespace SeeingSharp.Multimedia.Core
         private Factory1 m_dxgiFactory;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
+        /// </summary>
+        public EngineHardwareInfo()
+        {
+            CreateFactory();
+            LoadAdapterInformation();
+        }
+
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
+
+            foreach(var actAdapter in m_adapters)
+            {
+                SeeingSharpUtil.DisposeObject(actAdapter);
+            }
+
+            m_adapters.Clear();
+        }
+
+        internal Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
+        {
+            var adapterCount = m_dxgiFactory.GetAdapterCount1();
+
+            if (outputInfo.AdapterIndex >= adapterCount)
+            {
+                throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!");
+            }
+
+            using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
+            {
+                var outputCount = adapter.GetOutputCount();
+
+                if (outputInfo.OutputIndex >= outputCount)
+                {
+                    throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!");
+                }
+
+                return adapter.GetOutput(outputInfo.OutputIndex);
+            }
+        }
+
+        /// <summary>
         /// Create the DXGI factory object.
         /// </summary>
         private void CreateFactory()
@@ -69,50 +112,7 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        internal Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
-        {
-            var adapterCount = m_dxgiFactory.GetAdapterCount1();
-
-            if (outputInfo.AdapterIndex >= adapterCount)
-            {
-                throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!");
-            }
-
-            using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
-            {
-                var outputCount = adapter.GetOutputCount();
-
-                if (outputInfo.OutputIndex >= outputCount)
-                {
-                    throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!");
-                }
-
-                return adapter.GetOutput(outputInfo.OutputIndex);
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
-        /// </summary>
-        public EngineHardwareInfo()
-        {
-            CreateFactory();
-            LoadAdapterInformation();
-        }
-
         public bool IsDisposed => m_dxgiFactory == null;
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
-
-            foreach(var actAdapter in m_adapters)
-            {
-                SeeingSharpUtil.DisposeObject(actAdapter);
-            }
-
-            m_adapters.Clear();
-        }
 
         /// <summary>
         /// Gets a collection containing all adapters.

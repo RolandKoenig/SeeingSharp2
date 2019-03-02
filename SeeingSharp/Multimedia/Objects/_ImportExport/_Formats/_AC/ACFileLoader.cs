@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -774,8 +775,11 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class ACFileInfo
         {
-            public List<ACMaterialInfo> Materials;
-            public List<ACObjectInfo> Objects;
+            public ACFileInfo()
+            {
+                Materials = new List<ACMaterialInfo>();
+                Objects = new List<ACObjectInfo>();
+            }
 
             /// <summary>
             /// Counts all objects within this file
@@ -793,11 +797,8 @@ namespace SeeingSharp.Multimedia.Objects
                 return result;
             }
 
-            public ACFileInfo()
-            {
-                Materials = new List<ACMaterialInfo>();
-                Objects = new List<ACObjectInfo>();
-            }
+            public List<ACMaterialInfo> Materials;
+            public List<ACObjectInfo> Objects;
         }
 
         //*********************************************************************
@@ -805,13 +806,6 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class ACMaterialInfo
         {
-            public Color4 Ambient;
-            public Color4 Diffuse;
-            public Color4 Emissive;
-            public string Name;
-            public float Shininess;
-            public Color4 Specular;
-
             public MaterialProperties CreateMaterialProperties()
             {
                 var result = new MaterialProperties
@@ -825,6 +819,13 @@ namespace SeeingSharp.Multimedia.Objects
 
                 return result;
             }
+
+            public Color4 Ambient;
+            public Color4 Diffuse;
+            public Color4 Emissive;
+            public string Name;
+            public float Shininess;
+            public Color4 Specular;
         }
 
         //*********************************************************************
@@ -832,17 +833,16 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class ACObjectInfo
         {
-            public List<ACObjectInfo> Childs;
-            public int KidCount;
-            public string Name;
-            public Matrix Rotation;
-            public List<ACSurface> Surfaces;
-            public string Texture;
-            public Vector2 TextureRepeat;
-            public Vector3 Translation;
-            public ACObjectType Type;
-            public string Url;
-            public List<ACVertex> Vertices;
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ACObjectInfo"/> class.
+            /// </summary>
+            public ACObjectInfo()
+            {
+                Childs = new List<ACObjectInfo>();
+                Surfaces = new List<ACSurface>();
+                Vertices = new List<ACVertex>();
+                Rotation = Matrix.Identity;
+            }
 
             /// <summary>
             /// Returns a <see cref="System.String"/> that represents this instance.
@@ -870,16 +870,17 @@ namespace SeeingSharp.Multimedia.Objects
                 return result;
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ACObjectInfo"/> class.
-            /// </summary>
-            public ACObjectInfo()
-            {
-                Childs = new List<ACObjectInfo>();
-                Surfaces = new List<ACSurface>();
-                Vertices = new List<ACVertex>();
-                Rotation = Matrix.Identity;
-            }
+            public List<ACObjectInfo> Childs;
+            public int KidCount;
+            public string Name;
+            public Matrix Rotation;
+            public List<ACSurface> Surfaces;
+            public string Texture;
+            public Vector2 TextureRepeat;
+            public Vector3 Translation;
+            public ACObjectType Type;
+            public string Url;
+            public List<ACVertex> Vertices;
         }
 
         //*********************************************************************
@@ -887,11 +888,6 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class ACSurface
         {
-            public int Flags;
-            public int Material;
-            public List<Vector2> TextureCoordinates;
-            public List<int> VertexReferences;
-
             /// <summary>
             /// Initializes a new instance of the <see cref="ACSurface"/> class.
             /// </summary>
@@ -925,6 +921,11 @@ namespace SeeingSharp.Multimedia.Objects
             /// Is this surface two sided?
             /// </summary>
             public bool IsTwoSided => (Flags & 32) == 32;
+
+            public int Flags;
+            public int Material;
+            public List<Vector2> TextureCoordinates;
+            public List<int> VertexReferences;
         }
 
         //*********************************************************************

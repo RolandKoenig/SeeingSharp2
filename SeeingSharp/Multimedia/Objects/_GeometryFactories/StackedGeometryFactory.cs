@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 using SharpDX;
 
@@ -29,6 +30,15 @@ namespace SeeingSharp.Multimedia.Objects
         // Main parameters
         private GeometryFactory m_geometryToStack;
         private int m_stackSize;
+
+        public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
+        {
+            geometryToStack.EnsureNotNull(nameof(geometryToStack));
+            stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
+
+            m_geometryToStack = geometryToStack;
+            m_stackSize = stackSize;
+        }
 
         /// <summary>
         /// Builds all vertex structures for the given detail level.
@@ -88,15 +98,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             return result;
-        }
-
-        public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
-        {
-            geometryToStack.EnsureNotNull(nameof(geometryToStack));
-            stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
-
-            m_geometryToStack = geometryToStack;
-            m_stackSize = stackSize;
         }
     }
 }

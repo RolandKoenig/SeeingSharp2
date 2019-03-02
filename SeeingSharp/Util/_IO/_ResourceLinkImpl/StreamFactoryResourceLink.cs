@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -30,6 +31,21 @@ namespace SeeingSharp.Util
     {
         private string m_fileName;
         private Func<Stream> m_streamFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StreamFactoryResourceLink" /> class.
+        /// </summary>
+        /// <param name="streamFactory">The factory method which creates the stream object.</param>
+        /// <param name="fileName">The name of the virtual file.</param>
+        public StreamFactoryResourceLink(
+            Func<Stream> streamFactory,
+            string fileName = "unknown.dat")
+        {
+            streamFactory.EnsureNotNull(nameof(streamFactory));
+
+            m_streamFactory = streamFactory;
+            m_fileName = fileName;
+        }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="Func{Stream}"/> to <see cref="StreamFactoryResourceLink"/>.
@@ -100,21 +116,6 @@ namespace SeeingSharp.Util
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StreamFactoryResourceLink" /> class.
-        /// </summary>
-        /// <param name="streamFactory">The factory method which creates the stream object.</param>
-        /// <param name="fileName">The name of the virtual file.</param>
-        public StreamFactoryResourceLink(
-            Func<Stream> streamFactory,
-            string fileName = "unknown.dat")
-        {
-            streamFactory.EnsureNotNull(nameof(streamFactory));
-
-            m_streamFactory = streamFactory;
-            m_fileName = fileName;
         }
 
         /// <summary>

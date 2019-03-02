@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,11 +55,6 @@ namespace SeeingSharp.Util
         public event EventHandler Starting;
 
         /// <summary>
-        /// Called on each heartbeat.
-        /// </summary>
-        public event EventHandler Tick;
-
-        /// <summary>
         /// Called when the thread is stopping.
         /// </summary>
         public event EventHandler Stopping;
@@ -67,6 +63,38 @@ namespace SeeingSharp.Util
         /// Called when an unhandled exception occurred.
         /// </summary>
         public event EventHandler<ObjectThreadExceptionEventArgs> ThreadException;
+
+        /// <summary>
+        /// Called on each heartbeat.
+        /// </summary>
+        public event EventHandler Tick;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
+        /// </summary>
+        public ObjectThread()
+            : this(string.Empty, STANDARD_HEARTBEAT)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
+        /// </summary>
+        /// <param name="name">The name of the generated thread.</param>
+        /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
+        public ObjectThread(string name, int heartBeat)
+        {
+            m_taskQueue = new ConcurrentQueue<Action>();
+            m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
+
+            Name = name;
+            HeartBeat = heartBeat;
+
+            m_culture = Thread.CurrentThread.CurrentCulture;
+            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
+
+            Timer = new ObjectThreadTimer();
+        }
 
         /// <summary>
         /// Starts the thread.
@@ -351,33 +379,6 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
-        /// </summary>
-        public ObjectThread()
-            : this(string.Empty, STANDARD_HEARTBEAT)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
-        /// </summary>
-        /// <param name="name">The name of the generated thread.</param>
-        /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
-        public ObjectThread(string name, int heartBeat)
-        {
-            m_taskQueue = new ConcurrentQueue<Action>();
-            m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
-
-            Name = name;
-            HeartBeat = heartBeat;
-
-            m_culture = Thread.CurrentThread.CurrentCulture;
-            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
-
-            Timer = new ObjectThreadTimer();
-        }
-
-        /// <summary>
         /// Gets current thread time.
         /// </summary>
         public DateTime ThreadTime => Timer.Now;
@@ -413,6 +414,15 @@ namespace SeeingSharp.Util
             private ObjectThread m_owner;
 
             /// <summary>
+            /// Initializes a new instance of the <see cref="ObjectThreadSynchronizationContext"/> class.
+            /// </summary>
+            /// <param name="owner">The owner of this context.</param>
+            public ObjectThreadSynchronizationContext(ObjectThread owner)
+            {
+                m_owner = owner;
+            }
+
+            /// <summary>
             /// When overridden in a derived class, dispatches an asynchronous message to a synchronization context.
             /// </summary>
             /// <param name="d">The <see cref="T:System.Threading.SendOrPostCallback"/> delegate to call.</param>
@@ -430,15 +440,6 @@ namespace SeeingSharp.Util
             public override void Send(SendOrPostCallback d, object state)
             {
                 throw new InvalidOperationException("Synchronous messages not supported on ObjectThreads!");
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ObjectThreadSynchronizationContext"/> class.
-            /// </summary>
-            /// <param name="owner">The owner of this context.</param>
-            public ObjectThreadSynchronizationContext(ObjectThread owner)
-            {
-                m_owner = owner;
             }
         }
     }

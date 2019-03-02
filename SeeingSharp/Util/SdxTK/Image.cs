@@ -55,11 +55,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         private SDX.DataBox[] dataBoxArray;
 
         /// <summary>
-        /// Description of this image.
-        /// </summary>
-        public ImageDescription Description;
-
-        /// <summary>
         /// Handle != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
         /// </summary>
         private GCHandle? handle;
@@ -76,15 +71,40 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         private PixelBufferArray pixelBufferArray;
 
         /// <summary>
-        /// Pixel buffers.
-        /// </summary>
-        internal PixelBuffer[] pixelBuffers;
-
-        /// <summary>
         /// Gets the total number of bytes occupied by this image in memory.
         /// </summary>
         private int totalSizeInBytes;
         private int zBufferCountPerArraySlice;
+
+        static Image()
+        {
+            Register(ImageFileType.Dds, DDSHelper.LoadFromDDSMemory, DDSHelper.SaveToDDSStream);
+            Register(ImageFileType.Gif, WICHelper.LoadFromWICMemory, WICHelper.SaveGifToWICMemory);
+            Register(ImageFileType.Tiff, WICHelper.LoadFromWICMemory, WICHelper.SaveTiffToWICMemory);
+            Register(ImageFileType.Bmp, WICHelper.LoadFromWICMemory, WICHelper.SaveBmpToWICMemory);
+            Register(ImageFileType.Jpg, WICHelper.LoadFromWICMemory, WICHelper.SaveJpgToWICMemory);
+            Register(ImageFileType.Png, WICHelper.LoadFromWICMemory, WICHelper.SavePngToWICMemory);
+            Register(ImageFileType.Wmp, WICHelper.LoadFromWICMemory, WICHelper.SaveWmpToWICMemory);
+        }
+
+        private Image()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Image" /> class.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <param name="dataPointer">The pointer to the data buffer.</param>
+        /// <param name="offset">The offset from the beginning of the data buffer.</param>
+        /// <param name="handle">The handle (optional).</param>
+        /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
+        /// <param name="pitchFlags"></param>
+        /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
+        internal Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
+        {
+            Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
+        }
 
         /// <summary>
         /// Gets the mipmap description of this instance for the specified mipmap level.
@@ -195,30 +215,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public SDX.DataBox[] ToDataBox()
         {
             return (DataBox[])dataBoxArray.Clone();
-        }
-
-        /// <summary>
-        /// Gets the databox from this image.
-        /// </summary>
-        /// <returns>The databox of this image.</returns>
-        private SDX.DataBox[] ComputeDataBox()
-        {
-            dataBoxArray = new DataBox[Description.ArraySize * Description.MipLevels];
-            var i = 0;
-            for (var arrayIndex = 0; arrayIndex < Description.ArraySize; arrayIndex++)
-            {
-                for (var mipIndex = 0; mipIndex < Description.MipLevels; mipIndex++)
-                {
-                    // Get the first z-slice (A DataBox for a Texture3D is pointing to the whole texture).
-                    var pixelBuffer = GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
-
-                    dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
-                    dataBoxArray[i].RowPitch = pixelBuffer.RowStride;
-                    dataBoxArray[i].SlicePitch = pixelBuffer.BufferStride;
-                    i++;
-                }
-            }
-            return dataBoxArray;
         }
 
         /// <summary>
@@ -556,29 +552,17 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Save(pixelBuffers, pixelBuffers.Length, Description, imageStream, fileType);
         }
 
-        /// <summary>
-        /// Loads an image from the specified pointer.
-        /// </summary>
-        /// <param name="dataPointer">The data pointer.</param>
-        /// <param name="dataSize">Size of the data.</param>
-        /// <param name="makeACopy">if set to <c>true</c> [make A copy].</param>
-        /// <param name="handle">The handle.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
+        public void Dispose()
         {
-            foreach (var loadSaveDelegate in loadSaveDelegates)
+            if (handle.HasValue)
             {
-                if (loadSaveDelegate.Load != null)
-                {
-                    var image = loadSaveDelegate.Load(dataPointer, dataSize, makeACopy, handle);
-                    if (image != null)
-                    {
-                        return image;
-                    }
-                }
+                handle.Value.Free();
             }
-            return null;
+
+            if (bufferIsDisposable)
+            {
+                Utilities.FreeMemory(buffer);
+            }
         }
 
         /// <summary>
@@ -606,7 +590,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
-            if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
+            if (!description.Format.IsValid() || description.Format.IsVideo())
             {
                 throw new InvalidOperationException("Unsupported DXGI Format");
             }
@@ -685,33 +669,12 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             dataBoxArray = ComputeDataBox();
         }
 
-        private PixelBuffer GetPixelBufferUnsafe(int arrayIndex, int zIndex, int mipmap)
-        {
-            var depthIndex = mipMapToZIndex[mipmap];
-            var pixelBufferIndex = arrayIndex * zBufferCountPerArraySlice + depthIndex + zIndex;
-            return pixelBuffers[pixelBufferIndex];
-        }
-
-        private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
-        {
-            return new ImageDescription
-            {
-                Width = width,
-                Height = height,
-                Depth = depth,
-                ArraySize = arraySize,
-                Dimension = dimension,
-                Format = format,
-                MipLevels = mipMapCount
-            };
-        }
-
         internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
         {
             widthCount = width;
             heightCount = height;
 
-            if (FormatHelper.IsCompressed(fmt))
+            if (fmt.IsCompressed())
             {
                 var bpb = fmt == Format.BC1_Typeless
                           || fmt == Format.BC1_UNorm
@@ -725,7 +688,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                 slicePitch = rowPitch * heightCount;
             }
-            else if (FormatHelper.IsPacked(fmt))
+            else if (fmt.IsPacked())
             {
                 rowPitch = ((width + 1) >> 1) * 4;
 
@@ -749,7 +712,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 }
                 else
                 {
-                    bpp = FormatHelper.SizeOfInBits(fmt);
+                    bpp = fmt.SizeOfInBits();
                 }
 
                 if ((flags & PitchFlags.LegacyDword) != 0)
@@ -821,6 +784,76 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 }
             }
             return mipmaps;
+        }
+
+        /// <summary>
+        /// Gets the databox from this image.
+        /// </summary>
+        /// <returns>The databox of this image.</returns>
+        private DataBox[] ComputeDataBox()
+        {
+            dataBoxArray = new DataBox[Description.ArraySize * Description.MipLevels];
+            var i = 0;
+            for (var arrayIndex = 0; arrayIndex < Description.ArraySize; arrayIndex++)
+            {
+                for (var mipIndex = 0; mipIndex < Description.MipLevels; mipIndex++)
+                {
+                    // Get the first z-slice (A DataBox for a Texture3D is pointing to the whole texture).
+                    var pixelBuffer = GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
+
+                    dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
+                    dataBoxArray[i].RowPitch = pixelBuffer.RowStride;
+                    dataBoxArray[i].SlicePitch = pixelBuffer.BufferStride;
+                    i++;
+                }
+            }
+            return dataBoxArray;
+        }
+
+        /// <summary>
+        /// Loads an image from the specified pointer.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        /// <param name="dataSize">Size of the data.</param>
+        /// <param name="makeACopy">if set to <c>true</c> [make A copy].</param>
+        /// <param name="handle">The handle.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotSupportedException"></exception>
+        private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
+        {
+            foreach (var loadSaveDelegate in loadSaveDelegates)
+            {
+                if (loadSaveDelegate.Load != null)
+                {
+                    var image = loadSaveDelegate.Load(dataPointer, dataSize, makeACopy, handle);
+                    if (image != null)
+                    {
+                        return image;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private PixelBuffer GetPixelBufferUnsafe(int arrayIndex, int zIndex, int mipmap)
+        {
+            var depthIndex = mipMapToZIndex[mipmap];
+            var pixelBufferIndex = arrayIndex * zBufferCountPerArraySlice + depthIndex + zIndex;
+            return pixelBuffers[pixelBufferIndex];
+        }
+
+        private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
+        {
+            return new ImageDescription
+            {
+                Width = width,
+                Height = height,
+                Depth = depth,
+                ArraySize = arraySize,
+                Dimension = dimension,
+                Format = format,
+                MipLevels = mipMapCount
+            };
         }
 
         /// <summary>
@@ -938,49 +971,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
         }
 
-        static Image()
-        {
-            Register(ImageFileType.Dds, DDSHelper.LoadFromDDSMemory, DDSHelper.SaveToDDSStream);
-            Register(ImageFileType.Gif, WICHelper.LoadFromWICMemory, WICHelper.SaveGifToWICMemory);
-            Register(ImageFileType.Tiff, WICHelper.LoadFromWICMemory, WICHelper.SaveTiffToWICMemory);
-            Register(ImageFileType.Bmp, WICHelper.LoadFromWICMemory, WICHelper.SaveBmpToWICMemory);
-            Register(ImageFileType.Jpg, WICHelper.LoadFromWICMemory, WICHelper.SaveJpgToWICMemory);
-            Register(ImageFileType.Png, WICHelper.LoadFromWICMemory, WICHelper.SavePngToWICMemory);
-            Register(ImageFileType.Wmp, WICHelper.LoadFromWICMemory, WICHelper.SaveWmpToWICMemory);
-        }
-
-        private Image()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Image" /> class.
-        /// </summary>
-        /// <param name="description">The image description.</param>
-        /// <param name="dataPointer">The pointer to the data buffer.</param>
-        /// <param name="offset">The offset from the beginning of the data buffer.</param>
-        /// <param name="handle">The handle (optional).</param>
-        /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
-        /// <param name="pitchFlags"></param>
-        /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
-        internal Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
-        {
-            Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
-        }
-
-        public void Dispose()
-        {
-            if (handle.HasValue)
-            {
-                handle.Value.Free();
-            }
-
-            if (bufferIsDisposable)
-            {
-                Utilities.FreeMemory(buffer);
-            }
-        }
-
         /// <summary>
         /// Gets a pointer to the image buffer in memory.
         /// </summary>
@@ -1001,6 +991,16 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// </summary>
         public int TotalSizeInBytes => totalSizeInBytes;
 
+        /// <summary>
+        /// Description of this image.
+        /// </summary>
+        public ImageDescription Description;
+
+        /// <summary>
+        /// Pixel buffers.
+        /// </summary>
+        internal PixelBuffer[] pixelBuffers;
+
         public delegate Image ImageLoadDelegate(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle);
 
         public delegate void ImageSaveDelegate(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream);
@@ -1017,18 +1017,18 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         private class LoadSaveDelegate
         {
-            public ImageFileType FileType;
-
-            public ImageLoadDelegate Load;
-
-            public ImageSaveDelegate Save;
-
             public LoadSaveDelegate(ImageFileType fileType, ImageLoadDelegate load, ImageSaveDelegate save)
             {
                 FileType = fileType;
                 Load = load;
                 Save = save;
             }
+
+            public ImageFileType FileType;
+
+            public ImageLoadDelegate Load;
+
+            public ImageSaveDelegate Save;
         }
     }
 }

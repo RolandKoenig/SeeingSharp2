@@ -37,6 +37,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.ShaderResourceView m_textureView;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapTextureResource"/> class.
+        /// </summary>
+        /// <param name="mappedTexture">The mapped texture.</param>
+        public BitmapTextureResource(MemoryMappedTexture32bpp mappedTexture)
+        {
+            mappedTexture.EnsureNotNull(nameof(mappedTexture));
+
+            m_mappedTexture = mappedTexture;
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
@@ -66,17 +77,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 m_textureView = SeeingSharpTools.DisposeObject(m_textureView);
                 m_texture = SeeingSharpTools.DisposeObject(m_texture);
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapTextureResource"/> class.
-        /// </summary>
-        /// <param name="mappedTexture">The mapped texture.</param>
-        public BitmapTextureResource(MemoryMappedTexture32bpp mappedTexture)
-        {
-            mappedTexture.EnsureNotNull(nameof(mappedTexture));
-
-            m_mappedTexture = mappedTexture;
         }
 
         /// <summary>

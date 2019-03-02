@@ -48,32 +48,12 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         public event EventHandler RecordingFinished;
 
         /// <summary>
-        /// Starts to render the video.
+        /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.
         /// </summary>
-        internal void StartRendering(Size2 videoSize)
+        /// <param name="targetFile">The target file to write to.</param>
+        public SeeingSharpVideoWriter(ResourceLink targetFile)
         {
-            videoSize.EnsureNotEmpty(nameof(videoSize));
-            if (m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already started before!"); }
-            if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
-
-            m_videoSize = videoSize;
-
-            // Reset exceptions
-            m_drawException = null;
-            m_startException = null;
-            m_finishExeption = null;
-
-            // Ensure that the target directory exists
-            try
-            {
-                StartRenderingInternal(m_videoSize);
-                m_hasStarted = true;
-            }
-            catch(Exception ex)
-            {
-                m_startException = ex;
-                m_hasStarted = false;
-            }
+            TargetFile = targetFile;
         }
 
         /// <summary>
@@ -101,29 +81,6 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             catch(Exception ex)
             {
                 m_drawException = ex;
-            }
-        }
-
-        /// <summary>
-        /// Finished the rendered video.
-        /// </summary>
-        internal void FinishRendering()
-        {
-            try
-            {
-                if (!m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
-                if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
-
-                FinishRenderingInternal();
-            }
-            catch(Exception ex)
-            {
-                m_finishExeption = ex;
-            }
-            finally
-            {
-                m_hasFinished = true;
-                RecordingFinished.Raise(this, EventArgs.Empty);
             }
         }
 
@@ -156,12 +113,55 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         protected abstract void FinishRenderingInternal();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.
+        /// Starts to render the video.
         /// </summary>
-        /// <param name="targetFile">The target file to write to.</param>
-        public SeeingSharpVideoWriter(ResourceLink targetFile)
+        internal void StartRendering(Size2 videoSize)
         {
-            TargetFile = targetFile;
+            videoSize.EnsureNotEmpty(nameof(videoSize));
+            if (m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already started before!"); }
+            if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
+
+            m_videoSize = videoSize;
+
+            // Reset exceptions
+            m_drawException = null;
+            m_startException = null;
+            m_finishExeption = null;
+
+            // Ensure that the target directory exists
+            try
+            {
+                StartRenderingInternal(m_videoSize);
+                m_hasStarted = true;
+            }
+            catch(Exception ex)
+            {
+                m_startException = ex;
+                m_hasStarted = false;
+            }
+        }
+
+        /// <summary>
+        /// Finished the rendered video.
+        /// </summary>
+        internal void FinishRendering()
+        {
+            try
+            {
+                if (!m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
+                if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
+
+                FinishRenderingInternal();
+            }
+            catch(Exception ex)
+            {
+                m_finishExeption = ex;
+            }
+            finally
+            {
+                m_hasFinished = true;
+                RecordingFinished.Raise(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

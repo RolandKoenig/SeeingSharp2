@@ -123,6 +123,474 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 #endif
                                                              };
 
+        /// <summary>
+        /// Load a DDS file in memory
+        /// </summary>
+        /// <param name="pSource">Source buffer</param>
+        /// <param name="size">Size of the DDS texture.</param>
+        /// <param name="makeACopy">Whether or not to make a copy of the DDS</param>
+        /// <param name="handle"></param>
+        /// <returns></returns>
+        public static unsafe Image LoadFromDDSMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
+        {
+            var flags = makeACopy ? DDSFlags.CopyMemory : DDSFlags.None;
+
+            ConversionFlags convFlags;
+            ImageDescription mdata;
+            // If the memory pointed is not a DDS memory, return null.
+            if (!DecodeDDSHeader(pSource, size, flags, out mdata, out convFlags))
+            {
+                return null;
+            }
+
+            var offset = sizeof(uint) + SDX.Utilities.SizeOf<DDS.Header>();
+            if ((convFlags & ConversionFlags.DX10) != 0)
+            {
+                offset += SDX.Utilities.SizeOf<DDS.HeaderDXT10>();
+            }
+
+            var pal8 = (int*)0;
+            if ((convFlags & ConversionFlags.Pal8) != 0)
+            {
+                pal8 = (int*)((byte*)pSource + offset);
+                offset += 256 * sizeof(uint);
+            }
+
+            if (size < offset)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Image.PitchFlags.LegacyDword : Image.PitchFlags.None, convFlags, pal8, handle);
+            return image;
+        }
+
+        public static void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            SaveToDDSStream(pixelBuffers, count, description, DDSFlags.None, imageStream);
+        }
+
+        //-------------------------------------------------------------------------------------
+        // Save a DDS to a stream
+        //-------------------------------------------------------------------------------------
+        public static unsafe void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription metadata, DDSFlags flags, Stream stream)
+        {
+            // Determine memory required
+            var totalSize = 0;
+            var headerSize = 0;
+            EncodeDDSHeader(metadata, flags, IntPtr.Zero, 0, out totalSize);
+            headerSize = totalSize;
+
+            var maxSlice = 0;
+
+            for (var i = 0; i < pixelBuffers.Length; ++i)
+            {
+                var slice = pixelBuffers[i].BufferStride;
+                totalSize += slice;
+                if (slice > maxSlice)
+                {
+                    maxSlice = slice;
+                }
+            }
+
+            Debug.Assert(totalSize > 0);
+
+            // Allocate a single temporary buffer to save the headers and each slice.
+            var buffer = new byte[Math.Max(maxSlice, headerSize)];
+
+            fixed (void* pbuffer = buffer)
+            {
+                int required;
+                EncodeDDSHeader(metadata, flags, (IntPtr)pbuffer, headerSize, out required);
+                stream.Write(buffer, 0, headerSize);
+            }
+
+            var remaining = totalSize - headerSize;
+            Debug.Assert(remaining > 0);
+
+            var index = 0;
+            for (var item = 0; item < metadata.ArraySize; ++item)
+            {
+                var d = metadata.Depth;
+
+                for (var level = 0; level < metadata.MipLevels; ++level)
+                {
+                    for (var slice = 0; slice < d; ++slice)
+                    {
+                        var pixsize = pixelBuffers[index].BufferStride;
+                        SDX.Utilities.Read(pixelBuffers[index].DataPointer, buffer, 0, pixsize);
+                        stream.Write(buffer, 0, pixsize);
+                        ++index;
+                    }
+
+                    if (d > 1)
+                    {
+                        d >>= 1;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies an image row with optional clearing of alpha value to 1.0.
+        /// </summary>
+        /// <remarks>
+        /// This method can be used in place as well, otherwise copies the image row unmodified.
+        /// </remarks>
+        /// <param name="pDestination">The destination buffer.</param>
+        /// <param name="outSize">The destination size.</param>
+        /// <param name="pSource">The source buffer.</param>
+        /// <param name="inSize">The source size.</param>
+        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
+        /// <param name="flags">Scanline flags used when copying the scanline.</param>
+        internal static unsafe void CopyScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, Format format, ScanlineFlags flags)
+        {
+            if ((flags & ScanlineFlags.SetAlpha) != 0)
+            {
+                switch (format)
+                {
+                    //-----------------------------------------------------------------------------
+                    case Format.R32G32B32A32_Typeless:
+                    case Format.R32G32B32A32_Float:
+                    case Format.R32G32B32A32_UInt:
+                    case Format.R32G32B32A32_SInt:
+                        {
+                            uint alpha;
+                            if (format == Format.R32G32B32A32_Float)
+                            {
+                                alpha = 0x3f800000;
+                            }
+                            else if (format == Format.R32G32B32A32_SInt)
+                            {
+                                alpha = 0x7fffffff;
+                            }
+                            else
+                            {
+                                alpha = 0xffffffff;
+                            }
+
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (uint*)pDestination;
+                                for (var count = 0; count < outSize; count += 16)
+                                {
+                                    dPtr += 3;
+                                    *dPtr++ = alpha;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (uint*)pSource;
+                                var dPtr = (uint*)pDestination;
+                                var size = Math.Min(outSize, inSize);
+                                for (var count = 0; count < size; count += 16)
+                                {
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = alpha;
+                                    sPtr++;
+                                }
+                            }
+                        }
+                        return;
+
+                    //-----------------------------------------------------------------------------
+                    case Format.R16G16B16A16_Typeless:
+                    case Format.R16G16B16A16_Float:
+                    case Format.R16G16B16A16_UNorm:
+                    case Format.R16G16B16A16_UInt:
+                    case Format.R16G16B16A16_SNorm:
+                    case Format.R16G16B16A16_SInt:
+                        {
+                            ushort alpha;
+                            if (format == Format.R16G16B16A16_Float)
+                            {
+                                alpha = 0x3c00;
+                            }
+                            else if (format == Format.R16G16B16A16_SNorm || format == Format.R16G16B16A16_SInt)
+                            {
+                                alpha = 0x7fff;
+                            }
+                            else
+                            {
+                                alpha = 0xffff;
+                            }
+
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (ushort*)pDestination;
+                                for (var count = 0; count < outSize; count += 8)
+                                {
+                                    dPtr += 3;
+                                    *dPtr++ = alpha;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (ushort*)pSource;
+                                var dPtr = (ushort*)pDestination;
+                                var size = Math.Min(outSize, inSize);
+                                for (var count = 0; count < size; count += 8)
+                                {
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = *sPtr++;
+                                    *dPtr++ = alpha;
+                                    sPtr++;
+                                }
+                            }
+                        }
+                        return;
+
+                    //-----------------------------------------------------------------------------
+                    case Format.R10G10B10A2_Typeless:
+                    case Format.R10G10B10A2_UNorm:
+                    case Format.R10G10B10A2_UInt:
+                    case Format.R10G10B10_Xr_Bias_A2_UNorm:
+                        {
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (uint*)pDestination;
+                                for (var count = 0; count < outSize; count += 4)
+                                {
+                                    *dPtr |= 0xC0000000;
+                                    ++dPtr;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (uint*)pSource;
+                                var dPtr = (uint*)pDestination;
+                                var size = Math.Min(outSize, inSize);
+                                for (var count = 0; count < size; count += 4)
+                                {
+                                    *dPtr++ = *sPtr++ | 0xC0000000;
+                                }
+                            }
+                        }
+                        return;
+
+                    //-----------------------------------------------------------------------------
+                    case Format.R8G8B8A8_Typeless:
+                    case Format.R8G8B8A8_UNorm:
+                    case Format.R8G8B8A8_UNorm_SRgb:
+                    case Format.R8G8B8A8_UInt:
+                    case Format.R8G8B8A8_SNorm:
+                    case Format.R8G8B8A8_SInt:
+                    case Format.B8G8R8A8_UNorm:
+                    case Format.B8G8R8A8_Typeless:
+                    case Format.B8G8R8A8_UNorm_SRgb:
+                        {
+                            var alpha = format == Format.R8G8B8A8_SNorm || format == Format.R8G8B8A8_SInt ? 0x7f000000 : 0xff000000;
+
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (uint*)pDestination;
+                                for (var count = 0; count < outSize; count += 4)
+                                {
+                                    var t = *dPtr & 0xFFFFFF;
+                                    t |= alpha;
+                                    *dPtr++ = t;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (uint*)pSource;
+                                var dPtr = (uint*)pDestination;
+                                var size = Math.Min(outSize, inSize);
+                                for (var count = 0; count < size; count += 4)
+                                {
+                                    var t = *sPtr++ & 0xFFFFFF;
+                                    t |= alpha;
+                                    *dPtr++ = t;
+                                }
+                            }
+                        }
+                        return;
+
+                    //-----------------------------------------------------------------------------
+                    case Format.B5G5R5A1_UNorm:
+                        {
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (ushort*)pDestination;
+                                for (var count = 0; count < outSize; count += 2)
+                                {
+                                    *dPtr++ |= 0x8000;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (ushort*)pSource;
+                                var dPtr = (ushort*)pDestination;
+                                var size = Math.Min(outSize, inSize);
+                                for (var count = 0; count < size; count += 2)
+                                {
+                                    *dPtr++ = (ushort)(*sPtr++ | 0x8000);
+                                }
+                            }
+                        }
+                        return;
+
+                    //-----------------------------------------------------------------------------
+                    case Format.A8_UNorm:
+                        SDX.Utilities.ClearMemory(pDestination, 0xff, outSize);
+                        return;
+
+#if DIRECTX11_1
+                    //-----------------------------------------------------------------------------
+                    case Format.B4G4R4A4_UNorm:
+                        {
+                            if (pDestination == pSource)
+                            {
+                                var dPtr = (ushort*) (pDestination);
+                                for (int count = 0; count < outSize; count += 2)
+                                {
+                                    *(dPtr++) |= 0xF000;
+                                }
+                            }
+                            else
+                            {
+                                var sPtr = (ushort*) (pSource);
+                                var dPtr = (ushort*) (pDestination);
+                                int size = Math.Min(outSize, inSize);
+                                for (int count = 0; count < size; count += 2)
+                                {
+                                    *(dPtr++) = (ushort) (*(sPtr++) | 0xF000);
+                                }
+                            }
+                        }
+                        return;
+#endif
+                        // DXGI_1_2_FORMATS
+                }
+            }
+
+            // Fall-through case is to just use memcpy (assuming this is not an in-place operation)
+            if (pDestination == pSource)
+            {
+                return;
+            }
+
+            SDX.Utilities.CopyMemory(pDestination, pSource, Math.Min(outSize, inSize));
+        }
+
+        /// <summary>
+        /// Swizzles (RGB &lt;-&gt; BGR) an image row with optional clearing of alpha value to 1.0.
+        /// </summary>
+        /// <param name="pDestination">The destination buffer.</param>
+        /// <param name="outSize">The destination size.</param>
+        /// <param name="pSource">The source buffer.</param>
+        /// <param name="inSize">The source size.</param>
+        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
+        /// <param name="flags">Scanline flags used when copying the scanline.</param>
+        /// <remarks>
+        /// This method can be used in place as well, otherwise copies the image row unmodified.
+        /// </remarks>
+        internal static unsafe void SwizzleScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, Format format, ScanlineFlags flags)
+        {
+            switch (format)
+            {
+                //---------------------------------------------------------------------------------
+                case Format.R10G10B10A2_Typeless:
+                case Format.R10G10B10A2_UNorm:
+                case Format.R10G10B10A2_UInt:
+                case Format.R10G10B10_Xr_Bias_A2_UNorm:
+                    if ((flags & ScanlineFlags.Legacy) != 0)
+                    {
+                        // Swap Red (R) and Blue (B) channel (used for D3DFMT_A2R10G10B10 legacy sources)
+                        if (pDestination == pSource)
+                        {
+                            var dPtr = (uint*)pDestination;
+                            for (var count = 0; count < outSize; count += 4)
+                            {
+                                var t = *dPtr;
+
+                                var t1 = (t & 0x3ff00000) >> 20;
+                                var t2 = (t & 0x000003ff) << 20;
+                                var t3 = t & 0x000ffc00;
+                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : t & 0xC0000000;
+
+                                *dPtr++ = t1 | t2 | t3 | ta;
+                            }
+                        }
+                        else
+                        {
+                            var sPtr = (uint*)pSource;
+                            var dPtr = (uint*)pDestination;
+                            var size = Math.Min(outSize, inSize);
+                            for (var count = 0; count < size; count += 4)
+                            {
+                                var t = *sPtr++;
+
+                                var t1 = (t & 0x3ff00000) >> 20;
+                                var t2 = (t & 0x000003ff) << 20;
+                                var t3 = t & 0x000ffc00;
+                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : t & 0xC0000000;
+
+                                *dPtr++ = t1 | t2 | t3 | ta;
+                            }
+                        }
+                        return;
+                    }
+                    break;
+
+                //---------------------------------------------------------------------------------
+                case Format.R8G8B8A8_Typeless:
+                case Format.R8G8B8A8_UNorm:
+                case Format.R8G8B8A8_UNorm_SRgb:
+                case Format.B8G8R8A8_UNorm:
+                case Format.B8G8R8X8_UNorm:
+                case Format.B8G8R8A8_Typeless:
+                case Format.B8G8R8A8_UNorm_SRgb:
+                case Format.B8G8R8X8_Typeless:
+                case Format.B8G8R8X8_UNorm_SRgb:
+                    // Swap Red (R) and Blue (B) channels (used to convert from DXGI 1.1 BGR formats to DXGI 1.0 RGB)
+                    if (pDestination == pSource)
+                    {
+                        var dPtr = (uint*)pDestination;
+                        for (var count = 0; count < outSize; count += 4)
+                        {
+                            var t = *dPtr;
+
+                            var t1 = (t & 0x00ff0000) >> 16;
+                            var t2 = (t & 0x000000ff) << 16;
+                            var t3 = t & 0x0000ff00;
+                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : t & 0xFF000000;
+
+                            *dPtr++ = t1 | t2 | t3 | ta;
+                        }
+                    }
+                    else
+                    {
+                        var sPtr = (uint*)pSource;
+                        var dPtr = (uint*)pDestination;
+                        var size = Math.Min(outSize, inSize);
+                        for (var count = 0; count < size; count += 4)
+                        {
+                            var t = *sPtr++;
+
+                            var t1 = (t & 0x00ff0000) >> 16;
+                            var t2 = (t & 0x000000ff) << 16;
+                            var t3 = t & 0x0000ff00;
+                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : t & 0xFF000000;
+
+                            *dPtr++ = t1 | t2 | t3 | ta;
+                        }
+                    }
+                    return;
+            }
+
+            // Fall-through case is to just use memcpy (assuming this is not an in-place operation)
+            if (pDestination == pSource)
+            {
+                return;
+            }
+
+            SDX.Utilities.CopyMemory(pDestination, pSource, Math.Min(outSize, inSize));
+        }
+
         // Note that many common DDS reader/writers (including D3DX) swap the
         // the RED/BLUE masks for 10:10:10:2 formats. We assume
         // below that the 'backwards' header mask is being used since it is most
@@ -263,7 +731,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 }
 
                 description.Format = headerDX10.DXGIFormat;
-                if (!FormatHelper.IsValid(description.Format))
+                if (!description.Format.IsValid())
                 {
                     throw new InvalidOperationException("Invalid Format from DDS HeaderDX10 ");
                 }
@@ -634,7 +1102,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             int newHeight;
             Image.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, out newWidth, out newHeight);
 
-            if (FormatHelper.IsCompressed(description.Format))
+            if (description.Format.IsCompressed())
             {
                 header->Flags |= DDS.HeaderFlags.LinearSize;
                 header->PitchOrLinearSize = slicePitch;
@@ -940,114 +1408,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         }
 
         /// <summary>
-        /// Load a DDS file in memory
-        /// </summary>
-        /// <param name="pSource">Source buffer</param>
-        /// <param name="size">Size of the DDS texture.</param>
-        /// <param name="makeACopy">Whether or not to make a copy of the DDS</param>
-        /// <param name="handle"></param>
-        /// <returns></returns>
-        public static unsafe Image LoadFromDDSMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
-        {
-            var flags = makeACopy ? DDSFlags.CopyMemory : DDSFlags.None;
-
-            ConversionFlags convFlags;
-            ImageDescription mdata;
-            // If the memory pointed is not a DDS memory, return null.
-            if (!DecodeDDSHeader(pSource, size, flags, out mdata, out convFlags))
-            {
-                return null;
-            }
-
-            var offset = sizeof(uint) + SDX.Utilities.SizeOf<DDS.Header>();
-            if ((convFlags & ConversionFlags.DX10) != 0)
-            {
-                offset += SDX.Utilities.SizeOf<DDS.HeaderDXT10>();
-            }
-
-            var pal8 = (int*)0;
-            if ((convFlags & ConversionFlags.Pal8) != 0)
-            {
-                pal8 = (int*)((byte*)pSource + offset);
-                offset += 256 * sizeof(uint);
-            }
-
-            if (size < offset)
-            {
-                throw new InvalidOperationException();
-            }
-
-            var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Image.PitchFlags.LegacyDword : Image.PitchFlags.None, convFlags, pal8, handle);
-            return image;
-        }
-
-        public static void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
-        {
-            SaveToDDSStream(pixelBuffers, count, description, DDSFlags.None, imageStream);
-        }
-
-        //-------------------------------------------------------------------------------------
-        // Save a DDS to a stream
-        //-------------------------------------------------------------------------------------
-        public static unsafe void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription metadata, DDSFlags flags, Stream stream)
-        {
-            // Determine memory required
-            var totalSize = 0;
-            var headerSize = 0;
-            EncodeDDSHeader(metadata, flags, IntPtr.Zero, 0, out totalSize);
-            headerSize = totalSize;
-
-            var maxSlice = 0;
-
-            for (var i = 0; i < pixelBuffers.Length; ++i)
-            {
-                var slice = pixelBuffers[i].BufferStride;
-                totalSize += slice;
-                if (slice > maxSlice)
-                {
-                    maxSlice = slice;
-                }
-            }
-
-            Debug.Assert(totalSize > 0);
-
-            // Allocate a single temporary buffer to save the headers and each slice.
-            var buffer = new byte[Math.Max(maxSlice, headerSize)];
-
-            fixed (void* pbuffer = buffer)
-            {
-                int required;
-                EncodeDDSHeader(metadata, flags, (IntPtr)pbuffer, headerSize, out required);
-                stream.Write(buffer, 0, headerSize);
-            }
-
-            var remaining = totalSize - headerSize;
-            Debug.Assert(remaining > 0);
-
-            var index = 0;
-            for (var item = 0; item < metadata.ArraySize; ++item)
-            {
-                var d = metadata.Depth;
-
-                for (var level = 0; level < metadata.MipLevels; ++level)
-                {
-                    for (var slice = 0; slice < d; ++slice)
-                    {
-                        var pixsize = pixelBuffers[index].BufferStride;
-                        SDX.Utilities.Read(pixelBuffers[index].DataPointer, buffer, 0, pixsize);
-                        stream.Write(buffer, 0, pixsize);
-                        ++index;
-                    }
-
-                    if (d > 1)
-                    {
-                        d >>= 1;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Converts or copies image data from pPixels into scratch image data
         /// </summary>
         /// <param name="pDDS"></param>
@@ -1121,7 +1481,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             throw new InvalidOperationException("Unexpected end of buffer");
                         }
 
-                        if (FormatHelper.IsCompressed(metadata.Format))
+                        if (metadata.Format.IsCompressed())
                         {
                             SDX.Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].BufferStride, imagesDst[index].BufferStride));
                         }
@@ -1259,366 +1619,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
         }
 
-        /// <summary>
-        /// Copies an image row with optional clearing of alpha value to 1.0.
-        /// </summary>
-        /// <remarks>
-        /// This method can be used in place as well, otherwise copies the image row unmodified.
-        /// </remarks>
-        /// <param name="pDestination">The destination buffer.</param>
-        /// <param name="outSize">The destination size.</param>
-        /// <param name="pSource">The source buffer.</param>
-        /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
-        /// <param name="flags">Scanline flags used when copying the scanline.</param>
-        internal static unsafe void CopyScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, Format format, ScanlineFlags flags)
-        {
-            if ((flags & ScanlineFlags.SetAlpha) != 0)
-            {
-                switch (format)
-                {
-                    //-----------------------------------------------------------------------------
-                    case Format.R32G32B32A32_Typeless:
-                    case Format.R32G32B32A32_Float:
-                    case Format.R32G32B32A32_UInt:
-                    case Format.R32G32B32A32_SInt:
-                        {
-                            uint alpha;
-                            if (format == Format.R32G32B32A32_Float)
-                            {
-                                alpha = 0x3f800000;
-                            }
-                            else if (format == Format.R32G32B32A32_SInt)
-                            {
-                                alpha = 0x7fffffff;
-                            }
-                            else
-                            {
-                                alpha = 0xffffffff;
-                            }
-
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (uint*)pDestination;
-                                for (var count = 0; count < outSize; count += 16)
-                                {
-                                    dPtr += 3;
-                                    *dPtr++ = alpha;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (uint*)pSource;
-                                var dPtr = (uint*)pDestination;
-                                var size = Math.Min(outSize, inSize);
-                                for (var count = 0; count < size; count += 16)
-                                {
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = alpha;
-                                    sPtr++;
-                                }
-                            }
-                        }
-                        return;
-
-                    //-----------------------------------------------------------------------------
-                    case Format.R16G16B16A16_Typeless:
-                    case Format.R16G16B16A16_Float:
-                    case Format.R16G16B16A16_UNorm:
-                    case Format.R16G16B16A16_UInt:
-                    case Format.R16G16B16A16_SNorm:
-                    case Format.R16G16B16A16_SInt:
-                        {
-                            ushort alpha;
-                            if (format == Format.R16G16B16A16_Float)
-                            {
-                                alpha = 0x3c00;
-                            }
-                            else if (format == Format.R16G16B16A16_SNorm || format == Format.R16G16B16A16_SInt)
-                            {
-                                alpha = 0x7fff;
-                            }
-                            else
-                            {
-                                alpha = 0xffff;
-                            }
-
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (ushort*)pDestination;
-                                for (var count = 0; count < outSize; count += 8)
-                                {
-                                    dPtr += 3;
-                                    *dPtr++ = alpha;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (ushort*)pSource;
-                                var dPtr = (ushort*)pDestination;
-                                var size = Math.Min(outSize, inSize);
-                                for (var count = 0; count < size; count += 8)
-                                {
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = *sPtr++;
-                                    *dPtr++ = alpha;
-                                    sPtr++;
-                                }
-                            }
-                        }
-                        return;
-
-                    //-----------------------------------------------------------------------------
-                    case Format.R10G10B10A2_Typeless:
-                    case Format.R10G10B10A2_UNorm:
-                    case Format.R10G10B10A2_UInt:
-                    case Format.R10G10B10_Xr_Bias_A2_UNorm:
-                        {
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (uint*)pDestination;
-                                for (var count = 0; count < outSize; count += 4)
-                                {
-                                    *dPtr |= 0xC0000000;
-                                    ++dPtr;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (uint*)pSource;
-                                var dPtr = (uint*)pDestination;
-                                var size = Math.Min(outSize, inSize);
-                                for (var count = 0; count < size; count += 4)
-                                {
-                                    *dPtr++ = *sPtr++ | 0xC0000000;
-                                }
-                            }
-                        }
-                        return;
-
-                    //-----------------------------------------------------------------------------
-                    case Format.R8G8B8A8_Typeless:
-                    case Format.R8G8B8A8_UNorm:
-                    case Format.R8G8B8A8_UNorm_SRgb:
-                    case Format.R8G8B8A8_UInt:
-                    case Format.R8G8B8A8_SNorm:
-                    case Format.R8G8B8A8_SInt:
-                    case Format.B8G8R8A8_UNorm:
-                    case Format.B8G8R8A8_Typeless:
-                    case Format.B8G8R8A8_UNorm_SRgb:
-                        {
-                            var alpha = format == Format.R8G8B8A8_SNorm || format == Format.R8G8B8A8_SInt ? 0x7f000000 : 0xff000000;
-
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (uint*)pDestination;
-                                for (var count = 0; count < outSize; count += 4)
-                                {
-                                    var t = *dPtr & 0xFFFFFF;
-                                    t |= alpha;
-                                    *dPtr++ = t;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (uint*)pSource;
-                                var dPtr = (uint*)pDestination;
-                                var size = Math.Min(outSize, inSize);
-                                for (var count = 0; count < size; count += 4)
-                                {
-                                    var t = *sPtr++ & 0xFFFFFF;
-                                    t |= alpha;
-                                    *dPtr++ = t;
-                                }
-                            }
-                        }
-                        return;
-
-                    //-----------------------------------------------------------------------------
-                    case Format.B5G5R5A1_UNorm:
-                        {
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (ushort*)pDestination;
-                                for (var count = 0; count < outSize; count += 2)
-                                {
-                                    *dPtr++ |= 0x8000;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (ushort*)pSource;
-                                var dPtr = (ushort*)pDestination;
-                                var size = Math.Min(outSize, inSize);
-                                for (var count = 0; count < size; count += 2)
-                                {
-                                    *dPtr++ = (ushort)(*sPtr++ | 0x8000);
-                                }
-                            }
-                        }
-                        return;
-
-                    //-----------------------------------------------------------------------------
-                    case Format.A8_UNorm:
-                        SDX.Utilities.ClearMemory(pDestination, 0xff, outSize);
-                        return;
-
-#if DIRECTX11_1
-                    //-----------------------------------------------------------------------------
-                    case Format.B4G4R4A4_UNorm:
-                        {
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (ushort*) (pDestination);
-                                for (int count = 0; count < outSize; count += 2)
-                                {
-                                    *(dPtr++) |= 0xF000;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (ushort*) (pSource);
-                                var dPtr = (ushort*) (pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 2)
-                                {
-                                    *(dPtr++) = (ushort) (*(sPtr++) | 0xF000);
-                                }
-                            }
-                        }
-                        return;
-#endif
-                        // DXGI_1_2_FORMATS
-                }
-            }
-
-            // Fall-through case is to just use memcpy (assuming this is not an in-place operation)
-            if (pDestination == pSource)
-            {
-                return;
-            }
-
-            SDX.Utilities.CopyMemory(pDestination, pSource, Math.Min(outSize, inSize));
-        }
-
-        /// <summary>
-        /// Swizzles (RGB &lt;-&gt; BGR) an image row with optional clearing of alpha value to 1.0.
-        /// </summary>
-        /// <param name="pDestination">The destination buffer.</param>
-        /// <param name="outSize">The destination size.</param>
-        /// <param name="pSource">The source buffer.</param>
-        /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
-        /// <param name="flags">Scanline flags used when copying the scanline.</param>
-        /// <remarks>
-        /// This method can be used in place as well, otherwise copies the image row unmodified.
-        /// </remarks>
-        internal static unsafe void SwizzleScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, Format format, ScanlineFlags flags)
-        {
-            switch (format)
-            {
-                //---------------------------------------------------------------------------------
-                case Format.R10G10B10A2_Typeless:
-                case Format.R10G10B10A2_UNorm:
-                case Format.R10G10B10A2_UInt:
-                case Format.R10G10B10_Xr_Bias_A2_UNorm:
-                    if ((flags & ScanlineFlags.Legacy) != 0)
-                    {
-                        // Swap Red (R) and Blue (B) channel (used for D3DFMT_A2R10G10B10 legacy sources)
-                        if (pDestination == pSource)
-                        {
-                            var dPtr = (uint*)pDestination;
-                            for (var count = 0; count < outSize; count += 4)
-                            {
-                                var t = *dPtr;
-
-                                var t1 = (t & 0x3ff00000) >> 20;
-                                var t2 = (t & 0x000003ff) << 20;
-                                var t3 = t & 0x000ffc00;
-                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : t & 0xC0000000;
-
-                                *dPtr++ = t1 | t2 | t3 | ta;
-                            }
-                        }
-                        else
-                        {
-                            var sPtr = (uint*)pSource;
-                            var dPtr = (uint*)pDestination;
-                            var size = Math.Min(outSize, inSize);
-                            for (var count = 0; count < size; count += 4)
-                            {
-                                var t = *sPtr++;
-
-                                var t1 = (t & 0x3ff00000) >> 20;
-                                var t2 = (t & 0x000003ff) << 20;
-                                var t3 = t & 0x000ffc00;
-                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : t & 0xC0000000;
-
-                                *dPtr++ = t1 | t2 | t3 | ta;
-                            }
-                        }
-                        return;
-                    }
-                    break;
-
-                //---------------------------------------------------------------------------------
-                case Format.R8G8B8A8_Typeless:
-                case Format.R8G8B8A8_UNorm:
-                case Format.R8G8B8A8_UNorm_SRgb:
-                case Format.B8G8R8A8_UNorm:
-                case Format.B8G8R8X8_UNorm:
-                case Format.B8G8R8A8_Typeless:
-                case Format.B8G8R8A8_UNorm_SRgb:
-                case Format.B8G8R8X8_Typeless:
-                case Format.B8G8R8X8_UNorm_SRgb:
-                    // Swap Red (R) and Blue (B) channels (used to convert from DXGI 1.1 BGR formats to DXGI 1.0 RGB)
-                    if (pDestination == pSource)
-                    {
-                        var dPtr = (uint*)pDestination;
-                        for (var count = 0; count < outSize; count += 4)
-                        {
-                            var t = *dPtr;
-
-                            var t1 = (t & 0x00ff0000) >> 16;
-                            var t2 = (t & 0x000000ff) << 16;
-                            var t3 = t & 0x0000ff00;
-                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : t & 0xFF000000;
-
-                            *dPtr++ = t1 | t2 | t3 | ta;
-                        }
-                    }
-                    else
-                    {
-                        var sPtr = (uint*)pSource;
-                        var dPtr = (uint*)pDestination;
-                        var size = Math.Min(outSize, inSize);
-                        for (var count = 0; count < size; count += 4)
-                        {
-                            var t = *sPtr++;
-
-                            var t1 = (t & 0x00ff0000) >> 16;
-                            var t2 = (t & 0x000000ff) << 16;
-                            var t3 = t & 0x0000ff00;
-                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : t & 0xFF000000;
-
-                            *dPtr++ = t1 | t2 | t3 | ta;
-                        }
-                    }
-                    return;
-            }
-
-            // Fall-through case is to just use memcpy (assuming this is not an in-place operation)
-            if (pDestination == pSource)
-            {
-                return;
-            }
-
-            SDX.Utilities.CopyMemory(pDestination, pSource, Math.Min(outSize, inSize));
-        }
-
         [Flags]
         public enum ConversionFlags
         {
@@ -1637,6 +1637,26 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             FormatA8P8 = 0x800, // Has an 8-bit palette with an alpha channel
             CopyMemory = 0x1000, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
             DX10 = 0x10000 // Has the 'DX10' extension header
+        }
+
+        [Flags]
+        internal enum ScanlineFlags
+        {
+            None = 0,
+            SetAlpha = 0x1, // Set alpha channel to known opaque value
+            Legacy = 0x2 // Enables specific legacy format conversion cases
+        }
+
+        private enum TEXP_LEGACY_FORMAT
+        {
+            UNKNOWN = 0,
+            R8G8B8,
+            R3G3B2,
+            A8R3G3B2,
+            P8,
+            A8P8,
+            A4L4,
+            B4G4R4A4
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1658,26 +1678,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public Format Format;
             public ConversionFlags ConversionFlags;
             public DDS.PixelFormat PixelFormat;
-        }
-
-        private enum TEXP_LEGACY_FORMAT
-        {
-            UNKNOWN = 0,
-            R8G8B8,
-            R3G3B2,
-            A8R3G3B2,
-            P8,
-            A8P8,
-            A4L4,
-            B4G4R4A4
-        }
-
-        [Flags]
-        internal enum ScanlineFlags
-        {
-            None = 0,
-            SetAlpha = 0x1, // Set alpha channel to known opaque value
-            Legacy = 0x2 // Enables specific legacy format conversion cases
         }
     }
 }

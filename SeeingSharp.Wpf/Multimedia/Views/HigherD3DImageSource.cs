@@ -31,7 +31,6 @@ using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
 using Resource = SharpDX.DXGI.Resource;
 
-
 namespace SeeingSharp.Multimedia.Views
 {
     public class HigherD3DImageSource : D3DImage, IDisposable
@@ -42,6 +41,24 @@ namespace SeeingSharp.Multimedia.Views
         private D3D9.Texture m_d3dRenderTarget;
 
         private EngineDevice m_device;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
+        /// </summary>
+        public HigherD3DImageSource(EngineDevice device, DeviceHandlerD3D9 deviceHandlerD3D9)
+        {
+            m_device = device;
+
+            m_d3dContext = deviceHandlerD3D9.Context;
+            m_d3dDevice = deviceHandlerD3D9.Device;
+
+            if(m_d3dDevice == null)
+            {
+                throw new SeeingSharpException("Unable to create Wpf image source: No Direct3D 9 device available on " + device);
+            }
+
+            s_activeClients++;
+        }
 
         /// <summary>
         /// Invalidates the direct3D image.
@@ -108,6 +125,17 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Disposes this object.
+        /// </summary>
+        public void Dispose()
+        {
+            SetRenderTarget(null);
+
+            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(m_d3dRenderTarget);
+            s_activeClients--;
+        }
+
+        /// <summary>
         /// Gets the handle that can be used for resource sharing.
         /// </summary>
         /// <param name="texture">The texture to be shared.</param>
@@ -150,35 +178,6 @@ namespace SeeingSharp.Multimedia.Views
         private static bool IsShareable(D3D11.Texture2D textureToCheck)
         {
             return (textureToCheck.Description.OptionFlags & D3D11.ResourceOptionFlags.Shared) != 0;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
-        /// </summary>
-        public HigherD3DImageSource(EngineDevice device, DeviceHandlerD3D9 deviceHandlerD3D9)
-        {
-            m_device = device;
-
-            m_d3dContext = deviceHandlerD3D9.Context;
-            m_d3dDevice = deviceHandlerD3D9.Device;
-
-            if(m_d3dDevice == null)
-            {
-                throw new SeeingSharpException("Unable to create Wpf image source: No Direct3D 9 device available on " + device);
-            }
-
-            s_activeClients++;
-        }
-
-        /// <summary>
-        /// Disposes this object.
-        /// </summary>
-        public void Dispose()
-        {
-            SetRenderTarget(null);
-
-            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(m_d3dRenderTarget);
-            s_activeClients--;
         }
 
         public bool HasRenderTarget => m_d3dRenderTarget != null;

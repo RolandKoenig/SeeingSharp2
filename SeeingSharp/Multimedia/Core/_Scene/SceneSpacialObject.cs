@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -55,6 +56,31 @@ namespace SeeingSharp.Multimedia.Core
         private float m_opacity;
         private float m_borderPart;
         private float m_borderMultiplyer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneSpacialObject"/> class.
+        /// </summary>
+        protected SceneSpacialObject()
+        {
+            RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
+
+            m_rotationUp = Vector3.UnitY;
+            m_rotationForward = Vector3.UnitZ;
+
+            m_opacity = 1f;
+            m_color = Color4.White;
+            m_accentuationFactor = 0f;
+            m_borderPart = 0.01f;
+            m_borderMultiplyer = 0f;
+
+            m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
+            m_position = Vector3.Zero;
+            m_rotation = Vector3.Zero;
+            m_scaling = new Vector3(1f, 1f, 1f);
+            m_transform = Matrix.Identity;
+            m_rotationQuaternion = Quaternion.Identity;
+            m_transformParamsChanged = true;
+        }
 
         /// <summary>
         /// Enables a shader generated border.
@@ -229,6 +255,21 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Unloads all resources
+        /// </summary>
+        public override void UnloadResources()
+        {
+            base.UnloadResources();
+
+            // Mark all local resources for unloading
+            foreach (var actRenderParameters in RenderParameters)
+            {
+                actRenderParameters.MarkForUnloading();
+            }
+            RenderParameters.Clear();
+        }
+
+        /// <summary>
         /// Updates the object.
         /// </summary>
         /// <param name="updateState">Current update state.</param>
@@ -368,30 +409,10 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Triggers recreation of render parameters.
+        /// Called when opacity has changed.
         /// </summary>
-        private void TriggerRecreateOfParameters()
+        protected virtual void OnOpacityChanged()
         {
-            // Notify, that all render parameters need a refresh on next render
-            foreach (var actRenderParameters in RenderParameters)
-            {
-                actRenderParameters.NeedsRefresh = true;
-            }
-        }
-
-        /// <summary>
-        /// Unloads all resources
-        /// </summary>
-        public override void UnloadResources()
-        {
-            base.UnloadResources();
-
-            // Mark all local resources for unloading
-            foreach (var actRenderParameters in RenderParameters)
-            {
-                actRenderParameters.MarkForUnloading();
-            }
-            RenderParameters.Clear();
         }
 
         /// <summary>
@@ -437,35 +458,15 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Called when opacity has changed.
+        /// Triggers recreation of render parameters.
         /// </summary>
-        protected virtual void OnOpacityChanged()
+        private void TriggerRecreateOfParameters()
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneSpacialObject"/> class.
-        /// </summary>
-        public SceneSpacialObject()
-        {
-            RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
-
-            m_rotationUp = Vector3.UnitY;
-            m_rotationForward = Vector3.UnitZ;
-
-            m_opacity = 1f;
-            m_color = Color4.White;
-            m_accentuationFactor = 0f;
-            m_borderPart = 0.01f;
-            m_borderMultiplyer = 0f;
-
-            m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
-            m_position = Vector3.Zero;
-            m_rotation = Vector3.Zero;
-            m_scaling = new Vector3(1f, 1f, 1f);
-            m_transform = Matrix.Identity;
-            m_rotationQuaternion = Quaternion.Identity;
-            m_transformParamsChanged = true;
+            // Notify, that all render parameters need a refresh on next render
+            foreach (var actRenderParameters in RenderParameters)
+            {
+                actRenderParameters.NeedsRefresh = true;
+            }
         }
 
         /// <summary>
@@ -550,11 +551,6 @@ namespace SeeingSharp.Multimedia.Core
                 m_transformParamsChanged = true;
             }
         }
-
-        /// <summary>
-        /// Gets all local render parameters.
-        /// </summary>
-        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
 
         /// <summary>
         /// Gets current AnimationHandler object.
@@ -751,5 +747,10 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
         }
+
+        /// <summary>
+        /// Gets all local render parameters.
+        /// </summary>
+        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -53,11 +54,6 @@ namespace SeeingSharp.Multimedia.Core
         private float m_lightPower;
         private float m_strongLightFactor;
         private bool m_alphaEnabledSwapChain;
-
-        /// <summary>
-        /// Internal accessor for ShowTextures variable.
-        /// </summary>
-        internal bool ShowTexturesInternal;
 
         /// <summary>
         /// Occurs when any configuration flag has changed.
@@ -265,5 +261,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         [Browsable(false)]
         public GraphicsCoreConfiguration CoreConfiguration => DeviceConfiguration?.CoreConfiguration;
+
+        /// <summary>
+        /// Internal accessor for ShowTextures variable.
+        /// </summary>
+        internal bool ShowTexturesInternal;
     }
 }

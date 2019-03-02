@@ -51,6 +51,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
+        /// </summary>
+        /// <param name="forceSimpleMethod">Force simple mode. Default to false.</param>
+        /// <param name="fadeIntensity">Intensity of the fade effect.</param>
+        public FocusPostprocessEffectResource(bool forceSimpleMethod = false, float fadeIntensity = 1f)
+        {
+            m_fadeIntensity.EnsureInRange(0f, 1f, nameof(fadeIntensity));
+
+            m_forceSimpleMethod = forceSimpleMethod;
+            m_fadeIntensity = fadeIntensity;
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         /// <param name="device">The device.</param>
@@ -243,19 +256,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
-        /// </summary>
-        /// <param name="forceSimpleMethod">Force simple mode. Default to false.</param>
-        /// <param name="fadeIntensity">Intensity of the fade effect.</param>
-        public FocusPostprocessEffectResource(bool forceSimpleMethod = false, float fadeIntensity = 1f)
-        {
-            m_fadeIntensity.EnsureInRange(0f, 1f, nameof(fadeIntensity));
-
-            m_forceSimpleMethod = forceSimpleMethod;
-            m_fadeIntensity = fadeIntensity;
         }
 
         /// <summary>

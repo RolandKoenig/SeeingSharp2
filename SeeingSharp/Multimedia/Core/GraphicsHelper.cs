@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.IO;
 using System.Linq;
@@ -843,56 +844,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets a vertex shader resource pointing to given shader file.
-        /// </summary>
-        /// <param name="device">The target device object.</param>
-        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
-        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        internal static VertexShaderResource GetVertexShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
-        {
-            device.EnsureNotNull(nameof(device));
-
-            var resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
-
-            return new VertexShaderResource(device.DefaultVertexShaderModel, resourceLink);
-        }
-
-        /// <summary>
-        /// Gets a pixel shader resource pointing to given shader file.
-        /// </summary>
-        /// <param name="device">The target device object.</param>
-        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
-        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
-        internal static PixelShaderResource GetPixelShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
-        {
-            device.EnsureNotNull(nameof(device));
-
-            var resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
-
-            return new PixelShaderResource(device.DefaultPixelShaderModel, resourceLink);
-        }
-
-        internal static AssemblyResourceLink GetShaderResourceLink(string subdirectory, string shaderNameWithoutExt)
-        {
-            AssemblyResourceLink resourceLink = null;
-            if (string.IsNullOrEmpty(subdirectory))
-            {
-                resourceLink = new AssemblyResourceLink(
-                    typeof(SeeingSharpResources),
-                    "Shaders",
-                    $"{shaderNameWithoutExt}.hlsl");
-            }
-            else
-            {
-                resourceLink = new AssemblyResourceLink(
-                    typeof(SeeingSharpResources),
-                    $"Shaders.{subdirectory}",
-                    $"{shaderNameWithoutExt}.hlsl");
-            }
-            return resourceLink;
-        }
-
-        /// <summary>
         /// Creates a default exture sampler state.
         /// </summary>
         /// <param name="device">The device to create the state for.</param>
@@ -971,6 +922,56 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             return new D3D11.Texture2D(device, textureDescription);
+        }
+
+        /// <summary>
+        /// Gets a vertex shader resource pointing to given shader file.
+        /// </summary>
+        /// <param name="device">The target device object.</param>
+        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
+        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
+        internal static VertexShaderResource GetVertexShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
+        {
+            device.EnsureNotNull(nameof(device));
+
+            var resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
+
+            return new VertexShaderResource(device.DefaultVertexShaderModel, resourceLink);
+        }
+
+        /// <summary>
+        /// Gets a pixel shader resource pointing to given shader file.
+        /// </summary>
+        /// <param name="device">The target device object.</param>
+        /// <param name="subdirectory">The subdirectory where the shader is located.</param>
+        /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
+        internal static PixelShaderResource GetPixelShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
+        {
+            device.EnsureNotNull(nameof(device));
+
+            var resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
+
+            return new PixelShaderResource(device.DefaultPixelShaderModel, resourceLink);
+        }
+
+        internal static AssemblyResourceLink GetShaderResourceLink(string subdirectory, string shaderNameWithoutExt)
+        {
+            AssemblyResourceLink resourceLink = null;
+            if (string.IsNullOrEmpty(subdirectory))
+            {
+                resourceLink = new AssemblyResourceLink(
+                    typeof(SeeingSharpResources),
+                    "Shaders",
+                    $"{shaderNameWithoutExt}.hlsl");
+            }
+            else
+            {
+                resourceLink = new AssemblyResourceLink(
+                    typeof(SeeingSharpResources),
+                    $"Shaders.{subdirectory}",
+                    $"{shaderNameWithoutExt}.hlsl");
+            }
+            return resourceLink;
         }
     }
 }

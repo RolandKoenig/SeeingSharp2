@@ -35,6 +35,15 @@ namespace SeeingSharp.Multimedia.Objects
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SkyboxObject"/> class.
+        /// </summary>
+        public SkyboxObject(NamedOrGenericKey cubeTextureKey)
+        {
+            m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
+            CubeTextureKey = cubeTextureKey;
+        }
+
+        /// <summary>
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
@@ -130,28 +139,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Updates the object.
-        /// </summary>
-        /// <param name="updateState">Current update state.</param>
-        protected override void UpdateInternal(SceneRelatedUpdateState updateState)
-        {
-
-        }
-
-        /// <summary>
-        /// Updates this object for the given view.
-        /// </summary>
-        /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
-        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            if(CountRenderPassSubscriptions(layerViewSubset) <= 0)
-            {
-                SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
-            }
-        }
-
-        /// <summary>
         /// Are resources loaded for the given device?
         /// </summary>
         /// <param name="device">The device for which to check.</param>
@@ -178,6 +165,28 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Updates the object.
+        /// </summary>
+        /// <param name="updateState">Current update state.</param>
+        protected override void UpdateInternal(SceneRelatedUpdateState updateState)
+        {
+
+        }
+
+        /// <summary>
+        /// Updates this object for the given view.
+        /// </summary>
+        /// <param name="updateState">Current state of the update pass.</param>
+        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            if(CountRenderPassSubscriptions(layerViewSubset) <= 0)
+            {
+                SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
+            }
+        }
+
+        /// <summary>
         /// Renders this object.
         /// </summary>
         /// <param name="renderState">Render this object.</param>
@@ -201,15 +210,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Draw the skybox
             deviceContext.DrawIndexed(6 * 6, 0, 0);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SkyboxObject"/> class.
-        /// </summary>
-        public SkyboxObject(NamedOrGenericKey cubeTextureKey)
-        {
-            m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
-            CubeTextureKey = cubeTextureKey;
         }
 
         /// <summary>

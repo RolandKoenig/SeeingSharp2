@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -32,6 +33,26 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class SceneManipulator
     {
+        // Main members
+
+        // Objects that remember all changes on object/resource collections
+
+        private List<SceneObject> m_createdObjects;
+        private List<NamedOrGenericKey> m_createdResources;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
+        /// </summary>
+        /// <param name="owner">The scene which will be manipulated.</param>
+        internal SceneManipulator(Scene owner)
+        {
+            Owner = owner;
+            IsValid = false;
+
+            m_createdObjects = new List<SceneObject>();
+            m_createdResources = new List<NamedOrGenericKey>();
+        }
+
         /// <summary>
         /// Resets all object and resource collections managed locally by
         /// this manipulator object (e. g. property CreatedObjects).
@@ -234,29 +255,6 @@ namespace SeeingSharp.Multimedia.Core
             childToAdd.EnsureNotNull(nameof(childToAdd));
 
             parent.AddChildInternal(childToAdd);
-        }
-
-        /// <summary>
-        /// Removes the given object from the list of children.
-        /// </summary>
-        /// <param name="parent">The object from which to remove the child.</param>
-        /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
-        internal void RemoveChild(SceneObject parent, SceneObject childToRemove)
-        {
-            parent.EnsureNotNull(nameof(parent));
-            childToRemove.EnsureNotNull(nameof(childToRemove));
-
-            parent.RemoveChildInternal(childToRemove);
-        }
-
-        /// <summary>
-        /// Queries for all children (also lower level).
-        /// </summary>
-        internal IEnumerable<SceneObject> GetAllChildren(SceneObject sceneObject)
-        {
-            sceneObject.EnsureNotNull(nameof(sceneObject));
-
-            return sceneObject.GetAllChildrenInternal();
         }
 
         /// <summary>
@@ -510,24 +508,34 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Removes the given object from the list of children.
+        /// </summary>
+        /// <param name="parent">The object from which to remove the child.</param>
+        /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
+        internal void RemoveChild(SceneObject parent, SceneObject childToRemove)
+        {
+            parent.EnsureNotNull(nameof(parent));
+            childToRemove.EnsureNotNull(nameof(childToRemove));
+
+            parent.RemoveChildInternal(childToRemove);
+        }
+
+        /// <summary>
+        /// Queries for all children (also lower level).
+        /// </summary>
+        internal IEnumerable<SceneObject> GetAllChildren(SceneObject sceneObject)
+        {
+            sceneObject.EnsureNotNull(nameof(sceneObject));
+
+            return sceneObject.GetAllChildrenInternal();
+        }
+
+        /// <summary>
         /// Checks whether this manipulator is still valid.
         /// </summary>
         private void CheckValid()
         {
             if (!IsValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
-        /// </summary>
-        /// <param name="owner">The scene which will be manipulated.</param>
-        internal SceneManipulator(Scene owner)
-        {
-            Owner = owner;
-            IsValid = false;
-
-            m_createdObjects = new List<SceneObject>();
-            m_createdResources = new List<NamedOrGenericKey>();
         }
 
         /// <summary>
@@ -553,17 +561,5 @@ namespace SeeingSharp.Multimedia.Core
         public IEnumerable<NamedOrGenericKey> CreatedResources => m_createdResources;
 
         public int CreatedResourcesCount => m_createdResources.Count;
-
-        // Main members
-
-        
-        
-
-        // Objects that remember all changes on object/resource collections
-
-        
-        private List<SceneObject> m_createdObjects;
-        private List<NamedOrGenericKey> m_createdResources;
-        
     }
 }

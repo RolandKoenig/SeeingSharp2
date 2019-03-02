@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,73 @@ namespace SeeingSharp.Multimedia.Input
     public class InputHandlerFactory
     {
         private List<IInputHandler> m_inputHandlers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputHandlerFactory"/> class.
+        /// </summary>
+        internal InputHandlerFactory(SeeingSharpLoader loader)
+        {
+            m_inputHandlers =
+                (from actExtension in loader.Extensions
+                 from actInputHandler in actExtension.CreateInputHandlers()
+                 select actInputHandler).ToList();
+        }
+
+        /// <summary>
+        /// Gets all possible GraphicsInputHandlers for the given view and camera types.
+        /// </summary>
+        /// <typeparam name="ViewType">Gets the type of the view.</typeparam>
+        /// <param name="viewObject">The view for which to the input handlers.</param>
+        public List<IInputHandler> GetInputHandler<ViewType>(IInputEnabledView viewObject)
+            where ViewType : class
+        {
+            var givenViewType = typeof(ViewType);
+
+            return GetInputHandler(givenViewType);
+        }
+
+        /// <summary>
+        /// Gets all possible GraphicsInputHandlers for the given view and camera types.
+        /// Pass null to all parameters to return all generic input handlers.
+        /// </summary>
+        /// <param name="givenViewType">The type of the camera.</param>
+        public List<IInputHandler> GetInputHandler(Type givenViewType)
+        {
+            var result = new List<IInputHandler>();
+
+            foreach (var actInputHandler in m_inputHandlers)
+            {
+                // Query for the input handler's information
+                var actSupportedViewTypes = actInputHandler.GetSupportedViewTypes();
+                var viewTypeSupported = false;
+
+                // Check for view-type support
+                if (actSupportedViewTypes == null)
+                {
+                    viewTypeSupported = givenViewType == null;
+                }
+                else if(givenViewType != null)
+                {
+                    foreach (var actViewType in actSupportedViewTypes)
+                    {
+                        if (actViewType.GetTypeInfo().IsAssignableFrom(givenViewType.GetTypeInfo()))
+                        {
+                            viewTypeSupported = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!viewTypeSupported)
+                {
+                    continue;
+                }
+
+                // Create a new input handler
+                result.Add(Activator.CreateInstance(actInputHandler.GetType()) as IInputHandler);
+            }
+            return result;
+        }
 
         /// <summary>
         /// Creates all input handlers which are not associated to one view.
@@ -96,73 +164,6 @@ namespace SeeingSharp.Multimedia.Input
             {
                 actInputHandler.Start(viewObject);
             }
-        }
-
-        /// <summary>
-        /// Gets all possible GraphicsInputHandlers for the given view and camera types.
-        /// </summary>
-        /// <typeparam name="ViewType">Gets the type of the view.</typeparam>
-        /// <param name="viewObject">The view for which to the input handlers.</param>
-        public List<IInputHandler> GetInputHandler<ViewType>(IInputEnabledView viewObject)
-            where ViewType : class
-        {
-            var givenViewType = typeof(ViewType);
-
-            return GetInputHandler(givenViewType);
-        }
-
-        /// <summary>
-        /// Gets all possible GraphicsInputHandlers for the given view and camera types.
-        /// Pass null to all parameters to return all generic input handlers.
-        /// </summary>
-        /// <param name="givenViewType">The type of the camera.</param>
-        public List<IInputHandler> GetInputHandler(Type givenViewType)
-        {
-            var result = new List<IInputHandler>();
-
-            foreach (var actInputHandler in m_inputHandlers)
-            {
-                // Query for the input handler's information
-                var actSupportedViewTypes = actInputHandler.GetSupportedViewTypes();
-                var viewTypeSupported = false;
-
-                // Check for view-type support
-                if (actSupportedViewTypes == null)
-                {
-                    viewTypeSupported = givenViewType == null;
-                }
-                else if(givenViewType != null)
-                {
-                    foreach (var actViewType in actSupportedViewTypes)
-                    {
-                        if (actViewType.GetTypeInfo().IsAssignableFrom(givenViewType.GetTypeInfo()))
-                        {
-                            viewTypeSupported = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!viewTypeSupported)
-                {
-                    continue;
-                }
-
-                // Create a new input handler
-                result.Add(Activator.CreateInstance(actInputHandler.GetType()) as IInputHandler);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InputHandlerFactory"/> class.
-        /// </summary>
-        internal InputHandlerFactory(SeeingSharpLoader loader)
-        {
-            m_inputHandlers =
-                (from actExtension in loader.Extensions
-                 from actInputHandler in actExtension.CreateInputHandlers()
-                 select actInputHandler).ToList();
         }
 
         /// <summary>

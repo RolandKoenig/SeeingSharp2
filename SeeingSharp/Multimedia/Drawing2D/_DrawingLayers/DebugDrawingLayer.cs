@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Util;
 using SharpDX;
@@ -31,32 +32,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private TextFormatResource m_textFormat;
         private SolidBrushResource m_solidBrushForeground;
         private SolidBrushResource m_solidBrushBackground;
-
-        /// <summary>
-        /// Performs custom 2D rendering.
-        /// Be carefull: This method is called from the rendering thread!
-        /// </summary>
-        /// <param name="graphics">The graphics object used for drawing.</param>
-        protected override void Draw2D(Graphics2D graphics)
-        {
-            if (m_textFormat == null) { return; }
-
-            // Check for minimum screen size
-            var screenSize = graphics.ScreenSize;
-
-            if(screenSize.Width < 300f ||
-               screenSize.Height < 100f)
-            {
-                return;
-            }
-
-            // Draw the debug message on the upper right corner
-            var targetRect = new RectangleF(
-                screenSize.Width - 300f, 10f,
-                280f, 80f);
-            graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);
-            graphics.DrawText("! Debug-Mode !", m_textFormat, targetRect, m_solidBrushForeground);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugDrawingLayer"/> class.
@@ -83,6 +58,32 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_textFormat);
             SeeingSharpTools.SafeDispose(ref m_solidBrushBackground);
             SeeingSharpTools.SafeDispose(ref m_solidBrushForeground);
+        }
+
+        /// <summary>
+        /// Performs custom 2D rendering.
+        /// Be carefull: This method is called from the rendering thread!
+        /// </summary>
+        /// <param name="graphics">The graphics object used for drawing.</param>
+        protected override void Draw2D(Graphics2D graphics)
+        {
+            if (m_textFormat == null) { return; }
+
+            // Check for minimum screen size
+            var screenSize = graphics.ScreenSize;
+
+            if(screenSize.Width < 300f ||
+               screenSize.Height < 100f)
+            {
+                return;
+            }
+
+            // Draw the debug message on the upper right corner
+            var targetRect = new RectangleF(
+                screenSize.Width - 300f, 10f,
+                280f, 80f);
+            graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);
+            graphics.DrawText("! Debug-Mode !", m_textFormat, targetRect, m_solidBrushForeground);
         }
     }
 }

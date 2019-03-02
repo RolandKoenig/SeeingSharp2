@@ -183,7 +183,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat UInt = new PixelFormat(Format.R16G16B16A16_UInt);
 
             public static readonly PixelFormat UNorm = new PixelFormat(Format.R16G16B16A16_UNorm);
-            
         }
 
         public static class R32
@@ -195,7 +194,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat Typeless = new PixelFormat(Format.R32_Typeless);
 
             public static readonly PixelFormat UInt = new PixelFormat(Format.R32_UInt);
-            
         }
 
         public static class R32G32
@@ -207,7 +205,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat Typeless = new PixelFormat(Format.R32G32_Typeless);
 
             public static readonly PixelFormat UInt = new PixelFormat(Format.R32G32_UInt);
-            
         }
 
         public static class R32G32B32
@@ -219,7 +216,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat Typeless = new PixelFormat(Format.R32G32B32_Typeless);
 
             public static readonly PixelFormat UInt = new PixelFormat(Format.R32G32B32_UInt);
-            
         }
 
         public static class R32G32B32A32
@@ -231,7 +227,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat Typeless = new PixelFormat(Format.R32G32B32A32_Typeless);
 
             public static readonly PixelFormat UInt = new PixelFormat(Format.R32G32B32A32_UInt);
-            
         }
 
         public static class R8
@@ -245,7 +240,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat UInt = new PixelFormat(Format.R8_UInt);
 
             public static readonly PixelFormat UNorm = new PixelFormat(Format.R8_UNorm);
-            
         }
 
         public static class R8G8
@@ -259,7 +253,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat UInt = new PixelFormat(Format.R8G8_UInt);
 
             public static readonly PixelFormat UNorm = new PixelFormat(Format.R8G8_UNorm);
-            
         }
 
         public static class R8G8B8A8
@@ -275,7 +268,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public static readonly PixelFormat UNorm = new PixelFormat(Format.R8G8B8A8_UNorm);
 
             public static readonly PixelFormat UNormSRgb = new PixelFormat(Format.R8G8B8A8_UNorm_SRgb);
-            
         }
 
         public static implicit operator Format(PixelFormat from)

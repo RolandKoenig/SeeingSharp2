@@ -28,16 +28,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ObjectRenderParameters : Resource
     {
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
         // Resources
         private TypeSafeConstantBufferResource<CBPerObject> m_cbPerObject;
 
         /// <summary>
-        /// Does this object needs refreshing?
+        /// Initializes a new instance of the <see cref="ObjectRenderParameters" /> class.
         /// </summary>
-        internal bool NeedsRefresh;
+        internal ObjectRenderParameters()
+        {
+            NeedsRefresh = true;
+        }
+
+        /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerObject = resources.GetResourceAndEnsureLoaded(
+                KEY_CONSTANT_BUFFER,
+                () => new TypeSafeConstantBufferResource<CBPerObject>());
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerObject = null;
+
+            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
+        }
 
         /// <summary>
         /// Triggers unloading of this resource.
@@ -74,36 +94,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerObject = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<CBPerObject>());
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerObject = null;
-
-            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectRenderParameters" /> class.
-        /// </summary>
-        internal ObjectRenderParameters()
-        {
-            NeedsRefresh = true;
-        }
-
-        /// <summary>
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded => m_cbPerObject != null;
+
+        // Resource keys
+        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
+        /// <summary>
+        /// Does this object needs refreshing?
+        /// </summary>
+        internal bool NeedsRefresh;
     }
 }

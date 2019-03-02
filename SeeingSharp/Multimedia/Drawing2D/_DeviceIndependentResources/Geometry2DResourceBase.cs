@@ -61,6 +61,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return geometryThis.Compare(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;
         }
 
+        public abstract void Dispose();
+
         /// <summary>
         /// Gets the geometry object.
         /// </summary>
@@ -70,7 +72,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get;
         }
-
-        public abstract void Dispose();
     }
 }

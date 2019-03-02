@@ -28,8 +28,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SingleForcedColorMaterialResource : MaterialResource
     {
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
         // Static resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
@@ -42,6 +40,35 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Shader parameters
         private float m_fadeIntensity;
         private bool m_cbPerMaterialDataChanged;
+
+        /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            // Load all required shaders and constant buffers
+            m_vertexShader = resources.GetResourceAndEnsureLoaded(
+                RES_KEY_VERTEX_SHADER,
+                () => GraphicsHelper.GetVertexShaderResource(device, "Common", "SingleForcedColorVertexShader"));
+            m_pixelShader = resources.GetResourceAndEnsureLoaded(
+                RES_KEY_PIXEL_SHADER,
+                () => GraphicsHelper.GetPixelShaderResource(device, "Common", "SingleForcedColorPixelShader"));
+
+            m_cbPerMaterial = resources.GetResourceAndEnsureLoaded(
+                KEY_CONSTANT_BUFFER,
+                () => new TypeSafeConstantBufferResource<CBPerMaterial>());
+            m_cbPerMaterialDataChanged = true;
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_pixelShader = null;
+            m_vertexShader = null;
+            m_cbPerMaterial = null;
+        }
 
         /// <summary>
         /// Generates the requested input layout.
@@ -90,35 +117,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.VertexShader.SetConstantBuffer(3, m_cbPerMaterial.ConstantBuffer);
         }
 
-        /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            // Load all required shaders and constant buffers
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_VERTEX_SHADER,
-                () => GraphicsHelper.GetVertexShaderResource(device, "Common", "SingleForcedColorVertexShader"));
-            m_pixelShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_PIXEL_SHADER,
-                () => GraphicsHelper.GetPixelShaderResource(device, "Common", "SingleForcedColorPixelShader"));
-
-            m_cbPerMaterial = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<CBPerMaterial>());
-            m_cbPerMaterialDataChanged = true;
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_pixelShader = null;
-            m_vertexShader = null;
-            m_cbPerMaterial = null;
-        }
-
         public override bool IsLoaded =>
             m_vertexShader != null &&
             m_pixelShader != null;
@@ -135,5 +133,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
+
+        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

@@ -31,11 +31,24 @@ namespace SeeingSharp.Multimedia.Objects
     {
         // Configuration
         private NamedOrGenericKey m_resTexture;
-        
 
         // Device dependent resources
         private IndexBasedDynamicCollection<TexturePainterHelper> m_texturePainterHelpers;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FullscreenTextureObject"/> class.
+        /// </summary>
+        /// <param name="texture">The texture.</param>
+        public FullscreenTextureObject(NamedOrGenericKey texture)
+        {
+            m_resTexture = texture;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
+            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
+
+            m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
+        }
 
         /// <summary>
         /// Loads all resources of the object.
@@ -58,6 +71,21 @@ namespace SeeingSharp.Multimedia.Objects
         public override bool IsLoaded(EngineDevice device)
         {
             return m_texturePainterHelpers.HasObjectAt(device.DeviceIndex);
+        }
+
+        /// <summary>
+        /// Unloads all resources of the object.
+        /// </summary>
+        public override void UnloadResources()
+        {
+            base.UnloadResources();
+
+            foreach(var actHelper in m_texturePainterHelpers)
+            {
+                actHelper.UnloadResources();
+            }
+
+            m_texturePainterHelpers.Clear();
         }
 
         /// <summary>
@@ -125,36 +153,6 @@ namespace SeeingSharp.Multimedia.Objects
                 // Render the object
                 actHelper.RenderPlain(renderState);
             }
-        }
-
-        /// <summary>
-        /// Unloads all resources of the object.
-        /// </summary>
-        public override void UnloadResources()
-        {
-            base.UnloadResources();
-
-            foreach(var actHelper in m_texturePainterHelpers)
-            {
-                actHelper.UnloadResources();
-            }
-
-            m_texturePainterHelpers.Clear();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FullscreenTextureObject"/> class.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        public FullscreenTextureObject(NamedOrGenericKey texture)
-        {
-            m_resTexture = texture;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
-            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
-
-            m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
         }
 
         public float AccentuationFactor { get; set; }

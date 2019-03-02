@@ -28,6 +28,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
 {
     public class DirectionalBlurEffectResource : EffectResource
     {
+        public DirectionalBlurEffectResource(IImage sourceImage)
+            : base(sourceImage)
+        {
+            StandardDeviation = 1f;
+            Angle = 0f;
+        }
+
         /// <summary>
         /// Builds the effect.
         /// </summary>
@@ -43,13 +50,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             };
 
             return dirBlurEffect;
-        }
-
-        public DirectionalBlurEffectResource(IImage sourceImage)
-            : base(sourceImage)
-        {
-            StandardDeviation = 1f;
-            Angle = 0f;
         }
 
         public float Angle

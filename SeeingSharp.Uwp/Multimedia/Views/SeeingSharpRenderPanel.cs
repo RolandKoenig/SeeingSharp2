@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,6 +45,20 @@ namespace SeeingSharp.Multimedia.Views
         public static readonly DependencyProperty DrawingLayer2DProperty =
             DependencyProperty.Register("DrawingLayer2D", typeof(Custom2DDrawingLayer), typeof(SeeingSharpRenderPanel), new PropertyMetadata(null, OnPropertyChanged));
 
+        private SeeingSharpPanelPainter m_painter;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
+        /// </summary>
+        public SeeingSharpRenderPanel()
+        {
+            m_painter = new SeeingSharpPanelPainter(this);
+            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
+            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+        }
+
         /// <summary>
         /// Called when one of the dependency properties has changed.
         /// </summary>
@@ -64,17 +79,6 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        /// <summary>
-        /// Gets or sets the currently applied scene.
-        /// </summary>
-        public Scene Scene
-        {
-            get => (Scene)GetValue(SceneProperty);
-            set => SetValue(SceneProperty, value);
-        }
-
-        private SeeingSharpPanelPainter m_painter;
-
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
@@ -86,13 +90,12 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
+        /// Gets or sets the currently applied scene.
         /// </summary>
-        public SeeingSharpRenderPanel()
+        public Scene Scene
         {
-            m_painter = new SeeingSharpPanelPainter(this);
-            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
-            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+            get => (Scene)GetValue(SceneProperty);
+            set => SetValue(SceneProperty, value);
         }
 
         /// <summary>
@@ -104,8 +107,6 @@ namespace SeeingSharp.Multimedia.Views
         /// Does the target control have focus?
         /// </summary>
         public bool Focused => ((IInputEnabledView)m_painter).Focused;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Discard rendering?

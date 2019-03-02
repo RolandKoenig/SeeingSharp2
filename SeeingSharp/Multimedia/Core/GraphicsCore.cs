@@ -50,6 +50,9 @@ namespace SeeingSharp.Multimedia.Core
         // Singleton instance
         private static GraphicsCore s_current;
 
+        // Members for threading
+        private static Task m_defaultInitTask;
+
         // Hardware 
         private EngineFactory m_engineFactory;
         private List<EngineDevice> m_devices;
@@ -60,33 +63,10 @@ namespace SeeingSharp.Multimedia.Core
         private FactoryHandlerWIC m_factoryHandlerWIC;
         private FactoryHandlerD2D m_factoryHandlerD2D;
         private FactoryHandlerDWrite m_factoryHandlerDWrite;
-
-        // Members for threading
-        private static Task m_defaultInitTask;
         private Task m_mainLoopTask;
         private CancellationTokenSource m_mainLoopCancelTokenSource;
 
-        /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        internal D2D.Factory FactoryD2D;
-
-        /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        internal D2D.Factory2 FactoryD2D_2;
-
-        /// <summary>
-        /// Gets the DirectWrite factory object.
-        /// </summary>
-        internal DWrite.Factory FactoryDWrite;
-
-        /// <summary>
-        /// Gets the WIC factory object.
-        /// </summary>
-        internal ImagingFactory FactoryWIC;
-
-        public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCachedException
+        public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCatchedException
         {
             add
             {
@@ -106,28 +86,112 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        internal static void PublishInternalExceptionInfo(
-            Exception ex,
-            InternalExceptionLocation location)
+        static GraphicsCore()
         {
-            List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
-            lock(s_internalExListenersLock)
-            {
-                if(s_internalExListeners.Count > 0)
-                {
-                    handlers = new List<EventHandler<InternalCatchedExceptionEventArgs>>(
-                        s_internalExListeners);
-                }
-            }
+            s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
+            s_internalExListenersLock = new object();
 
-            foreach(var actEventHandler in handlers)
+            // Create the key generator for resource keys
+            ResourceKeyGenerator = new UniqueGenericKeyGenerator();
+        }
+
+        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
+        {
+            try
             {
+                // Upate RK.Common members
+                m_devices = new List<EngineDevice>();
+
+                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                {
+                    SyncContext = SynchronizationContext.Current
+                };
+
+                // <-- TODO
+                PerformanceCalculator.RunAsync(CancellationToken.None)
+                    .FireAndForget();
+
+                Configuration = new GraphicsCoreConfiguration
+                {
+                    DebugEnabled = loadSettings.DebugEnabled
+                };
+
+                // Create container object for all input handlers
+                InputHandlers = new InputHandlerFactory(loader);
+                ImportersAndExporters = new ImporterExporterRepository(loader);
+
+                // Try to load global api factories (mostly for 2D rendering / operations)
                 try
                 {
-                    actEventHandler(null, new InternalCatchedExceptionEventArgs(
-                        ex, location));
+                    if(s_throwDeviceInitError)
+                    {
+                        throw new SeeingSharpException("Simulated device load exception");
+                    }
+
+                    m_engineFactory = new EngineFactory(loadSettings);
+                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
+                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
+                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    m_initException = ex;
+
+                    m_devices.Clear();
+                    m_factoryHandlerWIC = null;
+                    m_factoryHandlerD2D = null;
+                    m_factoryHandlerDWrite = null;
+                    return;
+                }
+                FactoryD2D = m_factoryHandlerD2D.Factory2;
+                FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
+                FactoryDWrite = m_factoryHandlerDWrite.Factory;
+                FactoryWIC = m_factoryHandlerWIC.Factory;
+
+                // Create the object containing all hardware information
+                HardwareInfo = new EngineHardwareInfo();
+                var actIndex = 0;
+
+                foreach(var actAdapterInfo in HardwareInfo.Adapters)
+                {
+                    var actEngineDevice = new EngineDevice(
+                        loadSettings,
+                        loader,
+                        m_engineFactory,
+                        Configuration,
+                        actAdapterInfo.Adapter,
+                        actAdapterInfo.IsSoftwareAdapter);
+
+                    if(actEngineDevice.IsLoadedSuccessfully)
+                    {
+                        actEngineDevice.DeviceIndex = actIndex;
+                        actIndex++;
+
+                        m_devices.Add(actEngineDevice);
+                    }
+                }
+
+                m_defaultDevice = m_devices.FirstOrDefault();
+
+                // Start input gathering
+                InputGatherer = new InputGathererThread();
+                InputGatherer.Start();
+
+                // Start main loop
+                MainLoop = new EngineMainLoop(this);
+                if (m_devices.Count > 0)
+                {
+                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
+                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                }
+            }
+            catch (Exception ex2)
+            {
+                m_initException = ex2;
+
+                HardwareInfo = null;
+                m_devices.Clear();
+                Configuration = null;
             }
         }
 
@@ -247,18 +311,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Loads the GraphicsCore object.
-        /// </summary>
-        internal static void Load(SeeingSharpLoader loader)
-        {
-            if (s_current != null) { throw new SeeingSharpException("Graphics is already loaded!"); }
-
-            var newCore = new GraphicsCore(loader.LoadSettings, loader);
-            if (s_current != null) { throw new SeeingSharpException("Parallel loading of GraphicsCore detected!"); }
-            s_current = newCore;
-        }
-
-        /// <summary>
         /// Checks if there is any hardware device loaded.
         /// </summary>
         public bool IsAnyHardwareDeviceLoaded()
@@ -280,6 +332,51 @@ namespace SeeingSharp.Multimedia.Core
         public void SetDefaultDeviceToHardware()
         {
             m_defaultDevice = m_devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
+        }
+
+        /// <summary>
+        /// Gets the next generic resource key.
+        /// </summary>
+        public static NamedOrGenericKey GetNextGenericResourceKey()
+        {
+            return ResourceKeyGenerator.GetNextGeneric();
+        }
+
+        internal static void PublishInternalExceptionInfo(
+            Exception ex,
+            InternalExceptionLocation location)
+        {
+            List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
+            lock(s_internalExListenersLock)
+            {
+                if(s_internalExListeners.Count > 0)
+                {
+                    handlers = new List<EventHandler<InternalCatchedExceptionEventArgs>>(
+                        s_internalExListeners);
+                }
+            }
+
+            foreach(var actEventHandler in handlers)
+            {
+                try
+                {
+                    actEventHandler(null, new InternalCatchedExceptionEventArgs(
+                        ex, location));
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Loads the GraphicsCore object.
+        /// </summary>
+        internal static void Load(SeeingSharpLoader loader)
+        {
+            if (s_current != null) { throw new SeeingSharpException("Graphics is already loaded!"); }
+
+            var newCore = new GraphicsCore(loader.LoadSettings, loader);
+            if (s_current != null) { throw new SeeingSharpException("Parallel loading of GraphicsCore detected!"); }
+            s_current = newCore;
         }
 
         /// <summary>
@@ -309,123 +406,6 @@ namespace SeeingSharp.Multimedia.Core
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
             PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
-        }
-
-        /// <summary>
-        /// Gets the next generic resource key.
-        /// </summary>
-        public static NamedOrGenericKey GetNextGenericResourceKey()
-        {
-            return ResourceKeyGenerator.GetNextGeneric();
-        }
-
-        static GraphicsCore()
-        {
-            s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
-            s_internalExListenersLock = new object();
-
-            // Create the key generator for resource keys
-            ResourceKeyGenerator = new UniqueGenericKeyGenerator();
-        }
-
-        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
-        {
-            try
-            {
-                // Upate RK.Common members
-                m_devices = new List<EngineDevice>();
-
-                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
-                {
-                    SyncContext = SynchronizationContext.Current
-                };
-
-                // <-- TODO
-                PerformanceCalculator.RunAsync(CancellationToken.None)
-                    .FireAndForget();
-
-                Configuration = new GraphicsCoreConfiguration
-                {
-                    DebugEnabled = loadSettings.DebugEnabled
-                };
-
-                // Create container object for all input handlers
-                InputHandlers = new InputHandlerFactory(loader);
-                ImportersAndExporters = new ImporterExporterRepository(loader);
-
-                // Try to load global api factories (mostly for 2D rendering / operations)
-                try
-                {
-                    if(s_throwDeviceInitError)
-                    {
-                        throw new SeeingSharpException("Simulated device load exception");
-                    }
-
-                    m_engineFactory = new EngineFactory(loadSettings);
-                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
-                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
-                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
-                }
-                catch (Exception ex)
-                {
-                    m_initException = ex;
-
-                    m_devices.Clear();
-                    m_factoryHandlerWIC = null;
-                    m_factoryHandlerD2D = null;
-                    m_factoryHandlerDWrite = null;
-                    return;
-                }
-                FactoryD2D = m_factoryHandlerD2D.Factory2;
-                FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
-                FactoryDWrite = m_factoryHandlerDWrite.Factory;
-                FactoryWIC = m_factoryHandlerWIC.Factory;
-
-                // Create the object containing all hardware information
-                HardwareInfo = new EngineHardwareInfo();
-                var actIndex = 0;
-
-                foreach(var actAdapterInfo in HardwareInfo.Adapters)
-                {
-                    var actEngineDevice = new EngineDevice(
-                        loadSettings,
-                        loader,
-                        m_engineFactory,
-                        Configuration,
-                        actAdapterInfo.Adapter,
-                        actAdapterInfo.IsSoftwareAdapter);
-
-                    if(actEngineDevice.IsLoadedSuccessfully)
-                    {
-                        actEngineDevice.DeviceIndex = actIndex;
-                        actIndex++;
-
-                        m_devices.Add(actEngineDevice);
-                    }
-                }
-
-                m_defaultDevice = m_devices.FirstOrDefault();
-
-                // Start input gathering
-                InputGatherer = new InputGathererThread();
-                InputGatherer.Start();
-
-                // Start main loop
-                MainLoop = new EngineMainLoop(this);
-                if (m_devices.Count > 0)
-                {
-                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
-                }
-            }
-            catch (Exception ex2)
-            {
-                m_initException = ex2;
-
-                HardwareInfo = null;
-                m_devices.Clear();
-                Configuration = null;
-            }
         }
 
         /// <summary>
@@ -575,5 +555,25 @@ namespace SeeingSharp.Multimedia.Core
         public PerformanceAnalyzer PerformanceCalculator { get; }
 
         internal bool Force2DFallbackMethod { get; }
+
+        /// <summary>
+        /// Gets the Direct2D factory object.
+        /// </summary>
+        internal D2D.Factory FactoryD2D;
+
+        /// <summary>
+        /// Gets the Direct2D factory object.
+        /// </summary>
+        internal D2D.Factory2 FactoryD2D_2;
+
+        /// <summary>
+        /// Gets the DirectWrite factory object.
+        /// </summary>
+        internal DWrite.Factory FactoryDWrite;
+
+        /// <summary>
+        /// Gets the WIC factory object.
+        /// </summary>
+        internal ImagingFactory FactoryWIC;
     }
 }

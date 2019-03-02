@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 
@@ -30,13 +31,11 @@ namespace SeeingSharp.Multimedia.Input
     public abstract class InputStateBase
     {
         /// <summary>
-        /// Copies this object and then resets it
-        /// in preparation of the next update pass.
-        /// Called by update-render loop.
+        /// Initializes a new instance of the <see cref="InputStateBase"/> class.
         /// </summary>
-        internal void CopyAndResetForUpdatePass(InputStateBase targetState)
+        protected InputStateBase()
         {
-            CopyAndResetForUpdatePassInternal(targetState);
+            CurrentType = GetType();
         }
 
         /// <summary>
@@ -47,11 +46,13 @@ namespace SeeingSharp.Multimedia.Input
         protected abstract void CopyAndResetForUpdatePassInternal(InputStateBase targetState);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InputStateBase"/> class.
+        /// Copies this object and then resets it
+        /// in preparation of the next update pass.
+        /// Called by update-render loop.
         /// </summary>
-        protected InputStateBase()
+        internal void CopyAndResetForUpdatePass(InputStateBase targetState)
         {
-            CurrentType = GetType();
+            CopyAndResetForUpdatePassInternal(targetState);
         }
 
         /// <summary>

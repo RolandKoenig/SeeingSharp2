@@ -41,6 +41,45 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_isInUpdateBeside;
 
         /// <summary>
+        /// Creates a new SceneLayer object for the given scene.
+        /// </summary>
+        /// <param name="name">The name of the layer.</param>
+        /// <param name="parentScene">Parent scene.</param>
+        internal SceneLayer(string name, Scene parentScene)
+        {
+            Name = name;
+            Scene = parentScene;
+
+            //Create list holding all information for individual views
+            m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
+
+            //Create standard collections
+            ObjectsInternal = new List<SceneObject>();
+            Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
+
+            //Create specialized collections
+            SpacialObjects = new List<SceneSpacialObject>(1024);
+            m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
+            m_sceneObjectsNotStatic = new List<SceneObject>(1024);
+            m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
+
+            AllowPick = true;
+            IsRenderingEnabled = true;
+            ClearDepthBufferAfterRendering = false;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return "Layer " + Name;
+        }
+
+        /// <summary>
         /// Registers the given view on this layer.
         /// </summary>
         internal void RegisterView(int viewIndex, ViewInformation viewInformation, ResourceDictionary resourceDictionary)
@@ -83,17 +122,6 @@ namespace SeeingSharp.Multimedia.Core
 
             // Remote the subset
             m_viewSubsets.RemoveObject(viewIndex);
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return "Layer " + Name;
         }
 
         /// <summary>
@@ -418,34 +446,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates a new SceneLayer object for the given scene.
-        /// </summary>
-        /// <param name="name">The name of the layer.</param>
-        /// <param name="parentScene">Parent scene.</param>
-        internal SceneLayer(string name, Scene parentScene)
-        {
-            Name = name;
-            Scene = parentScene;
-
-            //Create list holding all information for individual views
-            m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
-
-            //Create standard collections
-            ObjectsInternal = new List<SceneObject>();
-            Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
-
-            //Create specialized collections
-            SpacialObjects = new List<SceneSpacialObject>(1024);
-            m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
-            m_sceneObjectsNotStatic = new List<SceneObject>(1024);
-            m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
-
-            AllowPick = true;
-            IsRenderingEnabled = true;
-            ClearDepthBufferAfterRendering = false;
-        }
-
-        /// <summary>
         /// Gets the name of this layer.
         /// </summary>
         public string Name { get; }
@@ -518,6 +518,11 @@ namespace SeeingSharp.Multimedia.Core
         public ReadOnlyCollection<SceneObject> Objects { get; }
 
         /// <summary>
+        /// Gets total count of objects within the scene.
+        /// </summary>
+        public int CountObjects => ObjectsInternal.Count;
+
+        /// <summary>
         /// Gets a list containing all scene objects (internal accessor to the complete list).
         /// </summary>
         internal List<SceneObject> ObjectsInternal { get; }
@@ -526,10 +531,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets a list containing all spacial objects.
         /// </summary>
         internal List<SceneSpacialObject> SpacialObjects { get; }
-
-        /// <summary>
-        /// Gets total count of objects within the scene.
-        /// </summary>
-        public int CountObjects => ObjectsInternal.Count;
     }
 }

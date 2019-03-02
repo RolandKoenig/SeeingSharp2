@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -39,6 +40,19 @@ namespace SeeingSharp.Multimedia.Objects
         // All model data
         private int m_importID;
         private ImportOptions m_importOptions;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
+        /// </summary>
+        public ImportedModelContainer(ImportOptions importOptions)
+        {
+            m_importOptions = importOptions;
+            Objects = new List<SceneObject>();
+            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
+            ImportedResources = new List<ImportedResourceInfo>();
+
+            m_importID = Interlocked.Increment(ref s_maxContainerID);
+        }
 
         /// <summary>
         /// Creates and adds the root for all imported scene objects.
@@ -88,19 +102,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             return new NamedOrGenericKey(
                 "Imported." + m_importID + "." + resourceClass + "." + resourceID);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
-        /// </summary>
-        public ImportedModelContainer(ImportOptions importOptions)
-        {
-            m_importOptions = importOptions;
-            Objects = new List<SceneObject>();
-            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            ImportedResources = new List<ImportedResourceInfo>();
-
-            m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
 
         /// <summary>

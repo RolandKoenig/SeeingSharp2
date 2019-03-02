@@ -36,6 +36,15 @@ namespace SeeingSharp.Multimedia.Objects
         private RenderState m_renderState;
         private Lazy<Matrix> m_worldViewPojCreator;
 
+        internal WirePainter(RenderState renderState, LineRenderResources renderResources)
+        {
+            m_isValid = true;
+            m_renderResources = renderResources;
+            m_renderState = renderState;
+
+            m_worldViewPojCreator = new Lazy<Matrix>(() => Matrix.Transpose(renderState.ViewProj));
+        }
+
         public void DrawLine(Vector3 start, Vector3 destination)
         {
             DrawLine(start, destination, Color4.Black);
@@ -82,15 +91,6 @@ namespace SeeingSharp.Multimedia.Objects
         internal void SetInvalid()
         {
             m_isValid = false;
-        }
-
-        internal WirePainter(RenderState renderState, LineRenderResources renderResources)
-        {
-            m_isValid = true;
-            m_renderResources = renderResources;
-            m_renderState = renderState;
-
-            m_worldViewPojCreator = new Lazy<Matrix>(() => Matrix.Transpose(renderState.ViewProj));
         }
     }
 }

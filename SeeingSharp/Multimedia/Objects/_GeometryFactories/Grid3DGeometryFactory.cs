@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Util;
 using SharpDX;
 
@@ -26,6 +27,28 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class Grid3DGeometryFactory : GeometryFactory
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Grid3DGeometryFactory" /> class.
+        /// </summary>
+        public Grid3DGeometryFactory()
+        {
+            GenerateGround = true;
+            LineSmallDevider = 25f;
+            LineBigDevider = 100f;
+            TileWidth = 1f;
+            TilesX = 10;
+            TilesZ = 10;
+            GroupTileCount = 5;
+            BuildBackFaces = true;
+
+            HighlightXZLines = false;
+            ZLineHighlightColor = Color4Ex.BlueColor;
+            XLineHighlightColor = Color4Ex.GreenColor;
+
+            GroundColor = Color4Ex.LightSteelBlue;
+            LineColor = Color4Ex.LightGray;
+        }
+
         /// <summary>
         /// Builds the structures.
         /// </summary>
@@ -139,28 +162,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Return all generated structures
             return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Grid3DGeometryFactory" /> class.
-        /// </summary>
-        public Grid3DGeometryFactory()
-        {
-            GenerateGround = true;
-            LineSmallDevider = 25f;
-            LineBigDevider = 100f;
-            TileWidth = 1f;
-            TilesX = 10;
-            TilesZ = 10;
-            GroupTileCount = 5;
-            BuildBackFaces = true;
-
-            HighlightXZLines = false;
-            ZLineHighlightColor = Color4Ex.BlueColor;
-            XLineHighlightColor = Color4Ex.GreenColor;
-
-            GroundColor = Color4Ex.LightSteelBlue;
-            LineColor = Color4Ex.LightGray;
         }
 
         public NamedOrGenericKey LineMaterial

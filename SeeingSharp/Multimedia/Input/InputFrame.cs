@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
@@ -33,6 +34,32 @@ namespace SeeingSharp.Multimedia.Input
         private TimeSpan m_frameDuration;
         private List<InputStateBase> m_inputStates;
         private List<InputStateBase> m_recoveredStates;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputFrame"/> class.
+        /// </summary>
+        /// <param name="expectedStateCount">The expected state count.</param>
+        /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
+        internal InputFrame(int expectedStateCount, TimeSpan frameDuration)
+        {
+            Reset(expectedStateCount, frameDuration);
+        }
+
+        /// <summary>
+        /// Gets all input state for the given view.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to get all input states.</param>
+        public IEnumerable<InputStateBase> GetInputStates(ViewInformation viewInfo)
+        {
+            var inputStateCount = m_inputStates.Count;
+            for (var loop = 0; loop < inputStateCount; loop++)
+            {
+                if (m_inputStates[loop].RelatedView == viewInfo)
+                {
+                    yield return m_inputStates[loop];
+                }
+            }
+        }
 
         /// <summary>
         /// Resets this InputFrame to use this object more than once.
@@ -57,22 +84,6 @@ namespace SeeingSharp.Multimedia.Input
             DefaultMouseOrPointer = MouseOrPointerState.Dummy;
             DefaultGamepad = GamepadState.Dummy;
             DefaultKeyboard = KeyboardState.Dummy;
-        }
-
-        /// <summary>
-        /// Gets all input state for the given view.
-        /// </summary>
-        /// <param name="viewInfo">The view for which to get all input states.</param>
-        public IEnumerable<InputStateBase> GetInputStates(ViewInformation viewInfo)
-        {
-            var inputStateCount = m_inputStates.Count;
-            for (var loop = 0; loop < inputStateCount; loop++)
-            {
-                if (m_inputStates[loop].RelatedView == viewInfo)
-                {
-                    yield return m_inputStates[loop];
-                }
-            }
         }
 
         internal void AddCopyOfState(InputStateBase inputState, ViewInformation viewInfo)
@@ -136,16 +147,6 @@ namespace SeeingSharp.Multimedia.Input
                     DefaultKeyboard = keyboardState;
                 }
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InputFrame"/> class.
-        /// </summary>
-        /// <param name="expectedStateCount">The expected state count.</param>
-        /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
-        internal InputFrame(int expectedStateCount, TimeSpan frameDuration)
-        {
-            Reset(expectedStateCount, frameDuration);
         }
 
         /// <summary>

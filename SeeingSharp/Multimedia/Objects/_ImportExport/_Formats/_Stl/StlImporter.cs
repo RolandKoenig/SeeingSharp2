@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -56,6 +57,62 @@ namespace SeeingSharp.Multimedia.Objects
 
         // Just for caching
         private List<Vector3> m_cachedPoints = new List<Vector3>(3);
+
+        /// <summary>
+        /// Imports a model from the given file.
+        /// </summary>
+        /// <param name="importOptions">Some configuration for the importer.</param>
+        /// <param name="sourceFile">The source file to be loaded.</param>
+        public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
+        {
+            // Get import options
+            var stlImportOptions = importOptions as StlImportOptions;
+
+            if(stlImportOptions == null)
+            {
+                throw new SeeingSharpException("Invalid import options for StlImporter!");
+            }
+
+            ImportedModelContainer result = null;
+
+            try
+            {
+                // Try to read in BINARY format first
+                using (var inStream = sourceFile.OpenInputStream())
+                {
+                    result = TryReadBinary(inStream, stlImportOptions);
+                }
+
+                // Read in ASCII format (if binary did not work)
+                if (result == null)
+                {
+                    using (var inStream = sourceFile.OpenInputStream())
+                    {
+                        result = TryReadAscii(inStream, stlImportOptions);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new SeeingSharpException($"Unable to read Stl file {sourceFile}: {ex.Message}!", ex);
+            }
+
+            // Handle empty result (unknown format error)
+            if (result == null)
+            {
+                throw new SeeingSharpException($"Unable to read Stl file {sourceFile}: Unrecognized format error!");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a default import options object for this importer.
+        /// </summary>
+        public ImportOptions CreateDefaultImportOptions()
+        {
+            return new StlImportOptions();
+        }
 
         /// <summary>
         /// Parses the ID and values from the specified line.
@@ -447,62 +504,6 @@ namespace SeeingSharp.Multimedia.Objects
 
                 return result;
             }
-        }
-
-        /// <summary>
-        /// Imports a model from the given file.
-        /// </summary>
-        /// <param name="importOptions">Some configuration for the importer.</param>
-        /// <param name="sourceFile">The source file to be loaded.</param>
-        public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
-        {
-            // Get import options
-            var stlImportOptions = importOptions as StlImportOptions;
-
-            if(stlImportOptions == null)
-            {
-                throw new SeeingSharpException("Invalid import options for StlImporter!");
-            }
-
-            ImportedModelContainer result = null;
-
-            try
-            {
-                // Try to read in BINARY format first
-                using (var inStream = sourceFile.OpenInputStream())
-                {
-                    result = TryReadBinary(inStream, stlImportOptions);
-                }
-
-                // Read in ASCII format (if binary did not work)
-                if (result == null)
-                {
-                    using (var inStream = sourceFile.OpenInputStream())
-                    {
-                        result = TryReadAscii(inStream, stlImportOptions);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new SeeingSharpException($"Unable to read Stl file {sourceFile}: {ex.Message}!", ex);
-            }
-
-            // Handle empty result (unknown format error)
-            if (result == null)
-            {
-                throw new SeeingSharpException($"Unable to read Stl file {sourceFile}: Unrecognized format error!");
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a default import options object for this importer.
-        /// </summary>
-        public ImportOptions CreateDefaultImportOptions()
-        {
-            return new StlImportOptions();
         }
     }
 }

@@ -54,9 +54,42 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private double m_dpiX;
         private double m_dpyY;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
+        /// </summary>
+        /// <param name="resource">The resource from w.</param>
+        /// <param name="frameCountX">Total count of frames in x direction.</param>
+        /// <param name="frameCountY">Total count of frames in y direction.</param>
+        public StandardBitmapResource(ResourceLink resource, int frameCountX = 1, int frameCountY = 1)
+        {
+            frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
+            frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
+
+            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            m_resourceLink = resource;
+
+            // Set default values (modified after first load)
+            m_firstLoadDone = false;
+            m_pixelWidth = 0;
+            m_pixelHeight = 0;
+            m_dpiX = 96.0;
+            m_dpyY = 96.0;
+            m_framesX = frameCountX;
+            m_framesY = frameCountY;
+            m_totalFrameCount = m_framesX * m_framesY;
+        }
+
         public override string ToString()
         {
             return $"Bitmap ({m_pixelWidth}x{m_pixelHeight} pixels)";
+        }
+
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
         }
 
         /// <summary>
@@ -111,14 +144,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Disposes this object.
-        /// </summary>
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-        /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to unload the resource.</param>
@@ -131,31 +156,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 SeeingSharpTools.DisposeObject(brush);
                 m_loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
-        /// </summary>
-        /// <param name="resource">The resource from w.</param>
-        /// <param name="frameCountX">Total count of frames in x direction.</param>
-        /// <param name="frameCountY">Total count of frames in y direction.</param>
-        public StandardBitmapResource(ResourceLink resource, int frameCountX = 1, int frameCountY = 1)
-        {
-            frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
-            frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
-
-            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
-            m_resourceLink = resource;
-
-            // Set default values (modified after first load)
-            m_firstLoadDone = false;
-            m_pixelWidth = 0;
-            m_pixelHeight = 0;
-            m_dpiX = 96.0;
-            m_dpyY = 96.0;
-            m_framesX = frameCountX;
-            m_framesY = frameCountY;
-            m_totalFrameCount = m_framesX * m_framesY;
         }
 
         /// <summary>

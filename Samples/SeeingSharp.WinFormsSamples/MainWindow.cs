@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,6 +39,16 @@ namespace SeeingSharp.WinFormsSamples
         private List<ListView> m_generatedListViews;
         private bool m_isChangingSample;
         private List<ToolStripItem> m_sampleCommandToolbarItems;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            m_generatedListViews = new List<ListView>();
+            m_sampleCommandToolbarItems = new List<ToolStripItem>();
+
+            UpdateWindowState();
+        }
 
         protected override async void OnLoad(EventArgs e)
         {
@@ -335,16 +346,6 @@ namespace SeeingSharp.WinFormsSamples
             if(!(changeButton.Tag is EngineDevice device)) { return; }
 
             m_ctrlRenderPanel.RenderLoop.SetRenderingDevice(device);
-        }
-
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            m_generatedListViews = new List<ListView>();
-            m_sampleCommandToolbarItems = new List<ToolStripItem>();
-
-            UpdateWindowState();
         }
     }
 }

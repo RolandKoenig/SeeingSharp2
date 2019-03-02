@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Windows.Input;
 
@@ -30,6 +31,10 @@ namespace SeeingSharp.SampleContainer.Util
 
         private Action m_executeAction;
 
+#pragma warning disable
+        public event EventHandler CanExecuteChanged;
+#pragma warning restore
+
         public DelegateCommand(Action executeAction)
         {
             m_executeAction = executeAction;
@@ -40,10 +45,6 @@ namespace SeeingSharp.SampleContainer.Util
             m_executeAction = executeAction;
             m_canExecuteAction = canExecuteAction;
         }
-
-#pragma warning disable
-        public event EventHandler CanExecuteChanged;
-#pragma warning restore
 
         public bool CanExecute(object parameter)
         {

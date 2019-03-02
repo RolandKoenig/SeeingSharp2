@@ -46,6 +46,34 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private DWrite.ReadingDirection m_readingDirection;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
+        /// </summary>
+        /// <param name="fontFamilyName">Name of the font family.</param>
+        /// <param name="fontSize">Size of the font.</param>
+        /// <param name="fontWeight">The weight of the font.</param>
+        /// <param name="fontStretch">The stretch parameter for the font.</param>
+        /// <param name="fontStyle">The style parameter for the font.</param>
+        public TextFormatResource(
+            string fontFamilyName, float fontSize,
+            FontWeight fontWeight = FontWeight.Normal,
+            FontStyle fontStyle = FontStyle.Normal,
+            FontStretch fontStretch = FontStretch.Normal)
+        {
+            m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
+            m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
+            m_fontFamilyName = fontFamilyName;
+            m_fontSize = fontSize;
+            m_fontWeight = (DWrite.FontWeight)fontWeight;
+            m_fontStyle = (DWrite.FontStyle)fontStyle;
+            m_fontStretch = (DWrite.FontStretch)fontStretch;
+
+            m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
+            m_textAlignment = DWrite.TextAlignment.Leading;
+            m_wordWrapping = DWrite.WordWrapping.Wrap;
+            m_readingDirection = DWrite.ReadingDirection.LeftToRight;
+        }
+
+        /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to unload the resource.</param>
@@ -98,34 +126,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
-        /// </summary>
-        /// <param name="fontFamilyName">Name of the font family.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        /// <param name="fontWeight">The weight of the font.</param>
-        /// <param name="fontStretch">The stretch parameter for the font.</param>
-        /// <param name="fontStyle">The style parameter for the font.</param>
-        public TextFormatResource(
-            string fontFamilyName, float fontSize,
-            FontWeight fontWeight = FontWeight.Normal,
-            FontStyle fontStyle = FontStyle.Normal,
-            FontStretch fontStretch = FontStretch.Normal)
-        {
-            m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
-            m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
-            m_fontFamilyName = fontFamilyName;
-            m_fontSize = fontSize;
-            m_fontWeight = (DWrite.FontWeight)fontWeight;
-            m_fontStyle = (DWrite.FontStyle)fontStyle;
-            m_fontStretch = (DWrite.FontStretch)fontStretch;
-
-            m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
-            m_textAlignment = DWrite.TextAlignment.Leading;
-            m_wordWrapping = DWrite.WordWrapping.Wrap;
-            m_readingDirection = DWrite.ReadingDirection.LeftToRight;
         }
 
         /// <summary>

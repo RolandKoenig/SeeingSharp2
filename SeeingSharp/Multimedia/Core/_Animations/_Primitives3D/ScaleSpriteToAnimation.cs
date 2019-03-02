@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -33,6 +34,26 @@ namespace SeeingSharp.Multimedia.Core
         // Runtime
         private float m_startScaling;
         private float m_moveScaling;
+
+        /// <summary>
+        /// Initialize a new Instance of the <see cref="ScaleSpriteToAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetScaling">The target scaling factor.</param>
+        /// <param name="duration">The duration.</param>
+        /// <exception cref="System.Exception">Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!</exception>
+        public ScaleSpriteToAnimation(IAnimatableObjectSprite targetObject, float targetScaling, TimeSpan duration)
+            : base(targetObject, AnimationType.FixedTime, duration)
+        {
+            m_targetObject = targetObject;
+            m_duration = duration;
+            m_targetScaling = targetScaling;
+
+            if (targetScaling < 0f)
+            {
+                throw new Exception("Scaling value can be less than 0!");
+            }
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -62,26 +83,6 @@ namespace SeeingSharp.Multimedia.Core
 
             m_moveScaling = 0;
             m_startScaling = 1;
-        }
-
-        /// <summary>
-        /// Initialize a new Instance of the <see cref="ScaleSpriteToAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetScaling">The target scaling factor.</param>
-        /// <param name="duration">The duration.</param>
-        /// <exception cref="System.Exception">Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!</exception>
-        public ScaleSpriteToAnimation(IAnimatableObjectSprite targetObject, float targetScaling, TimeSpan duration)
-            : base(targetObject, AnimationType.FixedTime, duration)
-        {
-            m_targetObject = targetObject;
-            m_duration = duration;
-            m_targetScaling = targetScaling;
-
-            if (targetScaling < 0f)
-            {
-                throw new Exception("Scaling value can be less than 0!");
-            }
         }
     }
 }

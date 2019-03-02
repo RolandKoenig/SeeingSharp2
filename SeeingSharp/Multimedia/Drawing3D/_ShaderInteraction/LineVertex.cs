@@ -21,6 +21,7 @@
 */
 
 //Some namespace mappings
+
 using System.Runtime.InteropServices;
 using SharpDX;
 using SharpDX.DXGI;

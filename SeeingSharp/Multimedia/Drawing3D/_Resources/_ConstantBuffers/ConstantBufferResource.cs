@@ -33,19 +33,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.Buffer m_constantBuffer;
 
         /// <summary>
-        /// Loads the resource.
+        /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
         /// </summary>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        public ConstantBufferResource(int bufferSize)
         {
-            m_constantBuffer = CreateConstantBuffer(device);
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_constantBuffer = SeeingSharpTools.DisposeObject(m_constantBuffer);
+            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
+            BufferSize = bufferSize;
         }
 
         /// <summary>
@@ -64,12 +57,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
+        /// Loads the resource.
         /// </summary>
-        public ConstantBufferResource(int bufferSize)
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
-            BufferSize = bufferSize;
+            m_constantBuffer = CreateConstantBuffer(device);
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_constantBuffer = SeeingSharpTools.DisposeObject(m_constantBuffer);
         }
 
         /// <summary>
@@ -78,13 +78,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override bool IsLoaded => m_constantBuffer != null;
 
         /// <summary>
-        /// Gets the buffer object.
-        /// </summary>
-        internal D3D11.Buffer ConstantBuffer => m_constantBuffer;
-
-        /// <summary>
         /// Gets the total size of the constant buffer.
         /// </summary>
         public int BufferSize { get; }
+
+        /// <summary>
+        /// Gets the buffer object.
+        /// </summary>
+        internal D3D11.Buffer ConstantBuffer => m_constantBuffer;
     }
 }

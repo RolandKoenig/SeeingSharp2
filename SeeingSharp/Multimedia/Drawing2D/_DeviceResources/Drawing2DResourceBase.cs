@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -29,17 +30,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // Helper flags
         private bool m_isDisposed;
-
-        /// <summary>
-        /// Unloads all resources loaded on the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to unload the resource.</param>
-        internal abstract void UnloadResources(EngineDevice engineDevice);
-
-        /// <summary>
-        /// Is this object disposed?
-        /// </summary>
-        public bool IsDisposed => m_isDisposed;
 
         /// <summary>
         /// Disposes this object.
@@ -53,5 +43,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 GraphicsCore.Current.MainLoop.RegisterForUnload(this);
             }
         }
+
+        /// <summary>
+        /// Unloads all resources loaded on the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to unload the resource.</param>
+        internal abstract void UnloadResources(EngineDevice engineDevice);
+
+        /// <summary>
+        /// Is this object disposed?
+        /// </summary>
+        public bool IsDisposed => m_isDisposed;
     }
 }

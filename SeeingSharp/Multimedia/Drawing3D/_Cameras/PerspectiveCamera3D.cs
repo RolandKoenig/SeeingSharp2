@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -29,6 +30,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Configuration
         private float m_fov = (float)Math.PI / 4.0f;
         private float m_aspectRatio;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
+        /// </summary>
+        public PerspectiveCamera3D()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
+        /// </summary>
+        /// <param name="width">Width of the renderwindow.</param>
+        /// <param name="height">Height of the renderwindow.</param>
+        public PerspectiveCamera3D(int width, int height)
+            : base(width, height)
+        {
+
+        }
 
         /// <summary>
         /// Calculates the view and projection matrix for this camera.
@@ -54,25 +74,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 m_fov,
                 m_aspectRatio,
                 zNear, zFar, out projMatrix);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
-        /// </summary>
-        public PerspectiveCamera3D()
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
-        /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public PerspectiveCamera3D(int width, int height)
-            : base(width, height)
-        {
-
         }
 
         /// <summary>

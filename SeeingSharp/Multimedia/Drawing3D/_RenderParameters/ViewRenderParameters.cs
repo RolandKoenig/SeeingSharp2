@@ -28,12 +28,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ViewRenderParameters : Resource
     {
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
         // Resources
         private TypeSafeConstantBufferResource<CBPerView> m_cbPerView;
         private PostprocessEffectResource m_postprocessEffect;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
+        /// </summary>
+        internal ViewRenderParameters()
+        {
+
+        }
+
+        /// <summary>
+        /// Loads the resource.
+        /// </summary>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerView = resources.GetResourceAndEnsureLoaded(
+                KEY_CONSTANT_BUFFER,
+                () => new TypeSafeConstantBufferResource<CBPerView>());
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_cbPerView = null;
+            m_postprocessEffect = null;
+        }
 
         /// <summary>
         /// Gets the postrocess effect with the given key.
@@ -88,40 +112,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Loads the resource.
+        /// Is the resource loaded?
         /// </summary>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerView = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<CBPerView>());
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_cbPerView = null;
-            m_postprocessEffect = null;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
-        /// </summary>
-        internal ViewRenderParameters()
-        {
-
-        }
+        public override bool IsLoaded => m_cbPerView != null;
 
         /// <summary>
         /// Gets or sets the key of the postprocess effect.
         /// </summary>
         internal NamedOrGenericKey PostprocessEffectKey { get; set; }
 
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => m_cbPerView != null;
+        // Resource keys
+        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -35,6 +36,16 @@ namespace SeeingSharp.Multimedia.Objects
         private Dictionary<NamedOrGenericKey, ExportMaterialInfo> m_dicExportMaterial;
         private Dictionary<SceneObject, object> m_dicOriginalObjects;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
+        /// </summary>
+        internal ExportModelContainer()
+        {
+            m_dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
+            m_dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
+            m_dicOriginalObjects = new Dictionary<SceneObject, object>();
+        }
+
         public void AddExportGeometry(ExportGeometryInfo exportGeometry)
         {
             exportGeometry.EnsureNotNull(nameof(exportGeometry));
@@ -47,18 +58,6 @@ namespace SeeingSharp.Multimedia.Objects
             exportMaterial.EnsureNotNull(nameof(exportMaterial));
 
             m_dicExportMaterial[exportMaterial.Key] = exportMaterial;
-        }
-
-        /// <summary>
-        /// Registers the given original object.
-        /// Original objects are hold to be able to check whether parents are also exported.
-        /// </summary>
-        /// <param name="sceneObject">The scene object.</param>
-        internal void RegisterOriginalObject(SceneObject sceneObject)
-        {
-            sceneObject.EnsureNotNull(nameof(sceneObject));
-
-            m_dicOriginalObjects[sceneObject] = null;
         }
 
         public bool ContainsExportGeometry(NamedOrGenericKey key)
@@ -84,13 +83,15 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
+        /// Registers the given original object.
+        /// Original objects are hold to be able to check whether parents are also exported.
         /// </summary>
-        internal ExportModelContainer()
+        /// <param name="sceneObject">The scene object.</param>
+        internal void RegisterOriginalObject(SceneObject sceneObject)
         {
-            m_dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
-            m_dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
-            m_dicOriginalObjects = new Dictionary<SceneObject, object>();
+            sceneObject.EnsureNotNull(nameof(sceneObject));
+
+            m_dicOriginalObjects[sceneObject] = null;
         }
     }
 }

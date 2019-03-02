@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -36,6 +37,53 @@ namespace SeeingSharp.Multimedia.Objects
         private List<IModelImporter> m_importers;
         private Dictionary<string, IModelImporter> m_importersByFileType;
         private Dictionary<string, SupportedFileFormatAttribute> m_infoByFileType;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ImporterExporterRepository"/> class from being created.
+        /// </summary>
+        internal ImporterExporterRepository(SeeingSharpLoader loader)
+        {
+            m_importers =
+                (from actExtension in loader.Extensions
+                 from actImporter in actExtension.CreateModelImporters()
+                 select actImporter).ToList();
+            m_exporters =
+                (from actExtension in loader.Extensions
+                 from actExporter in actExtension.CreateModelExporters()
+                 select actExporter).ToList();
+
+            m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
+
+            // Get format support on each importer
+            m_importersByFileType = new Dictionary<string, IModelImporter>();
+
+            foreach(var actImporter in m_importers)
+            {
+                foreach(var actSupportedFile in actImporter
+                    .GetType().GetTypeInfo()
+                    .GetCustomAttributes<SupportedFileFormatAttribute>())
+                {
+                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
+                    m_importersByFileType[actFileFormat] = actImporter;
+                    m_infoByFileType[actFileFormat] = actSupportedFile;
+                }
+            }
+
+            // Get format support on each exporter
+            m_exportersByFileType = new Dictionary<string, IModelExporter>();
+
+            foreach (var actExporter in m_exporters)
+            {
+                foreach (var actSupportedFile in actExporter
+                    .GetType().GetTypeInfo()
+                    .GetCustomAttributes<SupportedFileFormatAttribute>())
+                {
+                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
+                    m_exportersByFileType[actFileFormat] = actExporter;
+                    m_infoByFileType[actFileFormat] = actSupportedFile;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets a collection containing all supported import formats.
@@ -165,53 +213,6 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException($"No importer found for file type {fileExtension}");
             }
             return importer;
-        }
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="ImporterExporterRepository"/> class from being created.
-        /// </summary>
-        internal ImporterExporterRepository(SeeingSharpLoader loader)
-        {
-            m_importers =
-                (from actExtension in loader.Extensions
-                 from actImporter in actExtension.CreateModelImporters()
-                 select actImporter).ToList();
-            m_exporters =
-                (from actExtension in loader.Extensions
-                 from actExporter in actExtension.CreateModelExporters()
-                 select actExporter).ToList();
-
-            m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
-
-            // Get format support on each importer
-            m_importersByFileType = new Dictionary<string, IModelImporter>();
-
-            foreach(var actImporter in m_importers)
-            {
-                foreach(var actSupportedFile in actImporter
-                    .GetType().GetTypeInfo()
-                    .GetCustomAttributes<SupportedFileFormatAttribute>())
-                {
-                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
-                    m_importersByFileType[actFileFormat] = actImporter;
-                    m_infoByFileType[actFileFormat] = actSupportedFile;
-                }
-            }
-
-            // Get format support on each exporter
-            m_exportersByFileType = new Dictionary<string, IModelExporter>();
-
-            foreach (var actExporter in m_exporters)
-            {
-                foreach (var actSupportedFile in actExporter
-                    .GetType().GetTypeInfo()
-                    .GetCustomAttributes<SupportedFileFormatAttribute>())
-                {
-                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
-                    m_exportersByFileType[actFileFormat] = actExporter;
-                    m_infoByFileType[actFileFormat] = actSupportedFile;
-                }
-            }
         }
     }
 }

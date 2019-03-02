@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -34,6 +35,20 @@ namespace SeeingSharp.Multimedia.Core
         // Runtime values
         private Vector3 m_startScaleVector;
         private Vector3 m_differenceVector;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="scaleVector">The move vector.</param>
+        /// <param name="duration">The duration.</param>
+        public Scale3DToAnimation(IAnimatableObjectScaling targetObject, Vector3 scaleVector, TimeSpan duration)
+            : base(targetObject, AnimationType.FixedTime, duration)
+        {
+            m_targetObject = targetObject;
+            m_targetScaleVector = scaleVector;
+            m_duration = duration;
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -63,20 +78,6 @@ namespace SeeingSharp.Multimedia.Core
             m_targetObject.Scaling = m_targetScaleVector;
             m_startScaleVector = Vector3.Zero;
             m_differenceVector = Vector3.Zero;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="scaleVector">The move vector.</param>
-        /// <param name="duration">The duration.</param>
-        public Scale3DToAnimation(IAnimatableObjectScaling targetObject, Vector3 scaleVector, TimeSpan duration)
-            : base(targetObject, AnimationType.FixedTime, duration)
-        {
-            m_targetObject = targetObject;
-            m_targetScaleVector = scaleVector;
-            m_duration = duration;
         }
     }
 }

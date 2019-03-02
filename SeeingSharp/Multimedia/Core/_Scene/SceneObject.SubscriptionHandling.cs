@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Util;
@@ -59,6 +60,46 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Unsubscribes from the given render pass.
+        /// </summary>
+        protected internal void UnsubscribeFromPass(RenderPassInfo passInfo, UpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            // Get the subscription list
+            // (may be null if object was removed from the layer)
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            if (subscriptionList == null) { return; }
+
+            // Perform unsubscribe
+            var entryCount = 0;
+            for (var loop = 0; loop < subscriptionList.Count; loop++)
+            {
+                if (subscriptionList[loop].RenderPass == passInfo)
+                {
+                    subscriptionList[loop].Unsubscribe();
+                    subscriptionList.RemoveAt(loop);
+                    entryCount++;
+                    loop--;
+                }
+            }
+            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
+            if (entryCount == 0) { throw new SeeingSharpGraphicsException("Inconsistency: No subscription found on SceneObject!"); }
+        }
+
+        /// <summary>
+        /// Unsubscribes from all passes.
+        /// </summary>
+        protected internal void UnsubsribeFromAllPasses(ViewRelatedSceneLayerSubset layerViewSubset)
+        {
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+
+            for (var loop = 0; loop < subscriptionList.Count; loop++)
+            {
+                subscriptionList[loop].Unsubscribe();
+            }
+            subscriptionList.Clear();
+        }
+
+        /// <summary>
         /// Updades all subscription info for given subscription row.
         /// This method is needed because 'RenderPassSubscription" is a struct and values are changed by host object.
         /// </summary>
@@ -92,32 +133,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!");
             }
-        }
-
-        /// <summary>
-        /// Unsubscribes from the given render pass.
-        /// </summary>
-        protected internal void UnsubscribeFromPass(RenderPassInfo passInfo, UpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            // Get the subscription list
-            // (may be null if object was removed from the layer)
-            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-            if (subscriptionList == null) { return; }
-
-            // Perform unsubscribe
-            var entryCount = 0;
-            for (var loop = 0; loop < subscriptionList.Count; loop++)
-            {
-                if (subscriptionList[loop].RenderPass == passInfo)
-                {
-                    subscriptionList[loop].Unsubscribe();
-                    subscriptionList.RemoveAt(loop);
-                    entryCount++;
-                    loop--;
-                }
-            }
-            if (entryCount > 1) { throw new SeeingSharpGraphicsException("Inconsistency: Too much subscriptions for SceneObject detected!"); }
-            if (entryCount == 0) { throw new SeeingSharpGraphicsException("Inconsistency: No subscription found on SceneObject!"); }
         }
 
         /// <summary>
@@ -168,20 +183,6 @@ namespace SeeingSharp.Multimedia.Core
         internal void ClearSubscriptionsWithoutUnsubscribeCall(ViewRelatedSceneLayerSubset layerViewSubset)
         {
             var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-            subscriptionList.Clear();
-        }
-
-        /// <summary>
-        /// Unsubscribes from all passes.
-        /// </summary>
-        protected internal void UnsubsribeFromAllPasses(ViewRelatedSceneLayerSubset layerViewSubset)
-        {
-            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-
-            for (var loop = 0; loop < subscriptionList.Count; loop++)
-            {
-                subscriptionList[loop].Unsubscribe();
-            }
             subscriptionList.Clear();
         }
     }

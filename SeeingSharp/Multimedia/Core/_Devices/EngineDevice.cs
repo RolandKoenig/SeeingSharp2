@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Constants
         private const string CATEGORY_ADAPTER = "Adapter";
-        
+
         // Members for antialiasing
         private SampleDescription m_sampleDescWithAntialiasing;
 
@@ -60,131 +60,6 @@ namespace SeeingSharp.Multimedia.Core
         private SampleDescription m_antialiasingConfigLow;
         private SampleDescription m_antialiasingConfigMedium;
         private SampleDescription m_antialiasingConfigHigh;
-
-
-        public T TryGetAdditionalDeviceHandler<T>()
-            where T : class
-        {
-            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
-            {
-                if (actAdditionalDeviceHandler is T result) { return result; }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Forces the given detail level.
-        /// </summary>
-        public void ForceDetailLevel(DetailLevel detailLevel)
-        {
-            m_isDetailLevelForced = true;
-            m_forcedDetailLevel = detailLevel;
-        }
-
-        /// <summary>
-        /// Get the sample description for the given quality level.
-        /// </summary>
-        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
-        {
-            switch (qualityLevel)
-            {
-                case AntialiasingQualityLevel.Low:
-                    return m_antialiasingConfigLow;
-
-                case AntialiasingQualityLevel.Medium:
-                    return m_antialiasingConfigMedium;
-
-                case AntialiasingQualityLevel.High:
-                    return m_antialiasingConfigHigh;
-            }
-
-            return new SampleDescription(1, 0);
-        }
-
-        /// <summary>
-        /// Get the sample description for the given quality level.
-        /// </summary>
-        internal SampleDescription GetSampleDescription(bool antialiasingEnabled)
-        {
-            if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
-            return new SampleDescription(1, 0);
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return AdapterDescription;
-            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
-            //else { return m_handlerD3D11.DeviceModeDescription; }
-        }
-
-        /// <summary>
-        /// Checks for standard antialiasing support.
-        /// </summary>
-        private bool CheckIsStandardAntialiasingPossible()
-        {
-            // Very important to check possible antialiasing
-            // More on the used technique
-            //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
-
-            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
-
-            if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
-            if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
-            if (m_handlerD3D11.FeatureLevel == FeatureLevel.Level_9_1) { return false; }
-
-            try
-            {
-                var textureDescription = new D3D11.Texture2DDescription
-                {
-                    Width = 100,
-                    Height = 100,
-                    MipLevels = 1,
-                    ArraySize = 1,
-                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
-                    Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new SampleDescription(2, 0),
-                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    OptionFlags = D3D11.ResourceOptionFlags.None
-                };
-
-                var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
-                SeeingSharpUtil.SafeDispose(ref testTexture);
-            }
-            catch(Exception)
-            {
-                return false;
-            }
-
-            // Check for quality levels
-            var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
-            var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
-            var hightQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
-
-            // Generate sample descriptions for each possible quality level
-            if (lowQualityLevels > 0)
-            {
-                m_antialiasingConfigLow = new SampleDescription(2, lowQualityLevels - 1);
-            }
-            if (mediumQualityLevels > 0)
-            {
-                m_antialiasingConfigMedium = new SampleDescription(4, mediumQualityLevels - 1);
-            }
-            if (hightQualityLevels > 0)
-            {
-                m_antialiasingConfigHigh = new SampleDescription(8, hightQualityLevels - 1);
-            }
-
-            return lowQualityLevels > 0;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
@@ -252,6 +127,130 @@ namespace SeeingSharp.Multimedia.Core
                     m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
                 }
             }
+        }
+
+        public T TryGetAdditionalDeviceHandler<T>()
+            where T : class
+        {
+            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
+            {
+                if (actAdditionalDeviceHandler is T result) { return result; }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Forces the given detail level.
+        /// </summary>
+        public void ForceDetailLevel(DetailLevel detailLevel)
+        {
+            m_isDetailLevelForced = true;
+            m_forcedDetailLevel = detailLevel;
+        }
+
+        /// <summary>
+        /// Get the sample description for the given quality level.
+        /// </summary>
+        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
+        public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        {
+            switch (qualityLevel)
+            {
+                case AntialiasingQualityLevel.Low:
+                    return m_antialiasingConfigLow;
+
+                case AntialiasingQualityLevel.Medium:
+                    return m_antialiasingConfigMedium;
+
+                case AntialiasingQualityLevel.High:
+                    return m_antialiasingConfigHigh;
+            }
+
+            return new SampleDescription(1, 0);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return AdapterDescription;
+            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
+            //else { return m_handlerD3D11.DeviceModeDescription; }
+        }
+
+        /// <summary>
+        /// Get the sample description for the given quality level.
+        /// </summary>
+        internal SampleDescription GetSampleDescription(bool antialiasingEnabled)
+        {
+            if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
+            return new SampleDescription(1, 0);
+        }
+
+        /// <summary>
+        /// Checks for standard antialiasing support.
+        /// </summary>
+        private bool CheckIsStandardAntialiasingPossible()
+        {
+            // Very important to check possible antialiasing
+            // More on the used technique
+            //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
+
+            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+
+            if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
+            if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
+            if (m_handlerD3D11.FeatureLevel == FeatureLevel.Level_9_1) { return false; }
+
+            try
+            {
+                var textureDescription = new D3D11.Texture2DDescription
+                {
+                    Width = 100,
+                    Height = 100,
+                    MipLevels = 1,
+                    ArraySize = 1,
+                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    Usage = D3D11.ResourceUsage.Default,
+                    SampleDescription = new SampleDescription(2, 0),
+                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
+                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                    OptionFlags = D3D11.ResourceOptionFlags.None
+                };
+
+                var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
+                SeeingSharpUtil.SafeDispose(ref testTexture);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
+            // Check for quality levels
+            var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
+            var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
+            var hightQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
+
+            // Generate sample descriptions for each possible quality level
+            if (lowQualityLevels > 0)
+            {
+                m_antialiasingConfigLow = new SampleDescription(2, lowQualityLevels - 1);
+            }
+            if (mediumQualityLevels > 0)
+            {
+                m_antialiasingConfigMedium = new SampleDescription(4, mediumQualityLevels - 1);
+            }
+            if (hightQualityLevels > 0)
+            {
+                m_antialiasingConfigHigh = new SampleDescription(8, hightQualityLevels - 1);
+            }
+
+            return lowQualityLevels > 0;
         }
 
         /// <summary>

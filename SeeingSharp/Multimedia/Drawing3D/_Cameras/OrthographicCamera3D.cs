@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -28,9 +29,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Constants
         private const float ZOOM_FACTOR_MIN = 0.1f;
-        
+
         // Configuration
         private float m_zoomFactor = 10f;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
+        /// </summary>
+        public OrthographicCamera3D()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
+        /// </summary>
+        /// <param name="width">Width of the renderwindow.</param>
+        /// <param name="height">Height of the renderwindow.</param>
+        public OrthographicCamera3D(int width, int height)
+            : base(width, height)
+        {
+        }
 
         /// <summary>
         /// Applies the data from the given ViewPoint object.
@@ -51,6 +69,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var result = base.GetViewPoint();
             result.OrthographicZoomFactor = m_zoomFactor;
             return result;
+        }
+
+        /// <summary>
+        /// Zooms the camera into or out along the actual target-vector.
+        /// </summary>
+        /// <param name="dist">The Distance you want to zoom.</param>
+        public override void Zoom(float dist)
+        {
+            while (Math.Abs(dist) > 1f)
+            {
+                m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
+                dist = dist - Math.Sign(dist);
+            }
+            m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
+
+            UpdateCamera();
         }
 
         /// <summary>
@@ -79,39 +113,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             MatrixEx.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
-        }
-
-        /// <summary>
-        /// Zooms the camera into or out along the actual target-vector.
-        /// </summary>
-        /// <param name="dist">The Distance you want to zoom.</param>
-        public override void Zoom(float dist)
-        {
-            while (Math.Abs(dist) > 1f)
-            {
-                m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
-                dist = dist - Math.Sign(dist);
-            }
-            m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
-
-            UpdateCamera();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
-        /// </summary>
-        public OrthographicCamera3D()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
-        /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public OrthographicCamera3D(int width, int height)
-            : base(width, height)
-        {
         }
 
         /// <summary>

@@ -37,6 +37,25 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.Effect[] m_loadedEffects;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EffectResource"/> class.
+        /// </summary>
+        public EffectResource(params IImage[] effectInputs)
+        {
+            m_loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
+
+            // Get all effect inputs
+            m_effectInputs = new IImageInternal[effectInputs.Length];
+            for(var loop=0; loop<effectInputs.Length; loop++)
+            {
+                m_effectInputs[loop] = effectInputs[loop] as IImageInternal;
+                if(m_effectInputs[loop] == null)
+                {
+                    throw new SeeingSharpGraphicsException("Unable to process effectinput at index " + loop + "!");
+                }
+            }
+        }
+
+        /// <summary>
         /// Builds the effect.
         /// </summary>
         /// <param name="device">The device on which to load the effect instance.</param>
@@ -54,25 +73,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 SeeingSharpTools.DisposeObject(actEffect);
                 m_loadedEffects[engineDevice.DeviceIndex] = null;
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectResource"/> class.
-        /// </summary>
-        public EffectResource(params IImage[] effectInputs)
-        {
-            m_loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
-
-            // Get all effect inputs
-            m_effectInputs = new IImageInternal[effectInputs.Length];
-            for(var loop=0; loop<effectInputs.Length; loop++)
-            {
-                m_effectInputs[loop] = effectInputs[loop] as IImageInternal;
-                if(m_effectInputs[loop] == null)
-                {
-                    throw new SeeingSharpGraphicsException("Unable to process effectinput at index " + loop + "!");
-                }
             }
         }
 

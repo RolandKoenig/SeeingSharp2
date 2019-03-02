@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Util;
 
@@ -32,12 +33,51 @@ namespace SeeingSharp.Multimedia.Core
         private ResourceDictionary m_resourceDictionary;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Resource"/> class.
+        /// </summary>
+        protected Resource()
+        {
+            ResourceType = GetType();
+            m_key = new NamedOrGenericKey();
+        }
+
+        /// <summary>
         /// Fills the given collection with all referenced resources.
         /// </summary>
         /// <param name="resourceCollection">The collection to be filled,</param>
         public virtual void GetReferencedResources(SingleInstanceCollection<Resource> resourceCollection)
         {
 
+        }
+
+        /// <summary>
+        /// Disposes this object (unloads all resources).
+        /// </summary>
+        public void Dispose()
+        {
+            UnloadResource();
+        }
+
+        /// <summary>
+        /// Loads all resource.
+        /// </summary>
+        /// <param name="device">The device on which to load all resources.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected abstract void LoadResourceInternal(EngineDevice device, ResourceDictionary resources);
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        /// <param name="device">The device on which the resources where loaded.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected abstract void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources);
+
+        /// <summary>
+        /// Triggers reloading of the resource.
+        /// </summary>
+        protected void ReloadResource()
+        {
+            m_markedForReloading = true;
         }
 
         /// <summary>
@@ -67,45 +107,6 @@ namespace SeeingSharp.Multimedia.Core
             if (m_device == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + m_key + " hos no registered Device!"); }
 
             UnloadResourceInternal(m_device, m_resourceDictionary);
-        }
-
-        /// <summary>
-        /// Loads all resource.
-        /// </summary>
-        /// <param name="device">The device on which to load all resources.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected abstract void LoadResourceInternal(EngineDevice device, ResourceDictionary resources);
-
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        /// <param name="device">The device on which the resources where loaded.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected abstract void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources);
-
-        /// <summary>
-        /// Triggers reloading of the resource.
-        /// </summary>
-        protected void ReloadResource()
-        {
-            m_markedForReloading = true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Resource"/> class.
-        /// </summary>
-        protected Resource()
-        {
-            ResourceType = GetType();
-            m_key = new NamedOrGenericKey();
-        }
-
-        /// <summary>
-        /// Disposes this object (unloads all resources).
-        /// </summary>
-        public void Dispose()
-        {
-            UnloadResource();
         }
 
         /// <summary>

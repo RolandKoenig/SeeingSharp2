@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
@@ -27,6 +28,15 @@ namespace SeeingSharp.Util
     {
         //Values used for calculation
         private ThreadSaveQueue<Tuple<DateTime, long>> m_lastDurationItems;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
+        /// </summary>
+        public DurationPerformanceCalculator(string calculatorName)
+            : base(calculatorName)
+        {
+            m_lastDurationItems = new ThreadSaveQueue<Tuple<DateTime, long>>();
+        }
 
         /// <summary>
         /// Notifies the a done activity and it's duration.
@@ -86,15 +96,6 @@ namespace SeeingSharp.Util
 
             // Create result object
             return new DurationPerformanceResult(this, keyTimeStamp, avgValue, maxValue, minValue);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
-        /// </summary>
-        public DurationPerformanceCalculator(string calculatorName)
-            : base(calculatorName)
-        {
-            m_lastDurationItems = new ThreadSaveQueue<Tuple<DateTime, long>>();
         }
     }
 }

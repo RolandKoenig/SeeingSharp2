@@ -28,6 +28,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
 {
     public class GaussianBlurEffectResource : EffectResource
     {
+        public GaussianBlurEffectResource(IImage sourceImage)
+            : base(sourceImage)
+        {
+            StandardDeviation = 1f;
+        }
+
         /// <summary>
         /// Builds the effect.
         /// </summary>
@@ -42,12 +48,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             };
 
             return blurEffect;
-        }
-
-        public GaussianBlurEffectResource(IImage sourceImage)
-            : base(sourceImage)
-        {
-            StandardDeviation = 1f;
         }
 
         public float StandardDeviation

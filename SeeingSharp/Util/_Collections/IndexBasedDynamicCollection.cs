@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,6 +33,17 @@ namespace SeeingSharp.Util
         private int m_listCount;
         private object m_lockObject;
         private Dictionary<T, int> m_objectIndices;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
+        /// </summary>
+        public IndexBasedDynamicCollection()
+        {
+            m_list = new List<T>(10);
+            m_listCount = 0;
+            m_objectIndices = new Dictionary<T, int>();
+            m_lockObject = new object();
+        }
 
         /// <summary>
         /// Has this collection an object at the given index?
@@ -191,17 +203,6 @@ namespace SeeingSharp.Util
                 m_objectIndices.Clear();
                 m_listCount = m_list.Count;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
-        /// </summary>
-        public IndexBasedDynamicCollection()
-        {
-            m_list = new List<T>(10);
-            m_listCount = 0;
-            m_objectIndices = new Dictionary<T, int>();
-            m_lockObject = new object();
         }
 
         /// <summary>

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Multimedia.Core;
 using SharpDX;
@@ -46,6 +47,30 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Additional parameters
         private float m_zNear = 0.1f;
         private float m_zFar = 500f;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
+        /// </summary>
+        public Camera3DBase()
+            : this(100, 100)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
+        /// </summary>
+        /// <param name="width">Width of the renderwindow.</param>
+        /// <param name="height">Height of the renderwindow.</param>
+        public Camera3DBase(int width, int height)
+        {
+            ScreenWidth = width;
+            ScreenHeight = height;
+
+            AnimationHandler = new AnimationHandler(this);
+
+            UpdateCamera();
+        }
 
         /// <summary>
         /// Applies the data from the given ViewPoint object.
@@ -103,22 +128,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             StateChanged = true;
         }
-
-        /// <summary>
-        /// Calculates the view and projection matrix for this camera.
-        /// </summary>
-        /// <param name="position">The position of the camera.</param>
-        /// <param name="target">The target point of the camera.</param>
-        /// <param name="upVector">The current up vector.</param>
-        /// <param name="zNear">Distance to the nearest rendered pixel.</param>
-        /// <param name="zFar">Distance to the farest rendered pixel.</param>
-        /// <param name="screenWidth">The current width of the screen in pixel.</param>
-        /// <param name="screenHeight">The current height of the screen in pixel.</param>
-        /// <param name="viewMatrix">The calculated view matrix.</param>
-        /// <param name="projMatrix">The calculated projection matrix.</param>
-        protected abstract void CalculateViewProjectionMatrices(
-            Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
-            out Matrix viewMatrix, out Matrix projMatrix);
 
         /// <summary>
         /// Sets the size of the screen.
@@ -258,28 +267,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
+        /// Calculates the view and projection matrix for this camera.
         /// </summary>
-        public Camera3DBase()
-            : this(100, 100)
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
-        /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public Camera3DBase(int width, int height)
-        {
-            ScreenWidth = width;
-            ScreenHeight = height;
-
-            AnimationHandler = new AnimationHandler(this);
-
-            UpdateCamera();
-        }
+        /// <param name="position">The position of the camera.</param>
+        /// <param name="target">The target point of the camera.</param>
+        /// <param name="upVector">The current up vector.</param>
+        /// <param name="zNear">Distance to the nearest rendered pixel.</param>
+        /// <param name="zFar">Distance to the farest rendered pixel.</param>
+        /// <param name="screenWidth">The current width of the screen in pixel.</param>
+        /// <param name="screenHeight">The current height of the screen in pixel.</param>
+        /// <param name="viewMatrix">The calculated view matrix.</param>
+        /// <param name="projMatrix">The calculated projection matrix.</param>
+        protected abstract void CalculateViewProjectionMatrices(
+            Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
+            out Matrix viewMatrix, out Matrix projMatrix);
 
         /// <summary>
         /// Gets the current AnimationHandler for this camera.

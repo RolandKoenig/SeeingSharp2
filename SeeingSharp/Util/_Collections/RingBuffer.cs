@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Checking;
 
@@ -36,6 +37,20 @@ namespace SeeingSharp.Util
         private T[] m_buffer;
         private int m_itemStart;
         private int m_itemLength;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RingBuffer{T}"/> class.
+        /// </summary>
+        /// <param name="maxItemCount">The maximum count of items.</param>
+        public RingBuffer(int maxItemCount)
+        {
+            maxItemCount.EnsureInRange(2, int.MaxValue, nameof(maxItemCount));
+
+            m_buffer = new T[maxItemCount];
+            Count = maxItemCount;
+            m_itemStart = 0;
+            m_itemLength = 0;
+        }
 
         /// <summary>
         /// Adds a new item to the buffer and overrides existing items
@@ -109,20 +124,6 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RingBuffer{T}"/> class.
-        /// </summary>
-        /// <param name="maxItemCount">The maximum count of items.</param>
-        public RingBuffer(int maxItemCount)
-        {
-            maxItemCount.EnsureInRange(2, int.MaxValue, nameof(maxItemCount));
-
-            m_buffer = new T[maxItemCount];
-            Count = maxItemCount;
-            m_itemStart = 0;
-            m_itemLength = 0;
-        }
-
-        /// <summary>
         /// Gets the object at the specified index.
         /// </summary>
         public T this[int index]
@@ -137,6 +138,6 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the total count of items.
         /// </summary>
-        public int Count { get; }        
+        public int Count { get; }
     }
 }

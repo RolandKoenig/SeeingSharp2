@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,6 +32,30 @@ namespace SeeingSharp
         private Lazy<BoundingBox2D> m_boundingBox2D;
         private Lazy<EdgeOrder> m_edgeOrder;
         private Vector2[] m_vertices;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polygon2D" /> class.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <exception cref="SeeingSharpException"></exception>
+        public Polygon2D(params Vector2[] vertices)
+        {
+            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+
+            //Apply given vertices (remove the last one if it is equal to the first one)
+            m_vertices = vertices;
+            if (m_vertices.Length > 1 &&
+               m_vertices[m_vertices.Length - 1] == m_vertices[0])
+            {
+                var newArray = new Vector2[m_vertices.Length - 1];
+                Array.Copy(m_vertices, newArray, m_vertices.Length - 1);
+                m_vertices = newArray;
+            }
+
+            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
+            m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
+            m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
+        }
 
         /// <summary>
         /// Clones this polygon.
@@ -175,6 +200,14 @@ namespace SeeingSharp
         }
 
         /// <summary>
+        /// Triangulates this polygon using the cutting ears triangulator.
+        /// </summary>
+        public IEnumerable<int> TriangulateUsingCuttingEars()
+        {
+            return CuttingEarsTriangulator.Triangulate(m_vertices);
+        }
+
+        /// <summary>
         /// Calculates the bounding box of this polygon.
         /// </summary>
         private BoundingBox2D CalculateBoundingBox()
@@ -226,38 +259,6 @@ namespace SeeingSharp
             //Return result depending on sum
             if (currentSum > 0f) { return EdgeOrder.Clockwise; }
             return EdgeOrder.CounterClockwise;
-        }
-
-        /// <summary>
-        /// Triangulates this polygon using the cutting ears triangulator.
-        /// </summary>
-        public IEnumerable<int> TriangulateUsingCuttingEars()
-        {
-            return CuttingEarsTriangulator.Triangulate(m_vertices);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Polygon2D" /> class.
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <exception cref="SeeingSharpException"></exception>
-        public Polygon2D(params Vector2[] vertices)
-        {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
-
-            //Apply given vertices (remove the last one if it is equal to the first one)
-            m_vertices = vertices;
-            if (m_vertices.Length > 1 &&
-               m_vertices[m_vertices.Length - 1] == m_vertices[0])
-            {
-                var newArray = new Vector2[m_vertices.Length - 1];
-                Array.Copy(m_vertices, newArray, m_vertices.Length - 1);
-                m_vertices = newArray;
-            }
-
-            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
-            m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
-            m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
         }
 
         /// <summary>

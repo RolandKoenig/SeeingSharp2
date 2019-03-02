@@ -11,6 +11,13 @@ namespace SeeingSharp.UwpSamples
         private SampleMetadata m_actSampleInfo;
         private bool m_isChangingSample;
 
+        public MainPage()
+        {
+            InitializeComponent();
+
+            Loaded += OnLoaded;
+        }
+
         /// <summary>
         /// Applies the given sample.
         /// </summary>
@@ -80,13 +87,6 @@ namespace SeeingSharp.UwpSamples
             if (selectedSample == null) { return; }
 
             ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
-        }
-
-        public MainPage()
-        {
-            InitializeComponent();
-
-            Loaded += OnLoaded;
         }
     }
 }

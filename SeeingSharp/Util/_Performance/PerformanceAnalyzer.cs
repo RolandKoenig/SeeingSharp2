@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
@@ -50,6 +51,35 @@ namespace SeeingSharp.Util
 
         // Configuration
         private TimeSpan m_valueInterval;
+
+        // Collections for UI
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
+        /// </summary>
+        public PerformanceAnalyzer(TimeSpan valueInterval, TimeSpan calculationInterval)
+        {
+            m_lastValueTimestamp = DateTime.UtcNow;
+            m_startupTimestamp = m_lastValueTimestamp;
+
+            m_valueInterval = valueInterval;
+            m_calculationInterval = calculationInterval;
+
+            m_maxCountHistoricalEntries = 50;
+            m_generateHistoricalCollection = true;
+            m_generateCurrentValueCollection = true;
+
+            SyncContext = SynchronizationContext.Current;
+            m_delayTimeMS = 1000;
+
+            m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
+            m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
+
+            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
+            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
+            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
+            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
+        }
 
         /// <summary>
         /// Notifies one occurrence of the FlowRate measurenemt with the given name.
@@ -269,35 +299,6 @@ namespace SeeingSharp.Util
             }
         }
 
-        // Collections for UI
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
-        /// </summary>
-        public PerformanceAnalyzer(TimeSpan valueInterval, TimeSpan calculationInterval)
-        {
-            m_lastValueTimestamp = DateTime.UtcNow;
-            m_startupTimestamp = m_lastValueTimestamp;
-
-            m_valueInterval = valueInterval;
-            m_calculationInterval = calculationInterval;
-
-            m_maxCountHistoricalEntries = 50;
-            m_generateHistoricalCollection = true;
-            m_generateCurrentValueCollection = true;
-
-            SyncContext = SynchronizationContext.Current;
-            m_delayTimeMS = 1000;
-
-            m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
-            m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
-
-            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
-        }
-
         /// <summary>
         /// Gets or sets the delay time (milliseconds) of the kpi calculate loop.
         /// </summary>
@@ -425,14 +426,14 @@ namespace SeeingSharp.Util
         /// </summary>
         private class CalculatorInfo
         {
-            public PerformanceCalculatorBase Calculator;
-            public BlockingCollection<PerformanceAnalyzeResultBase> Results;
-
             public CalculatorInfo(PerformanceCalculatorBase calculator)
             {
                 Calculator = calculator;
                 Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
             }
+
+            public PerformanceCalculatorBase Calculator;
+            public BlockingCollection<PerformanceAnalyzeResultBase> Results;
         }
     }
 }

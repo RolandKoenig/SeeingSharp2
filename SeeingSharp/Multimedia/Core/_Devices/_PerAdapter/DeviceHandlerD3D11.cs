@@ -52,20 +52,6 @@ namespace SeeingSharp.Multimedia.Core
         private D3D.FeatureLevel m_featureLevel;
 
         /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        public void UnloadResources()
-        {
-            m_immediateContext = SeeingSharpUtil.DisposeObject(m_immediateContext);
-            m_immediateContext3 = SeeingSharpUtil.DisposeObject(m_immediateContext3);
-            m_device1 = SeeingSharpUtil.DisposeObject(m_device1);
-            m_device3 = SeeingSharpUtil.DisposeObject(m_device3);
-
-            m_creationFlags = D3D11.DeviceCreationFlags.None;
-            m_featureLevel = D3D.FeatureLevel.Level_11_0;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
         internal DeviceHandlerD3D11(DeviceLoadSettings deviceLoadSettings, Adapter1 dxgiAdapter)
@@ -149,9 +135,18 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets current feature level.
+        /// Unloads all resources.
         /// </summary>
-        internal D3D.FeatureLevel FeatureLevel => m_featureLevel;
+        public void UnloadResources()
+        {
+            m_immediateContext = SeeingSharpUtil.DisposeObject(m_immediateContext);
+            m_immediateContext3 = SeeingSharpUtil.DisposeObject(m_immediateContext3);
+            m_device1 = SeeingSharpUtil.DisposeObject(m_device1);
+            m_device3 = SeeingSharpUtil.DisposeObject(m_device3);
+
+            m_creationFlags = D3D11.DeviceCreationFlags.None;
+            m_featureLevel = D3D.FeatureLevel.Level_11_0;
+        }
 
         /// <summary>
         /// Is the hardware Direct3D 10 or upper?
@@ -170,26 +165,9 @@ namespace SeeingSharp.Multimedia.Core
             m_featureLevel == D3D.FeatureLevel.Level_11_1;
 
         /// <summary>
-        /// Gets the Direct3D 11 device.
-        /// </summary>
-        internal D3D11.Device1 Device1 => m_device1;
-
-        internal D3D11.Device3 Device3 => m_device3;
-
-        /// <summary>
         /// Gets the native pointer to the device object.
         /// </summary>
         public IntPtr DeviceNativePointer => m_device1.NativePointer;
-
-        /// <summary>
-        /// Gets the immediate context.
-        /// </summary>
-        internal D3D11.DeviceContext ImmediateContext => m_immediateContext;
-
-        /// <summary>
-        /// Gets the immediate context.
-        /// </summary>
-        internal D3D11.DeviceContext3 ImmediateContext3 => m_immediateContext3;
 
         /// <summary>
         /// Is device successfully initialized?
@@ -218,5 +196,27 @@ namespace SeeingSharp.Multimedia.Core
         /// Are Direct2D textures possible?
         /// </summary>
         public bool IsDirect2DTextureEnabled => (m_creationFlags & D3D11.DeviceCreationFlags.BgraSupport) == D3D11.DeviceCreationFlags.BgraSupport;
+
+        /// <summary>
+        /// Gets current feature level.
+        /// </summary>
+        internal D3D.FeatureLevel FeatureLevel => m_featureLevel;
+
+        /// <summary>
+        /// Gets the Direct3D 11 device.
+        /// </summary>
+        internal D3D11.Device1 Device1 => m_device1;
+
+        internal D3D11.Device3 Device3 => m_device3;
+
+        /// <summary>
+        /// Gets the immediate context.
+        /// </summary>
+        internal D3D11.DeviceContext ImmediateContext => m_immediateContext;
+
+        /// <summary>
+        /// Gets the immediate context.
+        /// </summary>
+        internal D3D11.DeviceContext3 ImmediateContext3 => m_immediateContext3;
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -49,11 +50,14 @@ namespace SeeingSharp.Multimedia.Core
         public event EventHandler<AnimationFailedEventArgs> AnimationFailed;
 
         /// <summary>
-        /// Clears all running animations.
+        /// Initializes a new instance of the <see cref="AnimationSequence"/> class.
         /// </summary>
-        internal void ClearAnimations()
+        public AnimationSequence()
         {
-            CancelAnimations();
+            m_preUpdateActions = new ConcurrentQueue<Action>();
+            m_runningAnimations = new Queue<IAnimation>();
+            m_runningSecondaryAnimations = new Queue<Queue<IAnimation>>();
+            m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
         }
 
         /// <summary>
@@ -77,48 +81,6 @@ namespace SeeingSharp.Multimedia.Core
             m_preUpdateActions.Enqueue(() =>
             {
                 CancelAnimations(targetObject);
-            });
-            Interlocked.Increment(ref m_preUpdateActionsCount);
-        }
-
-        /// <summary>
-        /// Begins the given AnimationSequence objects.
-        /// </summary>
-        /// <param name="animationSequenceList">The list containing all animations to be added.</param>
-        internal void BeginAnimation(IEnumerable<IAnimation> animationSequenceList)
-        {
-            // Queue this call to update logic..
-            m_preUpdateActions.Enqueue(() =>
-            {
-                // Append a WaitFinished sequence if there are currently previous animations executing
-                if (m_runningAnimationsCount > 0)
-                {
-                    m_runningAnimations.Enqueue(new WaitFinishedAnimation());
-                    Interlocked.Increment(ref m_runningAnimationsCount);
-                }
-
-                // Append all given animations
-                foreach (var actChildAnimation in animationSequenceList)
-                {
-                    m_runningAnimations.Enqueue(actChildAnimation);
-                    Interlocked.Increment(ref m_runningAnimationsCount);
-                }
-            });
-            Interlocked.Increment(ref m_preUpdateActionsCount);
-        }
-
-        /// <summary>
-        /// Begins the given AnimationSequence object in a separate queue.
-        /// </summary>
-        /// <param name="animationSequenceList">The list containing all animations to be added.</param>
-        internal void BeginSecondaryAnimation(IEnumerable<IAnimation> animationSequenceList)
-        {
-            // Queue this call to update logic..
-            m_preUpdateActions.Enqueue(() =>
-            {
-                var newAnimationQueue = new Queue<IAnimation>(animationSequenceList);
-                m_runningSecondaryAnimations.Enqueue(newAnimationQueue);
-                Interlocked.Increment(ref m_runningSecondaryAnimationsCount);
             });
             Interlocked.Increment(ref m_preUpdateActionsCount);
         }
@@ -302,6 +264,261 @@ namespace SeeingSharp.Multimedia.Core
         public AnimationUpdateResult Update(IAnimationUpdateState updateState)
         {
             return Update(updateState, null);
+        }
+
+        /// <summary>
+        /// Checks if the given object is animated by this animation.
+        /// </summary>
+        /// <param name="targetObject">The object to check for.</param>
+        /// <returns></returns>
+        public bool IsObjectAnimated(object targetObject)
+        {
+            PreCheckExecutionInternal();
+            try
+            {
+                // Check on primary animations
+                if (m_runningAnimationsCount > 0)
+                {
+                    foreach (var actAnimation in m_runningAnimations)
+                    {
+                        if (actAnimation.IsObjectAnimated(targetObject))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // Check on all secondary animations too
+                if (m_runningSecondaryAnimationsCount > 0)
+                {
+                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
+                    {
+                        foreach (var actAnimation in actSecondaryQueue)
+                        {
+                            if (actAnimation.IsObjectAnimated(targetObject))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+            finally
+            {
+                PostCheckExecutionInternal();
+            }
+        }
+
+        /// <summary>
+        /// Called for each update step of this animation.
+        /// </summary>
+        /// <param name="updateState">The current state of the update pass.</param>
+        /// <param name="animationState">The current state of the animation.</param>
+        public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            var countAnimationsFinished = 0;
+            var prevIgnorePauseState = updateState.IgnorePauseState;
+
+            PreCheckExecutionInternal();
+            try
+            {
+                // Execute all pre-update actions
+                if (m_preUpdateActionsCount > 0)
+                {
+                    PerformPreupdateActionsInternal();
+                }
+
+                // Cancel here if there are no animations at all
+                if (m_runningAnimationsCount == 0 &&
+                    m_runningSecondaryAnimationsCount == 0)
+                {
+                    m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
+                    return AnimationUpdateResult.Empty;
+                }
+
+                // Check collection counters for plausibility
+                if (m_runningAnimationsCount < 0 ||
+                   m_runningSecondaryAnimationsCount < 0 ||
+                   m_preUpdateActionsCount < 0)
+                {
+                    throw new SeeingSharpGraphicsException("Internal error: Invalid animation count errors in Animation handler!");
+                }
+
+                var anySubAnimationFinishedOrCanceled = false;
+
+                // Animation update loop for primary animations
+                if (m_runningAnimationsCount > 0)
+                {
+                    anySubAnimationFinishedOrCanceled |= UpdateQueueInternal(updateState, animationState, m_runningAnimations);
+                }
+
+                // Animation update loop for secondary animations
+                if (m_runningSecondaryAnimationsCount > 0)
+                {
+                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
+                    {
+                        anySubAnimationFinishedOrCanceled |= UpdateQueueInternal(updateState, animationState, actSecondaryQueue);
+                    }
+                }
+
+                // Dequeue all finished animations
+                // Do also calculate time till next finished animation here
+                while (anySubAnimationFinishedOrCanceled && m_runningAnimationsCount > 0)
+                {
+                    if (m_runningAnimations.First().IsFinishedOrCanceled())
+                    {
+                        anySubAnimationFinishedOrCanceled = true;
+                        countAnimationsFinished++;
+                        var currentAnimation = m_runningAnimations.Dequeue();
+
+                        if (currentAnimation != null)
+                        {
+                            Interlocked.Decrement(ref m_runningAnimationsCount);
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (anySubAnimationFinishedOrCanceled && m_runningSecondaryAnimationsCount > 0)
+                {
+                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
+                    {
+                        while (actSecondaryQueue.Count > 0)
+                        {
+                            if (actSecondaryQueue.Peek().IsFinishedOrCanceled())
+                            {
+                                anySubAnimationFinishedOrCanceled = true;
+                                countAnimationsFinished++;
+                                actSecondaryQueue.Dequeue();
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Clear all secondary animations which are finished completely
+                while (m_runningSecondaryAnimationsCount > 0 &&
+                      m_runningSecondaryAnimations.Peek().Count == 0)
+                {
+                    var dummy = m_runningSecondaryAnimations.Dequeue();
+                    Interlocked.Decrement(ref m_runningSecondaryAnimationsCount);
+                }
+
+                // Calculate time till next partial animation step
+                if (anySubAnimationFinishedOrCanceled)
+                {
+                    UpdateTimeTillNextPartFinished();
+                }
+                else
+                {
+                    m_timeTillNextPartFinished = m_timeTillNextPartFinished - updateState.UpdateTime;
+                    if(m_timeTillNextPartFinished < DefaultCycleTime)
+                    {
+                        m_timeTillNextPartFinished = DefaultCycleTime;
+                    }
+                }
+            }
+            finally
+            {
+                updateState.IgnorePauseState = prevIgnorePauseState;
+
+                PostCheckExecutionInternal();
+            }
+
+            // Return some diagnostics about the executed animation
+            var result = new AnimationUpdateResult
+            {
+                CountFinishedAnimations = countAnimationsFinished
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Resets this animation.
+        /// </summary>
+        public void Reset()
+        {
+            ClearAnimations();
+        }
+
+        /// <summary>
+        /// Gets the time in milliseconds till this animation is finished.
+        /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
+        /// </summary>
+        /// <param name="previousMinFinishTime">The minimum TimeSpan previous animations take.</param>
+        /// <param name="previousMaxFinishTime">The maximum TimeSpan previous animations take.</param>
+        /// <param name="defaultCycleTime">The default cycle time if we would be in continous calculation mode.</param>
+        public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
+        {
+            return m_timeTillNextPartFinished;
+        }
+
+        /// <summary>
+        /// Called when an animation throws an exception during execution.
+        /// </summary>
+        /// <param name="animation">The failed animation.</param>
+        /// <param name="ex">The exception thrown.</param>
+        protected virtual AnimationFailedReaction OnAnimationFailed(IAnimation animation, Exception ex)
+        {
+            return AnimationFailedReaction.ThrowException;
+        }
+
+        /// <summary>
+        /// Clears all running animations.
+        /// </summary>
+        internal void ClearAnimations()
+        {
+            CancelAnimations();
+        }
+
+        /// <summary>
+        /// Begins the given AnimationSequence objects.
+        /// </summary>
+        /// <param name="animationSequenceList">The list containing all animations to be added.</param>
+        internal void BeginAnimation(IEnumerable<IAnimation> animationSequenceList)
+        {
+            // Queue this call to update logic..
+            m_preUpdateActions.Enqueue(() =>
+            {
+                // Append a WaitFinished sequence if there are currently previous animations executing
+                if (m_runningAnimationsCount > 0)
+                {
+                    m_runningAnimations.Enqueue(new WaitFinishedAnimation());
+                    Interlocked.Increment(ref m_runningAnimationsCount);
+                }
+
+                // Append all given animations
+                foreach (var actChildAnimation in animationSequenceList)
+                {
+                    m_runningAnimations.Enqueue(actChildAnimation);
+                    Interlocked.Increment(ref m_runningAnimationsCount);
+                }
+            });
+            Interlocked.Increment(ref m_preUpdateActionsCount);
+        }
+
+        /// <summary>
+        /// Begins the given AnimationSequence object in a separate queue.
+        /// </summary>
+        /// <param name="animationSequenceList">The list containing all animations to be added.</param>
+        internal void BeginSecondaryAnimation(IEnumerable<IAnimation> animationSequenceList)
+        {
+            // Queue this call to update logic..
+            m_preUpdateActions.Enqueue(() =>
+            {
+                var newAnimationQueue = new Queue<IAnimation>(animationSequenceList);
+                m_runningSecondaryAnimations.Enqueue(newAnimationQueue);
+                Interlocked.Increment(ref m_runningSecondaryAnimationsCount);
+            });
+            Interlocked.Increment(ref m_preUpdateActionsCount);
         }
 
         /// <summary>
@@ -540,222 +757,6 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             if (m_currentWorkingThreadCount < 0) { throw new SeeingSharpGraphicsException("Invalid currentWorkingThreadCount on AnimationSequence!"); }
-        }
-
-        /// <summary>
-        /// Called when an animation throws an exception during execution.
-        /// </summary>
-        /// <param name="animation">The failed animation.</param>
-        /// <param name="ex">The exception thrown.</param>
-        protected virtual AnimationFailedReaction OnAnimationFailed(IAnimation animation, Exception ex)
-        {
-            return AnimationFailedReaction.ThrowException;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnimationSequence"/> class.
-        /// </summary>
-        public AnimationSequence()
-        {
-            m_preUpdateActions = new ConcurrentQueue<Action>();
-            m_runningAnimations = new Queue<IAnimation>();
-            m_runningSecondaryAnimations = new Queue<Queue<IAnimation>>();
-            m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
-        }
-
-        /// <summary>
-        /// Checks if the given object is animated by this animation.
-        /// </summary>
-        /// <param name="targetObject">The object to check for.</param>
-        /// <returns></returns>
-        public bool IsObjectAnimated(object targetObject)
-        {
-            PreCheckExecutionInternal();
-            try
-            {
-                // Check on primary animations
-                if (m_runningAnimationsCount > 0)
-                {
-                    foreach (var actAnimation in m_runningAnimations)
-                    {
-                        if (actAnimation.IsObjectAnimated(targetObject))
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                // Check on all secondary animations too
-                if (m_runningSecondaryAnimationsCount > 0)
-                {
-                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
-                    {
-                        foreach (var actAnimation in actSecondaryQueue)
-                        {
-                            if (actAnimation.IsObjectAnimated(targetObject))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                return false;
-            }
-            finally
-            {
-                PostCheckExecutionInternal();
-            }
-        }
-
-        /// <summary>
-        /// Called for each update step of this animation.
-        /// </summary>
-        /// <param name="updateState">The current state of the update pass.</param>
-        /// <param name="animationState">The current state of the animation.</param>
-        public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            var countAnimationsFinished = 0;
-            var prevIgnorePauseState = updateState.IgnorePauseState;
-
-            PreCheckExecutionInternal();
-            try
-            {
-                // Execute all pre-update actions
-                if (m_preUpdateActionsCount > 0)
-                {
-                    PerformPreupdateActionsInternal();
-                }
-
-                // Cancel here if there are no animations at all
-                if (m_runningAnimationsCount == 0 &&
-                    m_runningSecondaryAnimationsCount == 0)
-                {
-                    m_timeTillNextPartFinished = SeeingSharpConstants.UPDATE_STATE_MAX_TIME;
-                    return AnimationUpdateResult.Empty;
-                }
-
-                // Check collection counters for plausibility
-                if (m_runningAnimationsCount < 0 ||
-                   m_runningSecondaryAnimationsCount < 0 ||
-                   m_preUpdateActionsCount < 0)
-                {
-                    throw new SeeingSharpGraphicsException("Internal error: Invalid animation count errors in Animation handler!");
-                }
-
-                var anySubAnimationFinishedOrCanceled = false;
-
-                // Animation update loop for primary animations
-                if (m_runningAnimationsCount > 0)
-                {
-                    anySubAnimationFinishedOrCanceled |= UpdateQueueInternal(updateState, animationState, m_runningAnimations);
-                }
-
-                // Animation update loop for secondary animations
-                if (m_runningSecondaryAnimationsCount > 0)
-                {
-                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
-                    {
-                        anySubAnimationFinishedOrCanceled |= UpdateQueueInternal(updateState, animationState, actSecondaryQueue);
-                    }
-                }
-
-                // Dequeue all finished animations
-                // Do also calculate time till next finished animation here
-                while (anySubAnimationFinishedOrCanceled && m_runningAnimationsCount > 0)
-                {
-                    if (m_runningAnimations.First().IsFinishedOrCanceled())
-                    {
-                        anySubAnimationFinishedOrCanceled = true;
-                        countAnimationsFinished++;
-                        var currentAnimation = m_runningAnimations.Dequeue();
-
-                        if (currentAnimation != null)
-                        {
-                            Interlocked.Decrement(ref m_runningAnimationsCount);
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                if (anySubAnimationFinishedOrCanceled && m_runningSecondaryAnimationsCount > 0)
-                {
-                    foreach (var actSecondaryQueue in m_runningSecondaryAnimations)
-                    {
-                        while (actSecondaryQueue.Count > 0)
-                        {
-                            if (actSecondaryQueue.Peek().IsFinishedOrCanceled())
-                            {
-                                anySubAnimationFinishedOrCanceled = true;
-                                countAnimationsFinished++;
-                                actSecondaryQueue.Dequeue();
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // Clear all secondary animations which are finished completely
-                while (m_runningSecondaryAnimationsCount > 0 &&
-                      m_runningSecondaryAnimations.Peek().Count == 0)
-                {
-                    var dummy = m_runningSecondaryAnimations.Dequeue();
-                    Interlocked.Decrement(ref m_runningSecondaryAnimationsCount);
-                }
-
-                // Calculate time till next partial animation step
-                if (anySubAnimationFinishedOrCanceled)
-                {
-                    UpdateTimeTillNextPartFinished();
-                }
-                else
-                {
-                    m_timeTillNextPartFinished = m_timeTillNextPartFinished - updateState.UpdateTime;
-                    if(m_timeTillNextPartFinished < DefaultCycleTime)
-                    {
-                        m_timeTillNextPartFinished = DefaultCycleTime;
-                    }
-                }
-            }
-            finally
-            {
-                updateState.IgnorePauseState = prevIgnorePauseState;
-
-                PostCheckExecutionInternal();
-            }
-
-            // Return some diagnostics about the executed animation
-            var result = new AnimationUpdateResult
-            {
-                CountFinishedAnimations = countAnimationsFinished
-            };
-
-            return result;
-        }
-
-        /// <summary>
-        /// Resets this animation.
-        /// </summary>
-        public void Reset()
-        {
-            ClearAnimations();
-        }
-
-        /// <summary>
-        /// Gets the time in milliseconds till this animation is finished.
-        /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
-        /// </summary>
-        /// <param name="previousMinFinishTime">The minimum TimeSpan previous animations take.</param>
-        /// <param name="previousMaxFinishTime">The maximum TimeSpan previous animations take.</param>
-        /// <param name="defaultCycleTime">The default cycle time if we would be in continous calculation mode.</param>
-        public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
-        {
-            return m_timeTillNextPartFinished;
         }
 
         /// <summary>

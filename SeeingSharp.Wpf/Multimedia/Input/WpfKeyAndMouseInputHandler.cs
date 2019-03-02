@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -41,6 +42,93 @@ namespace SeeingSharp.Multimedia.Input
         // Input states
         private MouseOrPointerState m_stateMouseOrPointer;
         private KeyboardState m_stateKeyboard;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WpfKeyAndMouseInputHandler"/> class.
+        /// </summary>
+        public WpfKeyAndMouseInputHandler()
+        {
+            m_stateMouseOrPointer = new MouseOrPointerState();
+            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
+
+            m_stateKeyboard = new KeyboardState();
+        }
+
+        /// <summary>
+        /// Gets a list containing all supported view types.
+        /// </summary>
+        public Type[] GetSupportedViewTypes()
+        {
+            return new[]
+            {
+                typeof(SeeingSharpRendererElement)
+            };
+        }
+
+        /// <summary>
+        /// Starts input handling.
+        /// </summary>
+        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
+        public void Start(IInputEnabledView viewObject)
+        {
+            m_rendererElement = viewObject as SeeingSharpRendererElement;
+            if(m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
+
+            // Register all events needed for mouse camera dragging
+            m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                m_rendererElement.MouseWheel += OnRendererElement_MouseWheel;
+                m_rendererElement.MouseDown += OnRendererElement_MouseDown;
+                m_rendererElement.MouseUp += OnRendererElement_MouseUp;
+                m_rendererElement.MouseMove += OnRendererElement_MouseMove;
+                m_rendererElement.MouseLeave += OnRendererElement_MouseLeave;
+                m_rendererElement.GotFocus += OnRenderElement_GotFocus;
+                m_rendererElement.LostFocus += OnRendererElement_LostFocus;
+                m_rendererElement.LostKeyboardFocus += OnRendererElement_LostKeyboardFocus;
+                m_rendererElement.PreviewMouseUp += OnRendererElement_PreviewMouseUp;
+                m_rendererElement.KeyUp += OnRendererElement_KeyUp;
+                m_rendererElement.KeyDown += OnRendererElement_KeyDown;
+            }));
+        }
+
+        /// <summary>
+        /// Stops input handling.
+        /// </summary>
+        public void Stop()
+        {
+            // Deregister all events
+            if(m_rendererElement != null)
+            {
+                var rendererElement = m_rendererElement;
+
+                m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    rendererElement.MouseWheel -= OnRendererElement_MouseWheel;
+                    rendererElement.MouseDown -= OnRendererElement_MouseDown;
+                    rendererElement.MouseUp -= OnRendererElement_MouseUp;
+                    rendererElement.MouseMove -= OnRendererElement_MouseMove;
+                    rendererElement.MouseLeave -= OnRendererElement_MouseLeave;
+                    rendererElement.LostFocus -= OnRendererElement_LostFocus;
+                    rendererElement.LostKeyboardFocus -= OnRendererElement_LostKeyboardFocus;
+                    rendererElement.GotFocus -= OnRenderElement_GotFocus;
+                    rendererElement.PreviewMouseUp -= OnRendererElement_PreviewMouseUp;
+                }));
+            }
+
+            m_rendererElement = null;
+
+            m_stateKeyboard = new KeyboardState();
+            m_stateMouseOrPointer = new MouseOrPointerState();
+        }
+
+        /// <summary>
+        /// Querries all current input states.
+        /// </summary>
+        public IEnumerable<InputStateBase> GetInputStates()
+        {
+            yield return m_stateMouseOrPointer;
+            yield return m_stateKeyboard;
+        }
 
         private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
         {
@@ -208,93 +296,6 @@ namespace SeeingSharp.Multimedia.Input
                     m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
                     break;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfKeyAndMouseInputHandler"/> class.
-        /// </summary>
-        public WpfKeyAndMouseInputHandler()
-        {
-            m_stateMouseOrPointer = new MouseOrPointerState();
-            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
-
-            m_stateKeyboard = new KeyboardState();
-        }
-
-        /// <summary>
-        /// Gets a list containing all supported view types.
-        /// </summary>
-        public Type[] GetSupportedViewTypes()
-        {
-            return new[]
-            {
-                typeof(SeeingSharpRendererElement)
-            };
-        }
-
-        /// <summary>
-        /// Starts input handling.
-        /// </summary>
-        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
-        {
-            m_rendererElement = viewObject as SeeingSharpRendererElement;
-            if(m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
-
-            // Register all events needed for mouse camera dragging
-            m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                m_rendererElement.MouseWheel += OnRendererElement_MouseWheel;
-                m_rendererElement.MouseDown += OnRendererElement_MouseDown;
-                m_rendererElement.MouseUp += OnRendererElement_MouseUp;
-                m_rendererElement.MouseMove += OnRendererElement_MouseMove;
-                m_rendererElement.MouseLeave += OnRendererElement_MouseLeave;
-                m_rendererElement.GotFocus += OnRenderElement_GotFocus;
-                m_rendererElement.LostFocus += OnRendererElement_LostFocus;
-                m_rendererElement.LostKeyboardFocus += OnRendererElement_LostKeyboardFocus;
-                m_rendererElement.PreviewMouseUp += OnRendererElement_PreviewMouseUp;
-                m_rendererElement.KeyUp += OnRendererElement_KeyUp;
-                m_rendererElement.KeyDown += OnRendererElement_KeyDown;
-            }));
-        }
-
-        /// <summary>
-        /// Stops input handling.
-        /// </summary>
-        public void Stop()
-        {
-            // Deregister all events
-            if(m_rendererElement != null)
-            {
-                var rendererElement = m_rendererElement;
-
-                m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    rendererElement.MouseWheel -= OnRendererElement_MouseWheel;
-                    rendererElement.MouseDown -= OnRendererElement_MouseDown;
-                    rendererElement.MouseUp -= OnRendererElement_MouseUp;
-                    rendererElement.MouseMove -= OnRendererElement_MouseMove;
-                    rendererElement.MouseLeave -= OnRendererElement_MouseLeave;
-                    rendererElement.LostFocus -= OnRendererElement_LostFocus;
-                    rendererElement.LostKeyboardFocus -= OnRendererElement_LostKeyboardFocus;
-                    rendererElement.GotFocus -= OnRenderElement_GotFocus;
-                    rendererElement.PreviewMouseUp -= OnRendererElement_PreviewMouseUp;
-                }));
-            }
-
-            m_rendererElement = null;
-
-            m_stateKeyboard = new KeyboardState();
-            m_stateMouseOrPointer = new MouseOrPointerState();
-        }
-
-        /// <summary>
-        /// Querries all current input states.
-        /// </summary>
-        public IEnumerable<InputStateBase> GetInputStates()
-        {
-            yield return m_stateMouseOrPointer;
-            yield return m_stateKeyboard;
         }
     }
 }

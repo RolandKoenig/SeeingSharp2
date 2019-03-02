@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp
@@ -31,9 +32,6 @@ namespace SeeingSharp
 
         // Component group names
         public const string COMPONENT_GROUP_CAMERA = "Camera";
-
-        // Constants for occurences per timeunit measuring
-        public static string PERF_GLOBAL_FRAMES_FINISHED = "Graphics.Global.FramesRendered";
 
         // Rendering constants
         public const double MINIMUM_FRAME_TIME_MS = 1000.0 / 60.0;
@@ -56,11 +54,14 @@ namespace SeeingSharp
         public const string PERF_RENDERLOOP_PRESENT = "Graphics.RenderLoop.Present (Scene: {0}, View: {1})";
         public const string PERF_RENDERLOOP_RENDER = "Graphics.RenderLoop.Render (Scene: {0}, View: {1})";
         public const string PERF_RENDERLOOP_RENDER_2D = "Graphics.RenderLoop.Render.2D (Scene: {0}, View: {1})";
+        public const double UPDATE_DEFAULT_CYCLE_MS = 50.0;
+        public const long UPDATE_DEFAULT_CYCLES_TICKS = 500000;
+
+        // Constants for occurences per timeunit measuring
+        public static string PERF_GLOBAL_FRAMES_FINISHED = "Graphics.Global.FramesRendered";
 
         // Constants for animation system
         public static readonly TimeSpan UPDATE_STATE_MAX_TIME = new TimeSpan(0, 0, 0, 0, int.MaxValue);
         public static readonly TimeSpan UPDATE_DEFAULT_CYLCE = new TimeSpan(UPDATE_DEFAULT_CYCLES_TICKS);
-        public const double UPDATE_DEFAULT_CYCLE_MS = 50.0;
-        public const long UPDATE_DEFAULT_CYCLES_TICKS = 500000;
     }
 }

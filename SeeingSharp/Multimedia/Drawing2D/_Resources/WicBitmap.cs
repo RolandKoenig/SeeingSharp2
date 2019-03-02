@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
@@ -32,6 +33,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // Native resource
         private Bitmap m_wicBitmap;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WicBitmap"/> class.
+        /// </summary>
+        /// <param name="wicBitmap">The unmanaged bitmap data object.</param>
+        private WicBitmap(Bitmap wicBitmap)
+        {
+            m_wicBitmap = wicBitmap;
+        }
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
         {
@@ -75,15 +85,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var result = new byte[m_wicBitmap.Size.Width * m_wicBitmap.Size.Height * 4];
             m_wicBitmap.CopyPixels(result, m_wicBitmap.Size.Width * 4);
             return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WicBitmap"/> class.
-        /// </summary>
-        /// <param name="wicBitmap">The unmanaged bitmap data object.</param>
-        private WicBitmap(Bitmap wicBitmap)
-        {
-            m_wicBitmap = wicBitmap;
         }
 
         /// <summary>

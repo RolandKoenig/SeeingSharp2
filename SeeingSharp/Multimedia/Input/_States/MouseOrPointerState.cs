@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Checking;
 using SharpDX;
@@ -42,6 +43,24 @@ namespace SeeingSharp.Multimedia.Input
         private bool[] m_buttonsDown;       // All following frames the mouse is down
         private bool[] m_buttonsUp;         // True on the frame when the button changes to up
         private bool m_isInside;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MouseOrPointerState"/> class.
+        /// </summary>
+        public MouseOrPointerState()
+        {
+            var buttonCount = BUTTON_COUNT;
+            if (buttonCount <= 0)
+            {
+                buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
+            }
+
+            Internals = new MouseOrPointerStateInternals(this);
+
+            m_buttonsHit = new bool[buttonCount];
+            m_buttonsDown = new bool[buttonCount];
+            m_buttonsUp = new bool[buttonCount];
+        }
 
         /// <summary>
         /// Returns true if the user pressed the given button in this frame.
@@ -68,6 +87,49 @@ namespace SeeingSharp.Multimedia.Input
         public bool IsButtonUp(MouseButton mouseButton)
         {
             return m_buttonsUp[(int)mouseButton];
+        }
+
+        /// <summary>
+        /// Copies this object and then resets it
+        /// in preparation of the next update pass.
+        /// Called by update-render loop.
+        /// </summary>
+        protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
+        {
+            var targetStateCasted = targetState as MouseOrPointerState;
+            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
+
+            targetStateCasted.m_moveDistancePixel = m_moveDistancePixel;
+            targetStateCasted.m_screenSizePixel = m_screenSizePixel;
+            targetStateCasted.m_positionPixel = m_positionPixel;
+            targetStateCasted.m_wheelDelta = m_wheelDelta;
+            targetStateCasted.m_isInside = m_isInside;
+            targetStateCasted.Type = Type;
+            for (var loop = 0; loop < BUTTON_COUNT; loop++)
+            {
+                targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
+                targetStateCasted.m_buttonsHit[loop] = m_buttonsHit[loop];
+                targetStateCasted.m_buttonsUp[loop] = m_buttonsUp[loop];
+            }
+
+            // Reset current object
+            m_moveDistancePixel = Vector2.Zero;
+            m_wheelDelta = 0;
+            for(var loop=0; loop<BUTTON_COUNT; loop++)
+            {
+                m_buttonsUp[loop] = false;
+
+                if(m_buttonsHit[loop] || m_buttonsDown[loop])
+                {
+                    m_buttonsHit[loop] = false;
+                    m_buttonsDown[loop] = true;
+                }
+                else
+                {
+                    m_buttonsHit[loop] = false;
+                    m_buttonsDown[loop] = false;
+                }
+            }
         }
 
         internal void NotifyButtonDown(MouseButton button)
@@ -147,49 +209,6 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Copies this object and then resets it
-        /// in preparation of the next update pass.
-        /// Called by update-render loop.
-        /// </summary>
-        protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
-        {
-            var targetStateCasted = targetState as MouseOrPointerState;
-            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
-
-            targetStateCasted.m_moveDistancePixel = m_moveDistancePixel;
-            targetStateCasted.m_screenSizePixel = m_screenSizePixel;
-            targetStateCasted.m_positionPixel = m_positionPixel;
-            targetStateCasted.m_wheelDelta = m_wheelDelta;
-            targetStateCasted.m_isInside = m_isInside;
-            targetStateCasted.Type = Type;
-            for (var loop = 0; loop < BUTTON_COUNT; loop++)
-            {
-                targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
-                targetStateCasted.m_buttonsHit[loop] = m_buttonsHit[loop];
-                targetStateCasted.m_buttonsUp[loop] = m_buttonsUp[loop];
-            }
-
-            // Reset current object
-            m_moveDistancePixel = Vector2.Zero;
-            m_wheelDelta = 0;
-            for(var loop=0; loop<BUTTON_COUNT; loop++)
-            {
-                m_buttonsUp[loop] = false;
-
-                if(m_buttonsHit[loop] || m_buttonsDown[loop])
-                {
-                    m_buttonsHit[loop] = false;
-                    m_buttonsDown[loop] = true;
-                }
-                else
-                {
-                    m_buttonsHit[loop] = false;
-                    m_buttonsDown[loop] = false;
-                }
-            }
-        }
-
-        /// <summary>
         /// Helper method: Updates the button state at the given index based
         /// on currently notified press-state.
         /// </summary>
@@ -211,24 +230,6 @@ namespace SeeingSharp.Multimedia.Input
                 m_buttonsDown[buttonIndex] = false;
                 m_buttonsUp[buttonIndex] = true;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MouseOrPointerState"/> class.
-        /// </summary>
-        public MouseOrPointerState()
-        {
-            var buttonCount = BUTTON_COUNT;
-            if (buttonCount <= 0)
-            {
-                buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
-            }
-
-            Internals = new MouseOrPointerStateInternals(this);
-
-            m_buttonsHit = new bool[buttonCount];
-            m_buttonsDown = new bool[buttonCount];
-            m_buttonsUp = new bool[buttonCount];
         }
 
         public Vector2 MoveDistanceDip => m_moveDistancePixel;
@@ -280,6 +281,11 @@ namespace SeeingSharp.Multimedia.Input
         {
             private MouseOrPointerState m_host;
 
+            internal MouseOrPointerStateInternals(MouseOrPointerState host)
+            {
+                m_host = host;
+            }
+
             public void NotifyButtonDown(MouseButton button)
             {
                 m_host.NotifyButtonDown(button);
@@ -313,11 +319,6 @@ namespace SeeingSharp.Multimedia.Input
             public void NotifyInside(bool isMouseInside)
             {
                 m_host.NotifyInside(isMouseInside);
-            }
-
-            internal MouseOrPointerStateInternals(MouseOrPointerState host)
-            {
-                m_host = host;
             }
 
             public MouseOrPointerType Type

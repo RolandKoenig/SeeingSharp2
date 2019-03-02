@@ -1459,14 +1459,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             private RenderLoop m_target;
 
-            public void UnloadViewResources()
-            {
-                m_target.UnloadViewResources();
-            }
-
             public RenderLoopInternals(RenderLoop target)
             {
                 m_target = target;
+            }
+
+            public void UnloadViewResources()
+            {
+                m_target.UnloadViewResources();
             }
 
             public D3D11.Texture2D RenderTarget => m_target.m_renderTarget;

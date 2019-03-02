@@ -44,6 +44,32 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         private bool isStrictRowStride;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PixelBuffer" /> struct.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="rowStride">The row pitch.</param>
+        /// <param name="bufferStride">The slice pitch.</param>
+        /// <param name="dataPointer">The pixels.</param>
+        public PixelBuffer(int width, int height, Format format, int rowStride, int bufferStride, IntPtr dataPointer)
+        {
+            if (dataPointer == IntPtr.Zero)
+            {
+                throw new ArgumentException("Pointer cannot be equal to IntPtr.Zero", "dataPointer");
+            }
+
+            Width = width;
+            Height = height;
+            this.format = format;
+            RowStride = rowStride;
+            BufferStride = bufferStride;
+            DataPointer = dataPointer;
+            PixelSize = this.format.SizeOfInBytes();
+            isStrictRowStride = PixelSize * width == rowStride;
+        }
+
+        /// <summary>
         /// Copies this pixel buffer to a destination pixel buffer.
         /// </summary>
         /// <param name="pixelBuffer">The destination pixel buffer.</param>
@@ -56,7 +82,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             // Check that buffers are identical
             if (Width != pixelBuffer.Width
                 || Height != pixelBuffer.Height
-                || PixelSize != FormatHelper.SizeOfInBytes(pixelBuffer.Format))
+                || PixelSize != pixelBuffer.Format.SizeOfInBytes())
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }
@@ -274,32 +300,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PixelBuffer" /> struct.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">The format.</param>
-        /// <param name="rowStride">The row pitch.</param>
-        /// <param name="bufferStride">The slice pitch.</param>
-        /// <param name="dataPointer">The pixels.</param>
-        public PixelBuffer(int width, int height, Format format, int rowStride, int bufferStride, IntPtr dataPointer)
-        {
-            if (dataPointer == IntPtr.Zero)
-            {
-                throw new ArgumentException("Pointer cannot be equal to IntPtr.Zero", "dataPointer");
-            }
-
-            Width = width;
-            Height = height;
-            this.format = format;
-            RowStride = rowStride;
-            BufferStride = bufferStride;
-            DataPointer = dataPointer;
-            PixelSize = FormatHelper.SizeOfInBytes(this.format);
-            isStrictRowStride = PixelSize * width == rowStride;
-        }
-
-        /// <summary>
         /// Gets the width.
         /// </summary>
         /// <value>The width.</value>
@@ -320,7 +320,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             get => format;
             set
             {
-                if (PixelSize != FormatHelper.SizeOfInBytes(value))
+                if (PixelSize != value.SizeOfInBytes())
                 {
                     throw new ArgumentException(
                         $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");

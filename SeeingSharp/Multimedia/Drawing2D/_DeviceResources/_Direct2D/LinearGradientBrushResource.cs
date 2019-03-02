@@ -40,6 +40,36 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private LoadedBrushResources[] m_loadedBrushes;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
+        /// </summary>
+        /// <param name="startPoint">The start point of the gradient.</param>
+        /// <param name="endPoint">The end point of the gradient.</param>
+        /// <param name="gradientStops">All points within the color gradient.</param>
+        /// <param name="extendMode">How to draw outside the content area?</param>
+        /// <param name="gamma">The gama configuration.</param>
+        /// <param name="opacity">The opacity value of the brush.</param>
+        public LinearGradientBrushResource(
+            Vector2 startPoint, Vector2 endPoint,
+            GradientStop[] gradientStops,
+            ExtendMode extendMode = ExtendMode.Clamp,
+            Gamma gamma = Gamma.StandardRgb,
+            float opacity = 1f)
+        {
+            startPoint.EnsureNotEqual(endPoint, nameof(startPoint), nameof(endPoint));
+            gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
+
+            m_gradientStops = gradientStops;
+            StartPoint = startPoint;
+            EndPoint = endPoint;
+            ExtendMode = extendMode;
+            Gamma = gamma;
+            m_opacity = opacity;
+
+            m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
+
+        }
+
+        /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to unload the resource.</param>
@@ -116,36 +146,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return result.Brush;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
-        /// </summary>
-        /// <param name="startPoint">The start point of the gradient.</param>
-        /// <param name="endPoint">The end point of the gradient.</param>
-        /// <param name="gradientStops">All points within the color gradient.</param>
-        /// <param name="extendMode">How to draw outside the content area?</param>
-        /// <param name="gamma">The gama configuration.</param>
-        /// <param name="opacity">The opacity value of the brush.</param>
-        public LinearGradientBrushResource(
-            Vector2 startPoint, Vector2 endPoint,
-            GradientStop[] gradientStops,
-            ExtendMode extendMode = ExtendMode.Clamp,
-            Gamma gamma = Gamma.StandardRgb,
-            float opacity = 1f)
-        {
-            startPoint.EnsureNotEqual(endPoint, nameof(startPoint), nameof(endPoint));
-            gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
-
-            m_gradientStops = gradientStops;
-            StartPoint = startPoint;
-            EndPoint = endPoint;
-            ExtendMode = extendMode;
-            Gamma = gamma;
-            m_opacity = opacity;
-
-            m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
-
         }
 
         public Gamma Gamma { get; }

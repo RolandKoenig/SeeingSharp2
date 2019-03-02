@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Util;
 using SharpDX.WIC;
@@ -33,13 +34,13 @@ namespace SeeingSharp.Multimedia.Core
             Converter = converter;
         }
 
-        public bool IsDisposed => Converter == null;
-
         public void Dispose()
         {
             Converter = SeeingSharpTools.DisposeObject(Converter);
             Decoder = SeeingSharpTools.DisposeObject(Decoder);
         }
+
+        public bool IsDisposed => Converter == null;
 
         public BitmapDecoder Decoder
         {

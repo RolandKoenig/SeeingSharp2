@@ -46,6 +46,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private TypeSafeConstantBufferResource<CBPerObject> m_constantBuffer;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
+        /// </summary>
+        public EdgeDetectPostprocessEffectResource()
+        {
+            Thickness = 2f;
+            m_borderColor = Color4Ex.BlueColor;
+            DrawOriginalObject = true;
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         /// <param name="device">The device.</param>
@@ -167,16 +177,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
-        /// </summary>
-        public EdgeDetectPostprocessEffectResource()
-        {
-            Thickness = 2f;
-            m_borderColor = Color4Ex.BlueColor;
-            DrawOriginalObject = true;
         }
 
         /// <summary>

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel;
@@ -35,6 +36,24 @@ namespace SeeingSharp.UwpSamples
         private SampleSettings m_sampleSettings;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
+
+        public MainWindowViewModel()
+        {
+            if (!DesignMode.DesignModeEnabled) { return; }
+
+            for (var loop = 1; loop < 5; loop++)
+            {
+                SampleGroups.Add($"DummyGroup {loop}");
+            }
+            SelectedGroup = "DummyGroup 2";
+
+            for (var loop=1; loop<5; loop++)
+            {
+                Samples.Add(new SampleViewModel(new SampleMetadata(
+                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"),
+                    GetType())));
+            }
+        }
 
         public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -67,24 +86,6 @@ namespace SeeingSharp.UwpSamples
                 Samples.Add(new SampleViewModel(actSampleMetadata));
             }
             SelectedSample = Samples.FirstOrDefault();
-        }
-
-        public MainWindowViewModel()
-        {
-            if (!DesignMode.DesignModeEnabled) { return; }
-
-            for (var loop = 1; loop < 5; loop++)
-            {
-                SampleGroups.Add($"DummyGroup {loop}");
-            }
-            SelectedGroup = "DummyGroup 2";
-
-            for (var loop=1; loop<5; loop++)
-            {
-                Samples.Add(new SampleViewModel(new SampleMetadata(
-                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"),
-                    GetType())));
-            }
         }
 
         public ObservableCollection<string> SampleGroups

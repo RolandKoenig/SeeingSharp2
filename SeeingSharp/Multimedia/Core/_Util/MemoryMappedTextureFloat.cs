@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Runtime.InteropServices;
 using SharpDX;
@@ -40,6 +41,17 @@ namespace SeeingSharp.Multimedia.Core
         private IntPtr m_pointer;
         private float* m_pointerNative;
         private Size2 m_size;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryMappedTextureFloat"/> class.
+        /// </summary>
+        /// <param name="size">The total size of the texture.</param>
+        public MemoryMappedTextureFloat(Size2 size)
+        {
+            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
+            m_pointerNative = (float*)m_pointer.ToPointer();
+            m_size = size;
+        }
 
         /// <summary>
         /// Queries for the ObjectID at the given location.
@@ -83,17 +95,6 @@ namespace SeeingSharp.Multimedia.Core
 
             // No clear match found
             return 0f;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryMappedTextureFloat"/> class.
-        /// </summary>
-        /// <param name="size">The total size of the texture.</param>
-        public MemoryMappedTextureFloat(Size2 size)
-        {
-            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
-            m_pointerNative = (float*)m_pointer.ToPointer();
-            m_size = size;
         }
 
         /// <summary>

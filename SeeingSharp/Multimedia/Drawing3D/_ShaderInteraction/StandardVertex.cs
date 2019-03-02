@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -26,7 +27,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 using SharpDX.DXGI;
-
 // Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 

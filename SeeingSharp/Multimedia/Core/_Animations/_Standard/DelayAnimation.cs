@@ -19,12 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class DelayAnimation : AnimationBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DelayAnimation"/> class.
+        /// </summary>
+        /// <param name="duration">The duration.</param>
+        public DelayAnimation(TimeSpan duration)
+            : base(null, AnimationType.FixedTime, duration)
+        {
+
+        }
+
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
         /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
@@ -36,16 +47,6 @@ namespace SeeingSharp.Multimedia.Core
         public override TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
             return FixedTime;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DelayAnimation"/> class.
-        /// </summary>
-        /// <param name="duration">The duration.</param>
-        public DelayAnimation(TimeSpan duration)
-            : base(null, AnimationType.FixedTime, duration)
-        {
-
         }
 
         /// <summary>

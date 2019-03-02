@@ -33,16 +33,6 @@ namespace SeeingSharp.Multimedia.Core
         private Factory2 m_factory;
 
         /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        internal void UnloadResources()
-        {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
-            m_adapter = SeeingSharpUtil.DisposeObject(m_adapter);
-            m_device = SeeingSharpUtil.DisposeObject(m_device);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
         /// </summary>
         internal DeviceHandlerDXGI(Adapter1 adapter, D3D11.Device device)
@@ -52,6 +42,21 @@ namespace SeeingSharp.Multimedia.Core
 
             m_factory = m_adapter.GetParent<Factory2>();
         }
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        internal void UnloadResources()
+        {
+            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+            m_adapter = SeeingSharpUtil.DisposeObject(m_adapter);
+            m_device = SeeingSharpUtil.DisposeObject(m_device);
+        }
+
+        public bool IsInitialized =>
+            m_factory != null &&
+            m_device != null &&
+            m_adapter != null;
 
         /// <summary>
         /// Gets current factory object.
@@ -68,10 +73,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets current adapter used for drawing.
         /// </summary>
         internal Adapter1 Adapter => m_adapter;
-
-        public bool IsInitialized =>
-            m_factory != null &&
-            m_device != null &&
-            m_adapter != null;
     }
 }

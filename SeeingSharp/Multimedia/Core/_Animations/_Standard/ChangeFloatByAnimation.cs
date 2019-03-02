@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -33,6 +34,23 @@ namespace SeeingSharp.Multimedia.Core
 
         private Action<float> m_setValueAction;
         private TimeSpan m_timeSpan;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChangeFloatByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="getValueFunc">The get value func.</param>
+        /// <param name="setValueAction">The set value action.</param>
+        /// <param name="increaseTotal">The increase total.</param>
+        /// <param name="timeSpan">The timespan.</param>
+        public ChangeFloatByAnimation(object targetObject, Func<float> getValueFunc, Action<float> setValueAction, float increaseTotal, TimeSpan timeSpan)
+            : base(targetObject, AnimationType.FixedTime, timeSpan)
+        {
+            m_getValueFunc = getValueFunc;
+            m_setValueAction = setValueAction;
+            m_increaseTotal = increaseTotal;
+            m_timeSpan = timeSpan;
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -54,23 +72,6 @@ namespace SeeingSharp.Multimedia.Core
             m_setValueAction(m_getValueFunc() + toIncrease);
 
             m_alreadyIncreased = toIncreaseTotal;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeFloatByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="getValueFunc">The get value func.</param>
-        /// <param name="setValueAction">The set value action.</param>
-        /// <param name="increaseTotal">The increase total.</param>
-        /// <param name="timeSpan">The timespan.</param>
-        public ChangeFloatByAnimation(object targetObject, Func<float> getValueFunc, Action<float> setValueAction, float increaseTotal, TimeSpan timeSpan)
-            : base(targetObject, AnimationType.FixedTime, timeSpan)
-        {
-            m_getValueFunc = getValueFunc;
-            m_setValueAction = setValueAction;
-            m_increaseTotal = increaseTotal;
-            m_timeSpan = timeSpan;
         }
 
         /// <summary>

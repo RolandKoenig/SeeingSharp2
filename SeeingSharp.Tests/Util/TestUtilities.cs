@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Drawing;
 using System.IO;
@@ -90,10 +91,10 @@ namespace SeeingSharp.Tests.Util
                 }
             };
 
-            GraphicsCore.InternalCachedException += eventHandler;
+            GraphicsCore.InternalCatchedException += eventHandler;
             return new DummyDisposable(() =>
             {
-                GraphicsCore.InternalCachedException -= eventHandler;
+                GraphicsCore.InternalCatchedException -= eventHandler;
 
                 Assert.IsTrue(internalEx == null, $"Internal exception at {location}: {internalEx}");
             });

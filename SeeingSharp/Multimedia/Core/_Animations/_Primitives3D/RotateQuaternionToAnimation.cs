@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -30,6 +31,19 @@ namespace SeeingSharp.Multimedia.Core
         private IAnimatableObjectQuaternion m_targetObject;
         private Quaternion m_startQuaternion;
         private Quaternion m_targetQuaternion;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RotateQuaternionToAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetQuaternion">The target quaternion.</param>
+        /// <param name="timeSpan">The time span.</param>
+        public RotateQuaternionToAnimation(IAnimatableObjectQuaternion targetObject, Quaternion targetQuaternion, TimeSpan timeSpan)
+            : base(targetObject, AnimationType.FixedTime, timeSpan)
+        {
+            m_targetObject = targetObject;
+            m_targetQuaternion = targetQuaternion;
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -60,19 +74,6 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnFixedTimeAnimationFinished()
         {
             m_targetObject.RotationQuaternion = m_targetQuaternion;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RotateQuaternionToAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetQuaternion">The target quaternion.</param>
-        /// <param name="timeSpan">The time span.</param>
-        public RotateQuaternionToAnimation(IAnimatableObjectQuaternion targetObject, Quaternion targetQuaternion, TimeSpan timeSpan)
-            : base(targetObject, AnimationType.FixedTime, timeSpan)
-        {
-            m_targetObject = targetObject;
-            m_targetQuaternion = targetQuaternion;
         }
     }
 }

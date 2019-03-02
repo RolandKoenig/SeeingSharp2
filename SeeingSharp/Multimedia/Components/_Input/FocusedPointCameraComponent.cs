@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
@@ -27,17 +28,17 @@ namespace SeeingSharp.Multimedia.Components
     {
         private Vector3 m_focusedLocation;
 
-        protected override Vector3 GetFocusedLocation()
-        {
-            return m_focusedLocation;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
         /// </summary>
         public FocusedPointCameraComponent()
         {
             m_focusedLocation = Vector3.Zero;
+        }
+
+        protected override Vector3 GetFocusedLocation()
+        {
+            return m_focusedLocation;
         }
 
         public float FocusedPointX

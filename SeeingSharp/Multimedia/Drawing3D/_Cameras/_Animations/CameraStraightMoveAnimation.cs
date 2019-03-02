@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -33,6 +34,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private OrthographicCamera3D m_cameraOrthographic;
         private Camera3DViewPoint m_viewPointSource;
         private Camera3DViewPoint m_viewPointTarget;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CameraStraightMoveAnimation"/> class.
+        /// </summary>
+        /// <param name="targetCamera">The camera to be animated.</param>
+        /// <param name="targetViewPoint">The target view point.</param>
+        /// <param name="animationTime">The animation time.</param>
+        public CameraStraightMoveAnimation(Camera3DBase targetCamera, Camera3DViewPoint targetViewPoint, TimeSpan animationTime)
+            : base(targetCamera, AnimationType.FixedTime, animationTime)
+        {
+            targetCamera.EnsureNotNull(nameof(targetCamera));
+            targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
+
+            m_camera = targetCamera;
+            m_cameraPerspective = m_camera as PerspectiveCamera3D;
+            m_cameraOrthographic = m_camera as OrthographicCamera3D;
+
+            m_viewPointSource = m_camera.GetViewPoint();
+            m_viewPointTarget = targetViewPoint;
+        }
 
         /// <summary>
         /// Called each time the CurrentTime value gets updated.
@@ -71,26 +92,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.OnFixedTimeAnimationFinished();
 
             m_camera.ApplyViewPoint(m_viewPointTarget);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CameraStraightMoveAnimation"/> class.
-        /// </summary>
-        /// <param name="targetCamera">The camera to be animated.</param>
-        /// <param name="targetViewPoint">The target view point.</param>
-        /// <param name="animationTime">The animation time.</param>
-        public CameraStraightMoveAnimation(Camera3DBase targetCamera, Camera3DViewPoint targetViewPoint, TimeSpan animationTime)
-            : base(targetCamera, AnimationType.FixedTime, animationTime)
-        {
-            targetCamera.EnsureNotNull(nameof(targetCamera));
-            targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
-
-            m_camera = targetCamera;
-            m_cameraPerspective = m_camera as PerspectiveCamera3D;
-            m_cameraOrthographic = m_camera as OrthographicCamera3D;
-
-            m_viewPointSource = m_camera.GetViewPoint();
-            m_viewPointTarget = targetViewPoint;
         }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace SeeingSharp.Multimedia.Objects
     {
         // Description
         private string m_name;
-        
+
         // Geometry
         private List<VertexStructureSurface> m_surfaces;
 
@@ -45,6 +46,29 @@ namespace SeeingSharp.Multimedia.Objects
         private bool m_buildTimeTransformEnabled;
         private Matrix m_buildTransformMatrix;
         private Func<Vertex, Vertex> m_buildTimeTransformFunc;
+
+        /// <summary>
+        /// Creates a new Vertex structure object
+        /// </summary>
+        public VertexStructure()
+            : this(512)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new Vertex structure object
+        /// </summary>
+        public VertexStructure(int verticesCapacity)
+        {
+            m_name = string.Empty;
+            Description = string.Empty;
+
+            VerticesInternal = new List<Vertex>(verticesCapacity);
+            m_surfaces = new List<VertexStructureSurface>();
+
+            Vertices = new VertexCollection(VerticesInternal);
+            Surfaces = new SurfaceCollection(m_surfaces);
+        }
 
         /// <summary>
         /// Creates the surface on this VertexStructure.
@@ -624,29 +648,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Creates a new Vertex structure object
-        /// </summary>
-        public VertexStructure()
-            : this(512)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new Vertex structure object
-        /// </summary>
-        public VertexStructure(int verticesCapacity)
-        {
-            m_name = string.Empty;
-            Description = string.Empty;
-
-            VerticesInternal = new List<Vertex>(verticesCapacity);
-            m_surfaces = new List<VertexStructureSurface>();
-
-            Vertices = new VertexCollection(VerticesInternal);
-            Surfaces = new SurfaceCollection(m_surfaces);
-        }
-
-        /// <summary>
         /// Gets the first surface of  this structure.
         /// It there is no surface, then one gets created automatically.
         /// </summary>
@@ -692,11 +693,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public VertexCollection Vertices { get; }
 
-        /// <summary>
-        /// Gets a collection of vertices.
-        /// </summary>
-        internal List<Vertex> VerticesInternal { get; }
-
         public SurfaceCollection Surfaces { get; }
 
         public int CountSurfaces => m_surfaces.Count;
@@ -737,6 +733,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ResourceLink ResourceLink { get; set; }
 
+        /// <summary>
+        /// Gets a collection of vertices.
+        /// </summary>
+        internal List<Vertex> VerticesInternal { get; }
+
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -747,6 +748,11 @@ namespace SeeingSharp.Multimedia.Objects
         {
             private List<Vertex> m_vertices;
 
+            internal VertexCollection(List<Vertex> vertices)
+            {
+                m_vertices = vertices;
+            }
+
             /// <summary>
             /// Adds a vertex to the structure
             /// </summary>
@@ -755,20 +761,15 @@ namespace SeeingSharp.Multimedia.Objects
                 m_vertices.Add(vertex);
             }
 
-            internal VertexCollection(List<Vertex> vertices)
-            {
-                m_vertices = vertices;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return m_vertices.GetEnumerator();
-            }
-
             /// <summary>
             ///
             /// </summary>
             public IEnumerator<Vertex> GetEnumerator()
+            {
+                return m_vertices.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return m_vertices.GetEnumerator();
             }
@@ -793,22 +794,22 @@ namespace SeeingSharp.Multimedia.Objects
         {
             private List<VertexStructureSurface> m_surfaces;
 
-            public void Add(VertexStructureSurface surface)
-            {
-                m_surfaces.Add(surface);
-            }
-
             internal SurfaceCollection(List<VertexStructureSurface> surfaces)
             {
                 m_surfaces = surfaces;
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
+            public void Add(VertexStructureSurface surface)
+            {
+                m_surfaces.Add(surface);
+            }
+
+            public IEnumerator<VertexStructureSurface> GetEnumerator()
             {
                 return m_surfaces.GetEnumerator();
             }
 
-            public IEnumerator<VertexStructureSurface> GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return m_surfaces.GetEnumerator();
             }

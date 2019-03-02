@@ -49,6 +49,70 @@ namespace SeeingSharp.Multimedia.Core
         private D2D.Bitmap1 m_renderTargetBitmap;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
+        /// </summary>
+        public Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling)
+            : this(device, renderTarget3D, viewWidth, viewHeight, dpiScaling, false)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
+        /// </summary>
+        internal Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
+        {
+            m_device = device;
+            m_renderTarget3D = renderTarget3D;
+
+            CreateResources(viewWidth, viewHeight, dpiScaling, forceInit);
+        }
+
+        /// <summary>
+        /// Begins the draw.
+        /// </summary>
+        public void BeginDraw()
+        {
+            if (m_renderTarget2D == null) { return; }
+
+            m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
+            m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
+
+            // Start Direct2D rendering
+            m_renderTarget2D.BeginDraw();
+        }
+
+        /// <summary>
+        /// Finishes Direct2D drawing.
+        /// </summary>
+        public void EndDraw()
+        {
+            if (m_renderTarget2D == null) { return; }
+
+            m_renderTarget2D.EndDraw();
+
+            // Finish Direct2D drawing
+            m_device.DeviceContextD2D.Target = null;
+        }
+
+        /// <summary>
+        /// Disposes all resources of this object completely.
+        /// </summary>
+        public void Dispose()
+        {
+            // Dispose all created objects
+            if (m_renderTarget2D != null)
+            {
+                SeeingSharpTools.SafeDispose(ref m_renderTargetBitmap);
+                m_renderTarget2D = null;
+            }
+            else
+            {
+                SeeingSharpTools.SafeDispose(ref m_renderTarget2D);
+            }
+        }
+
+        /// <summary>
         /// Creates all resources
         /// </summary>
         private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
@@ -80,70 +144,6 @@ namespace SeeingSharp.Multimedia.Core
                 m_renderTargetBitmap = new D2D.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
                 m_renderTarget2D = m_device.DeviceContextD2D;
                 m_graphics2D = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
-            }
-        }
-
-        /// <summary>
-        /// Begins the draw.
-        /// </summary>
-        public void BeginDraw()
-        {
-            if (m_renderTarget2D == null) { return; }
-
-            m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
-            m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
-
-            // Start Direct2D rendering
-            m_renderTarget2D.BeginDraw();
-        }
-
-        /// <summary>
-        /// Finishes Direct2D drawing.
-        /// </summary>
-        public void EndDraw()
-        {
-            if (m_renderTarget2D == null) { return; }
-
-            m_renderTarget2D.EndDraw();
-
-            // Finish Direct2D drawing
-            m_device.DeviceContextD2D.Target = null;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
-        /// </summary>
-        public Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling)
-            : this(device, renderTarget3D, viewWidth, viewHeight, dpiScaling, false)
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
-        /// </summary>
-        internal Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
-        {
-            m_device = device;
-            m_renderTarget3D = renderTarget3D;
-
-            CreateResources(viewWidth, viewHeight, dpiScaling, forceInit);
-        }
-
-        /// <summary>
-        /// Disposes all resources of this object completely.
-        /// </summary>
-        public void Dispose()
-        {
-            // Dispose all created objects
-            if (m_renderTarget2D != null)
-            {
-                SeeingSharpTools.SafeDispose(ref m_renderTargetBitmap);
-                m_renderTarget2D = null;
-            }
-            else
-            {
-                SeeingSharpTools.SafeDispose(ref m_renderTarget2D);
             }
         }
 

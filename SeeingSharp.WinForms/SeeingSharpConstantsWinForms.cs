@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp
@@ -28,7 +29,7 @@ namespace SeeingSharp
         // Constants for design-time
         public const string DESIGNER_CATEGORY_RENDERER = "Renderer";
         public const string DESIGNER_CATEGORY_CAMERA = "Camera";
-        
+
         // Misc
         public static readonly TimeSpan MOUSE_CLICK_MAX_TIME = TimeSpan.FromMilliseconds(200.0);
         public static readonly TimeSpan THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE = TimeSpan.FromSeconds(0.5);

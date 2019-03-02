@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -44,6 +45,16 @@ namespace SeeingSharp.Multimedia.Core
         private IEnumerable<InputFrame> m_inputFrames;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
+        /// </summary>
+        internal SceneRelatedUpdateState(Scene owner)
+        {
+            m_owner = owner;
+            World = new Matrix4Stack(Matrix.Identity);
+            m_inputFrames = null;
+        }
+
+        /// <summary>
         /// Called just before the update pass of a scene object starts.
         /// </summary>
         /// <param name="targetScene">The scene for which to prepare this state object</param>
@@ -64,16 +75,6 @@ namespace SeeingSharp.Multimedia.Core
 
             m_inputFrames = inputFrames;
             if(m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
-        /// </summary>
-        internal SceneRelatedUpdateState(Scene owner)
-        {
-            m_owner = owner;
-            World = new Matrix4Stack(Matrix.Identity);
-            m_inputFrames = null;
         }
 
         /// <summary>
@@ -119,14 +120,13 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-
-        internal bool ForceTransformUpdatesOnChilds;
-
         public bool IsPaused => m_isPaused;
 
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
         public IEnumerable<InputFrame> InputFrames => m_inputFrames;
+
+        internal bool ForceTransformUpdatesOnChilds;
     }
 }

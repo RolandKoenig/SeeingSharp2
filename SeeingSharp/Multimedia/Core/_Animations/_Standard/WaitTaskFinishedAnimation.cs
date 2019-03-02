@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
@@ -26,6 +27,15 @@ namespace SeeingSharp.Multimedia.Core
     public class WaitTaskFinishedAnimation : AnimationBase
     {
         private Task m_taskToWaitFor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitTaskFinishedAnimation" /> class.
+        /// </summary>
+        public WaitTaskFinishedAnimation(Task taskToWaitFor)
+            : base(null, AnimationType.FinishedByEvent)
+        {
+            m_taskToWaitFor = taskToWaitFor;
+        }
 
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
@@ -37,15 +47,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 NotifyAnimationFinished();
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaitTaskFinishedAnimation" /> class.
-        /// </summary>
-        public WaitTaskFinishedAnimation(Task taskToWaitFor)
-            : base(null, AnimationType.FinishedByEvent)
-        {
-            m_taskToWaitFor = taskToWaitFor;
         }
 
         /// <summary>

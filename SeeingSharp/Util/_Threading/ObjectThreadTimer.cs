@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
@@ -28,21 +29,6 @@ namespace SeeingSharp.Util
         private double m_speedFactor;
         private DateTime m_startTimeStamp;
         private TimeSpan m_timeSinceStart;
-
-        /// <summary>
-        /// Adds the given timespan to the timer.
-        /// </summary>
-        internal void Add(TimeSpan timeSpan)
-        {
-            if (m_speedFactor == 1.0)
-            {
-                m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
-            }
-            else
-            {
-                m_timeSinceStart = m_timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * m_speedFactor)));
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadTimer"/> class.
@@ -75,6 +61,21 @@ namespace SeeingSharp.Util
             m_startTimeStamp = startTimeStamp;
             m_timeSinceStart = TimeSpan.Zero;
             m_speedFactor = speedFactor;
+        }
+
+        /// <summary>
+        /// Adds the given timespan to the timer.
+        /// </summary>
+        internal void Add(TimeSpan timeSpan)
+        {
+            if (m_speedFactor == 1.0)
+            {
+                m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
+            }
+            else
+            {
+                m_timeSinceStart = m_timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * m_speedFactor)));
+            }
         }
 
         /// <summary>

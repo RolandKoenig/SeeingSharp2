@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SharpDX;
 
@@ -35,6 +36,43 @@ namespace SeeingSharp.Multimedia.Core
         // Runtime values
         private MovementAnimationHelper m_moveHelper;
         private Vector3 m_startVector;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetVector">The target position of the object.</param>
+        /// <param name="duration">The duration.</param>
+        public Move3DToAnimation(IAnimatableObjectPosition targetObject, Vector3 targetVector, TimeSpan duration)
+            : base(targetObject)
+        {
+            m_targetObject = targetObject;
+            m_targetVector = targetVector;
+            m_paramDuration = duration;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetVector">The target position of the object.</param>
+        ///´<param name="speed">The total movement speed.</param>
+        public Move3DToAnimation(IAnimatableObjectPosition targetObject, Vector3 targetVector, MovementSpeed speed)
+            : base(targetObject)
+        {
+            m_targetObject = targetObject;
+            m_targetVector = targetVector;
+            m_paramMoveSpeed = speed;
+        }
+
+        /// <summary>
+        /// Resets this animation.
+        /// </summary>
+        public override void OnReset()
+        {
+            base.OnReset();
+            ChangeToEventBased();
+        }
 
         /// <summary>
         /// Called when animation starts.
@@ -67,15 +105,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Resets this animation.
-        /// </summary>
-        public override void OnReset()
-        {
-            base.OnReset();
-            ChangeToEventBased();
-        }
-
-        /// <summary>
         /// Called each time the CurrentTime value gets updated.
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
@@ -92,34 +121,6 @@ namespace SeeingSharp.Multimedia.Core
             m_targetObject.Position = m_targetVector;
             m_startVector = Vector3.Zero;
             m_moveHelper = null;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetVector">The target position of the object.</param>
-        /// <param name="duration">The duration.</param>
-        public Move3DToAnimation(IAnimatableObjectPosition targetObject, Vector3 targetVector, TimeSpan duration)
-            : base(targetObject)
-        {
-            m_targetObject = targetObject;
-            m_targetVector = targetVector;
-            m_paramDuration = duration;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetVector">The target position of the object.</param>
-        ///´<param name="speed">The total movement speed.</param>
-        public Move3DToAnimation(IAnimatableObjectPosition targetObject, Vector3 targetVector, MovementSpeed speed)
-            : base(targetObject)
-        {
-            m_targetObject = targetObject;
-            m_targetVector = targetVector;
-            m_paramMoveSpeed = speed;
         }
     }
 }

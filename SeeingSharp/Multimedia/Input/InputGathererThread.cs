@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -46,74 +47,17 @@ namespace SeeingSharp.Multimedia.Input
         private Dictionary<IInputEnabledView, List<IInputHandler>> m_viewInputHandlers;
 
         /// <summary>
-        /// Gets all gathered InputFrames.
+        /// Initializes a new instance of the <see cref="InputGathererThread"/> class.
         /// </summary>
-        internal void QueryForCurrentFrames(List<InputFrame> targetList)
+        internal InputGathererThread()
+            : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
         {
-            // Do first recover all old frames
-            m_recoveredInputFrames.Enqueue(targetList);
-            targetList.Clear();
+            m_commandQueue = new ThreadSaveQueue<Action>();
+            m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
+            m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
 
-            // Enqueue new frames
-            m_gatheredInputFrames.DequeueAll(targetList);
-        }
-
-        /// <summary>
-        /// Registers the given view on this thread.
-        /// </summary>
-        internal void RegisterView(IInputEnabledView view)
-        {
-            view.EnsureNotNull(nameof(view));
-
-            m_commandQueue.Enqueue(() =>
-            {
-                var inputHandlers = InputHandlerFactory.CreateInputHandlersForView(view);
-                if(inputHandlers == null) { return; }
-                if(inputHandlers.Count == 0) { return; }
-
-                // Deregister old input handlers if necessary
-                if(m_viewInputHandlers.ContainsKey(view))
-                {
-                    var oldList = m_viewInputHandlers[view];
-
-                    foreach(var actOldInputHanlder in oldList)
-                    {
-                        actOldInputHanlder.Stop();
-                    }
-                    m_viewInputHandlers.Remove(view);
-                }
-
-                // Register new ones
-                m_viewInputHandlers[view] = inputHandlers;
-
-                foreach(var actInputHandler in inputHandlers)
-                {
-                    actInputHandler.Start(view);
-                }
-            });
-        }
-
-        /// <summary>
-        /// Deregisters the given view from this thread.
-        /// </summary>
-        internal void DeregisterView(IInputEnabledView view)
-        {
-            view.EnsureNotNull(nameof(view));
-
-            m_commandQueue.Enqueue(() =>
-            {
-                if (m_viewInputHandlers.ContainsKey(view))
-                {
-                    var oldList = m_viewInputHandlers[view];
-
-                    foreach (var actOldInputHanlder in oldList)
-                    {
-                        actOldInputHanlder.Stop();
-                    }
-
-                    m_viewInputHandlers.Remove(view);
-                }
-            });
+            //m_globalInputHandlers = new List<IInputHandler>();
+            m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
         }
 
         protected override void OnTick(EventArgs eArgs)
@@ -205,17 +149,74 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InputGathererThread"/> class.
+        /// Gets all gathered InputFrames.
         /// </summary>
-        internal InputGathererThread()
-            : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
+        internal void QueryForCurrentFrames(List<InputFrame> targetList)
         {
-            m_commandQueue = new ThreadSaveQueue<Action>();
-            m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
-            m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
+            // Do first recover all old frames
+            m_recoveredInputFrames.Enqueue(targetList);
+            targetList.Clear();
 
-            //m_globalInputHandlers = new List<IInputHandler>();
-            m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
+            // Enqueue new frames
+            m_gatheredInputFrames.DequeueAll(targetList);
+        }
+
+        /// <summary>
+        /// Registers the given view on this thread.
+        /// </summary>
+        internal void RegisterView(IInputEnabledView view)
+        {
+            view.EnsureNotNull(nameof(view));
+
+            m_commandQueue.Enqueue(() =>
+            {
+                var inputHandlers = InputHandlerFactory.CreateInputHandlersForView(view);
+                if(inputHandlers == null) { return; }
+                if(inputHandlers.Count == 0) { return; }
+
+                // Deregister old input handlers if necessary
+                if(m_viewInputHandlers.ContainsKey(view))
+                {
+                    var oldList = m_viewInputHandlers[view];
+
+                    foreach(var actOldInputHanlder in oldList)
+                    {
+                        actOldInputHanlder.Stop();
+                    }
+                    m_viewInputHandlers.Remove(view);
+                }
+
+                // Register new ones
+                m_viewInputHandlers[view] = inputHandlers;
+
+                foreach(var actInputHandler in inputHandlers)
+                {
+                    actInputHandler.Start(view);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Deregisters the given view from this thread.
+        /// </summary>
+        internal void DeregisterView(IInputEnabledView view)
+        {
+            view.EnsureNotNull(nameof(view));
+
+            m_commandQueue.Enqueue(() =>
+            {
+                if (m_viewInputHandlers.ContainsKey(view))
+                {
+                    var oldList = m_viewInputHandlers[view];
+
+                    foreach (var actOldInputHanlder in oldList)
+                    {
+                        actOldInputHanlder.Stop();
+                    }
+
+                    m_viewInputHandlers.Remove(view);
+                }
+            });
         }
     }
 }

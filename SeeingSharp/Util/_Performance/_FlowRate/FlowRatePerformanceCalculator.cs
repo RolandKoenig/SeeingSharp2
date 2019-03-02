@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Linq;
 
@@ -28,6 +29,16 @@ namespace SeeingSharp.Util
     {
         // Values used for calculation
         private ThreadSaveQueue<DateTime> m_lastReportedTimestamps;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlowRatePerformanceCalculator"/> class.
+        /// </summary>
+        /// <param name="calculatorName">Name of the calculator.</param>
+        public FlowRatePerformanceCalculator(string calculatorName)
+            : base(calculatorName)
+        {
+            m_lastReportedTimestamps = new ThreadSaveQueue<DateTime>();
+        }
 
         /// <summary>
         /// Notifies a new occurrence of the activity.
@@ -88,16 +99,6 @@ namespace SeeingSharp.Util
 
             // Generate the result object
             return new FlowRatePerformanceResult(this, keyTimeStamp, resultValue);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FlowRatePerformanceCalculator"/> class.
-        /// </summary>
-        /// <param name="calculatorName">Name of the calculator.</param>
-        public FlowRatePerformanceCalculator(string calculatorName)
-            : base(calculatorName)
-        {
-            m_lastReportedTimestamps = new ThreadSaveQueue<DateTime>();
         }
     }
 }

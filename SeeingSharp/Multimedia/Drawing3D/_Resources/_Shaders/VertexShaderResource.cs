@@ -32,6 +32,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.VertexShader m_vertexShader;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
+        /// </summary>
+        /// <param name="shaderProfile">Shader profile used for compiling.</param>
+        /// <param name="resourceLink">The resourceLink.</param>
+        public VertexShaderResource(string shaderProfile, ResourceLink resourceLink)
+            : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
+        {
+
+        }
+
+        /// <summary>
         /// Loads the resource.
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
@@ -48,17 +59,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected internal override void UnloadShader()
         {
             m_vertexShader = SeeingSharpTools.DisposeObject(m_vertexShader);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
-        /// </summary>
-        /// <param name="shaderProfile">Shader profile used for compiling.</param>
-        /// <param name="resourceLink">The resourceLink.</param>
-        public VertexShaderResource(string shaderProfile, ResourceLink resourceLink)
-            : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
-        {
-
         }
 
         /// <summary>

@@ -35,6 +35,23 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.SolidColorBrush[] m_loadedBrushes;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
+        /// </summary>
+        /// <param name="singleColor">Color of the single.</param>
+        /// <param name="opacity">The opacity value of the brush.</param>
+        public SolidBrushResource(
+            Color4 singleColor,
+            float opacity = 1f)
+        {
+            opacity.EnsureInRange(0f, 1f, nameof(opacity));
+
+            m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
+
+            Opacity = opacity;
+            Color = singleColor;
+        }
+
+        /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to unload the resource.</param>
@@ -77,23 +94,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
-        /// </summary>
-        /// <param name="singleColor">Color of the single.</param>
-        /// <param name="opacity">The opacity value of the brush.</param>
-        public SolidBrushResource(
-            Color4 singleColor,
-            float opacity = 1f)
-        {
-            opacity.EnsureInRange(0f, 1f, nameof(opacity));
-
-            m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
-
-            Opacity = opacity;
-            Color = singleColor;
         }
 
         public Color4 Color { get; }

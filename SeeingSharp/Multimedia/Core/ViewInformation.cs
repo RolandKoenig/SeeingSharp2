@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX;
@@ -34,32 +35,6 @@ namespace SeeingSharp.Multimedia.Core
         private List<SceneObjectFilter> m_sceneObjectFilters;
 
         /// <summary>
-        /// The owner of this ViewInformation object (standard field for fast access):
-        /// </summary>
-        internal RenderLoop Owner;
-
-        /// <summary>
-        /// Gets or sets the index of this view.
-        /// Be careful: this value depends on the scene the view is attached to!
-        ///             Its value is set by RegisterView and DeregisterView methods of the Scene class
-        /// </summary>
-        internal int ViewIndex;
-
-        /// <summary>
-        /// Updates the bounding frustum.
-        /// </summary>
-        /// <param name="viewProjectionMatrix"></param>
-        internal void UpdateFrustum(Matrix viewProjectionMatrix)
-        {
-            m_cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
-        }
-
-        public static implicit operator ViewInformation(RenderLoop renderLoop)
-        {
-            return renderLoop.ViewInformation;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ViewInformation" /> class.
         /// </summary>
         internal ViewInformation(RenderLoop owner)
@@ -70,6 +45,20 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneObjectFilters = new List<SceneObjectFilter>();
 
             ViewIndex = -1;
+        }
+
+        public static implicit operator ViewInformation(RenderLoop renderLoop)
+        {
+            return renderLoop.ViewInformation;
+        }
+
+        /// <summary>
+        /// Updates the bounding frustum.
+        /// </summary>
+        /// <param name="viewProjectionMatrix"></param>
+        internal void UpdateFrustum(Matrix viewProjectionMatrix)
+        {
+            m_cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
         }
 
         /// <summary>
@@ -106,5 +95,17 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the collection containing all filters.
         /// </summary>
         internal List<SceneObjectFilter> Filters => Owner.Filters;
+
+        /// <summary>
+        /// The owner of this ViewInformation object (standard field for fast access):
+        /// </summary>
+        internal RenderLoop Owner;
+
+        /// <summary>
+        /// Gets or sets the index of this view.
+        /// Be careful: this value depends on the scene the view is attached to!
+        ///             Its value is set by RegisterView and DeregisterView methods of the Scene class
+        /// </summary>
+        internal int ViewIndex;
     }
 }

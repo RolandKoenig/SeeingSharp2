@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SharpDX;
 
@@ -30,6 +31,26 @@ namespace SeeingSharp
         private Stack<Matrix3x2> m_stack;
         private int m_pushTimes;
         private Matrix3x2 m_top;
+
+        /// <summary>
+        /// Cretaes a new matrix stack using 3x2 matrices
+        /// </summary>
+        public Matrix3x2Stack()
+        {
+            m_stack = new Stack<Matrix3x2>();
+            m_top = Matrix3x2.Identity;
+
+            m_pushTimes = 0;
+        }
+
+        /// <summary>
+        /// Creates a new matrix stack usin 3x2 matrices
+        /// </summary>
+        public Matrix3x2Stack(Matrix3x2 top)
+            : this()
+        {
+            m_top = top;
+        }
 
         /// <summary>
         /// Resets this object to single identity matrix.
@@ -159,26 +180,6 @@ namespace SeeingSharp
                 m_top = m_stack.Pop();
                 m_pushTimes--;
             }
-        }
-
-        /// <summary>
-        /// Cretaes a new matrix stack using 3x2 matrices
-        /// </summary>
-        public Matrix3x2Stack()
-        {
-            m_stack = new Stack<Matrix3x2>();
-            m_top = Matrix3x2.Identity;
-
-            m_pushTimes = 0;
-        }
-
-        /// <summary>
-        /// Creates a new matrix stack usin 3x2 matrices
-        /// </summary>
-        public Matrix3x2Stack(Matrix3x2 top)
-            : this()
-        {
-            m_top = top;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@
 */
 
 //Some namespace mappings
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,6 +80,48 @@ namespace SeeingSharp.Multimedia.Views
         /// Raises when mouse was down a short amount of time.
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseClickEx;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
+        /// </summary>
+        public SeeingSharpRendererControl()
+        {
+            // Set style parameters for this control
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
+            SetStyle(ControlStyles.Opaque, true);
+            SetStyle(ControlStyles.Selectable, true);
+            base.DoubleBuffered = false;
+
+            m_lastSizeChange = DateTime.MinValue;
+            m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
+
+            // Create the render loop
+            var backColor = BackColor;
+            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, DesignMode);
+            m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
+            m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
+            m_renderLoop.DiscardRendering = true;
+            Disposed += (sender, eArgs) =>
+            {
+                m_renderLoop.Dispose();
+            };
+
+            // Perform default initialization logic (if not called before)
+            if (GraphicsCore.IsLoaded)
+            {
+                m_renderLoop.SetScene(new Scene());
+                m_renderLoop.Camera = new PerspectiveCamera3D();
+
+                //Initialize background brush
+                UpdateDrawingResourcesForFailoverRendering();
+            }
+
+            Disposed += OnDisposed;
+
+            UpdateDrawingResourcesForFailoverRendering();
+        }
 
         /// <summary>
         /// Gets the scene object below the cursor.
@@ -173,55 +216,6 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Stops rendering.
-        /// </summary>
-        private void StartRendering()
-        {
-            if (DesignMode) { return; }
-            if (!GraphicsCore.IsLoaded) { return; }
-
-            if (!m_renderLoop.IsRegisteredOnMainLoop)
-            {
-                m_renderLoop.SetCurrentViewSize(Width, Height);
-                m_renderLoop.DiscardRendering = false;
-                m_renderLoop.RegisterRenderLoop();
-            }
-        }
-
-        /// <summary>
-        /// Stops rendering.
-        /// </summary>
-        private void StopRendering()
-        {
-            if (DesignMode) { return; }
-            if (!GraphicsCore.IsLoaded) { return; }
-
-            if (m_renderLoop.IsRegisteredOnMainLoop)
-            {
-                m_renderLoop.DiscardRendering = true;
-                m_renderLoop.DeregisterRenderLoop();
-            }
-        }
-
-        /// <summary>
-        /// Updates the background brush used for failover rendering in System.Drawing.
-        /// </summary>
-        private void UpdateDrawingResourcesForFailoverRendering()
-        {
-            SeeingSharpTools.SafeDispose(ref m_backBrush);
-            SeeingSharpTools.SafeDispose(ref m_foreBrushText);
-            SeeingSharpTools.SafeDispose(ref m_backBrushText);
-            SeeingSharpTools.SafeDispose(ref m_borderPen);
-
-            m_backBrush = new HatchBrush(
-                HatchStyle.DottedGrid,
-                GDI.Color.Gray, BackColor);
-            m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
-            m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
-            m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
-        }
-
-        /// <summary>
         /// Called when BackColor property has changed.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
@@ -283,20 +277,6 @@ namespace SeeingSharp.Multimedia.Views
             else if (!Visible) { StopRendering(); }
         }
 
-        /// <summary>
-        /// Called when this view gets disposed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            if (!DesignMode)
-            {
-                m_renderLoop.Dispose();
-                m_renderLoop = null;
-            }
-        }
-
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -351,6 +331,69 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Stops rendering.
+        /// </summary>
+        private void StartRendering()
+        {
+            if (DesignMode) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
+
+            if (!m_renderLoop.IsRegisteredOnMainLoop)
+            {
+                m_renderLoop.SetCurrentViewSize(Width, Height);
+                m_renderLoop.DiscardRendering = false;
+                m_renderLoop.RegisterRenderLoop();
+            }
+        }
+
+        /// <summary>
+        /// Stops rendering.
+        /// </summary>
+        private void StopRendering()
+        {
+            if (DesignMode) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
+
+            if (m_renderLoop.IsRegisteredOnMainLoop)
+            {
+                m_renderLoop.DiscardRendering = true;
+                m_renderLoop.DeregisterRenderLoop();
+            }
+        }
+
+        /// <summary>
+        /// Updates the background brush used for failover rendering in System.Drawing.
+        /// </summary>
+        private void UpdateDrawingResourcesForFailoverRendering()
+        {
+            SeeingSharpTools.SafeDispose(ref m_backBrush);
+            SeeingSharpTools.SafeDispose(ref m_foreBrushText);
+            SeeingSharpTools.SafeDispose(ref m_backBrushText);
+            SeeingSharpTools.SafeDispose(ref m_borderPen);
+
+            m_backBrush = new HatchBrush(
+                HatchStyle.DottedGrid,
+                GDI.Color.Gray, BackColor);
+            m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
+            m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
+            m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
+        }
+
+        /// <summary>
+        /// Called when this view gets disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            if (!DesignMode)
+            {
+                m_renderLoop.Dispose();
+                m_renderLoop = null;
+            }
+        }
+
+        /// <summary>
         /// Called when RenderLoop allows it to manipulate current filter list.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -358,48 +401,6 @@ namespace SeeingSharp.Multimedia.Views
         private void OnRenderLoopManipulateFilterList(object sender, ManipulateFilterListArgs e)
         {
             ManipulateFilterList?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
-        /// </summary>
-        public SeeingSharpRendererControl()
-        {
-            // Set style parameters for this control
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
-            SetStyle(ControlStyles.Opaque, true);
-            SetStyle(ControlStyles.Selectable, true);
-            base.DoubleBuffered = false;
-
-            m_lastSizeChange = DateTime.MinValue;
-            m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
-
-            // Create the render loop
-            var backColor = BackColor;
-            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, DesignMode);
-            m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
-            m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
-            m_renderLoop.DiscardRendering = true;
-            Disposed += (sender, eArgs) =>
-            {
-                m_renderLoop.Dispose();
-            };
-
-            // Perform default initialization logic (if not called before)
-            if (GraphicsCore.IsLoaded)
-            {
-                m_renderLoop.SetScene(new Scene());
-                m_renderLoop.Camera = new PerspectiveCamera3D();
-
-                //Initialize background brush
-                UpdateDrawingResourcesForFailoverRendering();
-            }
-
-            Disposed += OnDisposed;
-
-            UpdateDrawingResourcesForFailoverRendering();
         }
 
         /// <summary>

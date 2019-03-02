@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace SeeingSharp.UwpSamples
         private BitmapSource m_bitmapSource;
         private Task m_bitmapSourceTask;
 
+        public SampleViewModel(SampleMetadata sample)
+        {
+            SampleMetadata = sample;
+        }
+
         private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
         {
             var source = new BitmapImage();
@@ -45,11 +51,6 @@ namespace SeeingSharp.UwpSamples
             m_bitmapSource = source;
 
             RaisePropertyChanged(nameof(BitmapSource));
-        }
-
-        public SampleViewModel(SampleMetadata sample)
-        {
-            SampleMetadata = sample;
         }
 
         public SampleMetadata SampleMetadata { get; }

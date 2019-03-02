@@ -19,12 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class WaitFinishedAnimation : AnimationBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitFinishedAnimation" /> class.
+        /// </summary>
+        public WaitFinishedAnimation()
+            : base(null)
+        {
+
+        }
+
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
         /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
@@ -45,15 +55,6 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             if (animationState.RunningAnimationsIndex == 0) { NotifyAnimationFinished(); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaitFinishedAnimation" /> class.
-        /// </summary>
-        public WaitFinishedAnimation()
-            : base(null)
-        {
-
         }
 
         /// <summary>
