@@ -63,7 +63,6 @@ namespace SeeingSharp.Multimedia.Core
 
         // Misc
         private bool m_initialized;
-        private string m_name;
         private List<SceneLayer> m_sceneLayers;
 
         /// <summary>

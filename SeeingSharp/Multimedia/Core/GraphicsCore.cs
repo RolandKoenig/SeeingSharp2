@@ -50,9 +50,6 @@ namespace SeeingSharp.Multimedia.Core
         // Singleton instance
         private static GraphicsCore s_current;
 
-        // Members for threading
-        private static Task m_defaultInitTask;
-
         // Hardware 
         private EngineFactory m_engineFactory;
         private List<EngineDevice> m_devices;

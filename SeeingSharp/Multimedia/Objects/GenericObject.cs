@@ -33,7 +33,6 @@ namespace SeeingSharp.Multimedia.Objects
     {
         // Resources
         private IndexBasedDynamicCollection<GeometryResource> m_localResources;
-        private float m_opacity;
         private bool m_passRelevantValuesChanged;
 
         // Configuration members

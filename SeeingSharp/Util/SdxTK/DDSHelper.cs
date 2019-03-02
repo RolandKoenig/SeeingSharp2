@@ -1262,7 +1262,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                     var t2 = (short)(((t & 0x1c) << 6) | ((t & 0x1c) << 3));
                                     var t3 = (short)(((t & 0x03) << 3) | ((t & 0x03) << 1) | ((t & 0x02) >> 1));
 
+#pragma warning disable
                                     *dPtr++ = (short)(t1 | t2 | t3);
+#pragma warning restore
                                 }
                             }
                             return true;
@@ -1289,7 +1291,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             var t3 = ((t & 0x0003) << 22) | ((t & 0x0003) << 20) | ((t & 0x0003) << 18) | ((t & 0x0003) << 16);
                             var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16);
 
+#pragma warning disable
                             *dPtr++ = (int)(t1 | t2 | t3 | ta);
+#pragma warning restore
                         }
                     }
                     return true;
@@ -1332,7 +1336,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             var t1 = pal8[t & 0xff];
                             var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16);
 
+#pragma warning disable
                             *dPtr++ = (int)(t1 | ta);
+#pragma warning restore
                         }
                     }
                     return true;
@@ -1353,7 +1359,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             var t1 = (short)(t & 0x0f);
                             var ta = (flags & ScanlineFlags.SetAlpha ) != 0 ?  (ushort)0xf000 : (ushort)((t & 0xf0) << 8);
 
+#pragma warning disable
                             *dPtr++ = (short)(t1 | (t1 << 4) | (t1 << 8) | ta);
+#pragma warning restore
                         }
                     }
                     return true;
@@ -1372,7 +1380,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                     var t1 = ((t & 0x0f) << 4) | (t & 0x0f);
                                     var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf0) << 24) | ((t & 0xf0) << 20));
 
+#pragma warning disable
                                     *dPtr++ = (int)(t1 | (t1 << 8) | (t1 << 16) | ta);
+#pragma warning restore
                                 }
                             }
                             return true;
@@ -1399,7 +1409,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             var t3 = ((t & 0x000f) << 20) | ((t & 0x000f) << 16);
                             var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf000) << 16) | ((t & 0xf000) << 12));
 
+#pragma warning disable
                             *dPtr++ = (int)(t1 | t2 | t3 | ta);
+#pragma warning restore
                         }
                     }
                     return true;

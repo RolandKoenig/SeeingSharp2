@@ -34,9 +34,6 @@ namespace SeeingSharp.Util
     {
         private const int STANDARD_HEARTBEAT = 500;
 
-        // Members for thread configuration
-        private bool m_createMessenger;
-
         // Members for thread runtime
         private volatile ObjectThreadState m_currentState;
         private Thread m_mainThread;

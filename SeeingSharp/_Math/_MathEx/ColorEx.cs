@@ -28,7 +28,6 @@ namespace SeeingSharp
     {
         public static Color FromArgb(byte a, byte r, byte g, byte b)
         {
-            Color4 d;
             return new Color(r, g, b, a);
         }
 
