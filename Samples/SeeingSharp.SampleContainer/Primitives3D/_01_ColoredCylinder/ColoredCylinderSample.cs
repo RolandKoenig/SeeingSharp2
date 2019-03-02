@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,25 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
         "Colored Cylinder", 1, nameof(Primitives3D),
-        sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
     public class ColoredCylinderSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
@@ -48,18 +44,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cylinder geometry resource
                 var cylinderGeometry = new CylinderGeometryFactory { CountOfSegments = 50 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cylinderGeometry));
 
                 // Create cylinder object

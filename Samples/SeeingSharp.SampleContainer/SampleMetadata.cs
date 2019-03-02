@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,15 +21,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.SampleContainer
 {
-    #region using
-
-    using System;
-    using SeeingSharp.Util;
-
-    #endregion
-
     public class SampleMetadata
     {
         private SampleDescriptionAttribute m_description;
@@ -45,17 +41,17 @@ namespace SeeingSharp.SampleContainer
             m_description = description;
             m_sampleType = sampleType;
 
-            this.Name = m_description.SampleName;
-            this.OrderId = m_description.OrderID;
-            this.Group = m_description.SampleGroupName;
-            this.SourceCodeUrl = m_description.SourceCodeUrl;
+            Name = m_description.SampleName;
+            OrderId = m_description.OrderID;
+            Group = m_description.SampleGroupName;
+            SourceCodeUrl = m_description.SourceCodeUrl;
         }
 
         public SampleBase CreateSampleObject()
         {
             if(m_sampleType == null)
             {
-                throw new ApplicationException($"No sample type given!");
+                throw new ApplicationException("No sample type given!");
             }
 
             var result = Activator.CreateInstance(m_sampleType) as SampleBase;
@@ -86,7 +82,7 @@ namespace SeeingSharp.SampleContainer
         public AssemblyResourceLink TryGetSampleImageLink()
         {
             if (m_description == null) { return null; }
-            if (string.IsNullOrWhiteSpace((m_description.SampleImageFileName))) { return null; }
+            if (string.IsNullOrWhiteSpace(m_description.SampleImageFileName)) { return null; }
 
             return new AssemblyResourceLink(
                 m_sampleType,
@@ -103,7 +99,7 @@ namespace SeeingSharp.SampleContainer
         {
             get;
             set;
-        } = 0;
+        }
 
         public string Group
         {

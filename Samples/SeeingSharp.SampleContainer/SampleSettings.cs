@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,26 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System.Collections.Generic;
+using System.ComponentModel;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer.Util;
+
 namespace SeeingSharp.SampleContainer
 {
-    #region using
-
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Multimedia.Core;
-    using Util;
-
-    #endregion
-
     public class SampleSettings : PropertyChangedBase
     {
         private RenderLoop m_renderLoop;
         private SampleMetadata m_sampleMetadata;
-
-        public SampleSettings()
-        {
-
-        }
 
         public virtual IEnumerable<SampleCommand> GetCommands()
         {

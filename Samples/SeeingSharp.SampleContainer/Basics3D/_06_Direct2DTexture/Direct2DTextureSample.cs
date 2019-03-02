@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -65,18 +64,18 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
             m_textFormat = new TextFormatResource("Arial", 36);
             m_textBrush = new SolidBrushResource(Color4Ex.RedColor);
 
-            var d2dDrawingLayer = new Custom2DDrawingLayer(graphics =>
+            var d2DDrawingLayer = new Custom2DDrawingLayer(graphics =>
             {
-                var d2dRectangle = new RectangleF(10, 10, 236, 236);
+                var d2DRectangle = new RectangleF(10, 10, 236, 236);
                 graphics.Clear(Color4Ex.LightBlue);
                 graphics.FillRoundedRectangle(
-                    d2dRectangle, 30, 30,
+                    d2DRectangle, 30, 30,
                     m_solidBrush);
 
-                d2dRectangle.Inflate(-10, -10);
+                d2DRectangle.Inflate(-10, -10);
                 graphics.DrawText(
                     castedSettings.DisplayText,
-                    m_textFormat, d2dRectangle, m_textBrush);
+                    m_textFormat, d2DRectangle, m_textBrush);
             });
 
             // Build 3D scene
@@ -88,7 +87,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
-                    () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
+                    () => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource

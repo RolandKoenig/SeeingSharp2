@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,25 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
-        "Edge detect", 1, nameof(SeeingSharp.SampleContainer.Postprocessing),
-        sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
+        "Edge detect", 1, nameof(Postprocessing),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
     public class EdgeDetectSample : SampleBase
     {
         /// <summary>
@@ -51,16 +47,16 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create edge detect resource
-                var resEdgeDetect = manipulator.AddResource(() => new EdgeDetectPostprocessEffectResource()
+                var resEdgeDetect = manipulator.AddResource(() => new EdgeDetectPostprocessEffectResource
                 {
                     BorderColor = Color4Ex.BlueColor,
                     Thickness = 5f
@@ -71,7 +67,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
                 // Create pallet geometry resource
                 var cubeGeometry = new CubeGeometryFactory();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeGeometry));
 
                 // Create pallet object

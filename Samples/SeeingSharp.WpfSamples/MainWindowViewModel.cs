@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ namespace SeeingSharp.WpfSamples
 
             // Load samples
             m_sampleRepo = sampleRepo;
-            foreach(string actSampleGroupName in m_sampleRepo.SampleGroups
+            foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select((actGroup) => actGroup.GroupName))
             {
                 this.SampleGroups.Add(actSampleGroupName);
@@ -61,8 +61,7 @@ namespace SeeingSharp.WpfSamples
         private void UpdateSampleCollection()
         {
             var sampleGroup = m_sampleRepo.SampleGroups
-                .Where((actGroup) => actGroup.GroupName == m_selectedGroup)
-                .FirstOrDefault();
+                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();

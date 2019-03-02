@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,22 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
 {
     #region using
-
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Core;
-    using Multimedia.Drawing2D;
-    using SharpDX;
-
     #endregion
 
     [SampleDescription(
-        "Primitives", 1, nameof(SeeingSharp.SampleContainer.Basics2D),
-        sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_01_Primitives")]
+        "Primitives", 1, nameof(Basics2D),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_01_Primitives")]
     public class PrimitivesSample : SampleBase
     {
         /// <summary>
@@ -47,17 +46,17 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             var solidBrush = new SolidBrushResource(Color4Ex.Gray);
-            await targetRenderLoop.Register2DDrawingLayerAsync((graphics) =>
+            await targetRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Full width and height for all primitive objects
-                float allPrimitivesWidth = 180f;
-                float allPrimitivesHeight = 100f;
+                var allPrimitivesWidth = 180f;
+                var allPrimitivesHeight = 100f;
 
                 // Update current transform so that primitive objects are in the middle of the screen
                 var screenBounds = graphics.ScreenBounds;
                 graphics.TransformStack.Push(Matrix3x2.Translation(new Vector2(
-                    (graphics.ScreenWidth / 2f) - (allPrimitivesWidth / 2f),
-                    (graphics.ScreenHeight / 2f) - (allPrimitivesHeight / 2f))));
+                    graphics.ScreenWidth / 2f - allPrimitivesWidth / 2f,
+                    graphics.ScreenHeight / 2f - allPrimitivesHeight / 2f)));
                 graphics.ApplyTransformStack();
 
                 try

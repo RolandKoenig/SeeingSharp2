@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,28 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing2D;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
-        "Direct2D Texture (animated)", 7, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated")]
+        "Direct2D Texture (animated)", 7, nameof(Basics3D),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated")]
     public class Direct2DTextureAnimatedSample : SampleBase
     {
+        private SolidBrushResource m_animatedRectBrush;
         private SolidBrushResource m_solidBrush;
         private TextFormatResource m_textFormat;
-        private SolidBrushResource m_animatedRectBrush;
 
         /// <summary>
         /// Called when the sample has to startup.
@@ -57,26 +53,26 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             // Whole animation takes x milliseconds
-            float animationMillis = 3000f;
+            var animationMillis = 3000f;
 
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
             m_animatedRectBrush = new SolidBrushResource(Color4Ex.RedColor);
 
-            var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+            var d2DDrawingLayer = new Custom2DDrawingLayer(graphics =>
             {
                 // Draw the background
-                var d2dRectangle = new RectangleF(10, 10, 236, 236);
+                var d2DRectangle = new RectangleF(10, 10, 236, 236);
                 graphics.Clear(Color4Ex.LightBlue);
                 graphics.FillRoundedRectangle(
-                    d2dRectangle, 30, 30,
+                    d2DRectangle, 30, 30,
                     m_solidBrush);
 
                 // Recalculate current location of the red rectangle on each frame
-                float currentLocation = ((float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis) / animationMillis;
+                var currentLocation = (float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis / animationMillis;
                 var rectPos = GetAnimationLocation(currentLocation, 165f, 165f);
                 graphics.FillRectangle(
                     new RectangleF(
@@ -87,15 +83,15 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             });
 
             // Build 3D scene
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define Direct2D texture resource
-                var resD2DTexture = manipulator.AddResource<Direct2DTextureResource>(
-                    () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
+                var resD2DTexture = manipulator.AddResource(
+                    () => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
@@ -103,7 +99,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                 {
                     Material = resD2DMaterial
                 };
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeGeometry));
 
                 // Create cube object
@@ -140,9 +136,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
         public (float x, float y) GetAnimationLocation(float procentualLoc, float maxWidth, float maxHeight)
         {
-            float xPos = 0f;
-            float yPos = 0f;
-            float currentLineLoc = (procentualLoc % 0.25f) / 0.25f;
+            var xPos = 0f;
+            var yPos = 0f;
+            var currentLineLoc = procentualLoc % 0.25f / 0.25f;
             if(procentualLoc < 0.25f)
             {
                 xPos = maxWidth * currentLineLoc;
@@ -155,13 +151,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             }
             else if(procentualLoc < 0.75f)
             {
-                xPos = maxWidth - (maxWidth * currentLineLoc);
+                xPos = maxWidth - maxWidth * currentLineLoc;
                 yPos = maxHeight;
             }
             else
             {
                 xPos = 0f;
-                yPos = maxHeight - (maxHeight * currentLineLoc);
+                yPos = maxHeight - maxHeight * currentLineLoc;
             }
 
             return (xPos, yPos);

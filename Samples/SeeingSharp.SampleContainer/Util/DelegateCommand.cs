@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,23 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using System.Windows.Input;
+
 namespace SeeingSharp.SampleContainer.Util
 {
-    #region using
-
-    using System;
-    using System.Windows.Input;
-
-    #endregion
-
     public class DelegateCommand : ICommand
     {
-#pragma warning disable
-        public event EventHandler CanExecuteChanged;
-#pragma warning restore
+        private Func<bool> m_canExecuteAction;
 
         private Action m_executeAction;
-        private Func<bool> m_canExecuteAction;
 
         public DelegateCommand(Action executeAction)
         {
@@ -50,10 +43,14 @@ namespace SeeingSharp.SampleContainer.Util
             m_canExecuteAction = canExecuteAction;
         }
 
+#pragma warning disable
+        public event EventHandler CanExecuteChanged;
+#pragma warning restore
+
         public bool CanExecute(object parameter)
         {
             if(m_canExecuteAction == null) { return true; }
-            else { return m_canExecuteAction(); }
+            return m_canExecuteAction();
         }
 
         public void Execute(object parameter)

@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+
 namespace SeeingSharp.SampleContainer
 {
     #region using
-
-    using System;
-
     #endregion
 
     [AttributeUsage(AttributeTargets.Class)]
@@ -34,12 +33,12 @@ namespace SeeingSharp.SampleContainer
     {
         public SampleDescriptionAttribute(string sampleName, int orderID, string sampleGroupName, string sampleImageFileName = "", string sourceCodeUrl = "", Type settingsType = null)
         {
-            this.SampleName = sampleName;
-            this.OrderID = orderID;
-            this.SampleGroupName = sampleGroupName;
-            this.SampleImageFileName = sampleImageFileName;
-            this.SourceCodeUrl = sourceCodeUrl;
-            this.SettingsType = settingsType;
+            SampleName = sampleName;
+            OrderID = orderID;
+            SampleGroupName = sampleGroupName;
+            SampleImageFileName = sampleImageFileName;
+            SourceCodeUrl = sourceCodeUrl;
+            SettingsType = settingsType;
         }
 
         public string SampleName

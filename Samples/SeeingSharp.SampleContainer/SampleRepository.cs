@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace SeeingSharp.SampleContainer
 {
-    #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-
-    #endregion
-
     public class SampleRepository
     {
         public SampleRepository()
@@ -62,22 +58,23 @@ namespace SeeingSharp.SampleContainer
             }
 
             // Sort sample groups
-            Dictionary<string, int> groupOrder = new Dictionary<string, int>();
+            var groupOrder = new Dictionary<string, int>();
             groupOrder[nameof(Basics3D)] = 1;
             groupOrder[nameof(Primitives3D)] = 2;
             groupOrder[nameof(Basics2D)] = 3;
             groupOrder[nameof(Postprocessing)] = 4;
-            Func<string, int> tryGetGroupOrderID = (groupName) =>
+
+            int TryGetGroupOrderId(string groupName)
             {
-                groupOrder.TryGetValue(groupName, out int orderID);
+                groupOrder.TryGetValue(groupName, out var orderID);
                 return orderID;
-            };
-            this.SampleGroups.Sort((left, right) => tryGetGroupOrderID(left.GroupName).CompareTo(tryGetGroupOrderID(right.GroupName)));
+            }
+            SampleGroups.Sort((left, right) => TryGetGroupOrderId(left.GroupName).CompareTo(TryGetGroupOrderId(right.GroupName)));
 
             // Sort samples
             foreach (var actSampleGroup in SampleGroups)
             {
-                actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo((right.OrderId)));
+                actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
             }
         }
 
