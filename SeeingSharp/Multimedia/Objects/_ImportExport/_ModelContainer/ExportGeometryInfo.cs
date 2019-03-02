@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="objType">Type of the object.</param>
-        public ExportGeometryInfo(NamedOrGenericKey key, ObjectType objType)
+        public ExportGeometryInfo(NamedOrGenericKey key, GeometryFactory objType)
         {
             Key = key;
             ObjectType = objType;
@@ -47,6 +47,6 @@ namespace SeeingSharp.Multimedia.Objects
 
         public NamedOrGenericKey Key { get; }
 
-        public ObjectType ObjectType { get; }
+        public GeometryFactory ObjectType { get; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region License information
 /*
     Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwhise.
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
      - http://www.rolandk.de (the autors homepage, german)
@@ -21,30 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer
 {
-    #region using
-
-    using System.Threading.Tasks;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
-    #endregion
-
     public abstract class SampleBase
     {
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
 
         public virtual void NotifyClosed()
         {
-
         }
 
         /// <summary>
-        /// Builds a floor to the given scene.
+        ///     Builds a floor to the given scene.
         /// </summary>
         protected void BuildStandardFloor(SceneManipulator manipulator, string sceneLayer)
         {
@@ -66,7 +62,7 @@ namespace SeeingSharp.SampleContainer
             var resTileMaterial = manipulator.AddResource(() => new SimpleColoredMaterialResource(resTileTexture));
 
             // Define floor geometry
-            var floorType = new FloorType(new Vector2(4f, 4f), 0f)
+            var floorType = new FloorGeometryFactory(new Vector2(4f, 4f), 0f)
             {
                 BottomMaterial = resTileMaterial,
                 DefaultFloorMaterial = resTileMaterial,
@@ -76,7 +72,7 @@ namespace SeeingSharp.SampleContainer
             floorType.SetTilemap(25, 25);
 
             // Add floor to scene
-            var resFloorGeometry = manipulator.AddResource((() => new GeometryResource(floorType)));
+            var resFloorGeometry = manipulator.AddResource(() => new GeometryResource(floorType));
             var floorObject = manipulator.AddGeneric(resFloorGeometry, sceneLayer);
         }
     }

@@ -21,51 +21,47 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
-        "Colored Cube", 1, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_01_ColoredCube")]
+        "Colored Cube", 1, nameof(Basics3D),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_01_ColoredCube")]
     public class ColoredCubeSample : SampleBase
     {
         /// <summary>
-        /// Called when the sample has to startup.
+        ///     Called when the sample has to startup.
         /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
+            // Get scene and camera
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create cube geometry resource
-                var cubeType = new CubeType();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cubeType));
+                // Create geometry resource
+                var resGeometry = manipulator.AddGeometry(
+                    new CubeGeometryFactory());
 
                 // Create cube object
-                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();

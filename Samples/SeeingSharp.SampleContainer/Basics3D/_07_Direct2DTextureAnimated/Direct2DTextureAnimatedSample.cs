@@ -41,7 +41,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
     [SampleDescription(
         "Direct2D Texture (animated)", 7, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated")]
     public class Direct2DTextureAnimatedSample : SampleBase
     {
         private SolidBrushResource m_solidBrush;
@@ -99,13 +99,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
-                var pType = new CubeType
+                var cubeGeometry = new CubeGeometryFactory
                 {
                     Material = resD2DMaterial
                 };
-
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(pType));
+                    () => new GeometryResource(cubeGeometry));
 
                 // Create cube object
                 var cubeObject = manipulator.AddGeneric(resPalletGeometry);

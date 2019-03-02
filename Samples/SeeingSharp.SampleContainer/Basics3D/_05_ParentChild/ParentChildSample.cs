@@ -21,25 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
-        "Parent/Child", 5, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_05_ParentChild")]
+        "Parent/Child", 5, nameof(Basics3D),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_05_ParentChild")]
     public class ParentChildSample : SampleBase
     {
         /// <summary>
@@ -51,18 +48,17 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
-                var cubeType = new CubeType();
-                var resCubeGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cubeType));
+                var resCubeGeometry = manipulator.AddGeometry(
+                    new CubeGeometryFactory());
 
                 //********************************
                 // Create parent object
@@ -79,7 +75,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     .ApplyAndRewind();
 
                 //********************************
-                // Create first level childs
+                // Create first level child
                 var actChild = manipulator.AddGeneric(resCubeGeometry);
                 actChild.Position = new Vector3(-2f, 0f, 0f);
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);

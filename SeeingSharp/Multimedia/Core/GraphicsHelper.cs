@@ -21,29 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-#region using
 
-//Some namespace mappings
+using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Resources;
+using SeeingSharp.Util;
+using SharpDX;
+
+// Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using Checking;
-    using Drawing3D;
-    using Resources;
-    using SeeingSharp.Util;
-    using SharpDX;
-
-    #endregion
 
     public static class GraphicsHelper
     {

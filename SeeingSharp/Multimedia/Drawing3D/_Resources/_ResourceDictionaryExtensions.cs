@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, ObjectType objectType)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, GeometryFactory objectType)
         {
             return resourceDiciontary.AddResource(new GeometryResource(objectType));
         }
@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, ObjectType objectType)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, GeometryFactory objectType)
         {
             return resourceDiciontary.AddResource(resourceKey, new GeometryResource(objectType));
         }

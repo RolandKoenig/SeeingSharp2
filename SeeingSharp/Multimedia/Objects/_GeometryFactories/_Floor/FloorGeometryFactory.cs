@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Objects
 
     #endregion
 
-    public class FloorType : ObjectType
+    public class FloorGeometryFactory : GeometryFactory
     {
         public const float DEFAULT_HEIGHT = 0.1f;
 
@@ -54,9 +54,9 @@ namespace SeeingSharp.Multimedia.Objects
         private NamedOrGenericKey m_bottomMaterial;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FloorType"/> class.
+        /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
         /// </summary>
-        public FloorType(Vector2 tileSize, float borderSize)
+        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
         {
             m_height = DEFAULT_HEIGHT;
             m_groundTiles = new List<FloorTile>();

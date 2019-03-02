@@ -77,7 +77,7 @@ namespace SeeingSharp.Tests
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
                     var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType()));
+                        () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -130,7 +130,7 @@ namespace SeeingSharp.Tests
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
                     var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType()));
+                        () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);

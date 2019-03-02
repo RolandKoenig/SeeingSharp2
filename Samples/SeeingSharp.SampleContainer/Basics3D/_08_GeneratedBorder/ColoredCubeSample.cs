@@ -38,7 +38,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
     [SampleDescription(
         "Generated Border", 8, nameof(SeeingSharp.SampleContainer.Basics3D),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder")]
     public class GeneratedBorderSample : SampleBase
     {
         /// <summary>
@@ -59,9 +59,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource
-                var cubeType = new CubeType();
+                var cubeGeometry = new CubeGeometryFactory();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cubeType));
+                    () => new GeometryResource(cubeGeometry));
 
                 float space = 1.05f;
 

@@ -25,47 +25,44 @@ namespace SeeingSharp.Multimedia.Objects
 {
     #region using
 
-    using SeeingSharp.Util;
     using SharpDX;
 
     #endregion
 
-    public class CubeType : ObjectType
+    public class CylinderGeometryFactory : GeometryFactory
     {
-        public CubeType()
+        public CylinderGeometryFactory()
         {
+            this.Radius = 0.5f;
+            this.Height = 1f;
+            this.CountOfSegments = 10;
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            var matProperties = new MaterialProperties
-            {
-                Key = Material
-            };
-
-            var size = this.Size;
-            var halfSize = size / 2f;
-
             var result = new VertexStructure();
-            result.CreateOrGetExistingSurface(matProperties)
-                .BuildCube24V(
-                    new Vector3(-halfSize, -halfSize, -halfSize),
-                    new Vector3(size, size, size),
-                    Color4Ex.Transparent);
+            var mainSurface = result.CreateSurface();
+            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }
 
-        public NamedOrGenericKey Material
+        public float Radius
         {
             get;
             set;
         }
 
-        public float Size
+        public float Height
         {
             get;
             set;
-        } = 1f;
+        }
+
+        public int CountOfSegments
+        {
+            get;
+            set;
+        }
     }
 }

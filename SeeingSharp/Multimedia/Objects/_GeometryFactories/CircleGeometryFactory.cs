@@ -29,12 +29,13 @@ namespace SeeingSharp.Multimedia.Objects
 
     #endregion
 
-    public class ConeType : ObjectType
+    public class CircleGeometryFactory : GeometryFactory
     {
-        public ConeType()
+        public CircleGeometryFactory()
         {
-            this.Radius = 0.5f;
-            this.Height = 1f;
+            this.Radius = 2f;
+            this.Width = 0.5f;
+            this.Height = 0.1f;
             this.CountOfSegments = 10;
         }
 
@@ -42,12 +43,18 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new VertexStructure();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildConeFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }
 
         public float Radius
+        {
+            get;
+            set;
+        }
+
+        public float Width
         {
             get;
             set;

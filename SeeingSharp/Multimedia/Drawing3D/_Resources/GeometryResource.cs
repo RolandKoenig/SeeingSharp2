@@ -53,15 +53,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         #region Generic resources
         private BoundingBox m_boundingBox;
-        private ObjectType m_objectType;
+        private GeometryFactory m_geometry;
         #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
         /// </summary>
-        public GeometryResource(ObjectType objectType)
+        public GeometryResource(GeometryFactory geometry)
         {
-            m_objectType = objectType;
+            m_geometry = geometry;
 
             m_loadedStructures = new LoadedStructureInfo[0];
         }
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="vertexStructure">The vertex structures.</param>
         public GeometryResource(VertexStructure vertexStructure)
-            : this(new GenericObjectType(vertexStructure))
+            : this(new GenericGeometryFactory(vertexStructure))
         {
         }
 
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             return new ExportGeometryInfo(
                 this.Key,
-                this.ObjectType);
+                this.Geometry);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Redefines the content of this geometry resource.
         /// </summary>
-        public void Redefine(ResourceDictionary resources, ObjectType objectType)
+        public void Redefine(ResourceDictionary resources, GeometryFactory objectType)
         {
             //Unload resource first if it was loaded
             bool wasLoaded = this.IsLoaded;
@@ -144,7 +144,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             //Update members
-            m_objectType = objectType;
+            m_geometry = objectType;
             m_boundingBox = new BoundingBox();
 
             //Reload resources again if they where loaded before
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, VertexStructure vertexStructures)
         {
-            this.Redefine(resources, new GenericObjectType(vertexStructures));
+            this.Redefine(resources, new GenericGeometryFactory(vertexStructures));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Build structures
             VertexStructure[] structures = new VertexStructure[]
             {
-                m_objectType.BuildStructure(new StructureBuildOptions(device.SupportedDetailLevel))
+                m_geometry.BuildStructure(new StructureBuildOptions(device.SupportedDetailLevel))
             };
 
             // Build BoundingBox around all vertices
@@ -450,9 +450,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the source of geometry data.
         /// </summary>
-        public ObjectType ObjectType
+        public GeometryFactory Geometry
         {
-            get { return m_objectType; }
+            get { return m_geometry; }
         }
 
         /// <summary>

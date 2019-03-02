@@ -30,12 +30,12 @@ namespace SeeingSharp.Multimedia.Objects
 
     #endregion
 
-    public class Grid3DType : ObjectType
+    public class Grid3DGeometryFactory : GeometryFactory
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Grid3DType" /> class.
+        /// Initializes a new instance of the <see cref="Grid3DGeometryFactory" /> class.
         /// </summary>
-        public Grid3DType()
+        public Grid3DGeometryFactory()
         {
             this.GenerateGround = true;
             this.LineSmallDevider = 25f;

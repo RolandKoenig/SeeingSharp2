@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
     [SampleDescription(
         "Colored Cone", 2, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_02_ColoredCone")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_02_ColoredCone")]
     public class ColoredConeSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
@@ -57,10 +57,9 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cone geometry resource
-                var coneType = new ConeType { CountOfSegments = 50 };
-
+                var coneGeometry = new ConeGeometryFactory { CountOfSegments = 50 };
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(coneType));
+                    () => new GeometryResource(coneGeometry));
 
                 // Create cone object
                 var coneObject = manipulator.AddGeneric(resPalletGeometry);

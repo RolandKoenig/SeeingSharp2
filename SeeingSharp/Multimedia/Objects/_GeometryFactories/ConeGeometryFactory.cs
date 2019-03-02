@@ -23,19 +23,46 @@
 #endregion
 namespace SeeingSharp.Multimedia.Objects
 {
-    public abstract class ObjectType
+    #region using
+
+    using SharpDX;
+
+    #endregion
+
+    public class ConeGeometryFactory : GeometryFactory
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectType"/> class.
-        /// </summary>
-        public ObjectType()
+        public ConeGeometryFactory()
         {
+            this.Radius = 0.5f;
+            this.Height = 1f;
+            this.CountOfSegments = 10;
         }
 
-        /// <summary>
-        /// Builds a VertexStructure using given parameters (like DetailLevel).
-        /// </summary>
-        /// <param name="buildOptions">Some generic options for structure building</param>
-        public abstract VertexStructure BuildStructure(StructureBuildOptions buildOptions);
+        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        {
+            var result = new VertexStructure();
+            var mainSurface = result.CreateSurface();
+            mainSurface.BuildConeFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+
+            return result;
+        }
+
+        public float Radius
+        {
+            get;
+            set;
+        }
+
+        public float Height
+        {
+            get;
+            set;
+        }
+
+        public int CountOfSegments
+        {
+            get;
+            set;
+        }
     }
 }

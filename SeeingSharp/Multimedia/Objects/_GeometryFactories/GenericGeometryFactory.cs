@@ -29,24 +29,24 @@ namespace SeeingSharp.Multimedia.Objects
 
     #endregion
 
-    public class GenericObjectType : ObjectType
+    public class GenericGeometryFactory : GeometryFactory
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObjectType"/> class.
+        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
         /// </summary>
         /// <param name="vertexStructure">The vertex structures.</param>
-        public GenericObjectType(VertexStructure vertexStructure)
+        public GenericGeometryFactory(VertexStructure vertexStructure)
         {
             VertexStructure = vertexStructure;
             VertexStructureLowDetail = vertexStructure;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObjectType"/> class.
+        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
         /// </summary>
         /// <param name="vertexStructure">The vertex structures.</param>
         /// <param name="vertexStructureLowDetail">The vertex structures for low detail level.</param>
-        public GenericObjectType(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
+        public GenericGeometryFactory(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
         {
             VertexStructure = vertexStructure;
             VertexStructureLowDetail = vertexStructureLowDetail;

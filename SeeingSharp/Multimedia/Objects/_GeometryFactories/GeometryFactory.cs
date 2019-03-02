@@ -23,53 +23,19 @@
 #endregion
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-
-    using SharpDX;
-
-    #endregion
-
-    public class CircleType : ObjectType
+    public abstract class GeometryFactory
     {
-        public CircleType()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeometryFactory"/> class.
+        /// </summary>
+        public GeometryFactory()
         {
-            this.Radius = 2f;
-            this.Width = 0.5f;
-            this.Height = 0.1f;
-            this.CountOfSegments = 10;
         }
 
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
-        {
-            var result = new VertexStructure();
-            var mainSurface = result.CreateSurface();
-            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
-
-            return result;
-        }
-
-        public float Radius
-        {
-            get;
-            set;
-        }
-
-        public float Width
-        {
-            get;
-            set;
-        }
-
-        public float Height
-        {
-            get;
-            set;
-        }
-
-        public int CountOfSegments
-        {
-            get;
-            set;
-        }
+        /// <summary>
+        /// Builds a VertexStructure using given parameters (like DetailLevel).
+        /// </summary>
+        /// <param name="buildOptions">Some generic options for structure building</param>
+        public abstract VertexStructure BuildStructure(StructureBuildOptions buildOptions);
     }
 }

@@ -21,30 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
 {
-    #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Checking;
-    using Multimedia.Components;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
-    #endregion
-
     [SampleDescription(
-        "Textured Cube", 2, nameof(SeeingSharp.SampleContainer.Basics3D),
-        sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_02_TexturedCube")]
+        "Textured Cube", 2, nameof(Basics3D),
+        "PreviewImage.png",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_02_TexturedCube")]
     public class SkyboxSample : SampleBase
     {
         /// <summary>
-        /// Called when the sample has to startup.
+        ///     Called when the sample has to startup.
         /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
@@ -52,29 +49,27 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define texture and material resource
                 var resTexture = manipulator.AddTexture(
                     new AssemblyResourceLink(
-                        this.GetType(),
+                        GetType(),
                         "SimpleTexture.png"));
                 var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 
                 // Create cube geometry resource
-                var cubeType = new CubeType
-                {
-                    Material = resMaterial
-                };
-
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cubeType));
+                var resPalletGeometry = manipulator.AddGeometry(
+                    new CubeGeometryFactory()
+                    {
+                        Material = resMaterial
+                    });
 
                 // Create cube object
                 var cubeObject = manipulator.AddGeneric(resPalletGeometry);

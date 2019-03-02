@@ -21,36 +21,27 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-namespace SeeingSharp.Multimedia.Objects._ObjectTypes
+namespace SeeingSharp.Multimedia.Objects
 {
-    #region usings
-
-    #endregion
-
-    public class SphereType : ObjectType
+    public class SphereGeometryFactory : GeometryFactory
     {
-        public SphereType()
-        {
-            this.Radius = 2f;
-        }
-
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             var result = new VertexStructure();
 
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildShpere(this.tDiv, this.pDiv, this.Radius, Color4Ex.Transparent);
+            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius, Color4Ex.Transparent);
 
             return result;
         }
 
-        public int tDiv
+        public int TDiv
         {
             get;
             set;
         }
 
-        public int pDiv
+        public int PDiv
         {
             get;
             set;
@@ -60,6 +51,6 @@ namespace SeeingSharp.Multimedia.Objects._ObjectTypes
         {
             get;
             set;
-        }
+        } = 1f;
     }
 }

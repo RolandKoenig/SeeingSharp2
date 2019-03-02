@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
     [SampleDescription(
         "Edge detect", 1, nameof(SeeingSharp.SampleContainer.Postprocessing),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
     public class EdgeDetectSample : SampleBase
     {
         /// <summary>
@@ -70,9 +70,9 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 edgeLayer.PostprocessEffectKey = resEdgeDetect;
 
                 // Create pallet geometry resource
-                var cubeType = new CubeType();
+                var cubeGeometry = new CubeGeometryFactory();
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cubeType));
+                    () => new GeometryResource(cubeGeometry));
 
                 // Create pallet object
                 var cubeObject = manipulator.AddGeneric(resPalletGeometry, "EdgeDetectLayer");

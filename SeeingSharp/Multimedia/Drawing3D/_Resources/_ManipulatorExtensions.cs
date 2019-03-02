@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         /// <param name="objectType">The geometry to be loaded.</param>
-        public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, ObjectType objectType)
+        public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, GeometryFactory objectType)
         {
             return sceneManipulator.AddResource<GeometryResource>(() => new GeometryResource(objectType));
         }

@@ -30,19 +30,19 @@ namespace SeeingSharp.Multimedia.Objects
 
     #endregion
 
-    public class StackedObjectType : ObjectType
+    public class StackedGeometryFactory : GeometryFactory
     {
         #region Main parameters
-        private ObjectType m_objTypeToStack;
+        private GeometryFactory m_geometryToStack;
         private int m_stackSize;
         #endregion
 
-        public StackedObjectType(ObjectType objTypeToStack, int stackSize)
+        public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
         {
-            objTypeToStack.EnsureNotNull(nameof(objTypeToStack));
+            geometryToStack.EnsureNotNull(nameof(geometryToStack));
             stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
 
-            m_objTypeToStack = objTypeToStack;
+            m_geometryToStack = geometryToStack;
             m_stackSize = stackSize;
         }
 
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for structure building</param>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            var structureFromChild = m_objTypeToStack.BuildStructure(buildOptions);
+            var structureFromChild = m_geometryToStack.BuildStructure(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));
 
             var childStructBox = structureFromChild.GenerateBoundingBox();

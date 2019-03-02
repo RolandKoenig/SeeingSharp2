@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Imports an object-type form given raw model file.
         /// </summary>
         /// <param name="rawBytes">Raw model file.</param>
-        public static ObjectType ImportObjectType(byte[] rawBytes)
+        public static GeometryFactory ImportObjectType(byte[] rawBytes)
         {
             using (var inStream = new MemoryStream(rawBytes))
             {
@@ -51,22 +51,22 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Loads an object from the given uri
         /// </summary>
-        public static ObjectType ImportObjectType(Stream inStream)
+        public static GeometryFactory ImportObjectType(Stream inStream)
         {
             var structures = ImportVertexStructure(inStream);
-            return new GenericObjectType(structures);
+            return new GenericGeometryFactory(structures);
         }
 
         /// <summary>
         /// Imports a ac file from the given stream.
         /// </summary>
         /// <param name="resourceLink">The link to the ac file.</param>
-        public static ObjectType ImportObjectType(ResourceLink resourceLink)
+        public static GeometryFactory ImportObjectType(ResourceLink resourceLink)
         {
             using (var inStream = resourceLink.OpenInputStream())
             {
                 var structure = ImportVertexStructure(inStream, resourceLink);
-                return new GenericObjectType(structure);
+                return new GenericGeometryFactory(structure);
             }
         }
 

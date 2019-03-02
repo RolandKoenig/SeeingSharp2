@@ -152,7 +152,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType()));
+                        () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -195,12 +195,12 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var cubeType = new CubeType
+                    var cubeType = new CubeGeometryFactory
                     {
                         Size = 0.3f
                     };
 
-                    var stackedType = new StackedObjectType(cubeType, 10);
+                    var stackedType = new StackedGeometryFactory(cubeType, 10);
 
                     var geoResource = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(stackedType));
@@ -246,7 +246,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType()));
+                        () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -294,7 +294,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType()));
+                        () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -337,7 +337,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     // Create pallet geometry resource
-                    var cubeType = new CubeType();
+                    var cubeType = new CubeGeometryFactory();
                     var resPalletGeometry = manipulator.AddResource<GeometryResource>(
                         () => new GeometryResource(cubeType));
 

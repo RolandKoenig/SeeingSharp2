@@ -36,7 +36,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
     [SampleDescription(
         "Primitives", 1, nameof(SeeingSharp.SampleContainer.Basics2D),
         sampleImageFileName:"PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics2D/_01_Primitives")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_01_Primitives")]
     public class PrimitivesSample : SampleBase
     {
         /// <summary>

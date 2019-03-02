@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
     [SampleDescription(
         "Colored Cylinder", 1, nameof(Primitives3D),
         sampleImageFileName: "PreviewImage.png",
-        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
+        sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
     public class ColoredCylinderSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
@@ -57,10 +57,10 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cylinder geometry resource
-                var cylinderType = new CylinderType { CountOfSegments = 50 };
+                var cylinderGeometry = new CylinderGeometryFactory { CountOfSegments = 50 };
 
                 var resPalletGeometry = manipulator.AddResource<GeometryResource>(
-                    () => new GeometryResource(cylinderType));
+                    () => new GeometryResource(cylinderGeometry));
 
                 // Create cylinder object
                 var cylinderObject = manipulator.AddGeneric(resPalletGeometry);
