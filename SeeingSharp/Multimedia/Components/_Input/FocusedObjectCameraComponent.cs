@@ -27,9 +27,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
 {
-    #region using
-    #endregion
-
     public class FocusedObjectCameraComponent : FocusedCameraComponent
     {
         protected override Vector3 GetFocusedLocation()

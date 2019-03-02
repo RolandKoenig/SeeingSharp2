@@ -26,12 +26,9 @@ using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
-    public struct StructureBuildOptions
+    public struct GeometryBuildOptions
     {
-        public StructureBuildOptions(DetailLevel detailLevel)
+        public GeometryBuildOptions(DetailLevel detailLevel)
         {
             TargetDetailLevel = detailLevel;
         }

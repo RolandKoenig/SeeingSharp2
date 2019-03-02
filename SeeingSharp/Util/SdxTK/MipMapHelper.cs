@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 var maxMips = CountMips(width, height);
                 if (mipLevels > maxMips)
                 {
-                    throw new InvalidOperationException(string.Format("MipLevels must be <= {0}", maxMips));
+                    throw new InvalidOperationException($"MipLevels must be <= {maxMips}");
                 }
             }
             else if (mipLevels == 0)
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 var maxMips = CountMips(width, height, depth);
                 if (mipLevels > maxMips)
                 {
-                    throw new InvalidOperationException(string.Format("MipLevels must be <= {0}", maxMips));
+                    throw new InvalidOperationException($"MipLevels must be <= {maxMips}");
                 }
             }
             else if (mipLevels == 0)

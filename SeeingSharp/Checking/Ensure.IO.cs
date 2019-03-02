@@ -46,16 +46,14 @@ namespace SeeingSharp.Checking
             {
                 if (!stream.CanRead)
                 {
-                    throw new SeeingSharpCheckException(string.Format(
-                        "Stream {0} within method {1} must be readable!",
-                        checkedVariableName, callerMethod));
+                    throw new SeeingSharpCheckException(
+                        $"Stream {checkedVariableName} within method {callerMethod} must be readable!");
                 }
             }
             catch(ObjectDisposedException)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Stream {0} within method {1} must not be disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Stream {checkedVariableName} within method {callerMethod} must not be disposed!");
             }
         }
 
@@ -71,16 +69,14 @@ namespace SeeingSharp.Checking
             {
                 if (!stream.CanWrite)
                 {
-                    throw new SeeingSharpCheckException(string.Format(
-                        "Stream {0} within method {1} must be writable!",
-                        checkedVariableName, callerMethod));
+                    throw new SeeingSharpCheckException(
+                        $"Stream {checkedVariableName} within method {callerMethod} must be writable!");
                 }
             }
             catch (ObjectDisposedException)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Stream {0} within method {1} must not be disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Stream {checkedVariableName} within method {callerMethod} must not be disposed!");
             }
         }
 
@@ -96,16 +92,14 @@ namespace SeeingSharp.Checking
             {
                 if (!stream.CanSeek)
                 {
-                    throw new SeeingSharpCheckException(string.Format(
-                        "Stream {0} within method {1} must be seekable!",
-                        checkedVariableName, callerMethod));
+                    throw new SeeingSharpCheckException(
+                        $"Stream {checkedVariableName} within method {callerMethod} must be seekable!");
                 }
             }
             catch (ObjectDisposedException)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Stream {0} within method {1} must not be disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Stream {checkedVariableName} within method {callerMethod} must not be disposed!");
             }
         }
 
@@ -127,10 +121,8 @@ namespace SeeingSharp.Checking
             }
 #else
             // Not possible on WinRT at all (no direct filesystem access)
-            throw new SeeingSharpCheckException(string.Format(
-                "Filepath {0} within method {1} could not be resolved (value: {2})!",
-                checkedVariableName, callerMethod,
-                filePath));
+            throw new SeeingSharpCheckException(
+                $"Filepath {checkedVariableName} within method {callerMethod} could not be resolved (value: {filePath})!");
 #endif
         }
     }

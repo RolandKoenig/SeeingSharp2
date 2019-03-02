@@ -26,12 +26,9 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class ConeGeometryFactory : GeometryFactory
     {
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var result = new VertexStructure();
             var mainSurface = result.CreateSurface();

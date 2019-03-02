@@ -27,15 +27,12 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class Grid3DGeometryFactory : GeometryFactory
     {
         /// <summary>
         /// Builds the structures.
         /// </summary>
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var result = new VertexStructure();
 

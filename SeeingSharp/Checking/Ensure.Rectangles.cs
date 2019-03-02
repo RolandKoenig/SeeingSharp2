@@ -44,9 +44,8 @@ namespace SeeingSharp.Checking
             if (rectangle.Width <= 0f ||
                 rectangle.Height <= 0f)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Rectangle {0} within method {1} must not be empty (given rectangle: {2})!",
-                    checkedVariableName, callerMethod, rectangle));
+                throw new SeeingSharpCheckException(
+                    $"Rectangle {checkedVariableName} within method {callerMethod} must not be empty (given rectangle: {rectangle})!");
             }
         }
 
@@ -61,9 +60,8 @@ namespace SeeingSharp.Checking
             if (rectangle.Width <= 0f ||
                 rectangle.Height <= 0f)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Rectangle {0} within method {1} must not be empty (given rectangle: {2})!",
-                    checkedVariableName, callerMethod, rectangle));
+                throw new SeeingSharpCheckException(
+                    $"Rectangle {checkedVariableName} within method {callerMethod} must not be empty (given rectangle: {rectangle})!");
             }
         }
     }

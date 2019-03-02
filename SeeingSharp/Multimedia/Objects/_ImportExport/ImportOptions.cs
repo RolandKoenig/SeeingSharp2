@@ -27,9 +27,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class ImportOptions
     {
         /// <summary>
@@ -75,9 +72,7 @@ namespace SeeingSharp.Multimedia.Objects
                     return true;
 
                 default:
-                    throw new SeeingSharpGraphicsException(string.Format(
-                        "Unknown coordinate system {0}!",
-                        ResourceCoordinateSystem));
+                    throw new SeeingSharpGraphicsException($"Unknown coordinate system {ResourceCoordinateSystem}!");
             }
         }
 

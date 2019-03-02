@@ -46,9 +46,8 @@ namespace SeeingSharp.Checking
                 EngineMath.EqualsWithTolerance(vectorValueLeft.Z, vectorValueRight.Z) &&
                 EngineMath.EqualsWithTolerance(vectorValueLeft.W, vectorValueRight.W))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Vector {0} within method {1} with value {2} musst not be equal with the vector {3}!",
-                    checkedVariableName, callerMethod, vectorValueLeft, comparedVariableName));
+                throw new SeeingSharpCheckException(
+                    $"Vector {checkedVariableName} within method {callerMethod} with value {vectorValueLeft} musst not be equal with the vector {comparedVariableName}!");
             }
         }
 
@@ -64,9 +63,8 @@ namespace SeeingSharp.Checking
                 EngineMath.EqualsWithTolerance(vectorValueLeft.Y, vectorValueRight.Y) &&
                 EngineMath.EqualsWithTolerance(vectorValueLeft.Z, vectorValueRight.Z))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Vector {0} within method {1} with value {2} musst not be equal with the vector {3}!",
-                    checkedVariableName, callerMethod, vectorValueLeft, comparedVariableName));
+                throw new SeeingSharpCheckException(
+                    $"Vector {checkedVariableName} within method {callerMethod} with value {vectorValueLeft} musst not be equal with the vector {comparedVariableName}!");
             }
         }
 
@@ -81,9 +79,8 @@ namespace SeeingSharp.Checking
             if (EngineMath.EqualsWithTolerance(vectorValueLeft.X, vectorValueRight.X) &&
                 EngineMath.EqualsWithTolerance(vectorValueLeft.Y, vectorValueRight.Y))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Vector {0} within method {1} with value {2} musst not be equal with the vector {3}!",
-                    checkedVariableName, callerMethod, vectorValueLeft, comparedVariableName));
+                throw new SeeingSharpCheckException(
+                    $"Vector {checkedVariableName} within method {callerMethod} with value {vectorValueLeft} musst not be equal with the vector {comparedVariableName}!");
             }
         }
 

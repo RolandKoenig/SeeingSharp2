@@ -26,16 +26,13 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class GenericGeometryFactory : GeometryFactory
     {
         /// <summary>
         /// Builds the structure.
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             if (buildOptions.IsHighDetail) { return VertexStructure; }
             return VertexStructureLowDetail;

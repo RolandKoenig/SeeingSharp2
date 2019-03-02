@@ -48,10 +48,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -66,10 +64,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -84,10 +80,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -102,10 +96,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -120,10 +112,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -138,10 +128,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -156,10 +144,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -174,10 +160,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
 
@@ -192,10 +176,8 @@ namespace SeeingSharp.Checking
             if (numValue < min ||
                 numValue > max)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
-                    checkedVariableName, callerMethod,
-                    min, max, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
         #endregion
@@ -214,9 +196,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
 
@@ -230,9 +211,8 @@ namespace SeeingSharp.Checking
 
             if (Math.Abs((double)numValue / 2) > EngineMath.TOLERANCE_DOUBLE_POSITIVE)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be a power of 2 (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a power of 2 (value: {numValue})!");
             }
         }
 
@@ -246,9 +226,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
 
@@ -262,9 +241,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
 
@@ -278,9 +256,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
 
@@ -294,9 +271,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
 
@@ -310,9 +286,8 @@ namespace SeeingSharp.Checking
 
             if (numValue < 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
         #endregion
@@ -331,9 +306,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
 
@@ -347,9 +321,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
 
@@ -363,9 +336,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
 
@@ -379,9 +351,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
 
@@ -395,9 +366,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
 
@@ -411,9 +381,8 @@ namespace SeeingSharp.Checking
 
             if (numValue <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Value {0} within method {1} must be positive and not zero (value: {2})!",
-                    checkedVariableName, callerMethod, numValue));
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
         #endregion

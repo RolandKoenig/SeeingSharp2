@@ -26,9 +26,6 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class FloorTileInfo
     {
         /// <summary>

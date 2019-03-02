@@ -29,9 +29,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
 {
-    #region using
-    #endregion
-
     public class FreeMovingCameraComponent : SceneComponent
     {
         /// <summary>

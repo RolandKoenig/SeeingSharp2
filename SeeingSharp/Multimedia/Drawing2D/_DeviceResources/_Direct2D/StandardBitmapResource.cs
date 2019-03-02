@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public override string ToString()
         {
-            return string.Format("Bitmap ({0}x{1} pixels)", m_pixelWidth, m_pixelHeight);
+            return $"Bitmap ({m_pixelWidth}x{m_pixelHeight} pixels)";
         }
 
         /// <summary>

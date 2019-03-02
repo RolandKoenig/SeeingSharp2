@@ -327,7 +327,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         break;
 
                     default:
-                        throw new InvalidOperationException(string.Format("Unexpected dimension [{0}] from DDS HeaderDX10", headerDX10.ResourceDimension));
+                        throw new InvalidOperationException(
+                            $"Unexpected dimension [{headerDX10.ResourceDimension}] from DDS HeaderDX10");
                 }
             }
             else

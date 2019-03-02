@@ -108,7 +108,8 @@ namespace SeeingSharp.Multimedia.Core
                 m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING &&
                 m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D)
             {
-                throw new SeeingSharpGraphicsException(string.Format("Invalid format for texture uploading to a color map ({0})!", m_format));
+                throw new SeeingSharpGraphicsException(
+                    $"Invalid format for texture uploading to a color map ({m_format})!");
             }
 
             // Upload the texture

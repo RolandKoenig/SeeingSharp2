@@ -37,9 +37,6 @@ using SDX = SharpDX;
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// An unmanaged buffer of pixels.
     /// </summary>
@@ -169,7 +166,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             var totalSize = Width * Height * PixelSize;
             if (totalSize % sizeOfOutputPixel != 0)
             {
-                throw new ArgumentException(string.Format("Invalid sizeof(T), not a multiple of current size [{0}]in bytes ", totalSize));
+                throw new ArgumentException($"Invalid sizeof(T), not a multiple of current size [{totalSize}]in bytes ");
             }
 
             var buffer = new T[totalSize / sizeOfOutputPixel];
@@ -331,7 +328,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 if (PixelSize != FormatHelper.SizeOfInBytes(value))
                 {
-                    throw new ArgumentException(string.Format("Format [{0}] doesn't have same pixel size in bytes than current format [{1}]", value, format));
+                    throw new ArgumentException(
+                        $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");
                 }
                 format = value;
             }

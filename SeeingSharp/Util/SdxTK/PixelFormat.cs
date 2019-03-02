@@ -31,9 +31,6 @@ using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// PixelFormat is equivalent to <see cref="SharpDX.DXGI.Format"/>.
     /// </summary>
@@ -392,7 +389,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public override string ToString()
         {
-            return string.Format("{0}", Value);
+            return $"{Value}";
         }
     }
 }

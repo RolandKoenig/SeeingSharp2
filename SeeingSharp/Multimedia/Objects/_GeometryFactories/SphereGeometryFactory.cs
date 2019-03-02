@@ -21,11 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
     public class SphereGeometryFactory : GeometryFactory
     {
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var result = new VertexStructure();
 

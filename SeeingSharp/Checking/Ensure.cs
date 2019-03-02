@@ -31,9 +31,6 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Checking
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class contains some helper methods which can be used
     /// to check method parameters.
@@ -51,9 +48,8 @@ namespace SeeingSharp.Checking
 
             if (toCompare != other)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} has not the expected value!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} has not the expected value!");
             }
         }
 
@@ -68,9 +64,8 @@ namespace SeeingSharp.Checking
 
             if (toCompare.CompareTo(other) != 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} has not the expected value!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} has not the expected value!");
             }
         }
 
@@ -85,9 +80,8 @@ namespace SeeingSharp.Checking
             if (disposable == null ||
                 disposable.IsDisposed)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Disposable onject {0} within method {1} must not be null or disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Disposable onject {checkedVariableName} within method {callerMethod} must not be null or disposed!");
             }
         }
 
@@ -101,9 +95,8 @@ namespace SeeingSharp.Checking
 
             if (boolValue)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Boolean {0} within method {1} must be false!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Boolean {checkedVariableName} within method {callerMethod} must be false!");
             }
         }
 
@@ -117,9 +110,8 @@ namespace SeeingSharp.Checking
 
             if (!boolValue)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Boolean {0} within method {1} must be true!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Boolean {checkedVariableName} within method {callerMethod} must be true!");
             }
         }
 
@@ -134,9 +126,8 @@ namespace SeeingSharp.Checking
             if (array == null ||
                 array.Length == 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Array {0} within method {1} must not be null or empty!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Array {checkedVariableName} within method {callerMethod} must not be null or empty!");
             }
         }
 
@@ -151,9 +142,8 @@ namespace SeeingSharp.Checking
             if (collection == null ||
                 collection.Count == 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Collection {0} within method {1} must not be null or empty!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Collection {checkedVariableName} within method {callerMethod} must not be null or empty!");
             }
         }
 
@@ -168,9 +158,8 @@ namespace SeeingSharp.Checking
             if (collection == null ||
                 collection.Count == 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Collection {0} within method {1} must not be null or empty!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Collection {checkedVariableName} within method {callerMethod} must not be null or empty!");
             }
         }
 
@@ -184,9 +173,8 @@ namespace SeeingSharp.Checking
 
             if(string.IsNullOrEmpty(stringParam))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "String {0} within method {1} must not be null or empty!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"String {checkedVariableName} within method {callerMethod} must not be null or empty!");
             }
         }
 
@@ -200,9 +188,8 @@ namespace SeeingSharp.Checking
 
             if (string.IsNullOrWhiteSpace(stringParam))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "String {0} within method {1} must not be null or empty!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"String {checkedVariableName} within method {callerMethod} must not be null or empty!");
             }
         }
 
@@ -216,9 +203,8 @@ namespace SeeingSharp.Checking
 
             if (objParam == null)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} must not be null!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} must not be null!");
             }
         }
 
@@ -233,9 +219,8 @@ namespace SeeingSharp.Checking
             if (objParam == null &&
                 default(T) != null)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} must not be null because type argument is not by ref!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} must not be null because type argument is not by ref!");
             }
         }
 
@@ -252,9 +237,8 @@ namespace SeeingSharp.Checking
             var argTypeInfo = objParam.GetType().GetTypeInfo();
             if (!genericTypeInfo.IsAssignableFrom(argTypeInfo))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} can not be assigned to type {2}!",
-                    checkedVariableName, callerMethod, genericTypeInfo.FullName));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} can not be assigned to type {genericTypeInfo.FullName}!");
             }
         }
 
@@ -268,9 +252,8 @@ namespace SeeingSharp.Checking
 
             if (objParam != null)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Object {0} within method {1} must be null!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Object {checkedVariableName} within method {callerMethod} must be null!");
             }
         }
     }

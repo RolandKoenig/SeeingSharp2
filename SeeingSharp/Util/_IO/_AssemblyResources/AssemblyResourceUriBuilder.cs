@@ -43,9 +43,7 @@ namespace SeeingSharp.Util
         /// </returns>
         public override string ToString()
         {
-            return string.Format(
-                "Resource: [{0}] {1}",
-                m_assemblyName, m_filePath);
+            return $"Resource: [{m_assemblyName}] {m_filePath}";
         }
 
         /// <summary>

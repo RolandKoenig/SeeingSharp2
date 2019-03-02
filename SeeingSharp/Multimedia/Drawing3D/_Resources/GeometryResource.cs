@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Build structures
             VertexStructure[] structures = {
-                m_geometry.BuildStructure(new StructureBuildOptions(device.SupportedDetailLevel))
+                m_geometry.BuildStructure(new GeometryBuildOptions(device.SupportedDetailLevel))
             };
 
             // Build BoundingBox around all vertices

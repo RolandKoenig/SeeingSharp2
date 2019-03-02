@@ -27,16 +27,13 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class StackedGeometryFactory : GeometryFactory
     {
         /// <summary>
         /// Builds all vertex structures for the given detail level.
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var structureFromChild = m_geometryToStack.BuildStructure(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));

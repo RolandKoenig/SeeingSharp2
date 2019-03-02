@@ -151,8 +151,7 @@ namespace SeeingSharp.Multimedia.Objects
             var fileExtension = source.FileExtension;
             if (string.IsNullOrEmpty(fileExtension))
             {
-                throw new SeeingSharpGraphicsException(string.Format(
-                    "Unable to query for file extension from source {0}", source));
+                throw new SeeingSharpGraphicsException($"Unable to query for file extension from source {source}");
             }
             return GetImporterByFileType(fileExtension);
         }
@@ -169,8 +168,7 @@ namespace SeeingSharp.Multimedia.Objects
             IModelImporter importer = null;
             if (!m_importersByFileType.TryGetValue(fileExtension, out importer))
             {
-                throw new SeeingSharpGraphicsException(string.Format(
-                    "No importer found for file type {0}", fileExtension));
+                throw new SeeingSharpGraphicsException($"No importer found for file type {fileExtension}");
             }
             return importer;
         }

@@ -574,10 +574,8 @@ namespace SeeingSharp.Multimedia.Objects
                                 }
 
                                 // Throw an exception with more detail where the error was raised originally
-                                throw new SeeingSharpGraphicsException(string.Format(
-                                    "Unable to read file {0} because of an error while reading xml at {1}",
-                                    sourceFile,
-                                    currentLine + ", " + currentColumn), ex);
+                                throw new SeeingSharpGraphicsException(
+                                    $"Unable to read file {sourceFile} because of an error while reading xml at {currentLine + ", " + currentColumn}", ex);
                             }
                         }
                     }

@@ -116,7 +116,7 @@ namespace SeeingSharp.Tests
                 {
                     // 2D rendering is made here
                     graphics.DrawText(
-                        string.Format("Just a dummy text ;){0}Just a dummy text ;)", Environment.NewLine),
+                        $"Just a dummy text ;){Environment.NewLine}Just a dummy text ;)",
                         textFormat,
                         new RectangleF(10, 10, 512, 512),
                         solidBrush);

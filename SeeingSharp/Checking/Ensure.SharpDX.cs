@@ -46,9 +46,8 @@ namespace SeeingSharp.Checking
             if (disposeBase == null ||
                 disposeBase.IsDisposed)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Resource {0} within method {1} musst not be null or disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Resource {checkedVariableName} within method {callerMethod} musst not be null or disposed!");
             }
         }
 
@@ -62,9 +61,8 @@ namespace SeeingSharp.Checking
 
             if (disposeBase.IsDisposed)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Resource {0} within method {1} musst not be disposed!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Resource {checkedVariableName} within method {callerMethod} musst not be disposed!");
             }
         }
     }

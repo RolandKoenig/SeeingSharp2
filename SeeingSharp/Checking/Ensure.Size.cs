@@ -44,9 +44,8 @@ namespace SeeingSharp.Checking
             if (size.Width <= 0 ||
                 size.Height <= 0)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Size {0} within method {1} must not be empty (given size: {2})!",
-                    checkedVariableName, callerMethod, size));
+                throw new SeeingSharpCheckException(
+                    $"Size {checkedVariableName} within method {callerMethod} must not be empty (given size: {size})!");
             }
         }
 
@@ -61,9 +60,8 @@ namespace SeeingSharp.Checking
             if (size.Width <= 0f ||
                 size.Height <= 0f)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Size {0} within method {1} must not be empty (given size: {2})!",
-                    checkedVariableName, callerMethod, size));
+                throw new SeeingSharpCheckException(
+                    $"Size {checkedVariableName} within method {callerMethod} must not be empty (given size: {size})!");
             }
         }
     }

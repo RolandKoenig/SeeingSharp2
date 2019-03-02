@@ -29,9 +29,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class FloorGeometryFactory : GeometryFactory
     {
         public const float DEFAULT_HEIGHT = 0.1f;
@@ -172,7 +169,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds the structure.
         /// </summary>
-        public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
+        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
         {
             var result = new VertexStructure();
 

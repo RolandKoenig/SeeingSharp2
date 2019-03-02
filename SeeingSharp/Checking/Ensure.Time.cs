@@ -43,10 +43,8 @@ namespace SeeingSharp.Checking
 
             if (timeSpan < TimeSpan.Zero)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Timespan {0} within method {1} must be longer or equal zero (given value is {2}!",
-                    checkedVariableName, callerMethod,
-                    timeSpan));
+                throw new SeeingSharpCheckException(
+                    $"Timespan {checkedVariableName} within method {callerMethod} must be longer or equal zero (given value is {timeSpan}!");
             }
         }
 
@@ -60,10 +58,8 @@ namespace SeeingSharp.Checking
 
             if (timeSpan < compareValue)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Timespan {0} within method {1} must be longer or equal {2} (given value is {3}!",
-                    checkedVariableName, callerMethod,
-                    compareValue, timeSpan));
+                throw new SeeingSharpCheckException(
+                    $"Timespan {checkedVariableName} within method {callerMethod} must be longer or equal {compareValue} (given value is {timeSpan}!");
             }
         }
 
@@ -77,10 +73,8 @@ namespace SeeingSharp.Checking
 
             if (timeSpan > compareValue)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Timespan {0} within method {1} must be shorter or equal {2} (given value is {3}!",
-                    checkedVariableName, callerMethod,
-                    compareValue, timeSpan));
+                throw new SeeingSharpCheckException(
+                    $"Timespan {checkedVariableName} within method {callerMethod} must be shorter or equal {compareValue} (given value is {timeSpan}!");
             }
         }
 
@@ -94,10 +88,8 @@ namespace SeeingSharp.Checking
 
             if (timeSpan <= TimeSpan.Zero)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Timespan {0} within method {1} must be longer than zero (given value is {2}!",
-                    checkedVariableName, callerMethod,
-                    timeSpan));
+                throw new SeeingSharpCheckException(
+                    $"Timespan {checkedVariableName} within method {callerMethod} must be longer than zero (given value is {timeSpan}!");
             }
         }
     }

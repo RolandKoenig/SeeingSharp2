@@ -30,9 +30,6 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Checking
 {
-    #region using
-    #endregion
-
     public static partial class Ensure
     {
         [Conditional("DEBUG")]
@@ -46,9 +43,8 @@ namespace SeeingSharp.Checking
             // Check result
             if (collection.Contains(element))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Collection {0} within method {1} must not contain element {2}!",
-                    checkedVariableName, callerMethod, element));
+                throw new SeeingSharpCheckException(
+                    $"Collection {checkedVariableName} within method {callerMethod} must not contain element {element}!");
             }
         }
 
@@ -66,9 +62,8 @@ namespace SeeingSharp.Checking
             // Check result
             if(!hasAnyElement)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Collection {0} within method {1} musst have more than zero elements!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException(
+                    $"Collection {checkedVariableName} within method {callerMethod} musst have more than zero elements!");
             }
         }
 
@@ -88,9 +83,8 @@ namespace SeeingSharp.Checking
             if (collectionCount < countMin ||
                 collectionCount > countMax)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Collection {0} within method {1} does not have the expected count of elements (expected min {2} to max {3}, current count is {4})!",
-                    checkedVariableName, callerMethod, countMin, countMax, collectionCount));
+                throw new SeeingSharpCheckException(
+                    $"Collection {checkedVariableName} within method {callerMethod} does not have the expected count of elements (expected min {countMin} to max {countMax}, current count is {collectionCount})!");
             }
         }
 

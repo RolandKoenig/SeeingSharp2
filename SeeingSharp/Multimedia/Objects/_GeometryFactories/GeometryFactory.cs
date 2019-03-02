@@ -21,14 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 namespace SeeingSharp.Multimedia.Objects
 {
     public abstract class GeometryFactory
     {
         /// <summary>
-        /// Builds a VertexStructure using given parameters (like DetailLevel).
+        /// Builds a <see cref="VertexStructure"/> using given parameters (like DetailLevel).
         /// </summary>
-        /// <param name="buildOptions">Some generic options for structure building</param>
-        public abstract VertexStructure BuildStructure(StructureBuildOptions buildOptions);
+        /// <param name="buildOptions">Some generic options for geometry building</param>
+        public abstract VertexStructure BuildStructure(GeometryBuildOptions buildOptions);
     }
 }

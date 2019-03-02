@@ -30,9 +30,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
 {
-    #region using
-    #endregion
-
     public abstract class FocusedCameraComponent
         : SceneComponent<FocusedCameraComponent.PerSceneContext>
     {

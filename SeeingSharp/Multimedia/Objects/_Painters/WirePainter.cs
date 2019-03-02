@@ -34,9 +34,6 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class WirePainter
     {
         public void DrawLine(Vector3 start, Vector3 destination)
