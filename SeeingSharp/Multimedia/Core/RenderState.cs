@@ -24,6 +24,13 @@
 #region using
 
 //Same namespace mappings.
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -32,73 +39,26 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Drawing2D;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class RenderState : IDisposable
     {
-        #region Resources for Direct3D 11 rendering
+        /// <summary>
+        /// Gets or sets the current device index.
+        /// </summary>
+        internal int DeviceIndex;
 
-        #endregion
-
-        #region  Generic fields
-        private bool m_disposed;
-        private Stack<RenderStackEntry> m_renderSettingsStack;
-        private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
-        private RenderStackEntry m_currentRenderSettings;
-        private Scene m_currentScene;
-        private ResourceDictionary m_currentResourceDictionary;
-        private Matrix4Stack m_world;
-        private PerformanceAnalyzer m_perfomanceCalculator;
-        #endregion
-
-        #region Current state
-        private MaterialResource m_forcedMaterial;
-        private MaterialResource m_lastAppliedMaterial;
-        private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
-        #endregion
+        //internal int LastRenderBlockID;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// Gets or sets the current render target for 2D rendering.
         /// </summary>
-        /// <param name="device">The device object.</param>
-        /// <param name="performanceCalculator">The object used to calculate performance values</param>
-        private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
-        {
-            //Set device members
-            Device = device;
-            this.DeviceIndex = device.DeviceIndex;
-
-            //Initialize world matrix
-            m_world = new Matrix4Stack(Matrix.Identity);
-
-            //Create settings stack
-            m_renderSettingsStack = new Stack<RenderStackEntry>();
-            m_sceneStack = new Stack<Tuple<Core.Scene, ResourceDictionary>>();
-
-            m_perfomanceCalculator = performanceCalculator;
-        }
+        internal D2D.RenderTarget RenderTarget2D;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// Gets or sets the current view index.
         /// </summary>
-        internal RenderState(
-            EngineDevice device,
-            PerformanceAnalyzer performanceCalculator,
-            RenderTargets renderTargets,
-            SharpDX.Mathematics.Interop.RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
-            : this(device, performanceCalculator)
-        {
-            Reset(renderTargets, viewport, camera, viewInformation);
-        }
+        internal int ViewIndex;
 
         /// <summary>
         /// Forces the use of the given material.
@@ -127,8 +87,8 @@ namespace SeeingSharp.Multimedia.Core
         internal void ApplyMaterial(MaterialResource resourceToApply, MaterialApplyInstancingMode instancingMode)
         {
             // Use forced material if any set
-            if ((m_forcedMaterial != null) &&
-                (resourceToApply != m_forcedMaterial))
+            if (m_forcedMaterial != null &&
+                resourceToApply != m_forcedMaterial)
             {
                 resourceToApply = m_forcedMaterial;
             }
@@ -140,7 +100,7 @@ namespace SeeingSharp.Multimedia.Core
                 return;
             }
 
-            if ((m_lastAppliedMaterial != resourceToApply) || (m_lastMaterialInstancingMode != instancingMode))
+            if (m_lastAppliedMaterial != resourceToApply || m_lastMaterialInstancingMode != instancingMode)
             {
                 // Apply material (material or instancing mode has changed)
                 resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
@@ -163,16 +123,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Disposes all resources of this object.
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_disposed) { return; }
-
-            m_disposed = true;
-        }
-
-        /// <summary>
         /// Resets the render state.
         /// </summary>
         /// <param name="viewport">The viewport.</param>
@@ -181,7 +131,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderTargets">The render targets used for rendering.</param>
         internal void Reset(
             RenderTargets renderTargets,
-            SharpDX.Mathematics.Interop.RawViewportF viewport,
+            RawViewportF viewport,
             Camera3DBase camera, ViewInformation viewInformation)
         {
             m_renderSettingsStack.Clear();
@@ -239,7 +189,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.DepthStencilBuffer != null)
             {
@@ -261,7 +211,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.ColorBuffer != null)
             {
@@ -281,7 +231,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.NormalDepthBuffer != null)
             {
@@ -305,7 +255,7 @@ namespace SeeingSharp.Multimedia.Core
             m_currentScene = scene;
             m_currentResourceDictionary = resourceDictionary;
 
-            return new DummyDisposable(() => this.PopScene());
+            return new DummyDisposable(() => PopScene());
         }
 
         /// <summary>
@@ -331,7 +281,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <exception cref="System.ObjectDisposedException">RenderState</exception>
         internal void PushRenderTarget(
             RenderTargets renderTargets,
-            SharpDX.Mathematics.Interop.RawViewportF viewport,
+            RawViewportF viewport,
             Camera3DBase camera, ViewInformation viewInformation)
         {
             if (m_disposed)
@@ -397,6 +347,51 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// </summary>
+        /// <param name="device">The device object.</param>
+        /// <param name="performanceCalculator">The object used to calculate performance values</param>
+        private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
+        {
+            //Set device members
+            Device = device;
+            DeviceIndex = device.DeviceIndex;
+
+            //Initialize world matrix
+            m_world = new Matrix4Stack(Matrix.Identity);
+
+            //Create settings stack
+            m_renderSettingsStack = new Stack<RenderStackEntry>();
+            m_sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
+
+            m_perfomanceCalculator = performanceCalculator;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// </summary>
+        internal RenderState(
+            EngineDevice device,
+            PerformanceAnalyzer performanceCalculator,
+            RenderTargets renderTargets,
+            RawViewportF viewport,
+            Camera3DBase camera, ViewInformation viewInformation)
+            : this(device, performanceCalculator)
+        {
+            Reset(renderTargets, viewport, camera, viewInformation);
+        }
+
+        /// <summary>
+        /// Disposes all resources of this object.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_disposed) { return; }
+
+            m_disposed = true;
+        }
+
+        /// <summary>
         /// Gets current Device object.
         /// </summary>
         public EngineDevice Device { get; }
@@ -404,35 +399,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the ViewProj matrix.
         /// </summary>
-        public Matrix ViewProj
-        {
-            get { return m_currentRenderSettings.ViewProj; }
-        }
+        public Matrix ViewProj => m_currentRenderSettings.ViewProj;
 
         /// <summary>
         /// Gets current world matrix.
         /// </summary>
         /// <value>The world.</value>
-        public Matrix4Stack World
-        {
-            get { return m_world; }
-        }
+        public Matrix4Stack World => m_world;
 
         /// <summary>
         /// Gets current scene object.
         /// </summary>
-        public Scene CurrentScene
-        {
-            get { return m_currentScene; }
-        }
+        public Scene CurrentScene => m_currentScene;
 
         /// <summary>
         /// Gets the current ResourceDictionary object.
         /// </summary>
-        public ResourceDictionary CurrentResources
-        {
-            get { return m_currentResourceDictionary; }
-        }
+        public ResourceDictionary CurrentResources => m_currentResourceDictionary;
 
         /// <summary>
         /// Gets current camera.
@@ -442,7 +425,7 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (m_currentRenderSettings != null) { return m_currentRenderSettings.Camera; }
-                else { return null; }
+                return null;
             }
         }
 
@@ -454,18 +437,18 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (m_currentRenderSettings != null) { return m_currentRenderSettings.ViewInformation; }
-                else { return null; }
+                return null;
             }
         }
 
         /// <summary>
         /// Gets the current main viewport.
         /// </summary>
-        internal SharpDX.Mathematics.Interop.RawViewportF Viewport
+        internal RawViewportF Viewport
         {
             get
             {
-                if (m_currentRenderSettings == null) { return new SharpDX.Mathematics.Interop.RawViewportF(); }
+                if (m_currentRenderSettings == null) { return new RawViewportF(); }
                 return m_currentRenderSettings.SingleViewport;
             }
         }
@@ -473,35 +456,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is this object disposed?
         /// </summary>
-        public bool Disposed
-        {
-            get { return m_disposed; }
-        }
-
-        /// <summary>
-        /// Gets or sets the current view index.
-        /// </summary>
-        internal int ViewIndex;
-
-        /// <summary>
-        /// Gets or sets the current device index.
-        /// </summary>
-        internal int DeviceIndex;
-
-        //internal int LastRenderBlockID;
-
-        /// <summary>
-        /// Gets or sets the current render target for 2D rendering.
-        /// </summary>
-        internal D2D.RenderTarget RenderTarget2D;
+        public bool Disposed => m_disposed;
 
         /// <summary>
         /// Gets the currently forced material.
         /// </summary>
-        public MaterialResource ForcedMaterial
-        {
-            get { return m_forcedMaterial; }
-        }
+        public MaterialResource ForcedMaterial => m_forcedMaterial;
 
         /// <summary>
         /// Gets or sets the current object for 2D rendering.
@@ -532,30 +492,14 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private class RenderStackEntry
         {
-            public Matrix4Stack Matrix4Stack;
             public Camera3DBase Camera;
-            public RenderTargets RenderTargets;
-            public SharpDX.Mathematics.Interop.RawViewportF SingleViewport;
-            public ViewInformation ViewInformation;
 
             // Local array which store alls rendertargets for usage
             private D3D11.RenderTargetView[] m_targetArray;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="RenderStackEntry"/> class.
-            /// </summary>
-            public RenderStackEntry()
-            {
-
-            }
-
-            /// <summary>
-            /// Gets the current view projection matrix.
-            /// </summary>
-            public Matrix ViewProj
-            {
-                get { return Camera.ViewProjection; }
-            }
+            public Matrix4Stack Matrix4Stack;
+            public RenderTargets RenderTargets;
+            public RawViewportF SingleViewport;
+            public ViewInformation ViewInformation;
 
             /// <summary>
             /// Applies all properties.
@@ -574,9 +518,34 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Set render targets to output merger
                 //deviceContext.Rasterizer.SetViewport(SingleViewport);
-                deviceContext.Rasterizer.SetViewports(new SharpDX.Mathematics.Interop.RawViewportF[] { SingleViewport, SingleViewport, SingleViewport });
+                deviceContext.Rasterizer.SetViewports(new[] { SingleViewport, SingleViewport, SingleViewport });
                 deviceContext.OutputMerger.SetTargets(RenderTargets.DepthStencilBuffer, m_targetArray);
             }
+
+            /// <summary>
+            /// Gets the current view projection matrix.
+            /// </summary>
+            public Matrix ViewProj => Camera.ViewProjection;
         }
+
+        #region Resources for Direct3D 11 rendering
+        #endregion
+
+        #region  Generic fields
+        private bool m_disposed;
+        private Stack<RenderStackEntry> m_renderSettingsStack;
+        private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
+        private RenderStackEntry m_currentRenderSettings;
+        private Scene m_currentScene;
+        private ResourceDictionary m_currentResourceDictionary;
+        private Matrix4Stack m_world;
+        private PerformanceAnalyzer m_perfomanceCalculator;
+        #endregion
+
+        #region Current state
+        private MaterialResource m_forcedMaterial;
+        private MaterialResource m_lastAppliedMaterial;
+        private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
+        #endregion
     }
 }

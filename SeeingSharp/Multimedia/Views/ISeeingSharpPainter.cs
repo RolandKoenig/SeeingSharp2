@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-
     #endregion
 
     public interface ISeeingSharpPainter

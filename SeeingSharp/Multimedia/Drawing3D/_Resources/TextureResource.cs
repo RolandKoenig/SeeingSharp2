@@ -24,6 +24,7 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,21 +32,10 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public abstract class TextureResource : Resource
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextureResource"/> class.
-        /// </summary>
-        protected TextureResource()
-        {
-
-        }
-
         /// <summary>
         /// Gets the texture object.
         /// </summary>

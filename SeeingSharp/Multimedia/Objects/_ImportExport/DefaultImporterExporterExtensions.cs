@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Input;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Core;
-    using Input;
-
     #endregion
 
     public class DefaultImporterExporterExtensions : ISeeingSharpExtensions

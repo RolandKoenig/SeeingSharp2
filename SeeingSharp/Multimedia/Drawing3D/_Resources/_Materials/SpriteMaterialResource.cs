@@ -24,6 +24,8 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,10 +33,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class SpriteMaterialResource : MaterialResource
@@ -42,23 +40,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private DefaultResources m_defaultResources;
+        private PixelShaderResource m_pixelShader;
 
         //Some configuration
 
         //Resource members
         private TextureResource m_textureResource;
         private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private DefaultResources m_defaultResources;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
-        /// </summary>
-        /// <param name="textureKey">The name of the texture to be rendered.</param>
-        public SpriteMaterialResource(NamedOrGenericKey textureKey)
-        {
-            TextureKey = textureKey;
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -109,7 +98,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -123,9 +112,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal override void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            bool isResourceSameType =
-                (previousMaterial != null) &&
-                (previousMaterial.ResourceType == base.ResourceType);
+            var isResourceSameType =
+                previousMaterial != null &&
+                previousMaterial.ResourceType == ResourceType;
 
             if (!isResourceSameType)
             {
@@ -148,6 +137,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
+        /// </summary>
+        /// <param name="textureKey">The name of the texture to be rendered.</param>
+        public SpriteMaterialResource(NamedOrGenericKey textureKey)
+        {
+            TextureKey = textureKey;
+        }
+
+        /// <summary>
         /// Gets the key of the texture resource.
         /// </summary>
         public NamedOrGenericKey TextureKey { get; }
@@ -155,9 +153,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_vertexShader != null; }
-        }
+        public override bool IsLoaded => m_vertexShader != null;
     }
 }

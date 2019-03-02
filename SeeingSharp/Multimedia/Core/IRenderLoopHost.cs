@@ -24,6 +24,9 @@
 #region using
 
 // Namespace mappings
+using System;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,15 +34,11 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public interface IRenderLoopHost
     {
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> OnRenderLoop_CreateViewResources(EngineDevice device);
+        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> OnRenderLoop_CreateViewResources(EngineDevice device);
 
         void OnRenderLoop_DisposeViewResources(EngineDevice device);
 

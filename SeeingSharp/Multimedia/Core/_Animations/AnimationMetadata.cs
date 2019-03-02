@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class AnimationMetadata
@@ -38,8 +38,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="finishedCallback">The finished callback.</param>
         public AnimationMetadata(IAnimation animation, Action finishedCallback)
         {
-            this.Animation = animation;
-            this.FinishedCallback = finishedCallback;
+            Animation = animation;
+            FinishedCallback = finishedCallback;
         }
 
         /// <summary>

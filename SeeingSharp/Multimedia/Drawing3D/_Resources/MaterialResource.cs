@@ -24,6 +24,8 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Objects;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,21 +33,10 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using Objects;
-
     #endregion
 
     public abstract class MaterialResource : Resource
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialResource"/> class.
-        /// </summary>
-        public MaterialResource()
-        {
-        }
-
         /// <summary>
         /// Stores all required data into a new <see cref="ExportMaterialInfo"/>.
         /// </summary>
@@ -76,9 +67,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="instancingMode">Instancing mode for which to generate the input layout for.</param>
         internal abstract D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements, MaterialApplyInstancingMode instancingMode);
 
-        public virtual bool IsExportable
-        {
-            get { return false; }
-        }
+        public virtual bool IsExportable => false;
     }
 }

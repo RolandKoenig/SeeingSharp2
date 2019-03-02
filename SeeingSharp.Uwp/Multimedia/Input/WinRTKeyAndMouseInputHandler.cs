@@ -21,198 +21,33 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Views;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Windows.System;
-    using Windows.UI.Core;
-    using Windows.UI.Input;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Input;
-    using Core;
-    using SharpDX;
-    using Views;
-
     #endregion
 
-    class WinRTKeyAndMouseInputHandler : IInputHandler
+    internal class WinRTKeyAndMouseInputHandler : IInputHandler
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
         private static readonly Dictionary<VirtualKey, WinVirtualKey> s_keyMappingDict;
 
-        #region objects from outside
-        private SeeingSharpPanelPainter m_painter;
-        private IInputEnabledView m_viewInterface;
-        private RenderLoop m_renderLoop;
-        private CoreWindow m_coreWindow;
-        private CoreDispatcher m_dispatcher;
-        #endregion
-
-        #region local resources
-        private Button m_dummyButtonForFocus;
-        private bool m_hasFocus;
-        #endregion
-
-        #region Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
-        #endregion
-
         #region state variables for camera movement
         private PointerPoint m_lastDragPoint;
         #endregion
-
-        /// <summary>
-        /// Initializes the <see cref="WinRTKeyAndMouseInputHandler"/> class.
-        /// </summary>
-        static WinRTKeyAndMouseInputHandler()
-        {
-            s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
-            foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
-            {
-                short actVirtualKeyCode = (short)actVirtualKey;
-                var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
-                s_keyMappingDict[actVirtualKey] = actWinVirtualKey;
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WinRTKeyAndMouseInputHandler"/> class.
-        /// </summary>
-        public WinRTKeyAndMouseInputHandler()
-        {
-            m_stateMouseOrPointer = new MouseOrPointerState();
-            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
-
-            m_stateKeyboard = new KeyboardState();
-        }
-
-        /// <summary>
-        /// Gets a list containing all supported view types.
-        /// </summary>
-        public Type[] GetSupportedViewTypes()
-        {
-            return new Type[]
-            {
-                typeof(SeeingSharpPanelPainter),
-            };
-        }
-
-        /// <summary>
-        /// Starts input handling.
-        /// </summary>
-        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
-        {
-            m_painter = viewObject as SeeingSharpPanelPainter;
-            if (m_painter == null) { throw new ArgumentException("Unable to handle given view object!"); }
-
-            m_viewInterface = m_painter as IInputEnabledView;
-            if (m_viewInterface == null) { throw new ArgumentException("Unable to handle given view object!"); }
-
-            m_renderLoop = m_viewInterface.RenderLoop;
-            if (m_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
-
-            m_dispatcher = m_painter.Disptacher;
-            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDisptacher from target panel!"); }
-
-            // Deligate start logic to UI thread
-            var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                // Register all events
-                m_painter.TargetPanel.PointerExited += OnTargetPanel_PointerExited;
-                m_painter.TargetPanel.PointerEntered += OnTargetPanel_PointerEntered;
-                m_painter.TargetPanel.PointerWheelChanged += OnTargetPanel_PointerWheelChanged;
-                m_painter.TargetPanel.PointerPressed += OnTargetPanel_PointerPressed;
-                m_painter.TargetPanel.PointerReleased += OnTargetPanel_PointerReleased;
-                m_painter.TargetPanel.PointerMoved += OnTargetPanel_PointerMoved;
-
-                // Create the dummy button for focus management
-                //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
-                m_dummyButtonForFocus = new Button
-                {
-                    Content = "Button",
-                    Width = 0,
-                    Height = 0,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
-
-                m_dummyButtonForFocus.KeyDown += OnDummyButtonForFocus_KeyDown;
-                m_dummyButtonForFocus.KeyUp += OnDummyButtonForFocus_KeyUp;
-                m_dummyButtonForFocus.LostFocus += OnDummyButtonForFocus_LostFocus;
-                m_dummyButtonForFocus.GotFocus += OnDummyButtonForFocus_GotFocus;
-                m_painter.TargetPanel.Children.Add(m_dummyButtonForFocus);
-
-                m_coreWindow = CoreWindow.GetForCurrentThread();
-                m_coreWindow.KeyDown += OnCoreWindow_KeyDown;
-                m_coreWindow.KeyUp += OnCoreWindow_KeyUp;
-
-                // Set focus on the target
-                m_dummyButtonForFocus.Focus(FocusState.Programmatic);
-            });
-        }
-
-        /// <summary>
-        /// Stops input handling.
-        /// </summary>
-        public void Stop()
-        {
-            m_hasFocus = false;
-            if(m_painter == null) { return; }
-            if(m_dispatcher == null) { return; }
-
-            // Deregister all events on UI thread
-            var dummyButtonForFocus = m_dummyButtonForFocus;
-            var painter = m_painter;
-            var coreWindow = m_coreWindow;
-
-            var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                // Remove the dummy button
-                if (dummyButtonForFocus != null)
-                {
-                    dummyButtonForFocus.KeyDown -= OnDummyButtonForFocus_KeyDown;
-                    dummyButtonForFocus.KeyUp -= OnDummyButtonForFocus_KeyUp;
-                    dummyButtonForFocus.LostFocus -= OnDummyButtonForFocus_LostFocus;
-                    dummyButtonForFocus.GotFocus -= OnDummyButtonForFocus_GotFocus;
-
-                    painter.TargetPanel.Children.Remove(dummyButtonForFocus);
-                }
-
-                // Deregister all events
-                painter.TargetPanel.PointerExited -= OnTargetPanel_PointerExited;
-                painter.TargetPanel.PointerEntered -= OnTargetPanel_PointerEntered;
-                painter.TargetPanel.PointerWheelChanged -= OnTargetPanel_PointerWheelChanged;
-                painter.TargetPanel.PointerPressed -= OnTargetPanel_PointerPressed;
-                painter.TargetPanel.PointerReleased -= OnTargetPanel_PointerReleased;
-                painter.TargetPanel.PointerMoved -= OnTargetPanel_PointerMoved;
-
-                // Deregister events from CoreWindow
-                coreWindow.KeyDown -= OnCoreWindow_KeyDown;
-                coreWindow.KeyUp -= OnCoreWindow_KeyUp;
-            });
-
-            // set all references to zero
-            m_dummyButtonForFocus = null;
-            m_painter = null;
-            m_coreWindow = null;
-            m_dispatcher = null;
-        }
-
-        /// <summary>
-        /// Querries all current input states.
-        /// </summary>
-        public IEnumerable<InputStateBase> GetInputStates()
-        {
-            yield return m_stateMouseOrPointer;
-            yield return m_stateKeyboard;
-        }
 
         private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -374,7 +209,7 @@ namespace SeeingSharp.Multimedia.Input
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
             var pointProperties = currentPoint.Properties;
-            int wheelDelta = pointProperties.MouseWheelDelta;
+            var wheelDelta = pointProperties.MouseWheelDelta;
 
             if (pointProperties.IsPrimary)
             {
@@ -391,7 +226,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when mouse leaves the target panel.
         /// </summary>
-        private void OnTargetPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnTargetPanel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (m_painter == null) { return; }
 
@@ -404,5 +239,170 @@ namespace SeeingSharp.Multimedia.Input
 
             m_stateMouseOrPointer.Internals.NotifyInside(true);
         }
+
+        /// <summary>
+        /// Initializes the <see cref="WinRTKeyAndMouseInputHandler"/> class.
+        /// </summary>
+        static WinRTKeyAndMouseInputHandler()
+        {
+            s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
+            foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
+            {
+                var actVirtualKeyCode = (short)actVirtualKey;
+                var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
+                s_keyMappingDict[actVirtualKey] = actWinVirtualKey;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WinRTKeyAndMouseInputHandler"/> class.
+        /// </summary>
+        public WinRTKeyAndMouseInputHandler()
+        {
+            m_stateMouseOrPointer = new MouseOrPointerState();
+            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
+
+            m_stateKeyboard = new KeyboardState();
+        }
+
+        /// <summary>
+        /// Gets a list containing all supported view types.
+        /// </summary>
+        public Type[] GetSupportedViewTypes()
+        {
+            return new[]
+            {
+                typeof(SeeingSharpPanelPainter)
+            };
+        }
+
+        /// <summary>
+        /// Starts input handling.
+        /// </summary>
+        /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
+        public void Start(IInputEnabledView viewObject)
+        {
+            m_painter = viewObject as SeeingSharpPanelPainter;
+            if (m_painter == null) { throw new ArgumentException("Unable to handle given view object!"); }
+
+            m_viewInterface = m_painter;
+            if (m_viewInterface == null) { throw new ArgumentException("Unable to handle given view object!"); }
+
+            m_renderLoop = m_viewInterface.RenderLoop;
+            if (m_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
+
+            m_dispatcher = m_painter.Disptacher;
+            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDisptacher from target panel!"); }
+
+            // Deligate start logic to UI thread
+            var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // Register all events
+                m_painter.TargetPanel.PointerExited += OnTargetPanel_PointerExited;
+                m_painter.TargetPanel.PointerEntered += OnTargetPanel_PointerEntered;
+                m_painter.TargetPanel.PointerWheelChanged += OnTargetPanel_PointerWheelChanged;
+                m_painter.TargetPanel.PointerPressed += OnTargetPanel_PointerPressed;
+                m_painter.TargetPanel.PointerReleased += OnTargetPanel_PointerReleased;
+                m_painter.TargetPanel.PointerMoved += OnTargetPanel_PointerMoved;
+
+                // Create the dummy button for focus management
+                //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
+                m_dummyButtonForFocus = new Button
+                {
+                    Content = "Button",
+                    Width = 0,
+                    Height = 0,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+
+                m_dummyButtonForFocus.KeyDown += OnDummyButtonForFocus_KeyDown;
+                m_dummyButtonForFocus.KeyUp += OnDummyButtonForFocus_KeyUp;
+                m_dummyButtonForFocus.LostFocus += OnDummyButtonForFocus_LostFocus;
+                m_dummyButtonForFocus.GotFocus += OnDummyButtonForFocus_GotFocus;
+                m_painter.TargetPanel.Children.Add(m_dummyButtonForFocus);
+
+                m_coreWindow = CoreWindow.GetForCurrentThread();
+                m_coreWindow.KeyDown += OnCoreWindow_KeyDown;
+                m_coreWindow.KeyUp += OnCoreWindow_KeyUp;
+
+                // Set focus on the target
+                m_dummyButtonForFocus.Focus(FocusState.Programmatic);
+            });
+        }
+
+        /// <summary>
+        /// Stops input handling.
+        /// </summary>
+        public void Stop()
+        {
+            m_hasFocus = false;
+            if(m_painter == null) { return; }
+            if(m_dispatcher == null) { return; }
+
+            // Deregister all events on UI thread
+            var dummyButtonForFocus = m_dummyButtonForFocus;
+            var painter = m_painter;
+            var coreWindow = m_coreWindow;
+
+            var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // Remove the dummy button
+                if (dummyButtonForFocus != null)
+                {
+                    dummyButtonForFocus.KeyDown -= OnDummyButtonForFocus_KeyDown;
+                    dummyButtonForFocus.KeyUp -= OnDummyButtonForFocus_KeyUp;
+                    dummyButtonForFocus.LostFocus -= OnDummyButtonForFocus_LostFocus;
+                    dummyButtonForFocus.GotFocus -= OnDummyButtonForFocus_GotFocus;
+
+                    painter.TargetPanel.Children.Remove(dummyButtonForFocus);
+                }
+
+                // Deregister all events
+                painter.TargetPanel.PointerExited -= OnTargetPanel_PointerExited;
+                painter.TargetPanel.PointerEntered -= OnTargetPanel_PointerEntered;
+                painter.TargetPanel.PointerWheelChanged -= OnTargetPanel_PointerWheelChanged;
+                painter.TargetPanel.PointerPressed -= OnTargetPanel_PointerPressed;
+                painter.TargetPanel.PointerReleased -= OnTargetPanel_PointerReleased;
+                painter.TargetPanel.PointerMoved -= OnTargetPanel_PointerMoved;
+
+                // Deregister events from CoreWindow
+                coreWindow.KeyDown -= OnCoreWindow_KeyDown;
+                coreWindow.KeyUp -= OnCoreWindow_KeyUp;
+            });
+
+            // set all references to zero
+            m_dummyButtonForFocus = null;
+            m_painter = null;
+            m_coreWindow = null;
+            m_dispatcher = null;
+        }
+
+        /// <summary>
+        /// Querries all current input states.
+        /// </summary>
+        public IEnumerable<InputStateBase> GetInputStates()
+        {
+            yield return m_stateMouseOrPointer;
+            yield return m_stateKeyboard;
+        }
+
+        #region objects from outside
+        private SeeingSharpPanelPainter m_painter;
+        private IInputEnabledView m_viewInterface;
+        private RenderLoop m_renderLoop;
+        private CoreWindow m_coreWindow;
+        private CoreDispatcher m_dispatcher;
+        #endregion
+
+        #region local resources
+        private Button m_dummyButtonForFocus;
+        private bool m_hasFocus;
+        #endregion
+
+        #region Input states
+        private MouseOrPointerState m_stateMouseOrPointer;
+        private KeyboardState m_stateKeyboard;
+        #endregion
     }
 }

@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using Checking;
-
     #endregion
 
     /// <summary>
@@ -38,26 +38,6 @@ namespace SeeingSharp.Util
     /// </summary>
     public class RingBuffer<T>
     {
-        #region all buffer properties
-        private T[] m_buffer;
-        private int m_itemStart;
-        private int m_itemLength;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RingBuffer{T}"/> class.
-        /// </summary>
-        /// <param name="maxItemCount">The maximum count of items.</param>
-        public RingBuffer(int maxItemCount)
-        {
-            maxItemCount.EnsureInRange(2, Int32.MaxValue, nameof(maxItemCount));
-
-            m_buffer = new T[maxItemCount];
-            Count = maxItemCount;
-            m_itemStart = 0;
-            m_itemLength = 0;
-        }
-
         /// <summary>
         /// Adds a new item to the buffer and overrides existing items
         /// if the count of items reached the maximum.
@@ -74,7 +54,7 @@ namespace SeeingSharp.Util
             {
                 m_itemStart = (m_itemStart + 1) % Count;
 
-                int nextIndex = m_itemStart - 1;
+                var nextIndex = m_itemStart - 1;
                 if(nextIndex < 0) { nextIndex = Count - 1; }
                 m_buffer[nextIndex] = newItem;
             }
@@ -107,7 +87,7 @@ namespace SeeingSharp.Util
             while(m_itemLength > 0)
             {
                 targetObservable.PushNext(m_buffer[m_itemStart]);
-                m_buffer[m_itemStart] = default(T);
+                m_buffer[m_itemStart] = default;
 
                 m_itemStart = (m_itemStart + 1) % Count;
                 m_itemLength--;
@@ -120,13 +100,27 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for(int loop=0; loop<Count; loop++)
+            for(var loop=0; loop<Count; loop++)
             {
-                m_buffer[loop] = default(T);
+                m_buffer[loop] = default;
             }
 
             m_itemLength = 0;
             m_itemStart = 0;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RingBuffer{T}"/> class.
+        /// </summary>
+        /// <param name="maxItemCount">The maximum count of items.</param>
+        public RingBuffer(int maxItemCount)
+        {
+            maxItemCount.EnsureInRange(2, int.MaxValue, nameof(maxItemCount));
+
+            m_buffer = new T[maxItemCount];
+            Count = maxItemCount;
+            m_itemStart = 0;
+            m_itemLength = 0;
         }
 
         /// <summary>
@@ -145,5 +139,11 @@ namespace SeeingSharp.Util
         /// Gets the total count of items.
         /// </summary>
         public int Count { get; }
+
+        #region all buffer properties
+        private T[] m_buffer;
+        private int m_itemStart;
+        private int m_itemLength;
+        #endregion
     }
 }

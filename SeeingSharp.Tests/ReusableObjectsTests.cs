@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.IO;
+using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using System.IO;
-    using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SeeingSharp.Util;
-
     #endregion
 
     [TestClass]

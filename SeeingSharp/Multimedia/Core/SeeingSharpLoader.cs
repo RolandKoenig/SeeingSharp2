@@ -21,29 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Objects;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Checking;
-    using Objects;
-
     #endregion
 
     public class SeeingSharpLoader
     {
         private List<ISeeingSharpExtensions> m_extensions;
-
-        internal SeeingSharpLoader()
-        {
-            m_extensions = new List<ISeeingSharpExtensions>();
-            m_extensions.Add(new DefaultImporterExporterExtensions());
-
-            this.LoadSettings = new DeviceLoadSettings();
-        }
 
         public void RegisterExtensions(ISeeingSharpExtensions extensions)
         {
@@ -65,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         public SeeingSharpLoader Configure(DeviceLoadSettings loadSettings)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
-            this.LoadSettings = loadSettings;
+            LoadSettings = loadSettings;
 
             return this;
         }
@@ -74,20 +66,25 @@ namespace SeeingSharp.Multimedia.Core
         {
             manipulateConfigAction.EnsureNotNull(nameof(manipulateConfigAction));
 
-            manipulateConfigAction(this.LoadSettings);
+            manipulateConfigAction(LoadSettings);
             return this;
         }
 
         public SeeingSharpLoader EnableDirectXDebugMode()
         {
-            return this.Configure(
+            return Configure(
                 loadSettings => loadSettings.DebugEnabled = true);
         }
 
-        public IEnumerable<ISeeingSharpExtensions> Extensions
+        internal SeeingSharpLoader()
         {
-            get => m_extensions;
+            m_extensions = new List<ISeeingSharpExtensions>();
+            m_extensions.Add(new DefaultImporterExporterExtensions());
+
+            LoadSettings = new DeviceLoadSettings();
         }
+
+        public IEnumerable<ISeeingSharpExtensions> Extensions => m_extensions;
 
         public DeviceLoadSettings LoadSettings
         {

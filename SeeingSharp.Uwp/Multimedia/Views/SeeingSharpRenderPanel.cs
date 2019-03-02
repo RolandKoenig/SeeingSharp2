@@ -21,48 +21,75 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Windows.ApplicationModel;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Windows.Foundation;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Core;
-    using Drawing2D;
-    using Drawing3D;
-    using Input;
-
     #endregion
 
     //[ContentProperty(Name = "SceneComponents")]
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
-        #region Dependency properties
-        public static readonly DependencyProperty SceneProperty =
-            DependencyProperty.Register("Scene", typeof(Scene), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new Scene(), OnPropertyChanged));
-        public static readonly DependencyProperty CameraProperty =
-            DependencyProperty.Register("Camera", typeof(Camera3DBase), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new PerspectiveCamera3D(), OnPropertyChanged));
-        public static readonly DependencyProperty DrawingLayer2DProperty =
-            DependencyProperty.Register("DrawingLayer2D", typeof(Custom2DDrawingLayer), typeof(SeeingSharpRenderPanel), new PropertyMetadata(null, OnPropertyChanged));
-        #endregion
-
-        private SeeingSharpPanelPainter m_painter;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Gets or sets the camera.
+        /// </summary>
+        public Camera3DBase Camera
+        {
+            get => (Camera3DBase)GetValue(CameraProperty);
+            set => SetValue(CameraProperty, value);
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
+        /// Gets or sets the custom layer for 2D rendering.
         /// </summary>
-        public SeeingSharpRenderPanel()
+        public Custom2DDrawingLayer DrawingLayer2D
         {
-            m_painter = new SeeingSharpPanelPainter(this);
-            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
-            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
+            set => SetValue(DrawingLayer2DProperty, value);
         }
+
+        /// <summary>
+        /// Called when one of the dependency properties has changed.
+        /// </summary>
+        private static async void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!GraphicsCore.IsLoaded) { return; }
+            if (DesignMode.DesignModeEnabled) { return; }
+
+            var renderPanel = sender as SeeingSharpRenderPanel;
+            if(renderPanel == null) { return; }
+
+            if (e.Property == SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
+            else if (e.Property == CameraProperty) { renderPanel.Camera = e.NewValue as Camera3DBase; }
+            else if (e.Property == DrawingLayer2DProperty)
+            {
+                if (e.OldValue != null) { await renderPanel.RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
+                if (e.NewValue != null) { await renderPanel.RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the currently applied scene.
+        /// </summary>
+        public Scene Scene
+        {
+            get => (Scene)GetValue(SceneProperty);
+            set => SetValue(SceneProperty, value);
+        }
+
+        private SeeingSharpPanelPainter m_painter;
 
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
         {
@@ -75,75 +102,34 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when one of the dependency properties has changed.
+        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
         /// </summary>
-        private static async void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        public SeeingSharpRenderPanel()
         {
-            if (!GraphicsCore.IsLoaded) { return; }
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) { return; }
-
-            var renderPanel = sender as SeeingSharpRenderPanel;
-            if(renderPanel == null) { return; }
-
-            if (e.Property == SeeingSharpRenderPanel.SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
-            else if (e.Property == SeeingSharpRenderPanel.CameraProperty) { renderPanel.Camera = e.NewValue as Camera3DBase; }
-            else if (e.Property == SeeingSharpRenderPanel.DrawingLayer2DProperty)
-            {
-                if (e.OldValue != null) { await renderPanel.RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
-                if (e.NewValue != null) { await renderPanel.RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
-            }
+            m_painter = new SeeingSharpPanelPainter(this);
+            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
+            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
         }
+
+        /// <summary>
+        /// Gets the RenderLoop that is currently in use.
+        /// </summary>
+        public RenderLoop RenderLoop => m_painter.RenderLoop;
+
+        /// <summary>
+        /// Does the target control have focus?
+        /// </summary>
+        public bool Focused => ((IInputEnabledView)m_painter).Focused;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Discard rendering?
         /// </summary>
         public bool DiscardRendering
         {
-            get { return m_painter.DiscardRendering; }
-            set { m_painter.DiscardRendering = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the currently applied scene.
-        /// </summary>
-        public Scene Scene
-        {
-            get { return (Scene)GetValue(SceneProperty); }
-            set { SetValue(SceneProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom layer for 2D rendering.
-        /// </summary>
-        public Custom2DDrawingLayer DrawingLayer2D
-        {
-            get { return (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty); }
-            set { SetValue(DrawingLayer2DProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the camera.
-        /// </summary>
-        public Camera3DBase Camera
-        {
-            get { return (Camera3DBase)GetValue(CameraProperty); }
-            set { SetValue(CameraProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets the RenderLoop that is currently in use.
-        /// </summary>
-        public RenderLoop RenderLoop
-        {
-            get { return m_painter.RenderLoop; }
-        }
-
-        /// <summary>
-        /// Does the target control have focus?
-        /// </summary>
-        public bool Focused
-        {
-            get { return ((IInputEnabledView)m_painter).Focused; }
+            get => m_painter.DiscardRendering;
+            set => m_painter.DiscardRendering = value;
         }
 
         public EngineDevice SelectedDevice
@@ -180,5 +166,14 @@ namespace SeeingSharp.Multimedia.Views
                 return GraphicsCore.Current.Devices;
             }
         }
+
+        #region Dependency properties
+        public static readonly DependencyProperty SceneProperty =
+            DependencyProperty.Register("Scene", typeof(Scene), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new Scene(), OnPropertyChanged));
+        public static readonly DependencyProperty CameraProperty =
+            DependencyProperty.Register("Camera", typeof(Camera3DBase), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new PerspectiveCamera3D(), OnPropertyChanged));
+        public static readonly DependencyProperty DrawingLayer2DProperty =
+            DependencyProperty.Register("DrawingLayer2D", typeof(Custom2DDrawingLayer), typeof(SeeingSharpRenderPanel), new PropertyMetadata(null, OnPropertyChanged));
+        #endregion
     }
 }

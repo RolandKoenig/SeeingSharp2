@@ -21,25 +21,46 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class ChangeFloatByAnimation : AnimationBase
     {
-        //Configuration members
-        private Func<float> m_getValueFunc;
-
-        private Action<float> m_setValueAction;
-        private float m_increaseTotal;
-        private TimeSpan m_timeSpan;
-
         //Members for running animation
         private float m_alreadyIncreased;
+        //Configuration members
+        private Func<float> m_getValueFunc;
+        private float m_increaseTotal;
+
+        private Action<float> m_setValueAction;
+        private TimeSpan m_timeSpan;
+
+        /// <summary>
+        /// Called when animation starts.
+        /// </summary>
+        protected override void OnStartAnimation()
+        {
+            m_alreadyIncreased = 0f;
+        }
+
+        /// <summary>
+        /// Called each time the CurrentTime value gets updated.
+        /// </summary>
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            var currentLocationPercent = (float)(CurrentTime.TotalMilliseconds / FixedTime.TotalMilliseconds);
+            var toIncreaseTotal = m_increaseTotal * currentLocationPercent;
+            var toIncrease = toIncreaseTotal - m_alreadyIncreased;
+
+            m_setValueAction(m_getValueFunc() + toIncrease);
+
+            m_alreadyIncreased = toIncreaseTotal;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeFloatByAnimation" /> class.
@@ -59,34 +80,9 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Called when animation starts.
-        /// </summary>
-        protected override void OnStartAnimation()
-        {
-            m_alreadyIncreased = 0f;
-        }
-
-        /// <summary>
-        /// Called each time the CurrentTime value gets updated.
-        /// </summary>
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            float currentLocationPercent = (float)(base.CurrentTime.TotalMilliseconds / base.FixedTime.TotalMilliseconds);
-            float toIncreaseTotal = m_increaseTotal * currentLocationPercent;
-            float toIncrease = toIncreaseTotal - m_alreadyIncreased;
-
-            m_setValueAction(m_getValueFunc() + toIncrease);
-
-            m_alreadyIncreased = toIncreaseTotal;
-        }
-
-        /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return false; }
-        }
+        public override bool IsBlockingAnimation => false;
     }
 }

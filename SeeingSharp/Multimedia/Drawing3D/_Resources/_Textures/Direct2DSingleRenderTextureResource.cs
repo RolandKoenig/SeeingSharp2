@@ -22,7 +22,11 @@
 */
 #endregion
 #region using
-
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -31,13 +35,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Checking;
-    using Core;
-    using Drawing2D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -47,52 +44,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class Direct2DSingleRenderTextureResource : TextureResource
     {
-        #region Configuration
-        private Custom2DDrawingLayer m_drawingLayer;
-        private BrushResource m_fillBrush;
-        private int m_width;
-        private int m_height;
-        #endregion
-
-        #region Resources for Direct3D
-        private D3D11.Texture2D m_renderTargetTexture;
-        private D3D11.ShaderResourceView m_renderTargetTextureView;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
-        /// </summary>
-        /// <param name="drawingLayer">The drawing layer.</param>
-        /// <param name="height">The width of the generated texture.</param>
-        /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
-        {
-            drawingLayer.EnsureNotNull(nameof(drawingLayer));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
-
-            m_drawingLayer = drawingLayer;
-            m_width = width;
-            m_height = height;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
-        /// </summary>
-        /// <param name="fillBrush">The brush which gets used when painting the texture on load time.</param>
-        /// <param name="height">The width of the generated texture.</param>
-        /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
-        {
-            fillBrush.EnsureNotNull(nameof(fillBrush));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
-
-            m_fillBrush = fillBrush;
-            m_width = width;
-            m_height = height;
-        }
-
         /// <summary>
         /// Loads all resource.
         /// </summary>
@@ -101,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
-                device, m_width, m_height, new GraphicsViewConfiguration() { AntialiasingEnabled = false });
+                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
             m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 
             // Create resources for rendering on the texture
@@ -148,37 +99,71 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// </summary>
+        /// <param name="drawingLayer">The drawing layer.</param>
+        /// <param name="height">The width of the generated texture.</param>
+        /// <param name="width">The height of the generated texture.</param>
+        public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
+        {
+            drawingLayer.EnsureNotNull(nameof(drawingLayer));
+            width.EnsurePositive(nameof(width));
+            height.EnsurePositive(nameof(height));
+
+            m_drawingLayer = drawingLayer;
+            m_width = width;
+            m_height = height;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// </summary>
+        /// <param name="fillBrush">The brush which gets used when painting the texture on load time.</param>
+        /// <param name="height">The width of the generated texture.</param>
+        /// <param name="width">The height of the generated texture.</param>
+        public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
+        {
+            fillBrush.EnsureNotNull(nameof(fillBrush));
+            width.EnsurePositive(nameof(width));
+            height.EnsurePositive(nameof(height));
+
+            m_fillBrush = fillBrush;
+            m_width = width;
+            m_height = height;
+        }
+
+        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_renderTargetTexture != null; }
-        }
+        public override bool IsLoaded => m_renderTargetTexture != null;
 
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_renderTargetTexture; }
-        }
+        public override D3D11.Texture2D Texture => m_renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_renderTargetTextureView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return 1; }
-        }
+        public override int ArraySize => 1;
+
+        #region Configuration
+        private Custom2DDrawingLayer m_drawingLayer;
+        private BrushResource m_fillBrush;
+        private int m_width;
+        private int m_height;
+        #endregion
+
+        #region Resources for Direct3D
+        private D3D11.Texture2D m_renderTargetTexture;
+        private D3D11.ShaderResourceView m_renderTargetTextureView;
+        #endregion
     }
 }

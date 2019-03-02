@@ -24,6 +24,12 @@
 #region using
 
 //Some namespace mappings
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using SeeingSharp.Multimedia.Objects;
+using SharpDX;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,13 +37,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
-    using Objects;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -48,15 +47,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         #region Constants
         public static readonly int Size = Marshal.SizeOf<StandardVertex>();
-        public static readonly D3D11.InputElement[] InputElements = new D3D11.InputElement[]
-        {
-            new D3D11.InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0, 0),
-            new D3D11.InputElement("NORMAL", 0, SharpDX.DXGI.Format.R32G32B32_Float, 12, 0),
-            new D3D11.InputElement("TANGENT", 0, SharpDX.DXGI.Format.R32G32B32_Float, 24, 0),
-            new D3D11.InputElement("BINORMAL", 0, SharpDX.DXGI.Format.R32G32B32_Float, 36, 0),
-            new D3D11.InputElement("COLOR", 0, SharpDX.DXGI.Format.R8G8B8A8_UNorm, 48, 0),
-            new D3D11.InputElement("TEXCOORD", 0, SharpDX.DXGI.Format.R32G32_Float, 52, 0),
-            new D3D11.InputElement("TEXCOORD", 1, SharpDX.DXGI.Format.R32_Float, 60, 0)
+        public static readonly D3D11.InputElement[] InputElements = {
+            new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+            new D3D11.InputElement("NORMAL", 0, Format.R32G32B32_Float, 12, 0),
+            new D3D11.InputElement("TANGENT", 0, Format.R32G32B32_Float, 24, 0),
+            new D3D11.InputElement("BINORMAL", 0, Format.R32G32B32_Float, 36, 0),
+            new D3D11.InputElement("COLOR", 0, Format.R8G8B8A8_UNorm, 48, 0),
+            new D3D11.InputElement("TEXCOORD", 0, Format.R32G32_Float, 52, 0),
+            new D3D11.InputElement("TEXCOORD", 1, Format.R32_Float, 60, 0)
         };
         #endregion
 
@@ -77,13 +75,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="color">The color.</param>
         public StandardVertex(Vector3 position, int color)
         {
-            this.Position = position;
-            this.Normal = new Vector3(0, 1, 0);
-            this.Texture = new Vector2(0f, 0f);
-            this.Color = color;
-            this.Tangent = Vector3.Zero;
-            this.Binormal = Vector3.Zero;
-            this.TextureFactor = 0f;
+            Position = position;
+            Normal = new Vector3(0, 1, 0);
+            Texture = new Vector2(0f, 0f);
+            Color = color;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
+            TextureFactor = 0f;
         }
 
         /// <summary>
@@ -93,13 +91,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="texCoord">The texture coordinate.</param>
         public StandardVertex(Vector3 position, Vector2 texCoord)
         {
-            this.Position = position;
-            this.Normal = new Vector3();
-            this.Texture = texCoord;
-            this.Color = 0;
-            this.Tangent = Vector3.Zero;
-            this.Binormal = Vector3.Zero;
-            this.TextureFactor = 0f;
+            Position = position;
+            Normal = new Vector3();
+            Texture = texCoord;
+            Color = 0;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
+            TextureFactor = 0f;
         }
 
         /// <summary>
@@ -110,13 +108,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="normal">The normal.</param>
         public StandardVertex(Vector3 position, Vector2 texCoord, Vector3 normal)
         {
-            this.Position = position;
-            this.Normal = normal;
-            this.Texture = texCoord;
-            this.Color = 0;
-            this.Tangent = Vector3.Zero;
-            this.Binormal = Vector3.Zero;
-            this.TextureFactor = 0f;
+            Position = position;
+            Normal = normal;
+            Texture = texCoord;
+            Color = 0;
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
+            TextureFactor = 0f;
         }
 
         /// <summary>
@@ -125,13 +123,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertex">Source vertex data.</param>
         public StandardVertex(Vertex vertex)
         {
-            this.Position = vertex.Position;
-            this.Normal = vertex.Normal;
-            this.Texture = vertex.TexCoord;
-            this.Color = vertex.Color.ToRgba();
-            this.Tangent = vertex.Tangent;
-            this.Binormal = vertex.Binormal;
-            this.TextureFactor = vertex.TextureFactor;
+            Position = vertex.Position;
+            Normal = vertex.Normal;
+            Texture = vertex.TexCoord;
+            Color = vertex.Color.ToRgba();
+            Tangent = vertex.Tangent;
+            Binormal = vertex.Binormal;
+            TextureFactor = vertex.TextureFactor;
         }
 
         /// <summary>
@@ -145,10 +143,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 throw new ArgumentNullException("source");
             }
 
-            int vertexCount = source.CountVertices;
+            var vertexCount = source.CountVertices;
 
             //Create result array
-            StandardVertex[] result = new StandardVertex[vertexCount];
+            var result = new StandardVertex[vertexCount];
 
             for (var loop = 0; loop < source.CountVertices; loop++)
             {
@@ -170,7 +168,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             //Get total vertex count
-            int vertexCount = 0;
+            var vertexCount = 0;
 
             for (var loop = 0; loop < structures.Length; loop++)
             {
@@ -178,13 +176,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             //create result array
-            StandardVertex[] result = new StandardVertex[vertexCount];
-            int actVertexPos = 0;
+            var result = new StandardVertex[vertexCount];
+            var actVertexPos = 0;
 
             for (var loop = 0; loop < structures.Length; loop++)
             {
                 var actStructure = structures[loop];
-                int structureVertexCount = actStructure.CountVertices;
+                var structureVertexCount = actStructure.CountVertices;
 
                 for (var innerLoop = 0; innerLoop < structureVertexCount; innerLoop++)
                 {
@@ -201,7 +199,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="lineColor">Color of the line.</param>
         /// <param name="lineListCreator">Function that creates each line.</param>
-        public static StandardVertex[] FromLineList(Color4 lineColor, System.Func<List<Vector3>> lineListCreator)
+        public static StandardVertex[] FromLineList(Color4 lineColor, Func<List<Vector3>> lineListCreator)
         {
             return FromLineList(lineColor, lineListCreator());
         }
@@ -223,12 +221,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="lineList">List containing the lines.</param>
         public static StandardVertex[] FromLineList(Color4 lineColor, params Vector3[] lineList)
         {
-            if ((lineList == null) || (lineList.Length == 0))
+            if (lineList == null || lineList.Length == 0)
             {
                 return new StandardVertex[0];
             }
 
-            StandardVertex[] result = new StandardVertex[lineList.Length];
+            var result = new StandardVertex[lineList.Length];
 
             for (var loop = 0; loop < lineList.Length; loop++)
             {

@@ -24,6 +24,11 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 using SDXM = SharpDX.Mathematics.Interop;
@@ -33,43 +38,13 @@ using SDXM = SharpDX.Mathematics.Interop;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class Graphics2D
     {
-        #region Main view related properties
-
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.DeviceContext m_deviceContext;
-        #endregion Main view related properties
-
         #region Transform settings
         private Graphics2DTransformSettings m_transformSettings;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Graphics2D"/> class.
-        /// </summary>
-        /// <param name="device">The hardware device which is used for rendering.</param>
-        /// <param name="renderTarget">The render target which is used by this graphics object.</param>
-        /// <param name="screenSize">The size of the screen in device independent pixels.</param>
-        internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
-        {
-            m_transformSettings = Graphics2DTransformSettings.Default;
-            TransformStack = new Matrix3x2Stack();
-
-            Device = device;
-            m_renderTarget = renderTarget;
-            ScreenPixelSize = screenSize;
-            m_deviceContext = m_renderTarget as D2D.DeviceContext;
-        }
 
         /// <summary>
         /// Sets current transform settings on this graphics object.
@@ -89,16 +64,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                     // Calculate scaling matrix here
                 case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                    float virtualWidth = m_transformSettings.VirtualScreenSize.Width;
-                    float virtualHeight = m_transformSettings.VirtualScreenSize.Height;
+                    var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
+                    var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
                     if(virtualWidth == 0f) { virtualWidth = ScreenPixelSize.Width; }
                     if(virtualHeight == 0f) { virtualHeight = ScreenPixelSize.Height; }
 
-                    float scaleFactorX = ScreenPixelSize.Width / virtualWidth;
-                    float scaleFactorY = ScreenPixelSize.Height / virtualHeight;
-                    float combinedScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
-                    float truePixelWidth = virtualWidth * combinedScaleFactor;
-                    float truePixelHeight = virtualHeight * combinedScaleFactor;
+                    var scaleFactorX = ScreenPixelSize.Width / virtualWidth;
+                    var scaleFactorY = ScreenPixelSize.Height / virtualHeight;
+                    var combinedScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
+                    var truePixelWidth = virtualWidth * combinedScaleFactor;
+                    var truePixelHeight = virtualHeight * combinedScaleFactor;
 
                     TransformStack.Push();
                     TransformStack.TransformLocal(
@@ -113,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             // Apply current transform
-            this.ApplyTransformStack();
+            ApplyTransformStack();
         }
 
         /// <summary>
@@ -139,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             TransformStack.Pop();
 
-            this.ApplyTransformStack();
+            ApplyTransformStack();
         }
 
         /// <summary>
@@ -150,12 +125,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public IDisposable BlockForLocalTransform_ReplacePrevious(Matrix3x2 customTransform)
         {
             TransformStack.Push(customTransform);
-            this.ApplyTransformStack();
+            ApplyTransformStack();
 
             return new DummyDisposable(() =>
             {
                 TransformStack.Pop();
-                this.ApplyTransformStack();
+                ApplyTransformStack();
             });
         }
 
@@ -167,12 +142,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             TransformStack.Push();
             TransformStack.TransformLocal(customTransform);
-            this.ApplyTransformStack();
+            ApplyTransformStack();
 
             return new DummyDisposable(() =>
             {
                 TransformStack.Pop();
-                this.ApplyTransformStack();
+                ApplyTransformStack();
             });
         }
 
@@ -268,8 +243,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawEllipse(RectangleF rectangle, BrushResource brush, float strokeWidth = 1f)
         {
-            float radiusX = (rectangle.Width / 2f);
-            float radiusY = (rectangle.Height / 2f);
+            var radiusX = rectangle.Width / 2f;
+            var radiusY = rectangle.Height / 2f;
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
@@ -286,7 +261,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawPoint(Vector2 point, BrushResource brush)
         {
-            this.DrawLine(
+            DrawLine(
                 point, new Vector2(point.X + 1f, point.Y),
                 brush);
         }
@@ -403,8 +378,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void FillEllipse(RectangleF rectangle, BrushResource brush)
         {
-            float radiusX = (rectangle.Width / 2f);
-            float radiusY = (rectangle.Height / 2f);
+            var radiusX = rectangle.Width / 2f;
+            var radiusY = rectangle.Height / 2f;
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
@@ -467,7 +442,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             destinationRectangle.EnsureNotEmpty(nameof(destinationRectangle));
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
 
-            int bitmapFrameCount = bitmap.TotalFrameCount;
+            var bitmapFrameCount = bitmap.TotalFrameCount;
             frameIndex.EnsureInRange(0, bitmapFrameCount - 1, nameof(frameIndex));
 
             // Render the bitmap
@@ -479,11 +454,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 var nativeBitmap = bitmap.GetBitmap(Device);
 
                 // Calculate source rectangle
-                int framesX = bitmap.FrameCountX;
-                int xFrameIndex = frameIndex % framesX;
-                int yFrameIndex = (frameIndex - xFrameIndex) / framesX;
-                int singleFrameWidth = bitmap.SingleFramePixelWidth;
-                int singleFrameHeight = bitmap.SingleFramePixelHeight;
+                var framesX = bitmap.FrameCountX;
+                var xFrameIndex = frameIndex % framesX;
+                var yFrameIndex = (frameIndex - xFrameIndex) / framesX;
+                var singleFrameWidth = bitmap.SingleFramePixelWidth;
+                var singleFrameHeight = bitmap.SingleFramePixelHeight;
                 var sourceRectangle = new RectangleF(
                     xFrameIndex * singleFrameWidth,
                     yFrameIndex * singleFrameHeight,
@@ -528,7 +503,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             bitmap.EnsureNotNull(nameof(bitmap));
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
 
-            int bitmapFrameCount = bitmap.TotalFrameCount;
+            var bitmapFrameCount = bitmap.TotalFrameCount;
             frameIndex.EnsureInRange(0, bitmapFrameCount - 1, nameof(frameIndex));
 
             // Render the bitmap
@@ -540,16 +515,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 var nativeBitmap = bitmap.GetBitmap(Device);
 
                 // Calculate destination rectangle
-                int singleFrameWidth = bitmap.SingleFramePixelWidth;
-                int singleFrameHeight = bitmap.SingleFramePixelHeight;
+                var singleFrameWidth = bitmap.SingleFramePixelWidth;
+                var singleFrameHeight = bitmap.SingleFramePixelHeight;
                 var destinationRectangle = new RectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     singleFrameWidth, singleFrameHeight);
 
                 // Calculate source rectangle
-                int framesX = bitmap.FrameCountX;
-                int xFrameIndex = frameIndex % framesX;
-                int yFrameIndex = (frameIndex - xFrameIndex) / framesX;
+                var framesX = bitmap.FrameCountX;
+                var xFrameIndex = frameIndex % framesX;
+                var yFrameIndex = (frameIndex - xFrameIndex) / framesX;
                 var sourceRectangle = new RectangleF(
                     xFrameIndex * singleFrameWidth,
                     yFrameIndex * singleFrameHeight,
@@ -565,7 +540,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
             else
             {
-                var destinationRectangle = new SharpDX.Mathematics.Interop.RawRectangleF(
+                var destinationRectangle = new SDXM.RawRectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
@@ -612,9 +587,26 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                 if(bitmap != null)
                 {
-                    this.DrawBitmap(bitmap, destinationOrigin);
+                    DrawBitmap(bitmap, destinationOrigin);
                 }
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Graphics2D"/> class.
+        /// </summary>
+        /// <param name="device">The hardware device which is used for rendering.</param>
+        /// <param name="renderTarget">The render target which is used by this graphics object.</param>
+        /// <param name="screenSize">The size of the screen in device independent pixels.</param>
+        internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
+        {
+            m_transformSettings = Graphics2DTransformSettings.Default;
+            TransformStack = new Matrix3x2Stack();
+
+            Device = device;
+            m_renderTarget = renderTarget;
+            ScreenPixelSize = screenSize;
+            m_deviceContext = m_renderTarget as D2D.DeviceContext;
         }
 
         /// <summary>
@@ -629,7 +621,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                Size2F screenSize = this.ScreenSize;
+                var screenSize = ScreenSize;
                 return new RectangleF(
                     0f, 0f,
                     screenSize.Width, screenSize.Height);
@@ -719,5 +711,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 m_renderTarget.Transform = value;
             }
         }
+
+        #region Main view related properties
+        private D2D.RenderTarget m_renderTarget;
+        private D2D.DeviceContext m_deviceContext;
+        #endregion Main view related properties
     }
 }

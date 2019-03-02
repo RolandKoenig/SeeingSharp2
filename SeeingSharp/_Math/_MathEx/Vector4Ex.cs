@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Runtime.CompilerServices;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using System.Runtime.CompilerServices;
-    using SharpDX;
-
     #endregion
 
     public static class Vector4Ex

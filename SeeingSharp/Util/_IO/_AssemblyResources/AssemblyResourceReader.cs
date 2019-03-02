@@ -21,15 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-
     #endregion
 
     public class AssemblyResourceReader
@@ -38,50 +39,6 @@ namespace SeeingSharp.Util
 
         private List<AssemblyResourceInfo> m_resources;
         private Dictionary<string, AssemblyResourceInfo> m_resourcesDict;
-
-        /// <summary>
-        /// Static constructor
-        /// </summary>
-        static AssemblyResourceReader()
-        {
-            s_attribType = typeof(AssemblyResourceFileAttribute);
-        }
-
-        /// <summary>
-        /// Creates a new AssemblyResourceReader object
-        /// </summary>
-        public AssemblyResourceReader(Type targetType)
-        {
-            TargetType = targetType;
-
-            var targetTypeInfo = TargetType.GetTypeInfo();
-            TargetAssembly = targetTypeInfo.Assembly;
-
-            m_resources = new List<AssemblyResourceInfo>();
-            m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
-
-            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
-            {
-                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
-
-                if (resInfo != null)
-                {
-                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
-                    m_resources.Add(fileInfo);
-
-                    if ((actAttrib.Key != null) && (!m_resourcesDict.ContainsKey(actAttrib.Key)))
-                    {
-                        m_resourcesDict.Add(actAttrib.Key, fileInfo);
-                    }
-                }
-                else
-                {
-                    throw new SeeingSharpException("Resource " + actAttrib.ResourcePath + " not found!");
-                }
-            }
-
-            ResourceFiles = new ResourceInfoCollection(this);
-        }
 
         /// <summary>
         /// Opens the resource at the given index for reading
@@ -135,7 +92,7 @@ namespace SeeingSharp.Util
         {
             using (var inStream = OpenRead(key))
             {
-                byte[] result = new byte[(int)inStream.Length];
+                var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
                 return result;
             }
@@ -149,10 +106,54 @@ namespace SeeingSharp.Util
         {
             using (var inStream = OpenRead(index))
             {
-                byte[] result = new byte[(int)inStream.Length];
+                var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static AssemblyResourceReader()
+        {
+            s_attribType = typeof(AssemblyResourceFileAttribute);
+        }
+
+        /// <summary>
+        /// Creates a new AssemblyResourceReader object
+        /// </summary>
+        public AssemblyResourceReader(Type targetType)
+        {
+            TargetType = targetType;
+
+            var targetTypeInfo = TargetType.GetTypeInfo();
+            TargetAssembly = targetTypeInfo.Assembly;
+
+            m_resources = new List<AssemblyResourceInfo>();
+            m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
+
+            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
+            {
+                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+
+                if (resInfo != null)
+                {
+                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    m_resources.Add(fileInfo);
+
+                    if (actAttrib.Key != null && !m_resourcesDict.ContainsKey(actAttrib.Key))
+                    {
+                        m_resourcesDict.Add(actAttrib.Key, fileInfo);
+                    }
+                }
+                else
+                {
+                    throw new SeeingSharpException("Resource " + actAttrib.ResourcePath + " not found!");
+                }
+            }
+
+            ResourceFiles = new ResourceInfoCollection(this);
         }
 
         /// <summary>
@@ -181,19 +182,19 @@ namespace SeeingSharp.Util
             private AssemblyResourceReader m_owner;
 
             /// <summary>
-            /// 
-            /// </summary>
-            public ResourceInfoCollection(AssemblyResourceReader owner)
-            {
-                m_owner = owner;
-            }
-
-            /// <summary>
             /// Is the given resource file available?
             /// </summary>
             public bool ContainsResourceFile(string key)
             {
                 return m_owner.m_resourcesDict.ContainsKey(key);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public ResourceInfoCollection(AssemblyResourceReader owner)
+            {
+                m_owner = owner;
             }
 
             /// <summary>
@@ -207,7 +208,7 @@ namespace SeeingSharp.Util
             /// <summary>
             /// IEnumerable implementation
             /// </summary>
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return m_owner.m_resources.GetEnumerator();
             }
@@ -215,26 +216,17 @@ namespace SeeingSharp.Util
             /// <summary>
             /// Gets total count of resource files
             /// </summary>
-            public int Count
-            {
-                get { return m_owner.m_resources.Count; }
-            }
+            public int Count => m_owner.m_resources.Count;
 
             /// <summary>
             /// Gets the AssemblyResourceInfo object at the given index
             /// </summary>
-            public AssemblyResourceInfo this[int index]
-            {
-                get { return m_owner.m_resources[index]; }
-            }
+            public AssemblyResourceInfo this[int index] => m_owner.m_resources[index];
 
             /// <summary>
             /// Gets the AssemblyResourceInfo object with the given key
             /// </summary>
-            public AssemblyResourceInfo this[string key]
-            {
-                get { return m_owner.m_resourcesDict[key]; }
-            }
+            public AssemblyResourceInfo this[string key] => m_owner.m_resourcesDict[key];
         }
     }
 }

@@ -22,10 +22,8 @@
 */
 #endregion
 #region using
-
 using System.Reflection;
 using System.Runtime.InteropServices;
-
 #endregion
 
 // General Information about an assembly is controlled through the following

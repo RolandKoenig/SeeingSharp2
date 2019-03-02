@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Core
     /// Helper structure which holds informatin about all currently
     /// attached components.
     /// </summary>
-    struct SceneComponentInfo
+    internal struct SceneComponentInfo
     {
         public SceneComponentBase Component;
         public object Context;
@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Core
     /// for a component (attach, detach) which normaly comes
     /// from the UI thread
     /// </summary>
-    struct SceneComponentRequest
+    internal struct SceneComponentRequest
     {
         public SceneComponentRequestType RequestType;
         public SceneComponentBase Component;
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
     /// <summary>
     /// The type of a component request.
     /// </summary>
-    enum SceneComponentRequestType
+    internal enum SceneComponentRequestType
     {
         Attach,
         Detach,

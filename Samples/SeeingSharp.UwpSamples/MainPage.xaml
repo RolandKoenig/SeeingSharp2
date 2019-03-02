@@ -13,13 +13,13 @@
     <Page.DataContext>
         <local:MainWindowViewModel />
     </Page.DataContext>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <!-- List of sample groups -->
         <ListBox Grid.Row="0"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
@@ -43,13 +43,13 @@
             <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
             <ListBox VerticalAlignment="Top"
-                 Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
-                 ItemsSource="{Binding Path=Samples}"
-                 SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
-                 SelectionChanged="OnSelectedSampleChanged"
-                 SelectionMode="Single"
-                 VerticalContentAlignment="Top"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                     Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
+                     ItemsSource="{Binding Path=Samples}"
+                     SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                     SelectionChanged="OnSelectedSampleChanged"
+                     SelectionMode="Single"
+                     VerticalContentAlignment="Top"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
@@ -58,12 +58,12 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical"
-                                        Margin="5">
+                                    Margin="5">
                             <Image Source="{Binding Path=BitmapSource}"
-                                       Width="64" Height="64" 
-                                       Margin="5"/>
+                                   Width="64" Height="64"
+                                   Margin="5" />
                             <TextBlock Text="{Binding Path=Name}"
-                                           HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Center" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -95,13 +95,11 @@
                                         MaxWidth="530" Background="Red"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
-                                        SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}">
-                
-            </localControls:PropertyGrid>
+                                        SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
 
             <StackPanel Orientation="Horizontal"
-                    Background="#BBD3D3D3"
-                    VerticalAlignment="Bottom">
+                        Background="#BBD3D3D3"
+                        VerticalAlignment="Bottom">
                 <StackPanel.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -120,20 +118,20 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <Image Source="/Assets/Icons/Output16x16.png" 
-                   Width="16"/>
+                <Image Source="/Assets/Icons/Output16x16.png"
+                       Width="16" />
                 <TextBlock Text="Resolution:" />
                 <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize, Mode=OneWay}" />
                 <TextBlock Text="px" />
-                <Rectangle Width="1" 
-                       Fill="Gray"/>
+                <Rectangle Width="1"
+                           Fill="Gray" />
 
-                <Image Source="/Assets/Icons/Adapter16x16.png" 
-                   Width="16"/>
+                <Image Source="/Assets/Icons/Adapter16x16.png"
+                       Width="16" />
                 <TextBlock Text="Device:" />
                 <ComboBox ItemsSource="{Binding ElementName=CtrlSwapChain, Path=PossibleDevices, Mode=OneWay}"
-                      SelectedItem="{Binding ElementName=CtrlSwapChain, Path=SelectedDevice, Mode=TwoWay}"
-                      Width="250"/>
+                          SelectedItem="{Binding ElementName=CtrlSwapChain, Path=SelectedDevice, Mode=TwoWay}"
+                          Width="250" />
             </StackPanel>
         </Grid>
     </Grid>

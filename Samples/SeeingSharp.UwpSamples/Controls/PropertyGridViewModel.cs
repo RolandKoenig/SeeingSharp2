@@ -21,30 +21,30 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
+
 namespace SeeingSharp.UwpSamples.Controls
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Reflection;
-
     #endregion
 
     public class PropertyGridViewModel : ViewModelBase
     {
-        private object m_selectedObject;
         private List<ConfigurablePropertyMetadata> m_propertyMetadata;
+        private object m_selectedObject;
 
         private void UpdatePropertyCollection()
         {
             var newPropertyMetadata = new List<ConfigurablePropertyMetadata>();
 
-            var selectedObject = this.SelectedObject;
+            var selectedObject = SelectedObject;
 
             if(selectedObject == null)
             {
-                this.PropertyMetadata = newPropertyMetadata;
+                PropertyMetadata = newPropertyMetadata;
                 return;
             }
 
@@ -53,8 +53,8 @@ namespace SeeingSharp.UwpSamples.Controls
                 // Check browsable attribute
                 var browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
 
-                if((browseAttrib != null) &&
-                   (!browseAttrib.Browsable))
+                if(browseAttrib != null &&
+                   !browseAttrib.Browsable)
                 {
                     continue;
                 }
@@ -62,7 +62,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 newPropertyMetadata.Add(new ConfigurablePropertyMetadata(actProperty, selectedObject));
             }
 
-            this.PropertyMetadata = newPropertyMetadata;
+            PropertyMetadata = newPropertyMetadata;
         }
 
         public object SelectedObject

@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public enum Graphics2DTransformMode
@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// Represents enum from Direct2D.
     /// </summary>
     [Flags]
-    public enum DrawTextOptions : int
+    public enum DrawTextOptions
     {
         /// <summary>
         /// Text is vertically snapped to pixel boundaries and is not clipped to the layout rectangle.
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from Direct2D.
     /// </summary>
-    public enum MeasuringMode : int
+    public enum MeasuringMode
     {
         /// <summary>
         /// Specifies that text is measured using glyph ideal metrics whose values are
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontStyle : int
+    public enum FontStyle
     {
         Normal = 0,
         Oblique = 1,
@@ -97,7 +97,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontWeight : int
+    public enum FontWeight
     {
         Thin = 100,
         ExtraLight = 200,
@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontStretch : int
+    public enum FontStretch
     {
         Undefined = 0,
         UltraCondensed = 1,
@@ -138,7 +138,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum ParagraphAlignment : int
+    public enum ParagraphAlignment
     {
         Near = 0,
         Far = 1,
@@ -148,7 +148,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum TextAlignment : int
+    public enum TextAlignment
     {
         Leading = 0,
         Trailing = 1,
@@ -158,7 +158,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum WordWrapping : int
+    public enum WordWrapping
     {
         Wrap = 0,
         NoWrap = 1
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum ReadingDirection : int
+    public enum ReadingDirection
     {
         LeftToRight = 0,
         RightToLeft = 1
@@ -208,7 +208,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from Direct2D.
     /// </summary>
-    public enum BitmapInterpolationMode : int
+    public enum BitmapInterpolationMode
     {
         NearestNeighbor = 0,
         Linear = 1
@@ -218,7 +218,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// Some bitmap format for Direct2D rendering.
     /// Maps directly to a subset of DXGI formats.
     /// </summary>
-    public enum BitmapFormat : int
+    public enum BitmapFormat
     {
         Bgra = SharpDX.DXGI.Format.B8G8R8A8_UNorm
     }
@@ -227,7 +227,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// Represents enum from Direct2D.
     /// Specifies how a brush paints areas outside of its normal content area.
     /// </summary>
-    public enum ExtendMode : int
+    public enum ExtendMode
     {
         /// <summary>
         /// Repeat the edge pixels of the brush's content for all regions outside the normal
@@ -299,8 +299,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         public GradientStop(Color4 color, float position)
         {
-            this.Color = color;
-            this.Position = position;
+            Color = color;
+            Position = position;
         }
 
         /// <summary>

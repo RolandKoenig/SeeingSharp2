@@ -21,17 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -42,25 +42,6 @@ namespace SeeingSharp.Multimedia.Objects
         #region Static id counter 
         private static int s_maxContainerID;
         #endregion
-
-        #region All model data
-        private int m_importID = 0;
-        private ImportOptions m_importOptions;
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
-        /// </summary>
-        public ImportedModelContainer(ImportOptions importOptions)
-        {
-            m_importOptions = importOptions;
-            Objects = new List<SceneObject>();
-            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            ImportedResources = new List<ImportedResourceInfo>();
-
-            m_importID = Interlocked.Increment(ref s_maxContainerID);
-        }
 
         /// <summary>
         /// Creates and adds the root for all imported scene objects.
@@ -96,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Add the object finally
-            this.Objects.Add(rootObject);
+            Objects.Add(rootObject);
 
             return rootObject;
         }
@@ -110,6 +91,19 @@ namespace SeeingSharp.Multimedia.Objects
         {
             return new NamedOrGenericKey(
                 "Imported." + m_importID + "." + resourceClass + "." + resourceID);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
+        /// </summary>
+        public ImportedModelContainer(ImportOptions importOptions)
+        {
+            m_importOptions = importOptions;
+            Objects = new List<SceneObject>();
+            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
+            ImportedResources = new List<ImportedResourceInfo>();
+
+            m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
 
         /// <summary>
@@ -131,21 +125,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// Should triangle order be changes by the import logic?
         /// (This property is handled by the importer)
         /// </summary>
-        public bool ChangeTriangleOrder
-        {
-            get { return m_importOptions.IsChangeTriangleOrderNeeded(); }
-        }
+        public bool ChangeTriangleOrder => m_importOptions.IsChangeTriangleOrderNeeded();
 
         /// <summary>
         /// The resize factor for imported geometry.
         /// (This property is handled by the importer)
         /// </summary>
-        public float ResizeFactor
-        {
-            get
-            {
-                return m_importOptions.ResizeFactor;
-            }
-        }
+        public float ResizeFactor => m_importOptions.ResizeFactor;
+
+        #region All model data
+        private int m_importID;
+        private ImportOptions m_importOptions;
+        #endregion
     }
 }

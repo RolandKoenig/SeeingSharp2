@@ -26,13 +26,6 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderPass2DOverlay : RenderPassBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderPass2DOverlay"/> class.
-        /// </summary>
-        public RenderPass2DOverlay()
-        {
-        }
-
-        /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
         /// </summary>
         /// <param name="renderState">The current render state.</param>
@@ -69,9 +62,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return true; }
-        }
+        public override bool IsLoaded => true;
     }
 }

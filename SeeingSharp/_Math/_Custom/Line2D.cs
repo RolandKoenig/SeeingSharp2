@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public struct Line2D
@@ -42,8 +42,8 @@ namespace SeeingSharp
         /// <param name="end">The end.</param>
         public Line2D(Vector2 start, Vector2 end)
         {
-            this.StartPosition = start;
-            this.EndPosition = end;
+            StartPosition = start;
+            EndPosition = end;
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace SeeingSharp
         public Ray2D ToRay()
         {
             return new Ray2D(
-                this.StartPosition,
-                Vector2.Normalize(this.EndPosition - this.StartPosition));
+                StartPosition,
+                Vector2.Normalize(EndPosition - StartPosition));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp
         /// </returns>
         public override string ToString()
         {
-            return "From " + this.StartPosition + " to " + this.EndPosition;
+            return "From " + StartPosition + " to " + EndPosition;
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Line2D other)
         {
             //Perform simple ray to ray intersection first
-            var ray1 = this.ToRay();
+            var ray1 = ToRay();
             var ray2 = other.ToRay();
-            Tuple<bool, Vector2> intersectionResult = ray1.Intersect(ray2);
+            var intersectionResult = ray1.Intersect(ray2);
 
             if (!intersectionResult.Item1)
             {
@@ -97,15 +97,15 @@ namespace SeeingSharp
             }
 
             //Is intersection point within line 1?
-            float distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
+            var distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
 
-            if (distanceTo1 > this.Length)
+            if (distanceTo1 > Length)
             {
                 return Tuple.Create(false, Vector2.Zero);
             }
 
             //Is intersection point within line 2?
-            float distanceTo2 = Vector2.Distance(ray2.Origin, intersectionResult.Item2);
+            var distanceTo2 = Vector2.Distance(ray2.Origin, intersectionResult.Item2);
 
             if (distanceTo2 > other.Length)
             {
@@ -122,13 +122,13 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Ray2D other)
         {
             //Perform simple ray to ray intersection first
-            var ray1 = this.ToRay();
-            Tuple<bool, Vector2> intersectionResult = ray1.Intersect(other);
+            var ray1 = ToRay();
+            var intersectionResult = ray1.Intersect(other);
             if (!intersectionResult.Item1) { return intersectionResult; }
 
             //Is intersection point within line 1?
-            float distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
-            if (distanceTo1 > this.Length) { return Tuple.Create(false, Vector2.Zero); }
+            var distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
+            if (distanceTo1 > Length) { return Tuple.Create(false, Vector2.Zero); }
 
             return intersectionResult;
         }
@@ -140,7 +140,7 @@ namespace SeeingSharp
         {
             get
             {
-                var lengthVector = this.EndPosition - this.StartPosition;
+                var lengthVector = EndPosition - StartPosition;
                 return lengthVector.Length();
             }
         }

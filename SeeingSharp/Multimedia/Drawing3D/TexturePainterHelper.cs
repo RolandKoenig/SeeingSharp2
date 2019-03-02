@@ -24,6 +24,10 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,46 +35,13 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     internal class TexturePainterHelper
     {
-        #region Resource keys
-        private NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
         #region Configuration
         private NamedOrGenericKey m_texture;
-
         #endregion
-
-        #region Used resources
-        private TextureResource m_textureResource;
-        private GeometryResource m_geometryResource;
-        private SpriteMaterialResource m_materialResource;
-        private DefaultResources m_defaultResources;
-        private ObjectRenderParameters m_renderParameters;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
-        /// </summary>
-        /// <param name="textureKey">The texture key.</param>
-        internal TexturePainterHelper(NamedOrGenericKey textureKey)
-        {
-            m_texture = textureKey;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
-        }
 
         /// <summary>
         /// Loads all resources of this texture painter object.
@@ -79,12 +50,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void LoadResources(ResourceDictionary resources)
         {
             // Load material
-            m_materialResource = resources.GetResourceAndEnsureLoaded<SpriteMaterialResource>(
+            m_materialResource = resources.GetResourceAndEnsureLoaded(
                 KEY_MATERIAL,
                 () => new SpriteMaterialResource(m_texture));
 
             // Load geometry resource
-            m_geometryResource = resources.GetResourceAndEnsureLoaded<GeometryResource>(
+            m_geometryResource = resources.GetResourceAndEnsureLoaded(
                 KEY_GEOMETRY,
                 () =>
                 {
@@ -103,11 +74,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(m_texture);
 
             // Get default resources
-            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(
+            m_defaultResources = resources.GetResourceAndEnsureLoaded(
                 DefaultResources.RESOURCE_KEY,
                 () => new DefaultResources());
 
-            m_renderParameters = resources.GetResourceAndEnsureLoaded<ObjectRenderParameters>(
+            m_renderParameters = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_PARAMETERS,
                 () => new ObjectRenderParameters());
         }
@@ -131,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void RenderPlain(RenderState renderState)
         {
             // Apply rendering parameters
-            m_renderParameters.UpdateValues(renderState, new CBPerObject()
+            m_renderParameters.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = AccentuationFactor,
                 BorderMultiplyer = 0f,
@@ -160,19 +131,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Render the object
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
 
-            if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
+            if (AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
             }
 
             m_geometryResource.Render(renderState);
 
-            if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
+            if (AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             }
 
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
+        /// </summary>
+        /// <param name="textureKey">The texture key.</param>
+        internal TexturePainterHelper(NamedOrGenericKey textureKey)
+        {
+            m_texture = textureKey;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
         }
 
         /// <summary>
@@ -187,10 +170,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Are resources loaded?
         /// </summary>
-        public bool IsLoaded
-        {
-            get { return (m_geometryResource != null) && (m_texture != null); }
-        }
+        public bool IsLoaded => m_geometryResource != null && m_texture != null;
 
         /// <summary>
         /// Gets or sets the alpha blend mode.
@@ -199,5 +179,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get; set;
         }
+
+        #region Resource keys
+        private NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+        #endregion
+
+        #region Used resources
+        private TextureResource m_textureResource;
+        private GeometryResource m_geometryResource;
+        private SpriteMaterialResource m_materialResource;
+        private DefaultResources m_defaultResources;
+        private ObjectRenderParameters m_renderParameters;
+        #endregion
     }
 }

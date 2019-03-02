@@ -21,23 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Windows.Forms;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.WinFormsSamples
 {
     #region using
-
-    using System;
-    using System.Windows.Forms;
-    using Multimedia.Core;
-
     #endregion
 
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             GraphicsCore.Loader
                 .SupportWinForms()

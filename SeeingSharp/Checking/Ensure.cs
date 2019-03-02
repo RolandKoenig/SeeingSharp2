@@ -21,17 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using Util;
-
     #endregion
 
     /// <summary>
@@ -82,8 +82,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((disposable == null) ||
-                (disposable.IsDisposed))
+            if (disposable == null ||
+                disposable.IsDisposed)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Disposable onject {0} within method {1} must not be null or disposed!",
@@ -131,8 +131,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((array == null) ||
-                (array.Length == 0))
+            if (array == null ||
+                array.Length == 0)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Array {0} within method {1} must not be null or empty!",
@@ -148,8 +148,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((collection == null) ||
-                (collection.Count == 0))
+            if (collection == null ||
+                collection.Count == 0)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Collection {0} within method {1} must not be null or empty!",
@@ -165,8 +165,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((collection == null) ||
-                (collection.Count == 0))
+            if (collection == null ||
+                collection.Count == 0)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Collection {0} within method {1} must not be null or empty!",
@@ -230,8 +230,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((objParam == null) &&
-                (default(T) != null))
+            if (objParam == null &&
+                default(T) != null)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Object {0} within method {1} must not be null because type argument is not by ref!",

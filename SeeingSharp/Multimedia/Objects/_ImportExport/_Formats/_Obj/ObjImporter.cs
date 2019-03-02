@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     [SupportedFileFormat("obj", "Wavefront OBJ")]
@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions CreateDefaultImportOptions()
         {
-            return new ObjImportOptions() { ResizeFactor = 0.01f };
+            return new ObjImportOptions { ResizeFactor = 0.01f };
         }
 
         /// <summary>

@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-
     #endregion
 
     [SupportedFileFormat("ac", "AC3D native format")]
@@ -63,7 +63,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             return result;
         }
-
 
         /// <summary>
         /// Creates a default import options object for this importer.

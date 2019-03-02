@@ -21,12 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections;
+using System.Collections.Generic;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.Collections.Generic;
-
     #endregion
 
     public class SingleInstanceCollection<T> : IEnumerable<T>, ICollection<T>
@@ -39,26 +40,6 @@ namespace SeeingSharp.Util
         public SingleInstanceCollection()
         {
             m_dictionary = new Dictionary<T, object>();
-        }
-
-        /// <summary>
-        /// Gets the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            return m_dictionary.Keys.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through a collection.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
-        /// </returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return m_dictionary.Keys.GetEnumerator();
         }
 
         /// <summary>
@@ -104,19 +85,13 @@ namespace SeeingSharp.Util
         /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </summary>
         /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
-        public int Count
-        {
-            get { return m_dictionary.Count; }
-        }
+        public int Count => m_dictionary.Count;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
         /// </summary>
         /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.</returns>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Removes the specified item.
@@ -130,6 +105,26 @@ namespace SeeingSharp.Util
                 return m_dictionary.Remove(item);
             }
             return false;
+        }
+
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return m_dictionary.Keys.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
+        /// </returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return m_dictionary.Keys.GetEnumerator();
         }
     }
 }

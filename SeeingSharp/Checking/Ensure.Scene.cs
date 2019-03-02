@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using Multimedia.Core;
-
     #endregion
 
     public static partial class EnsureMultimedia

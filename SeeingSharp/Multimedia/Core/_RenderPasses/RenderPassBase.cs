@@ -26,14 +26,6 @@ namespace SeeingSharp.Multimedia.Core
     public abstract class RenderPassBase : Resource
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderPassBase" /> class.
-        /// </summary>
-        public RenderPassBase()
-        {
-
-        }
-
-        /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
         /// </summary>
         /// <param name="renderState">The current render state.</param>

@@ -24,6 +24,10 @@
 #region using
 
 //Some namespace mappings
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,55 +35,13 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class SceneLayer
     {
-        #region All generic members
-        private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
-        private List<SceneObject> m_sceneObjectsNotStatic;
-        private List<SceneObject> m_sceneObjectsNotSpacial;
-        private bool m_isInUpdate;
-        private bool m_isInUpdateBeside;
-        #endregion
-
         #region View related members
         private IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset> m_viewSubsets;
         #endregion
-
-        /// <summary>
-        /// Creates a new SceneLayer object for the given scene.
-        /// </summary>
-        /// <param name="name">The name of the layer.</param>
-        /// <param name="parentScene">Parent scene.</param>
-        internal SceneLayer(string name, Scene parentScene)
-        {
-            Name = name;
-            Scene = parentScene;
-
-            //Create list holding all information for individual views
-            m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
-
-            //Create standard collections
-            ObjectsInternal = new List<SceneObject>();
-            Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
-
-            //Create specialized collections
-            SpacialObjects = new List<SceneSpacialObject>(1024);
-            m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
-            m_sceneObjectsNotStatic = new List<SceneObject>(1024);
-            m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
-
-            this.AllowPick = true;
-            this.IsRenderingEnabled = true;
-            this.ClearDepthBufferAfterRendering = false;
-        }
 
         /// <summary>
         /// Registers the given view on this layer.
@@ -283,8 +245,8 @@ namespace SeeingSharp.Multimedia.Core
             List<SceneObject> invalidObjects = null;
 
             // Load all resources
-            int sceneObjectArrayLength = ObjectsInternal.Count;
-            SceneObject[] sceneObjectArray = ObjectsInternal.GetBackingArray();
+            var sceneObjectArrayLength = ObjectsInternal.Count;
+            var sceneObjectArray = ObjectsInternal.GetBackingArray();
 
             for (var loop = 0; loop < sceneObjectArrayLength; loop++)
             {
@@ -331,20 +293,20 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Update all objects which are registered for initial update call
-                int initialUpdateCallCount = m_sceneObjectsForSingleUpdateCall.Count;
+                var initialUpdateCallCount = m_sceneObjectsForSingleUpdateCall.Count;
                 if(initialUpdateCallCount > 0)
                 {
-                    SceneObject[] initialUpdateCallItems = m_sceneObjectsForSingleUpdateCall.GetBackingArray();
-                    for(int loop=0; loop<initialUpdateCallCount; loop++)
+                    var initialUpdateCallItems = m_sceneObjectsForSingleUpdateCall.GetBackingArray();
+                    for(var loop=0; loop<initialUpdateCallCount; loop++)
                     {
                         initialUpdateCallItems[loop].Update(updateState);
                     }
                 }
 
                 // Call default update method for each object
-                int updateListLength = m_sceneObjectsNotStatic.Count;
-                SceneObject[] updateList = m_sceneObjectsNotStatic.GetBackingArray();
-                for(int actIndex = 0; actIndex < updateListLength; actIndex++)
+                var updateListLength = m_sceneObjectsNotStatic.Count;
+                var updateList = m_sceneObjectsNotStatic.GetBackingArray();
+                for(var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
                     if (!updateList[actIndex].HasParent)
                     {
@@ -353,7 +315,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Call overall updates on all objects
-                for (int loop = 0; loop < updateListLength; loop++)
+                for (var loop = 0; loop < updateListLength; loop++)
                 {
                     if (!updateList[loop].HasParent)
                     {
@@ -405,7 +367,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void Render(RenderState renderState)
         {
-            if (!this.IsRenderingEnabled)
+            if (!IsRenderingEnabled)
             {
                 return;
             }
@@ -454,8 +416,36 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 //Remove this object from this layer
-                this.RemoveObject(actObject);
+                RemoveObject(actObject);
             }
+        }
+
+        /// <summary>
+        /// Creates a new SceneLayer object for the given scene.
+        /// </summary>
+        /// <param name="name">The name of the layer.</param>
+        /// <param name="parentScene">Parent scene.</param>
+        internal SceneLayer(string name, Scene parentScene)
+        {
+            Name = name;
+            Scene = parentScene;
+
+            //Create list holding all information for individual views
+            m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
+
+            //Create standard collections
+            ObjectsInternal = new List<SceneObject>();
+            Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
+
+            //Create specialized collections
+            SpacialObjects = new List<SceneSpacialObject>(1024);
+            m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
+            m_sceneObjectsNotStatic = new List<SceneObject>(1024);
+            m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
+
+            AllowPick = true;
+            IsRenderingEnabled = true;
+            ClearDepthBufferAfterRendering = false;
         }
 
         /// <summary>
@@ -543,9 +533,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets total count of objects within the scene.
         /// </summary>
-        public int CountObjects
-        {
-            get { return ObjectsInternal.Count; }
-        }
+        public int CountObjects => ObjectsInternal.Count;
+
+        #region All generic members
+        private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
+        private List<SceneObject> m_sceneObjectsNotStatic;
+        private List<SceneObject> m_sceneObjectsNotSpacial;
+        private bool m_isInUpdate;
+        private bool m_isInUpdateBeside;
+        #endregion
     }
 }

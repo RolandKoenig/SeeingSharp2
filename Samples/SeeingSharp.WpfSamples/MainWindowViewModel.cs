@@ -21,25 +21,36 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.ObjectModel;
+using System.Linq;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
+
 namespace SeeingSharp.WpfSamples
 {
-    #region using
-
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using Multimedia.Core;
-    using SampleContainer;
-    using SampleContainer.Util;
-
-    #endregion
-
     public class MainWindowViewModel : PropertyChangedBase
     {
+        private RenderLoop m_renderLoop;
         private SampleRepository m_sampleRepo;
+        private SampleSettings m_sampleSettings;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
-        private SampleSettings m_sampleSettings;
-        private RenderLoop m_renderLoop;
+
+        private void UpdateSampleCollection()
+        {
+            var sampleGroup = m_sampleRepo.SampleGroups
+                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
+            if (sampleGroup == null) { return; }
+
+            Samples.Clear();
+            foreach(var actSampleMetadata in sampleGroup.Samples)
+            {
+                Samples.Add(new SampleViewModel(actSampleMetadata));
+            }
+            SelectedSample = Samples.FirstOrDefault();
+        }
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -51,25 +62,11 @@ namespace SeeingSharp.WpfSamples
             // Load samples
             m_sampleRepo = sampleRepo;
             foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
-                .Select((actGroup) => actGroup.GroupName))
+                .Select(actGroup => actGroup.GroupName))
             {
-                this.SampleGroups.Add(actSampleGroupName);
+                SampleGroups.Add(actSampleGroupName);
             }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
-        }
-
-        private void UpdateSampleCollection()
-        {
-            var sampleGroup = m_sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
-            if (sampleGroup == null) { return; }
-
-            this.Samples.Clear();
-            foreach(var actSampleMetadata in sampleGroup.Samples)
-            {
-                this.Samples.Add(new SampleViewModel(actSampleMetadata));
-            }
-            this.SelectedSample = this.Samples.FirstOrDefault();
+            SelectedGroup = SampleGroups.FirstOrDefault();
         }
 
         public ObservableCollection<string> SampleGroups
@@ -88,7 +85,7 @@ namespace SeeingSharp.WpfSamples
                     m_selectedGroup = value;
                     RaisePropertyChanged(nameof(SelectedGroup));
 
-                    this.UpdateSampleCollection();
+                    UpdateSampleCollection();
                 }
             }
         }
@@ -118,12 +115,12 @@ namespace SeeingSharp.WpfSamples
                     RaisePropertyChanged(nameof(SelectedSample));
                     RaisePropertyChanged(nameof(SampleSettings));
 
-                    this.SampleCommands.Clear();
+                    SampleCommands.Clear();
                     if (m_sampleSettings != null)
                     {
                         foreach (var actSampleCommand in m_sampleSettings.GetCommands())
                         {
-                            this.SampleCommands.Add(actSampleCommand);
+                            SampleCommands.Add(actSampleCommand);
                         }
                     }
                 }
@@ -136,9 +133,6 @@ namespace SeeingSharp.WpfSamples
             private set;
         } = new ObservableCollection<SampleCommand>();
 
-        public SampleSettings SampleSettings
-        {
-            get => m_sampleSettings;
-        }
+        public SampleSettings SampleSettings => m_sampleSettings;
     }
 }

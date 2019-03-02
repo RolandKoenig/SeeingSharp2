@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SeeingSharp.Multimedia.Drawing3D;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System.Collections.Generic;
-    using Drawing3D;
-    using SharpDX;
-
     #endregion
 
     public class ViewInformation
@@ -42,17 +42,16 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewInformation" /> class.
+        /// The owner of this ViewInformation object (standard field for fast access):
         /// </summary>
-        internal ViewInformation(RenderLoop owner)
-        {
-            this.Owner = owner;
+        internal RenderLoop Owner;
 
-            //Initialize scene object filter
-            m_sceneObjectFilters = new List<SceneObjectFilter>();
-
-            this.ViewIndex = -1;
-        }
+        /// <summary>
+        /// Gets or sets the index of this view.
+        /// Be careful: this value depends on the scene the view is attached to!
+        ///             Its value is set by RegisterView and DeregisterView methods of the Scene class
+        /// </summary>
+        internal int ViewIndex;
 
         /// <summary>
         /// Updates the bounding frustum.
@@ -69,71 +68,51 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ViewInformation" /> class.
+        /// </summary>
+        internal ViewInformation(RenderLoop owner)
+        {
+            Owner = owner;
+
+            //Initialize scene object filter
+            m_sceneObjectFilters = new List<SceneObjectFilter>();
+
+            ViewIndex = -1;
+        }
+
+        /// <summary>
         /// Gets the current view size.
         /// </summary>
-        public Size2 CurrentViewSize
-        {
-            get { return Owner.CurrentViewSize; }
-        }
+        public Size2 CurrentViewSize => Owner.CurrentViewSize;
 
         /// <summary>
         /// Gets the camera object that belongs to this view.
         /// </summary>
-        public Camera3DBase Camera
-        {
-            get { return Owner.Camera; }
-        }
+        public Camera3DBase Camera => Owner.Camera;
 
         /// <summary>
         /// Gets the device this view is using.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return Owner.Device; }
-        }
+        public EngineDevice Device => Owner.Device;
 
         /// <summary>
         /// Gets the current scene rendered by this view.
         /// </summary>
-        public Scene Scene
-        {
-            get { return Owner.Scene; }
-        }
+        public Scene Scene => Owner.Scene;
 
         /// <summary>
         /// Gets the bounding frustum defining the area the camera sees in the 3D wordl.
         /// </summary>
-        public BoundingFrustum CameraBoundingFrustum
-        {
-            get { return m_cameraFrustum; }
-        }
+        public BoundingFrustum CameraBoundingFrustum => m_cameraFrustum;
 
         /// <summary>
         /// Gets the configuration that belongs to this view.
         /// </summary>
-        public GraphicsViewConfiguration ViewConfiguration
-        {
-            get { return Owner.ViewConfiguration; }
-        }
+        public GraphicsViewConfiguration ViewConfiguration => Owner.ViewConfiguration;
 
         /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> Filters
-        {
-            get { return Owner.Filters; }
-        }
-
-        /// <summary>
-        /// Gets or sets the index of this view.
-        /// Be careful: this value depends on the scene the view is attached to!
-        ///             Its value is set by RegisterView and DeregisterView methods of the Scene class
-        /// </summary>
-        internal int ViewIndex;
-
-        /// <summary>
-        /// The owner of this ViewInformation object (standard field for fast access):
-        /// </summary>
-        internal RenderLoop Owner;
+        internal List<SceneObjectFilter> Filters => Owner.Filters;
     }
 }

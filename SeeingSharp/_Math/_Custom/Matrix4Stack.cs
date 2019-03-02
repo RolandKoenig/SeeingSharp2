@@ -21,42 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using SharpDX;
-
     #endregion
 
     public class Matrix4Stack
     {
-        private Stack<Matrix> m_stack;
         private int m_pushTimes;
+        private Stack<Matrix> m_stack;
 
         private Matrix m_top;
-
-        /// <summary>
-        /// Cretaes a new matrix stack using 4x4 matrices
-        /// </summary>
-        public Matrix4Stack()
-        {
-            m_stack = new Stack<Matrix>();
-            m_top = Matrix.Identity;
-
-            m_pushTimes = 0;
-        }
-
-        /// <summary>
-        /// Creates a new matrix stack usin 4x4 matrices
-        /// </summary>
-        public Matrix4Stack(Matrix top)
-            : this()
-        {
-            m_top = top;
-        }
 
         /// <summary>
         /// Resets this object to single identity matrix.
@@ -173,11 +152,11 @@ namespace SeeingSharp
         /// <summary>
         /// Clones the object
         /// </summary>
-        public Object Clone()
+        public object Clone()
         {
             var cloned = new Matrix4Stack();
 
-            Matrix[] allElements = m_stack.ToArray();
+            var allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix>();
 
@@ -224,11 +203,28 @@ namespace SeeingSharp
         }
 
         /// <summary>
+        /// Cretaes a new matrix stack using 4x4 matrices
+        /// </summary>
+        public Matrix4Stack()
+        {
+            m_stack = new Stack<Matrix>();
+            m_top = Matrix.Identity;
+
+            m_pushTimes = 0;
+        }
+
+        /// <summary>
+        /// Creates a new matrix stack usin 4x4 matrices
+        /// </summary>
+        public Matrix4Stack(Matrix top)
+            : this()
+        {
+            m_top = top;
+        }
+
+        /// <summary>
         /// Gets the top matrix
         /// </summary>
-        public Matrix Top
-        {
-            get { return m_top; }
-        }
+        public Matrix Top => m_top;
     }
 }

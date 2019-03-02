@@ -21,16 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     /// <summary>
@@ -41,32 +41,6 @@ namespace SeeingSharp.Multimedia.Input
         #region Constants
         private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
         #endregion
-
-        #region Synchronization
-        private ThreadSaveQueue<Action> m_commandQueue;
-        private ThreadSaveQueue<InputFrame> m_recoveredInputFrames;
-        private ThreadSaveQueue<InputFrame> m_gatheredInputFrames;
-        private InputFrame m_lastInputFrame;
-        #endregion
-
-        #region Thread local state
-        private List<IInputHandler> m_globalInputHandlers;
-        private Dictionary<IInputEnabledView, List<IInputHandler>> m_viewInputHandlers;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InputGathererThread"/> class.
-        /// </summary>
-        internal InputGathererThread()
-            : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
-        {
-            m_commandQueue = new ThreadSaveQueue<Action>();
-            m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
-            m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
-
-            //m_globalInputHandlers = new List<IInputHandler>();
-            m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
-        }
 
         /// <summary>
         /// Gets all gathered InputFrames.
@@ -90,14 +64,14 @@ namespace SeeingSharp.Multimedia.Input
 
             m_commandQueue.Enqueue(() =>
             {
-                List<IInputHandler> inputHandlers = InputHandlerFactory.CreateInputHandlersForView(view);
+                var inputHandlers = InputHandlerFactory.CreateInputHandlersForView(view);
                 if(inputHandlers == null) { return; }
                 if(inputHandlers.Count == 0) { return; }
 
                 // Deregister old input handlers if necessary
                 if(m_viewInputHandlers.ContainsKey(view))
                 {
-                    List<IInputHandler> oldList = m_viewInputHandlers[view];
+                    var oldList = m_viewInputHandlers[view];
 
                     foreach(var actOldInputHanlder in oldList)
                     {
@@ -127,7 +101,7 @@ namespace SeeingSharp.Multimedia.Input
             {
                 if (m_viewInputHandlers.ContainsKey(view))
                 {
-                    List<IInputHandler> oldList = m_viewInputHandlers[view];
+                    var oldList = m_viewInputHandlers[view];
 
                     foreach (var actOldInputHanlder in oldList)
                     {
@@ -171,7 +145,7 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Gather all input data
-            int expectedStateCount = m_lastInputFrame != null ? m_lastInputFrame.CountStates : 6;
+            var expectedStateCount = m_lastInputFrame != null ? m_lastInputFrame.CountStates : 6;
 
             // Create new InputFrame object or reuse an old one
             InputFrame newInputFrame = null;
@@ -195,7 +169,7 @@ namespace SeeingSharp.Multimedia.Input
                 }
             }
 
-            foreach(KeyValuePair<IInputEnabledView, List<IInputHandler>> actViewSpecificHandlers in m_viewInputHandlers)
+            foreach(var actViewSpecificHandlers in m_viewInputHandlers)
             {
                 var renderLoop = actViewSpecificHandlers.Key.RenderLoop;
 
@@ -226,5 +200,31 @@ namespace SeeingSharp.Multimedia.Input
                 m_gatheredInputFrames.Dequeue(out dummyFrame);
             }
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputGathererThread"/> class.
+        /// </summary>
+        internal InputGathererThread()
+            : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
+        {
+            m_commandQueue = new ThreadSaveQueue<Action>();
+            m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
+            m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
+
+            //m_globalInputHandlers = new List<IInputHandler>();
+            m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
+        }
+
+        #region Synchronization
+        private ThreadSaveQueue<Action> m_commandQueue;
+        private ThreadSaveQueue<InputFrame> m_recoveredInputFrames;
+        private ThreadSaveQueue<InputFrame> m_gatheredInputFrames;
+        private InputFrame m_lastInputFrame;
+        #endregion
+
+        #region Thread local state
+        private List<IInputHandler> m_globalInputHandlers;
+        private Dictionary<IInputEnabledView, List<IInputHandler>> m_viewInputHandlers;
+        #endregion
     }
 }

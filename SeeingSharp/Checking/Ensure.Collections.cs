@@ -21,16 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using Util;
-
     #endregion
 
     public static partial class Ensure
@@ -61,7 +61,7 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             // Get the collection count
-            bool hasAnyElement = SeeingSharpUtil.HasAnyElement(collection);
+            var hasAnyElement = SeeingSharpUtil.HasAnyElement(collection);
 
             // Check result
             if(!hasAnyElement)
@@ -81,12 +81,12 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             // Get the collection count
-            int collectionCount = -1;
-            collectionCount = SeeingSharpUtil.GetCollectionCount<T>(collection);
+            var collectionCount = -1;
+            collectionCount = SeeingSharpUtil.GetCollectionCount(collection);
 
             // Check result
-            if ((collectionCount < countMin) ||
-                (collectionCount > countMax))
+            if (collectionCount < countMin ||
+                collectionCount > countMax)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Collection {0} within method {1} does not have the expected count of elements (expected min {2} to max {3}, current count is {4})!",
@@ -103,8 +103,8 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             // Get the collection count
-            int collectionCount = -1;
-            collectionCount = SeeingSharpUtil.GetCollectionCount<T>(collection);
+            var collectionCount = -1;
+            collectionCount = SeeingSharpUtil.GetCollectionCount(collection);
 
             // Check result
             if (collectionCount != count)

@@ -21,64 +21,33 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
     /// Describes a 3D geometry in memory.
     /// </summary>
-    public partial class VertexStructure
+    public class VertexStructure
     {
         #region Description
         private string m_name;
-
         #endregion
 
         #region Geometry
-
         private List<VertexStructureSurface> m_surfaces;
-
         #endregion
-
-        #region Members for build time transform
-        private bool m_buildTimeTransformEnabled;
-        private Matrix m_buildTransformMatrix;
-        private Func<Vertex, Vertex> m_buildTimeTransformFunc;
-        #endregion
-
-        /// <summary>
-        /// Creates a new Vertex structure object
-        /// </summary>
-        public VertexStructure()
-            : this(512)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new Vertex structure object
-        /// </summary>
-        public VertexStructure(int verticesCapacity)
-        {
-            m_name = string.Empty;
-            Description = string.Empty;
-
-            VerticesInternal = new List<Vertex>(verticesCapacity);
-            m_surfaces = new List<VertexStructureSurface>();
-
-            Vertices = new VertexCollection(VerticesInternal);
-            Surfaces = new SurfaceCollection(m_surfaces);
-        }
 
         /// <summary>
         /// Creates the surface on this VertexStructure.
@@ -162,23 +131,23 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void RealignToCenter()
         {
-            var fullBoundingBox = this.GenerateBoundingBox();
+            var fullBoundingBox = GenerateBoundingBox();
             var fullCenter = fullBoundingBox.GetMiddleCenter();
             var targetCenter = new Vector3(0f, 0f, 0f);
             var moveToTargetCenter = targetCenter - fullCenter;
 
-            this.UpdateVerticesUsingRelocationBy(moveToTargetCenter);
+            UpdateVerticesUsingRelocationBy(moveToTargetCenter);
         }
 
         public void RealignToFloorCenter()
         {
 
-            var fullBoundingBox = this.GenerateBoundingBox();
+            var fullBoundingBox = GenerateBoundingBox();
             var fullCenter = fullBoundingBox.GetMiddleCenter();
             var targetCenter = new Vector3(0f, fullBoundingBox.Size.Y / 2f, 0f);
             var moveToTargetCenter = targetCenter - fullCenter;
 
-            this.UpdateVerticesUsingRelocationBy(moveToTargetCenter);
+            UpdateVerticesUsingRelocationBy(moveToTargetCenter);
         }
 
         /// <summary>
@@ -219,7 +188,7 @@ namespace SeeingSharp.Multimedia.Objects
         public void FitToCenteredCuboid(float cubeSideLengthX, float cubeSideLengthY, float cubeSideLengthZ, FitToCuboidMode fitMode, SpacialOriginLocation fitOrigin)
         {
             //Get whole bounding box
-            var boundingBox = this.GenerateBoundingBox();
+            var boundingBox = GenerateBoundingBox();
             var boundingBoxSize = boundingBox.Size;
 
             if (boundingBox.IsEmpty()) { return; }
@@ -233,9 +202,9 @@ namespace SeeingSharp.Multimedia.Objects
                 -boundingBoxSize.Z / 2f);
 
             // Calculate resize factors
-            float resizeFactorX = cubeSideLengthX / boundingBoxSize.X;
-            float resizeFactorY = cubeSideLengthY / boundingBoxSize.Y;
-            float resizeFactorZ = cubeSideLengthZ / boundingBoxSize.Z;
+            var resizeFactorX = cubeSideLengthX / boundingBoxSize.X;
+            var resizeFactorY = cubeSideLengthY / boundingBoxSize.Y;
+            var resizeFactorZ = cubeSideLengthZ / boundingBoxSize.Z;
 
             if (fitMode == FitToCuboidMode.MaintainAspectRatio)
             {
@@ -255,12 +224,12 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Bring the structure to origin based location and then scale it
-            this.UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.GetCornerA()));
-            this.UpdateVerticesUsingRelocationFunc((actPosition) => new Vector3(
+            UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.GetCornerA()));
+            UpdateVerticesUsingRelocationFunc(actPosition => new Vector3(
                 actPosition.X * resizeFactorX,
                 actPosition.Y * resizeFactorY,
                 actPosition.Z * resizeFactorZ));
-            this.UpdateVerticesUsingRelocationBy(targetCornerALocation);
+            UpdateVerticesUsingRelocationBy(targetCornerALocation);
         }
 
         public void RemoveSurface(VertexStructureSurface surface)
@@ -274,7 +243,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="index">The index to get the vertex from.</param>
         public Vertex EnsureVertexAt(int index)
         {
-            while (VerticesInternal.Count <= index) { this.AddVertex(); }
+            while (VerticesInternal.Count <= index) { AddVertex(); }
             return VerticesInternal[index];
         }
 
@@ -316,8 +285,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="pickingOptions">The distance if picking succeeds.</param>
         public bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
         {
-            int surfaceCount = m_surfaces.Count;
-            for(int loop=0; loop<surfaceCount; loop++)
+            var surfaceCount = m_surfaces.Count;
+            for(var loop=0; loop<surfaceCount; loop++)
             {
                 if(m_surfaces[loop].Intersects(pickingRay, pickingOptions, out distance))
                 {
@@ -348,7 +317,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (structures != null)
             {
-                for (int loop = 0; loop < structures.Length; loop++)
+                for (var loop = 0; loop < structures.Length; loop++)
                 {
                     if (structures[loop] != null)
                     {
@@ -375,10 +344,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="otherStructure">The structure to add to this one.</param>
         public void AddStructure(VertexStructure otherStructure)
         {
-            int baseIndex = (int)VerticesInternal.Count;
+            var baseIndex = VerticesInternal.Count;
 
             VerticesInternal.AddRange(otherStructure.Vertices);
-            int otherStructureSurfaceCount = otherStructure.m_surfaces.Count;
+            var otherStructureSurfaceCount = otherStructure.m_surfaces.Count;
 
             for (var loopSurface = 0; loopSurface < otherStructureSurfaceCount; loopSurface++)
             {
@@ -415,7 +384,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Add the vertex and return the index
             VerticesInternal.Add(vertex);
-            return (int)(VerticesInternal.Count - 1);
+            return VerticesInternal.Count - 1;
         }
 
         /// <summary>
@@ -455,7 +424,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="vertexCount">Total count of vertices to be updated.</param>
         public void CalculateNormals(int startVertex, int vertexCount)
         {
-            if ((startVertex < 0) || (startVertex >= VerticesInternal.Count)) { throw new ArgumentException("startVertex"); }
+            if (startVertex < 0 || startVertex >= VerticesInternal.Count) { throw new ArgumentException("startVertex"); }
             if (vertexCount + startVertex > VerticesInternal.Count) { throw new ArgumentException("vertexCount"); }
 
             for (var actVertexIndex = startVertex; actVertexIndex < startVertex + vertexCount; actVertexIndex++)
@@ -463,22 +432,22 @@ namespace SeeingSharp.Multimedia.Objects
                 // Find all triangles connected to this vertex and get normals from them
                 var finalNormalHelper = Vector3.Zero;
                 var finalNormalHelper2 = Vector3.Zero;
-                int normalCount = 0;
+                var normalCount = 0;
 
-                int surfaceCount = m_surfaces.Count;
+                var surfaceCount = m_surfaces.Count;
 
                 for (var actSurfaceIndex = 0; actSurfaceIndex < surfaceCount; actSurfaceIndex++)
                 {
                     var actSurface = m_surfaces[actSurfaceIndex];
-                    int triangleCount = actSurface.CountTriangles;
+                    var triangleCount = actSurface.CountTriangles;
 
                     for (var loopTriangle = 0; loopTriangle < triangleCount; loopTriangle++)
                     {
                         var triangleStartIndex = loopTriangle * 3;
 
-                        if ((actSurface.IndicesInternal[triangleStartIndex] == actVertexIndex) ||
-                            (actSurface.IndicesInternal[triangleStartIndex + 1] == actVertexIndex) ||
-                            (actSurface.IndicesInternal[triangleStartIndex + 2] == actVertexIndex))
+                        if (actSurface.IndicesInternal[triangleStartIndex] == actVertexIndex ||
+                            actSurface.IndicesInternal[triangleStartIndex + 1] == actVertexIndex ||
+                            actSurface.IndicesInternal[triangleStartIndex + 2] == actVertexIndex)
                         {
                             var v1 = VerticesInternal[actSurface.IndicesInternal[triangleStartIndex]];
                             var v2 = VerticesInternal[actSurface.IndicesInternal[triangleStartIndex + 1]];
@@ -510,7 +479,7 @@ namespace SeeingSharp.Multimedia.Objects
             capacityMultiplier.EnsurePositiveAndNotZero(nameof(capacityMultiplier));
 
             // Create new VertexStructure object
-            int vertexCount = VerticesInternal.Count;
+            var vertexCount = VerticesInternal.Count;
             var result = new VertexStructure(
                 vertexCount * capacityMultiplier);
 
@@ -568,7 +537,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="Color4">The new color.</param>
         public void SetColorOnEachVertex(Color4 Color4)
         {
-            for (int loop = 0; loop < VerticesInternal.Count; loop++)
+            for (var loop = 0; loop < VerticesInternal.Count; loop++)
             {
                 VerticesInternal[loop] = VerticesInternal[loop].Copy(Color4);
             }
@@ -579,7 +548,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for(int loop=0; loop<m_surfaces.Count; loop++)
+            for(var loop=0; loop<m_surfaces.Count; loop++)
             {
                 m_surfaces[loop].ToggleTriangleIndexOrder();
             }
@@ -591,11 +560,11 @@ namespace SeeingSharp.Multimedia.Objects
         public void ToggleCoordinateSystem()
         {
             //Calculate the center coordinate of this structure
-            var boundingBox = this.GenerateBoundingBox();
+            var boundingBox = GenerateBoundingBox();
             var centerCoord = boundingBox.GetMiddleCenter();
 
             //Update each vertex coordinate
-            this.UpdateVerticesUsingRelocationFunc((givenVector) =>
+            UpdateVerticesUsingRelocationFunc(givenVector =>
             {
                 return new Vector3(
                     givenVector.X, givenVector.Y,
@@ -615,8 +584,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="transformMatrix"></param>
         public void TransformVertices(Matrix transformMatrix)
         {
-            int length = VerticesInternal.Count;
-            for (int loop = 0; loop < length; loop++)
+            var length = VerticesInternal.Count;
+            for (var loop = 0; loop < length; loop++)
             {
                 VerticesInternal[loop] = VerticesInternal[loop].Copy(
                     Vector3.Transform(VerticesInternal[loop].Position, transformMatrix).ToXYZ(),
@@ -629,7 +598,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public VertexStructure[] ToSingleItemArray()
         {
-            return new VertexStructure[] { this };
+            return new[] { this };
         }
 
         /// <summary>
@@ -637,8 +606,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void UpdateVerticesUsingRelocationBy(Vector3 relocateVector)
         {
-            int length = VerticesInternal.Count;
-            for (int loop = 0; loop < length; loop++)
+            var length = VerticesInternal.Count;
+            for (var loop = 0; loop < length; loop++)
             {
                 VerticesInternal[loop] = VerticesInternal[loop].Copy(Vector3.Add(VerticesInternal[loop].Geometry.Position, relocateVector));
             }
@@ -650,11 +619,34 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="calculatePositionFunc">The function to be applied to each coordinate.</param>
         public void UpdateVerticesUsingRelocationFunc(Func<Vector3, Vector3> calculatePositionFunc)
         {
-            int length = VerticesInternal.Count;
-            for (int loop = 0; loop < length; loop++)
+            var length = VerticesInternal.Count;
+            for (var loop = 0; loop < length; loop++)
             {
                 VerticesInternal[loop] = VerticesInternal[loop].Copy(calculatePositionFunc(Vertices[loop].Position));
             }
+        }
+
+        /// <summary>
+        /// Creates a new Vertex structure object
+        /// </summary>
+        public VertexStructure()
+            : this(512)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new Vertex structure object
+        /// </summary>
+        public VertexStructure(int verticesCapacity)
+        {
+            m_name = string.Empty;
+            Description = string.Empty;
+
+            VerticesInternal = new List<Vertex>(verticesCapacity);
+            m_surfaces = new List<VertexStructureSurface>();
+
+            Vertices = new VertexCollection(VerticesInternal);
+            Surfaces = new SurfaceCollection(m_surfaces);
         }
 
         /// <summary>
@@ -673,10 +665,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves total count of all vertices within this structure
         /// </summary>
-        public int CountVertices
-        {
-            get { return VerticesInternal.Count; }
-        }
+        public int CountVertices => VerticesInternal.Count;
 
         /// <summary>
         /// A short description for the use of this structure
@@ -686,17 +675,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Is this structure empty?
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return (VerticesInternal.Count == 0) && (m_surfaces.Count == 0); }
-        }
+        public bool IsEmpty => VerticesInternal.Count == 0 && m_surfaces.Count == 0;
 
         /// <summary>
         /// The name of this structure
         /// </summary>
         public string Name
         {
-            get { return m_name; }
+            get => m_name;
             set
             {
                 m_name = value;
@@ -716,17 +702,14 @@ namespace SeeingSharp.Multimedia.Objects
 
         public SurfaceCollection Surfaces { get; }
 
-        public int CountSurfaces
-        {
-            get { return m_surfaces.Count; }
-        }
+        public int CountSurfaces => m_surfaces.Count;
 
         public int CountTriangles
         {
             get
             {
-                int sum = 0;
-                for(int loop=0; loop<m_surfaces.Count; loop++)
+                var sum = 0;
+                for(var loop=0; loop<m_surfaces.Count; loop++)
                 {
                     sum += m_surfaces[loop].CountTriangles;
                 }
@@ -738,8 +721,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             get
             {
-                int sum = 0;
-                for (int loop = 0; loop < m_surfaces.Count; loop++)
+                var sum = 0;
+                for (var loop = 0; loop < m_surfaces.Count; loop++)
                 {
                     sum += m_surfaces[loop].CountIndices;
                 }
@@ -767,22 +750,22 @@ namespace SeeingSharp.Multimedia.Objects
         {
             private List<Vertex> m_vertices;
 
-            internal VertexCollection(List<Vertex> vertices)
-            {
-                m_vertices = vertices;
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return m_vertices.GetEnumerator();
-            }
-
             /// <summary>
             /// Adds a vertex to the structure
             /// </summary>
             public void Add(Vertex vertex)
             {
                 m_vertices.Add(vertex);
+            }
+
+            internal VertexCollection(List<Vertex> vertices)
+            {
+                m_vertices = vertices;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return m_vertices.GetEnumerator();
             }
 
             /// <summary>
@@ -798,8 +781,8 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public Vertex this[int index]
             {
-                get { return m_vertices[index]; }
-                internal set { m_vertices[index] = value; }
+                get => m_vertices[index];
+                internal set => m_vertices[index] = value;
             }
         }
 
@@ -813,19 +796,19 @@ namespace SeeingSharp.Multimedia.Objects
         {
             private List<VertexStructureSurface> m_surfaces;
 
+            public void Add(VertexStructureSurface surface)
+            {
+                m_surfaces.Add(surface);
+            }
+
             internal SurfaceCollection(List<VertexStructureSurface> surfaces)
             {
                 m_surfaces = surfaces;
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return m_surfaces.GetEnumerator();
-            }
-
-            public void Add(VertexStructureSurface surface)
-            {
-                m_surfaces.Add(surface);
             }
 
             public IEnumerator<VertexStructureSurface> GetEnumerator()
@@ -838,9 +821,15 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public VertexStructureSurface this[int index]
             {
-                get { return m_surfaces[index]; }
-                internal set { m_surfaces[index] = value; }
+                get => m_surfaces[index];
+                internal set => m_surfaces[index] = value;
             }
         }
+
+        #region Members for build time transform
+        private bool m_buildTimeTransformEnabled;
+        private Matrix m_buildTransformMatrix;
+        private Func<Vertex, Vertex> m_buildTimeTransformFunc;
+        #endregion
     }
 }

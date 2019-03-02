@@ -22,19 +22,19 @@
 */
 #endregion
 
+using System;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+
 namespace SeeingSharp.UwpSamples
 {
     #region using
-
-    using System;
-    using Windows.ApplicationModel;
-    using Windows.ApplicationModel.Activation;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Navigation;
-    using Multimedia.Core;
-    using SampleContainer;
-
     #endregion
 
     /// <summary>
@@ -42,24 +42,6 @@ namespace SeeingSharp.UwpSamples
     /// </summary>
     sealed partial class App : Application
     {
-        /// <summary>
-        /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
-        /// und daher das logische Äquivalent von main() bzw. WinMain().
-        /// </summary>
-        public App()
-        {
-            this.InitializeComponent();
-
-            PlatformDependentMethods.SetOpenUrlInBrowser(async (url) =>
-            {
-                var targetUrl = new Uri(url);
-                await Windows.System.Launcher.LaunchUriAsync(targetUrl);
-            });
-
-            this.Suspending += OnSuspending;
-            this.Resuming += OnResuming;
-        }
-
         /// <summary>
         /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
         /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
@@ -111,7 +93,7 @@ namespace SeeingSharp.UwpSamples
         /// </summary>
         /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
         /// <param name="e">Details über den Navigationsfehler</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
@@ -135,6 +117,24 @@ namespace SeeingSharp.UwpSamples
         private void OnResuming(object sender, object e)
         {
             GraphicsCore.Current.Resume();
+        }
+
+        /// <summary>
+        /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
+        /// und daher das logische Äquivalent von main() bzw. WinMain().
+        /// </summary>
+        public App()
+        {
+            InitializeComponent();
+
+            PlatformDependentMethods.SetOpenUrlInBrowser(async url =>
+            {
+                var targetUrl = new Uri(url);
+                await Launcher.LaunchUriAsync(targetUrl);
+            });
+
+            Suspending += OnSuspending;
+            Resuming += OnResuming;
         }
     }
 }

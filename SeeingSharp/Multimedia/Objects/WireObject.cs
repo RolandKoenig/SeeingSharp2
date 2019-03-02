@@ -24,6 +24,10 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,12 +35,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -45,24 +43,9 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public class WireObject : SceneObject
     {
-        #region Configuration
-        private bool m_forceReloadLineData;
-        private Line[] m_lineData;
-
-        #endregion
-
         #region Direct3D resources
         private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WireObject" /> class.
-        /// </summary>
-        public WireObject()
-        {
-            LineColor = Color4.Black;
-            m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
-        }
 
         /// <summary>
         /// Loads all resources of the object.
@@ -72,9 +55,9 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
-                new LocalResourceData()
+                new LocalResourceData
                 {
-                    LineRenderResources = resourceDictionary.GetResourceAndEnsureLoaded<LineRenderResources>(
+                    LineRenderResources = resourceDictionary.GetResourceAndEnsureLoaded(
                         LineRenderResources.RESOURCE_KEY,
                         () => new LineRenderResources()),
                     LineVertexBuffer = null
@@ -110,7 +93,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Handle line data reloading flag
             if(m_forceReloadLineData)
             {
-                m_localResources.ForEachInEnumeration((actItem) => actItem.LineDataLoaded = false);
+                m_localResources.ForEachInEnumeration(actItem => actItem.LineDataLoaded = false);
                 m_forceReloadLineData = false;
             }
         }
@@ -122,9 +105,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
             }
         }
 
@@ -139,8 +122,8 @@ namespace SeeingSharp.Multimedia.Objects
             // Load line data to memory if needed
             if (!resourceData.LineDataLoaded)
             {
-                if ((m_lineData == null) ||
-                    (m_lineData.Length == 0))
+                if (m_lineData == null ||
+                    m_lineData.Length == 0)
                 {
                     return;
                 }
@@ -161,11 +144,20 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject()
+        {
+            LineColor = Color4.Black;
+            m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
+        }
+
+        /// <summary>
         /// Gets or sets current line data.
         /// </summary>
         public Line[] LineData
         {
-            get { return m_lineData; }
+            get => m_lineData;
             set
             {
                 if (m_lineData != value)
@@ -186,9 +178,14 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class LocalResourceData
         {
+            public bool LineDataLoaded;
             public LineRenderResources LineRenderResources;
             public D3D11.Buffer LineVertexBuffer;
-            public bool LineDataLoaded;
         }
+
+        #region Configuration
+        private bool m_forceReloadLineData;
+        private Line[] m_lineData;
+        #endregion
     }
 }

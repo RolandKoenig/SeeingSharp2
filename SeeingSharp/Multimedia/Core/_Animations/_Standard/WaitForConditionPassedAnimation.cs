@@ -21,29 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using Checking;
-
     #endregion
 
     public class WaitForConditionPassedAnimation : AnimationBase
     {
         private Func<bool> m_checkFunction;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaitForConditionPassedAnimation" /> class.
-        /// </summary>
-        public WaitForConditionPassedAnimation(Func<bool> checkFunction)
-            : base(null)
-        {
-            checkFunction.EnsureNotNull(nameof(checkFunction));
-
-            m_checkFunction = checkFunction;
-        }
 
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
@@ -64,16 +53,24 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState"></param>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (m_checkFunction()) { this.NotifyAnimationFinished(); }
+            if (m_checkFunction()) { NotifyAnimationFinished(); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitForConditionPassedAnimation" /> class.
+        /// </summary>
+        public WaitForConditionPassedAnimation(Func<bool> checkFunction)
+            : base(null)
+        {
+            checkFunction.EnsureNotNull(nameof(checkFunction));
+
+            m_checkFunction = checkFunction;
         }
 
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

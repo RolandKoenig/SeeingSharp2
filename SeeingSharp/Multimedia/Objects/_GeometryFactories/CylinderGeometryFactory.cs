@@ -21,30 +21,30 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public class CylinderGeometryFactory : GeometryFactory
     {
-        public CylinderGeometryFactory()
-        {
-            this.Radius = 0.5f;
-            this.Height = 1f;
-            this.CountOfSegments = 10;
-        }
-
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             var result = new VertexStructure();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCylinderFullV(Vector3.Zero, Radius, Height, CountOfSegments, Color4Ex.Transparent);
 
             return result;
+        }
+
+        public CylinderGeometryFactory()
+        {
+            Radius = 0.5f;
+            Height = 1f;
+            CountOfSegments = 10;
         }
 
         public float Radius

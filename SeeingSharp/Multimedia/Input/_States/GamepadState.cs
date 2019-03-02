@@ -21,44 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using Checking;
-
     #endregion
 
     public class GamepadState : InputStateBase
     {
         public static readonly GamepadState Dummy = new GamepadState(0);
-
-        #region State variables
-        private int m_controllerIndex;
-        private GamepadReportedState m_prevState;
-        private GamepadReportedState m_currentState;
-        private bool m_isConnected;
-        #endregion
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="GamepadState"/> class from being created.
-        /// </summary>
-        public GamepadState()
-        {
-            m_prevState = new GamepadReportedState();
-            m_currentState = new GamepadReportedState();
-
-            this.Internals = new GamepadStateInternals(this);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GamepadState"/> class.
-        /// </summary>
-        internal GamepadState(int controllerIndex)
-            : this()
-        {
-            m_controllerIndex = controllerIndex;
-        }
 
         internal void NotifyConnected(bool isConnected)
         {
@@ -81,10 +54,10 @@ namespace SeeingSharp.Multimedia.Input
             var targetStateCasted = targetState as GamepadState;
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
-            targetStateCasted.m_controllerIndex = this.m_controllerIndex;
-            targetStateCasted.m_isConnected = this.m_isConnected;
-            targetStateCasted.m_prevState = this.m_prevState;
-            targetStateCasted.m_currentState = this.m_currentState;
+            targetStateCasted.m_controllerIndex = m_controllerIndex;
+            targetStateCasted.m_isConnected = m_isConnected;
+            targetStateCasted.m_prevState = m_prevState;
+            targetStateCasted.m_currentState = m_currentState;
         }
 
         /// <summary>
@@ -106,19 +79,36 @@ namespace SeeingSharp.Multimedia.Input
         {
             if (!m_isConnected) { return false; }
 
-            bool prevDown = ((short)m_prevState.Buttons & (short)button) == (short)button;
-            bool currentDown = ((short)m_currentState.Buttons & (short)button) == (short)button;
+            var prevDown = ((short)m_prevState.Buttons & (short)button) == (short)button;
+            var currentDown = ((short)m_currentState.Buttons & (short)button) == (short)button;
 
-            return (!prevDown) && currentDown;
+            return !prevDown && currentDown;
+        }
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="GamepadState"/> class from being created.
+        /// </summary>
+        public GamepadState()
+        {
+            m_prevState = new GamepadReportedState();
+            m_currentState = new GamepadReportedState();
+
+            Internals = new GamepadStateInternals(this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GamepadState"/> class.
+        /// </summary>
+        internal GamepadState(int controllerIndex)
+            : this()
+        {
+            m_controllerIndex = controllerIndex;
         }
 
         /// <summary>
         /// Do we have any controller connected on this point.
         /// </summary>
-        public bool IsConnected
-        {
-            get { return m_isConnected; }
-        }
+        public bool IsConnected => m_isConnected;
 
         /// <summary>
         /// Gets the currently pressed buttons.
@@ -135,50 +125,32 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// The position of the left thumbstick on the X-axis. The value is between -1.0 and and 1.0.
         /// </summary>
-        public float LeftThumbX
-        {
-            get { return m_currentState.LeftThumbstickX; }
-        }
+        public float LeftThumbX => m_currentState.LeftThumbstickX;
 
         /// <summary>
         /// The position of the left thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
         /// </summary>
-        public float LeftThumbY
-        {
-            get { return m_currentState.LeftThumbstickY; }
-        }
+        public float LeftThumbY => m_currentState.LeftThumbstickY;
 
         /// <summary>
         /// The position of the left trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
         /// </summary>
-        public float LeftTrigger
-        {
-            get { return m_currentState.LeftTrigger; }
-        }
+        public float LeftTrigger => m_currentState.LeftTrigger;
 
         /// <summary>
         /// The position of the right thumbstick on the X-axis. The value is between -1.0 and and 1.0.
         /// </summary>
-        public float RightThumbX
-        {
-            get { return m_currentState.RightThumbstickX; }
-        }
+        public float RightThumbX => m_currentState.RightThumbstickX;
 
         /// <summary>
         /// The position of the right thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
         /// </summary>
-        public float RightThumbY
-        {
-            get { return m_currentState.RightThumbstickY; }
-        }
+        public float RightThumbY => m_currentState.RightThumbstickY;
 
         /// <summary>
         /// The position of the right trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
         /// </summary>
-        public float RightTrigger
-        {
-            get { return m_currentState.RightTrigger; }
-        }
+        public float RightTrigger => m_currentState.RightTrigger;
 
         public GamepadStateInternals Internals
         {
@@ -193,10 +165,6 @@ namespace SeeingSharp.Multimedia.Input
         {
             private GamepadState m_host;
 
-            internal GamepadStateInternals(GamepadState host)
-            {
-                m_host = host;
-            }
             public void NotifyConnected(bool isConnected)
             {
                 m_host.NotifyConnected(isConnected);
@@ -206,6 +174,18 @@ namespace SeeingSharp.Multimedia.Input
             {
                 m_host.NotifyState(controllerState);
             }
+
+            internal GamepadStateInternals(GamepadState host)
+            {
+                m_host = host;
+            }
         }
+
+        #region State variables
+        private int m_controllerIndex;
+        private GamepadReportedState m_prevState;
+        private GamepadReportedState m_currentState;
+        private bool m_isConnected;
+        #endregion
     }
 }

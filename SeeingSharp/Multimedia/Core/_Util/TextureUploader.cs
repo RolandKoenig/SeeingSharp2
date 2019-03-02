@@ -24,6 +24,10 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,11 +35,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class TextureUploader : IDisposable
@@ -45,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.Texture2D m_texture;
         private int m_width;
         private int m_height;
-        private SharpDX.DXGI.Format m_format;
+        private Format m_format;
         private bool m_isMultisampled;
 
         //Direct3D resources for rendertarget capturing
@@ -69,7 +68,7 @@ namespace SeeingSharp.Multimedia.Core
             m_width = textureDesc.Width;
             m_height = textureDesc.Height;
             m_format = textureDesc.Format;
-            m_isMultisampled = (textureDesc.SampleDescription.Count > 1) || (textureDesc.SampleDescription.Quality > 0);
+            m_isMultisampled = textureDesc.SampleDescription.Count > 1 || textureDesc.SampleDescription.Quality > 0;
         }
 
 #if DESKTOP
@@ -102,12 +101,12 @@ namespace SeeingSharp.Multimedia.Core
         /// Takes a color texture and uploads it to the given buffer.
         /// </summary>
         /// <param name="intBuffer">The target int buffer to which to copy all pixel data.</param>
-        public unsafe void UploadToIntBuffer(MemoryMappedTexture32bpp intBuffer)
+        public void UploadToIntBuffer(MemoryMappedTexture32bpp intBuffer)
         {
             // Check current format
-            if ((m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT) &&
-                (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING) &&
-                (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D))
+            if (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT &&
+                m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING &&
+                m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D)
             {
                 throw new SeeingSharpGraphicsException(string.Format("Invalid format for texture uploading to a color map ({0})!", m_format));
             }
@@ -123,8 +122,8 @@ namespace SeeingSharp.Multimedia.Core
                 var rowPitchSource = dataBox.RowPitch;
                 var rowPitchDestination = intBuffer.Width * 4;
 
-                if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
-                    (rowPitchDestination > 0) && (rowPitchDestination < 20000))
+                if (rowPitchSource > 0 && rowPitchSource < 20000 &&
+                    rowPitchDestination > 0 && rowPitchDestination < 20000)
                 {
                     for (var loopY = 0; loopY < m_height; loopY++)
                     {
@@ -145,7 +144,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Upload a floatingpoint texture from the graphics hardware.
         /// This method is only valid for resources of type R32_Floatfloat.
         /// </summary>
-        public unsafe MemoryMappedTextureFloat UploadToFloatBuffer()
+        public MemoryMappedTextureFloat UploadToFloatBuffer()
         {
             var result = new MemoryMappedTextureFloat(
                 new Size2(m_width, m_height));
@@ -158,7 +157,7 @@ namespace SeeingSharp.Multimedia.Core
         /// This method is only valid for resources of type R32_Floatfloat.
         /// </summary>
         /// <param name="floatBuffer">The target float buffer to which to copy all ObjectIDs.</param>
-        public unsafe void UploadToFloatBuffer(MemoryMappedTextureFloat floatBuffer)
+        public void UploadToFloatBuffer(MemoryMappedTextureFloat floatBuffer)
         {
             // Check current format
             if (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_OBJECT_ID)
@@ -185,11 +184,11 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
 
-                int rowPitchSource = dataBox.RowPitch;
-                int rowPitchDestination = floatBuffer.Width * 4;
+                var rowPitchSource = dataBox.RowPitch;
+                var rowPitchDestination = floatBuffer.Width * 4;
 
-                if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
-                    (rowPitchDestination > 0) && (rowPitchDestination < 20000))
+                if (rowPitchSource > 0 && rowPitchSource < 20000 &&
+                    rowPitchDestination > 0 && rowPitchDestination < 20000)
                 {
                     for (var loopY = 0; loopY < m_height; loopY++)
                     {

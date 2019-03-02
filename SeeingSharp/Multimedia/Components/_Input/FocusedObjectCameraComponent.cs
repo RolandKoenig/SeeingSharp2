@@ -21,37 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Components
 {
     #region using
-
-    using Core;
-    using SharpDX;
-
     #endregion
 
     public class FocusedObjectCameraComponent : FocusedCameraComponent
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusedObjectCameraComponent"/> class.
-        /// </summary>
-        public FocusedObjectCameraComponent()
-        {
-
-        }
-
         protected override Vector3 GetFocusedLocation()
         {
-            var focusedObject = this.FocusedObject;
+            var focusedObject = FocusedObject;
 
             if (focusedObject != null)
             {
                 return focusedObject.Position;
             }
-            else
-            {
-                return Vector3.Zero;
-            }
+            return Vector3.Zero;
         }
 
         public SceneSpacialObject FocusedObject

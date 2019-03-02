@@ -21,50 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.ComponentModel;
+using System.Xml.Serialization;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.ComponentModel;
-    using System.Xml.Serialization;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class GraphicsViewConfiguration
     {
-        #region Constants
-        private const bool DEFAULT_SHOW_TEXTURES = true;
-        private const bool DEFAULT_WIREFRAME = false;
-        private const bool DEFAULT_ANTIALIASING = true;
-        private const AntialiasingQualityLevel DEFAULT_ANTIALIASING_QUALITY = AntialiasingQualityLevel.Medium;
-        private const float DEFAULT_BORDER_FACTOR = 1f;
-        private const float DEFAULT_GRADIENT_FACTOR = 1f;
-        private const float DEFAULT_ACCENTUATION_FACTOR = 0f;
-        private const float DEFAULT_AMBIENT_FACTOR = 0.2f;
-        private const float DEFAULT_LIGHT_POWER = 0.8f;
-        private const float DEFAULT_STRONG_LIGHT_FACTOR = 1.5f;
-        private const bool DEFAULT_SWAP_CHAIN_WIDTH_ALPHA = false;
-        #endregion
-
-        #region Generic
-        #endregion
-
-        #region Antialiasing configuration
-        private bool m_antialiasingEnabled;
-        private AntialiasingQualityLevel m_antialiasingQuality;
-        #endregion
-
-        #region Most view parameters (Light, Gradient, Accentuation)
-        private float m_generatedColorGradientFactor;
-        private float m_generatedBorderFactor;
-        private float m_accentuationFactor;
-        private float m_ambientFactor;
-        private float m_lightPower;
-        private float m_strongLightFactor;
-        private bool m_alphaEnabledSwapChain;
-        #endregion
+        /// <summary>
+        /// Internal accessor for ShowTextures variable.
+        /// </summary>
+        internal bool ShowTexturesInternal;
 
         /// <summary>
         /// Occurs when any configuration flag has changed.
@@ -225,11 +198,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        /// <summary>
-        /// Internal accessor for ShowTextures variable.
-        /// </summary>
-        internal bool ShowTexturesInternal;
-
         [XmlAttribute]
         [DefaultValue(DEFAULT_SHOW_TEXTURES)]
         public bool ShowTextures
@@ -277,5 +245,37 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         [Browsable(false)]
         public GraphicsCoreConfiguration CoreConfiguration => DeviceConfiguration?.CoreConfiguration;
+
+        #region Constants
+        private const bool DEFAULT_SHOW_TEXTURES = true;
+        private const bool DEFAULT_WIREFRAME = false;
+        private const bool DEFAULT_ANTIALIASING = true;
+        private const AntialiasingQualityLevel DEFAULT_ANTIALIASING_QUALITY = AntialiasingQualityLevel.Medium;
+        private const float DEFAULT_BORDER_FACTOR = 1f;
+        private const float DEFAULT_GRADIENT_FACTOR = 1f;
+        private const float DEFAULT_ACCENTUATION_FACTOR = 0f;
+        private const float DEFAULT_AMBIENT_FACTOR = 0.2f;
+        private const float DEFAULT_LIGHT_POWER = 0.8f;
+        private const float DEFAULT_STRONG_LIGHT_FACTOR = 1.5f;
+        private const bool DEFAULT_SWAP_CHAIN_WIDTH_ALPHA = false;
+        #endregion
+
+        #region Generic
+        #endregion
+
+        #region Antialiasing configuration
+        private bool m_antialiasingEnabled;
+        private AntialiasingQualityLevel m_antialiasingQuality;
+        #endregion
+
+        #region Most view parameters (Light, Gradient, Accentuation)
+        private float m_generatedColorGradientFactor;
+        private float m_generatedBorderFactor;
+        private float m_accentuationFactor;
+        private float m_ambientFactor;
+        private float m_lightPower;
+        private float m_strongLightFactor;
+        private bool m_alphaEnabledSwapChain;
+        #endregion
     }
 }

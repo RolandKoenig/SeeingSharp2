@@ -21,6 +21,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX.WIC;
+
 namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerWIC
@@ -30,17 +33,14 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal FactoryHandlerWIC(DeviceLoadSettings deviceLoadSettings)
         {
-            Factory = new SharpDX.WIC.ImagingFactory();
+            Factory = new ImagingFactory();
         }
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal SharpDX.WIC.ImagingFactory Factory { get; }
+        internal ImagingFactory Factory { get; }
 
-        public bool IsInitialized
-        {
-            get { return Factory != null; }
-        }
+        public bool IsInitialized => Factory != null;
     }
 }

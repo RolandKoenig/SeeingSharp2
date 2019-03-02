@@ -24,6 +24,7 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Drawing3D;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,21 +32,11 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using Drawing3D;
-
     #endregion
 
     public class RenderPassDefaultTransparent : RenderPassBase
     {
         private DefaultResources m_defaultResources;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderPassDefaultTransparent" /> class.
-        /// </summary>
-        public RenderPassDefaultTransparent()
-        {
-        }
 
         /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
@@ -97,9 +88,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_defaultResources != null; }
-        }
+        public override bool IsLoaded => m_defaultResources != null;
     }
 }

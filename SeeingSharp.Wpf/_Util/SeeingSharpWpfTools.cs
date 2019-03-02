@@ -24,6 +24,9 @@
 #region using
 
 // Namespace mappings
+using System;
+using System.Reflection;
+using SharpDX;
 using Wpf = System.Windows;
 using WpfMedia = System.Windows.Media;
 
@@ -32,23 +35,19 @@ using WpfMedia = System.Windows.Media;
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Reflection;
-
     #endregion
 
     public static class SeeingSharpWpfTools
     {
-        public static void Color4FromWpfColor(ref WpfMedia.Color source, ref SharpDX.Color4 target)
+        public static void Color4FromWpfColor(ref WpfMedia.Color source, ref Color4 target)
         {
-            target.Red = (float) source.R / 255f;
-            target.Green = (float) source.G / 255f;
-            target.Blue = (float) source.B / 255f;
-            target.Alpha = (float) source.A / 255f;
+            target.Red = source.R / 255f;
+            target.Green = source.G / 255f;
+            target.Blue = source.B / 255f;
+            target.Alpha = source.A / 255f;
         }
 
-        public static void WpfColorFromColor4(ref SharpDX.Color4 source, ref WpfMedia.Color target)
+        public static void WpfColorFromColor4(ref Color4 source, ref WpfMedia.Color target)
         {
             target.A = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
             target.R= (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
@@ -71,7 +70,7 @@ namespace SeeingSharp.Util
 
         public static Wpf.Size GetPixelSize(Wpf.UIElement uiElement, Wpf.Size minSize)
         {
-            GetDpiScalingFactor(uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY);
+            GetDpiScalingFactor(uiElement, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
             return new Wpf.Size(
                 Math.Max(uiElement.RenderSize.Width * dpiScaleFactorX, 100),

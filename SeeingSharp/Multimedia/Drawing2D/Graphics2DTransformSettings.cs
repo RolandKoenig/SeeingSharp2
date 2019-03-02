@@ -21,17 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public struct Graphics2DTransformSettings
     {
-        public static readonly Graphics2DTransformSettings Default = new Graphics2DTransformSettings()
+        public static readonly Graphics2DTransformSettings Default = new Graphics2DTransformSettings
         {
             TransformMode = Graphics2DTransformMode.Custom,
             VirtualScreenSize = new Size2F(),

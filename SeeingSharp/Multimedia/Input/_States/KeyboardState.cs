@@ -21,39 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System.Collections.Generic;
-    using Checking;
-
     #endregion
 
     public class KeyboardState : InputStateBase
     {
         public static readonly KeyboardState Dummy = new KeyboardState();
 
-        #region current key states
-        private List<WinVirtualKey> m_keysHit;
-        private List<WinVirtualKey> m_keysDown;
-        private bool m_focused;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeyboardState"/> class.
-        /// </summary>
-        public KeyboardState()
-        {
-            m_keysHit = new List<WinVirtualKey>(6);
-            m_keysDown = new List<WinVirtualKey>(12);
-
-            this.Internals = new KeyboardStateInternals(this);
-        }
-
         internal void NotifyKeyDown(WinVirtualKey key)
         {
-            bool anyRegistered =
+            var anyRegistered =
                 m_keysDown.Contains(key) ||
                 m_keysHit.Contains(key);
             if (anyRegistered) { return; }
@@ -101,32 +84,34 @@ namespace SeeingSharp.Multimedia.Input
             targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
 
             targetStateCasted.m_keysHit.Clear();
-            targetStateCasted.m_keysHit.AddRange(this.m_keysHit);
+            targetStateCasted.m_keysHit.AddRange(m_keysHit);
 
             targetStateCasted.m_keysDown.Clear();
-            targetStateCasted.m_keysDown.AddRange(this.m_keysDown);
+            targetStateCasted.m_keysDown.AddRange(m_keysDown);
 
-            targetStateCasted.m_focused = this.m_focused;
+            targetStateCasted.m_focused = m_focused;
 
             // Update local collections (move hit keys to down keys)
-            this.m_keysDown.AddRange(this.m_keysHit);
-            this.m_keysHit.Clear();
+            m_keysDown.AddRange(m_keysHit);
+            m_keysHit.Clear();
         }
 
-        public IEnumerable<WinVirtualKey> KeysDown
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyboardState"/> class.
+        /// </summary>
+        public KeyboardState()
         {
-            get { return m_keysDown; }
+            m_keysHit = new List<WinVirtualKey>(6);
+            m_keysDown = new List<WinVirtualKey>(12);
+
+            Internals = new KeyboardStateInternals(this);
         }
 
-        public IEnumerable<WinVirtualKey> KeysHit
-        {
-            get { return m_keysHit; }
-        }
+        public IEnumerable<WinVirtualKey> KeysDown => m_keysDown;
 
-        public bool IsConnected
-        {
-            get { return m_focused; }
-        }
+        public IEnumerable<WinVirtualKey> KeysHit => m_keysHit;
+
+        public bool IsConnected => m_focused;
 
         public KeyboardStateInternals Internals
         {
@@ -140,11 +125,6 @@ namespace SeeingSharp.Multimedia.Input
         public class KeyboardStateInternals
         {
             private KeyboardState m_host;
-
-            internal KeyboardStateInternals(KeyboardState host)
-            {
-                m_host = host;
-            }
 
             public void NotifyKeyDown(WinVirtualKey key)
             {
@@ -165,6 +145,17 @@ namespace SeeingSharp.Multimedia.Input
             {
                 m_host.NotifyFocusLost();
             }
+
+            internal KeyboardStateInternals(KeyboardState host)
+            {
+                m_host = host;
+            }
         }
+
+        #region current key states
+        private List<WinVirtualKey> m_keysHit;
+        private List<WinVirtualKey> m_keysDown;
+        private bool m_focused;
+        #endregion
     }
 }

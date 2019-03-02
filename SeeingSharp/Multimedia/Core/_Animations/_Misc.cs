@@ -21,21 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     /// <summary>
     /// Describes the component which is relevant for rotation calculation.
     /// </summary>
     [Flags]
-    public enum RotationCalculationComponent : int
+    public enum RotationCalculationComponent
     {
-        All = RotationCalculationComponent.Pitch | RotationCalculationComponent.Yaw | RotationCalculationComponent.Roll,
+        All = Pitch | Yaw | Roll,
 
         Pitch = 1,
 
@@ -119,8 +119,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="exception">The exception.</param>
         internal AnimationFailedEventArgs(IAnimation animation, Exception exception)
         {
-            this.Animation = animation;
-            this.Exception = exception;
+            Animation = animation;
+            Exception = exception;
         }
 
         /// <summary>

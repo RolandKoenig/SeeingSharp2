@@ -21,18 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Core;
-
     #endregion
 
     public interface IImage
-    {
-    }
+    {}
 
     internal interface IImageInternal
     {

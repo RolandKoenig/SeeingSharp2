@@ -21,25 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class EventDrivenStepInfo
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventDrivenStepInfo"/> class.
-        /// </summary>
-        public EventDrivenStepInfo()
-        {
-
-        }
-
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class WaitTimePassedAnimation : AnimationBase
@@ -46,9 +46,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

@@ -24,6 +24,9 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 
@@ -32,13 +35,6 @@ using SDXM = SharpDX.Mathematics.Interop;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System.Collections.ObjectModel;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class PolygonGeometryResource : Geometry2DResourceBase
@@ -46,25 +42,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #region resources
         private D2D.PathGeometry m_d2dGeometry;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
-        /// </summary>
-        public PolygonGeometryResource()
-        {
-            m_d2dGeometry = new D2D.PathGeometry(
-                GraphicsCore.Current.FactoryD2D);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
-        /// </summary>
-        /// <param name="polygon">The data which populates the geometry.</param>
-        public PolygonGeometryResource(Polygon2D polygon)
-            : this()
-        {
-            SetContent(polygon);
-        }
 
         /// <summary>
         /// Sets the content to all lines in the given polygon.
@@ -77,7 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             using (var geoSink = m_d2dGeometry.Open())
             {
-                ReadOnlyCollection<Vector2> vertices = polygon.Vertices;
+                var vertices = polygon.Vertices;
 
                 // Start the figure
                 var startPoint = vertices[0];
@@ -86,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     D2D.FigureBegin.Filled);
 
                 // Add all lines
-                int vertexCount = vertices.Count;
+                var vertexCount = vertices.Count;
 
                 for (var loop = 1; loop < vertexCount; loop++)
                 {
@@ -112,8 +89,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var relation = m_d2dGeometry.Compare(otherGeometry.m_d2dGeometry);
 
             return
-                (relation != D2D.GeometryRelation.Unknown) &&
-                (relation != D2D.GeometryRelation.Disjoint);
+                relation != D2D.GeometryRelation.Unknown &&
+                relation != D2D.GeometryRelation.Disjoint;
         }
 
         /// <summary>
@@ -132,12 +109,25 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_d2dGeometry);
         }
 
-        public override bool IsDisposed
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
+        /// </summary>
+        public PolygonGeometryResource()
         {
-            get
-            {
-                return m_d2dGeometry == null;
-            }
+            m_d2dGeometry = new D2D.PathGeometry(
+                GraphicsCore.Current.FactoryD2D);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
+        /// </summary>
+        /// <param name="polygon">The data which populates the geometry.</param>
+        public PolygonGeometryResource(Polygon2D polygon)
+            : this()
+        {
+            SetContent(polygon);
+        }
+
+        public override bool IsDisposed => m_d2dGeometry == null;
     }
 }

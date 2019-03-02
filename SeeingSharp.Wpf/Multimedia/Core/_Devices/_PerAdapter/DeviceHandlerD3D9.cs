@@ -24,6 +24,10 @@
 #region using
 
 //Some namespace mappings
+using System;
+using System.Runtime.InteropServices;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D9 = SharpDX.Direct3D9;
 
 #endregion
@@ -31,19 +35,20 @@ using D3D9 = SharpDX.Direct3D9;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Runtime.InteropServices;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private SharpDX.DXGI.Adapter1 m_dxgiAdapter;
-        private D3D9.Direct3DEx m_direct3DEx;
-        private D3D9.DeviceEx m_deviceEx;
         private int m_adapterIndex;
+        private D3D9.DeviceEx m_deviceEx;
+        private D3D9.Direct3DEx m_direct3DEx;
+        private Adapter1 m_dxgiAdapter;
+
+        /// <summary>
+        /// Gets current desktop window.
+        /// </summary>
+        [DllImport("user32.dll", SetLastError = false)]
+        private static extern IntPtr GetDesktopWindow();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
@@ -51,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dxgiAdapter">The target adapter.</param>
         /// <param name="isSoftwareAdapter">Are we in software mode?</param>
         /// <param name="debugEnabled">Is debug mode enabled?</param>
-        internal DeviceHandlerD3D9(SharpDX.DXGI.Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
+        internal DeviceHandlerD3D9(Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
         {
             // Update member variables
             m_dxgiAdapter = dxgiAdapter;
@@ -82,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Try to find the Direct3D9 adapter that maches given DXGI adapter
                     m_adapterIndex = -1;
-                    for (int loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
+                    for (var loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
                     {
                         var d3d9AdapterInfo = m_direct3DEx.GetAdapterIdentifier(loop);
                         if (d3d9AdapterInfo.DeviceId == m_dxgiAdapter.Description1.DeviceId)
@@ -97,10 +102,6 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Try to create the device
                     m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, m_adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, createFlags, presentparams);
-                }
-                else
-                {
-                    //Not supported in software mode
                 }
             }
             catch (Exception)
@@ -121,33 +122,18 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets current desktop window.
-        /// </summary>
-        [DllImport("user32.dll", SetLastError = false)]
-        private static extern IntPtr GetDesktopWindow();
-
-        /// <summary>
         /// Is the device successfully initialized?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_deviceEx != null; }
-        }
+        public bool IsInitialized => m_deviceEx != null;
 
         /// <summary>
         /// Gets the initialized device.
         /// </summary>
-        internal D3D9.DeviceEx Device
-        {
-            get { return m_deviceEx; }
-        }
+        internal D3D9.DeviceEx Device => m_deviceEx;
 
         /// <summary>
         /// Gets current DirectX context.
         /// </summary>
-        internal D3D9.Direct3DEx Context
-        {
-            get { return m_direct3DEx; }
-        }
+        internal D3D9.Direct3DEx Context => m_direct3DEx;
     }
 }

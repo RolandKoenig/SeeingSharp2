@@ -21,19 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public static class Size2Ex
     {
         public static Vector2 ToVector2(this ref Size2 size)
         {
-            return new Vector2((float)size.Width, (float)size.Height);
+            return new Vector2(size.Width, size.Height);
         }
     }
 }

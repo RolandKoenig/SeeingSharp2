@@ -22,7 +22,9 @@
 */
 #endregion
 #region using
-
+using System;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -31,20 +33,10 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class DeviceHandlerD2D
     {
-        #region Main references for Direct2D
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.Device m_deviceD2D;
-        private D2D.DeviceContext m_deviceContextD2D;
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
         /// </summary>
@@ -58,10 +50,10 @@ namespace SeeingSharp.Multimedia.Core
                     throw new SeeingSharpGraphicsException("Simulation Direct2D device init exception");
                 }
 
-                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<SharpDX.DXGI.Device>())
+                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<Device>())
                 {
                     m_deviceD2D = new D2D.Device1(engineFactory.FactoryD2D_2, dxgiDevice);
-                    m_deviceContextD2D = new SharpDX.Direct2D1.DeviceContext(
+                    m_deviceContextD2D = new D2D.DeviceContext(
                         m_deviceD2D,
                         D2D.DeviceContextOptions.None);
                     m_renderTarget = m_deviceContextD2D;
@@ -75,36 +67,24 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public bool IsLoaded
-        {
-            get
-            {
-                return m_renderTarget != null;
-            }
-        }
+        public bool IsLoaded => m_renderTarget != null;
 
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        public D2D.Device Device
-        {
-            get { return m_deviceD2D; }
-        }
+        public D2D.Device Device => m_deviceD2D;
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        public D2D.DeviceContext DeviceContext
-        {
-            get { return m_deviceContextD2D; }
-        }
+        public D2D.DeviceContext DeviceContext => m_deviceContextD2D;
 
-        internal D2D.RenderTarget RenderTarget
-        {
-            get
-            {
-                return m_renderTarget;
-            }
-        }
+        internal D2D.RenderTarget RenderTarget => m_renderTarget;
+
+        #region Main references for Direct2D
+        private D2D.RenderTarget m_renderTarget;
+        private D2D.Device m_deviceD2D;
+        private D2D.DeviceContext m_deviceContextD2D;
+        #endregion
     }
 }

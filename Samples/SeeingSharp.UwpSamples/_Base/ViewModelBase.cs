@@ -21,27 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace SeeingSharp.UwpSamples
 {
     #region using
-
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
     #endregion
 
     public class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ViewModelBase()
-        {
-
-        }
-
         protected void RaisePropertyChanged([CallerMemberName] string propName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

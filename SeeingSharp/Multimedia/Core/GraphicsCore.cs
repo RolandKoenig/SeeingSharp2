@@ -21,78 +21,55 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-#region using
 
 //Some namespace mappings
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 using DWrite = SharpDX.DirectWrite;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Checking;
-    using Input;
-    using Objects;
-    using SeeingSharp.Util;
-
-    #endregion
-
     public class GraphicsCore
     {
         #region Members for Unittesting
         private static bool s_throwDeviceInitError;
         #endregion
 
-        #region Members for exception handling
-        private static List<EventHandler<InternalCatchedExceptionEventArgs>> s_internalExListeners;
-        private static object s_internalExListenersLock;
-        #endregion
-
         #region Singleton instance
         private static GraphicsCore s_current;
         #endregion
 
-        #region Hardware 
-        private EngineFactory m_engineFactory;
-        private List<EngineDevice> m_devices;
-        private EngineDevice m_defaultDevice;
-        #endregion
+        /// <summary>
+        /// Gets the Direct2D factory object.
+        /// </summary>
+        internal D2D.Factory FactoryD2D;
 
-        #region Some helpers
+        /// <summary>
+        /// Gets the Direct2D factory object.
+        /// </summary>
+        internal D2D.Factory2 FactoryD2D_2;
 
-        #endregion
+        /// <summary>
+        /// Gets the DirectWrite factory object.
+        /// </summary>
+        internal DWrite.Factory FactoryDWrite;
 
-        #region Members for input
-
-        #endregion
-
-        #region Global device handlers
-        private Exception m_initException;
-        private FactoryHandlerWIC m_factoryHandlerWIC;
-        private FactoryHandlerD2D m_factoryHandlerD2D;
-        private FactoryHandlerDWrite m_factoryHandlerDWrite;
-        #endregion
-
-        #region Members for threading
-        private static Task m_defaultInitTask;
-        private Task m_mainLoopTask;
-        private CancellationTokenSource m_mainLoopCancelTokenSource;
-        #endregion
-
-        #region Configurations
-
-        #endregion
+        /// <summary>
+        /// Gets the WIC factory object.
+        /// </summary>
+        internal ImagingFactory FactoryWIC;
 
         public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCachedException
         {
@@ -111,115 +88,6 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     s_internalExListeners.Remove(value);
                 }
-            }
-        }
-
-        static GraphicsCore()
-        {
-            s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
-            s_internalExListenersLock = new object();
-
-            // Create the key generator for resource keys
-            ResourceKeyGenerator = new UniqueGenericKeyGenerator();
-        }
-
-        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
-        {
-            try
-            {
-                // Upate RK.Common members
-                m_devices = new List<EngineDevice>();
-
-                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
-                {
-                    SyncContext = SynchronizationContext.Current
-                };
-
-                // <-- TODO
-                PerformanceCalculator.RunAsync(CancellationToken.None)
-                    .FireAndForget();
-
-                Configuration = new GraphicsCoreConfiguration
-                {
-                    DebugEnabled = loadSettings.DebugEnabled
-                };
-
-                // Create container object for all input handlers
-                InputHandlers = new InputHandlerFactory(loader);
-                ImportersAndExporters = new ImporterExporterRepository(loader);
-
-                // Try to load global api factories (mostly for 2D rendering / operations)
-                try
-                {
-                    if(s_throwDeviceInitError)
-                    {
-                        throw new SeeingSharpException("Simulated device load exception");
-                    }
-
-                    m_engineFactory = new EngineFactory(loadSettings);
-                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
-                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
-                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
-                }
-                catch (Exception ex)
-                {
-                    m_initException = ex;
-
-                    m_devices.Clear();
-                    m_factoryHandlerWIC = null;
-                    m_factoryHandlerD2D = null;
-                    m_factoryHandlerDWrite = null;
-                    return;
-                }
-                this.FactoryD2D = m_factoryHandlerD2D.Factory2;
-                this.FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
-                this.FactoryDWrite = m_factoryHandlerDWrite.Factory;
-                this.FactoryWIC = m_factoryHandlerWIC.Factory;
-
-                // Create the object containing all hardware information
-                HardwareInfo = new EngineHardwareInfo();
-                int actIndex = 0;
-
-                foreach(var actAdapterInfo in HardwareInfo.Adapters)
-                {
-                    var actEngineDevice = new EngineDevice(
-                        loadSettings,
-                        loader,
-                        m_engineFactory,
-                        Configuration,
-                        actAdapterInfo.Adapter,
-                        actAdapterInfo.IsSoftwareAdapter);
-
-                    if(actEngineDevice.IsLoadedSuccessfully)
-                    {
-                        actEngineDevice.DeviceIndex = actIndex;
-                        actIndex++;
-
-                        m_devices.Add(actEngineDevice);
-                    }
-                }
-
-                m_defaultDevice = m_devices.FirstOrDefault();
-
-                // Start input gathering
-                InputGatherer = new InputGathererThread();
-                InputGatherer.Start();
-
-                // Start main loop
-                MainLoop = new EngineMainLoop(this);
-                if (m_devices.Count > 0)
-                {
-                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
-                }
-            }
-            catch (Exception ex2)
-            {
-                m_initException = ex2;
-
-                HardwareInfo = null;
-                m_devices.Clear();
-                Configuration = null;
             }
         }
 
@@ -289,7 +157,7 @@ namespace SeeingSharp.Multimedia.Core
         public EngineDevice TryGetDeviceByLuid(long luid)
         {
             return m_devices.FirstOrDefault(
-                (actDevice) => actDevice.Luid == luid);
+                actDevice => actDevice.Luid == luid);
         }
 
         /// <summary>
@@ -303,9 +171,9 @@ namespace SeeingSharp.Multimedia.Core
             // Query for all available FontFamilies installed on the system
             List<string> result = null;
 
-            using (var fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
+            using (var fontCollection = FactoryDWrite.GetSystemFontCollection(false))
             {
-                int fontFamilyCount = fontCollection.FontFamilyCount;
+                var fontFamilyCount = fontCollection.FontFamilyCount;
                 result = new List<string>(fontFamilyCount);
 
                 for(var loop =0; loop< fontFamilyCount; loop++)
@@ -313,20 +181,20 @@ namespace SeeingSharp.Multimedia.Core
                     using (var actFamily = fontCollection.GetFontFamily(loop))
                     using (var actLocalizedStrings = actFamily.FamilyNames)
                     {
-                        int localeIndex = -1;
+                        var localeIndex = -1;
 
-                        if ((bool)actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
+                        if (actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
                         {
-                            string actName = actLocalizedStrings.GetString(0);
+                            var actName = actLocalizedStrings.GetString(0);
 
                             if(!string.IsNullOrWhiteSpace(actName))
                             {
                                 result.Add(actName);
                             }
                         }
-                        else if((bool)actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
+                        else if(actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
                         {
-                            string actName = actLocalizedStrings.GetString(0);
+                            var actName = actLocalizedStrings.GetString(0);
 
                             if (!string.IsNullOrWhiteSpace(actName))
                             {
@@ -380,7 +248,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool IsAnyHardwareDeviceLoaded()
         {
-            return m_devices.Any((actDevice) => !actDevice.IsSoftware);
+            return m_devices.Any(actDevice => !actDevice.IsSoftware);
         }
 
         /// <summary>
@@ -388,7 +256,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void SetDefaultDeviceToSoftware()
         {
-            m_defaultDevice = m_devices.FirstOrDefault((actDevice) => actDevice.IsSoftware);
+            m_defaultDevice = m_devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
         }
 
         /// <summary>
@@ -396,7 +264,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void SetDefaultDeviceToHardware()
         {
-            m_defaultDevice = m_devices.FirstOrDefault((actDevice) => actDevice.IsSoftware);
+            m_defaultDevice = m_devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
         }
 
         /// <summary>
@@ -405,7 +273,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityName">The name of the activity.</param>
         internal IDisposable BeginMeasureActivityDuration(string activityName)
         {
-            return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
+            return PerformanceCalculator.BeginMeasureActivityDuration(activityName);
         }
 
         /// <summary>
@@ -415,7 +283,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityAction">The activity action.</param>
         internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
         {
-            this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
+            PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
         }
 
         /// <summary>
@@ -425,7 +293,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="durationTicks"></param>
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
-            this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
+            PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
         }
 
         /// <summary>
@@ -434,6 +302,115 @@ namespace SeeingSharp.Multimedia.Core
         public static NamedOrGenericKey GetNextGenericResourceKey()
         {
             return ResourceKeyGenerator.GetNextGeneric();
+        }
+
+        static GraphicsCore()
+        {
+            s_internalExListeners = new List<EventHandler<InternalCatchedExceptionEventArgs>>();
+            s_internalExListenersLock = new object();
+
+            // Create the key generator for resource keys
+            ResourceKeyGenerator = new UniqueGenericKeyGenerator();
+        }
+
+        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
+        {
+            try
+            {
+                // Upate RK.Common members
+                m_devices = new List<EngineDevice>();
+
+                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                {
+                    SyncContext = SynchronizationContext.Current
+                };
+
+                // <-- TODO
+                PerformanceCalculator.RunAsync(CancellationToken.None)
+                    .FireAndForget();
+
+                Configuration = new GraphicsCoreConfiguration
+                {
+                    DebugEnabled = loadSettings.DebugEnabled
+                };
+
+                // Create container object for all input handlers
+                InputHandlers = new InputHandlerFactory(loader);
+                ImportersAndExporters = new ImporterExporterRepository(loader);
+
+                // Try to load global api factories (mostly for 2D rendering / operations)
+                try
+                {
+                    if(s_throwDeviceInitError)
+                    {
+                        throw new SeeingSharpException("Simulated device load exception");
+                    }
+
+                    m_engineFactory = new EngineFactory(loadSettings);
+                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
+                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
+                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
+                }
+                catch (Exception ex)
+                {
+                    m_initException = ex;
+
+                    m_devices.Clear();
+                    m_factoryHandlerWIC = null;
+                    m_factoryHandlerD2D = null;
+                    m_factoryHandlerDWrite = null;
+                    return;
+                }
+                FactoryD2D = m_factoryHandlerD2D.Factory2;
+                FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
+                FactoryDWrite = m_factoryHandlerDWrite.Factory;
+                FactoryWIC = m_factoryHandlerWIC.Factory;
+
+                // Create the object containing all hardware information
+                HardwareInfo = new EngineHardwareInfo();
+                var actIndex = 0;
+
+                foreach(var actAdapterInfo in HardwareInfo.Adapters)
+                {
+                    var actEngineDevice = new EngineDevice(
+                        loadSettings,
+                        loader,
+                        m_engineFactory,
+                        Configuration,
+                        actAdapterInfo.Adapter,
+                        actAdapterInfo.IsSoftwareAdapter);
+
+                    if(actEngineDevice.IsLoadedSuccessfully)
+                    {
+                        actEngineDevice.DeviceIndex = actIndex;
+                        actIndex++;
+
+                        m_devices.Add(actEngineDevice);
+                    }
+                }
+
+                m_defaultDevice = m_devices.FirstOrDefault();
+
+                // Start input gathering
+                InputGatherer = new InputGathererThread();
+                InputGatherer.Start();
+
+                // Start main loop
+                MainLoop = new EngineMainLoop(this);
+                if (m_devices.Count > 0)
+                {
+                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
+                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                }
+            }
+            catch (Exception ex2)
+            {
+                m_initException = ex2;
+
+                HardwareInfo = null;
+                m_devices.Clear();
+                Configuration = null;
+            }
         }
 
         /// <summary>
@@ -452,7 +429,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if (s_current == null)
                 {
-                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Current)} before Load was called or a rendering control created!");
+                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Current)} before Load was called or a rendering control created!");
                 }
 
                 return s_current;
@@ -463,7 +440,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Loader)} after successfully loading!"); }
+                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Loader)} after successfully loading!"); }
                 return new SeeingSharpLoader();
             }
         }
@@ -476,37 +453,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the first output monitor.
         /// </summary>
-        public EngineOutputInfo DefaultOutput
-        {
-            get
-            {
-                return HardwareInfo.Adapters
-                    .FirstOrDefault()?
-                    .Outputs.FirstOrDefault();
-            }
-        }
+        public EngineOutputInfo DefaultOutput =>
+            HardwareInfo.Adapters
+                .FirstOrDefault()?
+                .Outputs.FirstOrDefault();
 
         /// <summary>
         /// Is GraphicsCore loaded successfully?
         /// </summary>
-        public static bool IsLoaded
-        {
-            get
-            {
-                return
-                    (s_current != null) &&
-                    (s_current.m_devices.Count > 0) &&
-                    (s_current.m_initException == null);
-            }
-        }
+        public static bool IsLoaded =>
+            s_current != null &&
+            s_current.m_devices.Count > 0 &&
+            s_current.m_initException == null;
 
-        public Exception InitException
-        {
-            get
-            {
-                return s_current?.m_initException;
-            }
-        }
+        public Exception InitException => s_current?.m_initException;
 
         /// <summary>
         /// Is debug enabled?
@@ -528,7 +488,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public EngineDevice DefaultDevice
         {
-            get{ return m_defaultDevice; }
+            get => m_defaultDevice;
             set
             {
                 if (value == null) { throw new ArgumentNullException("DefaultDevice"); }
@@ -541,18 +501,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all loaded devices.
         /// </summary>
-        public IEnumerable<EngineDevice> Devices
-        {
-            get { return m_devices; }
-        }
+        public IEnumerable<EngineDevice> Devices => m_devices;
 
         /// <summary>
         /// Gets the total count of loaded devices.
         /// </summary>
-        public int DeviceCount
-        {
-            get { return m_devices.Count; }
-        }
+        public int DeviceCount => m_devices.Count;
 
         /// <summary>
         /// Gets the total count of registered RenderLoop objects.
@@ -574,17 +528,14 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (m_devices == null) { return null; }
-                return m_devices.FirstOrDefault((actDevice) => actDevice.IsSoftware);
+                return m_devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
             }
         }
 
         /// <summary>
         /// Gets a collection containing all devices.
         /// </summary>
-        public IEnumerable<EngineDevice> LoadedDevices
-        {
-            get { return m_devices; }
-        }
+        public IEnumerable<EngineDevice> LoadedDevices => m_devices;
 
         /// <summary>
         /// Gets a list containing all input handlers.
@@ -608,26 +559,39 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public PerformanceAnalyzer PerformanceCalculator { get; }
 
-        /// <summary>
-        /// Gets the WIC factory object.
-        /// </summary>
-        internal SharpDX.WIC.ImagingFactory FactoryWIC;
-
-        /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        internal D2D.Factory FactoryD2D;
-
-        /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        internal D2D.Factory2 FactoryD2D_2;
-
-        /// <summary>
-        /// Gets the DirectWrite factory object.
-        /// </summary>
-        internal DWrite.Factory FactoryDWrite;
-
         internal bool Force2DFallbackMethod { get; }
+
+        #region Members for exception handling
+        private static List<EventHandler<InternalCatchedExceptionEventArgs>> s_internalExListeners;
+        private static object s_internalExListenersLock;
+        #endregion
+
+        #region Hardware 
+        private EngineFactory m_engineFactory;
+        private List<EngineDevice> m_devices;
+        private EngineDevice m_defaultDevice;
+        #endregion
+
+        #region Some helpers
+        #endregion
+
+        #region Members for input
+        #endregion
+
+        #region Global device handlers
+        private Exception m_initException;
+        private FactoryHandlerWIC m_factoryHandlerWIC;
+        private FactoryHandlerD2D m_factoryHandlerD2D;
+        private FactoryHandlerDWrite m_factoryHandlerDWrite;
+        #endregion
+
+        #region Members for threading
+        private static Task m_defaultInitTask;
+        private Task m_mainLoopTask;
+        private CancellationTokenSource m_mainLoopCancelTokenSource;
+        #endregion
+
+        #region Configurations
+        #endregion
     }
 }

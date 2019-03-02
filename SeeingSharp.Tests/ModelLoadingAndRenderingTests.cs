@@ -22,7 +22,14 @@
 */
 #endregion
 #region using
-
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Tests.Util;
+using SharpDX;
 using GDI = System.Drawing;
 
 #endregion
@@ -30,18 +37,6 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using Multimedia.Views;
-    using SeeingSharp.Util;
-    using SharpDX;
-    using Util;
-
     #endregion
 
     [TestClass]
@@ -72,7 +67,7 @@ namespace SeeingSharp.Tests
                     ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ
                 };
 
-                IEnumerable<SceneObject> loadedObjects = await memRenderTarget.Scene.ImportAsync(
+                var loadedObjects = await memRenderTarget.Scene.ImportAsync(
                     TestUtilities.CreateResourceLink("Models", "Fox.stl"),
                     importOptions);
 
@@ -84,7 +79,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "ModelStl.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -112,9 +107,9 @@ namespace SeeingSharp.Tests
                 // Define scene
                 SceneObject newObject = null;
 
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
 
@@ -128,7 +123,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "FlatShadedObject.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -156,9 +151,9 @@ namespace SeeingSharp.Tests
                 // Define scene
                 SceneObject newObject = null;
 
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
 
@@ -171,7 +166,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "ShadedObject.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -199,9 +194,9 @@ namespace SeeingSharp.Tests
                 // Define scene
                 SceneObject newObject = null;
 
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
 
@@ -215,7 +210,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "TwoSidedObject.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -243,9 +238,9 @@ namespace SeeingSharp.Tests
                 // Define scene
                 SceneObject newObject = null;
 
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(ACFileLoader.ImportObjectType(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
 
@@ -255,11 +250,11 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("ModelLoadingAndRendering", "SingleSidedObject.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }

@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using SharpDX;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using SharpDX;
-
     #endregion
 
     public static partial class Ensure
@@ -41,8 +41,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((size.Width <= 0) ||
-                (size.Height <= 0))
+            if (size.Width <= 0 ||
+                size.Height <= 0)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Size {0} within method {1} must not be empty (given size: {2})!",
@@ -58,8 +58,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((size.Width <= 0f) ||
-                (size.Height <= 0f))
+            if (size.Width <= 0f ||
+                size.Height <= 0f)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Size {0} within method {1} must not be empty (given size: {2})!",

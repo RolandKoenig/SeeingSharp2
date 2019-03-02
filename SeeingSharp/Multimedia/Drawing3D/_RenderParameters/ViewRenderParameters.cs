@@ -24,6 +24,8 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,10 +33,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class ViewRenderParameters : Resource
@@ -42,23 +40,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Resource keys
         internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
         #endregion
-
-        #region Configuration
-
-        #endregion
-
-        #region Resources
-        private TypeSafeConstantBufferResource<CBPerView> m_cbPerView;
-        private PostprocessEffectResource m_postprocessEffect;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
-        /// </summary>
-        internal ViewRenderParameters()
-        {
-
-        }
 
         /// <summary>
         /// Gets the postrocess effect with the given key.
@@ -132,6 +113,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
+        /// </summary>
+        internal ViewRenderParameters()
+        {
+
+        }
+
+        /// <summary>
         /// Gets or sets the key of the postprocess effect.
         /// </summary>
         internal NamedOrGenericKey PostprocessEffectKey { get; set; }
@@ -139,12 +128,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get
-            {
-                return m_cbPerView != null;
-            }
-        }
+        public override bool IsLoaded => m_cbPerView != null;
+
+        #region Configuration
+        #endregion
+
+        #region Resources
+        private TypeSafeConstantBufferResource<CBPerView> m_cbPerView;
+        private PostprocessEffectResource m_postprocessEffect;
+        #endregion
     }
 }

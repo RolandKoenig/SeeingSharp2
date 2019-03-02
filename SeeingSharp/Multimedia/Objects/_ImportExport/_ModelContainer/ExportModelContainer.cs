@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System.Collections.Generic;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     /// <summary>
@@ -37,19 +37,9 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public class ExportModelContainer
     {
-        private Dictionary<NamedOrGenericKey, ExportMaterialInfo> m_dicExportMaterial;
         private Dictionary<NamedOrGenericKey, ExportGeometryInfo> m_dicExportGeometry;
+        private Dictionary<NamedOrGenericKey, ExportMaterialInfo> m_dicExportMaterial;
         private Dictionary<SceneObject, object> m_dicOriginalObjects;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
-        /// </summary>
-        internal ExportModelContainer()
-        {
-            m_dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
-            m_dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
-            m_dicOriginalObjects = new Dictionary<SceneObject, object>();
-        }
 
         public void AddExportGeometry(ExportGeometryInfo exportGeometry)
         {
@@ -97,6 +87,16 @@ namespace SeeingSharp.Multimedia.Objects
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
             return m_dicOriginalObjects.ContainsKey(sceneObject);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
+        /// </summary>
+        internal ExportModelContainer()
+        {
+            m_dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
+            m_dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
+            m_dicOriginalObjects = new Dictionary<SceneObject, object>();
         }
     }
 }

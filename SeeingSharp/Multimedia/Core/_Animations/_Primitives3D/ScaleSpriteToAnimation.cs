@@ -21,26 +21,45 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class ScaleSpriteToAnimation : AnimationBase
     {
-        #region Parameters
-        private IAnimatableObjectSprite m_targetObject;
-        private TimeSpan m_duration;
-        private float m_targetScaling;
-        #endregion Parameters
+        /// <summary>
+        /// Called when animation starts.
+        /// </summary>
+        protected override void OnStartAnimation()
+        {
+            m_startScaling = m_targetObject.Scaling;
+            m_moveScaling = m_targetScaling - m_startScaling;
+        }
 
-        #region Runtime
-        private float m_startScaling;
-        private float m_moveScaling;
-        #endregion Runtime
+        /// <summary>
+        /// Called each time the CurrentTime value gets updated.
+        /// </summary>
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
+            m_targetObject.Scaling = m_startScaling + m_moveScaling * changeFactor;
+        }
+
+        /// <summary>
+        /// Called when the FixedTime animation has finished.
+        /// (Sets final state to the target object and clears all runtime values).
+        /// </summary>
+        protected override void OnFixedTimeAnimationFinished()
+        {
+            m_targetObject.Scaling = m_targetScaling;
+
+            m_moveScaling = 0;
+            m_startScaling = 1;
+        }
 
         /// <summary>
         /// Initialize a new Instance of the <see cref="ScaleSpriteToAnimation" /> class.
@@ -62,34 +81,15 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        /// <summary>
-        /// Called when animation starts.
-        /// </summary>
-        protected override void OnStartAnimation()
-        {
-            m_startScaling = m_targetObject.Scaling;
-            m_moveScaling = m_targetScaling - m_startScaling;
-        }
+        #region Parameters
+        private IAnimatableObjectSprite m_targetObject;
+        private TimeSpan m_duration;
+        private float m_targetScaling;
+        #endregion Parameters
 
-        /// <summary>
-        /// Called each time the CurrentTime value gets updated.
-        /// </summary>
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            float changeFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
-            m_targetObject.Scaling = m_startScaling + m_moveScaling * changeFactor;
-        }
-
-        /// <summary>
-        /// Called when the FixedTime animation has finished.
-        /// (Sets final state to the target object and clears all runtime values).
-        /// </summary>
-        protected override void OnFixedTimeAnimationFinished()
-        {
-            m_targetObject.Scaling = m_targetScaling;
-
-            m_moveScaling = 0;
-            m_startScaling = 1;
-        }
+        #region Runtime
+        private float m_startScaling;
+        private float m_moveScaling;
+        #endregion Runtime
     }
 }

@@ -21,28 +21,74 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class Move3DToAnimation : AnimationBase
     {
-        #region Parameters
-        private IAnimatableObjectPosition m_targetObject;
-        private Vector3 m_targetVector;
-        private TimeSpan m_paramDuration;
-        private MovementSpeed m_paramMoveSpeed;
-        #endregion
+        /// <summary>
+        /// Called when animation starts.
+        /// </summary>
+        protected override void OnStartAnimation()
+        {
+            m_startVector = m_targetObject.Position;
+            var moveVector = m_targetVector - m_startVector;
 
-        #region Runtime values
-        private MovementAnimationHelper m_moveHelper;
-        private Vector3 m_startVector;
-        #endregion
+            // Create move-helper individually
+            if (m_paramDuration > TimeSpan.Zero)
+            {
+                m_moveHelper = new MovementAnimationHelper(
+                    new MovementSpeed(moveVector, m_paramDuration),
+                    moveVector);
+            }
+            else if(m_paramMoveSpeed != MovementSpeed.Empty)
+            {
+                m_moveHelper = new MovementAnimationHelper(m_paramMoveSpeed, moveVector);
+            }
+            else
+            {
+                m_moveHelper = new MovementAnimationHelper(
+                    new MovementSpeed(moveVector, TimeSpan.FromMilliseconds(1.0)),
+                    moveVector);
+            }
+
+            // Change the type of this animation in the base class
+            ChangeToFixedTime(m_moveHelper.MovementTime);
+        }
+
+        /// <summary>
+        /// Resets this animation.
+        /// </summary>
+        public override void OnReset()
+        {
+            base.OnReset();
+            ChangeToEventBased();
+        }
+
+        /// <summary>
+        /// Called each time the CurrentTime value gets updated.
+        /// </summary>
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(CurrentTime);
+        }
+
+        /// <summary>
+        /// Called when the FixedTime animation has finished.
+        /// (Sets final state to the target object and clears all runtime values).
+        /// </summary>
+        protected override void OnFixedTimeAnimationFinished()
+        {
+            m_targetObject.Position = m_targetVector;
+            m_startVector = Vector3.Zero;
+            m_moveHelper = null;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
@@ -72,62 +118,16 @@ namespace SeeingSharp.Multimedia.Core
             m_paramMoveSpeed = speed;
         }
 
-        /// <summary>
-        /// Called when animation starts.
-        /// </summary>
-        protected override void OnStartAnimation()
-        {
-            m_startVector = m_targetObject.Position;
-            var moveVector = m_targetVector - m_startVector;
+        #region Parameters
+        private IAnimatableObjectPosition m_targetObject;
+        private Vector3 m_targetVector;
+        private TimeSpan m_paramDuration;
+        private MovementSpeed m_paramMoveSpeed;
+        #endregion
 
-            // Create move-helper individually
-            if (m_paramDuration > TimeSpan.Zero)
-            {
-                m_moveHelper = new MovementAnimationHelper(
-                    new MovementSpeed(moveVector, m_paramDuration),
-                    moveVector);
-            }
-            else if(m_paramMoveSpeed != MovementSpeed.Empty)
-            {
-                m_moveHelper = new MovementAnimationHelper(m_paramMoveSpeed, moveVector);
-            }
-            else
-            {
-                m_moveHelper = new MovementAnimationHelper(
-                    new MovementSpeed(moveVector, TimeSpan.FromMilliseconds(1.0)),
-                    moveVector);
-            }
-
-            // Change the type of this animation in the base class
-            base.ChangeToFixedTime(m_moveHelper.MovementTime);
-        }
-
-        /// <summary>
-        /// Resets this animation.
-        /// </summary>
-        public override void OnReset()
-        {
-            base.OnReset();
-            base.ChangeToEventBased();
-        }
-
-        /// <summary>
-        /// Called each time the CurrentTime value gets updated.
-        /// </summary>
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(base.CurrentTime);
-        }
-
-        /// <summary>
-        /// Called when the FixedTime animation has finished.
-        /// (Sets final state to the target object and clears all runtime values).
-        /// </summary>
-        protected override void OnFixedTimeAnimationFinished()
-        {
-            m_targetObject.Position = m_targetVector;
-            m_startVector = Vector3.Zero;
-            m_moveHelper = null;
-        }
+        #region Runtime values
+        private MovementAnimationHelper m_moveHelper;
+        private Vector3 m_startVector;
+        #endregion
     }
 }

@@ -21,28 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Imaging;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.UwpSamples
 {
     #region using
-
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Windows.UI.Xaml.Media.Imaging;
-    using SampleContainer;
-    using Util;
-
     #endregion
 
     public class SampleViewModel : ViewModelBase
     {
         private BitmapSource m_bitmapSource;
         private Task m_bitmapSourceTask;
-
-        public SampleViewModel(SampleMetadata sample)
-        {
-            SampleMetadata = sample;
-        }
 
         private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
         {
@@ -58,6 +53,11 @@ namespace SeeingSharp.UwpSamples
             RaisePropertyChanged(nameof(BitmapSource));
         }
 
+        public SampleViewModel(SampleMetadata sample)
+        {
+            SampleMetadata = sample;
+        }
+
         public SampleMetadata SampleMetadata { get; }
 
         public string Name => SampleMetadata.Name;
@@ -68,7 +68,7 @@ namespace SeeingSharp.UwpSamples
         {
             get
             {
-                if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
+                if(m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
                     var sourceLink = SampleMetadata.TryGetSampleImageLink();
                     if(sourceLink == null) { return null; }

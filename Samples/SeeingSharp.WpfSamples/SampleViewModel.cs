@@ -21,17 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
+
 namespace SeeingSharp.WpfSamples
 {
-    #region using
-
-    using System.Threading.Tasks;
-    using System.Windows.Media.Imaging;
-    using SampleContainer;
-    using SampleContainer.Util;
-
-    #endregion
-
     public class SampleViewModel : PropertyChangedBase
     {
         private BitmapSource m_bitmapSource;
@@ -52,7 +49,7 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
+                if(m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
                     var sourceLink = SampleMetadata.TryGetSampleImageLink();
 
@@ -71,7 +68,7 @@ namespace SeeingSharp.WpfSamples
 
                         m_bitmapSource = source;
                     }).ContinueWith(
-                        (task) => RaisePropertyChanged(nameof(BitmapSource)),
+                        task => RaisePropertyChanged(nameof(BitmapSource)),
                         TaskScheduler.FromCurrentSynchronizationContext());
                 }
 

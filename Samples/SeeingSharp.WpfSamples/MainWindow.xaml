@@ -7,7 +7,7 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
         mc:Ignorable="d"
-        Title="Seeing# 2 - Wpf samples" Width="800" Height="450" 
+        Title="Seeing# 2 - Wpf samples" Width="800" Height="450"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
     <DockPanel LastChildFill="True">
 
@@ -36,7 +36,7 @@
             <!-- List of samples of the currently selected group -->
             <StackPanel Orientation="Vertical"
                         VerticalAlignment="Top">
-                
+
                 <ListBox Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
                          ItemsSource="{Binding Path=Samples}"
                          SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
@@ -53,11 +53,11 @@
                             <StackPanel Orientation="Vertical"
                                         Margin="5" Cursor="Hand">
                                 <Image Source="{Binding Path=BitmapSource}"
-                                       Width="64" Height="64" 
+                                       Width="64" Height="64"
                                        RenderOptions.BitmapScalingMode="Fant"
-                                       Margin="5"/>
+                                       Margin="5" />
                                 <TextBlock Text="{Binding Path=Name}"
-                                           HorizontalAlignment="Center"/>
+                                           HorizontalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -81,12 +81,12 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <propTools:PropertyGrid SelectedObject="{Binding Path=SampleSettings}" 
-                                        Width="325" Margin="5,0,15,15" 
+                <propTools:PropertyGrid SelectedObject="{Binding Path=SampleSettings}"
+                                        Width="325" Margin="5,0,15,15"
                                         BorderThickness="1" BorderBrush="DarkGray"
                                         HorizontalAlignment="Left"
-                                        TabVisibility="Collapsed" 
-                                        Background="#BBD3D3D3" 
+                                        TabVisibility="Collapsed"
+                                        Background="#BBD3D3D3"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <propTools:PropertyGrid.ControlFactory>
                         <local:PropertyGridControlFactory />
@@ -116,29 +116,29 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <Image Source="/Assets/Icons/Output16x16.png" 
-                   Width="16"/>
+                <Image Source="/Assets/Icons/Output16x16.png"
+                       Width="16" />
                 <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CurrentViewSize}" />
                 <TextBlock Text="px" />
-                <Rectangle Width="1" 
-                       Fill="Gray"/>
+                <Rectangle Width="1"
+                           Fill="Gray" />
 
-                <Image Source="/Assets/Icons/Adapter16x16.png" 
-                   Width="16"/>
+                <Image Source="/Assets/Icons/Adapter16x16.png"
+                       Width="16" />
                 <ComboBox ItemsSource="{Binding ElementName=CtrlRenderer, Path=PossibleDevices}"
-                      SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
-                      Width="200"/>
-                <Rectangle Width="1" 
-                       Fill="Gray"/>
+                          SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
+                          Width="200" />
+                <Rectangle Width="1"
+                           Fill="Gray" />
 
                 <TextBlock Text="Composition:" />
                 <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CompositionMode}" />
             </StackPanel>
 
         </Grid>
-        
-        
+
+
     </DockPanel>
-    
+
 
 </Window>

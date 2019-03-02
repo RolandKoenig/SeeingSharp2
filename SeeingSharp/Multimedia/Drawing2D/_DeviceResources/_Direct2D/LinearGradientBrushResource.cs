@@ -24,6 +24,12 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,13 +37,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class LinearGradientBrushResource : BrushResource
@@ -46,10 +45,84 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private LoadedBrushResources[] m_loadedBrushes;
         #endregion
 
-        #region Configuration
-        private GradientStop[] m_gradientStops;
-        private float m_opacity;
-        #endregion
+        /// <summary>
+        /// Unloads all resources loaded on the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to unload the resource.</param>
+        internal override void UnloadResources(EngineDevice engineDevice)
+        {
+            var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
+
+            if (loadedBrush.Brush != null)
+            {
+                loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
+                loadedBrush.GradientStops = SeeingSharpTools.DisposeObject(loadedBrush.GradientStops);
+
+                m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
+            }
+        }
+
+        /// <summary>
+        /// Gets the brush for the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to get the brush.</param>
+        internal override D2D.Brush GetBrush(EngineDevice engineDevice)
+        {
+            // Check for disposed state
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+
+            if (result.Brush == null)
+            {
+                // Convert gradient stops to structure from SharpDX
+                var d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
+
+                for(var loop =0; loop<d2dGradientStops.Length; loop++)
+                {
+                    d2dGradientStops[loop] = new D2D.GradientStop
+                    {
+                        Color = m_gradientStops[loop].Color,
+                        Position = m_gradientStops[loop].Position
+                    };
+                }
+
+                // Create the brush
+                result = new LoadedBrushResources
+                {
+                    GradientStops = new D2D.GradientStopCollection(
+                        engineDevice.FakeRenderTarget2D,
+                        d2dGradientStops,
+                        (D2D.Gamma) Gamma,
+                        (D2D.ExtendMode) ExtendMode)
+                };
+
+                unsafe
+                {
+                    var identityMatrix = Matrix3x2.Identity;
+                    result.Brush = new D2D.LinearGradientBrush(
+                        engineDevice.FakeRenderTarget2D,
+                        new D2D.LinearGradientBrushProperties
+                        {
+                            StartPoint = StartPoint,
+                            EndPoint = EndPoint
+                        },
+                        new D2D.BrushProperties
+                        {
+                            Opacity = m_opacity,
+                            Transform = *(RawMatrix3x2*)&identityMatrix
+                        },
+                        result.GradientStops);
+                }
+
+                m_loadedBrushes[engineDevice.DeviceIndex] = result;
+            }
+
+            return result.Brush;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
@@ -81,85 +154,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         }
 
-        /// <summary>
-        /// Unloads all resources loaded on the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to unload the resource.</param>
-        internal override void UnloadResources(EngineDevice engineDevice)
-        {
-            var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
-
-            if (loadedBrush.Brush != null)
-            {
-                loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
-                loadedBrush.GradientStops = SeeingSharpTools.DisposeObject(loadedBrush.GradientStops);
-
-                m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
-            }
-        }
-
-        /// <summary>
-        /// Gets the brush for the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to get the brush.</param>
-        internal override D2D.Brush GetBrush(EngineDevice engineDevice)
-        {
-            // Check for disposed state
-            if (base.IsDisposed)
-            {
-                throw new ObjectDisposedException(this.GetType().Name);
-            }
-
-            var result = m_loadedBrushes[engineDevice.DeviceIndex];
-
-            if (result.Brush == null)
-            {
-                // Convert gradient stops to structure from SharpDX
-                D2D.GradientStop[] d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
-
-                for(var loop =0; loop<d2dGradientStops.Length; loop++)
-                {
-                    d2dGradientStops[loop] = new D2D.GradientStop()
-                    {
-                        Color = m_gradientStops[loop].Color,
-                        Position = m_gradientStops[loop].Position
-                    };
-                }
-
-                // Create the brush
-                result = new LoadedBrushResources
-                {
-                    GradientStops = new D2D.GradientStopCollection(
-                        engineDevice.FakeRenderTarget2D,
-                        d2dGradientStops,
-                        (D2D.Gamma) Gamma,
-                        (D2D.ExtendMode) ExtendMode)
-                };
-
-                unsafe
-                {
-                    var identityMatrix = Matrix3x2.Identity;
-                    result.Brush = new D2D.LinearGradientBrush(
-                        engineDevice.FakeRenderTarget2D,
-                        new D2D.LinearGradientBrushProperties()
-                        {
-                            StartPoint = StartPoint,
-                            EndPoint = EndPoint
-                        },
-                        new D2D.BrushProperties()
-                        {
-                            Opacity = m_opacity,
-                            Transform = *(SharpDX.Mathematics.Interop.RawMatrix3x2*)&identityMatrix
-                        },
-                        result.GradientStops);
-                }
-
-                m_loadedBrushes[engineDevice.DeviceIndex] = result;
-            }
-
-            return result.Brush;
-        }
-
         public Gamma Gamma { get; }
 
         public ExtendMode ExtendMode { get; }
@@ -181,5 +175,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             public D2D.GradientStopCollection GradientStops;
             public D2D.LinearGradientBrush Brush;
         }
+
+        #region Configuration
+        private GradientStop[] m_gradientStops;
+        private float m_opacity;
+        #endregion
     }
 }

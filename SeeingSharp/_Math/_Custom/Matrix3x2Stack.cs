@@ -21,44 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using SharpDX;
-
     #endregion
 
     public class Matrix3x2Stack
     {
-        #region Stack data
-        private Stack<Matrix3x2> m_stack;
-        private int m_pushTimes;
-        private Matrix3x2 m_top;
-        #endregion
-
-        /// <summary>
-        /// Cretaes a new matrix stack using 3x2 matrices
-        /// </summary>
-        public Matrix3x2Stack()
-        {
-            m_stack = new Stack<Matrix3x2>();
-            m_top = Matrix3x2.Identity;
-
-            m_pushTimes = 0;
-        }
-
-        /// <summary>
-        /// Creates a new matrix stack usin 3x2 matrices
-        /// </summary>
-        public Matrix3x2Stack(Matrix3x2 top)
-            : this()
-        {
-            m_top = top;
-        }
-
         /// <summary>
         /// Resets this object to single identity matrix.
         /// </summary>
@@ -139,11 +112,11 @@ namespace SeeingSharp
         /// <summary>
         /// Clones the object
         /// </summary>
-        public Object Clone()
+        public object Clone()
         {
             var cloned = new Matrix3x2Stack();
 
-            Matrix3x2[] allElements = m_stack.ToArray();
+            var allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix3x2>();
 
@@ -190,11 +163,34 @@ namespace SeeingSharp
         }
 
         /// <summary>
+        /// Cretaes a new matrix stack using 3x2 matrices
+        /// </summary>
+        public Matrix3x2Stack()
+        {
+            m_stack = new Stack<Matrix3x2>();
+            m_top = Matrix3x2.Identity;
+
+            m_pushTimes = 0;
+        }
+
+        /// <summary>
+        /// Creates a new matrix stack usin 3x2 matrices
+        /// </summary>
+        public Matrix3x2Stack(Matrix3x2 top)
+            : this()
+        {
+            m_top = top;
+        }
+
+        /// <summary>
         /// Gets the top matrix
         /// </summary>
-        public Matrix3x2 Top
-        {
-            get { return m_top; }
-        }
+        public Matrix3x2 Top => m_top;
+
+        #region Stack data
+        private Stack<Matrix3x2> m_stack;
+        private int m_pushTimes;
+        private Matrix3x2 m_top;
+        #endregion
     }
 }

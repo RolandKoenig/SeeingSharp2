@@ -24,6 +24,8 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,10 +33,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class PixelShaderResource : ShaderResource
@@ -42,16 +40,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Resources for Direct3D 11 rendering
         private D3D11.PixelShader m_pixelShader;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
-        /// </summary>
-        /// <param name="shaderProfile">Shader profile used for compiling.</param>
-        /// <param name="resourceLink">The resourceLink.</param>
-        public PixelShaderResource(string shaderProfile, ResourceLink resourceLink)
-            : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
-        {
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -73,19 +61,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
+        /// </summary>
+        /// <param name="shaderProfile">Shader profile used for compiling.</param>
+        /// <param name="resourceLink">The resourceLink.</param>
+        public PixelShaderResource(string shaderProfile, ResourceLink resourceLink)
+            : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
+        {
+        }
+
+        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_pixelShader != null; }
-        }
+        public override bool IsLoaded => m_pixelShader != null;
 
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        internal D3D11.PixelShader PixelShader
-        {
-            get { return m_pixelShader; }
-        }
+        internal D3D11.PixelShader PixelShader => m_pixelShader;
     }
 }

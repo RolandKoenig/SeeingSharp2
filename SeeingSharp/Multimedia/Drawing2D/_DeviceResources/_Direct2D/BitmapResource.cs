@@ -22,7 +22,8 @@
 */
 #endregion
 #region using
-
+using System;
+using SeeingSharp.Multimedia.Core;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -30,10 +31,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Core;
-
     #endregion
 
     public abstract class BitmapResource : Drawing2DResourceBase, IImage, IImageInternal
@@ -46,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device for which to get the input.</param>
         IDisposable IImageInternal.GetImageObject(EngineDevice device)
         {
-            return this.GetBitmap(device)
+            return GetBitmap(device)
                 .QueryInterface<D2D.Bitmap>();
         }
 

@@ -21,31 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Checking;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Checking;
-    using SharpDX;
-
     #endregion
 
     public class StackedGeometryFactory : GeometryFactory
     {
-        #region Main parameters
-        private GeometryFactory m_geometryToStack;
-        private int m_stackSize;
-        #endregion
-
-        public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
-        {
-            geometryToStack.EnsureNotNull(nameof(geometryToStack));
-            stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
-
-            m_geometryToStack = geometryToStack;
-            m_stackSize = stackSize;
-        }
-
         /// <summary>
         /// Builds all vertex structures for the given detail level.
         /// </summary>
@@ -60,16 +46,16 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Copy metadata infomration of the VertexStructures
             var result = structureFromChild.Clone(
-                copyGeometryData: false,
-                capacityMultiplier: m_stackSize);
+                false,
+                m_stackSize);
 
             // Build geometry
-            for (int loop = 0; loop < m_stackSize; loop++)
+            for (var loop = 0; loop < m_stackSize; loop++)
             {
-                float actYCorrection = childStructBox.Height * loop;
+                var actYCorrection = childStructBox.Height * loop;
                 var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
 
-                int baseVertex = loop * structureFromChild.CountVertices;
+                var baseVertex = loop * structureFromChild.CountVertices;
 
                 foreach (var actVertex in structureFromChild.Vertices)
                 {
@@ -105,5 +91,19 @@ namespace SeeingSharp.Multimedia.Objects
 
             return result;
         }
+
+        public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
+        {
+            geometryToStack.EnsureNotNull(nameof(geometryToStack));
+            stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
+
+            m_geometryToStack = geometryToStack;
+            m_stackSize = stackSize;
+        }
+
+        #region Main parameters
+        private GeometryFactory m_geometryToStack;
+        private int m_stackSize;
+        #endregion
     }
 }

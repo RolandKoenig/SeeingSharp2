@@ -22,7 +22,18 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Tests.Util;
+using SeeingSharp.Util;
+using SharpDX;
 using GDI = System.Drawing;
 
 #endregion
@@ -30,20 +41,6 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Multimedia.Core;
-    using Multimedia.Drawing2D;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using Multimedia.Views;
-    using SeeingSharp.Util;
-    using SharpDX;
-    using Util;
-
     #endregion
 
     [TestClass]
@@ -83,9 +80,9 @@ namespace SeeingSharp.Tests
                     camera.UpdateCamera();
 
                     // 2D rendering is made here
-                    var d2dDrawingLayer = new Custom2DDrawingLayer((graphics) =>
+                    var d2dDrawingLayer = new Custom2DDrawingLayer(graphics =>
                     {
-                        var d2dRectangle = new SharpDX.RectangleF(10, 10, 236, 236);
+                        var d2dRectangle = new RectangleF(10, 10, 236, 236);
                         graphics.Clear(Color4Ex.LightBlue);
                         graphics.FillRoundedRectangle(
                             d2dRectangle, 30, 30,
@@ -96,13 +93,13 @@ namespace SeeingSharp.Tests
                     });
 
                     // Define scene
-                    await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                    await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                     {
-                        var resD2DTexture = manipulator.AddResource<Direct2DTextureResource>(
+                        var resD2DTexture = manipulator.AddResource(
                             () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                         var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
-                        var geoResource = manipulator.AddResource<GeometryResource>(
-                            () => new GeometryResource(new CubeGeometryFactory() { Material = resD2DMaterial }));
+                        var geoResource = manipulator.AddResource(
+                            () => new GeometryResource(new CubeGeometryFactory { Material = resD2DMaterial }));
 
                         var newObject = manipulator.AddGeneric(geoResource);
                         newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -119,7 +116,7 @@ namespace SeeingSharp.Tests
 
             // Calculate and check difference
             Assert.IsNotNull(screenshot);
-            bool isNearEqual = BitmapComparison.IsNearEqual(
+            var isNearEqual = BitmapComparison.IsNearEqual(
                 screenshot, TestUtilities.LoadBitmapFromResource("ErrorHandling", "SimpleObject.png"));
             Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
         }
@@ -130,9 +127,9 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGrahicsAsync();
 
-            bool isRenderTargetOperational = true;
-            bool isGraphicsCoreInitialized = true;
-            int registeredRenderLoopCount = 1;
+            var isRenderTargetOperational = true;
+            var isGraphicsCoreInitialized = true;
+            var registeredRenderLoopCount = 1;
             using (GraphicsCore.AutomatedTest_NewTestEnviornment())
 
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
@@ -162,7 +159,7 @@ namespace SeeingSharp.Tests
             Panel hostPanel1 = null;
             Panel hostPanel2 = null;
             SeeingSharpRendererControl renderControl = null;
-            int stepID = 0;
+            var stepID = 0;
             Exception fakeUIThreadException = null;
 
             var fakeUIThread = new ObjectThread("Fake-UI", 100);
@@ -173,19 +170,19 @@ namespace SeeingSharp.Tests
             };
             fakeUIThread.Starting += (sender, eArgs) =>
             {
-                hostPanel1 = new System.Windows.Forms.Panel
+                hostPanel1 = new Panel
                 {
                     Size = new GDI.Size(500, 500)
                 };
 
-                hostPanel2 = new System.Windows.Forms.Panel
+                hostPanel2 = new Panel
                 {
                     Size = new GDI.Size(500, 500)
                 };
 
                 renderControl = new SeeingSharpRendererControl
                 {
-                    Dock = System.Windows.Forms.DockStyle.Fill
+                    Dock = DockStyle.Fill
                 };
 
                 hostPanel1.CreateControl();

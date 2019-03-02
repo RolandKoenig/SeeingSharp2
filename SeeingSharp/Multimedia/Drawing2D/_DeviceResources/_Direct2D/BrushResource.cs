@@ -24,6 +24,7 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,9 +32,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public abstract class BrushResource : Drawing2DResourceBase

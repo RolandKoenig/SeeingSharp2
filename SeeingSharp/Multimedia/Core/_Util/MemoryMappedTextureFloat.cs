@@ -21,43 +21,31 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Runtime.InteropServices;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Runtime.InteropServices;
-    using SharpDX;
-
     #endregion
 
     public unsafe class MemoryMappedTextureFloat : IDisposable
     {
         // Some query steps, relevant for QueryForObjectID method
-        private static readonly Point[] QUERY_OBJECT_ID_STEPS = new Point[]
-        {
+        private static readonly Point[] QUERY_OBJECT_ID_STEPS = {
             new Point(1, 0),new Point(1, 0),
             new Point(0, 1),
             new Point(-1, 0), new Point(-1, 0), new Point(-1, 0), new Point(-1, 0),
             new Point(0, -1), new Point(0, -1),
-            new Point(1, 0), new Point(1, 0), new Point(1, 0), new Point(1, 0),
+            new Point(1, 0), new Point(1, 0), new Point(1, 0), new Point(1, 0)
         };
 
         // The native structure, where we store all ObjectIDs uploaded from graphics hardware
         private IntPtr m_pointer;
         private float* m_pointerNative;
         private Size2 m_size;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryMappedTextureFloat"/> class.
-        /// </summary>
-        /// <param name="size">The total size of the texture.</param>
-        public MemoryMappedTextureFloat(Size2 size)
-        {
-            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
-            m_pointerNative = (float*)m_pointer.ToPointer();
-            m_size = size;
-        }
 
         /// <summary>
         /// Queries for the ObjectID at the given location.
@@ -73,9 +61,9 @@ namespace SeeingSharp.Multimedia.Core
 
             // Loop over more pixels to be sure, that we are directly facing one object
             //  => This is needed because of manipulations done by multisampling (=Antialiasing)
-            int currentX = xPos;
-            int currentY = yPos;
-            float lastObjID = m_pointerNative[currentY * m_size.Width + currentX];
+            var currentX = xPos;
+            var currentY = yPos;
+            var lastObjID = m_pointerNative[currentY * m_size.Width + currentX];
 
             for (var loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
             {
@@ -92,7 +80,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Read current value and compare with last one
                 //  (If equal, than at least two pixels are the same => Return this ObjectID)
-                float currObjID = m_pointerNative[currentY * m_size.Width + currentX];
+                var currObjID = m_pointerNative[currentY * m_size.Width + currentX];
                 if (currObjID == lastObjID) { return currObjID; }
 
                 // No match found, continue with next one
@@ -101,6 +89,17 @@ namespace SeeingSharp.Multimedia.Core
 
             // No clear match found
             return 0f;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryMappedTextureFloat"/> class.
+        /// </summary>
+        /// <param name="size">The total size of the texture.</param>
+        public MemoryMappedTextureFloat(Size2 size)
+        {
+            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
+            m_pointerNative = (float*)m_pointer.ToPointer();
+            m_size = size;
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="xPos">The x location of the float value.</param>
         /// <param name="yPos">The y location of the float value.</param>
-        public unsafe float this[int xPos, int yPos]
+        public float this[int xPos, int yPos]
         {
             get
             {
@@ -136,29 +135,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the total size of the buffer in bytes.
         /// </summary>
-        public uint SizeInBytes
-        {
-            get
-            {
-                return (uint)(m_size.Width * m_size.Height * 4);
-            }
-        }
+        public uint SizeInBytes => (uint)(m_size.Width * m_size.Height * 4);
 
         /// <summary>
         /// Gets the width of the buffer.
         /// </summary>
-        public int Width
-        {
-            get { return m_size.Width; }
-        }
+        public int Width => m_size.Width;
 
         /// <summary>
         /// Gets the height of the buffer.
         /// </summary>
-        public int Height
-        {
-            get { return m_size.Height; }
-        }
+        public int Height => m_size.Height;
 
         /// <summary>
         /// Gets the pointer of the buffer.

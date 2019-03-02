@@ -22,8 +22,8 @@
       Anwendungspaket. Die Sternchen sind keine Platzhalter.
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
-    
-    
+
+
     <!-- Fügen Sie hier Ihre anwendungsspezifischen Laufzeitdirektiven ein. -->
 
 

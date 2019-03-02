@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     public class FloorTile
@@ -61,10 +61,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the material used by this tile.
         /// </summary>
-        public NamedOrGenericKey Material
-        {
-            get { return m_tileInfo.Material; }
-        }
+        public NamedOrGenericKey Material => m_tileInfo.Material;
 
         /// <summary>
         /// Gets the x-position of the tile.

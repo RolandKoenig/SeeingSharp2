@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Threading.Tasks;
-
     #endregion
 
     public interface IAnimationSequenceBuilder<out TargetType>

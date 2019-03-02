@@ -21,20 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Objects;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-    using Objects;
-
     #endregion
 
     public class SceneObjectInfo
     {
         private List<SceneObjectInfo> m_childs;
+
+        public override string ToString()
+        {
+            return $"Type:{Type}, #Childs:{Childs.Count}";
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectInfo"/> class.
@@ -73,18 +77,10 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public override string ToString()
-        {
-            return $"Type:{this.Type}, #Childs:{this.Childs.Count}";
-        }
-
         public SceneObject OriginalObject { get; }
 
         public SceneObjectInfoType Type { get; }
 
-        public IReadOnlyList<SceneObjectInfo> Childs
-        {
-            get { return m_childs; }
-        }
+        public IReadOnlyList<SceneObjectInfo> Childs => m_childs;
     }
 }

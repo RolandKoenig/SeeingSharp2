@@ -21,42 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class Scale3DToAnimation : AnimationBase
     {
-        #region Parameters
-        private IAnimatableObjectScaling m_targetObject;
-        private Vector3 m_targetScaleVector;
-        private TimeSpan m_duration;
-        #endregion
-
-        #region Runtime values
-        private Vector3 m_startScaleVector;
-        private Vector3 m_differenceVector;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="scaleVector">The move vector.</param>
-        /// <param name="duration">The duration.</param>
-        public Scale3DToAnimation(IAnimatableObjectScaling targetObject, Vector3 scaleVector, TimeSpan duration)
-            : base(targetObject, AnimationType.FixedTime, duration)
-        {
-            m_targetObject = targetObject;
-            m_targetScaleVector = scaleVector;
-            m_duration = duration;
-        }
-
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -72,7 +47,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float scaleFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
+            var scaleFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
 
             m_targetObject.Scaling = m_startScaleVector + m_differenceVector * scaleFactor;
         }
@@ -86,5 +61,30 @@ namespace SeeingSharp.Multimedia.Core
             m_startScaleVector = Vector3.Zero;
             m_differenceVector = Vector3.Zero;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="scaleVector">The move vector.</param>
+        /// <param name="duration">The duration.</param>
+        public Scale3DToAnimation(IAnimatableObjectScaling targetObject, Vector3 scaleVector, TimeSpan duration)
+            : base(targetObject, AnimationType.FixedTime, duration)
+        {
+            m_targetObject = targetObject;
+            m_targetScaleVector = scaleVector;
+            m_duration = duration;
+        }
+
+        #region Parameters
+        private IAnimatableObjectScaling m_targetObject;
+        private Vector3 m_targetScaleVector;
+        private TimeSpan m_duration;
+        #endregion
+
+        #region Runtime values
+        private Vector3 m_startScaleVector;
+        private Vector3 m_differenceVector;
+        #endregion
     }
 }

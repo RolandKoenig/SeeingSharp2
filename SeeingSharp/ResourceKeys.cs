@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     public static class ResourceKeys

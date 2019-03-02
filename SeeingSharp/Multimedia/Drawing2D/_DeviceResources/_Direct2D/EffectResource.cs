@@ -24,6 +24,10 @@
 #region using
 
 // Namespace mappings
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,22 +35,38 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public abstract class EffectResource : Drawing2DResourceBase, IImage, IImageInternal
     {
+        #region Configuration
+        private IImageInternal[] m_effectInputs;
+        #endregion
+
         #region Resources
         private D2D.Effect[] m_loadedEffects;
         #endregion
 
-        #region Configuration
-        private IImageInternal[] m_effectInputs;
-        #endregion
+        /// <summary>
+        /// Builds the effect.
+        /// </summary>
+        /// <param name="device">The device on which to load the effect instance.</param>
+        protected abstract D2D.Effect BuildEffect(EngineDevice device);
+
+        /// <summary>
+        /// Unloads all resources loaded on the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to unload the resource.</param>
+        internal override void UnloadResources(EngineDevice engineDevice)
+        {
+            var actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+
+            if (actEffect != null)
+            {
+                SeeingSharpTools.DisposeObject(actEffect);
+                m_loadedEffects[engineDevice.DeviceIndex] = null;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectResource"/> class.
@@ -57,7 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             // Get all effect inputs
             m_effectInputs = new IImageInternal[effectInputs.Length];
-            for(int loop=0; loop<effectInputs.Length; loop++)
+            for(var loop=0; loop<effectInputs.Length; loop++)
             {
                 m_effectInputs[loop] = effectInputs[loop] as IImageInternal;
                 if(m_effectInputs[loop] == null)
@@ -98,7 +118,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 {
                     using (var actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
                     {
-                        effect.SetInput(loop, actInput, new SharpDX.Mathematics.Interop.RawBool(false));
+                        effect.SetInput(loop, actInput, new RawBool(false));
                     }
                 }
 
@@ -107,27 +127,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return effect.Output;
-        }
-
-        /// <summary>
-        /// Builds the effect.
-        /// </summary>
-        /// <param name="device">The device on which to load the effect instance.</param>
-        protected abstract D2D.Effect BuildEffect(EngineDevice device);
-
-        /// <summary>
-        /// Unloads all resources loaded on the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to unload the resource.</param>
-        internal override void UnloadResources(EngineDevice engineDevice)
-        {
-            var actEffect = m_loadedEffects[engineDevice.DeviceIndex];
-
-            if (actEffect != null)
-            {
-                SeeingSharpTools.DisposeObject(actEffect);
-                m_loadedEffects[engineDevice.DeviceIndex] = null;
-            }
         }
     }
 }

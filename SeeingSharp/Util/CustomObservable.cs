@@ -21,20 +21,50 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-
     #endregion
 
     public class CustomObservable<T> : IObservable<T>
     {
-        private List<IObserver<T>> m_observers;
         private bool m_isFinished;
+        private List<IObserver<T>> m_observers;
+
+        public void PushNext(T nextObject)
+        {
+            for(var loop=0; loop<m_observers.Count; loop++)
+            {
+                m_observers[loop].OnNext(nextObject);
+            }
+        }
+
+        public void PushError(Exception error)
+        {
+            m_isFinished.EnsureFalse(nameof(m_isFinished));
+
+            m_isFinished = true;
+            for (var loop = 0; loop < m_observers.Count; loop++)
+            {
+                m_observers[loop].OnError(error);
+            }
+        }
+
+        public void PushCompleted()
+        {
+            m_isFinished.EnsureFalse(nameof(m_isFinished));
+
+            m_isFinished = true;
+            for (var loop = 0; loop < m_observers.Count; loop++)
+            {
+                m_observers[loop].OnCompleted();
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomObservable{T}"/> class.
@@ -55,36 +85,6 @@ namespace SeeingSharp.Util
 
             return new DummyDisposable(
                 () => m_observers.Remove(observer));
-        }
-
-        public void PushNext(T nextObject)
-        {
-            for(int loop=0; loop<m_observers.Count; loop++)
-            {
-                m_observers[loop].OnNext(nextObject);
-            }
-        }
-
-        public void PushError(Exception error)
-        {
-            m_isFinished.EnsureFalse(nameof(m_isFinished));
-
-            m_isFinished = true;
-            for (int loop = 0; loop < m_observers.Count; loop++)
-            {
-                m_observers[loop].OnError(error);
-            }
-        }
-
-        public void PushCompleted()
-        {
-            m_isFinished.EnsureFalse(nameof(m_isFinished));
-
-            m_isFinished = true;
-            for (int loop = 0; loop < m_observers.Count; loop++)
-            {
-                m_observers[loop].OnCompleted();
-            }
         }
     }
 }

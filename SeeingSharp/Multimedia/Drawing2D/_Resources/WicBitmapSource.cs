@@ -21,16 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.WIC;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class WicBitmapSource : IDisposable
@@ -38,15 +38,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #region Native resources
         private WicBitmapSourceInternal m_wicBitmapSource;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
-        /// </summary>
-        /// <param name="bitmapSource">The bitmap source.</param>
-        private WicBitmapSource(WicBitmapSourceInternal bitmapSource)
-        {
-            m_wicBitmapSource = bitmapSource;
-        }
 
         /// <summary>
         /// Creates a WIC BitmapSource object from the given source.
@@ -62,6 +53,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return new WicBitmapSource(wicBitmapSource);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
+        /// </summary>
+        /// <param name="bitmapSource">The bitmap source.</param>
+        private WicBitmapSource(WicBitmapSourceInternal bitmapSource)
+        {
+            m_wicBitmapSource = bitmapSource;
         }
 
         /// <summary>
@@ -90,9 +90,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
         }
 
-        internal SharpDX.WIC.BitmapSource BitmapSource
-        {
-            get { return m_wicBitmapSource.Converter; }
-        }
+        internal BitmapSource BitmapSource => m_wicBitmapSource.Converter;
     }
 }

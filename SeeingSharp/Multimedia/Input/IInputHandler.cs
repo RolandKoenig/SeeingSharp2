@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-
     #endregion
 
     public interface IInputHandler

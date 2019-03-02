@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class SeeingSharpConstantsWinForms

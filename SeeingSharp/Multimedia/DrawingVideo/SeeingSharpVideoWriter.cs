@@ -24,6 +24,11 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,13 +36,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.DrawingVideo
 {
     #region using
-
-    using System;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -45,32 +43,10 @@ namespace SeeingSharp.Multimedia.DrawingVideo
     /// </summary>
     public abstract class SeeingSharpVideoWriter
     {
-        #region Configuration
-
-        #endregion
-
-        #region Runtime values
-        private Size2 m_videoSize;
-        private bool m_hasStarted;
-        private bool m_hasFinished;
-        private Exception m_startException;
-        private Exception m_drawException;
-        private Exception m_finishExeption;
-        #endregion
-
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
         /// </summary>
         public event EventHandler RecordingFinished;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.
-        /// </summary>
-        /// <param name="targetFile">The target file to write to.</param>
-        public SeeingSharpVideoWriter(ResourceLink targetFile)
-        {
-            TargetFile = targetFile;
-        }
 
         /// <summary>
         /// Starts to render the video.
@@ -91,7 +67,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             // Ensure that the target directory exists
             try
             {
-                this.StartRenderingInternal(m_videoSize);
+                StartRenderingInternal(m_videoSize);
                 m_hasStarted = true;
             }
             catch(Exception ex)
@@ -121,7 +97,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
                     throw new SeeingSharpGraphicsException("Size has changed during recording!");
                 }
 
-                this.DrawFrameInternal(device, uploadedTexture);
+                DrawFrameInternal(device, uploadedTexture);
             }
             catch(Exception ex)
             {
@@ -148,7 +124,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             finally
             {
                 m_hasFinished = true;
-                this.RecordingFinished.Raise(this, EventArgs.Empty);
+                RecordingFinished.Raise(this, EventArgs.Empty);
             }
         }
 
@@ -181,6 +157,15 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         protected abstract void FinishRenderingInternal();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.
+        /// </summary>
+        /// <param name="targetFile">The target file to write to.</param>
+        public SeeingSharpVideoWriter(ResourceLink targetFile)
+        {
+            TargetFile = targetFile;
+        }
+
+        /// <summary>
         /// Gets the target file this VideoWriter is writing to.
         /// </summary>
         public ResourceLink TargetFile { get; }
@@ -188,18 +173,12 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <summary>
         /// Has rendering started?
         /// </summary>
-        public bool HasStarted
-        {
-            get { return m_hasStarted; }
-        }
+        public bool HasStarted => m_hasStarted;
 
         /// <summary>
         /// Has rendering finished?
         /// </summary>
-        public bool HasFinished
-        {
-            get { return m_hasFinished; }
-        }
+        public bool HasFinished => m_hasFinished;
 
         /// <summary>
         /// The RenderLoop this VideoWriter is currently associated to.
@@ -213,24 +192,24 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <summary>
         /// Gets the current video size.
         /// </summary>
-        public Size2 VideoSize
-        {
-            get { return m_videoSize; }
-        }
+        public Size2 VideoSize => m_videoSize;
 
-        public Exception LastStartException
-        {
-            get { return m_startException; }
-        }
+        public Exception LastStartException => m_startException;
 
-        public Exception LastDrawException
-        {
-            get { return m_drawException; }
-        }
+        public Exception LastDrawException => m_drawException;
 
-        public Exception LastFinishException
-        {
-            get { return m_finishExeption; }
-        }
+        public Exception LastFinishException => m_finishExeption;
+
+        #region Configuration
+        #endregion
+
+        #region Runtime values
+        private Size2 m_videoSize;
+        private bool m_hasStarted;
+        private bool m_hasFinished;
+        private Exception m_startException;
+        private Exception m_drawException;
+        private Exception m_finishExeption;
+        #endregion
     }
 }

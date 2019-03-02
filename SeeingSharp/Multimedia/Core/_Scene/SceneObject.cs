@@ -21,67 +21,36 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using Checking;
-    using Input;
-    using Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public abstract partial class SceneObject : IDisposable, IAnimatableObject
     {
-        #region Generic members
-        private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
-        private DetailLevel m_targetDetailLevel;
-        private bool m_isStatic;
-        #endregion Generic members
-
-        #region Some information about parent containers
-        private Scene m_scene;
-        private SceneLayer m_sceneLayer;
-        #endregion Some information about parent containers
+        #region Members for animations
+        private AnimationHandler m_animationHandler;
+        #endregion Members for animations
 
         #region Members for behaviors
         private List<SceneObjectBehavior> m_behaviors;
         #endregion Members for behaviors
 
-        #region Members for animations
-        private AnimationHandler m_animationHandler;
-        #endregion Members for animations
-
-        #region Collections for describing object hierarchies
-        private List<SceneObject> m_children;
-        private SceneObject m_parent;
-        #endregion Collections for describing object hierarchies
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="SceneObject"/> class.
+        /// Indicates whether transformation data has changed during last update calls.
+        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
         /// </summary>
-        protected SceneObject()
-        {
-            m_targetDetailLevel = DetailLevel.All;
-
-            m_children = new List<SceneObject>();
-            m_parent = null;
-
-            m_behaviors = new List<SceneObjectBehavior>();
-            m_animationHandler = new AnimationHandler(this);
-            m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
-
-            //Create a dynamic container for custom data
-            CustomData = new ExpandoObject();
-
-            this.TransormationChanged = true;
-            this.IsPickingTestVisible = true;
-        }
+        internal bool TransormationChanged;
 
         /// <summary>
         /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
@@ -90,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="exportOptions">Options for export.</param>
         internal void PrepareForExport(ExportModelContainer modelContainer, ExportOptions exportOptions)
         {
-            this.PrepareForExportInternal(modelContainer, exportOptions);
+            PrepareForExportInternal(modelContainer, exportOptions);
         }
 
         /// <summary>
@@ -109,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayer = sceneLayer;
 
             // Call virtual event
-            this.OnAddedToScene(m_scene);
+            OnAddedToScene(m_scene);
         }
 
         /// <summary>
@@ -128,7 +97,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayer = null;
 
             // Call virtual event
-            this.OnRemovedFromScene(oldScene);
+            OnRemovedFromScene(oldScene);
         }
 
         /// <summary>
@@ -242,7 +211,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void AddChildInternal(SceneObject childToAdd)
         {
             if (childToAdd == this) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
-            if (childToAdd.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Child musst have the same scene!"); }
+            if (childToAdd.Scene != Scene) { throw new SeeingSharpGraphicsException("Child musst have the same scene!"); }
             if (childToAdd.m_parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
             if (childToAdd.IsParentOf(this)) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
             if (m_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
@@ -258,7 +227,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
         internal void RemoveChildInternal(SceneObject childToRemove)
         {
-            if (childToRemove.Scene != this.Scene) { throw new ArgumentException("Child musst have the same scene!"); }
+            if (childToRemove.Scene != Scene) { throw new ArgumentException("Child musst have the same scene!"); }
 
             // Destroy parent/child relation
             m_children.Remove(childToRemove);
@@ -273,7 +242,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (viewInfo.ViewIndex < 0) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not assoziated to any view!"); }
             if (viewInfo.Scene == null) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to any scene!"); }
-            if (viewInfo.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
+            if (viewInfo.Scene != Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
             var checkData = m_visibilityData[viewInfo.ViewIndex];
 
@@ -325,20 +294,17 @@ namespace SeeingSharp.Multimedia.Core
         {
             if(viewInfo.ViewIndex < 0) { return false; }
 
-            var checkData = this.GetVisibilityCheckData(viewInfo);
+            var checkData = GetVisibilityCheckData(viewInfo);
 
             if (checkData.IsVisible) { return true; }
 
-            if ((checkData.IsVisible != isVisible) &&
-                (checkData.FilterStageData.Count == 0))
+            if (checkData.IsVisible != isVisible &&
+                checkData.FilterStageData.Count == 0)
             {
                 checkData.IsVisible = isVisible;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         /// <summary>
@@ -415,7 +381,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="inputFrame">The input frame.</param>
         internal void ProcessInput(InputFrame inputFrame)
         {
-            this.ProcessInputInternal(inputFrame);
+            ProcessInputInternal(inputFrame);
         }
 
         /// <summary>
@@ -465,14 +431,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 actBehavior.UpdateOverall(updateState);
             }
-        }
-
-        /// <summary>
-        /// Disposes all unmanaged resources of this object.
-        /// </summary>
-        public void Dispose()
-        {
-            this.UnloadResources();
         }
 
         /// <summary>
@@ -574,6 +532,40 @@ namespace SeeingSharp.Multimedia.Core
         public abstract bool IsLoaded(EngineDevice device);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneObject"/> class.
+        /// </summary>
+        protected SceneObject()
+        {
+            m_targetDetailLevel = DetailLevel.All;
+
+            m_children = new List<SceneObject>();
+            m_parent = null;
+
+            m_behaviors = new List<SceneObjectBehavior>();
+            m_animationHandler = new AnimationHandler(this);
+            m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
+
+            //Create a dynamic container for custom data
+            CustomData = new ExpandoObject();
+
+            TransormationChanged = true;
+            IsPickingTestVisible = true;
+        }
+
+        /// <summary>
+        /// Gets current AnimationHandler object.
+        /// </summary>
+        public virtual AnimationHandler AnimationHandler => m_animationHandler;
+
+        /// <summary>
+        /// Disposes all unmanaged resources of this object.
+        /// </summary>
+        public void Dispose()
+        {
+            UnloadResources();
+        }
+
+        /// <summary>
         /// Gets a dynamic container for custom data.
         /// </summary>
         public dynamic CustomData { get; }
@@ -600,55 +592,35 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current scene.
         /// </summary>
-        public Scene Scene
-        {
-            get { return m_scene; }
-        }
+        public Scene Scene => m_scene;
 
         /// <summary>
         /// Gets or sets the scene layer.
         /// </summary>
-        public SceneLayer SceneLayer
-        {
-            get { return m_sceneLayer; }
-        }
-
-        /// <summary>
-        /// Gets current AnimationHandler object.
-        /// </summary>
-        public virtual AnimationHandler AnimationHandler
-        {
-            get { return m_animationHandler; }
-        }
+        public SceneLayer SceneLayer => m_sceneLayer;
 
         /// <summary>
         /// Is this object a static object?
         /// </summary>
         public bool IsStatic
         {
-            get { return m_isStatic; }
+            get => m_isStatic;
             set
             {
-                if (this.Scene != null) { throw new SeeingSharpException("Unable to change IsStatic state when the object is already assigned to a scene!"); }
+                if (Scene != null) { throw new SeeingSharpException("Unable to change IsStatic state when the object is already assigned to a scene!"); }
                 m_isStatic = value;
             }
         }
-
-        /// <summary>
-        /// Indicates whether transformation data has changed during last update calls.
-        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
-        /// </summary>
-        internal bool TransormationChanged;
 
         /// <summary>
         /// Gets or sets the target detail level.
         /// </summary>
         public DetailLevel TargetDetailLevel
         {
-            get { return m_targetDetailLevel; }
+            get => m_targetDetailLevel;
             set
             {
-                if (this.Scene != null) { throw new SeeingSharpGraphicsException("Unable to change TargetDetailLevel when object is already added to a scene!"); }
+                if (Scene != null) { throw new SeeingSharpGraphicsException("Unable to change TargetDetailLevel when object is already added to a scene!"); }
                 m_targetDetailLevel = value;
             }
         }
@@ -656,18 +628,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Does this object have a parent?
         /// </summary>
-        public bool HasParent
-        {
-            get { return m_parent != null; }
-        }
+        public bool HasParent => m_parent != null;
 
         /// <summary>
         /// Gets the parent object.
         /// </summary>
-        public SceneObject Parent
-        {
-            get { return m_parent; }
-        }
+        public SceneObject Parent => m_parent;
 
         /// <summary>
         /// Does this object have any child?
@@ -676,18 +642,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                List<SceneObject> childs = m_children;
-                return (childs != null) && (childs.Count > 0);
+                var childs = m_children;
+                return childs != null && childs.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the total count of direct children of this object.
         /// </summary>
-        public int CountChildren
-        {
-            get { return m_children.Count; }
-        }
+        public int CountChildren => m_children.Count;
 
         /// <summary>
         /// Is it possible to export this object?
@@ -696,5 +659,21 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
         }
+
+        #region Generic members
+        private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
+        private DetailLevel m_targetDetailLevel;
+        private bool m_isStatic;
+        #endregion Generic members
+
+        #region Some information about parent containers
+        private Scene m_scene;
+        private SceneLayer m_sceneLayer;
+        #endregion Some information about parent containers
+
+        #region Collections for describing object hierarchies
+        private List<SceneObject> m_children;
+        private SceneObject m_parent;
+        #endregion Collections for describing object hierarchies
     }
 }

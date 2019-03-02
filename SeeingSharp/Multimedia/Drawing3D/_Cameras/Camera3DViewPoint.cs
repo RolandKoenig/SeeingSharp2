@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -40,8 +40,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Camera3DViewPoint()
         {
-            this.OrthographicZoomFactor = 10f;
-            this.CameraType = Camera3DType.Perspective;
+            OrthographicZoomFactor = 10f;
+            CameraType = Camera3DType.Perspective;
         }
 
         ///// <summary>
@@ -100,14 +100,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public string CameraTypeString
         {
-            get { return this.CameraType.ToString(); }
+            get => CameraType.ToString();
             set
             {
                 var valueParsed = Camera3DType.Perspective;
 
                 if (Enum.TryParse(value, out valueParsed))
                 {
-                    this.CameraType = valueParsed;
+                    CameraType = valueParsed;
                 }
             }
         }

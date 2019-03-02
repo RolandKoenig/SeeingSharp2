@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            return default(BoundingBox);
+            return default;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            return default(BoundingSphere);
+            return default;
         }
 
         /// <summary>

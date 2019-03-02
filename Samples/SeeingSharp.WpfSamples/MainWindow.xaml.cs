@@ -1,10 +1,10 @@
 ﻿#region License information
 /*
     Seeing# and all games/applications distributed together with it. 
-    Exception are projects where it is noted otherwhise.
+    Exception are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -22,50 +22,37 @@
 */
 #endregion
 
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using SeeingSharp.SampleContainer;
+
 namespace SeeingSharp.WpfSamples
 {
-    #region using
-
-    using System.Windows;
-    using System.Windows.Controls;
-    using SampleContainer;
-
-    #endregion
-
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private bool m_isChangingSample;
         private SampleBase m_actSample;
         private SampleMetadata m_actSampleInfo;
-
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            this.Loaded += OnLoaded;
-        }
+        private bool m_isChangingSample;
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
-                this.DataContext = new MainWindowViewModel(sampleRepo, this.CtrlRenderer.RenderLoop);
+                DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
             }
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+            if(!(DataContext is MainWindowViewModel viewModel)) { return; }
 
             var selectedSample = viewModel.SelectedSample;
             if(selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
         /// <summary>
@@ -83,11 +70,11 @@ namespace SeeingSharp.WpfSamples
                 // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
-                    await this.CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+                    await CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
                     {
                         manipulator.Clear(true);
                     });
-                    await this.CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+                    await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
 
@@ -99,21 +86,28 @@ namespace SeeingSharp.WpfSamples
                 if (sampleInfo != null)
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(this.CtrlRenderer.RenderLoop, sampleSettings);
+                    await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
                 }
 
                 // Wait for next finished rendering
-                await this.CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
 
-                await this.CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
             }
             finally
             {
                 m_isChangingSample = false;
             }
+        }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            Loaded += OnLoaded;
         }
     }
 }

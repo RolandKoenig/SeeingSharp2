@@ -21,36 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class RotateQuaternionToAnimation : AnimationBase
     {
-        #region Parameters
-        private IAnimatableObjectQuaternion m_targetObject;
-        private Quaternion m_startQuaternion;
-        private Quaternion m_targetQuaternion;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RotateQuaternionToAnimation" /> class.
-        /// </summary>
-        /// <param name="targetObject">The target object.</param>
-        /// <param name="targetQuaternion">The target quaternion.</param>
-        /// <param name="timeSpan">The time span.</param>
-        public RotateQuaternionToAnimation(IAnimatableObjectQuaternion targetObject, Quaternion targetQuaternion, TimeSpan timeSpan)
-            : base(targetObject, AnimationType.FixedTime, timeSpan)
-        {
-            m_targetObject = targetObject;
-            m_targetQuaternion = targetQuaternion;
-        }
-
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -67,7 +48,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             //how does Slerp work: --> http://en.wikipedia.org/wiki/Slerp
-            float changeFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
+            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
 
             var slerpQuaternion = Quaternion.Slerp(m_startQuaternion, m_targetQuaternion, changeFactor);
             m_targetObject.RotationQuaternion = slerpQuaternion;
@@ -81,5 +62,24 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_targetObject.RotationQuaternion = m_targetQuaternion;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RotateQuaternionToAnimation" /> class.
+        /// </summary>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="targetQuaternion">The target quaternion.</param>
+        /// <param name="timeSpan">The time span.</param>
+        public RotateQuaternionToAnimation(IAnimatableObjectQuaternion targetObject, Quaternion targetQuaternion, TimeSpan timeSpan)
+            : base(targetObject, AnimationType.FixedTime, timeSpan)
+        {
+            m_targetObject = targetObject;
+            m_targetQuaternion = targetQuaternion;
+        }
+
+        #region Parameters
+        private IAnimatableObjectQuaternion m_targetObject;
+        private Quaternion m_startQuaternion;
+        private Quaternion m_targetQuaternion;
+        #endregion
     }
 }

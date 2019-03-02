@@ -24,6 +24,10 @@
 #region using
 
 //Some namespace mappings
+using System.Runtime.InteropServices;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
@@ -32,12 +36,6 @@ using D3D = SharpDX.Direct3D;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System.Runtime.InteropServices;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class LineRenderResources : Resource
@@ -45,27 +43,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Public constants
         internal static readonly NamedOrGenericKey RESOURCE_KEY = GraphicsCore.GetNextGenericResourceKey();
         #endregion
-
-        #region Private constants
-        private static readonly NamedOrGenericKey KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Resources
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
-        private D3D11.InputLayout m_inputLayout;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LineRenderResources" /> class.
-        /// </summary>
-        public LineRenderResources()
-        {
-
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -131,42 +108,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded correctly?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_pixelShader != null; }
-        }
+        public override bool IsLoaded => m_pixelShader != null;
 
         /// <summary>
         /// Gets the vertex shader resource.
         /// </summary>
-        public VertexShaderResource VertexShader
-        {
-            get { return m_vertexShader; }
-        }
+        public VertexShaderResource VertexShader => m_vertexShader;
 
         /// <summary>
         /// Gets the pixel shader resource.
         /// </summary>
-        public PixelShaderResource PixelShader
-        {
-            get { return m_pixelShader; }
-        }
+        public PixelShaderResource PixelShader => m_pixelShader;
 
         /// <summary>
         /// Gets the constant buffer resource.
         /// </summary>
-        public ConstantBufferResource ConstantBuffer
-        {
-            get { return m_constantBuffer; }
-        }
+        public ConstantBufferResource ConstantBuffer => m_constantBuffer;
 
         /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
-        internal D3D11.InputLayout InputLayout
-        {
-            get { return m_inputLayout; }
-        }
+        internal D3D11.InputLayout InputLayout => m_inputLayout;
 
         //*********************************************************************
         //*********************************************************************
@@ -177,5 +139,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
             public Matrix WorldViewProj;
             public Color4 DiffuseColor;
         }
+
+        #region Private constants
+        private static readonly NamedOrGenericKey KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+        #endregion
+
+        #region Resources
+        private VertexShaderResource m_vertexShader;
+        private PixelShaderResource m_pixelShader;
+        private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
+        private D3D11.InputLayout m_inputLayout;
+        #endregion
     }
 }

@@ -24,6 +24,11 @@
 #region using
 
 // Namespace mappings
+using System.Collections.Generic;
+using System.Linq;
+using SeeingSharp.Multimedia.Core;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 using SDX = SharpDX;
 
 #endregion
@@ -31,29 +36,12 @@ using SDX = SharpDX;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Linq;
-    using Core;
-    using SharpDX.Direct2D1;
-    using SharpDX.DirectWrite;
-
     #endregion
 
     internal class VertexStructureTextRenderer : TextRendererBase
     {
-        private VertexStructureSurface m_targetSurface;
         private TextGeometryOptions m_geometryOptions;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexStructureTextRenderer" /> class.
-        /// </summary>
-        public VertexStructureTextRenderer(VertexStructureSurface targetSurface, TextGeometryOptions textGeometryOptions)
-            : base()
-        {
-            m_targetSurface = targetSurface;
-            m_geometryOptions = textGeometryOptions;
-        }
+        private VertexStructureSurface m_targetSurface;
 
         /// <summary>
         /// IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs.
@@ -76,8 +64,8 @@ namespace SeeingSharp.Multimedia.Objects
             object clientDrawingContext, float baselineOriginX, float baselineOriginY,
             MeasuringMode measuringMode, GlyphRun glyphRun, GlyphRunDescription glyphRunDescription, SDX.ComObject clientDrawingEffect)
         {
-            if ((glyphRun.Indices == null) ||
-                (glyphRun.Indices.Length == 0))
+            if (glyphRun.Indices == null ||
+                glyphRun.Indices.Length == 0)
             {
                 return SDX.Result.Ok;
             }
@@ -121,13 +109,13 @@ namespace SeeingSharp.Multimedia.Objects
                 IEnumerable<Polygon2D> fillingPolygons = geometryExtruder.GeneratedPolygons
                     .Where(actPolygon => actPolygon.EdgeOrder == EdgeOrder.CounterClockwise)
                     .OrderBy(actPolygon => actPolygon.BoundingBox.Size.X * actPolygon.BoundingBox.Size.Y);
-                List<Polygon2D> holePolygons = geometryExtruder.GeneratedPolygons
+                var holePolygons = geometryExtruder.GeneratedPolygons
                     .Where(actPolygon => actPolygon.EdgeOrder == EdgeOrder.Clockwise)
                     .OrderByDescending(actPolygon => actPolygon.BoundingBox.Size.X * actPolygon.BoundingBox.Size.Y)
                     .ToList();
 
                 // Build geometry for all polygons
-                int loopPolygon = 0;
+                var loopPolygon = 0;
 
                 foreach (var actFillingPolygon in fillingPolygons)
                 {
@@ -142,20 +130,20 @@ namespace SeeingSharp.Multimedia.Objects
                     // - Remove found holes from current hole list
                     var polygonForRendering = actFillingPolygon;
                     var polygonForTriangulation = actFillingPolygon.Clone();
-                    List<SDX.Vector2> cutPoints = new List<SDX.Vector2>();
+                    var cutPoints = new List<SDX.Vector2>();
 
                     foreach (var actHole in correspondingHoles)
                     {
                         holePolygons.Remove(actHole);
                         polygonForRendering = polygonForRendering.MergeWithHole(actHole, Polygon2DMergeOptions.Default, cutPoints);
-                        polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions() { MakeMergepointSpaceForTriangulation = true });
+                        polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions { MakeMergepointSpaceForTriangulation = true });
                     }
 
                     loopPolygon++;
-                    int actBaseIndex = (int)tempStructure.CountVertices;
+                    var actBaseIndex = tempStructure.CountVertices;
 
                     var edgeOrder = polygonForRendering.EdgeOrder;
-                    float edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
+                    var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
                     // Append all vertices to temporary VertexStructure
                     for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
@@ -194,7 +182,7 @@ namespace SeeingSharp.Multimedia.Objects
                         for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                         {
                             var colorToUse = Color4Ex.GreenColor;
-                            float pointRenderSize = 0.1f;
+                            var pointRenderSize = 0.1f;
 
                             if (cutPoints.Contains(polygonForRendering.Vertices[loop]))
                             {
@@ -211,38 +199,38 @@ namespace SeeingSharp.Multimedia.Objects
                     }
 
                     // Triangulate the polygon
-                    IEnumerable<int> triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
+                    var triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
 
                     if (triangleIndices == null) { continue; }
                     if (triangleIndices == null) { throw new SeeingSharpGraphicsException("Unable to triangulate given PathGeometry object!"); }
 
                     // Append all triangles to the temporary structure
-                    using (IEnumerator<int> indexEnumerator = triangleIndices.GetEnumerator())
+                    using (var indexEnumerator = triangleIndices.GetEnumerator())
                     {
                         while (indexEnumerator.MoveNext())
                         {
-                            int index1 = indexEnumerator.Current;
-                            int index2 = 0;
-                            int index3 = 0;
+                            var index1 = indexEnumerator.Current;
+                            var index2 = 0;
+                            var index3 = 0;
 
                             if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
                             if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
 
                             tempSurface.AddTriangle(
-                                (int)(actBaseIndex + index3),
-                                (int)(actBaseIndex + index2),
-                                (int)(actBaseIndex + index1));
+                                actBaseIndex + index3,
+                                actBaseIndex + index2,
+                                actBaseIndex + index1);
                         }
                     }
                 }
             }
 
             // Make volumetric outlines
-            int triangleCountWithoutSide = tempSurface.CountTriangles;
+            var triangleCountWithoutSide = tempSurface.CountTriangles;
 
             if (m_geometryOptions.MakeVolumetricText)
             {
-                float volumetricTextDepth = m_geometryOptions.VolumetricTextDepth;
+                var volumetricTextDepth = m_geometryOptions.VolumetricTextDepth;
 
                 if(m_geometryOptions.VerticesScaleFactor > 0f)
                 {
@@ -296,7 +284,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var transformMatrix = new Matrix4Stack(scaleMatrix);
                 transformMatrix.TransformLocal(m_geometryOptions.VertexTransform);
 
-                tempStructure.UpdateVerticesUsingRelocationFunc((actVector) => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
+                tempStructure.UpdateVerticesUsingRelocationFunc(actVector => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
             }
 
             // Calculate all normals before adding to target structure
@@ -368,6 +356,15 @@ namespace SeeingSharp.Multimedia.Objects
         public override SDX.Result DrawUnderline(object clientDrawingContext, float baselineOriginX, float baselineOriginY, ref Underline underline, SDX.ComObject clientDrawingEffect)
         {
             return SDX.Result.Ok;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexStructureTextRenderer" /> class.
+        /// </summary>
+        public VertexStructureTextRenderer(VertexStructureSurface targetSurface, TextGeometryOptions textGeometryOptions)
+        {
+            m_targetSurface = targetSurface;
+            m_geometryOptions = textGeometryOptions;
         }
     }
 }

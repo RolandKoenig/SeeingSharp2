@@ -21,16 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-    using Input;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -42,25 +42,11 @@ namespace SeeingSharp.Multimedia.Core
         private static readonly InputFrame[] DUMMY_FRAME_COLLECTION = new InputFrame[0];
         #endregion
 
+        internal bool ForceTransformUpdatesOnChilds;
+
         #region parameters
         private Scene m_owner;
         #endregion
-
-        #region parameters for single update step
-        private bool m_isPaused;
-        private UpdateState m_updateState;
-        private IEnumerable<InputFrame> m_inputFrames;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
-        /// </summary>
-        internal SceneRelatedUpdateState(Scene owner)
-        {
-            m_owner = owner;
-            World = new Matrix4Stack(Matrix.Identity);
-            m_inputFrames = null;
-        }
 
         /// <summary>
         /// Called just before the update pass of a scene object starts.
@@ -86,6 +72,16 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
+        /// </summary>
+        internal SceneRelatedUpdateState(Scene owner)
+        {
+            m_owner = owner;
+            World = new Matrix4Stack(Matrix.Identity);
+            m_inputFrames = null;
+        }
+
+        /// <summary>
         /// Gets current update time.
         /// </summary>
         public TimeSpan UpdateTime
@@ -94,7 +90,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!IgnorePauseState)) { return TimeSpan.Zero; }
+                if (m_isPaused && !IgnorePauseState) { return TimeSpan.Zero; }
                 return m_updateState.UpdateTime;
             }
         }
@@ -108,10 +104,12 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!IgnorePauseState)) { return 0; }
+                if (m_isPaused && !IgnorePauseState) { return 0; }
                 return m_updateState.UpdateTimeMilliseconds;
             }
         }
+
+        public bool IgnorePauseState { get; set; }
 
         public Matrix4Stack World { get; }
 
@@ -122,25 +120,21 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (SceneLayer == null) { return null; }
-                else { return SceneLayer.Scene; }
+                return SceneLayer.Scene;
             }
         }
 
-        public bool IsPaused
-        {
-            get { return m_isPaused; }
-        }
-
-        public bool IgnorePauseState { get; set; }
+        public bool IsPaused => m_isPaused;
 
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
-        public IEnumerable<InputFrame> InputFrames
-        {
-            get { return m_inputFrames; }
-        }
+        public IEnumerable<InputFrame> InputFrames => m_inputFrames;
 
-        internal bool ForceTransformUpdatesOnChilds;
+        #region parameters for single update step
+        private bool m_isPaused;
+        private UpdateState m_updateState;
+        private IEnumerable<InputFrame> m_inputFrames;
+        #endregion
     }
 }

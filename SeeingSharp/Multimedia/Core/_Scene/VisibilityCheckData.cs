@@ -21,24 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     internal class VisibilityCheckData
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VisibilityCheckData"/> class.
-        /// </summary>
-        internal VisibilityCheckData()
-        {
-            this.FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
-        }
-
         /// <summary>
         /// All data the the corresponding filter stages.
         /// </summary>
@@ -48,5 +40,13 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this object visible?
         /// </summary>
         internal bool IsVisible;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisibilityCheckData"/> class.
+        /// </summary>
+        internal VisibilityCheckData()
+        {
+            FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
+        }
     }
 }

@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Runtime.InteropServices;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System.Runtime.InteropServices;
-
     #endregion
 
     [StructLayout(LayoutKind.Sequential)]

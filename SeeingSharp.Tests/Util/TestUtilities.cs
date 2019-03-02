@@ -21,19 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Tests.Util
 {
     #region using
-
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Multimedia.Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public static class TestUtilities
@@ -67,7 +67,7 @@ namespace SeeingSharp.Tests.Util
             var resourceLink = CreateResourceLink(subfolderName, fileName);
             using (var inStream = resourceLink.OpenRead())
             {
-                return (Bitmap)Bitmap.FromStream(inStream);
+                return (Bitmap)Image.FromStream(inStream);
             }
         }
 
@@ -78,7 +78,7 @@ namespace SeeingSharp.Tests.Util
         /// <param name="fileName">The target file name.</param>
         public static void DumpToDesktop(Bitmap bitmap, string fileName)
         {
-            string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             bitmap.Save(Path.Combine(desktopDir, fileName));
         }
 
@@ -87,7 +87,7 @@ namespace SeeingSharp.Tests.Util
             Exception internalEx = null;
             var location = InternalExceptionLocation.DisposeGraphicsObject;
 
-            EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (object sender, InternalCatchedExceptionEventArgs e) =>
+            EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (sender, e) =>
             {
                 if (internalEx == null)
                 {

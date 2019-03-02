@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using Core;
-
     #endregion
 
     public static class AnimatableObjectExtensions
@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             where TargetObject : Camera3DBase
         {
             sequenceBuilder.Add(
-                new CameraStraightMoveAnimation(sequenceBuilder.TargetObject as Camera3DBase, targetViewPoint, animationTime));
+                new CameraStraightMoveAnimation(sequenceBuilder.TargetObject, targetViewPoint, animationTime));
             return sequenceBuilder;
         }
     }

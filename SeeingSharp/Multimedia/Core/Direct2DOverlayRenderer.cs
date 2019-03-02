@@ -24,6 +24,11 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -32,18 +37,12 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using Drawing2D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
     /// This class makes a Direct3D 11 texture available for 2D rendering with Direct2D.
     /// </summary>
-    class Direct2DOverlayRenderer : IDisposable
+    internal class Direct2DOverlayRenderer : IDisposable
     {
         private static readonly NamedOrGenericKey RES_KEY_FALLBACK_TEXTURE = GraphicsCore.GetNextGenericResourceKey();
 
@@ -51,15 +50,67 @@ namespace SeeingSharp.Multimedia.Core
         private Graphics2D m_graphics2D;
         #endregion
 
-        #region Given resources
-        private EngineDevice m_device;
-        private D3D11.Texture2D m_renderTarget3D;
-        #endregion
+        /// <summary>
+        /// Creates all resources
+        /// </summary>
+        private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
+        {
+            // Calculate the screen size in device independent units
+            var scaledScreenSize = new Size2F(
+                viewWidth / dpiScaling.ScaleFactorX,
+                viewHeight / dpiScaling.ScaleFactorY);
 
-        #region Own 2D render target resource
-        private D2D.RenderTarget m_renderTarget2D;
-        private D2D.Bitmap1 m_renderTargetBitmap;
-        #endregion
+            // Cancel here if the device does not support 2D rendering
+            if (!forceInit &&
+               !m_device.Supports2D)
+            {
+                return;
+            }
+
+            // Create the render target
+            using (var dxgiSurface = m_renderTarget3D.QueryInterface<Surface>())
+            {
+                var bitmapProperties = new D2D.BitmapProperties1
+                {
+                    DpiX = dpiScaling.DpiX,
+                    DpiY = dpiScaling.DpiY,
+                    BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
+                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                        D2D.AlphaMode.Premultiplied)
+                };
+
+                m_renderTargetBitmap = new D2D.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
+                m_renderTarget2D = m_device.DeviceContextD2D;
+                m_graphics2D = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
+            }
+        }
+
+        /// <summary>
+        /// Begins the draw.
+        /// </summary>
+        public void BeginDraw()
+        {
+            if (m_renderTarget2D == null) { return; }
+
+            m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
+            m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
+
+            // Start Direct2D rendering
+            m_renderTarget2D.BeginDraw();
+        }
+
+        /// <summary>
+        /// Finishes Direct2D drawing.
+        /// </summary>
+        public void EndDraw()
+        {
+            if (m_renderTarget2D == null) { return; }
+
+            m_renderTarget2D.EndDraw();
+
+            // Finish Direct2D drawing
+            m_device.DeviceContextD2D.Target = null;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
@@ -99,89 +150,28 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates all resources
-        /// </summary>
-        private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
-        {
-            // Calculate the screen size in device independent units
-            var scaledScreenSize = new Size2F(
-                (float)viewWidth / dpiScaling.ScaleFactorX,
-                (float)viewHeight / dpiScaling.ScaleFactorY);
-
-            // Cancel here if the device does not support 2D rendering
-            if ((!forceInit) &&
-               (!m_device.Supports2D))
-            {
-                return;
-            }
-
-            // Create the render target
-            using (var dxgiSurface = m_renderTarget3D.QueryInterface<SharpDX.DXGI.Surface>())
-            {
-                var bitmapProperties = new D2D.BitmapProperties1
-                {
-                    DpiX = dpiScaling.DpiX,
-                    DpiY = dpiScaling.DpiY,
-                    BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
-                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
-                        D2D.AlphaMode.Premultiplied)
-                };
-
-                m_renderTargetBitmap = new SharpDX.Direct2D1.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
-                m_renderTarget2D = m_device.DeviceContextD2D;
-                m_graphics2D = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
-            }
-        }
-
-        /// <summary>
-        /// Begins the draw.
-        /// </summary>
-        public void BeginDraw()
-        {
-            if (m_renderTarget2D == null) { return; }
-
-            m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
-            m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
-
-            // Start Direct2D rendering
-            m_renderTarget2D.BeginDraw();
-        }
-
-        /// <summary>
-        /// Finishes Direct2D drawing.
-        /// </summary>
-        public void EndDraw()
-        {
-            if (m_renderTarget2D == null) { return; }
-
-            m_renderTarget2D.EndDraw();
-
-            // Finish Direct2D drawing
-            m_device.DeviceContextD2D.Target = null;
-        }
-
-        /// <summary>
         /// Is this resource loaded correctly?
         /// </summary>
-        public bool IsLoaded
-        {
-            get { return m_renderTarget2D != null; }
-        }
+        public bool IsLoaded => m_renderTarget2D != null;
 
         /// <summary>
         /// Gets the Direct2D render target.
         /// </summary>
-        internal D2D.RenderTarget RenderTarget2D
-        {
-            get { return m_renderTarget2D; }
-        }
+        internal D2D.RenderTarget RenderTarget2D => m_renderTarget2D;
 
         /// <summary>
         /// Gets the 2D graphics object.
         /// </summary>
-        internal Graphics2D Graphics
-        {
-            get { return m_graphics2D; }
-        }
+        internal Graphics2D Graphics => m_graphics2D;
+
+        #region Given resources
+        private EngineDevice m_device;
+        private D3D11.Texture2D m_renderTarget3D;
+        #endregion
+
+        #region Own 2D render target resource
+        private D2D.RenderTarget m_renderTarget2D;
+        private D2D.Bitmap1 m_renderTargetBitmap;
+        #endregion
     }
 }

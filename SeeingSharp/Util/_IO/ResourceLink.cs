@@ -21,38 +21,31 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Checking;
-
     #endregion
 
     public abstract class ResourceLink
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceLink"/> class.
-        /// </summary>
-        protected ResourceLink()
-        {
-        }
-
         /// <summary>
         /// Writes the contents of this resource to the given dummy file.
         /// </summary>
         /// <param name="fileName">Name of the dummy file.</param>
         public void WriteAllBytesToDummyFile(string fileName)
         {
-            using (var inStream = this.OpenInputStream())
+            using (var inStream = OpenInputStream())
 
             using (Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                byte[] buffer = new byte[1024];
-                int readBytes = inStream.Read(buffer, 0, buffer.Length);
+                var buffer = new byte[1024];
+                var readBytes = inStream.Read(buffer, 0, buffer.Length);
                 while (readBytes > 0)
                 {
                     outStream.Write(buffer, 0, readBytes);
@@ -66,7 +59,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public string ReadCompleteToString()
         {
-            using (var inStream = this.OpenInputStream())
+            using (var inStream = OpenInputStream())
 
             using (var inStreamReader = new StreamReader(inStream))
             {
@@ -79,7 +72,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task<string> ReadCompleteToStringAsync()
         {
-            using (var inStream = await this.OpenInputStreamAsync())
+            using (var inStream = await OpenInputStreamAsync())
 
             using (var inStreamReader = new StreamReader(inStream))
             {
@@ -125,16 +118,13 @@ namespace SeeingSharp.Util
             // Try to read format out of the file name
             if (!string.IsNullOrEmpty(fileName))
             {
-                int indexLastDot = fileName.LastIndexOf('.');
+                var indexLastDot = fileName.LastIndexOf('.');
                 if (indexLastDot < 0) { return string.Empty; }
                 if (fileName.Length < indexLastDot + 1) { return string.Empty; }
 
                 return fileName.Substring(indexLastDot + 1).ToLower();
             }
-            else
-            {
-                return string.Empty;
-            }
+            return string.Empty;
         }
 
         public static implicit operator ResourceLink(AssemblyResourceLink streamFactory)

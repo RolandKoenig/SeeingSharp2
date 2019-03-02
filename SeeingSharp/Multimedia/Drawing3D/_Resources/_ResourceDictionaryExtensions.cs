@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using Objects;
-    using SeeingSharp.Util;
-
     #endregion
 
     internal static class ResourceDictionaryExtensions
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var textureKey = targetSurface.TextureKey;
 
             // Get the material if it is already created
-            if ((!materialKey.IsEmpty) && (resourceDict.ContainsResource(materialKey)))
+            if (!materialKey.IsEmpty && resourceDict.ContainsResource(materialKey))
             {
                 return resourceDict.GetResource<MaterialResource>(materialKey);
             }
@@ -77,45 +77,37 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if(textureKey.IsEmpty)
             {
                 // Create a default material without any texture
-                var result = resourceDict.AddResource<SimpleColoredMaterialResource>(materialKey, new SimpleColoredMaterialResource());
+                var result = resourceDict.AddResource(materialKey, new SimpleColoredMaterialResource());
                 result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
                 return result;
             }
-            else
+            // Create texture resource if needed
+            try
             {
-                // Create texture resource if needed
-                try
+                if (!resourceDict.ContainsResource(textureKey) &&
+                    !string.IsNullOrEmpty(textureKey.NameKey))
                 {
-                    if ((!resourceDict.ContainsResource(textureKey)) &&
-                       (!string.IsNullOrEmpty(textureKey.NameKey)))
+                    // Try to find and create the texture resource by its name
+                    if (targetSurface.ResourceLink != null)
                     {
-                        // Try to find and create the texture resource by its name
-                        if (targetSurface.ResourceLink != null)
-                        {
-                            var textureResourceLink = targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey);
+                        var textureResourceLink = targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey);
 
-                            resourceDict.AddResource<StandardTextureResource>(
-                                textureKey,
-                                new StandardTextureResource(
-                                    targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey)));
-                        }
-                        else if (targetSurface.ResourceSourceAssembly != null)
+                        resourceDict.AddResource(
+                            textureKey,
+                            new StandardTextureResource(
+                                targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey)));
+                    }
+                    else if (targetSurface.ResourceSourceAssembly != null)
+                    {
+                        var textureResourceLink = new AssemblyResourceLink(
+                            targetSurface.ResourceSourceAssembly,
+                            targetSurface.ResourceSourceAssembly.GetName().Name + ".Resources.Textures",
+                            textureKey.NameKey);
+                        if (textureResourceLink.IsValid())
                         {
-                            var textureResourceLink = new AssemblyResourceLink(
-                                targetSurface.ResourceSourceAssembly,
-                                targetSurface.ResourceSourceAssembly.GetName().Name + ".Resources.Textures",
-                                textureKey.NameKey);
-                            if (textureResourceLink.IsValid())
-                            {
-                                resourceDict.AddResource<StandardTextureResource>(
-                                    textureKey,
-                                    new StandardTextureResource(textureResourceLink));
-                            }
-                            else
-                            {
-                                // Unable to resolve texture
-                                textureKey = NamedOrGenericKey.Empty;
-                            }
+                            resourceDict.AddResource(
+                                textureKey,
+                                new StandardTextureResource(textureResourceLink));
                         }
                         else
                         {
@@ -123,26 +115,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             textureKey = NamedOrGenericKey.Empty;
                         }
                     }
+                    else
+                    {
+                        // Unable to resolve texture
+                        textureKey = NamedOrGenericKey.Empty;
+                    }
                 }
-                catch { }
+            }
+            catch { }
 
-                // Create a default textured material
-                if (!textureKey.IsEmpty)
-                {
-                    var result = resourceDict.AddResource<SimpleColoredMaterialResource>(
-                        materialKey,
-                        new SimpleColoredMaterialResource(textureKey));
-                    result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
-                    return result;
-                }
-                else
-                {
-                    var result = resourceDict.AddResource<SimpleColoredMaterialResource>(
-                        materialKey,
-                        new SimpleColoredMaterialResource());
-                    result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
-                    return result;
-                }
+            // Create a default textured material
+            if (!textureKey.IsEmpty)
+            {
+                var result = resourceDict.AddResource(
+                    materialKey,
+                    new SimpleColoredMaterialResource(textureKey));
+                result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
+                return result;
+            }
+            else
+            {
+                var result = resourceDict.AddResource(
+                    materialKey,
+                    new SimpleColoredMaterialResource());
+                result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
+                return result;
             }
         }
 

@@ -21,17 +21,25 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.IO;
+using System.Reflection;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.IO;
-    using System.Reflection;
-
     #endregion
 
     public class AssemblyResourceInfo
     {
+        /// <summary>
+        /// Opens a reading stream
+        /// </summary>
+        public Stream OpenRead()
+        {
+            return TargetAssembly.GetManifestResourceStream(ResourcePath);
+        }
+
         /// <summary>
         /// Creates a new AssemblyResourceInfo object
         /// </summary>
@@ -40,14 +48,6 @@ namespace SeeingSharp.Util
             TargetAssembly = targetAssembly;
             ResourcePath = resourcePath;
             Key = key;
-        }
-
-        /// <summary>
-        /// Opens a reading stream
-        /// </summary>
-        public Stream OpenRead()
-        {
-            return TargetAssembly.GetManifestResourceStream(ResourcePath);
         }
 
         /// <summary>

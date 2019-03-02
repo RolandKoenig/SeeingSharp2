@@ -24,6 +24,8 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SharpDX.Direct2D1.Effects;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,33 +33,30 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public class GaussianBlurEffectResource : EffectResource
     {
-        public GaussianBlurEffectResource(IImage sourceImage)
-            : base(sourceImage)
-        {
-            this.StandardDeviation = 1f;
-        }
-
         /// <summary>
         /// Builds the effect.
         /// </summary>
         /// <param name="device">The device on which to load the effect instance.</param>
         protected override D2D.Effect BuildEffect(EngineDevice device)
         {
-            var blurEffect = new D2D.Effects.GaussianBlur(device.DeviceContextD2D)
+            var blurEffect = new GaussianBlur(device.DeviceContextD2D)
             {
                 BorderMode = D2D.BorderMode.Soft,
                 Optimization = D2D.GaussianBlurOptimization.Quality,
-                StandardDeviation = this.StandardDeviation
+                StandardDeviation = StandardDeviation
             };
 
             return blurEffect;
+        }
+
+        public GaussianBlurEffectResource(IImage sourceImage)
+            : base(sourceImage)
+        {
+            StandardDeviation = 1f;
         }
 
         public float StandardDeviation

@@ -22,33 +22,42 @@
 */
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI;
+using Windows.UI.Text;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
+
 namespace SeeingSharp.UwpSamples.Controls
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Linq;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Data;
-    using Windows.UI.Xaml.Media;
-
     #endregion
 
     public sealed partial class PropertyGrid : UserControl
     {
         public static readonly DependencyProperty SelectedObjectProperty =
-            DependencyProperty.Register(nameof(PropertyGrid.SelectedObject), typeof(object), typeof(PropertyGrid), new PropertyMetadata(null, OnSelectedObjectChanged));
+            DependencyProperty.Register(nameof(SelectedObject), typeof(object), typeof(PropertyGrid), new PropertyMetadata(null, OnSelectedObjectChanged));
+
+        private static void OnSelectedObjectChanged(DependencyObject sender, DependencyPropertyChangedEventArgs eArgs)
+        {
+            if(!(sender is PropertyGrid propGrid)) { return; }
+
+            propGrid.m_propertyGridVM.SelectedObject = eArgs.NewValue;
+            propGrid.UpdatePropertiesView();
+        }
+
+        public object SelectedObject
+        {
+            get => GetValue(SelectedObjectProperty);
+            set => SetValue(SelectedObjectProperty, value);
+        }
 
         private PropertyGridViewModel m_propertyGridVM;
-
-        public PropertyGrid()
-        {
-            this.InitializeComponent();
-
-            m_propertyGridVM = new PropertyGridViewModel();
-            this.GridMain.DataContext = m_propertyGridVM;
-        }
 
         private void UpdatePropertiesView()
         {
@@ -57,22 +66,22 @@ namespace SeeingSharp.UwpSamples.Controls
             var lstProperties = new List<ConfigurablePropertyMetadata>(m_propertyGridVM.PropertyMetadata);
             lstProperties.Sort((left, right) => left.CategoryName.CompareTo(right.CategoryName));
             var lstPropertyCategories = lstProperties
-                .Select((actProperty) => actProperty.CategoryName)
+                .Select(actProperty => actProperty.CategoryName)
                 .Distinct()
                 .ToList();
 
             // Define rows
             GridMain.RowDefinitions.Clear();
-            int rowCount = lstProperties.Count + lstPropertyCategories.Count;
-            for(int loop=0; loop<rowCount; loop++)
+            var rowCount = lstProperties.Count + lstPropertyCategories.Count;
+            for(var loop=0; loop<rowCount; loop++)
             {
-                GridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(45.0) });
+                GridMain.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45.0) });
             }
-            this.Height = rowCount * 45d;
+            Height = rowCount * 45d;
 
             // Create all controls
-            int actRowIndex = 0;
-            string actCategory = string.Empty;
+            var actRowIndex = 0;
+            var actCategory = string.Empty;
             foreach(var actProperty in m_propertyGridVM.PropertyMetadata)
             {
                 if(actProperty.CategoryName != actCategory)
@@ -89,13 +98,13 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.SetValue(Grid.ColumnProperty, 0d);
                     txtHeader.Margin = new Thickness(5d, 5d, 5d, 5d);
                     txtHeader.VerticalAlignment = VerticalAlignment.Bottom;
-                    txtHeader.FontWeight = Windows.UI.Text.FontWeights.Bold;
+                    txtHeader.FontWeight = FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    var rect = new Windows.UI.Xaml.Shapes.Rectangle
+                    var rect = new Rectangle
                     {
                         Height = 2d,
-                        Fill = new SolidColorBrush(Windows.UI.Colors.Black),
+                        Fill = new SolidColorBrush(Colors.Black),
                         VerticalAlignment = VerticalAlignment.Bottom,
                         Margin = new Thickness(5d, 5d, 5d, 0d)
                     };
@@ -126,12 +135,12 @@ namespace SeeingSharp.UwpSamples.Controls
                     case PropertyValueType.Bool:
                         var ctrlCheckBox = new CheckBox();
 
-                        ctrlCheckBox.SetBinding(CheckBox.IsCheckedProperty, new Binding()
+                        ctrlCheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
                             Mode = BindingMode.TwoWay,
                             Source = actProperty,
-                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                         });
 
                         ctrlValueEdit = ctrlCheckBox;
@@ -139,12 +148,12 @@ namespace SeeingSharp.UwpSamples.Controls
 
                     case PropertyValueType.String:
                         var ctrlTextBox = new TextBox();
-                        ctrlTextBox.SetBinding(TextBox.TextProperty, new Binding()
+                        ctrlTextBox.SetBinding(TextBox.TextProperty, new Binding
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
                             Mode = BindingMode.TwoWay,
                             Source = actProperty,
-                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                         });
                         ctrlTextBox.Width = 200d;
                         ctrlValueEdit = ctrlTextBox;
@@ -153,12 +162,12 @@ namespace SeeingSharp.UwpSamples.Controls
                     case PropertyValueType.Enum:
                         var ctrlComboBox = new ComboBox();
                         ctrlComboBox.ItemsSource = actProperty.GetEnumMembers();
-                        ctrlComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
+                        ctrlComboBox.SetBinding(Selector.SelectedItemProperty, new Binding
                         {
                             Path = new PropertyPath(nameof(actProperty.ValueAccessor)),
                             Mode = BindingMode.TwoWay,
                             Source = actProperty,
-                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                         });
                         ctrlComboBox.Width = 200d;
                         ctrlValueEdit = ctrlComboBox;
@@ -178,19 +187,12 @@ namespace SeeingSharp.UwpSamples.Controls
             }
         }
 
-        private static void OnSelectedObjectChanged(DependencyObject sender, DependencyPropertyChangedEventArgs eArgs)
+        public PropertyGrid()
         {
-            if(!(sender is PropertyGrid propGrid)) { return; }
+            InitializeComponent();
 
-            propGrid.m_propertyGridVM.SelectedObject = eArgs.NewValue;
-            propGrid.UpdatePropertiesView();
-        }
-
-
-        public object SelectedObject
-        {
-            get { return (object)GetValue(SelectedObjectProperty); }
-            set { SetValue(SelectedObjectProperty, value); }
+            m_propertyGridVM = new PropertyGridViewModel();
+            GridMain.DataContext = m_propertyGridVM;
         }
     }
 }

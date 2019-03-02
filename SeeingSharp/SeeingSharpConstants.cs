@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-
     #endregion
 
     public static class SeeingSharpConstants
@@ -34,6 +34,14 @@ namespace SeeingSharp
         public const float MAX_FOCUS_DISTANCE = 15f;
         public const float MIN_FOCUS_DISTANCE = 3f;
         public const int ASYNC_LOADER_MAX_PRALLEL_TASK_COUNT = 2;
+
+        #region Component group names
+        public const string COMPONENT_GROUP_CAMERA = "Camera";
+        #endregion
+
+        #region Constants for occurences per timeunit measuring
+        public static string PERF_GLOBAL_FRAMES_FINISHED = "Graphics.Global.FramesRendered";
+        #endregion
 
         #region Rendering constants
         public const double MINIMUM_FRAME_TIME_MS = 1000.0 / 60.0;
@@ -60,16 +68,8 @@ namespace SeeingSharp
         public const string PERF_RENDERLOOP_RENDER_2D = "Graphics.RenderLoop.Render.2D (Scene: {0}, View: {1})";
         #endregion
 
-        #region Constants for occurences per timeunit measuring
-        public static string PERF_GLOBAL_FRAMES_FINISHED = "Graphics.Global.FramesRendered";
-        #endregion
-
-        #region Component group names
-        public const string COMPONENT_GROUP_CAMERA = "Camera";
-        #endregion
-
         #region Constants for animation system
-        public static readonly TimeSpan UPDATE_STATE_MAX_TIME = new TimeSpan(0, 0, 0, 0, Int32.MaxValue);
+        public static readonly TimeSpan UPDATE_STATE_MAX_TIME = new TimeSpan(0, 0, 0, 0, int.MaxValue);
         public static readonly TimeSpan UPDATE_DEFAULT_CYLCE = new TimeSpan(UPDATE_DEFAULT_CYCLES_TICKS);
         public const double UPDATE_DEFAULT_CYCLE_MS = 50.0;
         public const long UPDATE_DEFAULT_CYCLES_TICKS = 500000;

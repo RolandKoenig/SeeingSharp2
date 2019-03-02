@@ -21,37 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     public class GenericGeometryFactory : GeometryFactory
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
-        /// </summary>
-        /// <param name="vertexStructure">The vertex structures.</param>
-        public GenericGeometryFactory(VertexStructure vertexStructure)
-        {
-            VertexStructure = vertexStructure;
-            VertexStructureLowDetail = vertexStructure;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
-        /// </summary>
-        /// <param name="vertexStructure">The vertex structures.</param>
-        /// <param name="vertexStructureLowDetail">The vertex structures for low detail level.</param>
-        public GenericGeometryFactory(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
-        {
-            VertexStructure = vertexStructure;
-            VertexStructureLowDetail = vertexStructureLowDetail;
-        }
-
         /// <summary>
         /// Builds the structure.
         /// </summary>
@@ -59,7 +38,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             if (buildOptions.IsHighDetail) { return VertexStructure; }
-            else { return VertexStructureLowDetail; }
+            return VertexStructureLowDetail;
         }
 
         /// <summary>
@@ -101,6 +80,27 @@ namespace SeeingSharp.Multimedia.Objects
                     actSurface.Material = materialNameNew;
                 }
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
+        /// </summary>
+        /// <param name="vertexStructure">The vertex structures.</param>
+        public GenericGeometryFactory(VertexStructure vertexStructure)
+        {
+            VertexStructure = vertexStructure;
+            VertexStructureLowDetail = vertexStructure;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
+        /// </summary>
+        /// <param name="vertexStructure">The vertex structures.</param>
+        /// <param name="vertexStructureLowDetail">The vertex structures for low detail level.</param>
+        public GenericGeometryFactory(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
+        {
+            VertexStructure = vertexStructure;
+            VertexStructureLowDetail = vertexStructureLowDetail;
         }
 
         /// <summary>

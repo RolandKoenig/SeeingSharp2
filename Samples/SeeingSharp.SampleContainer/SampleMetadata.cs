@@ -21,6 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System;
 using SeeingSharp.Util;
 
@@ -30,22 +31,6 @@ namespace SeeingSharp.SampleContainer
     {
         private SampleDescriptionAttribute m_description;
         private Type m_sampleType;
-
-        public SampleMetadata()
-        {
-
-        }
-
-        public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
-        {
-            m_description = description;
-            m_sampleType = sampleType;
-
-            Name = m_description.SampleName;
-            OrderId = m_description.OrderID;
-            Group = m_description.SampleGroupName;
-            SourceCodeUrl = m_description.SourceCodeUrl;
-        }
 
         public SampleBase CreateSampleObject()
         {
@@ -87,6 +72,22 @@ namespace SeeingSharp.SampleContainer
             return new AssemblyResourceLink(
                 m_sampleType,
                 m_description.SampleImageFileName);
+        }
+
+        public SampleMetadata()
+        {
+
+        }
+
+        public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
+        {
+            m_description = description;
+            m_sampleType = sampleType;
+
+            Name = m_description.SampleName;
+            OrderId = m_description.OrderID;
+            Group = m_description.SampleGroupName;
+            SourceCodeUrl = m_description.SourceCodeUrl;
         }
 
         public string Name

@@ -21,28 +21,31 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SeeingSharp.Util;
-
     #endregion
 
     public abstract class SceneObjectFilter
     {
         /// <summary>
+        /// Has filter configuration changed?
+        /// </summary>
+        internal bool ConfigurationChanged;
+
+        /// <summary>
+        /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
+        /// </summary>
+        internal bool ConfigurationChangedUI;
+
+        /// <summary>
         /// An event that notifies changed filter configuration.
         /// </summary>
         public event EventHandler FilterConfigurationChanged;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneObjectFilter"/> class.
-        /// </summary>
-        public SceneObjectFilter()
-        {
-        }
 
         /// <summary>
         /// Checks for visibility of the given object.
@@ -73,19 +76,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Do update this filter on each frame?
         /// </summary>
-        public virtual bool UpdateEachFrame
-        {
-            get { return false; }
-        }
-
-        /// <summary>
-        /// Has filter configuration changed?
-        /// </summary>
-        internal bool ConfigurationChanged;
-
-        /// <summary>
-        /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
-        /// </summary>
-        internal bool ConfigurationChangedUI;
+        public virtual bool UpdateEachFrame => false;
     }
 }

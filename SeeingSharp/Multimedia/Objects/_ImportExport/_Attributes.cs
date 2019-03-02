@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-
     #endregion
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -34,8 +34,8 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public SupportedFileFormatAttribute(string shortFormatName, string shortDescription)
         {
-            this.ShortFormatName = shortFormatName;
-            this.ShortDescription = shortDescription;
+            ShortFormatName = shortFormatName;
+            ShortDescription = shortDescription;
         }
 
         public string ShortFormatName

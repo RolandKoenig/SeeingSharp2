@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class DurationPerformanceResult : PerformanceAnalyzeResultBase
@@ -37,9 +37,9 @@ namespace SeeingSharp.Util
         public DurationPerformanceResult(DurationPerformanceCalculator calculator, DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
             : base(calculator, timestampKey)
         {
-            this.SumAverageTicks = sumAvgTicks;
-            this.SumMaxTicks = sumMaxTicks;
-            this.SumMinTicks = sumMinTicks;
+            SumAverageTicks = sumAvgTicks;
+            SumMaxTicks = sumMaxTicks;
+            SumMinTicks = sumMinTicks;
         }
 
         public long SumMaxTicks { get; set; }
@@ -55,48 +55,27 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (this.SumAverageTicks == 0) { return 0; }
-                return (int)(10000000L / this.SumAverageTicks);
+                if (SumAverageTicks == 0) { return 0; }
+                return (int)(10000000L / SumAverageTicks);
             }
         }
 
-        public TimeSpan SumMax
-        {
-            get { return TimeSpan.FromTicks(SumMaxTicks); }
-        }
+        public TimeSpan SumMax => TimeSpan.FromTicks(SumMaxTicks);
 
-        public long SumMaxMS
-        {
-            get { return (long)Math.Round(this.SumMax.TotalMilliseconds); }
-        }
+        public long SumMaxMS => (long)Math.Round(SumMax.TotalMilliseconds);
 
-        public TimeSpan SumMin
-        {
-            get { return TimeSpan.FromTicks(SumMinTicks); }
-        }
+        public TimeSpan SumMin => TimeSpan.FromTicks(SumMinTicks);
 
-        public long SumMinMS
-        {
-            get { return (long)Math.Round(this.SumMin.TotalMilliseconds); }
-        }
+        public long SumMinMS => (long)Math.Round(SumMin.TotalMilliseconds);
 
-        public TimeSpan SumAverage
-        {
-            get { return TimeSpan.FromTicks(SumAverageTicks); }
-        }
+        public TimeSpan SumAverage => TimeSpan.FromTicks(SumAverageTicks);
 
-        public long SumAverageMS
-        {
-            get { return (long)Math.Round(this.SumAverage.TotalMilliseconds); }
-        }
+        public long SumAverageMS => (long)Math.Round(SumAverage.TotalMilliseconds);
 
         /// <summary>
         /// Gets the average millisecond value as a double.
         /// </summary>
 
-        public double SumAverageMSDouble
-        {
-            get { return this.SumAverage.TotalMilliseconds; }
-        }
+        public double SumAverageMSDouble => SumAverage.TotalMilliseconds;
     }
 }

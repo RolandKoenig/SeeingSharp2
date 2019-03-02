@@ -24,6 +24,11 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,13 +36,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class SolidBrushResource : BrushResource
@@ -45,27 +43,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #region Resources
         private D2D.SolidColorBrush[] m_loadedBrushes;
         #endregion
-
-        #region Configuration
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
-        /// </summary>
-        /// <param name="singleColor">Color of the single.</param>
-        /// <param name="opacity">The opacity value of the brush.</param>
-        public SolidBrushResource(
-            Color4 singleColor,
-            float opacity = 1f)
-        {
-            opacity.EnsureInRange(0f, 1f, nameof(opacity));
-
-            m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
-
-            Opacity = opacity;
-            Color = singleColor;
-        }
 
         /// <summary>
         /// Unloads all resources loaded on the given device.
@@ -88,9 +65,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
@@ -101,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 result = new D2D.SolidColorBrush(
                     engineDevice.FakeRenderTarget2D,
                     Color,
-                    new D2D.BrushProperties()
+                    new D2D.BrushProperties
                     {
                         Opacity = Opacity,
                         Transform = Matrix3x2.Identity
@@ -112,8 +89,28 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
+        /// </summary>
+        /// <param name="singleColor">Color of the single.</param>
+        /// <param name="opacity">The opacity value of the brush.</param>
+        public SolidBrushResource(
+            Color4 singleColor,
+            float opacity = 1f)
+        {
+            opacity.EnsureInRange(0f, 1f, nameof(opacity));
+
+            m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
+
+            Opacity = opacity;
+            Color = singleColor;
+        }
+
         public Color4 Color { get; }
 
         public float Opacity { get; }
+
+        #region Configuration
+        #endregion
     }
 }

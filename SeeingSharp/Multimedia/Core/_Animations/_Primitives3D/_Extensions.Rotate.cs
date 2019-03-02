@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public static partial class Drawing3DAnimationExtensions
@@ -99,8 +99,8 @@ namespace SeeingSharp.Multimedia.Core
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
                     sequenceBuilder.TargetObject, new Vector3(0f, targetYaw, 0f), animationTime,
-                    calculationComponent: RotationCalculationComponent.Yaw,
-                    stateChangeMode: AnimationStateChangeMode.ChangeStateBy));
+                    RotationCalculationComponent.Yaw,
+                    AnimationStateChangeMode.ChangeStateBy));
             return sequenceBuilder;
         }
 
@@ -120,8 +120,8 @@ namespace SeeingSharp.Multimedia.Core
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
                     targetObject, new Vector3(0f, targetYaw, 0f), animationTime,
-                    calculationComponent: RotationCalculationComponent.Yaw,
-                    stateChangeMode: AnimationStateChangeMode.ChangeStateBy));
+                    RotationCalculationComponent.Yaw,
+                    AnimationStateChangeMode.ChangeStateBy));
             return sequenceBuilder;
         }
 

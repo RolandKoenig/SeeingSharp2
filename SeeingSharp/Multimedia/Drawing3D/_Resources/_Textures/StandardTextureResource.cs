@@ -24,6 +24,9 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using SDXTK = SeeingSharp.Multimedia.Util.SdxTK;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -32,62 +35,10 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System.IO;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class StandardTextureResource : TextureResource
     {
-        #region configuration
-        private ResourceLink m_resourceLinkHighQuality;
-        private ResourceLink m_resourceLinkLowQuality;
-        private MemoryMappedTexture32bpp m_inMemoryTexture;
-        #endregion
-
-        #region Loaded resources
-        private D3D11.Texture2D m_texture;
-        private D3D11.ShaderResourceView m_textureView;
-        #endregion
-
-        #region Runtime
-        private bool m_isCubeTexture;
-        private bool m_isRenderTarget;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        public StandardTextureResource(ResourceLink textureSource)
-        {
-            m_resourceLinkHighQuality = textureSource;
-            m_resourceLinkLowQuality = textureSource;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        internal StandardTextureResource(MemoryMappedTexture32bpp inMemoryTexture)
-        {
-            inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
-
-            m_inMemoryTexture = inMemoryTexture;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
-        /// </summary>
-        /// <param name="highQualityTextureSource">High quality version of the texture.</param>
-        /// <param name="lowQualityTextureSource">Low quality version of the texture.</param>
-        public StandardTextureResource(ResourceLink highQualityTextureSource, ResourceLink lowQualityTextureSource)
-        {
-            m_resourceLinkHighQuality = highQualityTextureSource;
-            m_resourceLinkLowQuality = lowQualityTextureSource;
-        }
-
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -120,8 +71,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Some checking..
             m_isCubeTexture =
-                (m_texture.Description.ArraySize == 6) &&
-                ((m_texture.Description.OptionFlags & D3D11.ResourceOptionFlags.TextureCube) == D3D11.ResourceOptionFlags.TextureCube);
+                m_texture.Description.ArraySize == 6 &&
+                (m_texture.Description.OptionFlags & D3D11.ResourceOptionFlags.TextureCube) == D3D11.ResourceOptionFlags.TextureCube;
             m_isRenderTarget =
                 (m_texture.Description.BindFlags & D3D11.BindFlags.RenderTarget) == D3D11.BindFlags.RenderTarget;
         }
@@ -139,56 +90,82 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        public StandardTextureResource(ResourceLink textureSource)
+        {
+            m_resourceLinkHighQuality = textureSource;
+            m_resourceLinkLowQuality = textureSource;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        internal StandardTextureResource(MemoryMappedTexture32bpp inMemoryTexture)
+        {
+            inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
+
+            m_inMemoryTexture = inMemoryTexture;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
+        /// </summary>
+        /// <param name="highQualityTextureSource">High quality version of the texture.</param>
+        /// <param name="lowQualityTextureSource">Low quality version of the texture.</param>
+        public StandardTextureResource(ResourceLink highQualityTextureSource, ResourceLink lowQualityTextureSource)
+        {
+            m_resourceLinkHighQuality = highQualityTextureSource;
+            m_resourceLinkLowQuality = lowQualityTextureSource;
+        }
+
+        /// <summary>
         /// Gets the texture object.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_texture; }
-        }
+        public override D3D11.Texture2D Texture => m_texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_textureView; }
-        }
-
-
+        public override D3D11.ShaderResourceView TextureView => m_textureView;
 
         /// <summary>
         /// Is the object loaded correctly?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_textureView != null; }
-        }
+        public override bool IsLoaded => m_textureView != null;
 
         /// <summary>
         /// Is this texture a cube texture?
         /// </summary>
-        public bool IsCubeTexture
-        {
-            get { return m_isCubeTexture; }
-        }
+        public bool IsCubeTexture => m_isCubeTexture;
 
         /// <summary>
         /// Is this texture a render target texture?
         /// </summary>
-        public bool IsRenderTargetTexture
-        {
-            get { return m_isRenderTarget; }
-        }
+        public bool IsRenderTargetTexture => m_isRenderTarget;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return m_texture.Description.ArraySize; }
-        }
+        public override int ArraySize => m_texture.Description.ArraySize;
+
+        #region configuration
+        private ResourceLink m_resourceLinkHighQuality;
+        private ResourceLink m_resourceLinkLowQuality;
+        private MemoryMappedTexture32bpp m_inMemoryTexture;
+        #endregion
+
+        #region Loaded resources
+        private D3D11.Texture2D m_texture;
+        private D3D11.ShaderResourceView m_textureView;
+        #endregion
+
+        #region Runtime
+        private bool m_isCubeTexture;
+        private bool m_isRenderTarget;
+        #endregion
     }
 }

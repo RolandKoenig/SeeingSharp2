@@ -24,6 +24,8 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SharpDX.Direct2D1.Effects;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,35 +33,32 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public class DirectionalBlurEffectResource : EffectResource
     {
-        public DirectionalBlurEffectResource(IImage sourceImage)
-            : base(sourceImage)
-        {
-            this.StandardDeviation = 1f;
-            this.Angle = 0f;
-        }
-
         /// <summary>
         /// Builds the effect.
         /// </summary>
         /// <param name="device">The device on which to load the effect instance.</param>
         protected override D2D.Effect BuildEffect(EngineDevice device)
         {
-            var dirBlurEffect = new D2D.Effects.DirectionalBlur(device.DeviceContextD2D)
+            var dirBlurEffect = new DirectionalBlur(device.DeviceContextD2D)
             {
-                Angle = this.Angle,
+                Angle = Angle,
                 BorderMode = D2D.BorderMode.Soft,
-                StandardDeviation = this.StandardDeviation,
+                StandardDeviation = StandardDeviation,
                 Optimization = D2D.DirectionalBlurOptimization.Balanced
             };
 
             return dirBlurEffect;
+        }
+
+        public DirectionalBlurEffectResource(IImage sourceImage)
+            : base(sourceImage)
+        {
+            StandardDeviation = 1f;
+            Angle = 0f;
         }
 
         public float Angle

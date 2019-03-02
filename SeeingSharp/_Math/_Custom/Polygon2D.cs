@@ -21,46 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using SharpDX;
-
     #endregion
 
     public class Polygon2D
     {
-        private Vector2[] m_vertices;
         private Lazy<BoundingBox2D> m_boundingBox2D;
         private Lazy<EdgeOrder> m_edgeOrder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Polygon2D" /> class.
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <exception cref="SeeingSharpException"></exception>
-        public Polygon2D(params Vector2[] vertices)
-        {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
-
-            //Apply given vertices (remove the last one if it is equal to the first one)
-            m_vertices = vertices;
-            if ((m_vertices.Length > 1) &&
-               (m_vertices[m_vertices.Length - 1] == m_vertices[0]))
-            {
-                Vector2[] newArray = new Vector2[m_vertices.Length - 1];
-                Array.Copy(m_vertices, newArray, m_vertices.Length - 1);
-                m_vertices = newArray;
-            }
-
-            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
-            m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
-            m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
-        }
+        private Vector2[] m_vertices;
 
         /// <summary>
         /// Clones this polygon.
@@ -87,7 +63,7 @@ namespace SeeingSharp
 
             //Find the hole vertex with the highest x value
             var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
-            int holeVertexIndexWithHighestX = -1;
+            var holeVertexIndexWithHighestX = -1;
 
             for (var loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
             {
@@ -108,9 +84,9 @@ namespace SeeingSharp
 
             //Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
-            int actLineIndex = 0;
+            var actLineIndex = 0;
 
-            foreach (var actLine in this.Lines)
+            foreach (var actLine in Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
 
@@ -119,10 +95,10 @@ namespace SeeingSharp
                     var rayToIntersectionPoint = new Ray2D(
                         ray2D.Origin,
                         Vector2.Normalize(actIntersection.Item2 - ray2D.Origin));
-                    float lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
+                    var lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
 
-                    if ((lengthToIntersectionPoint > 0f) &&
-                        (rayToIntersectionPoint.EqualsWithTolerance(ray2D)))
+                    if (lengthToIntersectionPoint > 0f &&
+                        rayToIntersectionPoint.EqualsWithTolerance(ray2D))
                     {
                         if (foundLine == null)
                         {
@@ -147,8 +123,8 @@ namespace SeeingSharp
             }
 
             //Now generate result polygon
-            List<Vector2> resultBuilder = new List<Vector2>(this.m_vertices.Length + actHole.m_vertices.Length + 2);
-            for (int loopFillVertex = 0; loopFillVertex < this.m_vertices.Length; loopFillVertex++)
+            var resultBuilder = new List<Vector2>(m_vertices.Length + actHole.m_vertices.Length + 2);
+            for (var loopFillVertex = 0; loopFillVertex < m_vertices.Length; loopFillVertex++)
             {
                 //Add current vertex from filling polygon first
                 resultBuilder.Add(m_vertices[loopFillVertex]);
@@ -164,7 +140,7 @@ namespace SeeingSharp
 
                     //Add all vertices from the hole polygon
                     resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
-                    int loopHoleVertex = holeVertexIndexWithHighestX + 1;
+                    var loopHoleVertex = holeVertexIndexWithHighestX + 1;
                     while (loopHoleVertex != holeVertexIndexWithHighestX)
                     {
                         if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
@@ -192,8 +168,8 @@ namespace SeeingSharp
                     }
 
                     //Handle the case in which next vertex would equal current cut point
-                    if ((m_vertices.Length > loopFillVertex + 1) &&
-                        (m_vertices[loopFillVertex + 1].Equals(foundLine.Item3)))
+                    if (m_vertices.Length > loopFillVertex + 1 &&
+                        m_vertices[loopFillVertex + 1].Equals(foundLine.Item3))
                     {
                         loopFillVertex++;
                     }
@@ -213,21 +189,18 @@ namespace SeeingSharp
             {
                 return BoundingBox2D.Empty;
             }
-            else
+            var minimum = new Vector2(float.MaxValue, float.MaxValue);
+            var maximum = new Vector2(float.MinValue, float.MinValue);
+
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
-                var minimum = new Vector2(float.MaxValue, float.MaxValue);
-                var maximum = new Vector2(float.MinValue, float.MinValue);
-
-                for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
-                {
-                    if (m_vertices[loopVertex].X < minimum.X) { minimum.X = m_vertices[loopVertex].X; }
-                    if (m_vertices[loopVertex].Y < minimum.Y) { minimum.Y = m_vertices[loopVertex].Y; }
-                    if (m_vertices[loopVertex].X > maximum.X) { maximum.X = m_vertices[loopVertex].X; }
-                    if (m_vertices[loopVertex].Y > maximum.Y) { maximum.Y = m_vertices[loopVertex].Y; }
-                }
-
-                return new BoundingBox2D(minimum, maximum - minimum);
+                if (m_vertices[loopVertex].X < minimum.X) { minimum.X = m_vertices[loopVertex].X; }
+                if (m_vertices[loopVertex].Y < minimum.Y) { minimum.Y = m_vertices[loopVertex].Y; }
+                if (m_vertices[loopVertex].X > maximum.X) { maximum.X = m_vertices[loopVertex].X; }
+                if (m_vertices[loopVertex].Y > maximum.Y) { maximum.Y = m_vertices[loopVertex].Y; }
             }
+
+            return new BoundingBox2D(minimum, maximum - minimum);
         }
 
         /// <summary>
@@ -243,11 +216,11 @@ namespace SeeingSharp
 
             if (m_vertices.Length < 2) { return EdgeOrder.Unknown; }
 
-            float currentSum = 0f;
-            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            var currentSum = 0f;
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
                 //Get index of following vertex
-                int loopNext = loopVertex + 1;
+                var loopNext = loopVertex + 1;
                 if (loopNext >= m_vertices.Length) { loopNext = 0; }
 
                 //Calculate sum
@@ -258,7 +231,39 @@ namespace SeeingSharp
 
             //Return result depending on sum
             if (currentSum > 0f) { return EdgeOrder.Clockwise; }
-            else { return EdgeOrder.CounterClockwise; }
+            return EdgeOrder.CounterClockwise;
+        }
+
+        /// <summary>
+        /// Triangulates this polygon using the cutting ears triangulator.
+        /// </summary>
+        public IEnumerable<int> TriangulateUsingCuttingEars()
+        {
+            return CuttingEarsTriangulator.Triangulate(m_vertices);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polygon2D" /> class.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <exception cref="SeeingSharpException"></exception>
+        public Polygon2D(params Vector2[] vertices)
+        {
+            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+
+            //Apply given vertices (remove the last one if it is equal to the first one)
+            m_vertices = vertices;
+            if (m_vertices.Length > 1 &&
+               m_vertices[m_vertices.Length - 1] == m_vertices[0])
+            {
+                var newArray = new Vector2[m_vertices.Length - 1];
+                Array.Copy(m_vertices, newArray, m_vertices.Length - 1);
+                m_vertices = newArray;
+            }
+
+            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
+            m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
+            m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
         }
 
         /// <summary>
@@ -268,7 +273,7 @@ namespace SeeingSharp
         {
             get
             {
-                for (int loop = 0; loop < m_vertices.Length; loop++)
+                for (var loop = 0; loop < m_vertices.Length; loop++)
                 {
                     if (loop >= m_vertices.Length - 1)
                     {
@@ -283,14 +288,6 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Triangulates this polygon using the cutting ears triangulator.
-        /// </summary>
-        public IEnumerable<int> TriangulateUsingCuttingEars()
-        {
-            return CuttingEarsTriangulator.Triangulate(m_vertices);
-        }
-
-        /// <summary>
         /// Gets all vertices defined by this polygon.
         /// </summary>
         public ReadOnlyCollection<Vector2> Vertices { get; }
@@ -298,17 +295,11 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the bounding box of this polygon.
         /// </summary>
-        public BoundingBox2D BoundingBox
-        {
-            get { return m_boundingBox2D.Value; }
-        }
+        public BoundingBox2D BoundingBox => m_boundingBox2D.Value;
 
         /// <summary>
         /// Gets the current edge order.
         /// </summary>
-        public EdgeOrder EdgeOrder
-        {
-            get { return m_edgeOrder.Value; }
-        }
+        public EdgeOrder EdgeOrder => m_edgeOrder.Value;
     }
 }

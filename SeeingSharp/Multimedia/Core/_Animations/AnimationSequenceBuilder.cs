@@ -21,21 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     #endregion
 
     internal class AnimationSequenceBuilder<TargetType> : IAnimationSequenceBuilder<TargetType>
         where TargetType : class
     {
-        private List<IAnimation> m_sequenceList;
         private bool m_applied;
+        private List<IAnimation> m_sequenceList;
 
         /// <summary>
         /// Initializes a new instance of the AnimationSequenceBuilder class.
@@ -61,7 +61,6 @@ namespace SeeingSharp.Multimedia.Core
             AnimationHandler = owner;
             TargetObject = animatedObject;
         }
-
 
         /// <summary>
         /// Initializes a new instance of the AnimationSequenceBuilder class.
@@ -96,7 +95,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Append 'CallAction' on demand
-            if ((actionToCall != null) || (cancelAction != null))
+            if (actionToCall != null || cancelAction != null)
             {
                 this.WaitFinished()
                     .CallAction(actionToCall, cancelAction);
@@ -126,7 +125,7 @@ namespace SeeingSharp.Multimedia.Core
             if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 
             // Append 'CallAction' on demand
-            if ((actionToCall != null) || (cancelAction != null))
+            if (actionToCall != null || cancelAction != null)
             {
                 this.WaitFinished()
                     .CallAction(actionToCall, cancelAction);
@@ -151,9 +150,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task ApplyAsync()
         {
-            TaskCompletionSource<bool> taskComplSource = new TaskCompletionSource<bool>();
+            var taskComplSource = new TaskCompletionSource<bool>();
 
-            this.Apply(
+            Apply(
                 () => taskComplSource.TrySetResult(true),
                 () => taskComplSource.TrySetCanceled());
 
@@ -166,9 +165,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task ApplyAsSecondaryAsync()
         {
-            TaskCompletionSource<bool> taskComplSource = new TaskCompletionSource<bool>();
+            var taskComplSource = new TaskCompletionSource<bool>();
 
-            this.ApplyAsSecondary(
+            ApplyAsSecondary(
                 () => taskComplSource.TrySetResult(true),
                 () => taskComplSource.TrySetCanceled());
 
@@ -188,7 +187,7 @@ namespace SeeingSharp.Multimedia.Core
             Action rewindAction = null;
             rewindAction = () =>
             {
-                List<IAnimation> newAnimationList = new List<IAnimation>(m_sequenceList.Count);
+                var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
                 foreach (var actAnimationStep in m_sequenceList)
                 {
                     actAnimationStep.Reset();
@@ -228,7 +227,7 @@ namespace SeeingSharp.Multimedia.Core
             Action rewindAction = null;
             rewindAction = () =>
             {
-                List<IAnimation> newAnimationList = new List<IAnimation>(m_sequenceList.Count);
+                var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
                 foreach (var actAnimationStep in m_sequenceList)
                 {
                     actAnimationStep.Reset();
@@ -260,17 +259,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the item count.
         /// </summary>
-        public int ItemCount
-        {
-            get { return m_sequenceList.Count; }
-        }
+        public int ItemCount => m_sequenceList.Count;
 
         /// <summary>
         /// Was apply called already?
         /// </summary>
-        public bool Applied
-        {
-            get { return m_applied; }
-        }
+        public bool Applied => m_applied;
     }
 }

@@ -28,14 +28,6 @@ namespace SeeingSharp.Multimedia.Core
         private SceneObject m_host;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SceneObjectBehavior"/> class.
-        /// </summary>
-        public SceneObjectBehavior()
-        {
-
-        }
-
-        /// <summary>
         /// Sets the host object for this behavior.
         /// </summary>
         /// <param name="hostObject">The object that hosts this behavior.</param>
@@ -76,9 +68,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the host object for this behavior.
         /// </summary>
-        public SceneObject HostObject
-        {
-            get { return m_host; }
-        }
+        public SceneObject HostObject => m_host;
     }
 }

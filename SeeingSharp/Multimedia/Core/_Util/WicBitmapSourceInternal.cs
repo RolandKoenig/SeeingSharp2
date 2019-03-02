@@ -21,44 +21,42 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Util;
+using SharpDX.WIC;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
-        public WicBitmapSourceInternal(SharpDX.WIC.BitmapDecoder decoder, SharpDX.WIC.FormatConverter converter)
+        public WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
         {
-            this.Decoder = decoder;
-            this.Converter = converter;
+            Decoder = decoder;
+            Converter = converter;
         }
+
+        public bool IsDisposed => Converter == null;
 
         public void Dispose()
         {
-            this.Converter = SeeingSharpTools.DisposeObject(this.Converter);
-            this.Decoder = SeeingSharpTools.DisposeObject(this.Decoder);
+            Converter = SeeingSharpTools.DisposeObject(Converter);
+            Decoder = SeeingSharpTools.DisposeObject(Decoder);
         }
 
-        public SharpDX.WIC.BitmapDecoder Decoder
+        public BitmapDecoder Decoder
         {
             get;
             private set;
         }
 
-        public SharpDX.WIC.FormatConverter Converter
+        public FormatConverter Converter
         {
             get;
             private set;
-        }
-
-        public bool IsDisposed
-        {
-            get { return this.Converter == null; }
         }
     }
 }

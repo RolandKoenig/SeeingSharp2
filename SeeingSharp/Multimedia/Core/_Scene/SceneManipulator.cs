@@ -21,47 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-    using Drawing2D;
-    using Drawing3D;
-    using Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class SceneManipulator
     {
-        // Main members
-        #region
-
-        #endregion
-
-        // Objects that remember all changes on object/resource collections
-        #region
-        private List<SceneObject> m_createdObjects;
-        private List<NamedOrGenericKey> m_createdResources;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
-        /// </summary>
-        /// <param name="owner">The scene which will be manipulated.</param>
-        internal SceneManipulator(Scene owner)
-        {
-            Owner = owner;
-            IsValid = false;
-
-            m_createdObjects = new List<SceneObject>();
-            m_createdResources = new List<NamedOrGenericKey>();
-        }
-
         /// <summary>
         /// Resets all object and resource collections managed locally by
         /// this manipulator object (e. g. property CreatedObjects).
@@ -210,7 +186,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawingAction">The action that draws the scene.</param>
         public void AddDrawingLayer(Action<Graphics2D> drawingAction)
         {
-            this.AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
+            AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
         }
 
         /// <summary>
@@ -308,8 +284,8 @@ namespace SeeingSharp.Multimedia.Core
                 newStructure.RealignToCenter();
             }
 
-            var resTextGeometry = this.AddResource(() => new GeometryResource(newStructure));
-            return this.AddGeneric(resTextGeometry, layer);
+            var resTextGeometry = AddResource(() => new GeometryResource(newStructure));
+            return AddGeneric(resTextGeometry, layer);
         }
 
         /// <summary>
@@ -318,7 +294,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="geometryResource">The geometry to be used.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource)
         {
-            return this.Add(new GenericObject(geometryResource));
+            return Add(new GenericObject(geometryResource));
         }
 
         /// <summary>
@@ -328,7 +304,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, string layer)
         {
-            return this.Add(new GenericObject(geometryResource), layer);
+            return Add(new GenericObject(geometryResource), layer);
         }
 
         /// <summary>
@@ -343,7 +319,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return this.Add(newGenericObject);
+            return Add(newGenericObject);
         }
 
         /// <summary>
@@ -359,7 +335,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return this.Add(newGenericObject, layer);
+            return Add(newGenericObject, layer);
         }
 
         /// <summary>
@@ -370,7 +346,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                this.Add(actObject);
+                Add(actObject);
             }
 
             return sceneObjects;
@@ -385,7 +361,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                this.Add(actObject, layer);
+                Add(actObject, layer);
             }
 
             return sceneObjects;
@@ -427,7 +403,6 @@ namespace SeeingSharp.Multimedia.Core
 
             Owner.RemoveRange(sceneObjects, layerName);
         }
-
 
         /// <summary>
         /// Adds a new layer with the given name.
@@ -549,6 +524,19 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
+        /// </summary>
+        /// <param name="owner">The scene which will be manipulated.</param>
+        internal SceneManipulator(Scene owner)
+        {
+            Owner = owner;
+            IsValid = false;
+
+            m_createdObjects = new List<SceneObject>();
+            m_createdResources = new List<NamedOrGenericKey>();
+        }
+
+        /// <summary>
         /// Gets the owner of this manipulator object.
         /// </summary>
         public Scene Owner { get; }
@@ -561,27 +549,27 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all created objects.
         /// </summary>
-        public IEnumerable<SceneObject> CreatedObjects
-        {
-            get { return m_createdObjects; }
-        }
+        public IEnumerable<SceneObject> CreatedObjects => m_createdObjects;
 
-        public int CreatedObjectsCount
-        {
-            get { return m_createdObjects.Count; }
-        }
+        public int CreatedObjectsCount => m_createdObjects.Count;
 
         /// <summary>
         /// Gets a list containing all created resources.
         /// </summary>
-        public IEnumerable<NamedOrGenericKey> CreatedResources
-        {
-            get { return m_createdResources; }
-        }
+        public IEnumerable<NamedOrGenericKey> CreatedResources => m_createdResources;
 
-        public int CreatedResourcesCount
-        {
-            get { return m_createdResources.Count; }
-        }
+        public int CreatedResourcesCount => m_createdResources.Count;
+
+        // Main members
+
+        #region
+        #endregion
+
+        // Objects that remember all changes on object/resource collections
+
+        #region
+        private List<SceneObject> m_createdObjects;
+        private List<NamedOrGenericKey> m_createdResources;
+        #endregion
     }
 }

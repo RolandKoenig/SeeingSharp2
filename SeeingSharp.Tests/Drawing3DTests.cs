@@ -22,7 +22,15 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Tests.Util;
+using SharpDX;
 using GDI = System.Drawing;
 
 #endregion
@@ -30,18 +38,6 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Multimedia.Core;
-    using Multimedia.Drawing3D;
-    using Multimedia.Objects;
-    using Multimedia.Views;
-    using SeeingSharp.Util;
-    using SharpDX;
-    using Util;
-
     #endregion
 
     [TestClass]
@@ -67,7 +63,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "ClearedScreen.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -93,11 +89,11 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var wireObject = new WireObject
                     {
-                        LineData = new Line[]
+                        LineData = new[]
                         {
                             new Line(
                                 new Vector3(-0.5f, 0f, -0.5f),
@@ -110,7 +106,7 @@ namespace SeeingSharp.Tests
                                 new Vector3(-0.5f, 0f, 0.5f)),
                             new Line(
                                 new Vector3(-0.5f, 0f, 0.5f),
-                                new Vector3(-0.5f, 0f, -0.5f)),
+                                new Vector3(-0.5f, 0f, -0.5f))
                         },
                         LineColor = Color4Ex.RedColor
                     };
@@ -125,7 +121,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleLine.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -148,9 +144,9 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -166,7 +162,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -192,7 +188,7 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var cubeType = new CubeGeometryFactory
                     {
@@ -201,7 +197,7 @@ namespace SeeingSharp.Tests
 
                     var stackedType = new StackedGeometryFactory(cubeType, 10);
 
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(stackedType));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -216,7 +212,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_StackedGeometry.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -242,9 +238,9 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -259,7 +255,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_Transparent.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -290,9 +286,9 @@ namespace SeeingSharp.Tests
                 memRenderTarget.RenderLoop.Camera = camera;
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -307,7 +303,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_Ortho.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -333,11 +329,11 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     // Create pallet geometry resource
                     var cubeType = new CubeGeometryFactory();
-                    var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                    var resPalletGeometry = manipulator.AddResource(
                         () => new GeometryResource(cubeType));
 
                     // Create pallet object
@@ -366,7 +362,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "Skybox.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }

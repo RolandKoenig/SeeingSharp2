@@ -21,30 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.IO;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.IO;
-    using System.Threading.Tasks;
-    using Checking;
-
     #endregion
 
     public class AssemblyResourceLinkSource : ResourceLink
     {
         private AssemblyResourceLink m_resourceLink;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyResourceLinkSource" /> class.
-        /// </summary>
-        /// <param name="resourceLink">The link to the resource.</param>
-        public AssemblyResourceLinkSource(AssemblyResourceLink resourceLink)
-        {
-            resourceLink.EnsureNotNull(nameof(resourceLink));
-
-            m_resourceLink = resourceLink;
-        }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="AssemblyResourceLink"/> to <see cref="AssemblyResourceLinkSource"/>.
@@ -59,7 +48,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "Assembly-Resource: " + m_resourceLink.ToString();
+            return "Assembly-Resource: " + m_resourceLink;
         }
 
         /// <summary>
@@ -105,27 +94,29 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyResourceLinkSource" /> class.
+        /// </summary>
+        /// <param name="resourceLink">The link to the resource.</param>
+        public AssemblyResourceLinkSource(AssemblyResourceLink resourceLink)
+        {
+            resourceLink.EnsureNotNull(nameof(resourceLink));
+
+            m_resourceLink = resourceLink;
+        }
+
+        /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension
-        {
-            get { return base.GetExtensionFromFileName(m_resourceLink.ResourceFile); }
-        }
+        public override string FileExtension => GetExtensionFromFileName(m_resourceLink.ResourceFile);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsAsync
-        {
-            get { return true; }
-        }
+        public override bool SupportsAsync => true;
 
         /// <summary>
         /// Are synchronous operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsSync
-        {
-            get { return true; }
-        }
+        public override bool SupportsSync => true;
     }
 }

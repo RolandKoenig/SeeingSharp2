@@ -24,6 +24,8 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,9 +33,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public class Overlay2DLineObject : SceneObject
@@ -74,9 +73,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <exception cref="System.NotImplementedException"></exception>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if(CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                this.SubscribeToPass(
+                SubscribeToPass(
                     RenderPassInfo.PASS_2D_OVERLAY,
                     layerViewSubset,
                     OnRenderOverlay2D);
@@ -92,16 +91,16 @@ namespace SeeingSharp.Multimedia.Objects
             using(var brush = new D2D.SolidColorBrush(renderState.RenderTarget2D, Color4Ex.RedColor))
             {
                 renderState.RenderTarget2D.DrawLine(
-                    new SharpDX.Mathematics.Interop.RawVector2(10f, 10f),
-                    new SharpDX.Mathematics.Interop.RawVector2(200f, 200f),
+                    new RawVector2(10f, 10f),
+                    new RawVector2(200f, 200f),
                     brush,
                     10f);
 
                 for(var loop =0 ; loop < 100; loop++)
                 {
                     renderState.RenderTarget2D.DrawLine(
-                        new SharpDX.Mathematics.Interop.RawVector2(200f + 10f * loop, 10f),
-                        new SharpDX.Mathematics.Interop.RawVector2(200f + 10f * loop, 200f),
+                        new RawVector2(200f + 10f * loop, 10f),
+                        new RawVector2(200f + 10f * loop, 200f),
                         brush,
                         5f);
                 }

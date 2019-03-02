@@ -21,24 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Components
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-    using Input;
-    using SharpDX;
-
     #endregion
 
     public class FreeMovingCameraComponent : SceneComponent
     {
-        #region Constants
-        private const float MOVEMENT = 0.3f;
-        private const float ROTATION = 0.01f;
-        #endregion
-
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -111,7 +106,7 @@ namespace SeeingSharp.Multimedia.Components
             out bool isControlKeyDown)
         {
             // Define multiplyer
-            float multiplyer = 1f;
+            var multiplyer = 1f;
             isControlKeyDown = false;
 
             if (actKeyboardState.IsKeyDown(WinVirtualKey.ControlKey) ||
@@ -204,14 +199,19 @@ namespace SeeingSharp.Multimedia.Components
             // Handle mouse wheel
             if (mouseState.WheelDelta != 0)
             {
-                float multiplyer = 1f;
+                var multiplyer = 1f;
                 if (isControlKeyDown) { multiplyer = 2f; }
-                actCamera.Zoom((mouseState.WheelDelta / 100f) * multiplyer);
+                actCamera.Zoom(mouseState.WheelDelta / 100f * multiplyer);
             }
         }
 
         public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
 
         public override bool IsViewSpecific => true;
+
+        #region Constants
+        private const float MOVEMENT = 0.3f;
+        private const float ROTATION = 0.01f;
+        #endregion
     }
 }

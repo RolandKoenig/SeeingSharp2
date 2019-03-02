@@ -24,6 +24,5 @@
 namespace SeeingSharp.Multimedia.Objects
 {
     public static partial class ConstructionExtensions
-    {
-    }
+    {}
 }

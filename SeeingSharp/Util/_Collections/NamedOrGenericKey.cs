@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-
     #endregion
 
     public struct NamedOrGenericKey : IEquatable<NamedOrGenericKey>, IComparable<NamedOrGenericKey>
@@ -81,7 +81,7 @@ namespace SeeingSharp.Util
         /// </returns>
         public override string ToString()
         {
-            return this.Description;
+            return Description;
         }
 
         /// <summary>
@@ -98,10 +98,7 @@ namespace SeeingSharp.Util
                 if (other.NameKey == null) { return false; }
                 return NameKey == other.NameKey;
             }
-            else
-            {
-                return GenericKey == other.GenericKey;
-            }
+            return GenericKey == other.GenericKey;
         }
 
         /// <summary>
@@ -110,7 +107,7 @@ namespace SeeingSharp.Util
         /// <param name="other"></param>
         public int CompareTo(NamedOrGenericKey other)
         {
-            int result = m_hashCode.CompareTo(other.m_hashCode);
+            var result = m_hashCode.CompareTo(other.m_hashCode);
             if(result == 0)
             {
                 if (NameKey != null)
@@ -139,12 +136,9 @@ namespace SeeingSharp.Util
             if (obj is NamedOrGenericKey)
             {
                 var other = (NamedOrGenericKey)obj;
-                return this.Equals(other);
+                return Equals(other);
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         /// <summary>
@@ -183,13 +177,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Is this key empty?
         /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return (GenericKey == 0) && (NameKey == null);
-            }
-        }
+        public bool IsEmpty => GenericKey == 0 && NameKey == null;
 
         /// <summary>
         /// Gets or sets a hint for this resource key (a custom description which helps identifying what is behind this key).
@@ -212,10 +200,7 @@ namespace SeeingSharp.Util
 
                 return result;
             }
-            set
-            {
-                m_hint = value;
-            }
+            set => m_hint = value;
         }
 
         /// <summary>
@@ -226,7 +211,7 @@ namespace SeeingSharp.Util
             get
             {
                 if (NameKey != null) { return "Name: " + NameKey; }
-                else { return "Generic ID: " + GenericKey; }
+                return "Generic ID: " + GenericKey;
             }
         }
 

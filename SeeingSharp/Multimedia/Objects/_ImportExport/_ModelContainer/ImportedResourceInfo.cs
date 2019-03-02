@@ -21,18 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class ImportedResourceInfo
     {
+        public override string ToString()
+        {
+            return ResourceKey.ToString();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedResourceInfo"/> class.
         /// </summary>
@@ -40,13 +45,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="resourceFactory">The resource factory.</param>
         public ImportedResourceInfo(NamedOrGenericKey resourceKey, Func<Resource> resourceFactory)
         {
-            this.ResourceKey = resourceKey;
-            this.ResourceFactory = resourceFactory;
-        }
-
-        public override string ToString()
-        {
-            return this.ResourceKey.ToString();
+            ResourceKey = resourceKey;
+            ResourceFactory = resourceFactory;
         }
 
         public NamedOrGenericKey ResourceKey

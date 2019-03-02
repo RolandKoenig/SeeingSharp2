@@ -22,7 +22,10 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using SeeingSharp.Multimedia.Core;
 using SDX = SharpDX;
 
 #endregion
@@ -30,12 +33,6 @@ using SDX = SharpDX;
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using Multimedia.Core;
-
     #endregion
 
     public static partial class EnsureMultimedia
@@ -66,7 +63,7 @@ namespace SeeingSharp.Checking
 
             // Check for maximum dimension
             //  see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx#Overview
-            int maxDimension = 0;
+            var maxDimension = 0;
             switch(driverLevel)
             {
                 case HardwareDriverLevel.Direct3D9_1:
@@ -94,5 +91,5 @@ namespace SeeingSharp.Checking
                     checkedVariableName, callerMethod, maxDimension));
             }
         }
-   }
+    }
 }

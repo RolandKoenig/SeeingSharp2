@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     /// <summary>
@@ -35,10 +35,30 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class UpdateState : IAnimationUpdateState
     {
-        #region Parameters passed by global loop
-        private int m_updateTimeMilliseconds;
-        private TimeSpan m_updateTime;
-        #endregion
+        /// <summary>
+        /// Called internally by EngineMainLoop and creates a copy of this object
+        /// for each updated scene.
+        /// </summary>
+        internal UpdateState CopyForSceneUpdate()
+        {
+            var result = new UpdateState
+            {
+                m_updateTime = m_updateTime,
+                m_updateTimeMilliseconds = m_updateTimeMilliseconds
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Resets this UpdateState to the given update time.
+        /// </summary>
+        /// <param name="updateTime">The update time.</param>
+        internal void Reset(TimeSpan updateTime)
+        {
+            m_updateTime = updateTime;
+            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+        }
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
@@ -59,50 +79,24 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Called internally by EngineMainLoop and creates a copy of this object
-        /// for each updated scene.
-        /// </summary>
-        internal UpdateState CopyForSceneUpdate()
-        {
-            var result = new UpdateState
-            {
-                m_updateTime = this.m_updateTime,
-                m_updateTimeMilliseconds = this.m_updateTimeMilliseconds
-            };
-
-            return result;
-        }
-
-        /// <summary>
-        /// Resets this UpdateState to the given update time.
-        /// </summary>
-        /// <param name="updateTime">The update time.</param>
-        internal void Reset(TimeSpan updateTime)
-        {
-            m_updateTime = updateTime;
-            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
-        }
-
-        /// <summary>
         /// Gets current update time.
         /// </summary>
-        public TimeSpan UpdateTime
-        {
-            get { return m_updateTime; }
-        }
+        public TimeSpan UpdateTime => m_updateTime;
 
         /// <summary>
         /// Gets the current update time in milliseconds.
         /// </summary>
-        public int UpdateTimeMilliseconds
-        {
-            get { return m_updateTimeMilliseconds; }
-        }
+        public int UpdateTimeMilliseconds => m_updateTimeMilliseconds;
 
         public bool IgnorePauseState
         {
             get;
             set;
         }
+
+        #region Parameters passed by global loop
+        private int m_updateTimeMilliseconds;
+        private TimeSpan m_updateTime;
+        #endregion
     }
 }

@@ -43,19 +43,13 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// Gets the pixel buffer.
         /// </summary>
         /// <returns>A <see cref="PixelBuffer"/>.</returns>
-        public PixelBuffer this[int bufferIndex]
-        {
-            get
-            {
-                return this.image.pixelBuffers[bufferIndex];
-            }
-        }
+        public PixelBuffer this[int bufferIndex] => image.pixelBuffers[bufferIndex];
 
         /// <summary>
         /// Gets the total number of pixel buffers.
         /// </summary>
         /// <returns>The total number of pixel buffers.</returns>
-        public int Count { get { return this.image.pixelBuffers.Length; } }
+        public int Count => image.pixelBuffers.Length;
 
         /// <summary>
         /// Gets the pixel buffer for the specified array/z slice and mipmap level.
@@ -63,13 +57,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="arrayOrDepthSlice">For 3D image, the parameter is the Z slice, otherwise it is an index into the texture array.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>A <see cref="PixelBuffer"/>.</returns>
-        public PixelBuffer this[int arrayOrDepthSlice, int mipIndex]
-        {
-            get
-            {
-                return this.image.GetPixelBuffer(arrayOrDepthSlice, mipIndex);
-            }
-        }
+        public PixelBuffer this[int arrayOrDepthSlice, int mipIndex] => image.GetPixelBuffer(arrayOrDepthSlice, mipIndex);
 
         /// <summary>
         /// Gets the pixel buffer for the specified array/z slice and mipmap level.
@@ -78,12 +66,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="zIndex">Z index for 3D image. Must be set to 0 for all 1D/2D images.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>A <see cref="PixelBuffer"/>.</returns>
-        public PixelBuffer this[int arrayIndex, int zIndex, int mipIndex]
-        {
-            get
-            {
-                return this.image.GetPixelBuffer(arrayIndex, zIndex, mipIndex);
-            }
-        }
+        public PixelBuffer this[int arrayIndex, int zIndex, int mipIndex] => image.GetPixelBuffer(arrayIndex, zIndex, mipIndex);
     }
 }

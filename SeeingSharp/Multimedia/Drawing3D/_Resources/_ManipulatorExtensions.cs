@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using Objects;
-    using SeeingSharp.Util;
-
     #endregion
 
     public static class SceneManipulatorExtensions
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureSource">The source of the texture.</param>
         public static NamedOrGenericKey AddTexture(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
-            return sceneManipulator.AddResource<StandardTextureResource>(() => new StandardTextureResource(textureSource));
+            return sceneManipulator.AddResource(() => new StandardTextureResource(textureSource));
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             ResourceLink textureSourceHighQuality,
             ResourceLink textureSourceLowQuality)
         {
-            return sceneManipulator.AddResource<StandardTextureResource>(() => new StandardTextureResource(textureSourceHighQuality, textureSourceLowQuality));
+            return sceneManipulator.AddResource(() => new StandardTextureResource(textureSourceHighQuality, textureSourceLowQuality));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         public static NamedOrGenericKey AddSimpleColoredMaterial(this SceneManipulator sceneManipulator)
         {
-            return sceneManipulator.AddResource<SimpleColoredMaterialResource>(() => new SimpleColoredMaterialResource());
+            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource());
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             bool adjustTextureCoordinates = false,
             float addToAlpha = 0f)
         {
-            return sceneManipulator.AddResource<SimpleColoredMaterialResource>(
+            return sceneManipulator.AddResource(
                 () => new SimpleColoredMaterialResource(textureKey)
                 {
                     AdjustTextureCoordinates = adjustTextureCoordinates,
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public static NamedOrGenericKey AddSimpleColoredMaterial(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
             var resTexture = sceneManipulator.AddTexture(textureSource);
-            return sceneManipulator.AddResource<SimpleColoredMaterialResource>(() => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource(resTexture));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             ResourceLink textureSourceHighQuality, ResourceLink textureSourceLowQuality)
         {
             var resTexture = sceneManipulator.AddTexture(textureSourceHighQuality, textureSourceLowQuality);
-            return sceneManipulator.AddResource<SimpleColoredMaterialResource>(() => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource(resTexture));
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertexStructure">The structures which define the geometry.</param>
         public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, VertexStructure vertexStructure)
         {
-            return sceneManipulator.AddResource<GeometryResource>(() => new GeometryResource(vertexStructure));
+            return sceneManipulator.AddResource(() => new GeometryResource(vertexStructure));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="objectType">The geometry to be loaded.</param>
         public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, GeometryFactory objectType)
         {
-            return sceneManipulator.AddResource<GeometryResource>(() => new GeometryResource(objectType));
+            return sceneManipulator.AddResource(() => new GeometryResource(objectType));
         }
     }
 }

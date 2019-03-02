@@ -21,18 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     #endregion
 
     public class ObjectThread
@@ -40,22 +40,7 @@ namespace SeeingSharp.Util
         private const int STANDARD_HEARTBEAT = 500;
 
         #region Members for thread configuration
-
         private bool m_createMessenger;
-        #endregion
-
-        #region Members for thread runtime
-        private volatile ObjectThreadState m_currentState;
-        private Thread m_mainThread;
-        private CultureInfo m_culture;
-        private CultureInfo m_uiCulture;
-        #endregion
-
-        #region Threading resources
-        private ObjectThreadSynchronizationContext m_syncContext;
-        private ConcurrentQueue<Action> m_taskQueue;
-        private SemaphoreSlim m_mainLoopSynchronizeObject;
-        private SemaphoreSlim m_threadStopSynchronizeObject;
         #endregion
 
         /// <summary>
@@ -79,40 +64,11 @@ namespace SeeingSharp.Util
         public event EventHandler<ObjectThreadExceptionEventArgs> ThreadException;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
-        /// </summary>
-        public ObjectThread()
-            : this(string.Empty, STANDARD_HEARTBEAT)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
-        /// </summary>
-        /// <param name="name">The name of the generated thread.</param>
-        /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
-        /// <param name="createMessenger">Do automatically create a messenger for this thread?</param>
-        public ObjectThread(string name, int heartBeat, bool createMessenger = false)
-        {
-            m_taskQueue = new ConcurrentQueue<Action>();
-            m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
-
-            Name = name;
-            HeartBeat = heartBeat;
-
-            m_culture = Thread.CurrentThread.CurrentCulture;
-            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
-
-            Timer = new ObjectThreadTimer();
-            m_createMessenger = createMessenger;
-        }
-
-        /// <summary>
         /// Starts the thread.
         /// </summary>
         public void Start()
         {
-            if (m_currentState != ObjectThreadState.None) { throw new InvalidOperationException("Unable to start thread: Illegal state: " + m_currentState.ToString() + "!"); }
+            if (m_currentState != ObjectThreadState.None) { throw new InvalidOperationException("Unable to start thread: Illegal state: " + m_currentState + "!"); }
 
             //Ensure that one single pass of the main loop is made at once
             m_mainLoopSynchronizeObject.Release();
@@ -151,8 +107,8 @@ namespace SeeingSharp.Util
 
                 case ObjectThreadState.Running:
                 case ObjectThreadState.Starting:
-                    TaskCompletionSource<object> taskSource = new TaskCompletionSource<object>();
-                    this.Stopping += (sender, eArgs) =>
+                    var taskSource = new TaskCompletionSource<object>();
+                    Stopping += (sender, eArgs) =>
                     {
                         taskSource.TrySetResult(null);
                     };
@@ -168,9 +124,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public Task StartAsync()
         {
-            this.Start();
+            Start();
 
-            return this.InvokeAsync(() => { });
+            return InvokeAsync(() => { });
         }
 
         /// <summary>
@@ -178,14 +134,17 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Stop()
         {
-            if (m_currentState != ObjectThreadState.Running) { throw new InvalidOperationException("Unable to stop thread: Illegal state: " + m_currentState.ToString() + "!"); }
+            if (m_currentState != ObjectThreadState.Running) { throw new InvalidOperationException("Unable to stop thread: Illegal state: " + m_currentState + "!"); }
             m_currentState = ObjectThreadState.Stopping;
 
             Action dummyAction = null;
-            while (m_taskQueue.TryDequeue(out dummyAction)) ;
+            while (m_taskQueue.TryDequeue(out dummyAction))
+            {
+                ;
+            }
 
             //Trigger next update
-            this.Trigger();
+            Trigger();
         }
 
         /// <summary>
@@ -193,7 +152,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task StopAsync(int timeout)
         {
-            this.Stop();
+            Stop();
 
             if (m_threadStopSynchronizeObject != null)
             {
@@ -229,7 +188,7 @@ namespace SeeingSharp.Util
             }
 
             //Enqueues the given action
-            TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+            var taskCompletionSource = new TaskCompletionSource<object>();
 
             m_taskQueue.Enqueue(() =>
             {
@@ -247,7 +206,7 @@ namespace SeeingSharp.Util
             Task result = taskCompletionSource.Task;
 
             //Triggers the main loop
-            this.Trigger();
+            Trigger();
 
             //Returns the result
             return result;
@@ -332,7 +291,7 @@ namespace SeeingSharp.Util
                             stopWatch.Start();
 
                             //Get current taskqueue
-                            List<Action> localTaskQueue = new List<Action>();
+                            var localTaskQueue = new List<Action>();
                             Action dummyAction = null;
                             while (m_taskQueue.TryDequeue(out dummyAction))
                             {
@@ -387,12 +346,38 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
+        /// </summary>
+        public ObjectThread()
+            : this(string.Empty, STANDARD_HEARTBEAT)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectThread"/> class.
+        /// </summary>
+        /// <param name="name">The name of the generated thread.</param>
+        /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
+        /// <param name="createMessenger">Do automatically create a messenger for this thread?</param>
+        public ObjectThread(string name, int heartBeat, bool createMessenger = false)
+        {
+            m_taskQueue = new ConcurrentQueue<Action>();
+            m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
+
+            Name = name;
+            HeartBeat = heartBeat;
+
+            m_culture = Thread.CurrentThread.CurrentCulture;
+            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
+
+            Timer = new ObjectThreadTimer();
+            m_createMessenger = createMessenger;
+        }
+
+        /// <summary>
         /// Gets current thread time.
         /// </summary>
-        public DateTime ThreadTime
-        {
-            get { return Timer.Now; }
-        }
+        public DateTime ThreadTime => Timer.Now;
 
         /// <summary>
         /// Gets current timer of the thread.
@@ -402,10 +387,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext
-        {
-            get { return m_syncContext; }
-        }
+        public SynchronizationContext SyncContext => m_syncContext;
 
         /// <summary>
         /// Gets the name of this thread.
@@ -428,15 +410,6 @@ namespace SeeingSharp.Util
             private ObjectThread m_owner;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="ObjectThreadSynchronizationContext"/> class.
-            /// </summary>
-            /// <param name="owner">The owner of this context.</param>
-            public ObjectThreadSynchronizationContext(ObjectThread owner)
-            {
-                m_owner = owner;
-            }
-
-            /// <summary>
             /// When overridden in a derived class, dispatches an asynchronous message to a synchronization context.
             /// </summary>
             /// <param name="d">The <see cref="T:System.Threading.SendOrPostCallback"/> delegate to call.</param>
@@ -455,6 +428,29 @@ namespace SeeingSharp.Util
             {
                 throw new InvalidOperationException("Synchronous messages not supported on ObjectThreads!");
             }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ObjectThreadSynchronizationContext"/> class.
+            /// </summary>
+            /// <param name="owner">The owner of this context.</param>
+            public ObjectThreadSynchronizationContext(ObjectThread owner)
+            {
+                m_owner = owner;
+            }
         }
+
+        #region Members for thread runtime
+        private volatile ObjectThreadState m_currentState;
+        private Thread m_mainThread;
+        private CultureInfo m_culture;
+        private CultureInfo m_uiCulture;
+        #endregion
+
+        #region Threading resources
+        private ObjectThreadSynchronizationContext m_syncContext;
+        private ConcurrentQueue<Action> m_taskQueue;
+        private SemaphoreSlim m_mainLoopSynchronizeObject;
+        private SemaphoreSlim m_threadStopSynchronizeObject;
+        #endregion
     }
 }

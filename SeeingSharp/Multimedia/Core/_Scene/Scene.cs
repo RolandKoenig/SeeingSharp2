@@ -24,6 +24,17 @@
 #region using
 
 // Some namespace mappings
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,19 +42,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Checking;
-    using Drawing2D;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public partial class Scene
@@ -52,78 +50,21 @@ namespace SeeingSharp.Multimedia.Core
         public const string DEFAULT_LAYER_NAME = "Default";
         #endregion
 
-        #region Misc
-        private bool m_initialized;
-        private string m_name;
-        private List<SceneLayer> m_sceneLayers;
+        #region Resource keys
+        private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        #endregion Resource keys
 
-        #endregion
-
-        #region Some other logical parts of the scene object
-        private SceneComponentFlyweight m_sceneComponents;
-        #endregion
+        #region Members for 2D rendering
+        private List<Custom2DDrawingLayer> m_drawing2DLayers;
+        #endregion Members for 2D rendering
 
         #region Members for 3D rendering
         private CBPerFrame m_perFrameData;
         #endregion
 
-        #region Members for 2D rendering
-
-        private List<Custom2DDrawingLayer> m_drawing2DLayers;
-        #endregion Members for 2D rendering
-
-        #region Async update actions
-        private ThreadSaveQueue<Action> m_asyncInvokesBeforeUpdate;
-        private ThreadSaveQueue<Action> m_asyncInvokesUpdateBesideRendering;
-        #endregion Async update actions
-
-        #region Resource keys
-        private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        #endregion Resource keys
-
-        #region Some runtime values
-        private IndexBasedDynamicCollection<ResourceDictionary> m_registeredResourceDicts;
-        private IndexBasedDynamicCollection<ViewInformation> m_registeredViews;
-        private IndexBasedDynamicCollection<SceneRenderParameters> m_renderParameters;
-        #endregion Some runtime values
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Scene" /> class.
-        /// </summary>
-        /// <param name="name">The global name of this scene.</param>
-        /// <param name="registerOnMessenger">
-        /// Do register this scene for application messaging?
-        /// If true, then the caller has to ensure that the name is only used once
-        /// across the currently executed application.
-        /// </param>
-        public Scene()
-        {
-            m_perFrameData = new CBPerFrame();
-
-            TransformMode2D = Graphics2DTransformMode.Custom;
-            CustomTransform2D = Matrix3x2.Identity;
-            VirtualScreenSize2D = new Size2F();
-
-            m_sceneComponents = new SceneComponentFlyweight(this);
-
-            m_sceneLayers = new List<SceneLayer>();
-            m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
-            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
-
-            m_drawing2DLayers = new List<Custom2DDrawingLayer>();
-
-            m_asyncInvokesBeforeUpdate = new ThreadSaveQueue<Action>();
-            m_asyncInvokesUpdateBesideRendering = new ThreadSaveQueue<Action>();
-
-            m_registeredResourceDicts = new IndexBasedDynamicCollection<ResourceDictionary>();
-            m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
-            m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
-
-            this.CachedUpdateState = new SceneRelatedUpdateState(this);
-
-            // Try to initialize this scene object
-            InitializeResourceDictionaries();
-        }
+        #region Some other logical parts of the scene object
+        private SceneComponentFlyweight m_sceneComponents;
+        #endregion
 
         /// <summary>
         /// Waits until the given object is visible on the given view.
@@ -131,13 +72,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">The scene object to be checked.</param>
         /// <param name="viewInfo">The view on which to check.</param>
         /// <param name="cancelToken">The cancellation token.</param>
-        public Task WaitUntilVisibleAsync(SceneObject sceneObject, ViewInformation viewInfo, CancellationToken cancelToken = default(CancellationToken))
+        public Task WaitUntilVisibleAsync(SceneObject sceneObject, ViewInformation viewInfo, CancellationToken cancelToken = default)
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
             sceneObject.EnsureNotNull(nameof(viewInfo));
 
             return WaitUntilVisibleAsync(
-                new SceneObject[] { sceneObject },
+                new[] { sceneObject },
                 viewInfo, cancelToken);
         }
 
@@ -147,14 +88,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">Only return objects of this layer (empty means all layers).</param>
         public async Task<List<SceneObjectInfo>> GetSceneObjectInfoAsync(string layer = "")
         {
-            List<SceneObjectInfo> result = new List<SceneObjectInfo>(16);
-            await this.PerformBesideRenderingAsync(() =>
+            var result = new List<SceneObjectInfo>(16);
+            await PerformBesideRenderingAsync(() =>
             {
                 foreach(var actLayer in m_sceneLayers)
                 {
                     // Layer filter
-                    if((!string.IsNullOrEmpty(layer)) &&
-                       (actLayer.Name != layer))
+                    if(!string.IsNullOrEmpty(layer) &&
+                       actLayer.Name != layer)
                     {
                         continue;
                     }
@@ -162,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
                     foreach(var actSceneObject in actLayer.ObjectsInternal)
                     {
                         if (actSceneObject.HasChilds) { continue; }
-                        result.Add(new Core.SceneObjectInfo(actSceneObject, buildFullChildTree: true));
+                        result.Add(new SceneObjectInfo(actSceneObject, true));
                     }
                 }
             });
@@ -180,9 +121,9 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureObjectOfScene(this, nameof(sceneObject));
 
             SceneObjectInfo result = null;
-            await this.PerformBesideRenderingAsync(() =>
+            await PerformBesideRenderingAsync(() =>
             {
-                result = new SceneObjectInfo(sceneObject, buildFullChildTree: true);
+                result = new SceneObjectInfo(sceneObject, true);
             });
 
             return result;
@@ -194,12 +135,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjects">The scene objects to check for.</param>
         /// <param name="viewInfo">The view on which to check for visibility.</param>
         /// <param name="cancelToken">The cancellation token.</param>
-        public Task WaitUntilVisibleAsync(IEnumerable<SceneObject> sceneObjects, ViewInformation viewInfo, CancellationToken cancelToken = default(CancellationToken))
+        public Task WaitUntilVisibleAsync(IEnumerable<SceneObject> sceneObjects, ViewInformation viewInfo, CancellationToken cancelToken = default)
         {
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            TaskCompletionSource<object> taskComplSource = new TaskCompletionSource<object>();
+            var taskComplSource = new TaskCompletionSource<object>();
 
             // Define the poll action (polling is done inside scene update
             Action pollAction = null;
@@ -284,7 +225,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var manipulator = new SceneManipulator(this);
 
-            return this.PerformBeforeUpdateAsync(() =>
+            return PerformBeforeUpdateAsync(() =>
             {
                 try
                 {
@@ -397,7 +338,7 @@ namespace SeeingSharp.Multimedia.Core
             pickingOptions.EnsureNotNull(nameof(pickingOptions));
 
             // Query for all objects below the cursor
-            List<Tuple<SceneObject, float>> pickedObjects = new List<Tuple<SceneObject, float>>();
+            var pickedObjects = new List<Tuple<SceneObject, float>>();
 
             foreach (var actLayer in m_sceneLayers)
             {
@@ -406,7 +347,7 @@ namespace SeeingSharp.Multimedia.Core
                     if (!actObject.IsVisible(viewInformation)) { continue; }
                     if (!actObject.IsPickingTestVisible) { continue; }
 
-                    float actDistance = actObject.Pick(rayStart, rayDirection, viewInformation, pickingOptions);
+                    var actDistance = actObject.Pick(rayStart, rayDirection, viewInformation, pickingOptions);
 
                     if (!float.IsNaN(actDistance))
                     {
@@ -417,8 +358,8 @@ namespace SeeingSharp.Multimedia.Core
 
             // Return all picked object in correct order
             return pickedObjects
-                .OrderBy((actObject) => actObject.Item2)
-                .Convert((actObject) => actObject.Item1)
+                .OrderBy(actObject => actObject.Item2)
+                .Convert(actObject => actObject.Item1)
                 .ToList();
         }
 
@@ -490,7 +431,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             viewInformation.EnsureNotNull(nameof(viewInformation));
 
-            bool isFirstView = m_registeredViews.Count == 0;
+            var isFirstView = m_registeredViews.Count == 0;
 
             InitializeResourceDictionaries();
 
@@ -511,7 +452,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Register this view on this scene and on all layers
-            int viewIndex = m_registeredViews.AddObject(viewInformation);
+            var viewIndex = m_registeredViews.AddObject(viewInformation);
 
             foreach (var actLayer in m_sceneLayers)
             {
@@ -555,7 +496,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Deregister the view on this scene and all layers
-            int viewIndex = m_registeredViews.IndexOf(viewInformation);
+            var viewIndex = m_registeredViews.IndexOf(viewInformation);
             m_registeredViews.RemoveObject(viewInformation);
 
             foreach (var actLayer in m_sceneLayers)
@@ -567,8 +508,8 @@ namespace SeeingSharp.Multimedia.Core
             viewInformation.ViewIndex = -1;
 
             // Mark this scene for deletion if we don't have any other view registered
-            if ((m_registeredViews.Count <= 0) &&
-                (!this.DiscardAutomaticUnload))
+            if (m_registeredViews.Count <= 0 &&
+                !DiscardAutomaticUnload)
             {
                 GraphicsCore.Current.MainLoop.RegisterSceneForUnload(this);
             }
@@ -592,7 +533,7 @@ namespace SeeingSharp.Multimedia.Core
             // Create the new layer
             var newLayer = new SceneLayer(name, this)
             {
-                OrderID = m_sceneLayers.Max((actLayer) => actLayer.OrderID) + 1
+                OrderID = m_sceneLayers.Max(actLayer => actLayer.OrderID) + 1
             };
 
             m_sceneLayers.Add(newLayer);
@@ -643,7 +584,7 @@ namespace SeeingSharp.Multimedia.Core
             layer.OrderID = newOrderID;
 
             // Sort local layer list
-            this.SortLayers();
+            SortLayers();
         }
 
         /// <summary>
@@ -767,7 +708,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 for (var loop = 0; loop < m_sceneLayers.Count; loop++)
                 {
-                    SceneLayer actLayer = m_sceneLayers[loop];
+                    var actLayer = m_sceneLayers[loop];
                     actLayer.ClearResources();
                 }
             }
@@ -779,7 +720,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach(var actObject in sceneObjects)
             {
-                this.Remove(actObject);
+                Remove(actObject);
             }
         }
 
@@ -789,7 +730,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach (var actObject in sceneObjects)
             {
-                this.Remove(actObject, layerName);
+                Remove(actObject, layerName);
             }
         }
 
@@ -830,7 +771,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>();
 
             m_asyncInvokesBeforeUpdate.Enqueue(() =>
             {
@@ -858,7 +799,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>();
 
             m_asyncInvokesUpdateBesideRendering.Enqueue(() =>
             {
@@ -893,14 +834,14 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneComponents.UpdateSceneComponents(updateState);
 
             // Invoke all async action attached to this scene
-            int asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
+            var asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
 
             if (asyncActionsBeforeUpdateCount > 0)
             {
                 Action actAsyncAction = null;
-                int actIndex = 0;
+                var actIndex = 0;
 
-                while ((actIndex < asyncActionsBeforeUpdateCount) &&
+                while (actIndex < asyncActionsBeforeUpdateCount &&
                        m_asyncInvokesBeforeUpdate.Dequeue(out actAsyncAction))
                 {
                     actAsyncAction();
@@ -1023,7 +964,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (renderParameters == null)
             {
-                renderParameters = resources.GetResourceAndEnsureLoaded<SceneRenderParameters>(
+                renderParameters = resources.GetResourceAndEnsureLoaded(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new SceneRenderParameters());
                 m_renderParameters.AddObject(renderParameters, renderState.DeviceIndex);
@@ -1064,7 +1005,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var graphics = renderState.Graphics2D;
 
-            graphics.PushTransformSettings(new Graphics2DTransformSettings()
+            graphics.PushTransformSettings(new Graphics2DTransformSettings
             {
                 CustomTransform = CustomTransform2D,
                 TransformMode = TransformMode2D,
@@ -1156,6 +1097,44 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Scene" /> class.
+        /// </summary>
+        /// <param name="name">The global name of this scene.</param>
+        /// <param name="registerOnMessenger">
+        /// Do register this scene for application messaging?
+        /// If true, then the caller has to ensure that the name is only used once
+        /// across the currently executed application.
+        /// </param>
+        public Scene()
+        {
+            m_perFrameData = new CBPerFrame();
+
+            TransformMode2D = Graphics2DTransformMode.Custom;
+            CustomTransform2D = Matrix3x2.Identity;
+            VirtualScreenSize2D = new Size2F();
+
+            m_sceneComponents = new SceneComponentFlyweight(this);
+
+            m_sceneLayers = new List<SceneLayer>();
+            m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
+            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
+
+            m_drawing2DLayers = new List<Custom2DDrawingLayer>();
+
+            m_asyncInvokesBeforeUpdate = new ThreadSaveQueue<Action>();
+            m_asyncInvokesUpdateBesideRendering = new ThreadSaveQueue<Action>();
+
+            m_registeredResourceDicts = new IndexBasedDynamicCollection<ResourceDictionary>();
+            m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
+            m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
+
+            CachedUpdateState = new SceneRelatedUpdateState(this);
+
+            // Try to initialize this scene object
+            InitializeResourceDictionaries();
+        }
+
+        /// <summary>
         /// Gets a collection containing all layers.
         /// </summary>
         internal ReadOnlyCollection<SceneLayer> Layers { get; }
@@ -1167,7 +1146,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                int result = 0;
+                var result = 0;
 
                 foreach (var actLayer in m_sceneLayers)
                 {
@@ -1193,10 +1172,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     return firstResourceDict.Count;
                 }
-                else
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -1241,5 +1217,22 @@ namespace SeeingSharp.Multimedia.Core
             get;
             set;
         }
+
+        #region Misc
+        private bool m_initialized;
+        private string m_name;
+        private List<SceneLayer> m_sceneLayers;
+        #endregion
+
+        #region Async update actions
+        private ThreadSaveQueue<Action> m_asyncInvokesBeforeUpdate;
+        private ThreadSaveQueue<Action> m_asyncInvokesUpdateBesideRendering;
+        #endregion Async update actions
+
+        #region Some runtime values
+        private IndexBasedDynamicCollection<ResourceDictionary> m_registeredResourceDicts;
+        private IndexBasedDynamicCollection<ViewInformation> m_registeredViews;
+        private IndexBasedDynamicCollection<SceneRenderParameters> m_renderParameters;
+        #endregion Some runtime values
     }
 }

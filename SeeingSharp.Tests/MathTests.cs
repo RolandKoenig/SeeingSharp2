@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpDX;
+
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SharpDX;
-
     #endregion
 
     [TestClass]

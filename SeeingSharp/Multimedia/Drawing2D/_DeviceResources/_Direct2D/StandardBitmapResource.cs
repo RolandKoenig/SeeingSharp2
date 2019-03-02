@@ -24,6 +24,12 @@
 #region using
 
 // Namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,13 +37,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using System.IO;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     /// <summary>
@@ -50,48 +49,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.Bitmap[] m_loadedBitmaps;
         #endregion
 
-        #region Configuration
-        private ResourceLink m_resourceLink;
-        private int m_framesX;
-        private int m_framesY;
-        private int m_totalFrameCount;
-        #endregion
-
-        #region RuntimeValues
-        private bool m_firstLoadDone;
-        private int m_framePixelWidth;
-        private int m_framePixelHeight;
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        private double m_dpiX;
-        private double m_dpyY;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
-        /// </summary>
-        /// <param name="resource">The resource from w.</param>
-        /// <param name="frameCountX">Total count of frames in x direction.</param>
-        /// <param name="frameCountY">Total count of frames in y direction.</param>
-        public StandardBitmapResource(ResourceLink resource, int frameCountX = 1, int frameCountY = 1)
-        {
-            frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
-            frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
-
-            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
-            m_resourceLink = resource;
-
-            // Set default values (modified after first load)
-            m_firstLoadDone = false;
-            m_pixelWidth = 0;
-            m_pixelHeight = 0;
-            m_dpiX = 96.0;
-            m_dpyY = 96.0;
-            m_framesX = frameCountX;
-            m_framesY = frameCountY;
-            m_totalFrameCount = m_framesX * m_framesY;
-        }
-
         public override string ToString()
         {
             return string.Format("Bitmap ({0}x{1} pixels)", m_pixelWidth, m_pixelHeight);
@@ -103,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The engine device.</param>
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
-            if (base.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+            if (IsDisposed) { throw new ObjectDisposedException(GetType().Name); }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];
 
@@ -112,7 +69,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 using (var inputStream = m_resourceLink.OpenInputStream())
                 using (var bitmapSourceWrapper = GraphicsHelper.LoadBitmapSource_D2D(inputStream))
                 {
-                    SharpDX.WIC.BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
+                    BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
                     // Store common properties about the bitmap
                     if (!m_firstLoadDone)
@@ -137,7 +94,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     result = D2D.Bitmap.FromWicBitmap(
                         engineDevice.FakeRenderTarget2D, bitmapSource,
                         new D2D.BitmapProperties(new D2D.PixelFormat(
-                            SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                            Format.B8G8R8A8_UNorm,
                             D2D.AlphaMode.Premultiplied)));
 
                     // Register loaded bitmap
@@ -172,66 +129,69 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
+        /// </summary>
+        /// <param name="resource">The resource from w.</param>
+        /// <param name="frameCountX">Total count of frames in x direction.</param>
+        /// <param name="frameCountY">Total count of frames in y direction.</param>
+        public StandardBitmapResource(ResourceLink resource, int frameCountX = 1, int frameCountY = 1)
+        {
+            frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
+            frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
+
+            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            m_resourceLink = resource;
+
+            // Set default values (modified after first load)
+            m_firstLoadDone = false;
+            m_pixelWidth = 0;
+            m_pixelHeight = 0;
+            m_dpiX = 96.0;
+            m_dpyY = 96.0;
+            m_framesX = frameCountX;
+            m_framesY = frameCountY;
+            m_totalFrameCount = m_framesX * m_framesY;
+        }
+
+        /// <summary>
         /// Gets the width of the bitmap in pixel´.
         /// </summary>
-        public override int PixelWidth
-        {
-            get { return m_pixelWidth; }
-        }
+        public override int PixelWidth => m_pixelWidth;
 
         /// <summary>
         /// Gets the height of the bitmap in pixel.
         /// </summary>
-        public override int PixelHeight
-        {
-            get { return m_pixelHeight; }
-        }
+        public override int PixelHeight => m_pixelHeight;
 
-        public override double DpiX
-        {
-            get
-            {
-                return m_dpiX;
-            }
-        }
+        public override double DpiX => m_dpiX;
 
-        public override double DpiY
-        {
-            get
-            {
-                return m_dpyY;
-            }
-        }
+        public override double DpiY => m_dpyY;
 
-        public override int FrameCountX
-        {
-            get{ return m_framesX; }
-        }
+        public override int FrameCountX => m_framesX;
 
-        public override int FrameCountY
-        {
-            get
-            {
-                return m_framesY;
-            }
-        }
+        public override int FrameCountY => m_framesY;
 
-        public override int TotalFrameCount
-        {
-            get
-            {
-                return m_totalFrameCount;
-            }
-        }
+        public override int TotalFrameCount => m_totalFrameCount;
 
-        public override int SingleFramePixelWidth
-        {
-            get { return m_framePixelWidth; }
-        }
+        public override int SingleFramePixelWidth => m_framePixelWidth;
 
-        public override int SingleFramePixelHeight
-        {
-            get { return m_framePixelHeight; }
-        }
+        public override int SingleFramePixelHeight => m_framePixelHeight;
+
+        #region Configuration
+        private ResourceLink m_resourceLink;
+        private int m_framesX;
+        private int m_framesY;
+        private int m_totalFrameCount;
+        #endregion
+
+        #region RuntimeValues
+        private bool m_firstLoadDone;
+        private int m_framePixelWidth;
+        private int m_framePixelHeight;
+        private int m_pixelWidth;
+        private int m_pixelHeight;
+        private double m_dpiX;
+        private double m_dpyY;
+        #endregion
     }
 }

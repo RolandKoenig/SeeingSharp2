@@ -22,11 +22,9 @@
 */
 #endregion
 #region using
-
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
-
 #endregion
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden

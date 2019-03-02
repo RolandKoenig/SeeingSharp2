@@ -22,7 +22,12 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Util;
+using SharpDX.Direct3D;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
@@ -32,12 +37,6 @@ using DWrite = SharpDX.DirectWrite;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using Checking;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class EngineDevice
@@ -46,37 +45,133 @@ namespace SeeingSharp.Multimedia.Core
         private const string CATEGORY_ADAPTER = "Adapter";
         #endregion
 
-        #region Main members
-
-        private SharpDX.DXGI.Adapter1 m_adapter1;
-        private SharpDX.DXGI.AdapterDescription1 m_adapterDesc1;
-        private DeviceLoadSettings m_deviceLoadSettings;
-        private EngineFactory m_engineFactory;
-
-        #endregion
-
-        #region Some configuration
-        private bool m_isDetailLevelForced;
-        private DetailLevel m_forcedDetailLevel;
-        #endregion
-
-        #region Handlers for different DirectX Apis
-        private DeviceHandlerDXGI m_handlerDXGI;
-        private DeviceHandlerD3D11 m_handlerD3D11;
-        private DeviceHandlerD2D m_handlerD2D;
-        private List<IDisposable> m_additionalDeviceHandlers;
-        #endregion
-
-        #region Possible antialiasing modes
-        private SharpDX.DXGI.SampleDescription m_antialiasingConfigLow;
-        private SharpDX.DXGI.SampleDescription m_antialiasingConfigMedium;
-        private SharpDX.DXGI.SampleDescription m_antialiasingConfigHigh;
-        #endregion
-
         #region Members for antialiasing
-
-        private SharpDX.DXGI.SampleDescription m_sampleDescWithAntialiasing;
+        private SampleDescription m_sampleDescWithAntialiasing;
         #endregion
+
+        public T TryGetAdditionalDeviceHandler<T>()
+            where T : class
+        {
+            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
+            {
+                if (actAdditionalDeviceHandler is T result) { return result; }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Forces the given detail level.
+        /// </summary>
+        public void ForceDetailLevel(DetailLevel detailLevel)
+        {
+            m_isDetailLevelForced = true;
+            m_forcedDetailLevel = detailLevel;
+        }
+
+        /// <summary>
+        /// Get the sample description for the given quality level.
+        /// </summary>
+        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
+        public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        {
+            switch (qualityLevel)
+            {
+                case AntialiasingQualityLevel.Low:
+                    return m_antialiasingConfigLow;
+
+                case AntialiasingQualityLevel.Medium:
+                    return m_antialiasingConfigMedium;
+
+                case AntialiasingQualityLevel.High:
+                    return m_antialiasingConfigHigh;
+            }
+
+            return new SampleDescription(1, 0);
+        }
+
+        /// <summary>
+        /// Get the sample description for the given quality level.
+        /// </summary>
+        internal SampleDescription GetSampleDescription(bool antialiasingEnabled)
+        {
+            if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
+            return new SampleDescription(1, 0);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return AdapterDescription;
+            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
+            //else { return m_handlerD3D11.DeviceModeDescription; }
+        }
+
+        /// <summary>
+        /// Checks for standard antialiasing support.
+        /// </summary>
+        private bool CheckIsStandardAntialiasingPossible()
+        {
+            // Very important to check possible antialiasing
+            // More on the used technique
+            //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
+
+            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+
+            if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
+            if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
+            if (m_handlerD3D11.FeatureLevel == FeatureLevel.Level_9_1) { return false; }
+
+            try
+            {
+                var textureDescription = new D3D11.Texture2DDescription
+                {
+                    Width = 100,
+                    Height = 100,
+                    MipLevels = 1,
+                    ArraySize = 1,
+                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    Usage = D3D11.ResourceUsage.Default,
+                    SampleDescription = new SampleDescription(2, 0),
+                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
+                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                    OptionFlags = D3D11.ResourceOptionFlags.None
+                };
+
+                var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
+                SeeingSharpUtil.SafeDispose(ref testTexture);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
+            // Check for quality levels
+            var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
+            var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
+            var hightQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
+
+            // Generate sample descriptions for each possible quality level
+            if (lowQualityLevels > 0)
+            {
+                m_antialiasingConfigLow = new SampleDescription(2, lowQualityLevels - 1);
+            }
+            if (mediumQualityLevels > 0)
+            {
+                m_antialiasingConfigMedium = new SampleDescription(4, mediumQualityLevels - 1);
+            }
+            if (hightQualityLevels > 0)
+            {
+                m_antialiasingConfigHigh = new SampleDescription(8, hightQualityLevels - 1);
+            }
+
+            return lowQualityLevels > 0;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
@@ -84,7 +179,7 @@ namespace SeeingSharp.Multimedia.Core
         internal EngineDevice(
             DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
-            SharpDX.DXGI.Adapter1 adapter, bool isSoftwareAdapter)
+            Adapter1 adapter, bool isSoftwareAdapter)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
             engineFactory.EnsureNotNull(nameof(engineFactory));
@@ -103,7 +198,7 @@ namespace SeeingSharp.Multimedia.Core
             Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
 
             // Set default antialiasing configurations
-            m_sampleDescWithAntialiasing = new SharpDX.DXGI.SampleDescription(1, 0);
+            m_sampleDescWithAntialiasing = new SampleDescription(1, 0);
 
             // Initialize all direct3D APIs
             try
@@ -132,7 +227,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_handlerD3D11 != null)
             {
                 m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
-                this.FakeRenderTarget2D = m_handlerD2D.RenderTarget;
+                FakeRenderTarget2D = m_handlerD2D.RenderTarget;
             }
 
             // Create additional device handlers
@@ -144,130 +239,6 @@ namespace SeeingSharp.Multimedia.Core
                     m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
                 }
             }
-        }
-
-        public T TryGetAdditionalDeviceHandler<T>()
-            where T : class
-        {
-            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
-            {
-                if (actAdditionalDeviceHandler is T result) { return result; }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Forces the given detail level.
-        /// </summary>
-        public void ForceDetailLevel(DetailLevel detailLevel)
-        {
-            m_isDetailLevelForced = true;
-            m_forcedDetailLevel = detailLevel;
-        }
-
-        /// <summary>
-        /// Get the sample description for the given quality level.
-        /// </summary>
-        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        public SharpDX.DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
-        {
-            switch (qualityLevel)
-            {
-                case AntialiasingQualityLevel.Low:
-                    return m_antialiasingConfigLow;
-
-                case AntialiasingQualityLevel.Medium:
-                    return m_antialiasingConfigMedium;
-
-                case AntialiasingQualityLevel.High:
-                    return m_antialiasingConfigHigh;
-            }
-
-            return new SharpDX.DXGI.SampleDescription(1, 0);
-        }
-
-        /// <summary>
-        /// Get the sample description for the given quality level.
-        /// </summary>
-        internal SharpDX.DXGI.SampleDescription GetSampleDescription(bool antialiasingEnabled)
-        {
-            if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
-            else { return new SharpDX.DXGI.SampleDescription(1, 0); }
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return this.AdapterDescription;
-            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
-            //else { return m_handlerD3D11.DeviceModeDescription; }
-        }
-
-        /// <summary>
-        /// Checks for standard antialiasing support.
-        /// </summary>
-        private bool CheckIsStandardAntialiasingPossible()
-        {
-            // Very important to check possible antialiasing
-            // More on the used technique
-            //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
-
-            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
-
-            if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
-            if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
-            if (m_handlerD3D11.FeatureLevel == SharpDX.Direct3D.FeatureLevel.Level_9_1) { return false; }
-
-            try
-            {
-                var textureDescription = new D3D11.Texture2DDescription
-                {
-                    Width = 100,
-                    Height = 100,
-                    MipLevels = 1,
-                    ArraySize = 1,
-                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
-                    Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new SharpDX.DXGI.SampleDescription(2, 0),
-                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    OptionFlags = D3D11.ResourceOptionFlags.None
-                };
-
-                var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
-                SeeingSharpUtil.SafeDispose(ref testTexture);
-            }
-            catch(Exception)
-            {
-                return false;
-            }
-
-            // Check for quality levels
-            int lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
-            int mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
-            int hightQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
-
-            // Generate sample descriptions for each possible quality level
-            if (lowQualityLevels > 0)
-            {
-                m_antialiasingConfigLow = new SharpDX.DXGI.SampleDescription(2, lowQualityLevels - 1);
-            }
-            if (mediumQualityLevels > 0)
-            {
-                m_antialiasingConfigMedium = new SharpDX.DXGI.SampleDescription(4, mediumQualityLevels - 1);
-            }
-            if (hightQualityLevels > 0)
-            {
-                m_antialiasingConfigHigh = new SharpDX.DXGI.SampleDescription(8, hightQualityLevels - 1);
-            }
-
-            return lowQualityLevels > 0;
         }
 
         /// <summary>
@@ -283,18 +254,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the description of this adapter.
         /// </summary>
-        public string AdapterDescription
-        {
-            get { return m_adapter1?.Description1.Description.Replace("\0", "") ?? nameof(EngineDevice); }
-        }
+        public string AdapterDescription => m_adapter1?.Description1.Description.Replace("\0", "") ?? nameof(EngineDevice);
 
         /// <summary>
         /// Is this device loaded successfully.
         /// </summary>
-        public bool IsLoadedSuccessfully
-        {
-            get { return InitializationException == null; }
-        }
+        public bool IsLoadedSuccessfully => InitializationException == null;
 
         public bool IsSoftware { get; }
 
@@ -308,20 +273,14 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_isDetailLevelForced) { return m_forcedDetailLevel; }
 
                 if (IsSoftware) { return DetailLevel.Low; }
-                else { return DetailLevel.High; }
+                return DetailLevel.High;
             }
         }
 
         /// <summary>
         /// Is high detail supported with this card?
         /// </summary>
-        public bool IsHighDetailSupported
-        {
-            get
-            {
-                return (this.SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
-            }
-        }
+        public bool IsHighDetailSupported => (SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
 
         /// <summary>
         /// Gets the level of the graphics driver.
@@ -363,14 +322,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Some older hardware only support 16-bit index buffers.
         /// </summary>
-        public bool SupportsOnly16BitIndexBuffer
-        {
-            get
-            {
-                // see https://msdn.microsoft.com/en-us/library/windows/desktop/ff471324(v=vs.85).aspx
-                return DriverLevel == HardwareDriverLevel.Direct3D9_1;
-            }
-        }
+        public bool SupportsOnly16BitIndexBuffer => DriverLevel == HardwareDriverLevel.Direct3D9_1;
 
         /// <summary>
         /// Gets the name of the default shader model.
@@ -400,56 +352,29 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
-        public D3D11.Device1 DeviceD3D11_1
-        {
-            get { return m_handlerD3D11.Device1; }
-        }
+        public D3D11.Device1 DeviceD3D11_1 => m_handlerD3D11.Device1;
 
-        public D3D11.Device3 Device3D11_3
-        {
-            get { return m_handlerD3D11.Device3; }
-        }
+        public D3D11.Device3 Device3D11_3 => m_handlerD3D11.Device3;
 
-        public D2D.Device DeviceD2D
-        {
-            get { return m_handlerD2D.Device; }
-        }
+        public D2D.Device DeviceD2D => m_handlerD2D.Device;
 
-        public D2D.DeviceContext DeviceContextD2D
-        {
-            get { return m_handlerD2D.DeviceContext; }
-        }
+        public D2D.DeviceContext DeviceContextD2D => m_handlerD2D.DeviceContext;
 
-        public SharpDX.DXGI.Device3 DeviceDxgi
-        {
-            get { return m_handlerDXGI.Device; }
-        }
+        public Device3 DeviceDxgi => m_handlerDXGI.Device;
 
         /// <summary>
         /// A unique value that identifies the adapter.
         /// </summary>
-        public long Luid
-        {
-            get { return m_adapterDesc1.Luid; }
-        }
+        public long Luid => m_adapterDesc1.Luid;
 
-        public bool Supports2D
-        {
-            get
-            {
-                return
-                    (m_handlerD2D != null) &&
-                    (m_handlerD2D.IsLoaded);
-            }
-        }
+        public bool Supports2D =>
+            m_handlerD2D != null &&
+            m_handlerD2D.IsLoaded;
 
         /// <summary>
         /// Gets the main Direct3D 11 context object.
         /// </summary>
-        public D3D11.DeviceContext DeviceImmediateContextD3D11
-        {
-            get { return m_handlerD3D11.ImmediateContext; }
-        }
+        public D3D11.DeviceContext DeviceImmediateContextD3D11 => m_handlerD3D11.ImmediateContext;
 
         /// <summary>
         /// Gets the current device configuration.
@@ -459,13 +384,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        public SharpDX.DXGI.Factory2 FactoryDxgi
-        {
-            get
-            {
-                return m_handlerDXGI.Factory;
-            }
-        }
+        public Factory2 FactoryDxgi => m_handlerDXGI.Factory;
 
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
@@ -507,9 +426,34 @@ namespace SeeingSharp.Multimedia.Core
                 m_host = host;
             }
 
-            public SharpDX.DXGI.Adapter1 Adapter => m_host.m_adapter1;
+            public Adapter1 Adapter => m_host.m_adapter1;
 
-            public SharpDX.DXGI.AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
+            public AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
         }
+
+        #region Main members
+        private Adapter1 m_adapter1;
+        private AdapterDescription1 m_adapterDesc1;
+        private DeviceLoadSettings m_deviceLoadSettings;
+        private EngineFactory m_engineFactory;
+        #endregion
+
+        #region Some configuration
+        private bool m_isDetailLevelForced;
+        private DetailLevel m_forcedDetailLevel;
+        #endregion
+
+        #region Handlers for different DirectX Apis
+        private DeviceHandlerDXGI m_handlerDXGI;
+        private DeviceHandlerD3D11 m_handlerD3D11;
+        private DeviceHandlerD2D m_handlerD2D;
+        private List<IDisposable> m_additionalDeviceHandlers;
+        #endregion
+
+        #region Possible antialiasing modes
+        private SampleDescription m_antialiasingConfigLow;
+        private SampleDescription m_antialiasingConfigMedium;
+        private SampleDescription m_antialiasingConfigHigh;
+        #endregion
     }
 }

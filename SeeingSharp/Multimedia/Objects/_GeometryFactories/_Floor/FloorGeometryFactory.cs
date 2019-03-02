@@ -21,49 +21,37 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class FloorGeometryFactory : GeometryFactory
     {
         public const float DEFAULT_HEIGHT = 0.1f;
 
-        //Properties
-        private float m_borderSize;
-
-        private Vector2 m_totalSizeWithoutBorder;
-        private Vector2 m_tileSize;
-        private float m_height;
-        private int m_tilesX;
-        private int m_tilesY;
-        private List<FloorTile> m_groundTiles;
-        private List<BorderInformation> m_borders;
-
         //Material names
         private NamedOrGenericKey m_borderMaterial;
-        private NamedOrGenericKey m_groundMaterial;
-        private NamedOrGenericKey m_sideMaterial;
-        private NamedOrGenericKey m_bottomMaterial;
+        private List<BorderInformation> m_borders;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
-        /// </summary>
-        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
-        {
-            m_height = DEFAULT_HEIGHT;
-            m_groundTiles = new List<FloorTile>();
-            m_borders = new List<BorderInformation>();
-            m_tileSize = tileSize;
-            m_borderSize = borderSize;
-        }
+        //Properties
+        private float m_borderSize;
+        private NamedOrGenericKey m_bottomMaterial;
+        private NamedOrGenericKey m_groundMaterial;
+        private List<FloorTile> m_groundTiles;
+        private float m_height;
+        private NamedOrGenericKey m_sideMaterial;
+        private Vector2 m_tileSize;
+        private int m_tilesX;
+        private int m_tilesY;
+
+        private Vector2 m_totalSizeWithoutBorder;
 
         /// <summary>
         /// Sets the tilemap.
@@ -72,8 +60,8 @@ namespace SeeingSharp.Multimedia.Objects
         public void SetTilemap(FloorTileInfo[,] tileMap)
         {
             //Get width and height of the tilemap
-            int tilesX = tileMap.GetLength(0);
-            int tilesY = tileMap.GetLength(1);
+            var tilesX = tileMap.GetLength(0);
+            var tilesY = tileMap.GetLength(1);
             if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", "tileMap"); }
             if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", "tileMap"); }
             m_tilesX = tilesX;
@@ -99,7 +87,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Generate all borders
-            bool[,] boolTileMap = CreateBooleanMap(tileMap);
+            var boolTileMap = CreateBooleanMap(tileMap);
             GenerateBorders(boolTileMap, tilesX, tilesY);
         }
 
@@ -110,10 +98,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="height">Height of the tilemap.</param>
         public void SetTilemap(int width, int height)
         {
-            bool[,] tilemap = new bool[width, height];
-            for (int loopX = 0; loopX < width; loopX++)
+            var tilemap = new bool[width, height];
+            for (var loopX = 0; loopX < width; loopX++)
             {
-                for (int loopY = 0; loopY < height; loopY++)
+                for (var loopY = 0; loopY < height; loopY++)
                 {
                     tilemap[loopX, loopY] = true;
                 }
@@ -128,8 +116,8 @@ namespace SeeingSharp.Multimedia.Objects
         public void SetTilemap(bool[,] tileMap)
         {
             //Get width and height of the tilemap
-            int tilesX = tileMap.GetLength(0);
-            int tilesY = tileMap.GetLength(1);
+            var tilesX = tileMap.GetLength(0);
+            var tilesY = tileMap.GetLength(1);
             if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", "tileMap"); }
             if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", "tileMap"); }
             m_tilesX = tilesX;
@@ -167,8 +155,8 @@ namespace SeeingSharp.Multimedia.Objects
         public Vector3 GetTilePosition(int xPos, int yPos)
         {
             //Check parameters
-            if ((xPos < 0) || (xPos >= m_tilesX)) { throw new ArgumentException("Invalid x position!", "xPos"); }
-            if ((yPos < 0) || (yPos >= m_tilesY)) { throw new ArgumentException("Invalid y position!", "yPos"); }
+            if (xPos < 0 || xPos >= m_tilesX) { throw new ArgumentException("Invalid x position!", "xPos"); }
+            if (yPos < 0 || yPos >= m_tilesY) { throw new ArgumentException("Invalid y position!", "yPos"); }
 
             //Calculate half sizes
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -176,9 +164,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Get position of the tile
             return new Vector3(
-                (xPos * m_tileSize.X) - totalHalfSize.X + tileHalfSize.X,
+                xPos * m_tileSize.X - totalHalfSize.X + tileHalfSize.X,
                 0f,
-                (yPos * m_tileSize.Y) - totalHalfSize.Y + tileHalfSize.Y);
+                yPos * m_tileSize.Y - totalHalfSize.Y + tileHalfSize.Y);
         }
 
         /// <summary>
@@ -189,7 +177,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new VertexStructure();
 
             // Hold dictionary containg materials and corresponding structures
-            Dictionary<NamedOrGenericKey, VertexStructureSurface> materialRelated = new Dictionary<NamedOrGenericKey, VertexStructureSurface>();
+            var materialRelated = new Dictionary<NamedOrGenericKey, VertexStructureSurface>();
 
             // Build bottom structure
             var bottomSurface = result.CreateSurface();
@@ -227,9 +215,9 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // Get position of the tile
                 var tilePosition = new Vector3(
-                    (actTile.XPos * m_tileSize.X) - totalHalfSize.X,
+                    actTile.XPos * m_tileSize.X - totalHalfSize.X,
                     0f,
-                    (actTile.YPos * m_tileSize.Y) - totalHalfSize.Y);
+                    actTile.YPos * m_tileSize.Y - totalHalfSize.Y);
 
                 // Add tile information to current VertexStructures
                 actSurface.BuildCubeTop4V(
@@ -256,9 +244,9 @@ namespace SeeingSharp.Multimedia.Objects
                 if (m_borderSize <= 0f)
                 {
                     var tilePosition = new Vector3(
-                        (actBorder.TileXPos * m_tileSize.X) - totalHalfSize.X,
+                        actBorder.TileXPos * m_tileSize.X - totalHalfSize.X,
                         0f,
-                        (actBorder.TileYPos * m_tileSize.Y) - totalHalfSize.Y);
+                        actBorder.TileYPos * m_tileSize.Y - totalHalfSize.Y);
 
                     //Build simple borders
                     switch (actBorder.Location)
@@ -296,10 +284,6 @@ namespace SeeingSharp.Multimedia.Objects
                             break;
                     }
                 }
-                else
-                {
-                    //Build complex borders
-                }
             }
 
             //Return all generated VertexStructures
@@ -312,14 +296,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="tileMap">The tilemap to convert.</param>
         private bool[,] CreateBooleanMap(FloorTileInfo[,] tileMap)
         {
-            int tilesX = tileMap.GetLength(0);
-            int tilesY = tileMap.GetLength(1);
+            var tilesX = tileMap.GetLength(0);
+            var tilesY = tileMap.GetLength(1);
 
             //Convert tilemap
-            bool[,] result = new bool[tilesX, tilesY];
-            for (int loopX = 0; loopX < tilesX; loopX++)
+            var result = new bool[tilesX, tilesY];
+            for (var loopX = 0; loopX < tilesX; loopX++)
             {
-                for (int loopY = 0; loopY < tilesY; loopY++)
+                for (var loopY = 0; loopY < tilesY; loopY++)
                 {
                     result[loopX, loopY] = tileMap[loopX, loopY] != null;
                 }
@@ -337,25 +321,25 @@ namespace SeeingSharp.Multimedia.Objects
         private void GenerateBorders(bool[,] tileMap, int tilesX, int tilesY)
         {
             m_borders.Clear();
-            for (int loopX = 0; loopX < tilesX; loopX++)
+            for (var loopX = 0; loopX < tilesX; loopX++)
             {
-                for (int loopY = 0; loopY < tilesY; loopY++)
+                for (var loopY = 0; loopY < tilesY; loopY++)
                 {
                     if (tileMap[loopX, loopY])
                     {
-                        if ((loopY == 0) || (!tileMap[loopX, loopY - 1]))
+                        if (loopY == 0 || !tileMap[loopX, loopY - 1])
                         {
                             m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Bottom));
                         }
-                        if ((loopX == 0) || (!tileMap[loopX - 1, loopY]))
+                        if (loopX == 0 || !tileMap[loopX - 1, loopY])
                         {
                             m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Left));
                         }
-                        if ((loopY == tilesY - 1) || (!tileMap[loopX, loopY + 1]))
+                        if (loopY == tilesY - 1 || !tileMap[loopX, loopY + 1])
                         {
                             m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Top));
                         }
-                        if ((loopX == tilesX - 1) || (!tileMap[loopX + 1, loopY]))
+                        if (loopX == tilesX - 1 || !tileMap[loopX + 1, loopY])
                         {
                             m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Right));
                         }
@@ -365,11 +349,23 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
+        /// </summary>
+        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
+        {
+            m_height = DEFAULT_HEIGHT;
+            m_groundTiles = new List<FloorTile>();
+            m_borders = new List<BorderInformation>();
+            m_tileSize = tileSize;
+            m_borderSize = borderSize;
+        }
+
+        /// <summary>
         /// Gets or sets the border material
         /// </summary>
         public NamedOrGenericKey BorderMaterial
         {
-            get { return m_borderMaterial; }
+            get => m_borderMaterial;
             set
             {
                 if (m_borderMaterial != value)
@@ -384,7 +380,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey DefaultFloorMaterial
         {
-            get { return m_groundMaterial; }
+            get => m_groundMaterial;
             set
             {
                 if (m_groundMaterial != value)
@@ -399,7 +395,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey SideMaterial
         {
-            get { return m_sideMaterial; }
+            get => m_sideMaterial;
             set
             {
                 if (m_sideMaterial != value)
@@ -414,7 +410,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey BottomMaterial
         {
-            get { return m_bottomMaterial; }
+            get => m_bottomMaterial;
             set
             {
                 if (m_bottomMaterial != value)
@@ -444,15 +440,15 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class BorderInformation
         {
+            public BorderLocation Location;
             public int TileXPos;
             public int TileYPos;
-            public BorderLocation Location;
 
             public BorderInformation(int xPos, int yPos, BorderLocation location)
             {
-                this.TileXPos = xPos;
-                this.TileYPos = yPos;
-                this.Location = location;
+                TileXPos = xPos;
+                TileYPos = yPos;
+                Location = location;
             }
         }
     }

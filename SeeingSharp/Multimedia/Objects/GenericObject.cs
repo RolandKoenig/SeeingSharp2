@@ -24,6 +24,11 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,53 +36,21 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Checking;
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class GenericObject : SceneSpacialObject
     {
-        #region Configuration members
-        private NamedOrGenericKey m_resGeometryKey;
+        #region Resources
+        private IndexBasedDynamicCollection<GeometryResource> m_localResources;
         #endregion
 
         #region private float m_opacity;
         private bool m_passRelevantValuesChanged;
         #endregion
 
-        #region Resources
-        private IndexBasedDynamicCollection<GeometryResource> m_localResources;
+        #region Configuration members
+        private NamedOrGenericKey m_resGeometryKey;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject"/> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        public GenericObject(NamedOrGenericKey geometryResource)
-        {
-            m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
-
-            m_resGeometryKey = geometryResource;
-
-            //m_opacity = 1f;
-            m_passRelevantValuesChanged = true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject" /> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        /// <param name="position">The initial position.</param>
-        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
-            : this(geometryResource)
-        {
-            this.Position = position;
-        }
 
         /// <summary>
         /// Tries to get the bounding box for the given render-loop.
@@ -88,17 +61,14 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
+            if (geometryResource != null &&
+                geometryResource.IsLoaded)
             {
                 var result = geometryResource.BoundingBox;
-                result.Transform(this.Transform);
+                result.Transform(Transform);
                 return result;
             }
-            else
-            {
-                return default(BoundingBox);
-            }
+            return default;
         }
 
         /// <summary>
@@ -110,8 +80,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
+            if (geometryResource != null &&
+                geometryResource.IsLoaded)
             {
                 // Get BoundingBox object
                 var boundingBox = geometryResource.BoundingBox;
@@ -120,14 +90,11 @@ namespace SeeingSharp.Multimedia.Objects
                 BoundingSphere result;
                 BoundingSphere.FromBox(ref boundingBox, out result);
 
-                result.Transform(this.Transform);
+                result.Transform(Transform);
 
                 return result;
             }
-            else
-            {
-                return default(BoundingSphere);
-            }
+            return default;
         }
 
         /// <summary>
@@ -182,8 +149,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
+            if (geometryResource != null &&
+                geometryResource.IsLoaded)
             {
                 var boundingBox = geometryResource.BoundingBox;
 
@@ -192,12 +159,12 @@ namespace SeeingSharp.Multimedia.Objects
                     // Transform picking ray to local space
                     var pickingRay = new Ray(rayStart, rayDirection);
                     Matrix temp;
-                    var localTransform = base.Transform;
+                    var localTransform = Transform;
                     Matrix.Invert(ref localTransform, out temp);
                     pickingRay.Transform(temp);
 
                     // Check for intersection on the bounding box
-                    float distance = 0f;
+                    var distance = 0f;
 
                     if (pickingRay.Intersects(ref boundingBox, out distance))
                     {
@@ -226,9 +193,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         internal override bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
         {
-            var boundingSphere = this.TryGetBoundingSphere(viewInfo);
+            var boundingSphere = TryGetBoundingSphere(viewInfo);
 
-            if (boundingSphere != default(BoundingSphere))
+            if (boundingSphere != default)
             {
                 return boundingFrustum.Contains(ref boundingSphere) != ContainmentType.Disjoint;
             }
@@ -308,22 +275,22 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
-            if ((m_passRelevantValuesChanged) ||
-                (base.CountRenderPassSubscriptions(layerViewSubset) == 0))
+            if (m_passRelevantValuesChanged ||
+                CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
                 //Unsubscribe from all passes first
-                base.UnsubsribeFromAllPasses(layerViewSubset);
+                UnsubsribeFromAllPasses(layerViewSubset);
 
                 //Now subscribe to needed pass
-                if (base.Opacity < 1f)
+                if (Opacity < 1f)
                 {
-                    base.SubscribeToPass(
+                    SubscribeToPass(
                         RenderPassInfo.PASS_TRANSPARENT_RENDER,
                         layerViewSubset, OnRenderTransparent);
                 }
                 else
                 {
-                    base.SubscribeToPass(
+                    SubscribeToPass(
                         RenderPassInfo.PASS_PLAIN_RENDER,
                         layerViewSubset, OnRenderPlain);
                 }
@@ -353,7 +320,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (geometryResource != null)
             {
-                base.UpdateAndApplyRenderParameters(renderState);
+                UpdateAndApplyRenderParameters(renderState);
                 geometryResource.Render(renderState);
             }
         }
@@ -368,22 +335,41 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (geometryResource != null)
             {
-                base.UpdateAndApplyRenderParameters(renderState);
+                UpdateAndApplyRenderParameters(renderState);
                 geometryResource.Render(renderState);
             }
         }
 
         /// <summary>
-        /// Gets the key of the geometry resources used by this object.
+        /// Initializes a new instance of the <see cref="GenericObject"/> class.
         /// </summary>
-        public NamedOrGenericKey GeometryResourceKey
+        /// <param name="geometryResource">The geometry resource.</param>
+        public GenericObject(NamedOrGenericKey geometryResource)
         {
-            get { return m_resGeometryKey; }
+            m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
+
+            m_resGeometryKey = geometryResource;
+
+            //m_opacity = 1f;
+            m_passRelevantValuesChanged = true;
         }
 
-        public override bool IsExportable
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericObject" /> class.
+        /// </summary>
+        /// <param name="geometryResource">The geometry resource.</param>
+        /// <param name="position">The initial position.</param>
+        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
+            : this(geometryResource)
         {
-            get { return true; }
+            Position = position;
         }
+
+        /// <summary>
+        /// Gets the key of the geometry resources used by this object.
+        /// </summary>
+        public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
+
+        public override bool IsExportable => true;
     }
 }

@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-
     #endregion
 
     /// <summary>
@@ -38,14 +38,6 @@ namespace SeeingSharp.Util
     public class ThreadSaveQueue<T>
     {
         private ConcurrentQueue<T> m_backingQueue;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadSaveQueue&lt;T&gt;"/> class.
-        /// </summary>
-        public ThreadSaveQueue()
-        {
-            m_backingQueue = new ConcurrentQueue<T>();
-        }
 
         /// <summary>
         /// Enqueues the specified item.
@@ -161,11 +153,11 @@ namespace SeeingSharp.Util
         /// </summary>
         public List<T> DequeueAll()
         {
-            List<T> result = new List<T>(m_backingQueue.Count);
+            var result = new List<T>(m_backingQueue.Count);
 
             var actItem = default(T);
 
-            while (this.Dequeue(out actItem))
+            while (Dequeue(out actItem))
             {
                 result.Add(actItem);
             }
@@ -180,7 +172,7 @@ namespace SeeingSharp.Util
         {
             var actItem = default(T);
 
-            while (this.Dequeue(out actItem))
+            while (Dequeue(out actItem))
             {
                 targetList.Add(actItem);
             }
@@ -192,15 +184,20 @@ namespace SeeingSharp.Util
         public void Clear()
         {
             var actItem = default(T);
-            while (this.Dequeue(out actItem)) { }
+            while (Dequeue(out actItem)) { }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadSaveQueue&lt;T&gt;"/> class.
+        /// </summary>
+        public ThreadSaveQueue()
+        {
+            m_backingQueue = new ConcurrentQueue<T>();
         }
 
         /// <summary>
         /// Gets the total count of items within the queue.
         /// </summary>
-        public int Count
-        {
-            get { return m_backingQueue.Count; }
-        }
+        public int Count => m_backingQueue.Count;
     }
 }

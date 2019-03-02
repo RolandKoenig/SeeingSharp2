@@ -21,53 +21,40 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Reflection;
-    using Drawing3D;
-    using Objects;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class ResourceDictionary : IEnumerable<Resource>
     {
+        /// <summary>
+        /// Gets the device index.
+        /// </summary>
+        internal int DeviceIndex;
+        private int m_lastRenderBlockID;
         private List<IRenderableResource> m_renderableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
-        private int m_lastRenderBlockID;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
-        /// </summary>
-        internal ResourceDictionary(EngineDevice device)
-        {
-            Device = device;
-            this.DeviceIndex = Device.DeviceIndex;
-
-            m_lastRenderBlockID = -1;
-
-            m_renderableResources = new List<IRenderableResource>();
-            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
-
-            m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
-            m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
-        }
 
         /// <summary>
         /// Gets the next render block id.
         /// </summary>
         internal int GetNextRenderBlockID()
         {
-            if (m_lastRenderBlockID == Int32.MaxValue) { m_lastRenderBlockID = 0; }
+            if (m_lastRenderBlockID == int.MaxValue) { m_lastRenderBlockID = 0; }
             else { m_lastRenderBlockID = m_lastRenderBlockID + 1; }
 
             return m_lastRenderBlockID;
@@ -123,7 +110,7 @@ namespace SeeingSharp.Multimedia.Core
 #else
                 var standardConstructor =
                     resourceType.GetTypeInfo().DeclaredConstructors
-                    .FirstOrDefault((actConstructor) => actConstructor.GetParameters().Length <= 0);
+                    .FirstOrDefault(actConstructor => actConstructor.GetParameters().Length <= 0);
 #endif
                 if (standardConstructor != null)
                 {
@@ -180,7 +167,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             //Check given keys
-            if ((!resource.IsKeyEmpty) && (!resourceKey.IsEmpty) && (resource.Key != resourceKey))
+            if (!resource.IsKeyEmpty && !resourceKey.IsEmpty && resource.Key != resourceKey)
             {
                 throw new ArgumentException("Unable to override existing key on given resource!");
             }
@@ -232,7 +219,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (!actResource.IsKeyEmpty)
                 {
-                    this.RemoveResource(actResource.Key);
+                    RemoveResource(actResource.Key);
                 }
             }
         }
@@ -318,17 +305,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-        /// </returns>
-        public IEnumerator<Resource> GetEnumerator()
-        {
-            return new ResourceEnumerator(m_resources.Values.GetEnumerator());
-        }
-
-        /// <summary>
         /// Gets the resource with the given key. CreateMethod will be called to create
         /// the resource if it is not available yet.
         /// </summary>
@@ -345,10 +321,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     return result;
                 }
-                else
-                {
-                    m_resources.Remove(resourceKey);
-                }
+                m_resources.Remove(resourceKey);
             }
 
             var newResource = createMethod();
@@ -384,7 +357,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (result == null)
                 {
                     result = CreateDefaultResource<T>();
-                    this.AddResource<T>(resourceKey, result);
+                    AddResource(resourceKey, result);
                 }
             }
             else
@@ -392,7 +365,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Resource does exist, so return existing
                 var currentResource = m_resources[resourceKey].Resource;
                 result = currentResource as T;
-                if((currentResource != null) && (result == null))
+                if(currentResource != null && result == null)
                 {
                     throw new SeeingSharpGraphicsException("Resource type mismatch: Behind the requested key " + resourceKey + " is a resource of another type (requested: " + typeof(T).FullName + ", current: " + currentResource.GetType().FullName + ")");
                 }
@@ -443,7 +416,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void LoadResources()
         {
-            List<ResourceInfo> allResources = new List<ResourceInfo>(m_resources.Values);
+            var allResources = new List<ResourceInfo>(m_resources.Values);
 
             foreach (var actResourceInfo in allResources)
             {
@@ -486,14 +459,32 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the device this resource dictionary belongs to.
+        /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
         /// </summary>
-        public EngineDevice Device { get; }
+        internal ResourceDictionary(EngineDevice device)
+        {
+            Device = device;
+            DeviceIndex = Device.DeviceIndex;
+
+            m_lastRenderBlockID = -1;
+
+            m_renderableResources = new List<IRenderableResource>();
+            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
+
+            m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
+            m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
+        }
 
         /// <summary>
-        /// Gets the device index.
+        /// Returns an enumerator that iterates through the collection.
         /// </summary>
-        internal int DeviceIndex;
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator<Resource> GetEnumerator()
+        {
+            return new ResourceEnumerator(m_resources.Values.GetEnumerator());
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -507,13 +498,15 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Gets the device this resource dictionary belongs to.
+        /// </summary>
+        public EngineDevice Device { get; }
+
+        /// <summary>
         /// Gets the resource with the given key.
         /// </summary>
         /// <param name="key">Key of the resource.</param>
-        public Resource this[NamedOrGenericKey key]
-        {
-            get { return m_resources[key].Resource; }
-        }
+        public Resource this[NamedOrGenericKey key] => m_resources[key].Resource;
 
         /// <summary>
         /// Gets an enumeration containing all renderable resources.
@@ -523,29 +516,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a reference to default resources object.
         /// </summary>
-        public DefaultResources DefaultResources
-        {
-            get
-            {
-                return GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
-            }
-        }
+        public DefaultResources DefaultResources => GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
         /// <summary>
         /// Gets total count of resource.
         /// </summary>
-        public int Count
-        {
-            get { return m_resources.Count; }
-        }
+        public int Count => m_resources.Count;
 
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         private class ResourceInfo
         {
-            public Resource Resource;
             public IRenderableResource RenderableResource;
+            public Resource Resource;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ResourceInfo"/> class.
@@ -553,8 +537,8 @@ namespace SeeingSharp.Multimedia.Core
             /// <param name="resource">The resource.</param>
             public ResourceInfo(Resource resource)
             {
-                this.Resource = resource;
-                this.RenderableResource = resource as IRenderableResource;
+                Resource = resource;
+                RenderableResource = resource as IRenderableResource;
             }
         }
 
@@ -614,10 +598,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public Resource Current
-            {
-                get { return m_resourceInfoEnumerator.Current.Resource; }
-            }
+            public Resource Current => m_resourceInfoEnumerator.Current.Resource;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.
@@ -626,10 +607,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            object IEnumerator.Current
-            {
-                get { return Current; }
-            }
+            object IEnumerator.Current => Current;
         }
     }
 }

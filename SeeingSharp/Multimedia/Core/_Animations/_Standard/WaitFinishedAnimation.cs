@@ -21,25 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class WaitFinishedAnimation : AnimationBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaitFinishedAnimation" /> class.
-        /// </summary>
-        public WaitFinishedAnimation()
-            : base(null)
-        {
-
-        }
-
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
         /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
@@ -59,16 +50,22 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState"></param>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (animationState.RunningAnimationsIndex == 0) { base.NotifyAnimationFinished(); }
+            if (animationState.RunningAnimationsIndex == 0) { NotifyAnimationFinished(); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitFinishedAnimation" /> class.
+        /// </summary>
+        public WaitFinishedAnimation()
+            : base(null)
+        {
+
         }
 
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

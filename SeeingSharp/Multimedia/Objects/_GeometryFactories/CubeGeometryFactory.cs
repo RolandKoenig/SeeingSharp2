@@ -21,11 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
-    using SeeingSharp.Util;
-    using SharpDX;
-
     public class CubeGeometryFactory : GeometryFactory
     {
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
@@ -35,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
                 Key = Material
             };
 
-            var size = this.Size;
+            var size = Size;
             var halfSize = size / 2f;
 
             var result = new VertexStructure();

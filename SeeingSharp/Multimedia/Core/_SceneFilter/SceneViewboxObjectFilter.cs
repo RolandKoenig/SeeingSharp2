@@ -21,38 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public class SceneViewboxObjectFilter : SceneObjectFilter
     {
-        #region Values for viewbox clipping
-        private ViewInformation m_viewInfo;
-        private BoundingFrustum m_boundingFrustum;
-        #endregion
-
-        #region Values for y-filter
-        private bool m_enableYFilter;
-        private float m_yFilterMin;
-        private float m_yFilterMax;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
-        /// </summary>
-        public SceneViewboxObjectFilter()
-        {
-            // Default configuration of the y-filter
-            m_enableYFilter = false;
-            m_yFilterMin = 0f;
-            m_yFilterMax = 10f;
-        }
-
         /// <summary>
         /// Sets current environment data.
         /// </summary>
@@ -83,10 +61,10 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle Y-Filter
-            if ((m_enableYFilter) &&
-                (m_yFilterMin != m_yFilterMax) &&
-                (m_yFilterMax > m_yFilterMin) &&
-                (m_yFilterMax - m_yFilterMin > 0.1f))
+            if (m_enableYFilter &&
+                m_yFilterMin != m_yFilterMax &&
+                m_yFilterMax > m_yFilterMin &&
+                m_yFilterMax - m_yFilterMin > 0.1f)
             {
                 var spacialObject = input as SceneSpacialObject;
 
@@ -118,11 +96,22 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
+        /// </summary>
+        public SceneViewboxObjectFilter()
+        {
+            // Default configuration of the y-filter
+            m_enableYFilter = false;
+            m_yFilterMin = 0f;
+            m_yFilterMax = 10f;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the y-filter is enabled.
         /// </summary>
         public bool EnableYFilter
         {
-            get { return m_enableYFilter; }
+            get => m_enableYFilter;
             set
             {
                 if (m_enableYFilter != value)
@@ -138,7 +127,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMin
         {
-            get { return m_yFilterMin; }
+            get => m_yFilterMin;
             set
             {
                 if (m_yFilterMin != value)
@@ -154,7 +143,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMax
         {
-            get { return m_yFilterMax; }
+            get => m_yFilterMax;
             set
             {
                 if (m_yFilterMax != value)
@@ -168,9 +157,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Should this filter be updated on each frame?
         /// </summary>
-        public override bool UpdateEachFrame
-        {
-            get { return true; }
-        }
+        public override bool UpdateEachFrame => true;
+
+        #region Values for viewbox clipping
+        private ViewInformation m_viewInfo;
+        private BoundingFrustum m_boundingFrustum;
+        #endregion
+
+        #region Values for y-filter
+        private bool m_enableYFilter;
+        private float m_yFilterMin;
+        private float m_yFilterMax;
+        #endregion
     }
 }

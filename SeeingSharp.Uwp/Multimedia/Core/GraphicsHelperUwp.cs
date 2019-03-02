@@ -24,6 +24,9 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Checking;
+using SharpDX;
+using SharpDX.DXGI;
 using GDI = System.Drawing;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -32,10 +35,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using Checking;
-    using SharpDX;
-
     #endregion
 
     public static class GraphicsHelperUwp
@@ -48,29 +47,29 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            var desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SwapChainDescription1
             {
                 Width = width,
                 Height = height,
                 Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
                 Stereo = false,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-                Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = Usage.BackBuffer | Usage.RenderTargetOutput,
                 BufferCount = 2,
-                Scaling = SharpDX.DXGI.Scaling.None,
-                SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-                AlphaMode = SharpDX.DXGI.AlphaMode.Ignore
+                Scaling = Scaling.None,
+                SwapEffect = SwapEffect.FlipSequential,
+                AlphaMode = AlphaMode.Ignore
             };
 
             //Creates the swap chain for the given CoreWindow object
-            return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
+            return new SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
         }
 
         /// <summary>
@@ -80,29 +79,29 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            var desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SwapChainDescription1
             {
                 Width = width,
                 Height = height,
                 Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
                 Stereo = false,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-                Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = Usage.BackBuffer | Usage.RenderTargetOutput,
                 BufferCount = 2,
-                Scaling = SharpDX.DXGI.Scaling.Stretch,
-                SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? SharpDX.DXGI.AlphaMode.Premultiplied : SharpDX.DXGI.AlphaMode.Ignore
+                Scaling = Scaling.Stretch,
+                SwapEffect = SwapEffect.FlipSequential,
+                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? AlphaMode.Premultiplied : AlphaMode.Ignore
             };
 
             //Creates the swap chain for XAML composition
-            return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
+            return new SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
         }
     }
 }

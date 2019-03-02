@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Windows.Forms;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System.Windows.Forms;
-
     #endregion
 
     public interface IInputControlHost

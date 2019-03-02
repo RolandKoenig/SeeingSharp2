@@ -21,39 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class CallActionAnimation : AnimationBase
     {
         private Action m_actionToCall;
         private Action m_cancelAction;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CallActionAnimation" /> class.
-        /// </summary>
-        public CallActionAnimation(Action actionToCall)
-            : base(null, AnimationType.FixedTime, TimeSpan.Zero)
-        {
-            m_actionToCall = actionToCall;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CallActionAnimation"/> class.
-        /// </summary>
-        /// <param name="actionToCall">The action to call.</param>
-        /// <param name="cancelAction">The cancel action.</param>
-        public CallActionAnimation(Action actionToCall, Action cancelAction)
-            : base(null, AnimationType.FixedTime, TimeSpan.Zero)
-        {
-            m_actionToCall = actionToCall;
-            m_cancelAction = cancelAction;
-        }
 
         /// <summary>
         /// Called when this animation was canceled.
@@ -75,6 +54,27 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_actionToCall();
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CallActionAnimation" /> class.
+        /// </summary>
+        public CallActionAnimation(Action actionToCall)
+            : base(null, AnimationType.FixedTime, TimeSpan.Zero)
+        {
+            m_actionToCall = actionToCall;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CallActionAnimation"/> class.
+        /// </summary>
+        /// <param name="actionToCall">The action to call.</param>
+        /// <param name="cancelAction">The cancel action.</param>
+        public CallActionAnimation(Action actionToCall, Action cancelAction)
+            : base(null, AnimationType.FixedTime, TimeSpan.Zero)
+        {
+            m_actionToCall = actionToCall;
+            m_cancelAction = cancelAction;
         }
     }
 }

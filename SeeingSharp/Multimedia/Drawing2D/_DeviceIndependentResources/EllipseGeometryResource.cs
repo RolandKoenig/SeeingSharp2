@@ -24,6 +24,10 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 
@@ -32,12 +36,6 @@ using SDXM = SharpDX.Mathematics.Interop;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class EllipseGeometryResource : Geometry2DResourceBase
@@ -45,23 +43,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #region Resources
         private D2D.EllipseGeometry m_geometry;
         #endregion
-
-        #region Configuration
-        private Vector2 m_center;
-        private float m_radiusX;
-        private float m_radiusY;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
-        /// </summary>
-        /// <param name="center">The center of the ellipse.</param>
-        /// <param name="radiusX">The radius in x direction.</param>
-        /// <param name="radiusY">The radius in y direction.</param>
-        public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
-        {
-            this.SetContent(center, radiusX, radiusY);
-        }
 
         /// <summary>
         /// Sets the content to all lines in the given polygon.
@@ -101,15 +82,29 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_geometry);
         }
 
-        public override bool IsDisposed
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
+        /// </summary>
+        /// <param name="center">The center of the ellipse.</param>
+        /// <param name="radiusX">The radius in x direction.</param>
+        /// <param name="radiusY">The radius in y direction.</param>
+        public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
         {
-            get { return m_geometry == null; }
+            SetContent(center, radiusX, radiusY);
         }
 
-        public Vector2 Center { get { return m_center; } }
+        public override bool IsDisposed => m_geometry == null;
 
-        public float RadiusX { get { return m_radiusX; } }
+        public Vector2 Center => m_center;
 
-        public float RadiusY { get { return m_radiusY; } }
+        public float RadiusX => m_radiusX;
+
+        public float RadiusY => m_radiusY;
+
+        #region Configuration
+        private Vector2 m_center;
+        private float m_radiusX;
+        private float m_radiusY;
+        #endregion
     }
 }

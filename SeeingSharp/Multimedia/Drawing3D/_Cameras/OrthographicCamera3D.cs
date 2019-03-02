@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class OrthographicCamera3D : Camera3DBase
@@ -39,24 +39,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Configuration
         private float m_zoomFactor = 10f;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
-        /// </summary>
-        public OrthographicCamera3D()
-            : base()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
-        /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public OrthographicCamera3D(int width, int height)
-            : base(width, height)
-        {
-        }
 
         /// <summary>
         /// Applies the data from the given ViewPoint object.
@@ -98,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (m_zoomFactor <= ZOOM_FACTOR_MIN) { m_zoomFactor = ZOOM_FACTOR_MIN; }
 
             MatrixEx.CreateOrthoLH(
-                (float)ScreenWidth / m_zoomFactor, (float)screenHeight / m_zoomFactor,
+                ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
                 Math.Abs(Math.Max(zNear, zFar)),
                 out projMatrix);
@@ -115,12 +97,29 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             while (Math.Abs(dist) > 1f)
             {
-                m_zoomFactor = m_zoomFactor + (float)Math.Sign(dist) * (m_zoomFactor / 10f);
-                dist = dist - (float)Math.Sign(dist);
+                m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
+                dist = dist - Math.Sign(dist);
             }
             m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
 
-            base.UpdateCamera();
+            UpdateCamera();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
+        /// </summary>
+        public OrthographicCamera3D()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
+        /// </summary>
+        /// <param name="width">Width of the renderwindow.</param>
+        /// <param name="height">Height of the renderwindow.</param>
+        public OrthographicCamera3D(int width, int height)
+            : base(width, height)
+        {
         }
 
         /// <summary>
@@ -128,13 +127,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZoomFactor
         {
-            get { return m_zoomFactor; }
+            get => m_zoomFactor;
             set
             {
                 if (m_zoomFactor != value)
                 {
                     m_zoomFactor = value;
-                    base.UpdateCamera();
+                    UpdateCamera();
                 }
             }
         }

@@ -21,18 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class LazyAnimation : IAnimation
     {
-        private Func<IAnimation> m_animationCreator;
         private IAnimation m_animation;
+        private Func<IAnimation> m_animationCreator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyAnimation"/> class.

@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
         public static IAnimationSequenceBuilder<TargetObjectType> BuildAnimationSequence<TargetObjectType>(this IAnimatableObject animationHost, TargetObjectType animatableObject)
             where TargetObjectType : class
         {
-            return animationHost.AnimationHandler.BuildAnimationSequence<TargetObjectType>(animatableObject);
+            return animationHost.AnimationHandler.BuildAnimationSequence(animatableObject);
         }
 
         /// <summary>

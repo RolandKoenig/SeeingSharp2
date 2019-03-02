@@ -21,70 +21,41 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     #endregion
 
     public partial class PerformanceAnalyzer
     {
         private const double DEFAULT_KPI_INTERVAL_SEC = 5.0;
-
-        // Configuration
-        private TimeSpan m_valueInterval;
         private TimeSpan m_calculationInterval;
-        private int m_maxCountHistoricalEntries;
-        private bool m_generateHistoricalCollection;
-        private bool m_generateCurrentValueCollection;
-
-        // Members for time ticks
-        private DateTime m_lastValueTimestamp;
-        private DateTime m_startupTimestamp;
-
-        // Members for threading
-        private volatile int m_delayTimeMS;
-        private Task m_runningTask;
+        private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
 
         // Members for calculators
         private ConcurrentDictionary<string, CalculatorInfo> m_calculatorsDict;
-        private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
 
-        // Collections for UI
+        // Members for threading
+        private volatile int m_delayTimeMS;
+        private bool m_generateCurrentValueCollection;
+        private bool m_generateHistoricalCollection;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
-        /// </summary>
-        public PerformanceAnalyzer(TimeSpan valueInterval, TimeSpan calculationInterval)
-        {
-            m_lastValueTimestamp = DateTime.UtcNow;
-            m_startupTimestamp = m_lastValueTimestamp;
+        // Members for time ticks
+        private DateTime m_lastValueTimestamp;
+        private int m_maxCountHistoricalEntries;
+        private Task m_runningTask;
+        private DateTime m_startupTimestamp;
 
-            m_valueInterval = valueInterval;
-            m_calculationInterval = calculationInterval;
-
-            m_maxCountHistoricalEntries = 50;
-            m_generateHistoricalCollection = true;
-            m_generateCurrentValueCollection = true;
-
-            SyncContext = SynchronizationContext.Current;
-            m_delayTimeMS = 1000;
-
-            m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
-            m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
-
-            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
-        }
+        // Configuration
+        private TimeSpan m_valueInterval;
 
         /// <summary>
         /// Notifies one occurrence of the FlowRate measurenemt with the given name.
@@ -139,7 +110,7 @@ namespace SeeingSharp.Util
 
             return new DummyDisposable(() =>
             {
-                this.NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
+                NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
             });
         }
 
@@ -149,8 +120,8 @@ namespace SeeingSharp.Util
         public Task RunAsync(CancellationToken cancelToken)
         {
             // Check for currently running task
-            if ((m_runningTask != null) &&
-                (m_runningTask.Status == TaskStatus.Running))
+            if (m_runningTask != null &&
+                m_runningTask.Status == TaskStatus.Running)
             {
                 throw new SeeingSharpException("Unable to start OnlineKpiContainer: Main loop is already running!");
             }
@@ -173,7 +144,7 @@ namespace SeeingSharp.Util
                         }
 
                         // Calculate values now
-                        this.CalculateValuesAsync(utcNow);
+                        CalculateValuesAsync(utcNow);
 
                         // Trigger refresh of ui collections
                         await RefreshUICollectionsAsync();
@@ -188,7 +159,6 @@ namespace SeeingSharp.Util
             return m_runningTask;
         }
 
-
         /// <summary>
         /// Refreshes the gui using the configured SynchronizationContext.
         /// </summary>
@@ -198,7 +168,7 @@ namespace SeeingSharp.Util
             await SyncContext.PostAlsoIfNullAsync(
                 () =>
                 {
-                    this.RefreshUICollections();
+                    RefreshUICollections();
                 },
                 ActionIfSyncContextIsNull.InvokeSynchronous);
         }
@@ -216,7 +186,7 @@ namespace SeeingSharp.Util
 
                 while (actCalculatorInfo.Results.TryTake(out actResult))
                 {
-                    this.HandleResultForUI(actResult);
+                    HandleResultForUI(actResult);
                 }
             }
         }
@@ -267,7 +237,7 @@ namespace SeeingSharp.Util
         {
             var newCalculatorInfo = m_calculatorsDict.GetOrAdd(
                 activity,
-                (key) =>
+                key =>
                 {
                     var newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
                     newCalculator.Parent = this;
@@ -278,8 +248,8 @@ namespace SeeingSharp.Util
                 });
 
 
-            if ((newCalculatorInfo == null) ||
-                (newCalculatorInfo.Calculator == null))
+            if (newCalculatorInfo == null ||
+                newCalculatorInfo.Calculator == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }
@@ -299,10 +269,39 @@ namespace SeeingSharp.Util
         /// </summary>
         private void EnsureNotRunning()
         {
-            if (this.IsRunning)
+            if (IsRunning)
             {
                 throw new InvalidOperationException("Unable to perform this operation when OnlineKpiContainer is running!");
             }
+        }
+
+        // Collections for UI
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
+        /// </summary>
+        public PerformanceAnalyzer(TimeSpan valueInterval, TimeSpan calculationInterval)
+        {
+            m_lastValueTimestamp = DateTime.UtcNow;
+            m_startupTimestamp = m_lastValueTimestamp;
+
+            m_valueInterval = valueInterval;
+            m_calculationInterval = calculationInterval;
+
+            m_maxCountHistoricalEntries = 50;
+            m_generateHistoricalCollection = true;
+            m_generateCurrentValueCollection = true;
+
+            SyncContext = SynchronizationContext.Current;
+            m_delayTimeMS = 1000;
+
+            m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
+            m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
+
+            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
+            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
+            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
+            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
         }
 
         /// <summary>
@@ -310,8 +309,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public int DelayTimeMS
         {
-            get { return m_delayTimeMS; }
-            set { m_delayTimeMS = value; }
+            get => m_delayTimeMS;
+            set => m_delayTimeMS = value;
         }
 
         /// <summary>
@@ -327,8 +326,8 @@ namespace SeeingSharp.Util
             get
             {
                 // Check for currently running task
-                if ((m_runningTask != null) &&
-                    (m_runningTask.Status == TaskStatus.Running))
+                if (m_runningTask != null &&
+                    m_runningTask.Status == TaskStatus.Running)
                 {
                     return true;
                 }
@@ -343,7 +342,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public TimeSpan ValueInterval
         {
-            get { return m_valueInterval; }
+            get => m_valueInterval;
             set
             {
                 EnsureNotRunning();
@@ -357,7 +356,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public TimeSpan CalculationInterval
         {
-            get { return m_calculationInterval; }
+            get => m_calculationInterval;
             set
             {
                 EnsureNotRunning();
@@ -370,7 +369,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public int MaxCountHistoricalEntries
         {
-            get { return m_maxCountHistoricalEntries; }
+            get => m_maxCountHistoricalEntries;
             set
             {
                 EnsureNotRunning();
@@ -383,7 +382,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool GenerateHistoricalCollection
         {
-            get { return m_generateHistoricalCollection; }
+            get => m_generateHistoricalCollection;
             set
             {
                 EnsureNotRunning();
@@ -396,7 +395,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool GenerateCurrentValueCollection
         {
-            get { return m_generateCurrentValueCollection; }
+            get => m_generateCurrentValueCollection;
             set
             {
                 EnsureNotRunning();
@@ -432,14 +431,14 @@ namespace SeeingSharp.Util
         /// </summary>
         private class CalculatorInfo
         {
-            public CalculatorInfo(PerformanceCalculatorBase calculator)
-            {
-                this.Calculator = calculator;
-                this.Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
-            }
-
             public PerformanceCalculatorBase Calculator;
             public BlockingCollection<PerformanceAnalyzeResultBase> Results;
+
+            public CalculatorInfo(PerformanceCalculatorBase calculator)
+            {
+                Calculator = calculator;
+                Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
+            }
         }
     }
 }

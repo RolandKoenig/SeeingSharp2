@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public static class BoundingSphereEx

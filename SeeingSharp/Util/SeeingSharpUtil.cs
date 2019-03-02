@@ -21,21 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-
     #endregion
 
-    public static partial class SeeingSharpUtil
+    public static class SeeingSharpUtil
     {
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {
@@ -79,7 +80,7 @@ namespace SeeingSharp.Util
             }
             catch
             {
-                return default(T);
+                return default;
             }
         }
 
@@ -122,12 +123,12 @@ namespace SeeingSharp.Util
         /// <param name="byteCount">The total count of bytes to be copied.</param>
         public static unsafe void CopyMemory(void* sourcePointer, void* targetPointer, ulong byteCount)
         {
-            ulong longCount = byteCount / 8;
-            ulong byteScrap = byteCount % 8;
+            var longCount = byteCount / 8;
+            var byteScrap = byteCount % 8;
 
             // Copy using long pointers
-            ulong* sourcePointerLong = (ulong*)sourcePointer;
-            ulong* targetPointerLong = (ulong*)targetPointer;
+            var sourcePointerLong = (ulong*)sourcePointer;
+            var targetPointerLong = (ulong*)targetPointer;
             for (ulong actIndexLong = 0; actIndexLong < longCount; actIndexLong++)
             {
                 targetPointerLong[actIndexLong] = sourcePointerLong[actIndexLong];
@@ -136,9 +137,9 @@ namespace SeeingSharp.Util
             // Copy remaining bytes
             if (byteScrap > 0)
             {
-                byte* sourcePointerByte = (byte*)sourcePointer;
-                byte* targetPointerByte = (byte*)targetPointer;
-                for (ulong actIndexByte = byteCount - byteScrap; actIndexByte < byteCount; actIndexByte++)
+                var sourcePointerByte = (byte*)sourcePointer;
+                var targetPointerByte = (byte*)targetPointer;
+                for (var actIndexByte = byteCount - byteScrap; actIndexByte < byteCount; actIndexByte++)
                 {
                     targetPointerByte[actIndexByte] = sourcePointerByte[actIndexByte];
                 }
@@ -188,7 +189,7 @@ namespace SeeingSharp.Util
         {
             if(delayMilliseconds <= 0) { return; }
 
-            using(var waitHandle = new System.Threading.ManualResetEvent(false))
+            using(var waitHandle = new ManualResetEvent(false))
             {
                 waitHandle.WaitOne((int)delayMilliseconds);
             }
@@ -196,30 +197,24 @@ namespace SeeingSharp.Util
 
         public static bool HasAnyElement<T>(IEnumerable<T> collection)
         {
-            IReadOnlyCollection<T> readonlyCollection = collection as IReadOnlyCollection<T>;
+            var readonlyCollection = collection as IReadOnlyCollection<T>;
             if (readonlyCollection != null)
             {
                 return readonlyCollection.Count > 0;
             }
-            else
+            var simpleCollection = collection as ICollection;
+
+            if (simpleCollection != null)
             {
-                var simpleCollection = collection as ICollection;
-
-                if (simpleCollection != null)
-                {
-                    return simpleCollection.Count > 0;
-                }
-                else
-                {
-                    // Try to loop forward to the first element
-                    foreach(var actElement in collection)
-                    {
-                        return true;
-                    }
-
-                    return false;
-                }
+                return simpleCollection.Count > 0;
             }
+            // Try to loop forward to the first element
+            foreach(var actElement in collection)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -227,25 +222,19 @@ namespace SeeingSharp.Util
         /// </summary>
         public static int GetCollectionCount<T>(IEnumerable<T> collection)
         {
-            IReadOnlyCollection<T> readonlyCollection = collection as IReadOnlyCollection<T>;
+            var readonlyCollection = collection as IReadOnlyCollection<T>;
 
             if (readonlyCollection != null)
             {
                 return readonlyCollection.Count;
             }
-            else
-            {
-                var simpleCollection = collection as ICollection;
+            var simpleCollection = collection as ICollection;
 
-                if (simpleCollection != null)
-                {
-                    return simpleCollection.Count;
-                }
-                else
-                {
-                    return collection.Count();
-                }
+            if (simpleCollection != null)
+            {
+                return simpleCollection.Count;
             }
+            return collection.Count();
         }
 
         /// <summary>
@@ -255,17 +244,14 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be inserted.</param>
         public static int BinaryInsert<T>(List<T> targetList, T newItem)
         {
-            int targetIndex = targetList.BinarySearch(newItem);
+            var targetIndex = targetList.BinarySearch(newItem);
             if (targetIndex < 0)
             {
                 targetList.Insert(~targetIndex, newItem);
                 return ~targetIndex;
             }
-            else
-            {
-                targetList.Insert(targetIndex, newItem);
-                return targetIndex;
-            }
+            targetList.Insert(targetIndex, newItem);
+            return targetIndex;
         }
 
         /// <summary>
@@ -276,17 +262,14 @@ namespace SeeingSharp.Util
         /// <param name="comparer">The comparer which is used for the binary search method.</param>
         public static int BinaryInsert<T>(List<T> targetList, T newItem, IComparer<T> comparer)
         {
-            int targetIndex = targetList.BinarySearch(newItem, comparer);
+            var targetIndex = targetList.BinarySearch(newItem, comparer);
             if (targetIndex < 0)
             {
                 targetList.Insert(~targetIndex, newItem);
                 return ~targetIndex;
             }
-            else
-            {
-                targetList.Insert(targetIndex, newItem);
-                return targetIndex;
-            }
+            targetList.Insert(targetIndex, newItem);
+            return targetIndex;
         }
 
         /// <summary>
@@ -296,7 +279,7 @@ namespace SeeingSharp.Util
         /// <param name="toRemove">The object to be removed.</param>
         public static void BinaryRemove<T>(List<T> targetList, T toRemove)
         {
-            int targetIndex = targetList.BinarySearch(toRemove);
+            var targetIndex = targetList.BinarySearch(toRemove);
             if (targetIndex >= 0)
             {
                 targetList.RemoveAt(targetIndex);

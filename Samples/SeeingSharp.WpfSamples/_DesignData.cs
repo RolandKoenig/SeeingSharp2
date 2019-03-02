@@ -21,16 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+
 namespace SeeingSharp.WpfSamples
 {
-    #region using
-
-    using System.Threading.Tasks;
-    using Multimedia.Core;
-    using SampleContainer;
-
-    #endregion
-
     public static class DesignData
     {
         public static MainWindowViewModel MainWindowVM

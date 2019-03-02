@@ -21,17 +21,29 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System.Threading.Tasks;
-
     #endregion
 
     public class WaitTaskFinishedAnimation : AnimationBase
     {
         private Task m_taskToWaitFor;
+
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            base.OnCurrentTimeUpdated(updateState, animationState);
+
+            if(m_taskToWaitFor.IsCanceled ||
+               m_taskToWaitFor.IsCompleted ||
+               m_taskToWaitFor.IsFaulted)
+            {
+                NotifyAnimationFinished();
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaitTaskFinishedAnimation" /> class.
@@ -42,25 +54,10 @@ namespace SeeingSharp.Multimedia.Core
             m_taskToWaitFor = taskToWaitFor;
         }
 
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            base.OnCurrentTimeUpdated(updateState, animationState);
-
-            if(m_taskToWaitFor.IsCanceled ||
-               m_taskToWaitFor.IsCompleted ||
-               m_taskToWaitFor.IsFaulted)
-            {
-                base.NotifyAnimationFinished();
-            }
-        }
-
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

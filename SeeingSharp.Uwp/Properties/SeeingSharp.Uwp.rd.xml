@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
     Diese Datei enthält Laufzeitdirektiven, Spezifikationen zu Typen, auf die Ihre Anwendung
     über die Reflektion und andere dynamische Codemuster zugreift. Laufzeitdirektiven werden dazu verwendet, den
@@ -27,7 +28,7 @@
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Library Name="SeeingSharp.Uwp">
 
-  	<!-- Fügen Sie hier Direktiven für Ihre Bibliothek ein. -->
+    <!-- Fügen Sie hier Direktiven für Ihre Bibliothek ein. -->
 
   </Library>
 </Directives>

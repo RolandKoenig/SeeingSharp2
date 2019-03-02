@@ -23,41 +23,42 @@
 #endregion
 
 // Namespace mappings
+using System;
+using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
+
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using System;
-    using Windows.Foundation;
-    using Windows.Graphics.Display;
-    using Windows.UI.Core;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     internal class SwapChainPanelWrapper : IDisposable
     {
-        #region UI objects
-        private SwapChainBackgroundPanel m_bgPanel;
-        private SharpDX.DXGI.ISwapChainBackgroundPanelNative m_bgPanelNative;
-        private SwapChainPanel m_panel;
-        private SharpDX.DXGI.ISwapChainPanelNative m_panelNative;
-        #endregion
+        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded?.Invoke(sender, e);
+        }
 
-        #region Configuration
-        private float m_currentDpiX;
-        private float m_currentDpiY;
-        #endregion
+        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded?.Invoke(sender, e);
+        }
 
-        #region Forwarded events
-        public event EventHandler<RoutedEventArgs> Unloaded;
-        public event EventHandler<RoutedEventArgs> Loaded;
-        public event EventHandler<SizeChangedEventArgs> SizeChanged;
-        public event EventHandler CompositionScaleChanged;
-        #endregion
+        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SizeChanged?.Invoke(sender, e);
+        }
+
+        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         public SwapChainPanelWrapper()
         {
@@ -74,7 +75,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_bgPanel = bgPanel;
-            m_bgPanelNative = ComObject.As<SharpDX.DXGI.ISwapChainBackgroundPanelNative>(m_bgPanel);
+            m_bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(m_bgPanel);
 
             m_bgPanel.SizeChanged += OnAnyPanel_SizeChanged;
             m_bgPanel.Loaded += OnAnyPanel_Loaded;
@@ -89,7 +90,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_panel = panel;
-            m_panelNative = ComObject.As<SharpDX.DXGI.ISwapChainPanelNative>(m_panel);
+            m_panelNative = ComObject.As<ISwapChainPanelNative>(m_panel);
 
             m_panel.SizeChanged += OnAnyPanel_SizeChanged;
             m_panel.Loaded += OnAnyPanel_Loaded;
@@ -106,51 +107,28 @@ namespace SeeingSharp.Multimedia.Views
             SeeingSharpTools.SafeDispose(ref m_panelNative);
         }
 
-        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
-        {
-            this.Unloaded?.Invoke(sender, e);
-        }
+        public Size RenderSize => Panel.RenderSize;
 
-        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Loaded?.Invoke(sender, e);
-        }
+        public Size ActualSize => new Size(Panel.ActualWidth, Panel.ActualHeight);
 
-        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            this.SizeChanged?.Invoke(sender, e);
-        }
+        public double ActualWidth => Panel.ActualWidth;
 
-        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
-        {
-            this.CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public Size RenderSize => this.Panel.RenderSize;
-
-        public Size ActualSize => new Size(this.Panel.ActualWidth, this.Panel.ActualHeight);
-
-        public double ActualWidth => this.Panel.ActualWidth;
-
-        public double ActualHeight => this.Panel.ActualHeight;
+        public double ActualHeight => Panel.ActualHeight;
 
         public Panel Panel
         {
             get
             {
                 if (m_bgPanel != null) { return m_bgPanel; }
-                else if (m_panel != null) { return m_panel; }
-                else
-                {
-                    throw new ObjectDisposedException("SwapChainPanelWrapper");
-                }
+                if (m_panel != null) { return m_panel; }
+                throw new ObjectDisposedException("SwapChainPanelWrapper");
             }
         }
 
         /// <summary>
         /// Sets the SwapChain object of the panel wrapped by this object.
         /// </summary>
-        public SharpDX.DXGI.SwapChain SwapChain
+        public SwapChain SwapChain
         {
             set
             {
@@ -188,12 +166,28 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 if(m_bgPanel != null) { return m_bgPanel.Dispatcher; }
-                else if(m_panel != null) { return m_panel.Dispatcher; }
-                else
-                {
-                    throw new ObjectDisposedException("SwapChainPanelWrapper");
-                }
+                if(m_panel != null) { return m_panel.Dispatcher; }
+                throw new ObjectDisposedException("SwapChainPanelWrapper");
             }
         }
+
+        #region UI objects
+        private SwapChainBackgroundPanel m_bgPanel;
+        private ISwapChainBackgroundPanelNative m_bgPanelNative;
+        private SwapChainPanel m_panel;
+        private ISwapChainPanelNative m_panelNative;
+        #endregion
+
+        #region Configuration
+        private float m_currentDpiX;
+        private float m_currentDpiY;
+        #endregion
+
+        #region Forwarded events
+        public event EventHandler<RoutedEventArgs> Unloaded;
+        public event EventHandler<RoutedEventArgs> Loaded;
+        public event EventHandler<SizeChangedEventArgs> SizeChanged;
+        public event EventHandler CompositionScaleChanged;
+        #endregion
     }
 }

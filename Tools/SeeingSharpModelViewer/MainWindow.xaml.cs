@@ -1,9 +1,8 @@
-﻿namespace SeeingSharpModelViewer
+﻿using System.Windows;
+
+namespace SeeingSharpModelViewer
 {
     #region using
-
-    using System.Windows;
-
     #endregion
 
     /// <summary>

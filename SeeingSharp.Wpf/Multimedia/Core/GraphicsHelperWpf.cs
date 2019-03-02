@@ -24,6 +24,11 @@
 #region using
 
 // Namespace mappings
+using System;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using SeeingSharp.Checking;
+using SeeingSharp.Util;
 using GDI = System.Drawing;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -32,27 +37,21 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Windows.Media.Imaging;
-    using Checking;
-    using SeeingSharp.Util;
-
     #endregion
 
     public static class GraphicsHelperWpf
     {
         public static void UniformRescale(ref int width, ref int height, float maxDimension)
         {
-            int biggerValue = width;
+            var biggerValue = width;
             if(height > biggerValue) { biggerValue = height; }
 
             float biggerValueF = biggerValue;
             if(biggerValueF <= maxDimension) { return; }
 
-            float scaleFactor = maxDimension / biggerValueF;
-            width = (int)((float)width * scaleFactor);
-            height = (int)((float)height * scaleFactor);
+            var scaleFactor = maxDimension / biggerValueF;
+            width = (int)(width * scaleFactor);
+            height = (int)(height * scaleFactor);
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
 
             try
             {
-                if (!targetBitmap.TryLock(new System.Windows.Duration(lockTimeout)))
+                if (!targetBitmap.TryLock(new Duration(lockTimeout)))
                 {
                     return;
                 }
@@ -88,12 +87,12 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Copy data row by row
                     //  => Rows from datasource may have more pixels because driver changes the size of textures
-                    ulong rowPitch = (ulong)(width * 4);
+                    var rowPitch = (ulong)(width * 4);
 
-                    for (int loopRow = 0; loopRow < height; loopRow++)
+                    for (var loopRow = 0; loopRow < height; loopRow++)
                     {
-                        int rowPitchSource = dataBox.RowPitch;
-                        int rowPitchDestination = width * 4;
+                        var rowPitchSource = dataBox.RowPitch;
+                        var rowPitchDestination = width * 4;
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             targetBitmap.BackBuffer + loopRow * rowPitchDestination,
@@ -102,7 +101,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 finally
                 {
-                    targetBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, width, height));
+                    targetBitmap.AddDirtyRect(new Int32Rect(0, 0, width, height));
                     targetBitmap.Unlock();
                 }
             }

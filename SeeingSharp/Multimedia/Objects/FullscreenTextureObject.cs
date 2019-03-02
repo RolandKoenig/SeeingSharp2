@@ -24,6 +24,9 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,38 +34,17 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class FullscreenTextureObject : SceneObject, IAnimatableObjectAccentuation, IAnimatableObjectOpacity
     {
         #region Configuration
         private NamedOrGenericKey m_resTexture;
-
         #endregion
 
         #region Device dependent resources
         private IndexBasedDynamicCollection<TexturePainterHelper> m_texturePainterHelpers;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FullscreenTextureObject"/> class.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        public FullscreenTextureObject(NamedOrGenericKey texture)
-        {
-            m_resTexture = texture;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
-            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
-
-            m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
-        }
 
         /// <summary>
         /// Loads all resources of the object.
@@ -103,12 +85,12 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
-            if (base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                base.SubscribeToPass(
+                SubscribeToPass(
                     RenderPassInfo.PASS_PLAIN_RENDER,
                     layerViewSubset, OnRenderPlain);
-                base.SubscribeToPass(
+                SubscribeToPass(
                     RenderPassInfo.PASS_TRANSPARENT_RENDER,
                     layerViewSubset, OnRenderTransparent);
             }
@@ -170,13 +152,28 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets or sets the scaling factor.
+        /// Initializes a new instance of the <see cref="FullscreenTextureObject"/> class.
         /// </summary>
-        public float Scaling { get; set; }
+        /// <param name="texture">The texture.</param>
+        public FullscreenTextureObject(NamedOrGenericKey texture)
+        {
+            m_resTexture = texture;
+            Scaling = 1f;
+            Opacity = 1f;
+            AccentuationFactor = 0f;
+            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
+
+            m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
+        }
 
         public float AccentuationFactor { get; set; }
 
         public float Opacity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scaling factor.
+        /// </summary>
+        public float Scaling { get; set; }
 
         /// <summary>
         /// Gets or sets the alpha blend mode.

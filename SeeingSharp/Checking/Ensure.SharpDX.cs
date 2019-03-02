@@ -22,7 +22,8 @@
 */
 #endregion
 #region using
-
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using SDX = SharpDX;
 
 #endregion
@@ -30,10 +31,6 @@ using SDX = SharpDX;
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-
     #endregion
 
     public static partial class EnsureMultimedia
@@ -46,8 +43,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((disposeBase == null) ||
-                (disposeBase.IsDisposed))
+            if (disposeBase == null ||
+                disposeBase.IsDisposed)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Resource {0} within method {1} musst not be null or disposed!",
@@ -70,6 +67,5 @@ namespace SeeingSharp.Checking
                     checkedVariableName, callerMethod));
             }
         }
-
     }
 }

@@ -24,6 +24,9 @@
 #region using
 
 //Some namespace mappings
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,48 +34,11 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class DefaultResources : Resource
     {
         public static readonly NamedOrGenericKey RESOURCE_KEY = new NamedOrGenericKey(typeof(DefaultResources));
-
-        #region Blend states
-        private Lazy<D3D11.BlendState> m_defaultBlendState;
-        private Lazy<D3D11.BlendState> m_alphaBlendingBlendState;
-        #endregion
-
-        #region Depth stencil states
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDefault;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDisableZWrites;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateInvertedZTest;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAllwaysPass;
-        #endregion
-
-        #region Rastarizer states
-        private Lazy<D3D11.RasterizerState> m_rasterStateLines;
-        private Lazy<D3D11.RasterizerState> m_rasterStateDefault;
-        private Lazy<D3D11.RasterizerState> m_rasterStateBiased;
-        private Lazy<D3D11.RasterizerState> m_rasterStateWireframe;
-        #endregion
-
-        #region Sample states
-        private Lazy<D3D11.SamplerState> m_samplerStateLow;
-        private Lazy<D3D11.SamplerState> m_samplerStateMedium;
-        private Lazy<D3D11.SamplerState> m_samplerStateHigh;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultResources" /> class.
-        /// </summary>
-        public DefaultResources()
-        {
-        }
 
         /// <summary>
         /// Gets the sampler state with the given requested quality level.
@@ -177,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             });
 
             // Create a raster state for wireframe rendering
-            m_rasterStateWireframe = new Lazy<SharpDX.Direct3D11.RasterizerState>(() =>
+            m_rasterStateWireframe = new Lazy<D3D11.RasterizerState>(() =>
             {
                 var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.FillMode = D3D11.FillMode.Wireframe;
@@ -229,10 +195,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Are resources loaded?
         /// </summary>
-        public bool ResourcesLoaded
-        {
-            get { return m_defaultBlendState != null; }
-        }
+        public bool ResourcesLoaded => m_defaultBlendState != null;
 
         internal D3D11.BlendState DefaultBlendState
         {
@@ -333,9 +296,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        public override bool IsLoaded
-        {
-            get { return m_defaultBlendState != null; }
-        }
+        public override bool IsLoaded => m_defaultBlendState != null;
+
+        #region Blend states
+        private Lazy<D3D11.BlendState> m_defaultBlendState;
+        private Lazy<D3D11.BlendState> m_alphaBlendingBlendState;
+        #endregion
+
+        #region Depth stencil states
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDefault;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDisableZWrites;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateInvertedZTest;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAllwaysPass;
+        #endregion
+
+        #region Rastarizer states
+        private Lazy<D3D11.RasterizerState> m_rasterStateLines;
+        private Lazy<D3D11.RasterizerState> m_rasterStateDefault;
+        private Lazy<D3D11.RasterizerState> m_rasterStateBiased;
+        private Lazy<D3D11.RasterizerState> m_rasterStateWireframe;
+        #endregion
+
+        #region Sample states
+        private Lazy<D3D11.SamplerState> m_samplerStateLow;
+        private Lazy<D3D11.SamplerState> m_samplerStateMedium;
+        private Lazy<D3D11.SamplerState> m_samplerStateHigh;
+        #endregion
     }
 }

@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using SeeingSharp.Util;
-
     #endregion
 
     public abstract partial class SceneObject
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
             ViewRelatedSceneLayerSubset layerViewSubset, Action<RenderState> renderAction,
             int zOrder = 0)
         {
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
 
             subscriptionList.Add(layerViewSubset.SubscribeForPass(renderPass, this, renderAction, zOrder));
         }
@@ -74,20 +74,20 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Get the subscription list
             // (may be null if object was removed from the layer)
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
             if (subscriptionList == null) { return; }
 
             // Update the corresponding subscription entry
-            int subscriptionCount = subscriptionList.Count;
-            int entryCount = 0;
+            var subscriptionCount = subscriptionList.Count;
+            var entryCount = 0;
 
-            for (int loop = 0; loop < subscriptionCount; loop++)
+            for (var loop = 0; loop < subscriptionCount; loop++)
             {
                 var currentSubscriptionInfo = subscriptionList[loop];
 
-                if ((currentSubscriptionInfo.SceneObject == newSubscriptionInfo.SceneObject) &&
-                    (currentSubscriptionInfo.RenderPass == newSubscriptionInfo.RenderPass) &&
-                    (currentSubscriptionInfo.RenderMethod == newSubscriptionInfo.RenderMethod))
+                if (currentSubscriptionInfo.SceneObject == newSubscriptionInfo.SceneObject &&
+                    currentSubscriptionInfo.RenderPass == newSubscriptionInfo.RenderPass &&
+                    currentSubscriptionInfo.RenderMethod == newSubscriptionInfo.RenderMethod)
                 {
                     subscriptionList[loop] = newSubscriptionInfo;
                     entryCount++;
@@ -107,12 +107,12 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Get the subscription list
             // (may be null if object was removed from the layer)
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
             if (subscriptionList == null) { return; }
 
             // Perform unsubscribe
-            int entryCount = 0;
-            for (int loop = 0; loop < subscriptionList.Count; loop++)
+            var entryCount = 0;
+            for (var loop = 0; loop < subscriptionList.Count; loop++)
             {
                 if (subscriptionList[loop].RenderPass == passInfo)
                 {
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Get the subscription list
             // (may be null if object was removed from the layer)
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
 
             if (subscriptionList == null)
             {
@@ -142,16 +142,16 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Remove the given entry from subscription list
-            int subscriptionCount = subscriptionList.Count;
-            int entryCount = 0;
+            var subscriptionCount = subscriptionList.Count;
+            var entryCount = 0;
 
             for (var loop = 0; loop < subscriptionCount; loop++)
             {
                 var currentSubscriptionInfo = subscriptionList[loop];
 
-                if ((currentSubscriptionInfo.SceneObject == subscription.SceneObject) &&
-                   (currentSubscriptionInfo.RenderPass == subscription.RenderPass) &&
-                   (currentSubscriptionInfo.RenderMethod == subscription.RenderMethod))
+                if (currentSubscriptionInfo.SceneObject == subscription.SceneObject &&
+                   currentSubscriptionInfo.RenderPass == subscription.RenderPass &&
+                   currentSubscriptionInfo.RenderMethod == subscription.RenderMethod)
                 {
                     subscriptionList.RemoveAt(loop);
                     loop--;
@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The view subset from which to clear all subscription entries.</param>
         internal void ClearSubscriptionsWithoutUnsubscribeCall(ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
             subscriptionList.Clear();
         }
 
@@ -182,9 +182,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected internal void UnsubsribeFromAllPasses(ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            List<RenderPassSubscription> subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
 
-            for (int loop = 0; loop < subscriptionList.Count; loop++)
+            for (var loop = 0; loop < subscriptionList.Count; loop++)
             {
                 subscriptionList[loop].Unsubscribe();
             }

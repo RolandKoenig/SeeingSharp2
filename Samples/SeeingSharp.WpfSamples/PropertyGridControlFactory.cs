@@ -21,18 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using PropertyTools.DataAnnotations;
+using PropertyTools.Wpf;
+
 namespace SeeingSharp.WpfSamples
 {
-    #region using
-
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using PropertyTools.DataAnnotations;
-    using PropertyTools.Wpf;
-
-    #endregion
-
     public class PropertyGridControlFactory : PropertyTools.Wpf.PropertyGridControlFactory
     {
         public override FrameworkElement CreateControl(PropertyItem property, PropertyControlFactoryOptions options)
@@ -41,11 +39,11 @@ namespace SeeingSharp.WpfSamples
             {
                 property.HeaderPlacement = HeaderPlacement.Hidden;
 
-                var result = new Button()
+                var result = new Button
                 {
-                    Content = property.DisplayName,
+                    Content = property.DisplayName
                 };
-                result.SetBinding(Button.CommandProperty, property.CreateBinding());
+                result.SetBinding(ButtonBase.CommandProperty, property.CreateBinding());
                 return result;
             }
 

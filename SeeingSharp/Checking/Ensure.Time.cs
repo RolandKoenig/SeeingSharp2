@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-
     #endregion
 
     public static partial class Ensure

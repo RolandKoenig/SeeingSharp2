@@ -21,6 +21,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SharpDX;
+
 #if DESKTOP
 using System.Windows.Media.Media3D;
 #endif
@@ -28,10 +32,6 @@ using System.Windows.Media.Media3D;
 namespace SeeingSharp
 {
     #region using
-
-    using System.Collections.Generic;
-    using SharpDX;
-
     #endregion
 
     public static class MathExtensions

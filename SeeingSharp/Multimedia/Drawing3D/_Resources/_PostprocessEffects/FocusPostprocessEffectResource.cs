@@ -24,6 +24,11 @@
 #region using
 
 //Some namespace mappings
+using System.Runtime.InteropServices;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,52 +36,10 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System.Runtime.InteropServices;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class FocusPostprocessEffectResource : PostprocessEffectResource
     {
-        #region Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_01 = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_02 = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Configuration
-        private bool m_forceSimpleMethod;
-        private float m_fadeIntensity;
-        #endregion
-
-        #region Resources
-        private SingleForcedColorMaterialResource m_singleForcedColor;
-        private RenderTargetTextureResource m_renderTarget;
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShaderBlur;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbFirstPass;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
-        /// </summary>
-        /// <param name="forceSimpleMethod">Force simple mode. Default to false.</param>
-        /// <param name="fadeIntensity">Intensity of the fade effect.</param>
-        public FocusPostprocessEffectResource(bool forceSimpleMethod = false, float fadeIntensity = 1f)
-        {
-            m_fadeIntensity.EnsureInRange(0f, 1f, nameof(fadeIntensity));
-
-            m_forceSimpleMethod = forceSimpleMethod;
-            m_fadeIntensity = fadeIntensity;
-        }
-
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -90,25 +53,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER_BLUR,
                 () => GraphicsHelper.GetPixelShaderResource(device, "Postprocessing", "PostprocessBlur"));
-            m_singleForcedColor = resources.GetResourceAndEnsureLoaded<SingleForcedColorMaterialResource>(
+            m_singleForcedColor = resources.GetResourceAndEnsureLoaded(
                 KEY_MATERIAL,
-                () => new SingleForcedColorMaterialResource() { FadeIntensity = m_fadeIntensity });
-            m_renderTarget = resources.GetResourceAndEnsureLoaded<RenderTargetTextureResource>(
+                () => new SingleForcedColorMaterialResource { FadeIntensity = m_fadeIntensity });
+            m_renderTarget = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_TARGET,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));
             m_defaultResources = resources.DefaultResources;
 
             // Load constant buffers
-            m_cbFirstPass = resources.GetResourceAndEnsureLoaded<TypeSafeConstantBufferResource<CBPerObject>>(
+            m_cbFirstPass = resources.GetResourceAndEnsureLoaded(
                 KEY_CB_PASS_01,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject()
+                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
                 {
                     BlurIntensity = 0.0f,
                     BlurOpacity = 0.1f
                 }));
-            m_cbSecondPass = resources.GetResourceAndEnsureLoaded<TypeSafeConstantBufferResource<CBPerObject>>(
+            m_cbSecondPass = resources.GetResourceAndEnsureLoaded(
                 KEY_CB_PASS_02,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject()
+                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
                 {
                     BlurIntensity = 0.8f,
                     BlurOpacity = 0.5f
@@ -140,7 +103,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="passID">The ID of the current pass (starting with 0)</param>
         internal override void NotifyBeforeRender(RenderState renderState, int passID)
         {
-            if (renderState.Device.IsHighDetailSupported && (!m_forceSimpleMethod))
+            if (renderState.Device.IsHighDetailSupported && !m_forceSimpleMethod)
             {
                 switch (passID)
                 {
@@ -210,7 +173,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            if (renderState.Device.IsHighDetailSupported && (!m_forceSimpleMethod))
+            if (renderState.Device.IsHighDetailSupported && !m_forceSimpleMethod)
             {
                 // Reset settings made on render state (needed for all passes)
                 deviceContext.Rasterizer.State = m_defaultResources.RasterStateDefault;
@@ -227,7 +190,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 switch (passID)
                 {
                     case 0:
-                        base.ApplyAlphaBasedSpriteRendering(deviceContext);
+                        ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -238,12 +201,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            base.DiscardAlphaBasedSpriteRendering(deviceContext);
+                            DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
                         return true;
 
                     case 1:
-                        base.ApplyAlphaBasedSpriteRendering(deviceContext);
+                        ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -254,7 +217,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            base.DiscardAlphaBasedSpriteRendering(deviceContext);
+                            DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
                         return false;
                 }
@@ -273,17 +236,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
+        /// </summary>
+        /// <param name="forceSimpleMethod">Force simple mode. Default to false.</param>
+        /// <param name="fadeIntensity">Intensity of the fade effect.</param>
+        public FocusPostprocessEffectResource(bool forceSimpleMethod = false, float fadeIntensity = 1f)
+        {
+            m_fadeIntensity.EnsureInRange(0f, 1f, nameof(fadeIntensity));
+
+            m_forceSimpleMethod = forceSimpleMethod;
+            m_fadeIntensity = fadeIntensity;
+        }
+
+        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get
-            {
-                return (m_renderTarget != null) &&
-                       (m_singleForcedColor != null) &&
-                       (m_singleForcedColor.IsLoaded);
-            }
-        }
+        public override bool IsLoaded =>
+            m_renderTarget != null &&
+            m_singleForcedColor != null &&
+            m_singleForcedColor.IsLoaded;
 
         //*********************************************************************
         //*********************************************************************
@@ -300,5 +271,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
             /// </summary>
             public Vector2 Dummy;
         }
+
+        #region Resource keys
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_CB_PASS_01 = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_CB_PASS_02 = GraphicsCore.GetNextGenericResourceKey();
+        #endregion
+
+        #region Configuration
+        private bool m_forceSimpleMethod;
+        private float m_fadeIntensity;
+        #endregion
+
+        #region Resources
+        private SingleForcedColorMaterialResource m_singleForcedColor;
+        private RenderTargetTextureResource m_renderTarget;
+        private DefaultResources m_defaultResources;
+        private PixelShaderResource m_pixelShaderBlur;
+        private TypeSafeConstantBufferResource<CBPerObject> m_cbFirstPass;
+        private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
+        #endregion
     }
 }

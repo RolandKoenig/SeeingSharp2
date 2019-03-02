@@ -1,12 +1,12 @@
 ﻿<Application
-             xmlns:propTools="http://propertytools.org/wpf"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
-             xmlns:pt="http://propertytools.org/wpf" x:Class="SeeingSharp.WpfSamples.App"
-             StartupUri="MainWindow.xaml">
+    xmlns:propTools="http://propertytools.org/wpf"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
+    xmlns:pt="http://propertytools.org/wpf" x:Class="SeeingSharp.WpfSamples.App"
+    StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
         <!-- Style for the property grid -->
         <Style TargetType="{x:Type propTools:PropertyGrid}">
             <Style.Resources>

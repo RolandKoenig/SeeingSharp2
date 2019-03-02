@@ -24,6 +24,10 @@
 #region using
 
 // Namespace mappings
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Util;
+using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -31,12 +35,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Checking;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public abstract class Geometry2DResourceBase : IDisposable, ICheckDisposed
@@ -50,7 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            var geometryThis = this.GetGeometry();
+            var geometryThis = GetGeometry();
             var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther) != D2D.GeometryRelation.Disjoint;
@@ -66,7 +64,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            var geometryThis = this.GetGeometry();
+            var geometryThis = GetGeometry();
             var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;

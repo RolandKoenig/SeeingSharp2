@@ -21,22 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
 namespace SeeingSharp.Checking
 {
     #region using
-
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-
     #endregion
 
     public static partial class Ensure
     {
         //---------------------------------------------------------------------
         // Method 'EnsureInRange' for all common numeric variables
-        #region
 
+        #region
         [Conditional("DEBUG")]
         public static void EnsureInRange(
             this byte numValue, byte min, byte max, string checkedVariableName,
@@ -45,8 +45,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -63,8 +63,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -81,8 +81,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -99,8 +99,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -117,8 +117,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -135,8 +135,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -153,8 +153,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -171,8 +171,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -189,8 +189,8 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if ((numValue < min) ||
-                (numValue > max))
+            if (numValue < min ||
+                numValue > max)
             {
                 throw new SeeingSharpCheckException(string.Format(
                     "Value {0} within method {1} must be between {2} and {3} (given value is {4}!",
@@ -198,13 +198,12 @@ namespace SeeingSharp.Checking
                     min, max, numValue));
             }
         }
-
         #endregion
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositive' for all common numeric variables
-        #region
 
+        #region
         [Conditional("DEBUG")]
         public static void EnsurePositive(
             this int numValue, string checkedVariableName,
@@ -316,13 +315,12 @@ namespace SeeingSharp.Checking
                     checkedVariableName, callerMethod, numValue));
             }
         }
-
         #endregion
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositiveAndNotZero' for all common numeric variables
-        #region
 
+        #region
         [Conditional("DEBUG")]
         public static void EnsurePositiveAndNotZero(
             this int numValue, string checkedVariableName,
@@ -418,7 +416,6 @@ namespace SeeingSharp.Checking
                     checkedVariableName, callerMethod, numValue));
             }
         }
-
         #endregion
     }
 }

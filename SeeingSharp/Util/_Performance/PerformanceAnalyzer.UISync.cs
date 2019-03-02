@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.ObjectModel;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.Collections.ObjectModel;
-
     #endregion
 
     public partial class PerformanceAnalyzer
@@ -56,7 +56,6 @@ namespace SeeingSharp.Util
                 HandleResultForUIForFlowRateKpi(
                     actFlowRateResult,
                     UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
-                return;
             }
         }
 
@@ -94,8 +93,8 @@ namespace SeeingSharp.Util
                 kpisCurrents.Add(kpiResult);
                 for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
                 {
-                    if ((kpisCurrents[loop] != kpiResult) &&
-                        (kpisCurrents[loop].Calculator == kpiResult.Calculator))
+                    if (kpisCurrents[loop] != kpiResult &&
+                        kpisCurrents[loop].Calculator == kpiResult.Calculator)
                     {
                         kpisCurrents.RemoveAt(loop);
                     }

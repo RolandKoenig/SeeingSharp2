@@ -24,6 +24,11 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,27 +36,12 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class SkyboxObject : SceneObject
     {
         //Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SkyboxObject"/> class.
-        /// </summary>
-        public SkyboxObject(NamedOrGenericKey cubeTextureKey)
-        {
-            m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
-            CubeTextureKey = cubeTextureKey;
-        }
 
         /// <summary>
         /// Loads all resources of the object.
@@ -61,8 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             // Define all vertices
-            StandardVertex[] vertices = new StandardVertex[]
-            {
+            StandardVertex[] vertices = {
                 // Front side
                 new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 0f)),
                 new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(0f, 1f)),
@@ -97,12 +86,11 @@ namespace SeeingSharp.Multimedia.Objects
                 new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 0f)),
                 new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 0f)),
                 new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f)),
+                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f))
             };
 
             // Define all indices
-            int[] indices = new int[]
-            {
+            int[] indices = {
                 0, 1, 2, 2, 3, 0,        // Font side
                 4, 5, 6, 6, 7, 4,        // Right side
                 8, 9, 10, 10, 11, 8,     // Back side
@@ -166,9 +154,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(base.CountRenderPassSubscriptions(layerViewSubset) <= 0)
+            if(CountRenderPassSubscriptions(layerViewSubset) <= 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
+                SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
             }
         }
 
@@ -215,13 +203,22 @@ namespace SeeingSharp.Multimedia.Objects
             deviceContext.PixelShader.SetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
+            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, Format.R32_UInt, 0);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
                 localResources.VertexBuffer,
                 StandardVertex.Size, 0));
 
             // Draw the skybox
             deviceContext.DrawIndexed(6 * 6, 0, 0);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkyboxObject"/> class.
+        /// </summary>
+        public SkyboxObject(NamedOrGenericKey cubeTextureKey)
+        {
+            m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
+            CubeTextureKey = cubeTextureKey;
         }
 
         /// <summary>
@@ -239,10 +236,10 @@ namespace SeeingSharp.Multimedia.Objects
         {
             public TextureResource CubeTexture;
             public DefaultResources DefaultResources;
-            public VertexShaderResource VertexShader;
+            public D3D11.Buffer IndexBuffer;
             public PixelShaderResource PixelShader;
             public D3D11.Buffer VertexBuffer;
-            public D3D11.Buffer IndexBuffer;
+            public VertexShaderResource VertexShader;
         }
     }
 }

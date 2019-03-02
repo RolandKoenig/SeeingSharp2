@@ -24,6 +24,9 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
@@ -32,60 +35,10 @@ using DWrite = SharpDX.DirectWrite;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class TextFormatResource : Drawing2DResourceBase
     {
-        #region Fixed resource parameters (passed on constructor)
-        private DWrite.TextFormat[] m_loadedTextFormats;
-        private string m_fontFamilyName;
-        private float m_fontSize;
-        private DWrite.FontWeight m_fontWeight;
-        private DWrite.FontStyle m_fontStyle;
-        private DWrite.FontStretch m_fontStretch;
-        #endregion
-
-        # region Dynamic runtime parameters (possible to pass on each render call)
-        private bool[] m_runtimeDataChangedFlags;
-        private DWrite.ParagraphAlignment m_paragraphAlignment;
-        private DWrite.TextAlignment m_textAlignment;
-        private DWrite.WordWrapping m_wordWrapping;
-        private DWrite.ReadingDirection m_readingDirection;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
-        /// </summary>
-        /// <param name="fontFamilyName">Name of the font family.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        /// <param name="fontWeight">The weight of the font.</param>
-        /// <param name="fontStretch">The stretch parameter for the font.</param>
-        /// <param name="fontStyle">The style parameter for the font.</param>
-        public TextFormatResource(
-            string fontFamilyName, float fontSize,
-            FontWeight fontWeight = FontWeight.Normal,
-            FontStyle fontStyle = FontStyle.Normal,
-            FontStretch fontStretch = FontStretch.Normal)
-        {
-            m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
-            m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
-            m_fontFamilyName = fontFamilyName;
-            m_fontSize = fontSize;
-            m_fontWeight = (DWrite.FontWeight)fontWeight;
-            m_fontStyle = (DWrite.FontStyle)fontStyle;
-            m_fontStretch = (DWrite.FontStretch)fontStretch;
-
-            m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
-            m_textAlignment = DWrite.TextAlignment.Leading;
-            m_wordWrapping = DWrite.WordWrapping.Wrap;
-            m_readingDirection = DWrite.ReadingDirection.LeftToRight;
-        }
-
         /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
@@ -108,9 +61,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal DWrite.TextFormat GetTextFormat(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedTextFormats[engineDevice.DeviceIndex];
@@ -142,11 +95,39 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
+        /// </summary>
+        /// <param name="fontFamilyName">Name of the font family.</param>
+        /// <param name="fontSize">Size of the font.</param>
+        /// <param name="fontWeight">The weight of the font.</param>
+        /// <param name="fontStretch">The stretch parameter for the font.</param>
+        /// <param name="fontStyle">The style parameter for the font.</param>
+        public TextFormatResource(
+            string fontFamilyName, float fontSize,
+            FontWeight fontWeight = FontWeight.Normal,
+            FontStyle fontStyle = FontStyle.Normal,
+            FontStretch fontStretch = FontStretch.Normal)
+        {
+            m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
+            m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
+            m_fontFamilyName = fontFamilyName;
+            m_fontSize = fontSize;
+            m_fontWeight = (DWrite.FontWeight)fontWeight;
+            m_fontStyle = (DWrite.FontStyle)fontStyle;
+            m_fontStretch = (DWrite.FontStretch)fontStretch;
+
+            m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
+            m_textAlignment = DWrite.TextAlignment.Leading;
+            m_wordWrapping = DWrite.WordWrapping.Wrap;
+            m_readingDirection = DWrite.ReadingDirection.LeftToRight;
+        }
+
+        /// <summary>
         /// Gets or sets the alignment of the paragraph.
         /// </summary>
         public ParagraphAlignment ParagraphAlignment
         {
-            get { return (ParagraphAlignment)m_paragraphAlignment; }
+            get => (ParagraphAlignment)m_paragraphAlignment;
             set
             {
                 var castedValue = (DWrite.ParagraphAlignment)value;
@@ -164,7 +145,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public TextAlignment TextAlignment
         {
-            get { return (TextAlignment)m_textAlignment; }
+            get => (TextAlignment)m_textAlignment;
             set
             {
                 var castedValue = (DWrite.TextAlignment)value;
@@ -182,7 +163,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public WordWrapping WordWrapping
         {
-            get { return (WordWrapping)m_wordWrapping; }
+            get => (WordWrapping)m_wordWrapping;
             set
             {
                 var castedValue = (DWrite.WordWrapping)value;
@@ -200,7 +181,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public ReadingDirection ReadingDirection
         {
-            get { return (ReadingDirection)m_readingDirection; }
+            get => (ReadingDirection)m_readingDirection;
             set
             {
                 var castedValue = (DWrite.ReadingDirection)value;
@@ -212,5 +193,22 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 }
             }
         }
+
+        #region Fixed resource parameters (passed on constructor)
+        private DWrite.TextFormat[] m_loadedTextFormats;
+        private string m_fontFamilyName;
+        private float m_fontSize;
+        private DWrite.FontWeight m_fontWeight;
+        private DWrite.FontStyle m_fontStyle;
+        private DWrite.FontStretch m_fontStretch;
+        #endregion
+
+        # region Dynamic runtime parameters (possible to pass on each render call)
+        private bool[] m_runtimeDataChangedFlags;
+        private DWrite.ParagraphAlignment m_paragraphAlignment;
+        private DWrite.TextAlignment m_textAlignment;
+        private DWrite.WordWrapping m_wordWrapping;
+        private DWrite.ReadingDirection m_readingDirection;
+        #endregion
     }
 }

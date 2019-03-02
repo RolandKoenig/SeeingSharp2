@@ -22,7 +22,7 @@
 */
 #endregion
 #region using
-
+using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 
 #endregion
@@ -30,9 +30,6 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     public class FactoryHandlerD2D
@@ -40,6 +37,14 @@ namespace SeeingSharp.Multimedia.Core
         #region Resources form Direct2D api
         private D2D.Factory2 m_factory2;
         #endregion
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        internal void UnloadResources()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_factory2);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerD2D"/> class.
@@ -51,25 +56,11 @@ namespace SeeingSharp.Multimedia.Core
                 deviceLoadSettings.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
         }
 
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        internal void UnloadResources()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_factory2);
-        }
-
-        internal D2D.Factory2 Factory2
-        {
-            get { return m_factory2; }
-        }
+        internal D2D.Factory2 Factory2 => m_factory2;
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_factory2 != null; }
-        }
+        public bool IsInitialized => m_factory2 != null;
     }
 }

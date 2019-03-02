@@ -24,6 +24,22 @@
 #region using
 
 //Some namespace mappings
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
@@ -32,52 +48,14 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-    using Core;
-    using Drawing3D;
-    using Input;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
-    public partial class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
+    public class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
         private const string TEXT_GRAPHICS_NOT_INITIALIZED = "Graphics not initialized!";
 
         #region Main reference to 3D-Engine
         private RenderLoop m_renderLoop;
-        #endregion
-
-        #region Resources for Direct3D 11
-        private SharpDX.DXGI.Factory m_factory;
-        private SharpDX.DXGI.SwapChain1 m_swapChain;
-        private D3D11.Device m_renderDevice;
-        private D3D11.DeviceContext m_renderDeviceContext;
-        private D3D11.RenderTargetView m_renderTarget;
-        private D3D11.DepthStencilView m_renderTargetDepth;
-        private D3D11.Texture2D m_backBuffer;
-        private D3D11.Texture2D m_depthBuffer;
-        #endregion
-
-        #region Generic members
-        private GDI.Brush m_backBrush;
-        private GDI.Brush m_foreBrushText;
-        private GDI.Brush m_backBrushText;
-        private GDI.Pen m_borderPen;
-        #endregion
-
-        #region Misc
-        private bool m_isMouseInside;
-        private DateTime m_lastSizeChange;
-        private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
         #endregion
 
         /// <summary>
@@ -91,48 +69,6 @@ namespace SeeingSharp.Multimedia.Views
         public event EventHandler<MouseEventArgs> MouseClickEx;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
-        /// </summary>
-        public SeeingSharpRendererControl()
-        {
-            // Set style parameters for this control
-            base.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            base.SetStyle(ControlStyles.ResizeRedraw, true);
-            base.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
-            base.SetStyle(ControlStyles.Opaque, true);
-            base.SetStyle(ControlStyles.Selectable, true);
-            base.DoubleBuffered = false;
-
-            m_lastSizeChange = DateTime.MinValue;
-            m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
-
-            // Create the render loop
-            var backColor = this.BackColor;
-            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
-            m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
-            m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
-            m_renderLoop.DiscardRendering = true;
-            this.Disposed += (sender, eArgs) =>
-            {
-                m_renderLoop.Dispose();
-            };
-
-            // Perform default initialization logic (if not called before)
-            if (GraphicsCore.IsLoaded)
-            {
-                m_renderLoop.SetScene(new Scene());
-                m_renderLoop.Camera = new PerspectiveCamera3D();
-
-                //Initialize background brush
-                UpdateDrawingResourcesForFailoverRendering();
-            }
-
-            this.Disposed += OnDisposed;
-
-            UpdateDrawingResourcesForFailoverRendering();
-        }
-
-        /// <summary>
         /// Gets the scene object below the cursor.
         /// </summary>
         public async Task<SceneObject> GetObjectBelowCursorAsync()
@@ -140,8 +76,8 @@ namespace SeeingSharp.Multimedia.Views
             if (!m_isMouseInside) { return null; }
 
             var objects = await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
-                new PickingOptions() { OnlyCheckBoundingBoxes = false });
+                SeeingSharpWinFormsTools.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                new PickingOptions { OnlyCheckBoundingBoxes = false });
             return objects?.FirstOrDefault();
         }
 
@@ -156,8 +92,8 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             return await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsTools.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
-                new PickingOptions() { OnlyCheckBoundingBoxes = false });
+                SeeingSharpWinFormsTools.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                new PickingOptions { OnlyCheckBoundingBoxes = false });
         }
 
         /// <summary>
@@ -178,7 +114,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         /// <param name="targetFile">Target file path.</param>
         /// <param name="imageFormat">Target file format.</param>
-        public async Task SaveScreenshotAsync(string targetFile, System.Drawing.Imaging.ImageFormat imageFormat)
+        public async Task SaveScreenshotAsync(string targetFile, ImageFormat imageFormat)
         {
             if (m_backBuffer != null)
             {
@@ -195,8 +131,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnPaint(e);
 
-            if ((!m_renderLoop.ViewResourcesLoaded) ||
-                (!m_renderLoop.IsRegisteredOnMainLoop))
+            if (!m_renderLoop.ViewResourcesLoaded ||
+                !m_renderLoop.IsRegisteredOnMainLoop)
             {
                 // Paint using System.Drawing
                 e.Graphics.FillRectangle(m_backBrush, e.ClipRectangle);
@@ -204,15 +140,15 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a simple grid on the background to have something for the Designer
                 if (!GraphicsCore.IsLoaded)
                 {
-                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
+                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, Font);
                     var targetRect = new GDI.RectangleF(
                         10f, 10f, targetSize.Width, targetSize.Height);
-                    if ((targetRect.Width > 10) &&
-                       (targetRect.Height > 10))
+                    if (targetRect.Width > 10 &&
+                       targetRect.Height > 10)
                     {
                         e.Graphics.FillRectangle(m_backBrushText, targetRect);
                         e.Graphics.DrawString(
-                            TEXT_GRAPHICS_NOT_INITIALIZED, this.Font,
+                            TEXT_GRAPHICS_NOT_INITIALIZED, Font,
                             m_foreBrushText, targetRect.X, targetRect.Y);
                     }
                 }
@@ -220,7 +156,7 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a border rectangle
                 e.Graphics.DrawRectangle(
                     m_borderPen,
-                    new GDI.Rectangle(0, 0, this.Width - 1, this.Height - 1));
+                    new GDI.Rectangle(0, 0, Width - 1, Height - 1));
             }
         }
 
@@ -229,12 +165,12 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void StartRendering()
         {
-            if (this.DesignMode) { return; }
+            if (DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
             if (!m_renderLoop.IsRegisteredOnMainLoop)
             {
-                m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
+                m_renderLoop.SetCurrentViewSize(Width, Height);
                 m_renderLoop.DiscardRendering = false;
                 m_renderLoop.RegisterRenderLoop();
             }
@@ -245,7 +181,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void StopRendering()
         {
-            if (this.DesignMode) { return; }
+            if (DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
             if (m_renderLoop.IsRegisteredOnMainLoop)
@@ -265,9 +201,9 @@ namespace SeeingSharp.Multimedia.Views
             SeeingSharpTools.SafeDispose(ref m_backBrushText);
             SeeingSharpTools.SafeDispose(ref m_borderPen);
 
-            m_backBrush = new System.Drawing.Drawing2D.HatchBrush(
-                GDI.Drawing2D.HatchStyle.DottedGrid,
-                GDI.Color.Gray, this.BackColor);
+            m_backBrush = new HatchBrush(
+                HatchStyle.DottedGrid,
+                GDI.Color.Gray, BackColor);
             m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
             m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
             m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
@@ -292,12 +228,12 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnSizeChanged(e);
 
-            if (this.DesignMode) { return; }
+            if (DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
-            if ((this.Width > 0) && (this.Height > 0))
+            if (Width > 0 && Height > 0)
             {
-                m_renderLoop.Camera.SetScreenSize(this.Width, this.Height);
+                m_renderLoop.Camera.SetScreenSize(Width, Height);
                 m_lastSizeChange = DateTime.UtcNow;
             }
         }
@@ -331,8 +267,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnVisibleChanged(e);
 
-            if (this.Visible) { StartRendering(); }
-            else if (!this.Visible) { StopRendering(); }
+            if (Visible) { StartRendering(); }
+            else if (!Visible) { StopRendering(); }
         }
 
         /// <summary>
@@ -342,159 +278,10 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            if (!this.DesignMode)
+            if (!DesignMode)
             {
                 m_renderLoop.Dispose();
                 m_renderLoop = null;
-            }
-        }
-
-        /// <summary>
-        /// Create all view resources.
-        /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
-        {
-            int width = this.Width;
-            int height = this.Height;
-            if (width <= SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
-            if (height <= SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
-
-            //Get all factories
-            m_factory = device.FactoryDxgi;
-
-            //Get all devices
-            m_renderDevice = device.DeviceD3D11_1;
-            m_renderDeviceContext = m_renderDevice.ImmediateContext;
-
-            //Create the swap chain and the render target
-            m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
-            m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
-            m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
-
-            //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
-            m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
-
-            //Define the viewport for rendering
-            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
-
-            // Query for current dpi value
-            var dpiScaling = DpiScaling.Default;
-
-            using (var graphics = this.CreateGraphics())
-            {
-                dpiScaling.DpiX = graphics.DpiX;
-                dpiScaling.DpiY = graphics.DpiY;
-            }
-
-            //Return all generated objects
-            return Tuple.Create(m_backBuffer, m_renderTarget, m_depthBuffer, m_renderTargetDepth, viewPort, new Size2(width, height), dpiScaling);
-        }
-
-        /// <summary>
-        /// Disposes all loaded view resources.
-        /// </summary>
-        void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice device)
-        {
-            m_factory = null;
-            m_renderDevice = null;
-            m_renderDeviceContext = null;
-
-            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
-            m_depthBuffer = SeeingSharpTools.DisposeObject(m_depthBuffer);
-            m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
-            m_backBuffer = SeeingSharpTools.DisposeObject(m_backBuffer);
-            m_swapChain = SeeingSharpTools.DisposeObject(m_swapChain);
-        }
-
-        /// <summary>
-        /// Called when RenderLoop object checks wheter it is possible to render.
-        /// </summary>
-        bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
-        {
-            // Check properties on self
-            if (this.IsDisposed) { return false; }
-            if (this.Parent == null) { return false; }
-            if (!this.Visible) { return false; }
-            if (this.Width <= 0) { return false; }
-            if (this.Height <= 0) { return false; }
-
-            Form parentForm = null;
-            var actParent = this.Parent;
-
-            while((parentForm == null) && (actParent != null))
-            {
-                parentForm = actParent as Form;
-                actParent = actParent.Parent;
-            }
-
-            // Check parent form
-            if(parentForm == null)
-            {
-                // TODO: Handle the case where we are hosted inside a wpf environment
-
-                // Control's parent chain is broken -> it is not visible.
-                return false;
-            }
-            else
-            {
-                if(parentForm.WindowState == FormWindowState.Minimized) { return false; }
-            }
-
-
-
-            return true;
-        }
-
-        /// <summary>
-        /// Called when the render loop prepares rendering.
-        /// </summary>
-        /// <param name="device">The current rendering device.</param>
-        void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
-        {
-            if((m_lastSizeChange != DateTime.MinValue) &&
-               (DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
-            {
-                m_lastSizeChange = DateTime.MinValue;
-
-                int width = this.Width;
-                int height = this.Height;
-                if ((width > 0) && (height > 0))
-                {
-                    m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Called when RenderLoop wants to present its results.
-        /// </summary>
-        void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
-        {
-            //Present all rendered stuff on screen
-            try
-            {
-                m_swapChain.Present(0, SharpDX.DXGI.PresentFlags.DoNotWait, new SharpDX.DXGI.PresentParameters());
-            }
-            catch(SharpDXException ex)
-            {
-                // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
-                // This error occurs some times on slower hardware
-                if (ex.ResultCode == SharpDX.DXGI.ResultCode.WasStillDrawing) { return; }
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Called when RenderLoop has finished rendering.
-        /// </summary>
-        void IRenderLoopHost.OnRenderLoop_AfterRendering(EngineDevice device)
-        {
-            //m_isOnRendering = false;
-            if (!this.Visible)
-            {
-                StopRendering();
             }
         }
 
@@ -562,25 +349,191 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Discard rendering?
+        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
         /// </summary>
-        [Browsable(false)]
-        [DefaultValue(false)]
-        public bool DiscardRendering
+        public SeeingSharpRendererControl()
         {
-            get { return m_renderLoop.DiscardRendering; }
-            set { m_renderLoop.DiscardRendering = value; }
+            // Set style parameters for this control
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
+            SetStyle(ControlStyles.Opaque, true);
+            SetStyle(ControlStyles.Selectable, true);
+            base.DoubleBuffered = false;
+
+            m_lastSizeChange = DateTime.MinValue;
+            m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
+
+            // Create the render loop
+            var backColor = BackColor;
+            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, DesignMode);
+            m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
+            m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
+            m_renderLoop.DiscardRendering = true;
+            Disposed += (sender, eArgs) =>
+            {
+                m_renderLoop.Dispose();
+            };
+
+            // Perform default initialization logic (if not called before)
+            if (GraphicsCore.IsLoaded)
+            {
+                m_renderLoop.SetScene(new Scene());
+                m_renderLoop.Camera = new PerspectiveCamera3D();
+
+                //Initialize background brush
+                UpdateDrawingResourcesForFailoverRendering();
+            }
+
+            Disposed += OnDisposed;
+
+            UpdateDrawingResourcesForFailoverRendering();
         }
 
         /// <summary>
-        /// Discard present of rendering results on the screen?
+        /// Create all view resources.
         /// </summary>
-        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
-        [DefaultValue(false)]
-        public bool DiscardPresent
+        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
-            get => m_renderLoop.DiscardPresent;
-            set => m_renderLoop.DiscardPresent = value;
+            var width = Width;
+            var height = Height;
+            if (width <= SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
+            if (height <= SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
+
+            //Get all factories
+            m_factory = device.FactoryDxgi;
+
+            //Get all devices
+            m_renderDevice = device.DeviceD3D11_1;
+            m_renderDeviceContext = m_renderDevice.ImmediateContext;
+
+            //Create the swap chain and the render target
+            m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
+            m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
+            m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
+
+            //Create the depth buffer
+            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
+            m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
+
+            //Define the viewport for rendering
+            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+
+            // Query for current dpi value
+            var dpiScaling = DpiScaling.Default;
+
+            using (var graphics = CreateGraphics())
+            {
+                dpiScaling.DpiX = graphics.DpiX;
+                dpiScaling.DpiY = graphics.DpiY;
+            }
+
+            //Return all generated objects
+            return Tuple.Create(m_backBuffer, m_renderTarget, m_depthBuffer, m_renderTargetDepth, viewPort, new Size2(width, height), dpiScaling);
+        }
+
+        /// <summary>
+        /// Disposes all loaded view resources.
+        /// </summary>
+        void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice device)
+        {
+            m_factory = null;
+            m_renderDevice = null;
+            m_renderDeviceContext = null;
+
+            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
+            m_depthBuffer = SeeingSharpTools.DisposeObject(m_depthBuffer);
+            m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
+            m_backBuffer = SeeingSharpTools.DisposeObject(m_backBuffer);
+            m_swapChain = SeeingSharpTools.DisposeObject(m_swapChain);
+        }
+
+        /// <summary>
+        /// Called when RenderLoop object checks wheter it is possible to render.
+        /// </summary>
+        bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
+        {
+            // Check properties on self
+            if (IsDisposed) { return false; }
+            if (Parent == null) { return false; }
+            if (!Visible) { return false; }
+            if (Width <= 0) { return false; }
+            if (Height <= 0) { return false; }
+
+            Form parentForm = null;
+            var actParent = Parent;
+
+            while(parentForm == null && actParent != null)
+            {
+                parentForm = actParent as Form;
+                actParent = actParent.Parent;
+            }
+
+            // Check parent form
+            if(parentForm == null)
+            {
+                // TODO: Handle the case where we are hosted inside a wpf environment
+
+                // Control's parent chain is broken -> it is not visible.
+                return false;
+            }
+            if(parentForm.WindowState == FormWindowState.Minimized) { return false; }
+
+
+
+            return true;
+        }
+
+        /// <summary>
+        /// Called when the render loop prepares rendering.
+        /// </summary>
+        /// <param name="device">The current rendering device.</param>
+        void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
+        {
+            if(m_lastSizeChange != DateTime.MinValue &&
+               DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
+            {
+                m_lastSizeChange = DateTime.MinValue;
+
+                var width = Width;
+                var height = Height;
+                if (width > 0 && height > 0)
+                {
+                    m_renderLoop.SetCurrentViewSize(Width, Height);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when RenderLoop wants to present its results.
+        /// </summary>
+        void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
+        {
+            //Present all rendered stuff on screen
+            try
+            {
+                m_swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
+            }
+            catch(SharpDXException ex)
+            {
+                // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
+                // This error occurs some times on slower hardware
+                if (ex.ResultCode == ResultCode.WasStillDrawing) { return; }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Called when RenderLoop has finished rendering.
+        /// </summary>
+        void IRenderLoopHost.OnRenderLoop_AfterRendering(EngineDevice device)
+        {
+            //m_isOnRendering = false;
+            if (!Visible)
+            {
+                StopRendering();
+            }
         }
 
         [Browsable(false)]
@@ -600,6 +553,35 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Gets the render loop object.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public RenderLoop RenderLoop => m_renderLoop;
+
+        /// <summary>
+        /// Discard rendering?
+        /// </summary>
+        [Browsable(false)]
+        [DefaultValue(false)]
+        public bool DiscardRendering
+        {
+            get => m_renderLoop.DiscardRendering;
+            set => m_renderLoop.DiscardRendering = value;
+        }
+
+        /// <summary>
+        /// Discard present of rendering results on the screen?
+        /// </summary>
+        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
+        [DefaultValue(false)]
+        public bool DiscardPresent
+        {
+            get => m_renderLoop.DiscardPresent;
+            set => m_renderLoop.DiscardPresent = value;
+        }
+
+        /// <summary>
         /// Gets the view configuration.
         /// </summary>
         [Browsable(true)]
@@ -607,13 +589,6 @@ namespace SeeingSharp.Multimedia.Views
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public GraphicsViewConfiguration ViewConfiguration => m_renderLoop.ViewConfiguration;
-
-        /// <summary>
-        /// Gets the render loop object.
-        /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public RenderLoop RenderLoop => m_renderLoop;
 
         /// <summary>
         /// Ruft die Hintergrundfarbe für das Steuerelement ab oder legt diese fest.
@@ -638,5 +613,29 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         [Browsable(false)]
         public bool IsOperational => m_renderLoop.IsOperational;
+
+        #region Resources for Direct3D 11
+        private Factory m_factory;
+        private SwapChain1 m_swapChain;
+        private D3D11.Device m_renderDevice;
+        private D3D11.DeviceContext m_renderDeviceContext;
+        private D3D11.RenderTargetView m_renderTarget;
+        private D3D11.DepthStencilView m_renderTargetDepth;
+        private D3D11.Texture2D m_backBuffer;
+        private D3D11.Texture2D m_depthBuffer;
+        #endregion
+
+        #region Generic members
+        private GDI.Brush m_backBrush;
+        private GDI.Brush m_foreBrushText;
+        private GDI.Brush m_backBrushText;
+        private GDI.Pen m_borderPen;
+        #endregion
+
+        #region Misc
+        private bool m_isMouseInside;
+        private DateTime m_lastSizeChange;
+        private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
+        #endregion
     }
 }

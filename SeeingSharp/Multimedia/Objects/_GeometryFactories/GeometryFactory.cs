@@ -26,13 +26,6 @@ namespace SeeingSharp.Multimedia.Objects
     public abstract class GeometryFactory
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeometryFactory"/> class.
-        /// </summary>
-        public GeometryFactory()
-        {
-        }
-
-        /// <summary>
         /// Builds a VertexStructure using given parameters (like DetailLevel).
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>

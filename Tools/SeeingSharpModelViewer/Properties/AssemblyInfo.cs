@@ -1,9 +1,7 @@
 ﻿#region using
-
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
-
 #endregion
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden

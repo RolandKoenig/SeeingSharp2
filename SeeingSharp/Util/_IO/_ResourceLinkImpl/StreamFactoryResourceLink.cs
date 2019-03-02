@@ -21,36 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Checking;
-
     #endregion
 
     public class StreamFactoryResourceLink : ResourceLink
     {
-        private Func<Stream> m_streamFactory;
         private string m_fileName;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StreamFactoryResourceLink" /> class.
-        /// </summary>
-        /// <param name="streamFactory">The factory method which creates the stream object.</param>
-        /// <param name="fileName">The name of the virtual file.</param>
-        public StreamFactoryResourceLink(
-            Func<Stream> streamFactory,
-            string fileName = "unknown.dat")
-        {
-            streamFactory.EnsureNotNull(nameof(streamFactory));
-
-            m_streamFactory = streamFactory;
-            m_fileName = fileName;
-        }
+        private Func<Stream> m_streamFactory;
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="Func{Stream}"/> to <see cref="StreamFactoryResourceLink"/>.
@@ -124,27 +109,33 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StreamFactoryResourceLink" /> class.
+        /// </summary>
+        /// <param name="streamFactory">The factory method which creates the stream object.</param>
+        /// <param name="fileName">The name of the virtual file.</param>
+        public StreamFactoryResourceLink(
+            Func<Stream> streamFactory,
+            string fileName = "unknown.dat")
+        {
+            streamFactory.EnsureNotNull(nameof(streamFactory));
+
+            m_streamFactory = streamFactory;
+            m_fileName = fileName;
+        }
+
+        /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension
-        {
-            get { return base.GetExtensionFromFileName(m_fileName); }
-        }
+        public override string FileExtension => GetExtensionFromFileName(m_fileName);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsAsync
-        {
-            get { return true; }
-        }
+        public override bool SupportsAsync => true;
 
         /// <summary>
         /// Are synchronous operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsSync
-        {
-            get { return true; }
-        }
+        public override bool SupportsSync => true;
     }
 }

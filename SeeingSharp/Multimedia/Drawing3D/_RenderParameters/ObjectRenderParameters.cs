@@ -24,6 +24,8 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,10 +33,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class ObjectRenderParameters : Resource
@@ -48,21 +46,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectRenderParameters" /> class.
+        /// Does this object needs refreshing?
         /// </summary>
-        internal ObjectRenderParameters()
-        {
-            this.NeedsRefresh = true;
-        }
+        internal bool NeedsRefresh;
 
         /// <summary>
         /// Triggers unloading of this resource.
         /// </summary>
         internal void MarkForUnloading()
         {
-            if(base.Dictionary != null)
+            if(Dictionary != null)
             {
-                base.Dictionary.MarkForUnloading(this);
+                Dictionary.MarkForUnloading(this);
             }
         }
 
@@ -110,16 +105,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Does this object needs refreshing?
+        /// Initializes a new instance of the <see cref="ObjectRenderParameters" /> class.
         /// </summary>
-        internal bool NeedsRefresh;
+        internal ObjectRenderParameters()
+        {
+            NeedsRefresh = true;
+        }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_cbPerObject != null; }
-        }
+        public override bool IsLoaded => m_cbPerObject != null;
     }
 }

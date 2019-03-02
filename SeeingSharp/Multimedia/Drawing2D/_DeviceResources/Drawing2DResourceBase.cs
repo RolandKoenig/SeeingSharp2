@@ -21,12 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-    using Core;
-    using SeeingSharp.Util;
-    using System;
     #endregion using
 
     public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed
@@ -34,6 +36,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #region Helper flags
         private bool m_isDisposed;
         #endregion Helper flags
+
+        /// <summary>
+        /// Unloads all resources loaded on the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to unload the resource.</param>
+        internal abstract void UnloadResources(EngineDevice engineDevice);
+
+        /// <summary>
+        /// Is this object disposed?
+        /// </summary>
+        public bool IsDisposed => m_isDisposed;
 
         /// <summary>
         /// Disposes this object.
@@ -46,20 +59,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                 GraphicsCore.Current.MainLoop.RegisterForUnload(this);
             }
-        }
-
-        /// <summary>
-        /// Unloads all resources loaded on the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to unload the resource.</param>
-        internal abstract void UnloadResources(EngineDevice engineDevice);
-
-        /// <summary>
-        /// Is this object disposed?
-        /// </summary>
-        public bool IsDisposed
-        {
-            get { return m_isDisposed; }
         }
     }
 }

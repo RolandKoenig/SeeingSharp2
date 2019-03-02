@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
 {
     #region using
-
-    using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SeeingSharp.Util;
-
     #endregion
 
     [TestClass]
@@ -41,7 +41,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_ReadAndMergeFromAssemblyResources()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 

@@ -24,32 +24,140 @@
 #region using
 
 //Some namespace Mappings
+using System;
+using System.Windows;
+using System.Windows.Interop;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
-
+using Resource = SharpDX.DXGI.Resource;
 #endregion
 
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using System;
-    using System.Windows;
-    using System.Windows.Interop;
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class HigherD3DImageSource : D3DImage, IDisposable
     {
         private static volatile int s_activeClients;
-
-        private EngineDevice m_device;
-        private D3D9.Texture m_d3dRenderTarget;
         private D3D9.Direct3DEx m_d3dContext;
         private D3D9.DeviceEx m_d3dDevice;
+        private D3D9.Texture m_d3dRenderTarget;
+
+        private EngineDevice m_device;
+
+        /// <summary>
+        /// Invalidates the direct3D image.
+        /// </summary>
+        public void InvalidateD3DImage()
+        {
+            if (m_d3dRenderTarget != null)
+            {
+                AddDirtyRect(new Int32Rect(0, 0, PixelWidth, PixelHeight));
+            }
+        }
+
+        /// <summary>
+        /// Sets the render target of this D3DImage object.
+        /// </summary>
+        /// <param name="renderTarget">The render target to set.</param>
+        public void SetRenderTarget(D3D11.Texture2D renderTarget)
+        {
+            if (m_d3dRenderTarget != null)
+            {
+                m_d3dRenderTarget = null;
+
+                Lock();
+                SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
+                Unlock();
+            }
+
+            if (renderTarget == null) { return; }
+            if (!IsShareable(renderTarget))
+            {
+                throw new ArgumentException("texture must be created with ResourceOptionFlags.Shared");
+            }
+
+            var format = TranslateFormat(renderTarget);
+
+            if (format == D3D9.Format.Unknown)
+            {
+                throw new ArgumentException("texture format is not compatible with OpenSharedResource");
+            }
+
+            var handle = GetSharedHandle(renderTarget);
+
+            if (handle == IntPtr.Zero)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
+            //Map the texture to the D3DImage base class
+            var tDisposed = renderTarget.IsDisposed;
+            float tWidth = renderTarget.Description.Width;
+            float tHeight = renderTarget.Description.Height;
+            m_d3dRenderTarget = new D3D9.Texture(
+                m_d3dDevice,
+                renderTarget.Description.Width,
+                renderTarget.Description.Height,
+                1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
+
+            using (var surface = m_d3dRenderTarget.GetSurfaceLevel(0))
+            {
+                Lock();
+                SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
+                Unlock();
+            }
+        }
+
+        /// <summary>
+        /// Gets the handle that can be used for resource sharing.
+        /// </summary>
+        /// <param name="texture">The texture to be shared.</param>
+        private IntPtr GetSharedHandle(D3D11.Texture2D texture)
+        {
+            texture.EnsureNotNull(nameof(texture));
+
+            using (var resource = texture.QueryInterface<Resource>())
+            {
+                return resource.SharedHandle;
+            }
+        }
+
+        /// <summary>
+        /// Gets the format for sharing.
+        /// </summary>
+        /// <param name="texture">The texture to get the format for.</param>
+        private static D3D9.Format TranslateFormat(D3D11.Texture2D texture)
+        {
+            switch (texture.Description.Format)
+            {
+                case Format.R10G10B10A2_UNorm:
+                    return D3D9.Format.A2B10G10R10;
+
+                case Format.R16G16B16A16_Float:
+                    return D3D9.Format.A16B16G16R16F;
+
+                case Format.B8G8R8A8_UNorm:
+                    return D3D9.Format.A8R8G8B8;
+
+                default:
+                    return D3D9.Format.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// Is the given texture sharable?
+        /// </summary>
+        /// <param name="textureToCheck">The checker to check.</param>
+        private static bool IsShareable(D3D11.Texture2D textureToCheck)
+        {
+            return (textureToCheck.Description.OptionFlags & D3D11.ResourceOptionFlags.Shared) != 0;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
@@ -76,117 +184,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             SetRenderTarget(null);
 
-            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(this.m_d3dRenderTarget);
+            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(m_d3dRenderTarget);
             s_activeClients--;
-        }
-
-        /// <summary>
-        /// Invalidates the direct3D image.
-        /// </summary>
-        public void InvalidateD3DImage()
-        {
-            if (this.m_d3dRenderTarget != null)
-            {
-                base.AddDirtyRect(new Int32Rect(0, 0, base.PixelWidth, base.PixelHeight));
-            }
-        }
-
-        /// <summary>
-        /// Sets the render target of this D3DImage object.
-        /// </summary>
-        /// <param name="renderTarget">The render target to set.</param>
-        public void SetRenderTarget(D3D11.Texture2D renderTarget)
-        {
-            if (this.m_d3dRenderTarget != null)
-            {
-                this.m_d3dRenderTarget = null;
-
-                base.Lock();
-                base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
-                base.Unlock();
-            }
-
-            if (renderTarget == null) { return; }
-            if (!IsShareable(renderTarget))
-            {
-                throw new ArgumentException("texture must be created with ResourceOptionFlags.Shared");
-            }
-
-            var format = HigherD3DImageSource.TranslateFormat(renderTarget);
-
-            if (format == D3D9.Format.Unknown)
-            {
-                throw new ArgumentException("texture format is not compatible with OpenSharedResource");
-            }
-
-            var handle = GetSharedHandle(renderTarget);
-
-            if (handle == IntPtr.Zero)
-            {
-                throw new ArgumentNullException(nameof(handle));
-            }
-
-            //Map the texture to the D3DImage base class
-            bool tDisposed = renderTarget.IsDisposed;
-            float tWidth = renderTarget.Description.Width;
-            float tHeight = renderTarget.Description.Height;
-            this.m_d3dRenderTarget = new D3D9.Texture(
-                m_d3dDevice,
-                renderTarget.Description.Width,
-                renderTarget.Description.Height,
-                1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
-
-            using (var surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
-            {
-                base.Lock();
-                base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
-                base.Unlock();
-            }
-        }
-
-        /// <summary>
-        /// Gets the handle that can be used for resource sharing.
-        /// </summary>
-        /// <param name="texture">The texture to be shared.</param>
-        private IntPtr GetSharedHandle(D3D11.Texture2D texture)
-        {
-            texture.EnsureNotNull(nameof(texture));
-
-            using (var resource = texture.QueryInterface<SharpDX.DXGI.Resource>())
-            {
-                return resource.SharedHandle;
-            }
-        }
-
-        /// <summary>
-        /// Gets the format for sharing.
-        /// </summary>
-        /// <param name="texture">The texture to get the format for.</param>
-        private static D3D9.Format TranslateFormat(D3D11.Texture2D texture)
-        {
-            switch (texture.Description.Format)
-            {
-                case SharpDX.DXGI.Format.R10G10B10A2_UNorm:
-                    return SharpDX.Direct3D9.Format.A2B10G10R10;
-
-                case SharpDX.DXGI.Format.R16G16B16A16_Float:
-                    return SharpDX.Direct3D9.Format.A16B16G16R16F;
-
-                case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
-                    return SharpDX.Direct3D9.Format.A8R8G8B8;
-
-                default:
-                    return SharpDX.Direct3D9.Format.Unknown;
-            }
-        }
-
-        /// <summary>
-        /// Is the given texture sharable?
-        /// </summary>
-        /// <param name="textureToCheck">The checker to check.</param>
-        private static bool IsShareable(D3D11.Texture2D textureToCheck)
-        {
-            return (textureToCheck.Description.OptionFlags & D3D11.ResourceOptionFlags.Shared) != 0;
         }
 
         public bool HasRenderTarget => m_d3dRenderTarget != null;

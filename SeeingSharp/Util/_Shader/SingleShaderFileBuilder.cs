@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.IO;
+using System.Text;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.IO;
-    using System.Text;
-
     #endregion
 
     public static class SingleShaderFileBuilder
@@ -66,20 +66,20 @@ namespace SeeingSharp.Util
                     }
 
                     // Handle include line
-                    int indexStringStart = actLine.IndexOf('"');
-                    int indexStringEnd = actLine.LastIndexOf('"');
+                    var indexStringStart = actLine.IndexOf('"');
+                    var indexStringEnd = actLine.LastIndexOf('"');
                     if(indexStringStart < 0) { continue; }
                     if(indexStringStart == indexStringEnd) { continue; }
 
-                    int includeFilePathLength = (indexStringEnd - indexStringStart) - 1;
+                    var includeFilePathLength = indexStringEnd - indexStringStart - 1;
                     if(includeFilePathLength <= 0) { continue; }
 
                     // Get full include file path in split it using path separators
-                    string includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);
-                    string[] includeFilePathSplitted = includeFilePath.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                    var includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);
+                    var includeFilePathSplitted = includeFilePath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
                     // Build the link to the include file
-                    string fileName = includeFilePathSplitted[includeFilePathSplitted.Length - 1];
+                    var fileName = includeFilePathSplitted[includeFilePathSplitted.Length - 1];
                     ResourceLink resLinkInner = null;
                     if (includeFilePathSplitted.Length < 2)
                     {

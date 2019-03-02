@@ -22,7 +22,7 @@
 */
 #endregion
 #region using
-
+using SeeingSharp.Util;
 using DWrite = SharpDX.DirectWrite;
 
 #endregion
@@ -30,9 +30,6 @@ using DWrite = SharpDX.DirectWrite;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using SeeingSharp.Util;
-
     #endregion
 
     public class FactoryHandlerDWrite
@@ -40,6 +37,14 @@ namespace SeeingSharp.Multimedia.Core
         #region Resources for DirectWrite
         private DWrite.Factory m_factory;
         #endregion
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        internal void UnloadResources()
+        {
+            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
@@ -52,27 +57,13 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        internal void UnloadResources()
-        {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
-        }
-
-        /// <summary>
         /// Gets the Factory object.
         /// </summary>
-        internal DWrite.Factory Factory
-        {
-            get { return m_factory; }
-        }
+        internal DWrite.Factory Factory => m_factory;
 
         /// <summary>
         /// Is DirectWrite initialized successfully?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_factory != null; }
-        }
+        public bool IsInitialized => m_factory != null;
     }
 }

@@ -22,7 +22,7 @@
 */
 #endregion
 #region using
-
+using SeeingSharp.Multimedia.Core;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -30,9 +30,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public abstract class PostprocessEffectResource : ShaderEffectResourceBase

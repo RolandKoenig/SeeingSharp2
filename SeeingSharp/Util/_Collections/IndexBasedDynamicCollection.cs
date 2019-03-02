@@ -21,13 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-
     #endregion
 
     public class IndexBasedDynamicCollection<T> : IEnumerable<T>
@@ -35,19 +36,8 @@ namespace SeeingSharp.Util
     {
         private List<T> m_list;
         private int m_listCount;
-        private Dictionary<T, int> m_objectIndices;
         private object m_lockObject;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
-        /// </summary>
-        public IndexBasedDynamicCollection()
-        {
-            m_list = new List<T>(10);
-            m_listCount = 0;
-            m_objectIndices = new Dictionary<T, int>();
-            m_lockObject = new object();
-        }
+        private Dictionary<T, int> m_objectIndices;
 
         /// <summary>
         /// Has this collection an object at the given index?
@@ -55,7 +45,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index to check.</param>
         public bool HasObjectAt(int index)
         {
-            List<T> objectList = m_list;
+            var objectList = m_list;
 
             if (m_listCount <= index) { return false; }
             if (index < 0) { return false; }
@@ -73,8 +63,8 @@ namespace SeeingSharp.Util
             {
                 if (m_objectIndices.ContainsKey(objectToAdd)) { throw new SeeingSharpException("This object is already added!"); }
 
-                int lastValidIndex = -1;
-                for (int loop = m_list.Count - 1; loop >= 0; loop--)
+                var lastValidIndex = -1;
+                for (var loop = m_list.Count - 1; loop >= 0; loop--)
                 {
                     if (m_list[loop] == null) { lastValidIndex = loop; }
                     else { break; }
@@ -87,13 +77,10 @@ namespace SeeingSharp.Util
                     m_listCount = m_list.Count;
                     return lastValidIndex;
                 }
-                else
-                {
-                    m_list.Add(objectToAdd);
-                    m_objectIndices.Add(objectToAdd, m_list.Count - 1);
-                    m_listCount = m_list.Count;
-                    return m_list.Count - 1;
-                }
+                m_list.Add(objectToAdd);
+                m_objectIndices.Add(objectToAdd, m_list.Count - 1);
+                m_listCount = m_list.Count;
+                return m_list.Count - 1;
             }
         }
 
@@ -125,7 +112,7 @@ namespace SeeingSharp.Util
                     throw new SeeingSharpException("There is already an object at the given index!");
                 }
 
-                this.RemoveObject(currentObject);
+                RemoveObject(currentObject);
             }
 
             // Perform all operations for adding this object
@@ -180,7 +167,7 @@ namespace SeeingSharp.Util
             {
                 if (m_objectIndices.ContainsKey(objectToRemove))
                 {
-                    int objectIndex = m_objectIndices[objectToRemove];
+                    var objectIndex = m_objectIndices[objectToRemove];
 
                     m_objectIndices.Remove(objectToRemove);
                     m_list[objectIndex] = null;
@@ -213,12 +200,23 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
+        /// </summary>
+        public IndexBasedDynamicCollection()
+        {
+            m_list = new List<T>(10);
+            m_listCount = 0;
+            m_objectIndices = new Dictionary<T, int>();
+            m_lockObject = new object();
+        }
+
+        /// <summary>
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            int max = m_list.Count;
+            var max = m_list.Count;
 
             for (var loop = 0; loop < max; loop++)
             {
@@ -242,7 +240,7 @@ namespace SeeingSharp.Util
         /// <returns>
         /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
         /// </returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -255,7 +253,7 @@ namespace SeeingSharp.Util
         {
             get
             {
-                List<T> objectList = m_list;
+                var objectList = m_list;
                 if (index >= m_listCount) { return null; }
                 return objectList[index];
             }
@@ -268,8 +266,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                List<T> objectList = m_list;
-                for (int loop = 0; loop < objectList.Count; loop++)
+                var objectList = m_list;
+                for (var loop = 0; loop < objectList.Count; loop++)
                 {
                     if (objectList[loop] != null) { return objectList[loop]; }
                 }

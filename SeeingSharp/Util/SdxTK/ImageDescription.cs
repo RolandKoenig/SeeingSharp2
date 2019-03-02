@@ -27,13 +27,13 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using System;
+using System.Runtime.InteropServices;
+using SharpDX.DXGI;
+
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
     #region using
-
-    using System;
-    using System.Runtime.InteropServices;
-
     #endregion
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <msdn-id>ff476252</msdn-id>
         /// <unmanaged>DXGI_FORMAT Format</unmanaged>
         /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>
-        public SharpDX.DXGI.Format Format;
+        public Format Format;
 
         public bool Equals(ImageDescription other)
         {
@@ -67,7 +67,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
             return obj is ImageDescription && Equals((ImageDescription)obj);
         }
 
@@ -75,7 +78,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             unchecked
             {
-                int hashCode = Dimension.GetHashCode();
+                var hashCode = Dimension.GetHashCode();
                 hashCode = (hashCode * 397) ^ Width;
                 hashCode = (hashCode * 397) ^ Height;
                 hashCode = (hashCode * 397) ^ Depth;

@@ -21,26 +21,56 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using Checking;
-    using Core;
-    using SharpDX;
-
     #endregion
 
     public class CameraStraightMoveAnimation : AnimationBase
     {
-        #region Configuration
-        private Camera3DBase m_camera;
-        private PerspectiveCamera3D m_cameraPerspective;
-        private OrthographicCamera3D m_cameraOrthographic;
-        private Camera3DViewPoint m_viewPointSource;
-        private Camera3DViewPoint m_viewPointTarget;
-        #endregion
+        /// <summary>
+        /// Called each time the CurrentTime value gets updated.
+        /// </summary>
+        /// <param name="updateState">The current state of update processing.</param>
+        /// <param name="animationState">The current state of the animation.</param>
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            base.OnCurrentTimeUpdated(updateState, animationState);
+
+            // Calculate factor by what to transform all coordinates
+            var maxMilliseconds = FixedTime.TotalMilliseconds;
+            var currentMillis = CurrentTime.TotalMilliseconds;
+            var actFrameFactor = (float)(currentMillis / maxMilliseconds);
+
+            // Transform position and rotation
+            var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
+            var rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
+            m_camera.Position = m_viewPointSource.Position + moveVector * actFrameFactor;
+            m_camera.TargetRotation = m_viewPointSource.Rotation + rotationVector * actFrameFactor;
+
+            // Special handling for orthographics cameras
+            if (m_cameraOrthographic != null)
+            {
+                var zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;
+                m_cameraOrthographic.ZoomFactor = m_viewPointSource.OrthographicZoomFactor + zoomValue * actFrameFactor;
+            }
+        }
+
+        /// <summary>
+        /// Called when the FixedTime animation has finished.
+        /// (Sets final state to the target object and clears all runtime values).
+        /// </summary>
+        protected override void OnFixedTimeAnimationFinished()
+        {
+            base.OnFixedTimeAnimationFinished();
+
+            m_camera.ApplyViewPoint(m_viewPointTarget);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraStraightMoveAnimation"/> class.
@@ -62,43 +92,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_viewPointTarget = targetViewPoint;
         }
 
-        /// <summary>
-        /// Called each time the CurrentTime value gets updated.
-        /// </summary>
-        /// <param name="updateState">The current state of update processing.</param>
-        /// <param name="animationState">The current state of the animation.</param>
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            base.OnCurrentTimeUpdated(updateState, animationState);
-
-            // Calculate factor by what to transform all coordinates
-            double maxMilliseconds = base.FixedTime.TotalMilliseconds;
-            double currentMillis = base.CurrentTime.TotalMilliseconds;
-            float actFrameFactor = (float)(currentMillis / maxMilliseconds);
-
-            // Transform position and rotation
-            var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
-            var rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
-            m_camera.Position = m_viewPointSource.Position + (moveVector * actFrameFactor);
-            m_camera.TargetRotation = m_viewPointSource.Rotation + (rotationVector * actFrameFactor);
-
-            // Special handling for orthographics cameras
-            if (m_cameraOrthographic != null)
-            {
-                float zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;
-                m_cameraOrthographic.ZoomFactor = m_viewPointSource.OrthographicZoomFactor + (zoomValue * actFrameFactor);
-            }
-        }
-
-        /// <summary>
-        /// Called when the FixedTime animation has finished.
-        /// (Sets final state to the target object and clears all runtime values).
-        /// </summary>
-        protected override void OnFixedTimeAnimationFinished()
-        {
-            base.OnFixedTimeAnimationFinished();
-
-            m_camera.ApplyViewPoint(m_viewPointTarget);
-        }
+        #region Configuration
+        private Camera3DBase m_camera;
+        private PerspectiveCamera3D m_cameraPerspective;
+        private OrthographicCamera3D m_cameraOrthographic;
+        private Camera3DViewPoint m_viewPointSource;
+        private Camera3DViewPoint m_viewPointTarget;
+        #endregion
     }
 }

@@ -21,29 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Concurrent;
+using System.Text;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Concurrent;
-    using System.Text;
-
     #endregion
 
     public class ReusableStringBuilders
     {
         private ConcurrentStack<StringBuilder> s_stringBuilders;
-
-        static ReusableStringBuilders()
-        {
-            Current = new ReusableStringBuilders();
-        }
-
-        public ReusableStringBuilders()
-        {
-            s_stringBuilders = new ConcurrentStack<StringBuilder>();
-        }
 
         public IDisposable UseStringBuilder(out StringBuilder stringBuilder, int requiredCapacity = 128)
         {
@@ -78,10 +68,17 @@ namespace SeeingSharp.Util
             s_stringBuilders.Clear();
         }
 
-        public int Count
+        static ReusableStringBuilders()
         {
-            get { return s_stringBuilders.Count; }
+            Current = new ReusableStringBuilders();
         }
+
+        public ReusableStringBuilders()
+        {
+            s_stringBuilders = new ConcurrentStack<StringBuilder>();
+        }
+
+        public int Count => s_stringBuilders.Count;
 
         public static ReusableStringBuilders Current
         {

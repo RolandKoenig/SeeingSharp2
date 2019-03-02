@@ -21,19 +21,34 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class ObjectThreadTimer
     {
+        private double m_speedFactor;
         private DateTime m_startTimeStamp;
         private TimeSpan m_timeSinceStart;
-        private double m_speedFactor;
+
+        /// <summary>
+        /// Adds the given timespan to the timer.
+        /// </summary>
+        internal void Add(TimeSpan timeSpan)
+        {
+            if (m_speedFactor == 1.0)
+            {
+                m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
+            }
+            else
+            {
+                m_timeSinceStart = m_timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * m_speedFactor)));
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadTimer"/> class.
@@ -69,34 +84,16 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Adds the given timespan to the timer.
-        /// </summary>
-        internal void Add(TimeSpan timeSpan)
-        {
-            if (m_speedFactor == 1.0)
-            {
-                m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
-            }
-            else
-            {
-                m_timeSinceStart = m_timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * m_speedFactor)));
-            }
-        }
-
-        /// <summary>
         /// Gets current time (thread-time, not pc-time!).
         /// </summary>
-        public DateTime Now
-        {
-            get { return m_startTimeStamp.Add(m_timeSinceStart); }
-        }
+        public DateTime Now => m_startTimeStamp.Add(m_timeSinceStart);
 
         /// <summary>
         /// Gets or sets current speed factor of the timer (default: 1.0).
         /// </summary>
         public double SpeedFactor
         {
-            get { return m_speedFactor; }
+            get => m_speedFactor;
             set
             {
                 if (value < 0.0) { throw new ArgumentException("SpeedFactor can not be less than zero!", "value"); }

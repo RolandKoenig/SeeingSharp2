@@ -24,6 +24,11 @@
 #region using
 
 // Namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Util;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -32,32 +37,41 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Checking;
-    using Core;
-    using Drawing2D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public class Direct2DTextureResource : TextureResource, IRenderableResource
     {
-        #region
-        private Custom2DDrawingLayer m_drawingLayer;
-        private int m_width;
-        private int m_height;
-        #endregion
+        /// <summary>
+        /// Loads all resource.
+        /// </summary>
+        /// <param name="device">The device on which to load all resources.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
+                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
+            m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 
-        #region Resources for Direct3D
-        private D3D11.Texture2D m_renderTargetTexture;
-        private D3D11.ShaderResourceView m_renderTargetTextureView;
-        #endregion
+            m_overlayRenderer = new Direct2DOverlayRenderer(
+                device,
+                m_renderTargetTexture,
+                m_width, m_height,
+                DpiScaling.Default);
+            m_graphics2D = new Graphics2D(device, m_overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
+        }
 
-        #region Resourcs for Direct2D
-        private Graphics2D m_graphics2D;
-        private Direct2DOverlayRenderer m_overlayRenderer;
-        #endregion
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        /// <param name="device">The device on which the resources where loaded.</param>
+        /// <param name="resources">The current ResourceDictionary.</param>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            m_graphics2D = null;
+            SeeingSharpTools.SafeDispose(ref m_overlayRenderer);
+            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
+            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DTextureResource"/> class.
@@ -106,69 +120,41 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Loads all resource.
-        /// </summary>
-        /// <param name="device">The device on which to load all resources.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
-                device, m_width, m_height, new GraphicsViewConfiguration() { AntialiasingEnabled = false });
-            m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
-
-            m_overlayRenderer = new Direct2DOverlayRenderer(
-                device,
-                m_renderTargetTexture,
-                m_width, m_height,
-                DpiScaling.Default);
-            m_graphics2D = new Graphics2D(device, m_overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
-        }
-
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        /// <param name="device">The device on which the resources where loaded.</param>
-        /// <param name="resources">The current ResourceDictionary.</param>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_graphics2D = null;
-            SeeingSharpTools.SafeDispose(ref m_overlayRenderer);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
-        }
-
-        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_graphics2D != null; }
-        }
+        public override bool IsLoaded => m_graphics2D != null;
 
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_renderTargetTexture; }
-        }
+        public override D3D11.Texture2D Texture => m_renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_renderTargetTextureView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return 1; }
-        }
+        public override int ArraySize => 1;
+
+        #region
+        private Custom2DDrawingLayer m_drawingLayer;
+        private int m_width;
+        private int m_height;
+        #endregion
+
+        #region Resources for Direct3D
+        private D3D11.Texture2D m_renderTargetTexture;
+        private D3D11.ShaderResourceView m_renderTargetTextureView;
+        #endregion
+
+        #region Resourcs for Direct2D
+        private Graphics2D m_graphics2D;
+        private Direct2DOverlayRenderer m_overlayRenderer;
+        #endregion
     }
 }

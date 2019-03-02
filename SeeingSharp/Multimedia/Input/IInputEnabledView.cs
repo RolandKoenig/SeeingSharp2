@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using Core;
-
     #endregion
 
     /// <summary>

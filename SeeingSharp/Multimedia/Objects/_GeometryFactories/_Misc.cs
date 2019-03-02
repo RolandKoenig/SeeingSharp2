@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-
     #endregion
 
     public struct StructureBuildOptions
@@ -38,10 +38,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public DetailLevel TargetDetailLevel { get; }
 
-        public bool IsHighDetail
-        {
-            get { return (TargetDetailLevel & DetailLevel.High) == DetailLevel.High; }
-        }
+        public bool IsHighDetail => (TargetDetailLevel & DetailLevel.High) == DetailLevel.High;
     }
 
     public enum SpiralChuteRotationDirection

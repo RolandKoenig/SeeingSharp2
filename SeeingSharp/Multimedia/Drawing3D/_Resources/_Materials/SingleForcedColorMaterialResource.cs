@@ -24,6 +24,8 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,39 +33,11 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class SingleForcedColorMaterialResource : MaterialResource
     {
         internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
-        #region Static resource keys
-        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Resource members
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
-        #endregion
-
-        #region Shader parameters
-        private float m_fadeIntensity;
-        private bool m_cbPerMaterialDataChanged;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SingleForcedColorMaterialResource" /> class.
-        /// </summary>
-        public SingleForcedColorMaterialResource()
-        {
-
-        }
 
         /// <summary>
         /// Generates the requested input layout.
@@ -79,7 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -98,7 +72,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 m_cbPerMaterial.SetData(
                     deviceContext,
-                    new CBPerMaterial()
+                    new CBPerMaterial
                     {
                         FadeIntensity = m_fadeIntensity
                     });
@@ -141,18 +115,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_cbPerMaterial = null;
         }
 
-        public override bool IsLoaded
-        {
-            get
-            {
-                return (m_vertexShader != null) &&
-                       (m_pixelShader != null);
-            }
-        }
+        public override bool IsLoaded =>
+            m_vertexShader != null &&
+            m_pixelShader != null;
 
         public float FadeIntensity
         {
-            get { return m_fadeIntensity; }
+            get => m_fadeIntensity;
             set
             {
                 if(m_fadeIntensity != value)
@@ -162,5 +131,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
+
+        #region Static resource keys
+        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        #endregion
+
+        #region Resource members
+        private VertexShaderResource m_vertexShader;
+        private PixelShaderResource m_pixelShader;
+        private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
+        #endregion
+
+        #region Shader parameters
+        private float m_fadeIntensity;
+        private bool m_cbPerMaterialDataChanged;
+        #endregion
     }
 }

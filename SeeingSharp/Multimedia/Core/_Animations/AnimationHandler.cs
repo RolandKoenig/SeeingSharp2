@@ -21,19 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     public class AnimationHandler : AnimationSequence
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
-        /// </summary>
-        /// <param name="owner">The owner object of this AnimationHandler.</param>
-        public AnimationHandler(object owner)
-        {
-            Owner = owner;
-        }
-
         /// <summary>
         /// Starts building an animation sequence for the current target object.
         /// </summary>
@@ -58,9 +52,18 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="animation">The failed animation.</param>
         /// <param name="ex">The exception thrown.</param>
-        protected override AnimationFailedReaction OnAnimationFailed(IAnimation animation, System.Exception ex)
+        protected override AnimationFailedReaction OnAnimationFailed(IAnimation animation, Exception ex)
         {
             return AnimationFailedReaction.RemoveAndContinue;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
+        /// </summary>
+        /// <param name="owner">The owner object of this AnimationHandler.</param>
+        public AnimationHandler(object owner)
+        {
+            Owner = owner;
         }
 
         /// <summary>

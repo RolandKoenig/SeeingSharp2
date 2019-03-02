@@ -23,15 +23,14 @@
 #endregion
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using SeeingSharp.SampleContainer;
+
 namespace SeeingSharp.UwpSamples
 {
     #region using
-
-    using Windows.ApplicationModel;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using SampleContainer;
-
     #endregion
 
     /// <summary>
@@ -39,16 +38,9 @@ namespace SeeingSharp.UwpSamples
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool m_isChangingSample;
         private SampleBase m_actSample;
         private SampleMetadata m_actSampleInfo;
-
-        public MainPage()
-        {
-            this.InitializeComponent();
-
-            this.Loaded += OnLoaded;
-        }
+        private bool m_isChangingSample;
 
         /// <summary>
         /// Applies the given sample.
@@ -66,7 +58,7 @@ namespace SeeingSharp.UwpSamples
                 // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
-                    await CtrlSwapChain.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+                    await CtrlSwapChain.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
                     {
                         manipulator.Clear(true);
                     });
@@ -106,19 +98,26 @@ namespace SeeingSharp.UwpSamples
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
 
-            var viewModel = this.DataContext as MainWindowViewModel;
-            viewModel?.LoadSampleData(sampleRepo, this.CtrlSwapChain.RenderLoop);
+            var viewModel = DataContext as MainWindowViewModel;
+            viewModel?.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DesignMode.DesignModeEnabled) { return; }
-            if (!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+            if (!(DataContext is MainWindowViewModel viewModel)) { return; }
 
             var selectedSample = viewModel.SelectedSample;
             if (selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+        }
+
+        public MainPage()
+        {
+            InitializeComponent();
+
+            Loaded += OnLoaded;
         }
     }
 }

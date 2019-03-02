@@ -21,14 +21,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
 {
     #region using
-
-    using System.IO;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SeeingSharp.Util;
-
     #endregion
 
     [TestClass]
@@ -41,11 +41,11 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_RelativeNamespace()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
@@ -68,12 +68,12 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_AnotherFile()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
             resLink = resLink.GetForAnotherFile("CommonPixelShader.hlsl", "..", "Dummy2");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
@@ -96,11 +96,11 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_FullNamespace()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType().Assembly,
+                GetType().Assembly,
                 "SeeingSharp.Tests.AssemblyResourcesAndShaderTests.Dummy",
                 "CommonPixelShader.hlsl");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {

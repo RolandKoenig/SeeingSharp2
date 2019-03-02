@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public struct BuiltVerticesRange
@@ -41,9 +41,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="structure">The structure.</param>
         public BuiltVerticesRange(VertexStructure structure)
         {
-            this.Structure = structure;
-            this.StartVertex = 0;
-            this.VertexCount = 0;
+            Structure = structure;
+            StartVertex = 0;
+            VertexCount = 0;
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="vertexCount">The vertex count.</param>
         public BuiltVerticesRange(VertexStructure structure, int startVertex, int vertexCount)
         {
-            this.Structure = structure;
-            this.StartVertex = startVertex;
-            this.VertexCount = vertexCount;
+            Structure = structure;
+            StartVertex = startVertex;
+            VertexCount = vertexCount;
         }
 
         /// <summary>
@@ -77,19 +77,19 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     throw new SeeingSharpGraphicsException("Unable to merge given vertex ranges!");
                 }
-                VertexCount = (int)(VertexCount + otherRange.VertexCount);
+                VertexCount = VertexCount + otherRange.VertexCount;
             }
         }
 
         public BuiltVerticesRange DisableTexture()
         {
-            int lastVertex = StartVertex + VertexCount;
+            var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TextureFactor = -100;
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -101,11 +101,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -117,11 +117,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -133,11 +133,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -149,11 +149,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.Y,
                     actVertex.TexCoord.X);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -162,9 +162,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this.VertexCount <= 0; }
-        }
+        public bool IsEmpty => VertexCount <= 0;
     }
 }

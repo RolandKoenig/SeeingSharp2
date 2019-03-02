@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System;
-    using Core;
-
     #endregion
 
     /// <summary>
@@ -35,18 +35,6 @@ namespace SeeingSharp.Multimedia.Input
     /// </summary>
     public abstract class InputStateBase
     {
-        #region state related data
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InputStateBase"/> class.
-        /// </summary>
-        protected InputStateBase()
-        {
-            CurrentType = this.GetType();
-        }
-
         /// <summary>
         /// Copies this object and then resets it
         /// in preparation of the next update pass.
@@ -65,6 +53,14 @@ namespace SeeingSharp.Multimedia.Input
         protected abstract void CopyAndResetForUpdatePassInternal(InputStateBase targetState);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="InputStateBase"/> class.
+        /// </summary>
+        protected InputStateBase()
+        {
+            CurrentType = GetType();
+        }
+
+        /// <summary>
         /// The view object this input state was queried on.
         /// Null, if this InputState does not depend on a view.
         /// </summary>
@@ -79,10 +75,13 @@ namespace SeeingSharp.Multimedia.Input
             get
             {
                 if(RelatedView == null) { return -1; }
-                else { return RelatedView.ViewIndex; }
+                return RelatedView.ViewIndex;
             }
         }
 
         internal Type CurrentType { get; }
+
+        #region state related data
+        #endregion
     }
 }

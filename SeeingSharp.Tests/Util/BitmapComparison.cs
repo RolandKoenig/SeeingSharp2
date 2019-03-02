@@ -22,7 +22,9 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Drawing.Imaging;
+using SeeingSharp.Checking;
 using GDI = System.Drawing;
 
 #endregion
@@ -30,11 +32,6 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Tests.Util
 {
     #region using
-
-    using System;
-    using System.Drawing.Imaging;
-    using Checking;
-
     #endregion
 
     /// <summary>
@@ -49,7 +46,7 @@ namespace SeeingSharp.Tests.Util
     public class BitmapComparison
     {
         private const int MAX_PER_PIXEL_DIFF = 128;
-        private const decimal MAX_PER_PIXEL_DIFF_DEC = (decimal)MAX_PER_PIXEL_DIFF;
+        private const decimal MAX_PER_PIXEL_DIFF_DEC = MAX_PER_PIXEL_DIFF;
 
         /// <summary>
         /// Determines whether the given bitmaps are near equality.
@@ -73,7 +70,7 @@ namespace SeeingSharp.Tests.Util
             bitmapRight.EnsureNotNull(nameof(bitmapRight));
             if (bitmapLeft.Size != bitmapRight.Size) { throw new SeeingSharpException("Both bitmaps musst have the same size!"); }
 
-            decimal totalDiffPercent = 0M;
+            var totalDiffPercent = 0M;
 
             var lockRect = new GDI.Rectangle(
                 new GDI.Point(0, 0),
@@ -85,28 +82,28 @@ namespace SeeingSharp.Tests.Util
             {
                 unsafe
                 {
-                    byte* dataLeftP = (byte*)dataLeft.Scan0.ToPointer();
-                    byte* dataRightP = (byte*)dataRight.Scan0.ToPointer();
+                    var dataLeftP = (byte*)dataLeft.Scan0.ToPointer();
+                    var dataRightP = (byte*)dataRight.Scan0.ToPointer();
                     decimal pixelCount = lockRect.Width * lockRect.Height;
 
-                    for (int loopY = 0; loopY < lockRect.Height; loopY++)
+                    for (var loopY = 0; loopY < lockRect.Height; loopY++)
                     {
-                        for (int loopX = 0; loopX < lockRect.Width; loopX++)
+                        for (var loopX = 0; loopX < lockRect.Width; loopX++)
                         {
                             // Calculate the memory location of the current pixel
-                            int currentLoc = loopY * lockRect.Height * 4 + loopX * 4;
+                            var currentLoc = loopY * lockRect.Height * 4 + loopX * 4;
 
                             // Get the maximum difference on this pixel on one color channel
-                            int diffA = Math.Abs(dataLeftP[currentLoc] - dataRightP[currentLoc]);
-                            int diffR = Math.Abs(dataLeftP[currentLoc + 1] - dataRightP[currentLoc + 1]);
-                            int diffG = Math.Abs(dataLeftP[currentLoc + 2] - dataRightP[currentLoc + 2]);
-                            int diffB = Math.Abs(dataLeftP[currentLoc + 3] - dataRightP[currentLoc + 3]);
-                            int maxDiff = Math.Max(diffA, Math.Max(diffR, Math.Max(diffG, diffB)));
+                            var diffA = Math.Abs(dataLeftP[currentLoc] - dataRightP[currentLoc]);
+                            var diffR = Math.Abs(dataLeftP[currentLoc + 1] - dataRightP[currentLoc + 1]);
+                            var diffG = Math.Abs(dataLeftP[currentLoc + 2] - dataRightP[currentLoc + 2]);
+                            var diffB = Math.Abs(dataLeftP[currentLoc + 3] - dataRightP[currentLoc + 3]);
+                            var maxDiff = Math.Max(diffA, Math.Max(diffR, Math.Max(diffG, diffB)));
                             if (maxDiff > MAX_PER_PIXEL_DIFF) { maxDiff = MAX_PER_PIXEL_DIFF; }
 
                             // Calculate the difference factor on this pixel and add it to the total difference value
-                            decimal pixelDiffPercent =
-                                (decimal)((decimal)maxDiff / MAX_PER_PIXEL_DIFF_DEC);
+                            var pixelDiffPercent =
+                                maxDiff / MAX_PER_PIXEL_DIFF_DEC;
                             totalDiffPercent += pixelDiffPercent / pixelCount;
                         }
                     }

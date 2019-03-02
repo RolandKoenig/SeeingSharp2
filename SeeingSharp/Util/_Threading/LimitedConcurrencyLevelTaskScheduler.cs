@@ -21,15 +21,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     #endregion
 
     // Provides a task scheduler that ensures a maximum concurrency level while
@@ -46,14 +46,7 @@ namespace SeeingSharp.Util
         // The maximum concurrency level allowed by this scheduler.
 
         // Indicates whether the scheduler is currently processing work items.
-        private int _delegatesQueuedOrRunning = 0;
-
-        // Creates a new instance with the specified degree of parallelism.
-        public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
-        {
-            if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
-            MaximumConcurrencyLevel = maxDegreeOfParallelism;
-        }
+        private int _delegatesQueuedOrRunning;
 
         // Queues a task to the scheduler.
         protected sealed override void QueueTask(Task task)
@@ -75,7 +68,7 @@ namespace SeeingSharp.Util
         private void NotifyThreadPoolOfPendingWork()
         {
             ThreadPool.UnsafeQueueUserWorkItem(
-                new WaitCallback((arg) =>
+                arg =>
                 {
                     // Note that the current thread is now processing work items.
                     // This is necessary to enable inlining of tasks into this thread.
@@ -102,12 +95,12 @@ namespace SeeingSharp.Util
                             }
 
                             // Execute the task we pulled out of the queue
-                            base.TryExecuteTask(item);
+                            TryExecuteTask(item);
                         }
                     }
                     // We're done processing items on the current thread
                     finally { _currentThreadIsProcessingItems = false; }
-                }),
+                },
                 null);
         }
 
@@ -115,42 +108,69 @@ namespace SeeingSharp.Util
         protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             // If this thread isn't already processing a task, we don't support inlining
-            if (!_currentThreadIsProcessingItems) return false;
+            if (!_currentThreadIsProcessingItems)
+            {
+                return false;
+            }
 
             // If the task was previously queued, remove it from the queue
             if (taskWasPreviouslyQueued)
                 // Try to run the task.
+            {
                 if (TryDequeue(task))
-                    return base.TryExecuteTask(task);
-                else
-                    return false;
-            else
-                return base.TryExecuteTask(task);
+                {
+                    return TryExecuteTask(task);
+                }
+                return false;
+            }
+            return TryExecuteTask(task);
         }
 
         // Attempt to remove a previously scheduled task from the scheduler.
         protected sealed override bool TryDequeue(Task task)
         {
-            lock (_tasks) return _tasks.Remove(task);
+            lock (_tasks)
+            {
+                return _tasks.Remove(task);
+            }
         }
-
-        // Gets the maximum concurrency level supported by this scheduler.
-        public sealed override int MaximumConcurrencyLevel { get; }
 
         // Gets an enumerable of the tasks currently scheduled on this scheduler.
         protected sealed override IEnumerable<Task> GetScheduledTasks()
         {
-            bool lockTaken = false;
+            var lockTaken = false;
             try
             {
                 Monitor.TryEnter(_tasks, ref lockTaken);
-                if (lockTaken) return _tasks;
-                else throw new NotSupportedException();
+                if (lockTaken)
+                {
+                    return _tasks;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
             finally
             {
-                if (lockTaken) Monitor.Exit(_tasks);
+                if (lockTaken)
+                {
+                    Monitor.Exit(_tasks);
+                }
             }
         }
+
+        // Creates a new instance with the specified degree of parallelism.
+        public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
+        {
+            if (maxDegreeOfParallelism < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
+            }
+            MaximumConcurrencyLevel = maxDegreeOfParallelism;
+        }
+
+        // Gets the maximum concurrency level supported by this scheduler.
+        public sealed override int MaximumConcurrencyLevel { get; }
     }
 }

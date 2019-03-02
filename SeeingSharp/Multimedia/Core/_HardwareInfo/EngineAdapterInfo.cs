@@ -22,7 +22,10 @@
 */
 #endregion
 #region using
-
+using System;
+using System.Collections.Generic;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -31,25 +34,20 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class EngineAdapterInfo : IDisposable, ICheckDisposed
     {
         private const string TRANSLATABLE_GROUP_COMMON_HARDWARE_INFO = "Common hardware information";
 
-        private SharpDX.DXGI.Adapter1 m_adapter;
+        private Adapter1 m_adapter;
+        private AdapterDescription m_adapterDescription;
         private D3D.FeatureLevel m_d3d11FeatureLevel;
-        private SharpDX.DXGI.AdapterDescription m_adapterDescription;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineAdapterInfo" /> class.
         /// </summary>
-        internal EngineAdapterInfo(int adapterIndex, SharpDX.DXGI.Adapter1 adapter)
+        internal EngineAdapterInfo(int adapterIndex, Adapter1 adapter)
         {
             Outputs = new List<EngineOutputInfo>();
             m_adapter = adapter;
@@ -57,15 +55,15 @@ namespace SeeingSharp.Multimedia.Core
 
             m_adapterDescription = adapter.Description;
             IsSoftwareAdapter =
-                (m_adapterDescription.Description == "Microsoft Basic Render Driver") ||
-                ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Software")) ||
-                ((!string.IsNullOrEmpty(m_adapterDescription.Description)) && m_adapterDescription.Description.Contains("Microsoft Basic Render Driver"));
+                m_adapterDescription.Description == "Microsoft Basic Render Driver" ||
+                !string.IsNullOrEmpty(m_adapterDescription.Description) && m_adapterDescription.Description.Contains("Software") ||
+                !string.IsNullOrEmpty(m_adapterDescription.Description) && m_adapterDescription.Description.Contains("Microsoft Basic Render Driver");
 
             m_d3d11FeatureLevel = D3D11.Device.GetSupportedFeatureLevel(adapter);
 
             //Query for output information
-            SharpDX.DXGI.Output[] outputs = adapter.Outputs;
-            for (int loop = 0; loop < outputs.Length; loop++)
+            var outputs = adapter.Outputs;
+            for (var loop = 0; loop < outputs.Length; loop++)
             {
                 try
                 {
@@ -88,6 +86,8 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        public bool IsDisposed => m_adapter == null;
+
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_adapter);
@@ -102,46 +102,26 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the corresponding adapter.
         /// </summary>
-        internal SharpDX.DXGI.Adapter1 Adapter
-        {
-            get { return m_adapter; }
-        }
+        internal Adapter1 Adapter => m_adapter;
 
         /// <summary>
         /// Gets the index of the adapter.
         /// </summary>
         public int AdapterIndex { get; }
 
-        public string MaxFeatureLevelD3D11
-        {
-            get { return m_d3d11FeatureLevel.ToString(); }
-        }
+        public string MaxFeatureLevelD3D11 => m_d3d11FeatureLevel.ToString();
 
         public bool IsSoftwareAdapter { get; }
 
         /// <summary>
         /// Gets the description of the adapter.
         /// </summary>
-        public string AdapterDescription
-        {
-            get { return m_adapterDescription.Description; }
-        }
+        public string AdapterDescription => m_adapterDescription.Description;
 
-        public string DedicatedSystemMemory
-        {
-            get { return m_adapterDescription.DedicatedSystemMemory.ToString(); }
-        }
+        public string DedicatedSystemMemory => m_adapterDescription.DedicatedSystemMemory.ToString();
 
-        public string DedicatedVideoMemory
-        {
-            get { return m_adapterDescription.DedicatedVideoMemory.ToString(); }
-        }
+        public string DedicatedVideoMemory => m_adapterDescription.DedicatedVideoMemory.ToString();
 
-        public string SharedSystemMemory
-        {
-            get { return m_adapterDescription.SharedSystemMemory.ToString(); }
-        }
-
-        public bool IsDisposed => m_adapter == null;
+        public string SharedSystemMemory => m_adapterDescription.SharedSystemMemory.ToString();
     }
 }

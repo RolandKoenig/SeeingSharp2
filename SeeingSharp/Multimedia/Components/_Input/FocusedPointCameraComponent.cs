@@ -21,17 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Components
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public class FocusedPointCameraComponent : FocusedCameraComponent
     {
         private Vector3 m_focusedLocation;
+
+        protected override Vector3 GetFocusedLocation()
+        {
+            return m_focusedLocation;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
@@ -39,11 +44,6 @@ namespace SeeingSharp.Multimedia.Components
         public FocusedPointCameraComponent()
         {
             m_focusedLocation = Vector3.Zero;
-        }
-
-        protected override Vector3 GetFocusedLocation()
-        {
-            return m_focusedLocation;
         }
 
         public float FocusedPointX

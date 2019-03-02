@@ -24,6 +24,9 @@
 #region using
 
 //Some namespace mappings
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,34 +34,13 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Checking;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class BitmapTextureResource : TextureResource
     {
-        #region Member for Direct3D 11 rendering
-        private D3D11.Texture2D m_texture;
-        private D3D11.ShaderResourceView m_textureView;
-        #endregion
-
         #region Generic members
         private MemoryMappedTexture32bpp m_mappedTexture;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapTextureResource"/> class.
-        /// </summary>
-        /// <param name="mappedTexture">The mapped texture.</param>
-        public BitmapTextureResource(MemoryMappedTexture32bpp mappedTexture)
-        {
-            mappedTexture.EnsureNotNull(nameof(mappedTexture));
-
-            m_mappedTexture = mappedTexture;
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -93,37 +75,41 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapTextureResource"/> class.
+        /// </summary>
+        /// <param name="mappedTexture">The mapped texture.</param>
+        public BitmapTextureResource(MemoryMappedTexture32bpp mappedTexture)
+        {
+            mappedTexture.EnsureNotNull(nameof(mappedTexture));
+
+            m_mappedTexture = mappedTexture;
+        }
+
+        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_texture != null; }
-        }
+        public override bool IsLoaded => m_texture != null;
 
         /// <summary>
         /// Gets the texture.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_texture; }
-        }
+        public override D3D11.Texture2D Texture => m_texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_textureView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_textureView;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return m_texture.Description.ArraySize; }
-        }
+        public override int ArraySize => m_texture.Description.ArraySize;
+
+        #region Member for Direct3D 11 rendering
+        private D3D11.Texture2D m_texture;
+        private D3D11.ShaderResourceView m_textureView;
+        #endregion
     }
 }

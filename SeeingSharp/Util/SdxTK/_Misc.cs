@@ -25,12 +25,11 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using System;
+
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
     #region using
-
-    using System;
-
     #endregion
 
     /// <summary>
@@ -133,7 +132,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         FilterCubic = 0x300000,
         FilterFant = 0x400000 // Combination of Linear and Box filter
         // Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
-    };
+    }
 
     /// <summary>
     /// Flags used by <see cref="DDSHelper.LoadFromDDSMemory"/>.
@@ -149,5 +148,5 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         No16Bpp = 0x10, // Conversions avoid use of 565, 5551, and 4444 formats and instead expand to 8888 to avoid use of optional WDDM 1.2 formats
         CopyMemory = 0x20, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
         ForceDX10Ext = 0x10000 // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
-    };
+    }
 }

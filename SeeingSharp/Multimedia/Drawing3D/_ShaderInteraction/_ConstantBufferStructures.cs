@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Runtime.InteropServices;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System.Runtime.InteropServices;
-    using SharpDX;
-
     #endregion
 
     // Structures representing the content of ConstantBuffers on graphics hardware

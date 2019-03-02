@@ -24,6 +24,7 @@
 #region using
 
 // Namespace mappings
+using Windows.UI;
 using SDX = SharpDX;
 
 #endregion
@@ -32,18 +33,18 @@ namespace SeeingSharp.Util
 {
     public static class SeeingSharpUwpTools
     {
-        public static SDX.Color4 Color4FromUIColor(ref Windows.UI.Color uiColor)
+        public static SDX.Color4 Color4FromUIColor(ref Color uiColor)
         {
             return new SDX.Color4(
-                (float)uiColor.R / 255f,
-                (float)uiColor.G / 255f,
-                (float)uiColor.B / 255f,
-                (float)uiColor.A / 255f);
+                uiColor.R / 255f,
+                uiColor.G / 255f,
+                uiColor.B / 255f,
+                uiColor.A / 255f);
         }
 
-        public static Windows.UI.Color UIColorFromColor4(ref SDX.Color4 color)
+        public static Color UIColorFromColor4(ref SDX.Color4 color)
         {
-            var uiColor = new Windows.UI.Color
+            var uiColor = new Color
             {
                 A = (byte) EngineMath.Clamp(0f, 255f, color.Alpha * 255f),
                 R = (byte) EngineMath.Clamp(0f, 255f, color.Red * 255f),

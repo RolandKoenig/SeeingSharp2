@@ -21,44 +21,26 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.ApplicationModel;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
+
 namespace SeeingSharp.UwpSamples
 {
     #region using
-
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using Windows.ApplicationModel;
-    using Multimedia.Core;
-    using SampleContainer;
-    using SampleContainer.Util;
-
     #endregion
 
     public class MainWindowViewModel : ViewModelBase
     {
+        private RenderLoop m_renderLoop;
         private SampleRepository m_sampleRepo;
+        private SampleSettings m_sampleSettings;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
-        private RenderLoop m_renderLoop;
-        private SampleSettings m_sampleSettings;
-
-        public MainWindowViewModel()
-        {
-            if (!DesignMode.DesignModeEnabled) { return; }
-
-            for (int loop = 1; loop < 5; loop++)
-            {
-                this.SampleGroups.Add($"DummyGroup {loop}");
-            }
-            this.SelectedGroup = "DummyGroup 2";
-
-            for (int loop=1; loop<5; loop++)
-            {
-                this.Samples.Add(new SampleViewModel(new SampleMetadata(
-                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"),
-                    this.GetType())));
-            }
-        }
 
         public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -68,12 +50,12 @@ namespace SeeingSharp.UwpSamples
             m_renderLoop = renderLoop;
 
             // Load samples
-            foreach(string actSampleGroupName in m_sampleRepo.SampleGroups
-                .Select((actGroup) => actGroup.GroupName))
+            foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
+                .Select(actGroup => actGroup.GroupName))
             {
-                this.SampleGroups.Add(actSampleGroupName);
+                SampleGroups.Add(actSampleGroupName);
             }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+            SelectedGroup = SampleGroups.FirstOrDefault();
         }
 
         private void UpdateSampleCollection()
@@ -81,16 +63,34 @@ namespace SeeingSharp.UwpSamples
             if (DesignMode.DesignModeEnabled) { return; }
 
             var sampleGroup = m_sampleRepo.SampleGroups
-                .Where((actGroup) => actGroup.GroupName == m_selectedGroup)
+                .Where(actGroup => actGroup.GroupName == m_selectedGroup)
                 .FirstOrDefault();
             if (sampleGroup == null) { return; }
 
-            this.Samples.Clear();
+            Samples.Clear();
             foreach(var actSampleMetadata in sampleGroup.Samples)
             {
-                this.Samples.Add(new SampleViewModel(actSampleMetadata));
+                Samples.Add(new SampleViewModel(actSampleMetadata));
             }
-            this.SelectedSample = this.Samples.FirstOrDefault();
+            SelectedSample = Samples.FirstOrDefault();
+        }
+
+        public MainWindowViewModel()
+        {
+            if (!DesignMode.DesignModeEnabled) { return; }
+
+            for (var loop = 1; loop < 5; loop++)
+            {
+                SampleGroups.Add($"DummyGroup {loop}");
+            }
+            SelectedGroup = "DummyGroup 2";
+
+            for (var loop=1; loop<5; loop++)
+            {
+                Samples.Add(new SampleViewModel(new SampleMetadata(
+                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"),
+                    GetType())));
+            }
         }
 
         public ObservableCollection<string> SampleGroups
@@ -109,7 +109,7 @@ namespace SeeingSharp.UwpSamples
                     m_selectedGroup = value;
                     RaisePropertyChanged(nameof(SelectedGroup));
 
-                    this.UpdateSampleCollection();
+                    UpdateSampleCollection();
                 }
             }
         }
@@ -138,12 +138,12 @@ namespace SeeingSharp.UwpSamples
                     RaisePropertyChanged(nameof(SelectedSample));
                     RaisePropertyChanged(nameof(SampleSettings));
 
-                    this.SampleCommands.Clear();
+                    SampleCommands.Clear();
                     if (m_sampleSettings != null)
                     {
                         foreach (var actSampleCommand in m_sampleSettings.GetCommands())
                         {
-                            this.SampleCommands.Add(actSampleCommand);
+                            SampleCommands.Add(actSampleCommand);
                         }
                     }
                 }
@@ -156,9 +156,6 @@ namespace SeeingSharp.UwpSamples
             private set;
         } = new ObservableCollection<SampleCommand>();
 
-        public SampleSettings SampleSettings
-        {
-            get => m_sampleSettings;
-        }
+        public SampleSettings SampleSettings => m_sampleSettings;
     }
 }

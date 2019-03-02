@@ -24,6 +24,11 @@
 #region using
 
 // Namespace mappings
+using System.Drawing.Imaging;
+using SeeingSharp.Checking;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
 using GDI = System.Drawing;
 using D3D11 = SharpDX.Direct3D11;
 using WinForms = System.Windows.Forms;
@@ -33,11 +38,6 @@ using WinForms = System.Windows.Forms;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using Checking;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     public static class GraphicsHelperWinForms
@@ -48,14 +48,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetControl">Target control of the swap chain.</param>
         /// <param name="device">Graphics device.</param>
         /// <param name="gfxConfig">The current graphics configuration.</param>
-        internal static SharpDX.DXGI.SwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
+        internal static SwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
         {
             targetControl.EnsureNotNull(nameof(targetControl));
             device.EnsureNotNull(nameof(device));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             // Create the swap chain description
-            var swapChainDesc = new SharpDX.DXGI.SwapChainDescription1();
+            var swapChainDesc = new SwapChainDescription1();
 
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
@@ -65,25 +65,25 @@ namespace SeeingSharp.Multimedia.Core
             else
             {
                 swapChainDesc.BufferCount = 2;
-                swapChainDesc.SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0);
+                swapChainDesc.SampleDescription = new SampleDescription(1, 0);
             }
 
             // Set common parameters
             swapChainDesc.Width = targetControl.Width;
             swapChainDesc.Height = targetControl.Height;
             swapChainDesc.Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT;
-            swapChainDesc.Scaling = SharpDX.DXGI.Scaling.Stretch;
-            swapChainDesc.SwapEffect = SharpDX.DXGI.SwapEffect.Discard;
-            swapChainDesc.Usage = SharpDX.DXGI.Usage.RenderTargetOutput;
+            swapChainDesc.Scaling = Scaling.Stretch;
+            swapChainDesc.SwapEffect = SwapEffect.Discard;
+            swapChainDesc.Usage = Usage.RenderTargetOutput;
 
             // Create and return the swap chain and the render target
-            return new SharpDX.DXGI.SwapChain1(
+            return new SwapChain1(
                 device.FactoryDxgi, device.DeviceD3D11_1, targetControl.Handle,
                 ref swapChainDesc,
-                new SharpDX.DXGI.SwapChainFullScreenDescription()
+                new SwapChainFullScreenDescription
                 {
-                    RefreshRate = new SharpDX.DXGI.Rational(60, 1),
-                    Scaling = SharpDX.DXGI.DisplayModeScaling.Centered,
+                    RefreshRate = new Rational(60, 1),
+                    Scaling = DisplayModeScaling.Centered,
                     Windowed = true
                 },
                 null);
@@ -118,15 +118,15 @@ namespace SeeingSharp.Multimedia.Core
 
             // Lock bitmap so it can be accessed for texture loading
             var bitmapData = bitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                new GDI.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             try
             {
                 // Open a reading stream for bitmap memory
                 var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
-                result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription()
+                result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
                 {
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
@@ -137,8 +137,8 @@ namespace SeeingSharp.Multimedia.Core
                     Width = bitmap.Width,
                     Height = bitmap.Height,
                     ArraySize = 1,
-                    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
-                }, new DataRectangle[] { dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle });
+                    SampleDescription = new SampleDescription(1, 0)
+                }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
 
                 // Workaround for now... auto generate mip-levels
                 using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
@@ -177,20 +177,20 @@ namespace SeeingSharp.Multimedia.Core
             {
                 //Lock bitmap so it can be accessed for texture loading
                 var bitmapData = resultBitmap.LockBits(
-                    new System.Drawing.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
-                    System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    new GDI.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
+                    ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
 
                 try
                 {
                     //Copy data row by row
                     // => Rows form datasource may have more pixels because driver changes the size of textures
-                    ulong rowPitch = (ulong)(width * 4);
+                    var rowPitch = (ulong)(width * 4);
 
                     for (var loopRow = 0; loopRow < height; loopRow++)
                     {
                         // Copy bitmap data
-                        int rowPitchSource = dataBox.RowPitch;
-                        int rowPitchDestination = width * 4;
+                        var rowPitchSource = dataBox.RowPitch;
+                        var rowPitchDestination = width * 4;
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             bitmapData.Scan0 + loopRow * rowPitchDestination,

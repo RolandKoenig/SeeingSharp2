@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Util;
+
 namespace SeeingSharp.Tests
 {
     #region using
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SeeingSharp.Util;
-
     #endregion
 
     [TestClass]
@@ -54,7 +54,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public void GetFileExtension_AssemblyResourceLink()
         {
-            ResourceLink extPNG = new AssemblyResourceLink(this.GetType(), "DummyNamespace.DummyFile.png");
+            ResourceLink extPNG = new AssemblyResourceLink(GetType(), "DummyNamespace.DummyFile.png");
             var extJPG = extPNG.GetForAnotherFile("Dummy.jpg");
 
             Assert.IsTrue(extPNG.FileExtension == "png");

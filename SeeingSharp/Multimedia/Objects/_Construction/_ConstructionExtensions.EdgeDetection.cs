@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System.Collections.Generic;
-    using SharpDX;
-
     #endregion
 
     public static partial class ConstructionExtensions
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new VertexStructure();
 
             //Find all edges from given view direction
-            List<Line> shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
+            var shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
 
             //Build the structure based on the found edges
             var lightNormal = Vector3.Normalize(lightDirection);
@@ -73,8 +73,8 @@ namespace SeeingSharp.Multimedia.Objects
         public static List<Line> GenerateEdgesSeenFromViewpoint(this IEnumerable<VertexStructure> structures, Vector3 viewDirection)
         {
             //Find all shadow volume edges
-            List<Line> foundEndges = new List<Line>(2048);
-            List<Line> edgesToRemove = new List<Line>(2048);
+            var foundEndges = new List<Line>(2048);
+            var edgesToRemove = new List<Line>(2048);
 
             foreach (var actStructure in structures)
             {
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Objects
                     {
                         if (Vector3.Dot(viewDirection, actStructure.Vertices[actTriangle.Index1].Normal) >= 0)
                         {
-                            Line[] actEdges = actTriangle.GetEdges(actStructure);
+                            var actEdges = actTriangle.GetEdges(actStructure);
 
                             for (var loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
                             {

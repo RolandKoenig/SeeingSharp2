@@ -24,6 +24,5 @@
 namespace SeeingSharp.Multimedia.Objects
 {
     public class ACImportOptions : ImportOptions
-    {
-    }
+    {}
 }

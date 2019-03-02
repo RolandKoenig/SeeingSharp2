@@ -21,40 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.D3DCompiler;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System.IO;
-    using System.Text;
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX.D3DCompiler;
-
     #endregion
 
     public abstract class ShaderResource : Resource
     {
-        #region Generic members
-        private string m_shaderProfile;
-        private byte[] m_shaderBytecode;
-        private ResourceLink m_resourceLink;
-        private ShaderResourceKind m_resourceKind;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShaderResource"/> class.
-        /// </summary>
-        /// <param name="shaderProfile">Shader profile used for compilation.</param>
-        /// <param name="resourceLink">The source of the resource.</param>
-        /// <param name="resourceKind">Kind of the shader resource.</param>
-        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
-        {
-            m_resourceKind = resourceKind;
-            m_shaderProfile = shaderProfile;
-            m_resourceLink = resourceLink;
-        }
-
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -79,7 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
 
                 case ShaderResourceKind.HlsFile:
-                    using (ReusableStringBuilders.Current.UseStringBuilder(out var singleShaderSourceBuilder, requiredCapacity: 10024))
+                    using (ReusableStringBuilders.Current.UseStringBuilder(out var singleShaderSourceBuilder, 10024))
                     {
                         SingleShaderFileBuilder.ReadShaderFileAndResolveIncludes(
                             resourceLink,
@@ -90,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             shaderSource,
                             "main",
                             shaderModel,
-                            shaderFlags: device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
+                            device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             sourceFileName: resourceLink.ToString());
                         if(compileResult.HasErrors)
                         {
@@ -123,11 +101,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected internal abstract void UnloadShader();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ShaderResource"/> class.
+        /// </summary>
+        /// <param name="shaderProfile">Shader profile used for compilation.</param>
+        /// <param name="resourceLink">The source of the resource.</param>
+        /// <param name="resourceKind">Kind of the shader resource.</param>
+        protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
+        {
+            m_resourceKind = resourceKind;
+            m_shaderProfile = shaderProfile;
+            m_resourceLink = resourceLink;
+        }
+
+        /// <summary>
         /// Gets the shader's raw bytecode.
         /// </summary>
-        public byte[] ShaderBytecode
-        {
-            get { return m_shaderBytecode; }
-        }
+        public byte[] ShaderBytecode => m_shaderBytecode;
+
+        #region Generic members
+        private string m_shaderProfile;
+        private byte[] m_shaderBytecode;
+        private ResourceLink m_resourceLink;
+        private ShaderResourceKind m_resourceKind;
+        #endregion
     }
 }

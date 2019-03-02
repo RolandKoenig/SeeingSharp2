@@ -36,10 +36,10 @@ namespace SeeingSharp.Util
         public static SDX.Color4 Color4FromGdiColor(this ref GDI.Color drawingColor)
         {
             return new SDX.Color4(
-                (float)drawingColor.R / 255f,
-                (float)drawingColor.G / 255f,
-                (float)drawingColor.B / 255f,
-                (float)drawingColor.A / 255f);
+                drawingColor.R / 255f,
+                drawingColor.G / 255f,
+                drawingColor.B / 255f,
+                drawingColor.A / 255f);
         }
 
         public static SDX.Point PointFromGdiPoint(GDI.Point point)

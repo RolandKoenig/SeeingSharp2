@@ -1,11 +1,10 @@
-﻿namespace SeeingSharpModelViewer
+﻿using System.Windows;
+using SeeingSharp;
+using SeeingSharp.Multimedia.Core;
+
+namespace SeeingSharpModelViewer
 {
     #region using
-
-    using System.Windows;
-    using SeeingSharp;
-    using SeeingSharp.Multimedia.Core;
-
     #endregion
 
     /// <summary>

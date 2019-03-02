@@ -24,6 +24,9 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,65 +34,13 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     internal class RenderTargetTextureResource : TextureResource
     {
-        #region Configuration
-        private RenderTargetCreationMode m_creationMode;
-        private int m_width;
-        private int m_heigth;
-        private bool m_antialiasingEnabled;
-        private AntialiasingQualityLevel m_antialiasingQuality;
-        private SharpDX.Mathematics.Interop.RawViewportF m_viewportF;
-        #endregion
-
-        #region Resources for depth buffer
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.DepthStencilView m_depthBufferView;
-        #endregion
-
-        #region Resources for color buffer
-        private D3D11.Texture2D m_colorBuffer;
-        private D3D11.RenderTargetView m_colorBufferRenderTargetView;
-        private D3D11.Texture2D m_colorBufferShaderResource;
-        private D3D11.ShaderResourceView m_colorBufferShaderResourceView;
-        #endregion
-
-        #region Resources for ObjectID buffer
-        private D3D11.Texture2D m_objectIDBuffer;
-        private D3D11.RenderTargetView m_objectIDBufferRenderTargetView;
-        #endregion
-
-        #region Resources for normal/depth buffer
-        private D3D11.Texture2D m_normalDepthBuffer;
-        private D3D11.RenderTargetView m_normalDepthBufferRenderTargetView;
-        private D3D11.Texture2D m_normalDepthBufferShaderResource;
-        private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
-        #endregion
-
         #region Runtime variables
         private bool m_shaderResourceCreated;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
-        /// </summary>
-        /// <param name="creationMode">Tells this object which texture to create.</param>
-        public RenderTargetTextureResource(RenderTargetCreationMode creationMode)
-            : base()
-        {
-            m_creationMode = creationMode;
-            m_width = -1;
-            m_heigth = -1;
-            m_viewportF = new SharpDX.Mathematics.Interop.RawViewportF();
-            m_shaderResourceCreated = false;
-        }
 
         /// <summary>
         /// Applies the given size.
@@ -102,13 +53,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Get current view size and antialiasing settings
             var currentViewSize = viewInfo.CurrentViewSize;
-            bool currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
+            var currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
             var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
-            if ((m_width != currentViewSize.Width) ||
-                (m_heigth != currentViewSize.Height) ||
-                (m_antialiasingEnabled != currentAntialiasingEnabled) ||
-                (m_antialiasingQuality != currentAntialiasingQuality))
+            if (m_width != currentViewSize.Width ||
+                m_heigth != currentViewSize.Height ||
+                m_antialiasingEnabled != currentAntialiasingEnabled ||
+                m_antialiasingQuality != currentAntialiasingQuality)
             {
                 // Dispose color-buffer resources
                 SeeingSharpTools.SafeDispose(ref m_colorBuffer);
@@ -308,50 +259,75 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
+        /// </summary>
+        /// <param name="creationMode">Tells this object which texture to create.</param>
+        public RenderTargetTextureResource(RenderTargetCreationMode creationMode)
+        {
+            m_creationMode = creationMode;
+            m_width = -1;
+            m_heigth = -1;
+            m_viewportF = new RawViewportF();
+            m_shaderResourceCreated = false;
+        }
+
+        /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return true; }
-        }
+        public override bool IsLoaded => true;
 
         /// <summary>
         /// Gets the texture itself.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_colorBuffer; }
-        }
+        public override D3D11.Texture2D Texture => m_colorBuffer;
 
         /// <summary>
         /// Gets the shader resource view to the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_colorBufferShaderResourceView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_colorBufferShaderResourceView;
 
-        internal D3D11.Texture2D TextureColor
-        {
-            get { return m_colorBuffer; }
-        }
+        internal D3D11.Texture2D TextureColor => m_colorBuffer;
 
-        internal D3D11.ShaderResourceView TextureViewColor
-        {
-            get { return m_colorBufferShaderResourceView; }
-        }
+        internal D3D11.ShaderResourceView TextureViewColor => m_colorBufferShaderResourceView;
 
         /// <summary>
         /// Gets the shader resource view to the normal-depth texture.
         /// </summary>
-        internal D3D11.ShaderResourceView TextureViewNormalDepth
-        {
-            get { return m_normalDepthBufferShaderResourceView; }
-        }
+        internal D3D11.ShaderResourceView TextureViewNormalDepth => m_normalDepthBufferShaderResourceView;
 
-        public override int ArraySize
-        {
-            get { return 1; }
-        }
+        public override int ArraySize => 1;
+
+        #region Configuration
+        private RenderTargetCreationMode m_creationMode;
+        private int m_width;
+        private int m_heigth;
+        private bool m_antialiasingEnabled;
+        private AntialiasingQualityLevel m_antialiasingQuality;
+        private RawViewportF m_viewportF;
+        #endregion
+
+        #region Resources for depth buffer
+        private D3D11.Texture2D m_depthBuffer;
+        private D3D11.DepthStencilView m_depthBufferView;
+        #endregion
+
+        #region Resources for color buffer
+        private D3D11.Texture2D m_colorBuffer;
+        private D3D11.RenderTargetView m_colorBufferRenderTargetView;
+        private D3D11.Texture2D m_colorBufferShaderResource;
+        private D3D11.ShaderResourceView m_colorBufferShaderResourceView;
+        #endregion
+
+        #region Resources for ObjectID buffer
+        private D3D11.Texture2D m_objectIDBuffer;
+        private D3D11.RenderTargetView m_objectIDBufferRenderTargetView;
+        #endregion
+
+        #region Resources for normal/depth buffer
+        private D3D11.Texture2D m_normalDepthBuffer;
+        private D3D11.RenderTargetView m_normalDepthBufferRenderTargetView;
+        private D3D11.Texture2D m_normalDepthBufferShaderResource;
+        private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
+        #endregion
     }
 }

@@ -21,17 +21,39 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class Custom2DDrawingLayer
     {
         private Action<Graphics2D> m_draw2DAction;
+
+        /// <summary>
+        /// Performs 2D rendering. This method gets called directly from RenderLoop or the Scene.
+        /// </summary>
+        /// <param name="graphics">The graphics object used for drawing.</param>
+        internal void Draw2DInternal(Graphics2D graphics)
+        {
+            Draw2D(graphics);
+        }
+
+        /// <summary>
+        /// Performs custom 2D rendering.
+        /// Be carefull: This method is called from the rendering thread!
+        /// </summary>
+        /// <param name="graphics">The graphics object used for drawing.</param>
+        protected virtual void Draw2D(Graphics2D graphics)
+        {
+            if(m_draw2DAction != null)
+            {
+                m_draw2DAction(graphics);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Custom2DDrawingLayer"/> class.
@@ -48,28 +70,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public Custom2DDrawingLayer(Action<Graphics2D> draw2DAction)
         {
             m_draw2DAction = draw2DAction;
-        }
-
-        /// <summary>
-        /// Performs 2D rendering. This method gets called directly from RenderLoop or the Scene.
-        /// </summary>
-        /// <param name="graphics">The graphics object used for drawing.</param>
-        internal void Draw2DInternal(Graphics2D graphics)
-        {
-            this.Draw2D(graphics);
-        }
-
-        /// <summary>
-        /// Performs custom 2D rendering.
-        /// Be carefull: This method is called from the rendering thread!
-        /// </summary>
-        /// <param name="graphics">The graphics object used for drawing.</param>
-        protected virtual void Draw2D(Graphics2D graphics)
-        {
-            if(m_draw2DAction != null)
-            {
-                m_draw2DAction(graphics);
-            }
         }
     }
 }

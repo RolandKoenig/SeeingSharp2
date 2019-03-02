@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Threading;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.Threading;
-
     #endregion
 
     public class UniqueGenericKeyGenerator
@@ -34,21 +34,21 @@ namespace SeeingSharp.Util
         private long m_nextGenericKey;
 
         /// <summary>
+        /// Generates the next generic key.
+        /// </summary>
+        public NamedOrGenericKey GetNextGeneric()
+        {
+            var result = Interlocked.Increment(ref m_nextGenericKey);
+            result--;
+            return new NamedOrGenericKey(result);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UniqueGenericKeyGenerator" /> class.
         /// </summary>
         public UniqueGenericKeyGenerator()
         {
             m_nextGenericKey = long.MinValue;
-        }
-
-        /// <summary>
-        /// Generates the next generic key.
-        /// </summary>
-        public NamedOrGenericKey GetNextGeneric()
-        {
-            long result = Interlocked.Increment(ref m_nextGenericKey);
-            result--;
-            return new NamedOrGenericKey(result);
         }
     }
 }

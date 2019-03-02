@@ -21,42 +21,17 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using SharpDX;
-
     #endregion
 
     public class PerspectiveCamera3D : Camera3DBase
     {
-        #region Configuration
-        private float m_fov = (float)Math.PI / 4.0f;
-        private float m_aspectRatio;
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
-        /// </summary>
-        public PerspectiveCamera3D()
-            : base()
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
-        /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public PerspectiveCamera3D(int width, int height)
-            : base(width, height)
-        {
-
-        }
-
         /// <summary>
         /// Calculates the view and projection matrix for this camera.
         /// </summary>
@@ -73,7 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix viewMatrix, out Matrix projMatrix)
         {
-            m_aspectRatio = (float)screenWidth / (float)screenHeight;
+            m_aspectRatio = screenWidth / (float)screenHeight;
             MatrixEx.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
@@ -84,11 +59,30 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
+        /// </summary>
+        public PerspectiveCamera3D()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
+        /// </summary>
+        /// <param name="width">Width of the renderwindow.</param>
+        /// <param name="height">Height of the renderwindow.</param>
+        public PerspectiveCamera3D(int width, int height)
+            : base(width, height)
+        {
+
+        }
+
+        /// <summary>
         /// Gets or sets the field of view value.
         /// </summary>
         public float FieldOfView
         {
-            get { return m_fov; }
+            get => m_fov;
             set
             {
                 m_fov = value;
@@ -99,9 +93,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the current aspect ratio.
         /// </summary>
-        public float AspectRatio
-        {
-            get { return m_aspectRatio; }
-        }
+        public float AspectRatio => m_aspectRatio;
+
+        #region Configuration
+        private float m_fov = (float)Math.PI / 4.0f;
+        private float m_aspectRatio;
+        #endregion
     }
 }

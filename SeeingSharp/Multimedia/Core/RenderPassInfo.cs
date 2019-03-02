@@ -21,33 +21,31 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
     #endregion
 
     public class RenderPassInfo
     {
-        #region All available render passes
-        public static readonly RenderPassInfo PASS_PLAIN_RENDER = new RenderPassInfo("DefaultPlainRender");
-        public static readonly RenderPassInfo PASS_LINE_RENDER = new RenderPassInfo("LineRender");
-        public static readonly RenderPassInfo PASS_TRANSPARENT_RENDER = new RenderPassInfo("DefaultTransparentRender");
-        public static readonly RenderPassInfo PASS_SPRITE_BATCH = new RenderPassInfo("SpriteBatchRender");
-        public static readonly RenderPassInfo PASS_2D_OVERLAY = new RenderPassInfo("2D-Overlay", isSorted: true);
-        #endregion
-
         #region Static collection which holds all render passes
         private static List<RenderPassInfo> s_renderPasses;
-
         #endregion
 
-        #region Render pass properties
-
-        #endregion
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return Name;
+        }
 
         /// <summary>
         /// Initializes the <see cref="RenderPassInfo" /> class.
@@ -74,17 +72,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        /// <summary>
         /// Gets a collection containing all render passes.
         /// </summary>
         public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses { get; }
@@ -95,5 +82,16 @@ namespace SeeingSharp.Multimedia.Core
         public string Name { get; }
 
         public bool IsSorted { get; }
+
+        #region All available render passes
+        public static readonly RenderPassInfo PASS_PLAIN_RENDER = new RenderPassInfo("DefaultPlainRender");
+        public static readonly RenderPassInfo PASS_LINE_RENDER = new RenderPassInfo("LineRender");
+        public static readonly RenderPassInfo PASS_TRANSPARENT_RENDER = new RenderPassInfo("DefaultTransparentRender");
+        public static readonly RenderPassInfo PASS_SPRITE_BATCH = new RenderPassInfo("SpriteBatchRender");
+        public static readonly RenderPassInfo PASS_2D_OVERLAY = new RenderPassInfo("2D-Overlay", true);
+        #endregion
+
+        #region Render pass properties
+        #endregion
     }
 }

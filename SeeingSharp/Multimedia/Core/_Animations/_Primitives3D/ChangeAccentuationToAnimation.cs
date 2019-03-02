@@ -21,24 +21,46 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using Checking;
-
     #endregion
 
     public class ChangeAccentuationToAnimation : AnimationBase
     {
-        #region Parameters
-        private float m_startAccentuation;
-        private TimeSpan m_duration;
-        private float m_moveAccentuation;
-        private float m_targetAccentuation;
-        private IAnimatableObjectAccentuation m_targetObject;
-        #endregion
+        /// <summary>
+        /// Called when animation starts.
+        /// </summary>
+        protected override void OnStartAnimation()
+        {
+            m_startAccentuation = m_targetObject.AccentuationFactor;
+            m_moveAccentuation = m_targetAccentuation - m_startAccentuation;
+        }
+
+        /// <summary>
+        /// Called each time the CurrentTime value gets updated.
+        /// </summary>
+        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
+        {
+            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
+            m_targetObject.AccentuationFactor = m_startAccentuation + m_moveAccentuation * changeFactor;
+        }
+
+        /// <summary>
+        /// Called when the FixedTime animation has finished.
+        /// (Sets final state to the target object and clears all runtime values).
+        /// </summary>
+        protected override void OnFixedTimeAnimationFinished()
+        {
+            m_targetObject.AccentuationFactor = m_targetAccentuation;
+
+            m_moveAccentuation = 0;
+            m_startAccentuation = 1;
+        }
 
         /// <summary>
         /// Initialize a new Instance of the <see cref="ChangeAccentuationToAnimation" /> class.
@@ -64,34 +86,12 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        /// <summary>
-        /// Called when animation starts.
-        /// </summary>
-        protected override void OnStartAnimation()
-        {
-            m_startAccentuation = m_targetObject.AccentuationFactor;
-            m_moveAccentuation = m_targetAccentuation - m_startAccentuation;
-        }
-
-        /// <summary>
-        /// Called each time the CurrentTime value gets updated.
-        /// </summary>
-        protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
-        {
-            float changeFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
-            m_targetObject.AccentuationFactor = m_startAccentuation + m_moveAccentuation * changeFactor;
-        }
-
-        /// <summary>
-        /// Called when the FixedTime animation has finished.
-        /// (Sets final state to the target object and clears all runtime values).
-        /// </summary>
-        protected override void OnFixedTimeAnimationFinished()
-        {
-            m_targetObject.AccentuationFactor = m_targetAccentuation;
-
-            m_moveAccentuation = 0;
-            m_startAccentuation = 1;
-        }
+        #region Parameters
+        private float m_startAccentuation;
+        private TimeSpan m_duration;
+        private float m_moveAccentuation;
+        private float m_targetAccentuation;
+        private IAnimatableObjectAccentuation m_targetObject;
+        #endregion
     }
 }

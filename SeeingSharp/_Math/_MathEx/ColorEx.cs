@@ -21,19 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using SharpDX;
-
     #endregion
 
     public static class ColorEx
     {
         public static Color FromArgb(byte a, byte r, byte g, byte b)
         {
-            SharpDX.Color4 d;
+            Color4 d;
             return new Color(r, g, b, a);
         }
 

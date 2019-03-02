@@ -25,8 +25,23 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class PickingInformation
     {
-        private SceneObject m_pickedObject;
         private float m_distance;
+        private SceneObject m_pickedObject;
+
+        /// <summary>
+        /// Notifies a pick for the given object with the given distance.
+        /// </summary>
+        /// <param name="pickedObject">The object that was picked.</param>
+        /// <param name="distance">The distance from the origin to the picked point.</param>
+        public void NotifyPick(SceneObject pickedObject, float distance)
+        {
+            if (float.IsNaN(m_distance) ||
+                distance < m_distance)
+            {
+                m_distance = distance;
+                m_pickedObject = pickedObject;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PickingInformation" /> class.
@@ -38,35 +53,13 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Notifies a pick for the given object with the given distance.
-        /// </summary>
-        /// <param name="pickedObject">The object that was picked.</param>
-        /// <param name="distance">The distance from the origin to the picked point.</param>
-        public void NotifyPick(SceneObject pickedObject, float distance)
-        {
-            if ((float.IsNaN(m_distance)) ||
-                (distance < m_distance))
-            {
-                m_distance = distance;
-                m_pickedObject = pickedObject;
-            }
-        }
-
-        /// <summary>
         /// The picked object.
         /// </summary>
-        public SceneObject PickedObject
-        {
-            get { return m_pickedObject; }
-        }
-
+        public SceneObject PickedObject => m_pickedObject;
 
         /// <summary>
         /// Gets the distance to the picked object.
         /// </summary>
-        public float Distance
-        {
-            get { return m_distance; }
-        }
+        public float Distance => m_distance;
     }
 }

@@ -21,32 +21,19 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-
     #endregion
 
     public class AssemblyResourceUriBuilder
     {
         private string m_assemblyName;
-        private bool m_isMainAssembly;
         private string m_filePath;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyResourceUriBuilder"/> class.
-        /// </summary>
-        /// <param name="assemblyName">Name of the assembly.</param>
-        /// <param name="isMainAssembly">if set to <c>true</c> [is main assembly].</param>
-        /// <param name="filePath">The file path.</param>
-        public AssemblyResourceUriBuilder(string assemblyName, bool isMainAssembly, string filePath)
-        {
-            m_assemblyName = assemblyName;
-            m_isMainAssembly = isMainAssembly;
-            m_filePath = filePath;
-        }
+        private bool m_isMainAssembly;
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -80,6 +67,19 @@ namespace SeeingSharp.Util
 #else
             throw new InvalidOperationException("Unable to generate resource uri: Platform not handled!");
 #endif
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyResourceUriBuilder"/> class.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <param name="isMainAssembly">if set to <c>true</c> [is main assembly].</param>
+        /// <param name="filePath">The file path.</param>
+        public AssemblyResourceUriBuilder(string assemblyName, bool isMainAssembly, string filePath)
+        {
+            m_assemblyName = assemblyName;
+            m_isMainAssembly = isMainAssembly;
+            m_filePath = filePath;
         }
     }
 }

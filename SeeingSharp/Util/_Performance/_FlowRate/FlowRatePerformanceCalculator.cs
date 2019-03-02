@@ -21,29 +21,16 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Linq;
+
 namespace SeeingSharp.Util
 {
-    #region using
-
-    using System;
-    using System.Linq;
-
-    #endregion
-
     public class FlowRatePerformanceCalculator : PerformanceCalculatorBase
     {
         // Values used for calculation
         private ThreadSaveQueue<DateTime> m_lastReportedTimestamps;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FlowRatePerformanceCalculator"/> class.
-        /// </summary>
-        /// <param name="calculatorName">Name of the calculator.</param>
-        public FlowRatePerformanceCalculator(string calculatorName)
-            : base(calculatorName)
-        {
-            m_lastReportedTimestamps = new ThreadSaveQueue<DateTime>();
-        }
 
         /// <summary>
         /// Notifies a new occurrence of the activity.
@@ -79,34 +66,41 @@ namespace SeeingSharp.Util
             {
                 return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
             }
-            else
+            // Throw away all items which are too old
+            foreach (var dummy in m_lastReportedTimestamps.DequeueWhile(actItem => actItem < minTimeStamp)) { }
+
+            // Check again wether we have any items
+            if (!m_lastReportedTimestamps.HasAny())
             {
-                // Throw away all items which are too old
-                foreach (var dummy in m_lastReportedTimestamps.DequeueWhile((actItem) => actItem < minTimeStamp)) { }
-
-                // Check again wether we have any items
-                if (!m_lastReportedTimestamps.HasAny())
-                {
-                    return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
-                }
-
-                // Counts all relevant items
-                double resultValue = (double)(m_lastReportedTimestamps
-                    .PeekWhile((actTuple) => actTuple < maxTimeStamp)
-                    .Count());
-
-                // Handle case where measured timespan in more less than the calculation timespan
-                var currentValueTimespan = maxTimeStamp - minTimeStamp;
-
-                if(currentValueTimespan != calculationInterval)
-                {
-                    double timespanFactor = (double)calculationInterval.Ticks / (double)currentValueTimespan.Ticks;
-                    resultValue *= timespanFactor;
-                }
-
-                // Generate the result object
-                return new FlowRatePerformanceResult(this, keyTimeStamp, resultValue);
+                return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
             }
+
+            // Counts all relevant items
+            double resultValue = m_lastReportedTimestamps
+                .PeekWhile(actTuple => actTuple < maxTimeStamp)
+                .Count();
+
+            // Handle case where measured timespan in more less than the calculation timespan
+            var currentValueTimespan = maxTimeStamp - minTimeStamp;
+
+            if(currentValueTimespan != calculationInterval)
+            {
+                var timespanFactor = calculationInterval.Ticks / (double)currentValueTimespan.Ticks;
+                resultValue *= timespanFactor;
+            }
+
+            // Generate the result object
+            return new FlowRatePerformanceResult(this, keyTimeStamp, resultValue);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlowRatePerformanceCalculator"/> class.
+        /// </summary>
+        /// <param name="calculatorName">Name of the calculator.</param>
+        public FlowRatePerformanceCalculator(string calculatorName)
+            : base(calculatorName)
+        {
+            m_lastReportedTimestamps = new ThreadSaveQueue<DateTime>();
         }
     }
 }

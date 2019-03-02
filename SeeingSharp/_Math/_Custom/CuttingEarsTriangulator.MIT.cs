@@ -22,13 +22,12 @@
 */
 #endregion
 
+using System.Collections.Generic;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System.Collections.Generic;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -67,7 +66,7 @@ namespace SeeingSharp
             // allocate and initialize list of indices in polygon
             var result = new List<int>(contour.Count * 3);
 
-            int n = contour.Count;
+            var n = contour.Count;
             if (n < 3)
             {
                 return null;
@@ -78,28 +77,28 @@ namespace SeeingSharp
             // we want a counter-clockwise polygon in V
             if (Area(contour) > 0)
             {
-                for (int v = 0; v < n; v++)
+                for (var v = 0; v < n; v++)
                 {
                     V[v] = v;
                 }
             }
             else
             {
-                for (int v = 0; v < n; v++)
+                for (var v = 0; v < n; v++)
                 {
-                    V[v] = (n - 1) - v;
+                    V[v] = n - 1 - v;
                 }
             }
 
-            int nv = n;
+            var nv = n;
 
             // remove nv-2 Vertices, creating 1 triangle every time
-            int count = 2 * nv; // error detection
+            var count = 2 * nv; // error detection
 
             for (int m = 0, v = nv - 1; nv > 2; )
             {
                 // if we loop, it is probably a non-simple polygon
-                if (0 >= (count--))
+                if (0 >= count--)
                 {
                     // ERROR - probable bad polygon!
                     //return null;
@@ -107,7 +106,7 @@ namespace SeeingSharp
                 }
 
                 // three consecutive vertices in current polygon, <u,v,w>
-                int u = v;
+                var u = v;
                 if (nv <= u)
                 {
                     u = 0; // previous
@@ -119,7 +118,7 @@ namespace SeeingSharp
                     v = 0; // new v
                 }
 
-                int w = v + 1;
+                var w = v + 1;
                 if (nv <= w)
                 {
                     w = 0; // next
@@ -130,14 +129,14 @@ namespace SeeingSharp
                     int s, t;
 
                     // true names of the vertices
-                    int a = V[u];
-                    int b = V[v];
-                    int c = V[w];
+                    var a = V[u];
+                    var b = V[v];
+                    var c = V[w];
 
                     // output Triangle
-                    result.Add((int)a);
-                    result.Add((int)b);
-                    result.Add((int)c);
+                    result.Add(a);
+                    result.Add(b);
+                    result.Add(c);
 
                     m++;
 
@@ -165,8 +164,8 @@ namespace SeeingSharp
         /// <returns>The area.</returns>
         private static double Area(IList<Vector2> contour)
         {
-            int n = contour.Count;
-            double A = 0.0;
+            var n = contour.Count;
+            var A = 0.0;
             for (int p = n - 1, q = 0; q < n; p = q++)
             {
                 A += contour[p].X * contour[q].Y - contour[q].X * contour[p].Y;
@@ -228,7 +227,7 @@ namespace SeeingSharp
             cCROSSap = cx * apy - cy * apx;
             bCROSScp = bx * cpy - by * cpx;
 
-            return (aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f);
+            return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
         }
 
         /// <summary>
@@ -255,14 +254,14 @@ namespace SeeingSharp
             Cx = contour[V[w]].X;
             Cy = contour[V[w]].Y;
 
-            if (Epsilon > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax))))
+            if (Epsilon > (Bx - Ax) * (Cy - Ay) - (By - Ay) * (Cx - Ax))
             {
                 return false;
             }
 
             for (p = 0; p < n; p++)
             {
-                if ((p == u) || (p == v) || (p == w))
+                if (p == u || p == v || p == w)
                 {
                     continue;
                 }

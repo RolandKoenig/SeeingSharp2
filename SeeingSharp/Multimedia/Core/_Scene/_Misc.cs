@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public delegate void Rendering3DHandler(object sender, Rendering3DArgs e);
@@ -146,7 +146,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">Current render state.</param>
         public Rendering3DArgs(RenderState renderState)
         {
-            this.RenderState = renderState;
+            RenderState = renderState;
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Updating3DArgs(UpdateState updateState)
         {
-            this.UpdateState = updateState;
+            UpdateState = updateState;
         }
 
         /// <summary>

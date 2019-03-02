@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Checking;
-    using Core;
-
     #endregion
 
     public abstract class ExportOptions
@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public EngineDevice ExportDevice
         {
-            get { return m_device; }
+            get => m_device;
             set
             {
                 value.EnsureNotNull(nameof(value));

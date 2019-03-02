@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System;
-
     #endregion
 
     public abstract class PerformanceAnalyzeResultBase
@@ -50,10 +50,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the name of the calculator.
         /// </summary>
-        public string CalculatorName
-        {
-            get { return Calculator.CalculatorName; }
-        }
+        public string CalculatorName => Calculator.CalculatorName;
 
         /// <summary>
         /// Gets the key of this kpi.

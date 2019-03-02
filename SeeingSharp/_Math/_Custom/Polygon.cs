@@ -21,35 +21,21 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using SharpDX;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using SharpDX;
-
     #endregion
 
     public class Polygon
     {
-        private Vector3[] m_vertices;
         private Lazy<Vector3> m_normal;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Polygon" /> class.
-        /// </summary>
-        public Polygon(params Vector3[] vertices)
-        {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
-
-            m_vertices = vertices;
-            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
-
-            //Define normal calculation method
-            m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
-        }
+        private Vector3[] m_vertices;
 
         /// <summary>
         /// Flatterns this polygon.
@@ -75,8 +61,8 @@ namespace SeeingSharp
             m.M42 = -offs.Y;
 
             //Calculate 2D surface
-            Vector2[] resultVertices = new Vector2[m_vertices.Length];
-            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            var resultVertices = new Vector2[m_vertices.Length];
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
                 var pp = Vector3.Transform(m_vertices[loopVertex], m);
                 resultVertices[loopVertex] = new Vector2(pp.X, pp.Y);
@@ -90,8 +76,22 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            var surface2D = this.Flattern();
+            var surface2D = Flattern();
             return surface2D.TriangulateUsingCuttingEars();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polygon" /> class.
+        /// </summary>
+        public Polygon(params Vector3[] vertices)
+        {
+            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+
+            m_vertices = vertices;
+            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
+
+            //Define normal calculation method
+            m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
         }
 
         /// <summary>
@@ -102,9 +102,6 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the normal of this polygon.
         /// </summary>
-        public Vector3 Normal
-        {
-            get { return m_normal.Value; }
-        }
+        public Vector3 Normal => m_normal.Value;
     }
 }

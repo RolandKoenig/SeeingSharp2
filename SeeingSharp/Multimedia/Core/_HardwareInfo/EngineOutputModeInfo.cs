@@ -21,19 +21,20 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using SharpDX.DXGI;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-
     #endregion
 
     public struct EngineOutputModeInfo : IEquatable<EngineOutputModeInfo>
     {
-        public static readonly EngineOutputModeInfo Empty = default(EngineOutputModeInfo);
+        public static readonly EngineOutputModeInfo Empty = default;
 
-        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, SharpDX.DXGI.ModeDescription modeDescription)
+        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, ModeDescription modeDescription)
         {
             HostOutput = hostOutput;
             PixelWidth = modeDescription.Width;
@@ -65,10 +66,10 @@ namespace SeeingSharp.Multimedia.Core
         public bool Equals(EngineOutputModeInfo other)
         {
             return
-                (PixelWidth == other.PixelWidth) &&
-                (PixelHeight == other.PixelHeight) &&
-                (RefreshRateNumerator == other.RefreshRateNumerator) &&
-                (RefreshRateDenominator == other.RefreshRateDenominator);
+                PixelWidth == other.PixelWidth &&
+                PixelHeight == other.PixelHeight &&
+                RefreshRateNumerator == other.RefreshRateNumerator &&
+                RefreshRateDenominator == other.RefreshRateDenominator;
         }
 
         /// <summary>
@@ -81,10 +82,14 @@ namespace SeeingSharp.Multimedia.Core
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(EngineOutputInfo)))
+            {
                 return false;
+            }
 
             return Equals((EngineOutputInfo)value);
         }
@@ -95,10 +100,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public int PixelHeight { get; }
 
-        public int PixelCount
-        {
-            get { return PixelWidth * PixelHeight; }
-        }
+        public int PixelCount => PixelWidth * PixelHeight;
 
         public int RefreshRateNumerator { get; }
 

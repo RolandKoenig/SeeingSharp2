@@ -21,34 +21,24 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Multimedia.Core;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using Core;
-    using SharpDX;
-
     #endregion
 
     public class ImportOptions
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportOptions"/> class.
-        /// </summary>
-        public ImportOptions()
-        {
-            this.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            this.ResizeFactor = 1f;
-            this.TwoSidedSurfaces = false;
-        }
-
         /// <summary>
         /// Gets the transform matrix for coordinate system.
         /// </summary>
         /// <returns></returns>
         public Matrix GetTransformMatrixForCoordinateSystem()
         {
-            switch (this.ResourceCoordinateSystem)
+            switch (ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                     return Matrix.Identity;
@@ -74,7 +64,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public bool IsChangeTriangleOrderNeeded()
         {
-            switch (this.ResourceCoordinateSystem)
+            switch (ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                 case CoordinateSystem.RightHanded_UpZ:
@@ -87,8 +77,18 @@ namespace SeeingSharp.Multimedia.Objects
                 default:
                     throw new SeeingSharpGraphicsException(string.Format(
                         "Unknown coordinate system {0}!",
-                        this.ResourceCoordinateSystem));
+                        ResourceCoordinateSystem));
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportOptions"/> class.
+        /// </summary>
+        public ImportOptions()
+        {
+            ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
+            ResizeFactor = 1f;
+            TwoSidedSurfaces = false;
         }
 
         /// <summary>

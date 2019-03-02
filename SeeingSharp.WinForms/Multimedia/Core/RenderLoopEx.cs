@@ -24,6 +24,8 @@
 #region using
 
 // Namespace mappings
+using System;
+using System.Threading.Tasks;
 using GDI = System.Drawing;
 
 #endregion
@@ -31,10 +33,6 @@ using GDI = System.Drawing;
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Threading.Tasks;
-
     #endregion
 
     public static class RenderLoopEx
@@ -44,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static Task<GDI.Bitmap> GetScreenshotGdiAsync(this RenderLoop renderLoop)
         {
-            TaskCompletionSource<GDI.Bitmap> result = new TaskCompletionSource<GDI.Bitmap>();
+            var result = new TaskCompletionSource<GDI.Bitmap>();
 
             renderLoop.EnqueueAfterPresentAction(() =>
             {
@@ -72,8 +70,8 @@ namespace SeeingSharp.Multimedia.Core
             var currentDevice = renderLoop.Device;
 
             // Concept behind this see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-            int width = currentViewSize.Width;
-            int height = currentViewSize.Height;
+            var width = currentViewSize.Width;
+            var height = currentViewSize.Height;
             if (width <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
             if (height <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
 

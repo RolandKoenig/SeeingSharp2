@@ -24,6 +24,9 @@
 #region using
 
 // Some namespace mappings
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,11 +34,6 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using System;
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class ConstantBufferResource : Resource
@@ -43,19 +41,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #region Direct3D resources
         private D3D11.Buffer m_constantBuffer;
         #endregion
-
-        #region Configuration
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
-        /// </summary>
-        public ConstantBufferResource(int bufferSize)
-        {
-            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
-            BufferSize = bufferSize;
-        }
 
         /// <summary>
         /// Loads the resource.
@@ -89,24 +74,30 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
+        /// </summary>
+        public ConstantBufferResource(int bufferSize)
+        {
+            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
+            BufferSize = bufferSize;
+        }
+
+        /// <summary>
         /// Is the buffer loaded correctly?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_constantBuffer != null; }
-        }
+        public override bool IsLoaded => m_constantBuffer != null;
 
         /// <summary>
         /// Gets the buffer object.
         /// </summary>
-        internal D3D11.Buffer ConstantBuffer
-        {
-            get { return m_constantBuffer; }
-        }
+        internal D3D11.Buffer ConstantBuffer => m_constantBuffer;
 
         /// <summary>
         /// Gets the total size of the constant buffer.
         /// </summary>
         public int BufferSize { get; }
+
+        #region Configuration
+        #endregion
     }
 }

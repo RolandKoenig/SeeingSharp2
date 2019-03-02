@@ -24,6 +24,15 @@
 #region using
 
 // Namespace mappings
+using System;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,45 +40,32 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Views
 {
     #region using
-
-    using System;
-    using System.ComponentModel;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     //For handling of staging resource see
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
     {
-        #region Configuration
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        #endregion
-
-        #region Reference to the render loop
-
-        #endregion
-
-        #region All needed direct3d resources
-        private D3D11.Device m_device;
-        private D3D11.DeviceContext m_deviceContext;
-        private D3D11.Texture2D m_copyHelperTextureStaging;
-        private D3D11.Texture2D m_renderTarget;
-        private D3D11.Texture2D m_renderTargetDepth;
-        private D3D11.RenderTargetView m_renderTargetView;
-        private D3D11.DepthStencilView m_renderTargetDepthView;
-        #endregion
-
         /// <summary>
         /// Raises before the render target starts rendering.
         /// </summary>
         public event CancelEventHandler BeforeRender;
+
+        /// <summary>
+        /// Awaits next render.
+        /// </summary>
+        public Task AwaitRenderAsync()
+        {
+            if (!IsOperational) { return Task.Delay(100); }
+
+            var result = new TaskCompletionSource<object>();
+            RenderLoop.EnqueueAfterPresentAction(() =>
+            {
+                result.TrySetResult(null);
+            });
+
+            return result.Task;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryRenderTarget" /> class.
@@ -89,22 +85,6 @@ namespace SeeingSharp.Multimedia.Views
             RenderLoop = new RenderLoop(syncContext, this);
             RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
             RenderLoop.RegisterRenderLoop();
-        }
-
-        /// <summary>
-        /// Awaits next render.
-        /// </summary>
-        public Task AwaitRenderAsync()
-        {
-            if (!this.IsOperational) { return Task.Delay(100); }
-
-            TaskCompletionSource<object> result = new TaskCompletionSource<object>();
-            RenderLoop.EnqueueAfterPresentAction(() =>
-            {
-                result.TrySetResult(null);
-            });
-
-            return result.Task;
         }
 
         /// <summary>
@@ -133,10 +113,10 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
-            int width = m_pixelWidth;
-            int height = m_pixelHeight;
+            var width = m_pixelWidth;
+            var height = m_pixelHeight;
 
             //Get references to current render device
             m_device = device.DeviceD3D11_1;
@@ -199,25 +179,14 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get { return RenderLoop.Scene; }
-            set { RenderLoop.SetScene(value); }
+            get => RenderLoop.Scene;
+            set => RenderLoop.SetScene(value);
         }
 
         public Camera3DBase Camera
         {
-            get { return RenderLoop.Camera; }
-            set { RenderLoop.Camera = value; }
-        }
-
-        public Color4 ClearColor
-        {
-            get { return RenderLoop.ClearColor; }
-            set { RenderLoop.ClearColor = value; }
-        }
-
-        public SynchronizationContext UISynchronizationContext
-        {
-            get { return RenderLoop.UISynchronizationContext; }
+            get => RenderLoop.Camera;
+            set => RenderLoop.Camera = value;
         }
 
         /// <summary>
@@ -225,9 +194,32 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public RenderLoop RenderLoop { get; }
 
-        public bool IsOperational
+        public Color4 ClearColor
         {
-            get { return RenderLoop.IsOperational; }
+            get => RenderLoop.ClearColor;
+            set => RenderLoop.ClearColor = value;
         }
+
+        public SynchronizationContext UISynchronizationContext => RenderLoop.UISynchronizationContext;
+
+        public bool IsOperational => RenderLoop.IsOperational;
+
+        #region Configuration
+        private int m_pixelWidth;
+        private int m_pixelHeight;
+        #endregion
+
+        #region Reference to the render loop
+        #endregion
+
+        #region All needed direct3d resources
+        private D3D11.Device m_device;
+        private D3D11.DeviceContext m_deviceContext;
+        private D3D11.Texture2D m_copyHelperTextureStaging;
+        private D3D11.Texture2D m_renderTarget;
+        private D3D11.Texture2D m_renderTargetDepth;
+        private D3D11.RenderTargetView m_renderTargetView;
+        private D3D11.DepthStencilView m_renderTargetDepthView;
+        #endregion
     }
 }

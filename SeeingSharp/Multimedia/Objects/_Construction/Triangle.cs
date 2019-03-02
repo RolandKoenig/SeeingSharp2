@@ -51,17 +51,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="sourceStructure">The source structure.</param>
         public Line[] GetEdges(VertexStructure sourceStructure)
         {
-            return new Line[]
+            return new[]
             {
                 new Line(
-                    sourceStructure.Vertices[this.Index1].Position,
-                    sourceStructure.Vertices[this.Index2].Position),
+                    sourceStructure.Vertices[Index1].Position,
+                    sourceStructure.Vertices[Index2].Position),
                 new Line(
-                    sourceStructure.Vertices[this.Index2].Position,
-                    sourceStructure.Vertices[this.Index3].Position),
+                    sourceStructure.Vertices[Index2].Position,
+                    sourceStructure.Vertices[Index3].Position),
                 new Line(
-                    sourceStructure.Vertices[this.Index3].Position,
-                    sourceStructure.Vertices[this.Index1].Position)
+                    sourceStructure.Vertices[Index3].Position,
+                    sourceStructure.Vertices[Index1].Position)
             };
         }
     }

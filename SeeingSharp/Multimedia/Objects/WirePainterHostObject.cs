@@ -24,6 +24,10 @@
 #region using
 
 //Some namespace mappings
+using System;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,31 +35,13 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using System;
-    using Core;
-    using Drawing3D;
-    using SeeingSharp.Util;
-
     #endregion
 
     public class WirePainterHostObject : SceneObject
     {
-        #region Configuration
-
-        #endregion
-
         #region Direct3D resources
         private IndexBasedDynamicCollection<LineRenderResources> m_localResources;
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WireObject" /> class.
-        /// </summary>
-        public WirePainterHostObject()
-        {
-            m_localResources = new IndexBasedDynamicCollection<LineRenderResources>();
-        }
 
         /// <summary>
         /// Loads all resources of the object.
@@ -65,7 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
-                resourceDictionary.GetResourceAndEnsureLoaded<LineRenderResources>(
+                resourceDictionary.GetResourceAndEnsureLoaded(
                     LineRenderResources.RESOURCE_KEY,
                     () => new LineRenderResources()),
                 device.DeviceIndex);
@@ -106,9 +92,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
             }
         }
 
@@ -135,6 +121,17 @@ namespace SeeingSharp.Multimedia.Objects
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WirePainterHostObject()
+        {
+            m_localResources = new IndexBasedDynamicCollection<LineRenderResources>();
+        }
+
         public Action<WirePainter> PaintAction { get; set; }
+
+        #region Configuration
+        #endregion
     }
 }

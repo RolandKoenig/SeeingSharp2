@@ -21,29 +21,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System.IO;
+using System.Threading.Tasks;
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Util
 {
     #region using
-
-    using System.IO;
-    using System.Threading.Tasks;
-    using Checking;
-
     #endregion
 
     public class FileSystemResourceLink : ResourceLink
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
-        /// </summary>
-        /// <param name="filePath">The path to the physical file.</param>
-        public FileSystemResourceLink(string filePath)
-        {
-            filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
-
-            FilePath = filePath;
-        }
-
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="FileSystemResourceLink"/>.
         /// </summary>
@@ -75,22 +64,19 @@ namespace SeeingSharp.Util
             newFileName.EnsureNotNullOrEmptyOrWhiteSpace(nameof(newFileName));
 
             // Build subdirectory path
-            string subdirectoryPath = string.Empty;
-            for (int loop = 0; loop < subdirectories.Length; loop++)
+            var subdirectoryPath = string.Empty;
+            for (var loop = 0; loop < subdirectories.Length; loop++)
             {
                 subdirectoryPath += subdirectories[loop] + "\\";
             }
 
             // Return new ResourceLink pointing to the other file
-            string directoryName = Path.GetDirectoryName(FilePath);
+            var directoryName = Path.GetDirectoryName(FilePath);
             if (!string.IsNullOrEmpty(directoryName))
             {
                 return new FileSystemResourceLink(Path.Combine(directoryName, subdirectoryPath + newFileName));
             }
-            else
-            {
-                return new FileSystemResourceLink(newFileName);
-            }
+            return new FileSystemResourceLink(newFileName);
         }
 
         /// <summary>
@@ -118,37 +104,36 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemResourceLink" /> class.
+        /// </summary>
+        /// <param name="filePath">The path to the physical file.</param>
+        public FileSystemResourceLink(string filePath)
+        {
+            filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
+
+            FilePath = filePath;
+        }
+
+        /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension
-        {
-            get { return base.GetExtensionFromFileName(FilePath); }
-        }
+        public override string FileExtension => GetExtensionFromFileName(FilePath);
 
         /// <summary>
         /// Gets the path to the file.
         /// </summary>
         public string FilePath { get; }
 
-        public string FileName
-        {
-            get { return Path.GetFileName(FilePath); }
-        }
+        public string FileName => Path.GetFileName(FilePath);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsAsync
-        {
-            get { return true; }
-        }
+        public override bool SupportsAsync => true;
 
         /// <summary>
         /// Are synchronous operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsSync
-        {
-            get { return true; }
-        }
+        public override bool SupportsSync => true;
     }
 }

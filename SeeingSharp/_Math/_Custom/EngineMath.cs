@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp
 {
     #region using
-
-    using System;
-
     #endregion
 
     public static class EngineMath
@@ -56,7 +56,7 @@ namespace SeeingSharp
         {
             if (value <= 1) { return 1; }
 
-            long valueLong = (long)value;
+            var valueLong = value;
             long result = 0;
 
             for (long actValue = 1; actValue <= valueLong; actValue++)
@@ -74,11 +74,11 @@ namespace SeeingSharp
         /// <param name="k">The lower vlaue normally mentioned as 'k'.</param>
         public static decimal BinomialCoefficient(decimal n, decimal k)
         {
-            int upperValueInt = (int)n;
-            int lowerValueInt = (int)k;
+            var upperValueInt = (int)n;
+            var lowerValueInt = (int)k;
 
             return
-                (decimal)Factorial(upperValueInt) /
+                Factorial(upperValueInt) /
                 (decimal)(Factorial(lowerValueInt) * Factorial(upperValueInt - lowerValueInt));
         }
 
@@ -88,10 +88,10 @@ namespace SeeingSharp
         /// <param name="angle">The angle to convert.</param>
         public static float GetAbsoluteAngleRadian(float angle)
         {
-            float result = angle;
+            var result = angle;
 
             result = result % ((float)Math.PI * 2f);
-            if (result < 0) { result = ((float)Math.PI * 2f) + result; }
+            if (result < 0) { result = (float)Math.PI * 2f + result; }
 
             return result;
         }
@@ -102,7 +102,7 @@ namespace SeeingSharp
         /// <param name="angle">The angle to convert.</param>
         public static float GetAboluteAngleDegree(float angle)
         {
-            float result = angle;
+            var result = angle;
 
             result = result % 360f;
             if (result < 0) { result = 360f + result; }
@@ -117,7 +117,7 @@ namespace SeeingSharp
         /// <returns>The radian value of the angle.</returns>
         public static float DegreeToRadian(float degreeValue)
         {
-            return (degreeValue / 360f) * RAD_360DEG;
+            return degreeValue / 360f * RAD_360DEG;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace SeeingSharp
         /// <returns>The radian value of the angle.</returns>
         public static float DegreeToRadian(int degreeValue)
         {
-            return (degreeValue / 360f) * RAD_360DEG;
+            return degreeValue / 360f * RAD_360DEG;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace SeeingSharp
         /// <returns>The degree value of the angle.</returns>
         public static float RadianToDegree(float radianValue)
         {
-            return (radianValue / RAD_360DEG) * 360f;
+            return radianValue / RAD_360DEG * 360f;
         }
 
         /// <summary>

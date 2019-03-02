@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Util;
+using SharpDX;
+
 namespace SeeingSharp.Multimedia.Objects
 {
     #region using
-
-    using SeeingSharp.Util;
-    using SharpDX;
-
     #endregion
 
     /// <summary>
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public struct TextGeometryOptions
     {
-        public static readonly TextGeometryOptions Default = new TextGeometryOptions()
+        public static readonly TextGeometryOptions Default = new TextGeometryOptions
         {
             FontSize = 20,
             FontFamily = "Sergoe UI",

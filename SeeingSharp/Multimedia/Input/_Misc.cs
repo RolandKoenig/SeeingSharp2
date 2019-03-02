@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+
 namespace SeeingSharp.Multimedia.Input
 {
     #region using
-
-    using System;
-
     #endregion
 
     public enum MouseOrPointerType
@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Input
     /// Controller buttons do not manifest crosstalk.
     /// </summary>
     [Flags]
-    public enum GamepadButton : int
+    public enum GamepadButton
     {
         None = 0,
         Menu = 1,

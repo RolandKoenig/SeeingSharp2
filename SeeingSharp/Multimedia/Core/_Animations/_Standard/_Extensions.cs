@@ -21,13 +21,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using System;
+using System.Threading.Tasks;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using System;
-    using System.Threading.Tasks;
-
     #endregion
 
     public static class Extensions
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Core
                 IAnimationSequenceBuilder<ObjectType> childBuilder = new AnimationSequenceBuilder<ObjectType>(result);
                 childSequenceBuilder(childBuilder);
 
-                if ((childBuilder.ItemCount == 0) && (!childBuilder.Applied))
+                if (childBuilder.ItemCount == 0 && !childBuilder.Applied)
                 {
                     childBuilder.Apply();
                 }

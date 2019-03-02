@@ -21,12 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
+using SeeingSharp.Checking;
+
 namespace SeeingSharp.Multimedia.Core
 {
     #region using
-
-    using Checking;
-
     #endregion
 
     /// <summary>
@@ -36,18 +36,18 @@ namespace SeeingSharp.Multimedia.Core
     {
         internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            this.Attach(manipulator, correspondingView);
+            Attach(manipulator, correspondingView);
             return null;
         }
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
         {
-            this.Detach(manipulator, correspondingView);
+            Detach(manipulator, correspondingView);
         }
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
         {
-            this.Update(updateState, correspondingView);
+            Update(updateState, correspondingView);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            return this.Attach(manipulator, correspondingView);
+            return Attach(manipulator, correspondingView);
         }
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Core
             var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
-            this.Detach(manipulator, correspondingView, componentContextCasted);
+            Detach(manipulator, correspondingView, componentContextCasted);
         }
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Core
             var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
-            this.Update(updateState, correspondingView, componentContextCasted);
+            Update(updateState, correspondingView, componentContextCasted);
         }
 
         /// <summary>

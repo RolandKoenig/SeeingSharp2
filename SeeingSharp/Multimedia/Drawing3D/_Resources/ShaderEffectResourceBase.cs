@@ -24,6 +24,8 @@
 #region using
 
 // Some namespace mappings
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -31,21 +33,12 @@ using D3D11 = SharpDX.Direct3D11;
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
-
-    using Core;
-    using SeeingSharp.Util;
-
     #endregion
 
     public abstract class ShaderEffectResourceBase : Resource
     {
         #region Constants
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Resources
-        private VertexShaderResource m_vertexShader;
-        private DefaultResources m_defaultResources;
         #endregion
 
         /// <summary>
@@ -113,5 +106,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = null;
             m_vertexShader = null;
         }
+
+        #region Resources
+        private VertexShaderResource m_vertexShader;
+        private DefaultResources m_defaultResources;
+        #endregion
     }
 }
