@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class ChangeOpacityToAnimation : AnimationBase
     {
+        // Parameters
+        private float m_startOpacity;
+        private TimeSpan m_duration;
+        private float m_moveOpacity;
+        private float m_targetOpacity;
+        private IAnimatableObjectOpacity m_targetObject;
+
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -85,13 +86,5 @@ namespace SeeingSharp.Multimedia.Core
                 throw new Exception("Opacity value can be between 0 and 1, not greater than 1 and not lower than 0!");
             }
         }
-
-        #region Parameters
-        private float m_startOpacity;
-        private TimeSpan m_duration;
-        private float m_moveOpacity;
-        private float m_targetOpacity;
-        private IAnimatableObjectOpacity m_targetObject;
-        #endregion
     }
 }

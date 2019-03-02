@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
+
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -30,13 +28,8 @@ using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A Direct2D texture which performs it's rendering only
     /// on load time. So Draw2D is called only once per device!
@@ -44,6 +37,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class Direct2DSingleRenderTextureResource : TextureResource
     {
+        // Configuration
+        private Custom2DDrawingLayer m_drawingLayer;
+        private BrushResource m_fillBrush;
+        private int m_width;
+        private int m_height;
+
+        // Resources for Direct3D
+        private D3D11.Texture2D m_renderTargetTexture;
+        private D3D11.ShaderResourceView m_renderTargetTextureView;
+
         /// <summary>
         /// Loads all resource.
         /// </summary>
@@ -153,17 +156,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// 6 for cubemap textures.
         /// </summary>
         public override int ArraySize => 1;
-
-        #region Configuration
-        private Custom2DDrawingLayer m_drawingLayer;
-        private BrushResource m_fillBrush;
-        private int m_width;
-        private int m_height;
-        #endregion
-
-        #region Resources for Direct3D
-        private D3D11.Texture2D m_renderTargetTexture;
-        private D3D11.ShaderResourceView m_renderTargetTextureView;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -32,22 +28,31 @@ using SharpDX.DXGI;
 using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This object represents a inmemory chached bitmap which is
     /// loaded from a ResourceLink (e. g. a file).
     /// </summary>
     public class StandardBitmapResource : BitmapResource
     {
-        #region Resources
+        // Resources
         private D2D.Bitmap[] m_loadedBitmaps;
-        #endregion
+
+        // Configuration
+        private ResourceLink m_resourceLink;
+        private int m_framesX;
+        private int m_framesY;
+        private int m_totalFrameCount;
+
+        // RuntimeValues
+        private bool m_firstLoadDone;
+        private int m_framePixelWidth;
+        private int m_framePixelHeight;
+        private int m_pixelWidth;
+        private int m_pixelHeight;
+        private double m_dpiX;
+        private double m_dpyY;
 
         public override string ToString()
         {
@@ -176,22 +181,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public override int SingleFramePixelWidth => m_framePixelWidth;
 
         public override int SingleFramePixelHeight => m_framePixelHeight;
-
-        #region Configuration
-        private ResourceLink m_resourceLink;
-        private int m_framesX;
-        private int m_framesY;
-        private int m_totalFrameCount;
-        #endregion
-
-        #region RuntimeValues
-        private bool m_firstLoadDone;
-        private int m_framePixelWidth;
-        private int m_framePixelHeight;
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        private double m_dpiX;
-        private double m_dpyY;
-        #endregion
     }
 }

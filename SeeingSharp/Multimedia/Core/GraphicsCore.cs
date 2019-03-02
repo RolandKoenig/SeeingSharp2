@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,9 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 
-//Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,13 +40,31 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class GraphicsCore
     {
-        #region Members for Unittesting
-        private static bool s_throwDeviceInitError;
-        #endregion
+        // Members for exception handling
+        private static List<EventHandler<InternalCatchedExceptionEventArgs>> s_internalExListeners;
+        private static object s_internalExListenersLock;
 
-        #region Singleton instance
+        // Members for Unit testing
+        private static bool s_throwDeviceInitError;
+
+        // Singleton instance
         private static GraphicsCore s_current;
-        #endregion
+
+        // Hardware 
+        private EngineFactory m_engineFactory;
+        private List<EngineDevice> m_devices;
+        private EngineDevice m_defaultDevice;
+
+        // Global device handlers
+        private Exception m_initException;
+        private FactoryHandlerWIC m_factoryHandlerWIC;
+        private FactoryHandlerD2D m_factoryHandlerD2D;
+        private FactoryHandlerDWrite m_factoryHandlerDWrite;
+
+        // Members for threading
+        private static Task m_defaultInitTask;
+        private Task m_mainLoopTask;
+        private CancellationTokenSource m_mainLoopCancelTokenSource;
 
         /// <summary>
         /// Gets the Direct2D factory object.
@@ -560,38 +575,5 @@ namespace SeeingSharp.Multimedia.Core
         public PerformanceAnalyzer PerformanceCalculator { get; }
 
         internal bool Force2DFallbackMethod { get; }
-
-        #region Members for exception handling
-        private static List<EventHandler<InternalCatchedExceptionEventArgs>> s_internalExListeners;
-        private static object s_internalExListenersLock;
-        #endregion
-
-        #region Hardware 
-        private EngineFactory m_engineFactory;
-        private List<EngineDevice> m_devices;
-        private EngineDevice m_defaultDevice;
-        #endregion
-
-        #region Some helpers
-        #endregion
-
-        #region Members for input
-        #endregion
-
-        #region Global device handlers
-        private Exception m_initException;
-        private FactoryHandlerWIC m_factoryHandlerWIC;
-        private FactoryHandlerD2D m_factoryHandlerD2D;
-        private FactoryHandlerDWrite m_factoryHandlerDWrite;
-        #endregion
-
-        #region Members for threading
-        private static Task m_defaultInitTask;
-        private Task m_mainLoopTask;
-        private CancellationTokenSource m_mainLoopCancelTokenSource;
-        #endregion
-
-        #region Configurations
-        #endregion
     }
 }

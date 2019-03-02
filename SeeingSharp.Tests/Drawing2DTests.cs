@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,13 +32,8 @@ using SeeingSharp.Util;
 using SharpDX;
 using GDI = System.Drawing;
 
-#endregion
-
 namespace SeeingSharp.Tests
 {
-    #region using
-    #endregion
-
     [TestClass]
     [DoNotParallelize]
     public class Drawing2DTests

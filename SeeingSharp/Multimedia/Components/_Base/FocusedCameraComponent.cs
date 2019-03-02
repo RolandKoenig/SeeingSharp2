@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -33,10 +30,13 @@ namespace SeeingSharp.Multimedia.Components
     public abstract class FocusedCameraComponent
         : SceneComponent<FocusedCameraComponent.PerSceneContext>
     {
-        #region Configuration
-        private Vector2 m_hvRotation;
-        #endregion
+        // Constants
+        private const float SINGLE_ROTATION_H = EngineMath.RAD_180DEG / 100f;
+        private const float SINGLE_ROTATION_V = EngineMath.RAD_180DEG / 100f;
 
+        // Configuration
+        private Vector2 m_hvRotation;
+        
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -288,10 +288,5 @@ namespace SeeingSharp.Multimedia.Components
             public float CameraDistance;
             public Vector2 CameraHVRotation;
         }
-
-        #region constants
-        private const float SINGLE_ROTATION_H = EngineMath.RAD_180DEG / 100f;
-        private const float SINGLE_ROTATION_V = EngineMath.RAD_180DEG / 100f;
-        #endregion
     }
 }

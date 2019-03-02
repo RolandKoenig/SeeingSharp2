@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
-
-//Some namespace mappings
 using System.Runtime.InteropServices;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -31,18 +26,22 @@ using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class LineRenderResources : Resource
     {
-        #region Public constants
         internal static readonly NamedOrGenericKey RESOURCE_KEY = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
+
+        // Private constants
+        private static readonly NamedOrGenericKey KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
+        // Resources
+        private VertexShaderResource m_vertexShader;
+        private PixelShaderResource m_pixelShader;
+        private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
+        private D3D11.InputLayout m_inputLayout;
 
         /// <summary>
         /// Loads the resource.
@@ -63,6 +62,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 device.DeviceD3D11_1,
                 m_vertexShader.ShaderBytecode,
                 LineVertex.InputElements);
+        }
+
+        /// <summary>
+        /// Unloads the resource.
+        /// </summary>
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            SeeingSharpTools.SafeDispose(ref m_inputLayout);
+
+            m_vertexShader = null;
+            m_pixelShader = null;
+            m_constantBuffer = null;
         }
 
         /// <summary>
@@ -91,18 +102,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.PixelShader.SetConstantBuffer(4, m_constantBuffer.ConstantBuffer);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(lineVertexBuffer, LineVertex.Size, 0));
             deviceContext.Draw(vertexCount, 0);
-        }
-
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            SeeingSharpTools.SafeDispose(ref m_inputLayout);
-
-            m_vertexShader = null;
-            m_pixelShader = null;
-            m_constantBuffer = null;
         }
 
         /// <summary>
@@ -139,18 +138,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             public Matrix WorldViewProj;
             public Color4 DiffuseColor;
         }
-
-        #region Private constants
-        private static readonly NamedOrGenericKey KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Resources
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
-        private D3D11.InputLayout m_inputLayout;
-        #endregion
     }
 }

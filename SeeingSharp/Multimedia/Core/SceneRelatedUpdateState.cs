@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -30,23 +27,21 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A UpdateState object which holds special variables for a Scene.
     /// </summary>
     public class SceneRelatedUpdateState : IAnimationUpdateState
     {
-        #region Constants
+        // Constants
         private static readonly InputFrame[] DUMMY_FRAME_COLLECTION = new InputFrame[0];
-        #endregion
 
-        internal bool ForceTransformUpdatesOnChilds;
-
-        #region parameters
+        // parameters
         private Scene m_owner;
-        #endregion
+
+        // parameters for single update step
+        private bool m_isPaused;
+        private UpdateState m_updateState;
+        private IEnumerable<InputFrame> m_inputFrames;
 
         /// <summary>
         /// Called just before the update pass of a scene object starts.
@@ -124,17 +119,14 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+
+        internal bool ForceTransformUpdatesOnChilds;
+
         public bool IsPaused => m_isPaused;
 
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
         public IEnumerable<InputFrame> InputFrames => m_inputFrames;
-
-        #region parameters for single update step
-        private bool m_isPaused;
-        private UpdateState m_updateState;
-        private IEnumerable<InputFrame> m_inputFrames;
-        #endregion
     }
 }

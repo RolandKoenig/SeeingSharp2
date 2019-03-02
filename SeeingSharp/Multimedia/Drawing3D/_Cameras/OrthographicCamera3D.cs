@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class OrthographicCamera3D : Camera3DBase
     {
-        #region Constants
+        // Constants
         private const float ZOOM_FACTOR_MIN = 0.1f;
-        #endregion
-
-        #region Configuration
+        
+        // Configuration
         private float m_zoomFactor = 10f;
-        #endregion
 
         /// <summary>
         /// Applies the data from the given ViewPoint object.

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +28,6 @@ using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     public class InputHandlerFactory
     {
         private List<IInputHandler> m_inputHandlers;

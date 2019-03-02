@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,25 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class RotateEulerAnglesAnimation : AnimationBase
     {
+        // Parameters
+        private IAnimatableObjectEulerRotation m_targetObject;
+        private RotationCalculationComponent m_calculationComponents;
+        private AnimationStateChangeMode m_stateChangeMode;
+        private Vector3 m_paramRotation;
+        private TimeSpan m_duration;
+
+        // Runtime values
+        private Vector3 m_startRotation;
+        private Vector3 m_targetRotation;
+        private Vector3 m_changeRotation;
+
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -120,19 +126,5 @@ namespace SeeingSharp.Multimedia.Core
             m_calculationComponents = calculationComponent;
             m_stateChangeMode = stateChangeMode;
         }
-
-        #region Parameters
-        private IAnimatableObjectEulerRotation m_targetObject;
-        private RotationCalculationComponent m_calculationComponents;
-        private AnimationStateChangeMode m_stateChangeMode;
-        private Vector3 m_paramRotation;
-        private TimeSpan m_duration;
-        #endregion
-
-        #region Runtime values
-        private Vector3 m_startRotation;
-        private Vector3 m_targetRotation;
-        private Vector3 m_changeRotation;
-        #endregion
     }
 }

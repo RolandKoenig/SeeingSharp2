@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
+// This code is ported from SharpDX.Toolkit
+// see: https://github.com/sharpdx/Toolkit
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -32,16 +31,8 @@ using SharpDX.DXGI;
 using SharpDX.WIC;
 using SDX = SharpDX;
 
-#endregion
-
-// This code is ported from SharpDX.Toolkit
-// see: https://github.com/sharpdx/Toolkit
-
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    #region using
-    #endregion
-
     public class WICHelper
     {
         private static ImagingFactory _factory = new ImagingFactory();

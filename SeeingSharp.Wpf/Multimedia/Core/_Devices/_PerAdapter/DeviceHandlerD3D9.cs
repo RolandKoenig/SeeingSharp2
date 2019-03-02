@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,23 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D3D9 = SharpDX.Direct3D9;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class DeviceHandlerD3D9 : IDisposable
     {
         private int m_adapterIndex;

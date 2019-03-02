@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class Scale3DToAnimation : AnimationBase
     {
+        // Parameters
+        private IAnimatableObjectScaling m_targetObject;
+        private Vector3 m_targetScaleVector;
+        private TimeSpan m_duration;
+
+        // Runtime values
+        private Vector3 m_startScaleVector;
+        private Vector3 m_differenceVector;
+
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -75,16 +78,5 @@ namespace SeeingSharp.Multimedia.Core
             m_targetScaleVector = scaleVector;
             m_duration = duration;
         }
-
-        #region Parameters
-        private IAnimatableObjectScaling m_targetObject;
-        private Vector3 m_targetScaleVector;
-        private TimeSpan m_duration;
-        #endregion
-
-        #region Runtime values
-        private Vector3 m_startScaleVector;
-        private Vector3 m_differenceVector;
-        #endregion
     }
 }

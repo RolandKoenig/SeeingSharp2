@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,16 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Runtime.InteropServices;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     // Structures representing the content of ConstantBuffers on graphics hardware
     // See hlsl file "_constants.hlsl"
 

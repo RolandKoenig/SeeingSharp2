@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,16 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class is responsible for standard movement calculation depending by
     /// maximum speed, acceleration and deceleration.
@@ -39,6 +33,19 @@ namespace SeeingSharp
     /// </summary>
     public class MovementAnimationHelper
     {
+        // Outer parameters
+        private MovementSpeed m_speed;
+        private Vector3 m_movementNormal;
+
+        // All values needed location calculation
+        private double m_accelerationLength;
+        private double m_accelerationSeconds;
+        private double m_decelerationLength;
+        private double m_decelerationSeconds;
+        private double m_fullSpeedLength;
+        private double m_fullSpeedSeconds;
+        private double m_reachedMaxSpeed;
+
         /// <summary>
         /// Gets the move distance by the given timespan.
         /// </summary>
@@ -164,20 +171,5 @@ namespace SeeingSharp
         /// Gets the full movement vector.
         /// </summary>
         public Vector3 MovementVector { get; }
-
-        #region Outer parameters
-        private MovementSpeed m_speed;
-        private Vector3 m_movementNormal;
-        #endregion
-
-        #region All values needed location calculation
-        private double m_accelerationLength;
-        private double m_accelerationSeconds;
-        private double m_decelerationLength;
-        private double m_decelerationSeconds;
-        private double m_fullSpeedLength;
-        private double m_fullSpeedSeconds;
-        private double m_reachedMaxSpeed;
-        #endregion
     }
 }

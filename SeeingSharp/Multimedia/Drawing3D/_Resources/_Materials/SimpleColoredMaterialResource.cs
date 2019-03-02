@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,36 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class SimpleColoredMaterialResource : MaterialResource
     {
         internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
+        // Resource keys
+        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+
+        // Some configuration
+        private Color4 m_materialDiffuseColor;
+        private float m_clipFactor;
+        private float m_maxClipDistance;
+        private float m_addToAlpha;
+        private bool m_adjustTextureCoordinates;
+        private bool m_cbPerMaterialDataChanged;
+
+        // Resource members
+        private TextureResource m_textureResource;
+        private VertexShaderResource m_vertexShader;
+        private PixelShaderResource m_pixelShader;
+        private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
+        private DefaultResources m_defaultResources;
 
         /// <summary>
         /// Loads the resource.
@@ -255,27 +265,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
-
-        #region Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Some configuration
-        private Color4 m_materialDiffuseColor;
-        private float m_clipFactor;
-        private float m_maxClipDistance;
-        private float m_addToAlpha;
-        private bool m_adjustTextureCoordinates;
-        private bool m_cbPerMaterialDataChanged;
-        #endregion
-
-        #region Resource members
-        private TextureResource m_textureResource;
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
-        private DefaultResources m_defaultResources;
-        #endregion
     }
 }

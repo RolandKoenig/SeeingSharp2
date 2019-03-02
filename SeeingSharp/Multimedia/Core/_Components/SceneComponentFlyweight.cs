@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,23 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This is mostly logic of the Scene class but experted here
     /// following the Flyweight pattern.
     /// </summary>
     internal class SceneComponentFlyweight
     {
+        // Main members
+        private Scene m_owner;
+        private ThreadSaveQueue<SceneComponentRequest> m_componentRequests;
+        private List<SceneComponentInfo> m_attachedComponents;
+
         /// <summary>
         /// Attaches the given component to this scene.
         /// </summary>
@@ -292,11 +291,5 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         internal int CountAttached => m_attachedComponents.Count;
-
-        #region Main members
-        private Scene m_owner;
-        private ThreadSaveQueue<SceneComponentRequest> m_componentRequests;
-        private List<SceneComponentInfo> m_attachedComponents;
-        #endregion
     }
 }

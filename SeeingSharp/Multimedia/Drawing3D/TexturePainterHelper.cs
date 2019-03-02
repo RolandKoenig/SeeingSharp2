@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,28 +19,31 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     internal class TexturePainterHelper
     {
-        #region Configuration
+        // Resource keys
+        private NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+
+        // Configuration
         private NamedOrGenericKey m_texture;
-        #endregion
+
+        // Used resources
+        private TextureResource m_textureResource;
+        private GeometryResource m_geometryResource;
+        private SpriteMaterialResource m_materialResource;
+        private DefaultResources m_defaultResources;
+        private ObjectRenderParameters m_renderParameters;
 
         /// <summary>
         /// Loads all resources of this texture painter object.
@@ -178,20 +180,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public TexturePainterAlphaBlendMode AlphaBlendMode
         {
             get; set;
-        }
-
-        #region Resource keys
-        private NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Used resources
-        private TextureResource m_textureResource;
-        private GeometryResource m_geometryResource;
-        private SpriteMaterialResource m_materialResource;
-        private DefaultResources m_defaultResources;
-        private ObjectRenderParameters m_renderParameters;
-        #endregion
+        }      
     }
 }

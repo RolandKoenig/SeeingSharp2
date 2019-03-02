@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,22 +19,24 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public abstract class AnimationBase : IAnimation
     {
-        #region Main properties of this animation
+        // Main properties of this animation
         private AnimationType m_animationType;
-        #endregion
+
+        // Control members for AnimationTypes
+        private Task m_asyncTask;
+        private TimeSpan m_fixedTime;
+        private TimeSpan m_currentTime;
+        private bool m_finished;
+        private bool m_started;
+        private bool m_canceled;
 
         /// <summary>
         /// Change the type of this animation to fixed time.
@@ -347,14 +348,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the target object.
         /// </summary>
         public object TargetObject { get; }
-
-        #region Control members for AnimationTypes
-        private Task m_asyncTask;
-        private TimeSpan m_fixedTime;
-        private TimeSpan m_currentTime;
-        private bool m_finished;
-        private bool m_started;
-        private bool m_canceled;
-        #endregion
     }
 }

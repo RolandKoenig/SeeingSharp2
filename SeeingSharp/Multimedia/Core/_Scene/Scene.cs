@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,34 +33,38 @@ using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public partial class Scene
     {
-        #region Constants
+        // Constants
         public const string DEFAULT_LAYER_NAME = "Default";
-        #endregion
 
-        #region Resource keys
+        // Resource keys
         private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        #endregion Resource keys
 
-        #region Members for 2D rendering
+        // Members for 2D rendering
         private List<Custom2DDrawingLayer> m_drawing2DLayers;
-        #endregion Members for 2D rendering
 
-        #region Members for 3D rendering
+        // Members for 3D rendering
         private CBPerFrame m_perFrameData;
-        #endregion
 
-        #region Some other logical parts of the scene object
+        // Some other logical parts of the scene object
         private SceneComponentFlyweight m_sceneComponents;
-        #endregion
+
+        // Async update actions
+        private ThreadSaveQueue<Action> m_asyncInvokesBeforeUpdate;
+        private ThreadSaveQueue<Action> m_asyncInvokesUpdateBesideRendering;
+
+        // Some runtime values
+        private IndexBasedDynamicCollection<ResourceDictionary> m_registeredResourceDicts;
+        private IndexBasedDynamicCollection<ViewInformation> m_registeredViews;
+        private IndexBasedDynamicCollection<SceneRenderParameters> m_renderParameters;
+
+        // Misc
+        private bool m_initialized;
+        private string m_name;
+        private List<SceneLayer> m_sceneLayers;
 
         /// <summary>
         /// Waits until the given object is visible on the given view.
@@ -1217,22 +1217,5 @@ namespace SeeingSharp.Multimedia.Core
             get;
             set;
         }
-
-        #region Misc
-        private bool m_initialized;
-        private string m_name;
-        private List<SceneLayer> m_sceneLayers;
-        #endregion
-
-        #region Async update actions
-        private ThreadSaveQueue<Action> m_asyncInvokesBeforeUpdate;
-        private ThreadSaveQueue<Action> m_asyncInvokesUpdateBesideRendering;
-        #endregion Async update actions
-
-        #region Some runtime values
-        private IndexBasedDynamicCollection<ResourceDictionary> m_registeredResourceDicts;
-        private IndexBasedDynamicCollection<ViewInformation> m_registeredViews;
-        private IndexBasedDynamicCollection<SceneRenderParameters> m_renderParameters;
-        #endregion Some runtime values
     }
 }

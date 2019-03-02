@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -30,17 +27,23 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class is responsible for input gathering.
     /// </summary>
     public class InputGathererThread : ObjectThread
     {
-        #region Constants
+        // Constants
         private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
-        #endregion
+
+        // Synchronization
+        private ThreadSaveQueue<Action> m_commandQueue;
+        private ThreadSaveQueue<InputFrame> m_recoveredInputFrames;
+        private ThreadSaveQueue<InputFrame> m_gatheredInputFrames;
+        private InputFrame m_lastInputFrame;
+
+        // Thread local state
+        private List<IInputHandler> m_globalInputHandlers;
+        private Dictionary<IInputEnabledView, List<IInputHandler>> m_viewInputHandlers;
 
         /// <summary>
         /// Gets all gathered InputFrames.
@@ -214,17 +217,5 @@ namespace SeeingSharp.Multimedia.Input
             //m_globalInputHandlers = new List<IInputHandler>();
             m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
         }
-
-        #region Synchronization
-        private ThreadSaveQueue<Action> m_commandQueue;
-        private ThreadSaveQueue<InputFrame> m_recoveredInputFrames;
-        private ThreadSaveQueue<InputFrame> m_gatheredInputFrames;
-        private InputFrame m_lastInputFrame;
-        #endregion
-
-        #region Thread local state
-        private List<IInputHandler> m_globalInputHandlers;
-        private Dictionary<IInputEnabledView, List<IInputHandler>> m_viewInputHandlers;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -32,15 +28,22 @@ using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class Direct2DTextureResource : TextureResource, IRenderableResource
     {
+        private Custom2DDrawingLayer m_drawingLayer;
+        private int m_width;
+        private int m_height;
+
+        // Resources for Direct3D
+        private D3D11.Texture2D m_renderTargetTexture;
+        private D3D11.ShaderResourceView m_renderTargetTextureView;
+
+        // Resourcs for Direct2D
+        private Graphics2D m_graphics2D;
+        private Direct2DOverlayRenderer m_overlayRenderer;
+
         /// <summary>
         /// Loads all resource.
         /// </summary>
@@ -140,21 +143,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// 6 for cubemap textures.
         /// </summary>
         public override int ArraySize => 1;
-
-        #region
-        private Custom2DDrawingLayer m_drawingLayer;
-        private int m_width;
-        private int m_height;
-        #endregion
-
-        #region Resources for Direct3D
-        private D3D11.Texture2D m_renderTargetTexture;
-        private D3D11.ShaderResourceView m_renderTargetTextureView;
-        #endregion
-
-        #region Resourcs for Direct2D
-        private Graphics2D m_graphics2D;
-        private Direct2DOverlayRenderer m_overlayRenderer;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -31,24 +27,49 @@ using SeeingSharp.Util;
 using SharpDX;
 using D3D = SharpDX.Direct3D;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class ViewRelatedSceneLayerSubset : IDisposable
     {
         private const int DEFAULT_PASS_SUBSCRIPTION_LENGTH = 1024;
 
-        #region State members
+        // State members
         private bool m_disposed;
-        #endregion
 
-        #region Temporary collections
+        // Temporary collections
         private List<Tuple<SceneObject, bool, bool>> m_tmpChangedVisibilities;
-        #endregion
+
+        // Configuration member
+        private Scene m_scene;
+        private SceneLayer m_sceneLayer;
+        private EngineDevice m_device;
+        private ResourceDictionary m_resources;
+
+        // Special members for subscribe/unsubscribe pass logic
+        private bool m_isSubscribeUnsubscribeAllowed;
+        private Action m_changedVisibilitiesAction;
+
+        // Objects that raises exceptions during render
+        private Dictionary<SceneObject, object> m_invalidObjects;
+        private Queue<SceneObject> m_invalidObjectsToDeregister;
+
+        // Resources for rendering
+        private RenderPassLineRender m_renderPassLineRender;
+        private RenderPassDefaultTransparent m_renderPassTransparent;
+        private RenderPass2DOverlay m_renderPass2DOverlay;
+        private ViewRenderParameters m_renderParameters;
+
+        // Subscription collections
+        // All collections needed to link all scene objects to corresponding render passes
+        // => This collections are updated using UpdateForView logic
+        private Dictionary<RenderPassInfo, PassSubscribionProperties> m_objectsPerPassDict;
+        private List<PassSubscribionProperties> m_objectsPerPass;
+        private PassSubscribionProperties m_objectsPassPlainRender;
+        private PassSubscribionProperties m_objectsPassLineRender;
+        private PassSubscribionProperties m_objectsPassTransparentRender;
+        private PassSubscribionProperties m_objectsPassSpriteBatchRender;
+        private PassSubscribionProperties m_objectsPass2DOverlay;
+        private bool m_anythingUnsubscribed;
 
         /// <summary>
         /// Gets or sets the index of this view subset within the scene.
@@ -888,43 +909,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 return x.ZOrder.CompareTo(y.ZOrder);
             }
-        }
-
-        #region Configuration member
-        private Scene m_scene;
-        private SceneLayer m_sceneLayer;
-        private EngineDevice m_device;
-        private ResourceDictionary m_resources;
-        #endregion
-
-        #region Special members for subscribe/unsubscribe pass logic
-        private bool m_isSubscribeUnsubscribeAllowed;
-        private Action m_changedVisibilitiesAction;
-        #endregion
-
-        #region Objects that raises exceptions during render
-        private Dictionary<SceneObject, object> m_invalidObjects;
-        private Queue<SceneObject> m_invalidObjectsToDeregister;
-        #endregion
-
-        #region Resources for rendering
-        private RenderPassLineRender m_renderPassLineRender;
-        private RenderPassDefaultTransparent m_renderPassTransparent;
-        private RenderPass2DOverlay m_renderPass2DOverlay;
-        private ViewRenderParameters m_renderParameters;
-        #endregion
-
-        #region Subscription collections
-        // All collections needed to link all scene objects to corresponding render passes
-        // => This collections are updated using UpdateForView logic
-        private Dictionary<RenderPassInfo, PassSubscribionProperties> m_objectsPerPassDict;
-        private List<PassSubscribionProperties> m_objectsPerPass;
-        private PassSubscribionProperties m_objectsPassPlainRender;
-        private PassSubscribionProperties m_objectsPassLineRender;
-        private PassSubscribionProperties m_objectsPassTransparentRender;
-        private PassSubscribionProperties m_objectsPassSpriteBatchRender;
-        private PassSubscribionProperties m_objectsPass2DOverlay;
-        private bool m_anythingUnsubscribed;
-        #endregion
+        }       
     }
 }

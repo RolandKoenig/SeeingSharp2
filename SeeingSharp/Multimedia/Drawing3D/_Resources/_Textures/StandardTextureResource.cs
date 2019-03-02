@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,30 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SDXTK = SeeingSharp.Multimedia.Util.SdxTK;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class StandardTextureResource : TextureResource
     {
+        // Configuration
+        private ResourceLink m_resourceLinkHighQuality;
+        private ResourceLink m_resourceLinkLowQuality;
+        private MemoryMappedTexture32bpp m_inMemoryTexture;
+
+        // Loaded resources
+        private D3D11.Texture2D m_texture;
+        private D3D11.ShaderResourceView m_textureView;
+
+        // Runtime
+        private bool m_isCubeTexture;
+        private bool m_isRenderTarget;
+
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -151,21 +155,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// 6 for cubemap textures.
         /// </summary>
         public override int ArraySize => m_texture.Description.ArraySize;
-
-        #region configuration
-        private ResourceLink m_resourceLinkHighQuality;
-        private ResourceLink m_resourceLinkLowQuality;
-        private MemoryMappedTexture32bpp m_inMemoryTexture;
-        #endregion
-
-        #region Loaded resources
-        private D3D11.Texture2D m_texture;
-        private D3D11.ShaderResourceView m_textureView;
-        #endregion
-
-        #region Runtime
-        private bool m_isCubeTexture;
-        private bool m_isRenderTarget;
-        #endregion
     }
 }

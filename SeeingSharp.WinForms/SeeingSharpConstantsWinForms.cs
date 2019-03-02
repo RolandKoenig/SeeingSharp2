@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     public class SeeingSharpConstantsWinForms
     {
-        #region Constants for design-time
+        // Constants for design-time
         public const string DESIGNER_CATEGORY_RENDERER = "Renderer";
         public const string DESIGNER_CATEGORY_CAMERA = "Camera";
-        #endregion
-
-        #region Misc
+        
+        // Misc
         public static readonly TimeSpan MOUSE_CLICK_MAX_TIME = TimeSpan.FromMilliseconds(200.0);
         public static readonly TimeSpan THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE = TimeSpan.FromSeconds(0.5);
-        #endregion
     }
 }

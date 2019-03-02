@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class Move2DByAnimation : AnimationBase
     {
+        // Parameters
+        private IAnimatableObjectPosition2D m_targetObject;
+        private Vector2 m_moveVector;
+        private MovementAnimationHelper m_moveHelper;
+
+        // Runtime values
+        private Vector2 m_targetVector;
+        private Vector2 m_startVector;
+
         /// <summary>
         /// Called when animation starts.
         /// (Checks the target object for compatibility and initializes runtime values).
@@ -96,16 +99,5 @@ namespace SeeingSharp.Multimedia.Core
             // Switch animation to fixed-time type
             ChangeToFixedTime(m_moveHelper.MovementTime);
         }
-
-        #region Parameters
-        private IAnimatableObjectPosition2D m_targetObject;
-        private Vector2 m_moveVector;
-        private MovementAnimationHelper m_moveHelper;
-        #endregion
-
-        #region Runtime values
-        private Vector2 m_targetVector;
-        private Vector2 m_startVector;
-        #endregion
     }
 }

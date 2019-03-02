@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,34 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Multimedia.Core;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public abstract class Camera3DBase : IAnimatableObject
     {
+        // Configuration
+        private Vector3 m_position = new Vector3(0, 0, 0);
+        private Vector3 m_relativeTarget = new Vector3(0, 0, 1);
+        private Vector3 m_upVector = new Vector3(0, 1, 0);
+        private float m_hRotation;
+        private float m_vRotation;
+
+        // State
+        private Vector3 m_lastBigStepPos = new Vector3(0, 0, 0);
+        private Vector3 m_up;
+        private Vector3 m_right;
+        private Vector3 m_look;
+        private Matrix m_view;
+        private Matrix m_project;
+        private Matrix m_viewProj;
+
+        // Additional parameters
+        private float m_zNear = 0.1f;
+        private float m_zFar = 500f;
+
         /// <summary>
         /// Applies the data from the given ViewPoint object.
         /// </summary>
@@ -437,31 +451,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the currently associated RenderLoop object.
         /// </summary>
         public object AssociatedRenderLoop { get; internal set; }
-
-        #region Configuration
-        private Vector3 m_position = new Vector3(0, 0, 0);
-        private Vector3 m_relativeTarget = new Vector3(0, 0, 1);
-        private Vector3 m_upVector = new Vector3(0, 1, 0);
-        private float m_hRotation;
-        private float m_vRotation;
-        #endregion
-
-        #region State
-        private Vector3 m_lastBigStepPos = new Vector3(0, 0, 0);
-        private Vector3 m_up;
-        private Vector3 m_right;
-        private Vector3 m_look;
-        private Matrix m_view;
-        private Matrix m_project;
-        private Matrix m_viewProj;
-        #endregion
-
-        #region Additional parameters
-        private float m_zNear = 0.1f;
-        private float m_zFar = 500f;
-        #endregion
-
-        #region Animation
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,32 +19,26 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
-
-//Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
 
-#endregion
+// Namespace mappings
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// The default structure for sending vertex data to the GPU.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     internal struct StandardVertex
     {
-        #region Constants
+        // Constants
         public static readonly int Size = Marshal.SizeOf<StandardVertex>();
         public static readonly D3D11.InputElement[] InputElements = {
             new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
@@ -56,9 +49,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             new D3D11.InputElement("TEXCOORD", 0, Format.R32G32_Float, 52, 0),
             new D3D11.InputElement("TEXCOORD", 1, Format.R32_Float, 60, 0)
         };
-        #endregion
 
-        #region  All vertex elements
+        // All vertex elements
         public Vector3 Position;
         public Vector3 Normal;
         public Vector3 Tangent;
@@ -66,7 +58,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public int Color;
         public Vector2 Texture;
         public float TextureFactor;
-        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardVertex"/> struct.
@@ -138,10 +129,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="source">The VertexStructure object.</param>
         public static StandardVertex[] FromVertexStructure(VertexStructure source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            source.EnsureNotNull(nameof(source));
 
             var vertexCount = source.CountVertices;
 
@@ -162,10 +150,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public static StandardVertex[] FromVertexStructure(VertexStructure[] structures)
         {
-            if (structures == null)
-            {
-                throw new ArgumentNullException("structures");
-            }
+            structures.EnsureNotNullOrEmpty(nameof(structures));
 
             //Get total vertex count
             var vertexCount = 0;

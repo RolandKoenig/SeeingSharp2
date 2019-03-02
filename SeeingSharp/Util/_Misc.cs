@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 namespace SeeingSharp.Util
 {
     /// <summary>
@@ -39,29 +37,4 @@ namespace SeeingSharp.Util
 
         DontInvoke
     }
-
-    //public enum InvokeDelayedMode
-    //{
-    //    FixedWaitTime,
-
-    //    EnsuredTimerInterval
-    //}
-
-    //public enum SeeingSharpLanguageKey
-    //{
-    //    /// <summary>
-    //    /// Default means that no language is specified.
-    //    /// </summary>
-    //    Default,
-
-    //    /// <summary>
-    //    /// A key for all english speaking regions.
-    //    /// </summary>
-    //    EN,
-
-    //    /// <summary>
-    //    /// A key for all german speaking regions.
-    //    /// </summary>
-    //    DE
-    //}
 }

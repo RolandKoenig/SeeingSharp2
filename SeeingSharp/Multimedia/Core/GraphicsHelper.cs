@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.IO;
 using System.Linq;
@@ -35,16 +32,24 @@ using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
-// Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace SeeingSharp.Multimedia.Core
 {
-
     public static class GraphicsHelper
     {
+        // All default texture formats
+        public const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
+        public const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
+        public const Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = Format.B8G8R8A8_UNorm;
+        public const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
+        public const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
+        public const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
+        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
+        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = PixelFormat.Format32bppPBGRA;
+
         /// <summary>
         /// Creates a Direct3D 11 texture that can be shared between more devices.
         /// </summary>
@@ -967,16 +972,5 @@ namespace SeeingSharp.Multimedia.Core
 
             return new D3D11.Texture2D(device, textureDescription);
         }
-
-        #region All default texture formats
-        public const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
-        public const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
-        public const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = PixelFormat.Format32bppPBGRA;
-        #endregion
     }
 }

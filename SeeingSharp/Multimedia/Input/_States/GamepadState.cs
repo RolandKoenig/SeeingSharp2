@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     public class GamepadState : InputStateBase
     {
         public static readonly GamepadState Dummy = new GamepadState(0);
+
+        // State variables
+        private int m_controllerIndex;
+        private GamepadReportedState m_prevState;
+        private GamepadReportedState m_currentState;
+        private bool m_isConnected;
 
         internal void NotifyConnected(bool isConnected)
         {
@@ -180,12 +180,6 @@ namespace SeeingSharp.Multimedia.Input
                 m_host = host;
             }
         }
-
-        #region State variables
-        private int m_controllerIndex;
-        private GamepadReportedState m_prevState;
-        private GamepadReportedState m_currentState;
-        private bool m_isConnected;
-        #endregion
+       
     }
 }

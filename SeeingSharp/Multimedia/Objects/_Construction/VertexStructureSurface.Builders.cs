@@ -1,4 +1,3 @@
-#region License information
 /*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
@@ -20,22 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Multimedia.Core;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public partial class VertexStructureSurface
     {
-        #region Members for build-time transform
+        // Members for build-time transform
         private Vector2 m_tileSize = Vector2.Zero;
-        #endregion
 
         /// <summary>
         /// Enables texture tile mode.

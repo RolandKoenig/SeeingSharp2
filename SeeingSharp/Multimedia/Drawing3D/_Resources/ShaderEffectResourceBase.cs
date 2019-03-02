@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,26 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
-
-// Some namespace mappings
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public abstract class ShaderEffectResourceBase : Resource
     {
-        #region Constants
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
+
+        // Resources
+        private VertexShaderResource m_vertexShader;
+        private DefaultResources m_defaultResources;
 
         /// <summary>
         /// Applies alpha based sprite rendering.
@@ -106,10 +98,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = null;
             m_vertexShader = null;
         }
-
-        #region Resources
-        private VertexShaderResource m_vertexShader;
-        private DefaultResources m_defaultResources;
-        #endregion
     }
 }

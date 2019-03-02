@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,23 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
+
 using System;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class DeviceHandlerD2D
     {
+        // Main references for Direct2D
+        private D2D.RenderTarget m_renderTarget;
+        private D2D.Device m_deviceD2D;
+        private D2D.DeviceContext m_deviceContextD2D;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
         /// </summary>
@@ -80,11 +78,5 @@ namespace SeeingSharp.Multimedia.Core
         public D2D.DeviceContext DeviceContext => m_deviceContextD2D;
 
         internal D2D.RenderTarget RenderTarget => m_renderTarget;
-
-        #region Main references for Direct2D
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.Device m_deviceD2D;
-        private D2D.DeviceContext m_deviceContextD2D;
-        #endregion
     }
 }

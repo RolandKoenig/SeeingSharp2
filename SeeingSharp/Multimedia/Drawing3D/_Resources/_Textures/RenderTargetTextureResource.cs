@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,27 +19,46 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     internal class RenderTargetTextureResource : TextureResource
     {
-        #region Runtime variables
+        // Runtime variables
         private bool m_shaderResourceCreated;
-        #endregion
+
+        // Configuration
+        private RenderTargetCreationMode m_creationMode;
+        private int m_width;
+        private int m_heigth;
+        private bool m_antialiasingEnabled;
+        private AntialiasingQualityLevel m_antialiasingQuality;
+        private RawViewportF m_viewportF;
+
+        // Resources for depth buffer
+        private D3D11.Texture2D m_depthBuffer;
+        private D3D11.DepthStencilView m_depthBufferView;
+
+        // Resources for color buffer
+        private D3D11.Texture2D m_colorBuffer;
+        private D3D11.RenderTargetView m_colorBufferRenderTargetView;
+        private D3D11.Texture2D m_colorBufferShaderResource;
+        private D3D11.ShaderResourceView m_colorBufferShaderResourceView;
+
+        // Resources for ObjectID buffer
+        private D3D11.Texture2D m_objectIDBuffer;
+        private D3D11.RenderTargetView m_objectIDBufferRenderTargetView;
+
+        // Resources for normal/depth buffer
+        private D3D11.Texture2D m_normalDepthBuffer;
+        private D3D11.RenderTargetView m_normalDepthBufferRenderTargetView;
+        private D3D11.Texture2D m_normalDepthBufferShaderResource;
+        private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
 
         /// <summary>
         /// Applies the given size.
@@ -296,38 +314,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal D3D11.ShaderResourceView TextureViewNormalDepth => m_normalDepthBufferShaderResourceView;
 
         public override int ArraySize => 1;
-
-        #region Configuration
-        private RenderTargetCreationMode m_creationMode;
-        private int m_width;
-        private int m_heigth;
-        private bool m_antialiasingEnabled;
-        private AntialiasingQualityLevel m_antialiasingQuality;
-        private RawViewportF m_viewportF;
-        #endregion
-
-        #region Resources for depth buffer
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.DepthStencilView m_depthBufferView;
-        #endregion
-
-        #region Resources for color buffer
-        private D3D11.Texture2D m_colorBuffer;
-        private D3D11.RenderTargetView m_colorBufferRenderTargetView;
-        private D3D11.Texture2D m_colorBufferShaderResource;
-        private D3D11.ShaderResourceView m_colorBufferShaderResourceView;
-        #endregion
-
-        #region Resources for ObjectID buffer
-        private D3D11.Texture2D m_objectIDBuffer;
-        private D3D11.RenderTargetView m_objectIDBufferRenderTargetView;
-        #endregion
-
-        #region Resources for normal/depth buffer
-        private D3D11.Texture2D m_normalDepthBuffer;
-        private D3D11.RenderTargetView m_normalDepthBufferRenderTargetView;
-        private D3D11.Texture2D m_normalDepthBufferShaderResource;
-        private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
-        #endregion
     }
 }

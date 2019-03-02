@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
@@ -31,9 +28,6 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
-    #region using
-    #endregion
-
     public partial class PerformanceAnalyzer
     {
         private const double DEFAULT_KPI_INTERVAL_SEC = 5.0;

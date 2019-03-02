@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -34,11 +31,34 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     internal class ObjFileReader
     {
+        // Constants
+        private const string SUBDIRECTORY_TEXTURES = "Texture";
+        private static readonly char[] ARGUMENT_SPLITTER = { ' ' };
+        private static readonly CultureInfo FILE_CULTURE = new CultureInfo("en-US");
+        private static readonly NumberFormatInfo FILE_NUMBER_FORMAT = FILE_CULTURE.NumberFormat;
+
+        // Parameters
+        private ResourceLink m_resource;
+        private ImportedModelContainer m_targetContainer;
+        private ObjImportOptions m_importOptions;
+
+        // Current object
+        private VertexStructureSurface m_currentSurface;
+        private VertexStructureSurface m_currentMaterialDefinition;
+
+        // Raw data
+        private List<Vector3> m_rawVertices;
+        private List<Vector3> m_rawNormals;
+        private List<Vector2> m_rawTextureCoordinates;
+
+        // Common objects (to prevent high load on garbage collector)
+        private float[] m_dummyFloatArguments_3 = new float[3];
+        private int[] m_dummyIntArguments_3 = new int[3];
+        private FaceIndices[] m_dummyFaceIndices_3 = new FaceIndices[3];
+        private FaceIndices[] m_dummyFaceIndices_4 = new FaceIndices[4];
+
         /// <summary>
         /// Creates all objects and puts them into the given ModelContainer.
         /// </summary>
@@ -789,36 +809,5 @@ namespace SeeingSharp.Multimedia.Objects
             public int TextureCoordinateIndex;
             public int NormalIndex;
         }
-
-        #region Constants
-        private static readonly char[] ARGUMENT_SPLITTER = { ' ' };
-        private static readonly CultureInfo FILE_CULTURE = new CultureInfo("en-US");
-        private static readonly NumberFormatInfo FILE_NUMBER_FORMAT = FILE_CULTURE.NumberFormat;
-        private const string SUBDIRECTORY_TEXTURES = "Texture";
-        #endregion
-
-        #region Parameters
-        private ResourceLink m_resource;
-        private ImportedModelContainer m_targetContainer;
-        private ObjImportOptions m_importOptions;
-        #endregion
-
-        #region Current object
-        private VertexStructureSurface m_currentSurface;
-        private VertexStructureSurface m_currentMaterialDefinition;
-        #endregion
-
-        #region Raw data
-        private List<Vector3> m_rawVertices;
-        private List<Vector3> m_rawNormals;
-        private List<Vector2> m_rawTextureCoordinates;
-        #endregion
-
-        #region Common objects (to prevent high load on garbage collector)
-        private float[] m_dummyFloatArguments_3 = new float[3];
-        private int[] m_dummyIntArguments_3 = new int[3];
-        private FaceIndices[] m_dummyFaceIndices_3 = new FaceIndices[3];
-        private FaceIndices[] m_dummyFaceIndices_4 = new FaceIndices[4];
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,22 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Objects
 {
     public class WirePainter
     {
+        // All members required for painting
+        private bool m_isValid;
+        private LineRenderResources m_renderResources;
+        private RenderState m_renderState;
+        private Lazy<Matrix> m_worldViewPojCreator;
+
         public void DrawLine(Vector3 start, Vector3 destination)
         {
             DrawLine(start, destination, Color4.Black);
@@ -92,12 +92,5 @@ namespace SeeingSharp.Multimedia.Objects
 
             m_worldViewPojCreator = new Lazy<Matrix>(() => Matrix.Transpose(renderState.ViewProj));
         }
-
-        #region All members required for painting
-        private bool m_isValid;
-        private LineRenderResources m_renderResources;
-        private RenderState m_renderState;
-        private Lazy<Matrix> m_worldViewPojCreator;
-        #endregion
     }
 }

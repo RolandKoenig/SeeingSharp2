@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,32 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class TextFormatResource : Drawing2DResourceBase
     {
+        // Fixed resource parameters (passed on constructor)
+        private DWrite.TextFormat[] m_loadedTextFormats;
+        private string m_fontFamilyName;
+        private float m_fontSize;
+        private DWrite.FontWeight m_fontWeight;
+        private DWrite.FontStyle m_fontStyle;
+        private DWrite.FontStretch m_fontStretch;
+
+        // Dynamic runtime parameters (possible to pass on each render call)
+        private bool[] m_runtimeDataChangedFlags;
+        private DWrite.ParagraphAlignment m_paragraphAlignment;
+        private DWrite.TextAlignment m_textAlignment;
+        private DWrite.WordWrapping m_wordWrapping;
+        private DWrite.ReadingDirection m_readingDirection;
+
         /// <summary>
         /// Unloads all resources loaded on the given device.
         /// </summary>
@@ -193,22 +199,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 }
             }
         }
-
-        #region Fixed resource parameters (passed on constructor)
-        private DWrite.TextFormat[] m_loadedTextFormats;
-        private string m_fontFamilyName;
-        private float m_fontSize;
-        private DWrite.FontWeight m_fontWeight;
-        private DWrite.FontStyle m_fontStyle;
-        private DWrite.FontStretch m_fontStretch;
-        #endregion
-
-        # region Dynamic runtime parameters (possible to pass on each render call)
-        private bool[] m_runtimeDataChangedFlags;
-        private DWrite.ParagraphAlignment m_paragraphAlignment;
-        private DWrite.TextAlignment m_textAlignment;
-        private DWrite.WordWrapping m_wordWrapping;
-        private DWrite.ReadingDirection m_readingDirection;
-        #endregion
     }
 }

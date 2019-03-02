@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,21 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A state object created by the EngineMainLoop object which controls
     /// the update pass.
     /// </summary>
     public class UpdateState : IAnimationUpdateState
     {
+        // Parameters passed by global loop
+        private int m_updateTimeMilliseconds;
+        private TimeSpan m_updateTime;
+
         /// <summary>
         /// Called internally by EngineMainLoop and creates a copy of this object
         /// for each updated scene.
@@ -93,10 +91,5 @@ namespace SeeingSharp.Multimedia.Core
             get;
             set;
         }
-
-        #region Parameters passed by global loop
-        private int m_updateTimeMilliseconds;
-        private TimeSpan m_updateTime;
-        #endregion
     }
 }

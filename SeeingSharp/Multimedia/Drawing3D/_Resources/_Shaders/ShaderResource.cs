@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.D3DCompiler;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public abstract class ShaderResource : Resource
     {
+        // Generic members
+        private string m_shaderProfile;
+        private byte[] m_shaderBytecode;
+        private ResourceLink m_resourceLink;
+        private ShaderResourceKind m_resourceKind;
+
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -117,12 +117,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the shader's raw bytecode.
         /// </summary>
         public byte[] ShaderBytecode => m_shaderBytecode;
-
-        #region Generic members
-        private string m_shaderProfile;
-        private byte[] m_shaderBytecode;
-        private ResourceLink m_resourceLink;
-        private ShaderResourceKind m_resourceKind;
-        #endregion
     }
 }

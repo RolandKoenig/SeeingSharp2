@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -31,18 +27,17 @@ using SharpDX;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class EllipseGeometryResource : Geometry2DResourceBase
     {
-        #region Resources
+        // Configuration
+        private Vector2 m_center;
+        private float m_radiusX;
+        private float m_radiusY;
+
+        // Resources
         private D2D.EllipseGeometry m_geometry;
-        #endregion
 
         /// <summary>
         /// Sets the content to all lines in the given polygon.
@@ -100,11 +95,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public float RadiusX => m_radiusX;
 
         public float RadiusY => m_radiusY;
-
-        #region Configuration
-        private Vector2 m_center;
-        private float m_radiusX;
-        private float m_radiusY;
-        #endregion
     }
 }

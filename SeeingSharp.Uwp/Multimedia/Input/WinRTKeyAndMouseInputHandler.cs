@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using Windows.System;
@@ -36,18 +33,29 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     internal class WinRTKeyAndMouseInputHandler : IInputHandler
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
         private static readonly Dictionary<VirtualKey, WinVirtualKey> s_keyMappingDict;
 
-        #region state variables for camera movement
+        // State variables for camera movement
         private PointerPoint m_lastDragPoint;
-        #endregion
+
+        // Objects from outside
+        private SeeingSharpPanelPainter m_painter;
+        private IInputEnabledView m_viewInterface;
+        private RenderLoop m_renderLoop;
+        private CoreWindow m_coreWindow;
+        private CoreDispatcher m_dispatcher;
+
+        // Local resources
+        private Button m_dummyButtonForFocus;
+        private bool m_hasFocus;
+
+        // Input states
+        private MouseOrPointerState m_stateMouseOrPointer;
+        private KeyboardState m_stateKeyboard;
 
         private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -386,23 +394,5 @@ namespace SeeingSharp.Multimedia.Input
             yield return m_stateMouseOrPointer;
             yield return m_stateKeyboard;
         }
-
-        #region objects from outside
-        private SeeingSharpPanelPainter m_painter;
-        private IInputEnabledView m_viewInterface;
-        private RenderLoop m_renderLoop;
-        private CoreWindow m_coreWindow;
-        private CoreDispatcher m_dispatcher;
-        #endregion
-
-        #region local resources
-        private Button m_dummyButtonForFocus;
-        private bool m_hasFocus;
-        #endregion
-
-        #region Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,16 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This is a simple RingBuffer implementation for Seeing#,
     /// originally created for the Input event system.
@@ -38,6 +32,11 @@ namespace SeeingSharp.Util
     /// </summary>
     public class RingBuffer<T>
     {
+        // all buffer properties
+        private T[] m_buffer;
+        private int m_itemStart;
+        private int m_itemLength;
+
         /// <summary>
         /// Adds a new item to the buffer and overrides existing items
         /// if the count of items reached the maximum.
@@ -138,12 +137,6 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the total count of items.
         /// </summary>
-        public int Count { get; }
-
-        #region all buffer properties
-        private T[] m_buffer;
-        private int m_itemStart;
-        private int m_itemLength;
-        #endregion
+        public int Count { get; }        
     }
 }

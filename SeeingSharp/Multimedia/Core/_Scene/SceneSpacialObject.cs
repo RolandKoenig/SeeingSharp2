@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -30,17 +27,34 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public abstract class SceneSpacialObject :
         SceneObject,
         IAnimatableObjectEulerRotation, IAnimatableObjectPosition, IAnimatableObjectQuaternion, IAnimatableObjectScaling,
         IAnimatableObjectOpacity, IAnimatableObjectAccentuation
     {
-        #region Resource keys
+        // Resource keys
         private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        #endregion Resource keys
+
+        // Spacial parameters
+        private SpacialTransformationType m_transformationType;
+        private Vector3 m_position;
+        private Vector3 m_rotation;
+        private Quaternion m_rotationQuaternion;
+        private Vector3 m_rotationForward;
+        private Vector3 m_rotationUp;
+        private Vector3 m_scaling;
+        private Matrix m_transform;
+        private Matrix m_customTransform;
+        private SceneSpacialObject m_transformSourceObject;
+        private bool m_transformParamsChanged;
+        private bool m_forceTransformUpdateOnChilds;
+
+        // Rendering parameters
+        private Color4 m_color;
+        private float m_accentuationFactor;
+        private float m_opacity;
+        private float m_borderPart;
+        private float m_borderMultiplyer;
 
         /// <summary>
         /// Enables a shader generated border.
@@ -737,31 +751,5 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
         }
-
-        #region Resources for rendering
-        #endregion Resources for rendering
-
-        #region Spacial parameters
-        private SpacialTransformationType m_transformationType;
-        private Vector3 m_position;
-        private Vector3 m_rotation;
-        private Quaternion m_rotationQuaternion;
-        private Vector3 m_rotationForward;
-        private Vector3 m_rotationUp;
-        private Vector3 m_scaling;
-        private Matrix m_transform;
-        private Matrix m_customTransform;
-        private SceneSpacialObject m_transformSourceObject;
-        private bool m_transformParamsChanged;
-        private bool m_forceTransformUpdateOnChilds;
-        #endregion Spacial parameters
-
-        #region Rendering parameters
-        private Color4 m_color;
-        private float m_accentuationFactor;
-        private float m_opacity;
-        private float m_borderPart;
-        private float m_borderMultiplyer;
-        #endregion Rendering parameters
     }
 }

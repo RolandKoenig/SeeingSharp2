@@ -1,4 +1,3 @@
-#region License information
 /*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
@@ -20,15 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     public static class EngineMath
     {
         public const float RAD_45DEG = (float)Math.PI * 0.25f;

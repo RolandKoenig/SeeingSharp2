@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
 //Some namespace mappings
 using System;
@@ -43,20 +40,35 @@ using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     public class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
         private const string TEXT_GRAPHICS_NOT_INITIALIZED = "Graphics not initialized!";
 
-        #region Main reference to 3D-Engine
+        // Main reference to 3D-Engine
         private RenderLoop m_renderLoop;
-        #endregion
+
+        // Resources for Direct3D 11
+        private Factory m_factory;
+        private SwapChain1 m_swapChain;
+        private D3D11.Device m_renderDevice;
+        private D3D11.DeviceContext m_renderDeviceContext;
+        private D3D11.RenderTargetView m_renderTarget;
+        private D3D11.DepthStencilView m_renderTargetDepth;
+        private D3D11.Texture2D m_backBuffer;
+        private D3D11.Texture2D m_depthBuffer;
+
+        // Generic members
+        private GDI.Brush m_backBrush;
+        private GDI.Brush m_foreBrushText;
+        private GDI.Brush m_backBrushText;
+        private GDI.Pen m_borderPen;
+
+        // Misc
+        private bool m_isMouseInside;
+        private DateTime m_lastSizeChange;
+        private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
 
         /// <summary>
         /// Raised when it is possible for the UI thread to manipulate current filter list.
@@ -613,29 +625,5 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         [Browsable(false)]
         public bool IsOperational => m_renderLoop.IsOperational;
-
-        #region Resources for Direct3D 11
-        private Factory m_factory;
-        private SwapChain1 m_swapChain;
-        private D3D11.Device m_renderDevice;
-        private D3D11.DeviceContext m_renderDeviceContext;
-        private D3D11.RenderTargetView m_renderTarget;
-        private D3D11.DepthStencilView m_renderTargetDepth;
-        private D3D11.Texture2D m_backBuffer;
-        private D3D11.Texture2D m_depthBuffer;
-        #endregion
-
-        #region Generic members
-        private GDI.Brush m_backBrush;
-        private GDI.Brush m_foreBrushText;
-        private GDI.Brush m_backBrushText;
-        private GDI.Pen m_borderPen;
-        #endregion
-
-        #region Misc
-        private bool m_isMouseInside;
-        private DateTime m_lastSizeChange;
-        private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
-        #endregion
     }
 }

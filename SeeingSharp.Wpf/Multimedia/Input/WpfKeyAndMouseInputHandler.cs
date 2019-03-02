@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -32,14 +29,18 @@ using Point = System.Windows.Point;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     internal class WpfKeyAndMouseInputHandler : IInputHandler
     {
-        #region Target objects
+        // Target objects
         private SeeingSharpRendererElement m_rendererElement;
-        #endregion
+
+        // Helper
+        private bool m_lastDragPointValid;
+        private Point m_lastDragPoint;
+
+        // Input states
+        private MouseOrPointerState m_stateMouseOrPointer;
+        private KeyboardState m_stateKeyboard;
 
         private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
         {
@@ -295,15 +296,5 @@ namespace SeeingSharp.Multimedia.Input
             yield return m_stateMouseOrPointer;
             yield return m_stateKeyboard;
         }
-
-        #region Helper
-        private bool m_lastDragPointValid;
-        private Point m_lastDragPoint;
-        #endregion
-
-        #region Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
-        #endregion
     }
 }

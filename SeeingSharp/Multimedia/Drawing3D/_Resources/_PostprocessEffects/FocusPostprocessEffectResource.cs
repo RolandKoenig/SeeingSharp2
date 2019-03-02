@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -31,15 +27,29 @@ using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class FocusPostprocessEffectResource : PostprocessEffectResource
     {
+        // Resource keys
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_CB_PASS_01 = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_CB_PASS_02 = GraphicsCore.GetNextGenericResourceKey();
+
+        // Configuration
+        private bool m_forceSimpleMethod;
+        private float m_fadeIntensity;
+
+        // Resources
+        private SingleForcedColorMaterialResource m_singleForcedColor;
+        private RenderTargetTextureResource m_renderTarget;
+        private DefaultResources m_defaultResources;
+        private PixelShaderResource m_pixelShaderBlur;
+        private TypeSafeConstantBufferResource<CBPerObject> m_cbFirstPass;
+        private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
+
         /// <summary>
         /// Loads the resource.
         /// </summary>
@@ -271,27 +281,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             /// </summary>
             public Vector2 Dummy;
         }
-
-        #region Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_01 = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_02 = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Configuration
-        private bool m_forceSimpleMethod;
-        private float m_fadeIntensity;
-        #endregion
-
-        #region Resources
-        private SingleForcedColorMaterialResource m_singleForcedColor;
-        private RenderTargetTextureResource m_renderTarget;
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShaderBlur;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbFirstPass;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
 //Some namespace mappings
 using System.Runtime.InteropServices;
@@ -29,29 +26,22 @@ using SharpDX;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A structure for sending line vertex data to the GPU.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     internal struct LineVertex
     {
-        #region Constants
+        // Constants
         public static readonly int Size = Marshal.SizeOf<LineVertex>();
         public static readonly D3D11.InputElement[] InputElements = {
             new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0)
         };
-        #endregion
 
-        #region Vertex data
+        // Vertex data
         public Vector3 Position;
-        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineVertex" /> struct.

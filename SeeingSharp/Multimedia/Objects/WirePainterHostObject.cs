@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,28 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class WirePainterHostObject : SceneObject
     {
-        #region Direct3D resources
+        // Direct3D resources
         private IndexBasedDynamicCollection<LineRenderResources> m_localResources;
-        #endregion
 
         /// <summary>
         /// Loads all resources of the object.
@@ -130,8 +120,5 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         public Action<WirePainter> PaintAction { get; set; }
-
-        #region Configuration
-        #endregion
     }
 }

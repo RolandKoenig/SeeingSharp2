@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,23 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace SeeingSharp.Checking
 {
-    #region using
-    #endregion
-
     public static partial class Ensure
     {
         //---------------------------------------------------------------------
         // Method 'EnsureInRange' for all common numeric variables
 
-        #region
         [Conditional("DEBUG")]
         public static void EnsureInRange(
             this byte numValue, byte min, byte max, string checkedVariableName,
@@ -180,12 +173,12 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be between {min} and {max} (given value is {numValue}!");
             }
         }
-        #endregion
+        
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositive' for all common numeric variables
 
-        #region
+        
         [Conditional("DEBUG")]
         public static void EnsurePositive(
             this int numValue, string checkedVariableName,
@@ -290,12 +283,12 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
             }
         }
-        #endregion
+        
 
         //---------------------------------------------------------------------
         // Method 'EnsurePositiveAndNotZero' for all common numeric variables
 
-        #region
+        
         [Conditional("DEBUG")]
         public static void EnsurePositiveAndNotZero(
             this int numValue, string checkedVariableName,
@@ -385,6 +378,6 @@ namespace SeeingSharp.Checking
                     $"Value {checkedVariableName} within method {callerMethod} must be positive and not zero (value: {numValue})!");
             }
         }
-        #endregion
+        
     }
 }

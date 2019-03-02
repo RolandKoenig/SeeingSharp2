@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class CameraStraightMoveAnimation : AnimationBase
     {
+        // Configuration
+        private Camera3DBase m_camera;
+        private PerspectiveCamera3D m_cameraPerspective;
+        private OrthographicCamera3D m_cameraOrthographic;
+        private Camera3DViewPoint m_viewPointSource;
+        private Camera3DViewPoint m_viewPointTarget;
+
         /// <summary>
         /// Called each time the CurrentTime value gets updated.
         /// </summary>
@@ -91,13 +92,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_viewPointSource = m_camera.GetViewPoint();
             m_viewPointTarget = targetViewPoint;
         }
-
-        #region Configuration
-        private Camera3DBase m_camera;
-        private PerspectiveCamera3D m_cameraPerspective;
-        private OrthographicCamera3D m_cameraOrthographic;
-        private Camera3DViewPoint m_viewPointSource;
-        private Camera3DViewPoint m_viewPointTarget;
-        #endregion
     }
 }

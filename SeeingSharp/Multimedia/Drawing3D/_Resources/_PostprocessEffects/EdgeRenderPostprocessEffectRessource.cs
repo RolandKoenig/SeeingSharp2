@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,28 +19,31 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System.Runtime.InteropServices;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class EdgeDetectPostprocessEffectResource : PostprocessEffectResource
     {
-        #region Configuration
+        // Resource keys
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
+        // Configuration
         private Color4 m_borderColor;
-        #endregion
+
+        // Resources
+        private RenderTargetTextureResource m_renderTarget;
+        private DefaultResources m_defaultResources;
+        private PixelShaderResource m_pixelShaderBlur;
+        private CBPerObject m_constantBufferData;
+        private TypeSafeConstantBufferResource<CBPerObject> m_constantBuffer;
 
         /// <summary>
         /// Loads the resource.
@@ -208,19 +210,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             public float OriginalColorAlpha;
             public Vector3 Dummy;
         }
-
-        #region Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-        #endregion
-
-        #region Resources
-        private RenderTargetTextureResource m_renderTarget;
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShaderBlur;
-        private CBPerObject m_constantBufferData;
-        private TypeSafeConstantBufferResource<CBPerObject> m_constantBuffer;
-        #endregion
     }
 }

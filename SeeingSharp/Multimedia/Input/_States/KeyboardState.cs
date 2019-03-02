@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     public class KeyboardState : InputStateBase
     {
         public static readonly KeyboardState Dummy = new KeyboardState();
+
+        // Current key states
+        private List<WinVirtualKey> m_keysHit;
+        private List<WinVirtualKey> m_keysDown;
+        private bool m_focused;
 
         internal void NotifyKeyDown(WinVirtualKey key)
         {
@@ -151,11 +150,5 @@ namespace SeeingSharp.Multimedia.Input
                 m_host = host;
             }
         }
-
-        #region current key states
-        private List<WinVirtualKey> m_keysHit;
-        private List<WinVirtualKey> m_keysDown;
-        private bool m_focused;
-        #endregion
     }
 }

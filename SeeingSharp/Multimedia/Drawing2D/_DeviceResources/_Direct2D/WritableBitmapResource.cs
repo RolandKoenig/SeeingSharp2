@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -31,18 +27,18 @@ using SharpDX;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class WriteableBitmapResource : BitmapResource
     {
-        #region Resources
+        // Configuration
+        private Size2 m_bitmapSize;
+        private D2D.PixelFormat m_pixelFormat;
+        private double m_dpiX;
+        private double m_dpiY;
+
+        // Resources
         private D2D.Bitmap[] m_loadedBitmaps;
-        #endregion
 
         /// <summary>
         /// Sets the bitmap's contents.
@@ -133,12 +129,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public override int SingleFramePixelWidth => m_bitmapSize.Width;
 
         public override int SingleFramePixelHeight => m_bitmapSize.Height;
-
-        #region Configuration
-        private Size2 m_bitmapSize;
-        private D2D.PixelFormat m_pixelFormat;
-        private double m_dpiX;
-        private double m_dpiY;
-        #endregion
     }
 }

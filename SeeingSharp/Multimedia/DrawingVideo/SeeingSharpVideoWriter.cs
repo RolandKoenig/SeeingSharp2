@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -31,18 +27,21 @@ using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.DrawingVideo
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A common base class for all video writers provided by the graphics engine.
     /// </summary>
     public abstract class SeeingSharpVideoWriter
     {
+        // Runtime values
+        private Size2 m_videoSize;
+        private bool m_hasStarted;
+        private bool m_hasFinished;
+        private Exception m_startException;
+        private Exception m_drawException;
+        private Exception m_finishExeption;
+
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
         /// </summary>
@@ -199,17 +198,5 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         public Exception LastDrawException => m_drawException;
 
         public Exception LastFinishException => m_finishExeption;
-
-        #region Configuration
-        #endregion
-
-        #region Runtime values
-        private Size2 m_videoSize;
-        private bool m_hasStarted;
-        private bool m_hasFinished;
-        private Exception m_startException;
-        private Exception m_drawException;
-        private Exception m_finishExeption;
-        #endregion
     }
 }

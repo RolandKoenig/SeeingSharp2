@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using SeeingSharp.Checking;
 using SharpDX;
 
@@ -29,6 +26,10 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class StackedGeometryFactory : GeometryFactory
     {
+        // Main parameters
+        private GeometryFactory m_geometryToStack;
+        private int m_stackSize;
+
         /// <summary>
         /// Builds all vertex structures for the given detail level.
         /// </summary>
@@ -97,10 +98,5 @@ namespace SeeingSharp.Multimedia.Objects
             m_geometryToStack = geometryToStack;
             m_stackSize = stackSize;
         }
-
-        #region Main parameters
-        private GeometryFactory m_geometryToStack;
-        private int m_stackSize;
-        #endregion
     }
 }

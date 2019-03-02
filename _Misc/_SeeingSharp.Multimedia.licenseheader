@@ -3,7 +3,6 @@ extensions: APACHE2.cs
 extensions: MS.cs
 extensions: .rd.xml
 extensions: .cs .cpp .h .hlsl
-#region License information
 /*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
@@ -25,7 +24,6 @@ extensions: .cs .cpp .h .hlsl
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 extensions: .aspx .ascx
 <%-- 
 Sample license text.

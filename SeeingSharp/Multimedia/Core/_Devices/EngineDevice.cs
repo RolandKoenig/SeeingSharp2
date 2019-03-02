@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -32,22 +30,37 @@ using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class EngineDevice
     {
-        #region Constants
+        // Constants
         private const string CATEGORY_ADAPTER = "Adapter";
-        #endregion
-
-        #region Members for antialiasing
+        
+        // Members for antialiasing
         private SampleDescription m_sampleDescWithAntialiasing;
-        #endregion
+
+        // Main members
+        private Adapter1 m_adapter1;
+        private AdapterDescription1 m_adapterDesc1;
+        private DeviceLoadSettings m_deviceLoadSettings;
+        private EngineFactory m_engineFactory;
+
+        // Some configuration
+        private bool m_isDetailLevelForced;
+        private DetailLevel m_forcedDetailLevel;
+
+        // Handlers for different DirectX Apis
+        private DeviceHandlerDXGI m_handlerDXGI;
+        private DeviceHandlerD3D11 m_handlerD3D11;
+        private DeviceHandlerD2D m_handlerD2D;
+        private List<IDisposable> m_additionalDeviceHandlers;
+
+        // Possible antialiasing modes
+        private SampleDescription m_antialiasingConfigLow;
+        private SampleDescription m_antialiasingConfigMedium;
+        private SampleDescription m_antialiasingConfigHigh;
+
 
         public T TryGetAdditionalDeviceHandler<T>()
             where T : class
@@ -430,30 +443,5 @@ namespace SeeingSharp.Multimedia.Core
 
             public AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
         }
-
-        #region Main members
-        private Adapter1 m_adapter1;
-        private AdapterDescription1 m_adapterDesc1;
-        private DeviceLoadSettings m_deviceLoadSettings;
-        private EngineFactory m_engineFactory;
-        #endregion
-
-        #region Some configuration
-        private bool m_isDetailLevelForced;
-        private DetailLevel m_forcedDetailLevel;
-        #endregion
-
-        #region Handlers for different DirectX Apis
-        private DeviceHandlerDXGI m_handlerDXGI;
-        private DeviceHandlerD3D11 m_handlerD3D11;
-        private DeviceHandlerD2D m_handlerD2D;
-        private List<IDisposable> m_additionalDeviceHandlers;
-        #endregion
-
-        #region Possible antialiasing modes
-        private SampleDescription m_antialiasingConfigLow;
-        private SampleDescription m_antialiasingConfigMedium;
-        private SampleDescription m_antialiasingConfigHigh;
-        #endregion
     }
 }

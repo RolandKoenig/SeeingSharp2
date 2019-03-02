@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,17 +19,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class ScaleSpriteToAnimation : AnimationBase
     {
+        // Parameters
+        private IAnimatableObjectSprite m_targetObject;
+        private TimeSpan m_duration;
+        private float m_targetScaling;
+
+        // Runtime
+        private float m_startScaling;
+        private float m_moveScaling;
+
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -80,16 +83,5 @@ namespace SeeingSharp.Multimedia.Core
                 throw new Exception("Scaling value can be less than 0!");
             }
         }
-
-        #region Parameters
-        private IAnimatableObjectSprite m_targetObject;
-        private TimeSpan m_duration;
-        private float m_targetScaling;
-        #endregion Parameters
-
-        #region Runtime
-        private float m_startScaling;
-        private float m_moveScaling;
-        #endregion Runtime
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -36,9 +33,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     // This code is based on HelixToolkit (MIT license)
     // https://github.com/helix-toolkit/helix-toolkit/blob/master/Source/HelixToolkit.Wpf/Importers/StLReader.cs
 
@@ -51,9 +45,17 @@ namespace SeeingSharp.Multimedia.Objects
     [SupportedFileFormat("stl", "StereoLithography .StL files")]
     public class StLImporter : IModelImporter
     {
-        #region Just for caching
+        // Constants
+        private const string RES_KEY_GEO_CLASS = "Geometry";
+        private const string RES_KEY_GEO_NAME = "Main";
+
+        // Static regular expressions for parsing
+        private static readonly Encoding ENCODING = Encoding.GetEncoding("us-ascii");
+        private static readonly Regex NORMAL_REGEX = new Regex(@"normal\s*(\S*)\s*(\S*)\s*(\S*)");
+        private static readonly Regex VERTEX_REGEX = new Regex(@"vertex\s*(\S*)\s*(\S*)\s*(\S*)");
+
+        // Just for caching
         private List<Vector3> m_cachedPoints = new List<Vector3>(3);
-        #endregion
 
         /// <summary>
         /// Parses the ID and values from the specified line.
@@ -502,16 +504,5 @@ namespace SeeingSharp.Multimedia.Objects
         {
             return new StlImportOptions();
         }
-
-        #region Constants
-        private const string RES_KEY_GEO_CLASS = "Geometry";
-        private const string RES_KEY_GEO_NAME = "Main";
-        #endregion
-
-        #region Static regular expressions for parsing
-        private static readonly Encoding ENCODING = Encoding.GetEncoding("us-ascii");
-        private static readonly Regex NORMAL_REGEX = new Regex(@"normal\s*(\S*)\s*(\S*)\s*(\S*)");
-        private static readonly Regex VERTEX_REGEX = new Regex(@"vertex\s*(\S*)\s*(\S*)\s*(\S*)");
-        #endregion
     }
 }

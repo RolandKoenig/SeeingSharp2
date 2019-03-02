@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -31,18 +27,16 @@ using SeeingSharp.Util;
 using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class RadialGradientBrushResource : BrushResource
     {
-        #region Resources
+        // Resources
         private LoadedBrushResources[] m_loadedBrushes;
-        #endregion
+
+        // Configuration
+        private GradientStop[] m_gradientStops;
+        private float m_opacity;
 
         /// <summary>
         /// Unloads all resources loaded on the given device.
@@ -174,10 +168,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
             public D2D.GradientStopCollection GradientStops;
             public D2D.RadialGradientBrush Brush;
         }
-
-        #region Configuration
-        private GradientStop[] m_gradientStops;
-        private float m_opacity;
-        #endregion
     }
 }

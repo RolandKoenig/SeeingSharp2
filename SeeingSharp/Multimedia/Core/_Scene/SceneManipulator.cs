@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
@@ -33,9 +30,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class SceneManipulator
     {
         /// <summary>
@@ -562,14 +556,14 @@ namespace SeeingSharp.Multimedia.Core
 
         // Main members
 
-        #region
-        #endregion
+        
+        
 
         // Objects that remember all changes on object/resource collections
 
-        #region
+        
         private List<SceneObject> m_createdObjects;
         private List<NamedOrGenericKey> m_createdResources;
-        #endregion
+        
     }
 }

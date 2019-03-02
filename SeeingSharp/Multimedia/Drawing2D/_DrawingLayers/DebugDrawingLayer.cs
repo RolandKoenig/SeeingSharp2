@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class DebugDrawingLayer : Custom2DDrawingLayer, IDisposable
     {
+        // Drawing resources
+        private TextFormatResource m_textFormat;
+        private SolidBrushResource m_solidBrushForeground;
+        private SolidBrushResource m_solidBrushBackground;
+
         /// <summary>
         /// Performs custom 2D rendering.
         /// Be carefull: This method is called from the rendering thread!
@@ -85,11 +84,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_solidBrushBackground);
             SeeingSharpTools.SafeDispose(ref m_solidBrushForeground);
         }
-
-        #region Drawing resources
-        private TextFormatResource m_textFormat;
-        private SolidBrushResource m_solidBrushForeground;
-        private SolidBrushResource m_solidBrushBackground;
-        #endregion
     }
 }

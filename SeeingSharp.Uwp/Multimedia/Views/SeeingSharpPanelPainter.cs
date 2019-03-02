@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System;
 using System.Threading;
 using Windows.Foundation;
@@ -41,19 +37,29 @@ using SharpDX.Mathematics.Interop;
 using Color = Windows.UI.Color;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     // Using SwapChainBackgroundPanel to render to the background of the WinRT app
     //  see http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
     public class SeeingSharpPanelPainter : ISeeingSharpPainter, IDisposable, IInputEnabledView, IRenderLoopHost
     {
         private double MIN_PIXEL_SIZE_HEIGHT = 100.0;
         private double MIN_PIXEL_SIZE_WIDTH = 100.0;
+
+        // SwapChainBackgroundPanel local members
+        private SwapChainPanelWrapper m_targetPanel;
+        private Size m_lastRefreshTargetSize;
+        private IDisposable m_observerSizeChanged;
+        private bool m_compositionScaleChanged;
+        private DateTime m_lastSizeChange;
+
+        // Resources from Direct3D 11
+        private SwapChain1 m_swapChain;
+        private D3D11.Texture2D m_backBuffer;
+        private D3D11.Texture2D m_backBufferMultisampled;
+        private D3D11.Texture2D m_depthBuffer;
+        private D3D11.RenderTargetView m_renderTargetView;
+        private D3D11.DepthStencilView m_renderTargetDepth;
 
         /// <summary>
         /// Attaches the renderer to the given SwapChainBackgroundPanel.
@@ -525,25 +531,5 @@ namespace SeeingSharp.Multimedia.Views
         public bool IsOperational => RenderLoop.IsOperational;
 
         public CoreDispatcher Disptacher => m_targetPanel?.Dispatcher;
-
-        #region Global members
-        #endregion
-
-        #region SwapChainBackgroundPanel local members
-        private SwapChainPanelWrapper m_targetPanel;
-        private Size m_lastRefreshTargetSize;
-        private IDisposable m_observerSizeChanged;
-        private bool m_compositionScaleChanged;
-        private DateTime m_lastSizeChange;
-        #endregion
-
-        #region Resources from Direct3D 11
-        private SwapChain1 m_swapChain;
-        private D3D11.Texture2D m_backBuffer;
-        private D3D11.Texture2D m_backBufferMultisampled;
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.RenderTargetView m_renderTargetView;
-        private D3D11.DepthStencilView m_renderTargetDepth;
-        #endregion
     }
 }

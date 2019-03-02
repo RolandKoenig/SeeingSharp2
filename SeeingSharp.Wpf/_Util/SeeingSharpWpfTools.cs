@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,22 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System;
 using System.Reflection;
 using SharpDX;
 using Wpf = System.Windows;
 using WpfMedia = System.Windows.Media;
 
-#endregion
-
 namespace SeeingSharp.Util
 {
-    #region using
-    #endregion
 
     public static class SeeingSharpWpfTools
     {

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -33,18 +29,16 @@ using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 using SDXM = SharpDX.Mathematics.Interop;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class Graphics2D
     {
-        #region Transform settings
+        // Transform settings
         private Graphics2DTransformSettings m_transformSettings;
-        #endregion
+
+        // Main view related properties
+        private D2D.RenderTarget m_renderTarget;
+        private D2D.DeviceContext m_deviceContext;
 
         /// <summary>
         /// Sets current transform settings on this graphics object.
@@ -711,10 +705,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 m_renderTarget.Transform = value;
             }
         }
-
-        #region Main view related properties
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.DeviceContext m_deviceContext;
-        #endregion Main view related properties
     }
 }

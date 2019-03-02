@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Util;
@@ -29,13 +27,8 @@ using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     // Overview Feature levels:
     //http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx
 
@@ -47,6 +40,17 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class DeviceHandlerD3D11
     {
+        // Resources from Direct3D11 api
+        private Adapter1 m_dxgiAdapter;
+        private D3D11.Device1 m_device1;
+        private D3D11.Device3 m_device3;
+        private D3D11.DeviceContext m_immediateContext;
+        private D3D11.DeviceContext3 m_immediateContext3;
+
+        // Parameters of created device
+        private D3D11.DeviceCreationFlags m_creationFlags;
+        private D3D.FeatureLevel m_featureLevel;
+
         /// <summary>
         /// Unloads all resources.
         /// </summary>
@@ -214,18 +218,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Are Direct2D textures possible?
         /// </summary>
         public bool IsDirect2DTextureEnabled => (m_creationFlags & D3D11.DeviceCreationFlags.BgraSupport) == D3D11.DeviceCreationFlags.BgraSupport;
-
-        #region Resources from Direct3D11 api
-        private Adapter1 m_dxgiAdapter;
-        private D3D11.Device1 m_device1;
-        private D3D11.Device3 m_device3;
-        private D3D11.DeviceContext m_immediateContext;
-        private D3D11.DeviceContext3 m_immediateContext3;
-        #endregion
-
-        #region Parameters of created device
-        private D3D11.DeviceCreationFlags m_creationFlags;
-        private D3D.FeatureLevel m_featureLevel;
-        #endregion
     }
 }

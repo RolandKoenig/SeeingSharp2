@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,9 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 
-// Namespace mappings
 using System;
 using Windows.Foundation;
 using Windows.Graphics.Display;
@@ -35,11 +32,24 @@ using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     internal class SwapChainPanelWrapper : IDisposable
     {
+        // UI objects
+        private SwapChainBackgroundPanel m_bgPanel;
+        private ISwapChainBackgroundPanelNative m_bgPanelNative;
+        private SwapChainPanel m_panel;
+        private ISwapChainPanelNative m_panelNative;
+
+        // Configuration
+        private float m_currentDpiX;
+        private float m_currentDpiY;
+
+        // Forwarded events
+        public event EventHandler<RoutedEventArgs> Unloaded;
+        public event EventHandler<RoutedEventArgs> Loaded;
+        public event EventHandler<SizeChangedEventArgs> SizeChanged;
+        public event EventHandler CompositionScaleChanged;
+
         private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
         {
             Unloaded?.Invoke(sender, e);
@@ -170,24 +180,5 @@ namespace SeeingSharp.Multimedia.Views
                 throw new ObjectDisposedException("SwapChainPanelWrapper");
             }
         }
-
-        #region UI objects
-        private SwapChainBackgroundPanel m_bgPanel;
-        private ISwapChainBackgroundPanelNative m_bgPanelNative;
-        private SwapChainPanel m_panel;
-        private ISwapChainPanelNative m_panelNative;
-        #endregion
-
-        #region Configuration
-        private float m_currentDpiX;
-        private float m_currentDpiY;
-        #endregion
-
-        #region Forwarded events
-        public event EventHandler<RoutedEventArgs> Unloaded;
-        public event EventHandler<RoutedEventArgs> Loaded;
-        public event EventHandler<SizeChangedEventArgs> SizeChanged;
-        public event EventHandler CompositionScaleChanged;
-        #endregion
     }
 }

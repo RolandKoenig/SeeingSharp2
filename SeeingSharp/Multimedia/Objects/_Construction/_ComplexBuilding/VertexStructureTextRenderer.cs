@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System.Collections.Generic;
 using System.Linq;
 using SeeingSharp.Multimedia.Core;
@@ -31,13 +27,8 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SDX = SharpDX;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     internal class VertexStructureTextRenderer : TextRendererBase
     {
         private TextGeometryOptions m_geometryOptions;

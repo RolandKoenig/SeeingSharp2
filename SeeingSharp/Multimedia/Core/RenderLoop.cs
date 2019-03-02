@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,9 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 
-//Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,38 +45,33 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class RenderLoop : IDisposable
     {
-        #region Configuration values
+        // Configuration values
         private GraphicsViewConfiguration m_viewConfiguration;
         private Camera3DBase m_camera;
-        #endregion
-
-        #region Async actions
+        
+        // Async actions
         private ThreadSaveQueue<Action> m_afterPresentActions;
-        #endregion
-
-        #region Target parameters for rendering
+        
+        // Target parameters for rendering
         private DateTime m_lastTargetParametersChanged;
         private EngineDevice m_targetDevice;
         private Size2 m_targetSize;
         private DpiScaling m_currentDpiScaling;
         private Scene m_targetScene;
         private bool m_viewRefreshForced;
-        #endregion
-
-        #region Callback methods for current host object
+        
+        // Callback methods for current host object
         private IRenderLoopHost m_renderLoopHost;
-        #endregion
-
-        #region Values needed for runtime
+        
+        // Values needed for runtime
         private bool m_lastRenderSuccessfully;
         private bool m_nextRenderAllowed;
         private int m_totalRenderCount;
         private RenderState m_renderState;
         private List<SeeingSharpVideoWriter> m_videoWriters;
         private bool m_callPresentInUiThread;
-        #endregion
-
-        #region Direct3D resources and other values gathered during graphics loading
+        
+        // Direct3D resources and other values gathered during graphics loading
         private List<Custom2DDrawingLayer> m_2dDrawingLayers;
         private DebugDrawingLayer m_debugDrawingLayer;
         private EngineDevice m_currentDevice;
@@ -92,15 +84,14 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.RenderTargetView m_renderTargetView;
         private D3D11.DepthStencilView m_renderTargetDepthView;
         private RawViewportF m_viewport;
-        #endregion
 
-        #region Direct3D resources for rendertarget capturing
+        // Direct3D resources for rendertarget capturing
+        // ----
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
         private D3D11.Texture2D m_copyHelperTextureStaging;
         private D3D11.Texture2D m_copyHelperTextureStandard;
-        #endregion
 
         /// <summary>
         /// Raised when the corresponding device has changed.

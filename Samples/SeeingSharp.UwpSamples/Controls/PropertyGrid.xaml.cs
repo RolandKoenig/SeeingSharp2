@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all games/applications distributed together with it. 
     Exception are projects where it is noted otherwhise.
     More info at 
@@ -20,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +33,6 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SeeingSharp.UwpSamples.Controls
 {
-    #region using
-    #endregion
-
     public sealed partial class PropertyGrid : UserControl
     {
         public static readonly DependencyProperty SelectedObjectProperty =

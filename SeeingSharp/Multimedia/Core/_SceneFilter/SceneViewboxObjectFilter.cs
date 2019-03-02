@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,17 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
 
     public class SceneViewboxObjectFilter : SceneObjectFilter
     {
+        // Values for viewbox clipping
+        private ViewInformation m_viewInfo;
+        private BoundingFrustum m_boundingFrustum;
+
+        // Values for y-filter
+        private bool m_enableYFilter;
+        private float m_yFilterMin;
+        private float m_yFilterMax;
+
         /// <summary>
         /// Sets current environment data.
         /// </summary>
@@ -158,16 +162,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Should this filter be updated on each frame?
         /// </summary>
         public override bool UpdateEachFrame => true;
-
-        #region Values for viewbox clipping
-        private ViewInformation m_viewInfo;
-        private BoundingFrustum m_boundingFrustum;
-        #endregion
-
-        #region Values for y-filter
-        private bool m_enableYFilter;
-        private float m_yFilterMin;
-        private float m_yFilterMax;
-        #endregion
     }
 }

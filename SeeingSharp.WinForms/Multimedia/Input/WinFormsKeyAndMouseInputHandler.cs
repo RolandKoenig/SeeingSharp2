@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mapings
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
@@ -31,19 +27,27 @@ using SharpDX;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     internal class WinFormsKeyAndMouseInputHandler : IInputHandler
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
 
         private static readonly Dictionary<WinForms.Keys, WinVirtualKey> s_keyMappingDict;
+
+        // References to the view
+        private WinForms.Control m_currentControl;
+        private RenderLoop m_renderLoop;
+        private IInputEnabledView m_focusHandler;
+
+        // Input states
+        private MouseOrPointerState m_stateMouseOrPointer;
+        private KeyboardState m_stateKeyboard;
+
+        // Some helper variables
+        private GDI.Point m_lastMousePoint;
+        private bool m_isMouseInside;
 
         /// <summary>
         /// Called when the mouse enters the screen.
@@ -386,21 +390,5 @@ namespace SeeingSharp.Multimedia.Input
             yield return m_stateMouseOrPointer;
             yield return m_stateKeyboard;
         }
-
-        #region References to the view
-        private WinForms.Control m_currentControl;
-        private RenderLoop m_renderLoop;
-        private IInputEnabledView m_focusHandler;
-        #endregion References to the view
-
-        #region Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
-        #endregion
-
-        #region Some helper variables
-        private GDI.Point m_lastMousePoint;
-        private bool m_isMouseInside;
-        #endregion Some helper variables
     }
 }

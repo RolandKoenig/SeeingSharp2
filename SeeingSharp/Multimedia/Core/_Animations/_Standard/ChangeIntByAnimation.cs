@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,20 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class ChangeIntByAnimation : AnimationBase
     {
-        #region Members for running animation
+        // Members for running animation
         private int m_alreadyIncreased;
-        #endregion
+
+        // Configuration members
+        private Func<int> m_getValueFunc;
+        private Action<int> m_setValueAction;
+        private int m_increaseTotal;
+        private TimeSpan m_timeSpan;
 
         /// <summary>
         /// Called when animation starts.
@@ -79,12 +78,5 @@ namespace SeeingSharp.Multimedia.Core
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
         public override bool IsBlockingAnimation => false;
-
-        #region Configuration members
-        private Func<int> m_getValueFunc;
-        private Action<int> m_setValueAction;
-        private int m_increaseTotal;
-        private TimeSpan m_timeSpan;
-        #endregion
     }
 }

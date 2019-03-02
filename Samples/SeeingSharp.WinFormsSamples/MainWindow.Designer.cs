@@ -20,8 +20,6 @@
             base.Dispose(disposing);
         }
 
-        #region Vom Windows Form-Designer generierter Code
-
         /// <summary>
         /// Erforderliche Methode für die Designerunterstützung.
         /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
@@ -306,7 +304,7 @@
 
         }
 
-        #endregion
+        
 
         private Multimedia.Views.SeeingSharpRendererControl m_ctrlRenderPanel;
         private System.Windows.Forms.Timer m_refreshTimer;

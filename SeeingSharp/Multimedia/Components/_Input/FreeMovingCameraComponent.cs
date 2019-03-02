@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
@@ -31,6 +28,10 @@ namespace SeeingSharp.Multimedia.Components
 {
     public class FreeMovingCameraComponent : SceneComponent
     {
+        // Constants
+        private const float MOVEMENT = 0.3f;
+        private const float ROTATION = 0.01f;
+
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
@@ -205,10 +206,5 @@ namespace SeeingSharp.Multimedia.Components
         public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
 
         public override bool IsViewSpecific => true;
-
-        #region Constants
-        private const float MOVEMENT = 0.3f;
-        private const float ROTATION = 0.01f;
-        #endregion
     }
 }

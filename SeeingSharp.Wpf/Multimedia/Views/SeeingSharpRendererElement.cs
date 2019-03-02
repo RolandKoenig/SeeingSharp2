@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,29 +41,51 @@ using SharpDX.Mathematics.Interop;
 using Color = System.Windows.Media.Color;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Gets or sets the custom layer for 2D rendering.
-        /// </summary>
-        public Custom2DDrawingLayer DrawingLayer2D
-        {
-            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
-            set => SetValue(DrawingLayer2DProperty, value);
-        }
+        // Dependency properties
+        public static readonly DependencyProperty SceneProperty =
+            DependencyProperty.Register(nameof(Scene), typeof(Scene), typeof(SeeingSharpRendererElement), new PropertyMetadata(new Scene()));
+        public static readonly DependencyProperty CameraProperty =
+            DependencyProperty.Register(nameof(Camera), typeof(Camera3DBase), typeof(SeeingSharpRendererElement), new PropertyMetadata(new PerspectiveCamera3D()));
+        public static readonly DependencyProperty DrawingLayer2DProperty =
+            DependencyProperty.Register(nameof(DrawingLayer2D), typeof(Custom2DDrawingLayer), typeof(SeeingSharpRendererElement), new PropertyMetadata(null));
+
+        // Some members..
+        private HigherD3DImageSource m_d3dImageSource;
+        private WriteableBitmap m_fallbackWpfImageSource;
+        private int m_lastRecreateWidth;
+        private int m_lastRecreateHeight;
+
+        // All needed direct3d resources
+        private D3D11.Texture2D m_backBufferForWpf;
+        private D3D11.Texture2D m_backBufferD3D11;
+        private D3D11.Texture2D m_depthBuffer;
+        private D3D11.RenderTargetView m_renderTarget;
+        private D3D11.DepthStencilView m_renderTargetDepth;
+        private Surface m_renderTarget2DDxgi;
+
+        // Some size related properties
+        private int m_renderTargetHeight;
+        private int m_renderTargetWidth;
+        private int m_viewportHeight;
+        private int m_viewportWidth;
+        private DateTime m_lastSizeChange;
+        private WpfSeeingSharpCompositionMode m_compositionMode;
+
+        // Change events
+        public event EventHandler SceneChanged;
+        public event EventHandler CameraChanged;
+        public event EventHandler DrawingLayer2DChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
 
-        #region State members for handling rendering problems
+        // State members for handling rendering problems
         private int m_isDirtyCount;
-        #endregion
+        
 
         /// <summary>
         /// Is this object in design mode?
@@ -651,45 +669,13 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        #region Dependency properties
-        public static readonly DependencyProperty SceneProperty =
-            DependencyProperty.Register(nameof(Scene), typeof(Scene), typeof(SeeingSharpRendererElement), new PropertyMetadata(new Scene()));
-        public static readonly DependencyProperty CameraProperty =
-            DependencyProperty.Register(nameof(Camera), typeof(Camera3DBase), typeof(SeeingSharpRendererElement), new PropertyMetadata(new PerspectiveCamera3D()));
-        public static readonly DependencyProperty DrawingLayer2DProperty =
-            DependencyProperty.Register(nameof(DrawingLayer2D), typeof(Custom2DDrawingLayer), typeof(SeeingSharpRendererElement), new PropertyMetadata(null));
-        #endregion
-
-        #region Some members..
-        private HigherD3DImageSource m_d3dImageSource;
-        private WriteableBitmap m_fallbackWpfImageSource;
-        private int m_lastRecreateWidth;
-        private int m_lastRecreateHeight;
-        #endregion
-
-        #region All needed direct3d resources
-        private D3D11.Texture2D m_backBufferForWpf;
-        private D3D11.Texture2D m_backBufferD3D11;
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.RenderTargetView m_renderTarget;
-        private D3D11.DepthStencilView m_renderTargetDepth;
-        private Surface m_renderTarget2DDxgi;
-        #endregion
-
-        #region Some size related properties
-        private int m_renderTargetHeight;
-        private int m_renderTargetWidth;
-        private int m_viewportHeight;
-        private int m_viewportWidth;
-        private DateTime m_lastSizeChange;
-        private WpfSeeingSharpCompositionMode m_compositionMode;
-        #endregion
-
-        #region Change events
-        public event EventHandler SceneChanged;
-        public event EventHandler CameraChanged;
-        public event EventHandler DrawingLayer2DChanged;
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
+        /// <summary>
+        /// Gets or sets the custom layer for 2D rendering.
+        /// </summary>
+        public Custom2DDrawingLayer DrawingLayer2D
+        {
+            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
+            set => SetValue(DrawingLayer2DProperty, value);
+        }
     }
 }

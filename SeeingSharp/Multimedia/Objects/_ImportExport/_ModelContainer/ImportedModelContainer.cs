@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -31,17 +28,17 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// Container for imported model data.
     /// </summary>
     public class ImportedModelContainer
     {
-        #region Static id counter 
+        // Static id counter 
         private static int s_maxContainerID;
-        #endregion
+
+        // All model data
+        private int m_importID;
+        private ImportOptions m_importOptions;
 
         /// <summary>
         /// Creates and adds the root for all imported scene objects.
@@ -132,10 +129,5 @@ namespace SeeingSharp.Multimedia.Objects
         /// (This property is handled by the importer)
         /// </summary>
         public float ResizeFactor => m_importOptions.ResizeFactor;
-
-        #region All model data
-        private int m_importID;
-        private ImportOptions m_importOptions;
-        #endregion
     }
 }

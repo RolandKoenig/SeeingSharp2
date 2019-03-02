@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,27 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class BitmapTextureResource : TextureResource
     {
-        #region Generic members
+        // Generic members
         private MemoryMappedTexture32bpp m_mappedTexture;
-        #endregion
+
+        // Member for Direct3D 11 rendering
+        private D3D11.Texture2D m_texture;
+        private D3D11.ShaderResourceView m_textureView;
 
         /// <summary>
         /// Loads the resource.
@@ -106,10 +100,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// 6 for cubemap textures.
         /// </summary>
         public override int ArraySize => m_texture.Description.ArraySize;
-
-        #region Member for Direct3D 11 rendering
-        private D3D11.Texture2D m_texture;
-        private D3D11.ShaderResourceView m_textureView;
-        #endregion
     }
 }

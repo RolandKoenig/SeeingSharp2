@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,16 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Collections.Generic;
 using SharpDX;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     public static class BoundingBoxEx
     {
         public static BoundingBox Create(IEnumerable<Vector3> containedLocations)

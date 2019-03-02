@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Collections.Generic;
 using SharpDX;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     public class Matrix3x2Stack
     {
+        // Stack data
+        private Stack<Matrix3x2> m_stack;
+        private int m_pushTimes;
+        private Matrix3x2 m_top;
+
         /// <summary>
         /// Resets this object to single identity matrix.
         /// </summary>
@@ -186,11 +185,5 @@ namespace SeeingSharp
         /// Gets the top matrix
         /// </summary>
         public Matrix3x2 Top => m_top;
-
-        #region Stack data
-        private Stack<Matrix3x2> m_stack;
-        private int m_pushTimes;
-        private Matrix3x2 m_top;
-        #endregion
     }
 }

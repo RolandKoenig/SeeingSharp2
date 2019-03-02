@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,19 +29,15 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A set of triangles of a VertexStructure which share the
     /// same material settings.
     /// </summary>
     public partial class VertexStructureSurface
     {
-        #region Material information
+        // Material information
         private Dictionary<Type, object> m_materialPropertiesExtended;
-        #endregion
-
+ 
         /// <summary>
         /// Clones this object.
         /// </summary>
@@ -919,11 +912,5 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public int this[int index] => m_indices[index];
         }
-
-        #region Common
-        #endregion
-
-        #region Geometry information
-        #endregion
     }
 }

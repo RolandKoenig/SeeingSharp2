@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
+// This code is ported from SharpDX.Toolkit
+// see: https://github.com/sharpdx/Toolkit
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,16 +33,8 @@ using SDX = SharpDX;
 using SDXIO = SharpDX.IO;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
-// This code is ported from SharpDX.Toolkit
-// see: https://github.com/sharpdx/Toolkit
-
 namespace SeeingSharp.Multimedia.Util.SdxTK
-{
-    #region using
-    #endregion
-
+{ 
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>

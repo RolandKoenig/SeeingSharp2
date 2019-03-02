@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,9 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
-// Namespace mappings
 
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
@@ -33,9 +29,6 @@ using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A description for <see cref="Image"/>.
     /// </summary>

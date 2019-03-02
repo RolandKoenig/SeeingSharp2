@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -35,24 +32,34 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// The core main loop for coordinating render and update processes over all
     /// registered RenderLoops.
     /// </summary>
     public class EngineMainLoop
     {
-        #region Members regarding 2D resources
+        // Main thread synchronization
+        private Task m_suspendWaiter;
+        private TaskCompletionSource<object> m_suspendWaiterSource;
+        private TaskCompletionSource<object> m_suspendCallWaiterSource;
+        private Task m_runningTask;
+        private ConcurrentQueue<Action> m_globalLoopAwaiters;
+
+        // RenderLoop collections
+        private List<RenderLoop> m_registeredRenderLoops;
+        private List<RenderLoop> m_unregisteredRenderLoops;
+        private object m_registeredRenderLoopsLock;
+
+        // Scene collections
+        private List<Scene> m_scenesForUnload;
+        private object m_scenesForUnloadLock;
+
+        // Members regarding 2D resources
         private ConcurrentQueue<Drawing2DResourceBase> m_drawing2DResourcesToUnload;
-        #endregion
 
-        #region Common
+        // Common
         private GraphicsCore m_host;
-        #endregion
-
-        #region Events        
+             
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
         /// input states (like Gampepad).
@@ -61,7 +68,6 @@ namespace SeeingSharp.Multimedia.Core
         /// See http://www.codeproject.com/Articles/37474/Threadsafe-Events
         /// </summary>
         public event EventHandler<GenericInputEventArgs> GenericInput;
-        #endregion
 
         /// <summary>
         /// Suspends rendering completely.
@@ -685,24 +691,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the total count of registered RenderLoop objects.
         /// </summary>
         public int RegisteredRenderLoopCount => m_registeredRenderLoops.Count;
-
-        #region main thread synchronization
-        private Task m_suspendWaiter;
-        private TaskCompletionSource<object> m_suspendWaiterSource;
-        private TaskCompletionSource<object> m_suspendCallWaiterSource;
-        private Task m_runningTask;
-        private ConcurrentQueue<Action> m_globalLoopAwaiters;
-        #endregion
-
-        #region RenderLoop collections
-        private List<RenderLoop> m_registeredRenderLoops;
-        private List<RenderLoop> m_unregisteredRenderLoops;
-        private object m_registeredRenderLoopsLock;
-        #endregion
-
-        #region Scene collections
-        private List<Scene> m_scenesForUnload;
-        private object m_scenesForUnloadLock;
-        #endregion
     }
 }

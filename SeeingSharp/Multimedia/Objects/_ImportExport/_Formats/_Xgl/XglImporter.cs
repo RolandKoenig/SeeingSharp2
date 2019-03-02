@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -33,9 +30,6 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     // Hirarchy in XGL file:
     //
     //  WORLD
@@ -78,6 +72,56 @@ namespace SeeingSharp.Multimedia.Objects
     [SupportedFileFormat("zgl", "SGI OpenGL render library format (compressed)")]
     public class XglImporter : IModelImporter
     {
+        // Internal resource names
+        private const string RES_CLASS_TEXTURE = "Tex";
+        private const string RES_CLASS_MATERIAL = "Mat";
+        private const string RES_CLASS_MESH = "Mesh";
+
+        // All common nodes
+        private const string NODE_NAME_DATA = "DATA";
+        private const string NODE_NAME_BACKGROUND = "BACKGROUND";
+        private const string NODE_NAME_LIGHTING = "LIGHTING";
+        private const string NODE_NAME_TEXTURE = "TEXTURE";
+        private const string NODE_NAME_MESH = "MESH";
+        private const string NODE_NAME_OBJECT = "OBJECT";
+
+        // All nodes containing texture information
+        private const string NODE_NAME_TEXTURE_RGBA = "TEXTURERGBA";
+        private const string NODE_NAME_TEXTURE_RGB = "TEXTURERGB";
+        private const string NODE_NAME_TEXTURE_MODULATE = "MODULATE";
+        private const string NODE_NAME_TEXTURE_REPEAT = "REPEAT";
+
+        // All nodes containing material information
+        private const string NODE_NAME_MAT = "MAT";
+        private const string NODE_NAME_MAT_DIFFUSE = "DIFF";
+        private const string NODE_NAME_MAT_AMB = "AMB";
+        private const string NODE_NAME_MAT_EMISS = "EMISS";
+        private const string NODE_NAME_MAT_SPEC = "SPEC";
+        private const string NODE_NAME_MAT_ALPHA = "ALPHA";
+        private const string NODE_NAME_MAT_SHINE = "SHINE";
+
+        // All nodes containing mesh information
+        private const string NODE_NAME_NORMAL = "N";
+        private const string NODE_NAME_POINT = "P";
+        private const string NODE_NAME_FACE = "F";
+        private const string NODE_NAME_FACE_VERTEX_1 = "FV1";
+        private const string NODE_NAME_FACE_VERTEX_2 = "FV2";
+        private const string NODE_NAME_FACE_VERTEX_3 = "FV3";
+        private const string NODE_NAME_FACE_MATERIAL_REF = "MATREF";
+        private const string NODE_NAME_FACE_TEXTUREREF_REF = "TEXTUREREF";
+        private const string NODE_NAME_FACE_POINT_REF = "PREF";
+        private const string NODE_NAME_FACE_NORMAL_REF = "NREF";
+        private const string NODE_NAME_PATCH = "PATCH";
+        private const string NODE_NAME_TC = "TC";
+        private const string NODE_NAME_SURFACE = "SURFACE";
+
+        // All nodes containing object information
+        private const string NODE_NAME_MESHREF = "MESHREF";
+        private const string NODE_NAME_TRANS_FORWARD = "FORWARD";
+        private const string NODE_NAME_TRANSFORM = "TRANSFORM";
+        private const string NODE_NAME_TRANS_UP = "UP";
+        private const string NODE_NAME_TRANS_POSITION = "POSITION";
+
         /// <summary>
         /// Imports the texture node where the xml reader is currently located.
         /// </summary>
@@ -602,61 +646,5 @@ namespace SeeingSharp.Multimedia.Objects
 
             return options;
         }
-
-        #region Internal resource names
-        private const string RES_CLASS_TEXTURE = "Tex";
-        private const string RES_CLASS_MATERIAL = "Mat";
-        private const string RES_CLASS_MESH = "Mesh";
-        #endregion Internal resource names
-
-        #region All common nodes
-        private const string NODE_NAME_DATA = "DATA";
-        private const string NODE_NAME_BACKGROUND = "BACKGROUND";
-        private const string NODE_NAME_LIGHTING = "LIGHTING";
-        private const string NODE_NAME_TEXTURE = "TEXTURE";
-        private const string NODE_NAME_MESH = "MESH";
-        private const string NODE_NAME_OBJECT = "OBJECT";
-        #endregion All common nodes
-
-        #region All nodes containing texture information
-        private const string NODE_NAME_TEXTURE_RGBA = "TEXTURERGBA";
-        private const string NODE_NAME_TEXTURE_RGB = "TEXTURERGB";
-        private const string NODE_NAME_TEXTURE_MODULATE = "MODULATE";
-        private const string NODE_NAME_TEXTURE_REPEAT = "REPEAT";
-        #endregion All nodes containing texture information
-
-        #region All nodes containing material information
-        private const string NODE_NAME_MAT = "MAT";
-        private const string NODE_NAME_MAT_DIFFUSE = "DIFF";
-        private const string NODE_NAME_MAT_AMB = "AMB";
-        private const string NODE_NAME_MAT_EMISS = "EMISS";
-        private const string NODE_NAME_MAT_SPEC = "SPEC";
-        private const string NODE_NAME_MAT_ALPHA = "ALPHA";
-        private const string NODE_NAME_MAT_SHINE = "SHINE";
-        #endregion
-
-        #region All nodes containing mesh information
-        private const string NODE_NAME_NORMAL = "N";
-        private const string NODE_NAME_POINT = "P";
-        private const string NODE_NAME_FACE = "F";
-        private const string NODE_NAME_FACE_VERTEX_1 = "FV1";
-        private const string NODE_NAME_FACE_VERTEX_2 = "FV2";
-        private const string NODE_NAME_FACE_VERTEX_3 = "FV3";
-        private const string NODE_NAME_FACE_MATERIAL_REF = "MATREF";
-        private const string NODE_NAME_FACE_TEXTUREREF_REF = "TEXTUREREF";
-        private const string NODE_NAME_FACE_POINT_REF = "PREF";
-        private const string NODE_NAME_FACE_NORMAL_REF = "NREF";
-        private const string NODE_NAME_PATCH = "PATCH";
-        private const string NODE_NAME_TC = "TC";
-        private const string NODE_NAME_SURFACE = "SURFACE";
-        #endregion All nodes containing mesh information
-
-        #region All nodes containing object information
-        private const string NODE_NAME_MESHREF = "MESHREF";
-        private const string NODE_NAME_TRANS_FORWARD = "FORWARD";
-        private const string NODE_NAME_TRANSFORM = "TRANSFORM";
-        private const string NODE_NAME_TRANS_UP = "UP";
-        private const string NODE_NAME_TRANS_POSITION = "POSITION";
-        #endregion All nodes containing object information
     }
 }

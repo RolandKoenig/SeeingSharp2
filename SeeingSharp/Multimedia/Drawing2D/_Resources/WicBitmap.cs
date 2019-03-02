@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
@@ -31,14 +28,10 @@ using SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion
-
     public class WicBitmap : IDisposable
     {
-        #region Native resource
+        // Native resource
         private Bitmap m_wicBitmap;
-        #endregion
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
         {

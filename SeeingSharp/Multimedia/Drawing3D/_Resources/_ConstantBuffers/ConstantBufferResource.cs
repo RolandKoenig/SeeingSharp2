@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,27 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class ConstantBufferResource : Resource
     {
-        #region Direct3D resources
+        // Direct3D resources
         private D3D11.Buffer m_constantBuffer;
-        #endregion
 
         /// <summary>
         /// Loads the resource.
@@ -96,8 +86,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the total size of the constant buffer.
         /// </summary>
         public int BufferSize { get; }
-
-        #region Configuration
-        #endregion
     }
 }

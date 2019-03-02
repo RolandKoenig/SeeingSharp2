@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,26 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class ViewInformation
     {
-        #region Runtime values
+        // Runtime values
         private BoundingFrustum m_cameraFrustum;
-        #endregion
 
-        #region Object filters for the scene model
+        // Object filters for the scene model
         private List<SceneObjectFilter> m_sceneObjectFilters;
-        #endregion
 
         /// <summary>
         /// The owner of this ViewInformation object (standard field for fast access):

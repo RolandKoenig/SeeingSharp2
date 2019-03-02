@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,18 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class RotateQuaternionToAnimation : AnimationBase
     {
+        // Parameters
+        private IAnimatableObjectQuaternion m_targetObject;
+        private Quaternion m_startQuaternion;
+        private Quaternion m_targetQuaternion;
+
         /// <summary>
         /// Called when animation starts.
         /// </summary>
@@ -75,11 +74,5 @@ namespace SeeingSharp.Multimedia.Core
             m_targetObject = targetObject;
             m_targetQuaternion = targetQuaternion;
         }
-
-        #region Parameters
-        private IAnimatableObjectQuaternion m_targetObject;
-        private Quaternion m_startQuaternion;
-        private Quaternion m_targetQuaternion;
-        #endregion
     }
 }

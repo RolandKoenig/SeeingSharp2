@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,29 +33,16 @@ using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     //[ContentProperty(Name = "SceneComponents")]
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Gets or sets the camera.
-        /// </summary>
-        public Camera3DBase Camera
-        {
-            get => (Camera3DBase)GetValue(CameraProperty);
-            set => SetValue(CameraProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the custom layer for 2D rendering.
-        /// </summary>
-        public Custom2DDrawingLayer DrawingLayer2D
-        {
-            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
-            set => SetValue(DrawingLayer2DProperty, value);
-        }
+        // Dependency properties
+        public static readonly DependencyProperty SceneProperty =
+            DependencyProperty.Register("Scene", typeof(Scene), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new Scene(), OnPropertyChanged));
+        public static readonly DependencyProperty CameraProperty =
+            DependencyProperty.Register("Camera", typeof(Camera3DBase), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new PerspectiveCamera3D(), OnPropertyChanged));
+        public static readonly DependencyProperty DrawingLayer2DProperty =
+            DependencyProperty.Register("DrawingLayer2D", typeof(Custom2DDrawingLayer), typeof(SeeingSharpRenderPanel), new PropertyMetadata(null, OnPropertyChanged));
 
         /// <summary>
         /// Called when one of the dependency properties has changed.
@@ -167,13 +151,22 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        #region Dependency properties
-        public static readonly DependencyProperty SceneProperty =
-            DependencyProperty.Register("Scene", typeof(Scene), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new Scene(), OnPropertyChanged));
-        public static readonly DependencyProperty CameraProperty =
-            DependencyProperty.Register("Camera", typeof(Camera3DBase), typeof(SeeingSharpRenderPanel), new PropertyMetadata(new PerspectiveCamera3D(), OnPropertyChanged));
-        public static readonly DependencyProperty DrawingLayer2DProperty =
-            DependencyProperty.Register("DrawingLayer2D", typeof(Custom2DDrawingLayer), typeof(SeeingSharpRenderPanel), new PropertyMetadata(null, OnPropertyChanged));
-        #endregion
+        /// <summary>
+        /// Gets or sets the camera.
+        /// </summary>
+        public Camera3DBase Camera
+        {
+            get => (Camera3DBase)GetValue(CameraProperty);
+            set => SetValue(CameraProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the custom layer for 2D rendering.
+        /// </summary>
+        public Custom2DDrawingLayer DrawingLayer2D
+        {
+            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
+            set => SetValue(DrawingLayer2DProperty, value);
+        }
     }
 }

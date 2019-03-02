@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,16 +29,24 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
-    #region using
-    #endregion
-
     public class ObjectThread
     {
         private const int STANDARD_HEARTBEAT = 500;
 
-        #region Members for thread configuration
+        // Members for thread configuration
         private bool m_createMessenger;
-        #endregion
+
+        // Members for thread runtime
+        private volatile ObjectThreadState m_currentState;
+        private Thread m_mainThread;
+        private CultureInfo m_culture;
+        private CultureInfo m_uiCulture;
+
+        // Threading resources
+        private ObjectThreadSynchronizationContext m_syncContext;
+        private ConcurrentQueue<Action> m_taskQueue;
+        private SemaphoreSlim m_mainLoopSynchronizeObject;
+        private SemaphoreSlim m_threadStopSynchronizeObject;
 
         /// <summary>
         /// Called when the thread ist starting.
@@ -358,8 +363,7 @@ namespace SeeingSharp.Util
         /// </summary>
         /// <param name="name">The name of the generated thread.</param>
         /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
-        /// <param name="createMessenger">Do automatically create a messenger for this thread?</param>
-        public ObjectThread(string name, int heartBeat, bool createMessenger = false)
+        public ObjectThread(string name, int heartBeat)
         {
             m_taskQueue = new ConcurrentQueue<Action>();
             m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
@@ -371,7 +375,6 @@ namespace SeeingSharp.Util
             m_uiCulture = Thread.CurrentThread.CurrentUICulture;
 
             Timer = new ObjectThreadTimer();
-            m_createMessenger = createMessenger;
         }
 
         /// <summary>
@@ -438,19 +441,5 @@ namespace SeeingSharp.Util
                 m_owner = owner;
             }
         }
-
-        #region Members for thread runtime
-        private volatile ObjectThreadState m_currentState;
-        private Thread m_mainThread;
-        private CultureInfo m_culture;
-        private CultureInfo m_uiCulture;
-        #endregion
-
-        #region Threading resources
-        private ObjectThreadSynchronizationContext m_syncContext;
-        private ConcurrentQueue<Action> m_taskQueue;
-        private SemaphoreSlim m_mainLoopSynchronizeObject;
-        private SemaphoreSlim m_threadStopSynchronizeObject;
-        #endregion
     }
 }

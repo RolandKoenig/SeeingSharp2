@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all games/applications distributed together with it. 
     Exception are projects where it is noted otherwhise.
     More info at 
@@ -20,16 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
 
 using System.Collections.Generic;
 using SharpDX;
 
 namespace SeeingSharp
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A cutting ears triangulator for simple polygons with no holes. O(n^2)
     /// This algorithm is based on the implementation of the Helix Toolkit (http://helixtoolkit.codeplex.com/)

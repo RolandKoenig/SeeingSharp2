@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -32,13 +28,8 @@ using SeeingSharp.Util;
 using GDI = System.Drawing;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public static class GraphicsHelperWpf
     {
         public static void UniformRescale(ref int width, ref int height, float maxDimension)

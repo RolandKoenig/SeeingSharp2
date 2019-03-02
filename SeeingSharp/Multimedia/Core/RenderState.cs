@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Same namespace mappings.
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -34,31 +30,24 @@ using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class RenderState : IDisposable
     {
-        /// <summary>
-        /// Gets or sets the current device index.
-        /// </summary>
-        internal int DeviceIndex;
+        // Generic fields
+        private bool m_disposed;
+        private Stack<RenderStackEntry> m_renderSettingsStack;
+        private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
+        private RenderStackEntry m_currentRenderSettings;
+        private Scene m_currentScene;
+        private ResourceDictionary m_currentResourceDictionary;
+        private Matrix4Stack m_world;
+        private PerformanceAnalyzer m_perfomanceCalculator;
 
-        //internal int LastRenderBlockID;
-
-        /// <summary>
-        /// Gets or sets the current render target for 2D rendering.
-        /// </summary>
-        internal D2D.RenderTarget RenderTarget2D;
-
-        /// <summary>
-        /// Gets or sets the current view index.
-        /// </summary>
-        internal int ViewIndex;
+        // Current state
+        private MaterialResource m_forcedMaterial;
+        private MaterialResource m_lastAppliedMaterial;
+        private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
 
         /// <summary>
         /// Forces the use of the given material.
@@ -484,6 +473,21 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        /// <summary>
+        /// Gets or sets the current device index.
+        /// </summary>
+        internal int DeviceIndex;
+
+        /// <summary>
+        /// Gets or sets the current render target for 2D rendering.
+        /// </summary>
+        internal D2D.RenderTarget RenderTarget2D;
+
+        /// <summary>
+        /// Gets or sets the current view index.
+        /// </summary>
+        internal int ViewIndex;
+
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -527,25 +531,5 @@ namespace SeeingSharp.Multimedia.Core
             /// </summary>
             public Matrix ViewProj => Camera.ViewProjection;
         }
-
-        #region Resources for Direct3D 11 rendering
-        #endregion
-
-        #region  Generic fields
-        private bool m_disposed;
-        private Stack<RenderStackEntry> m_renderSettingsStack;
-        private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
-        private RenderStackEntry m_currentRenderSettings;
-        private Scene m_currentScene;
-        private ResourceDictionary m_currentResourceDictionary;
-        private Matrix4Stack m_world;
-        private PerformanceAnalyzer m_perfomanceCalculator;
-        #endregion
-
-        #region Current state
-        private MaterialResource m_forcedMaterial;
-        private MaterialResource m_lastAppliedMaterial;
-        private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
-        #endregion
     }
 }

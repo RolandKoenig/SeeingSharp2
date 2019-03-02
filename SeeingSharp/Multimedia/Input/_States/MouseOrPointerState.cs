@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,17 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Checking;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Input
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// A state object describing current mouse or pointer input.
     /// </summary>
@@ -38,6 +32,16 @@ namespace SeeingSharp.Multimedia.Input
     {
         public static readonly MouseOrPointerState Dummy = new MouseOrPointerState();
         private static readonly int BUTTON_COUNT = Enum.GetValues(typeof(MouseButton)).Length;
+
+        // Current state
+        private Vector2 m_moveDistancePixel;
+        private Vector2 m_positionPixel;
+        private Vector2 m_screenSizePixel;
+        private int m_wheelDelta;
+        private bool[] m_buttonsHit;        // Only for one frame at true
+        private bool[] m_buttonsDown;       // All following frames the mouse is down
+        private bool[] m_buttonsUp;         // True on the frame when the button changes to up
+        private bool m_isInside;
 
         /// <summary>
         /// Returns true if the user pressed the given button in this frame.
@@ -322,19 +326,5 @@ namespace SeeingSharp.Multimedia.Input
                 set => m_host.Type = value;
             }
         }
-
-        #region Generic info
-        #endregion
-
-        #region Current state
-        private Vector2 m_moveDistancePixel;
-        private Vector2 m_positionPixel;
-        private Vector2 m_screenSizePixel;
-        private int m_wheelDelta;
-        private bool[] m_buttonsHit;        // Only for one frame at true
-        private bool[] m_buttonsDown;       // All following frames the mouse is down
-        private bool[] m_buttonsUp;         // True on the frame when the button changes to up
-        private bool m_isInside;
-        #endregion
     }
 }

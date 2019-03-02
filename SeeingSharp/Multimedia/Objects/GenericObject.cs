@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -31,26 +27,21 @@ using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     public class GenericObject : SceneSpacialObject
     {
-        #region Resources
+        // Resources
         private IndexBasedDynamicCollection<GeometryResource> m_localResources;
-        #endregion
+        
 
-        #region private float m_opacity;
+        private float m_opacity;
         private bool m_passRelevantValuesChanged;
-        #endregion
+        
 
-        #region Configuration members
+        // Configuration members
         private NamedOrGenericKey m_resGeometryKey;
-        #endregion
+        
 
         /// <summary>
         /// Tries to get the bounding box for the given render-loop.

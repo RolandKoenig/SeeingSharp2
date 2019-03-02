@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,20 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 using System;
 using System.Drawing.Imaging;
 using SeeingSharp.Checking;
 using GDI = System.Drawing;
 
-#endregion
-
 namespace SeeingSharp.Tests.Util
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class is for comparing two pictueres and to calculate the difference between these.
     /// Originally, this algorithm was based on http://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET.

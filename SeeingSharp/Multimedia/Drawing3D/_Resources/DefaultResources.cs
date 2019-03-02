@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,25 +19,37 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
-
-//Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class DefaultResources : Resource
     {
         public static readonly NamedOrGenericKey RESOURCE_KEY = new NamedOrGenericKey(typeof(DefaultResources));
+
+        // Blend states
+        private Lazy<D3D11.BlendState> m_defaultBlendState;
+        private Lazy<D3D11.BlendState> m_alphaBlendingBlendState;
+
+        // Depth stencil states
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDefault;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDisableZWrites;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateInvertedZTest;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAllwaysPass;
+
+        // Rastarizer states
+        private Lazy<D3D11.RasterizerState> m_rasterStateLines;
+        private Lazy<D3D11.RasterizerState> m_rasterStateDefault;
+        private Lazy<D3D11.RasterizerState> m_rasterStateBiased;
+        private Lazy<D3D11.RasterizerState> m_rasterStateWireframe;
+
+        // Sample states
+        private Lazy<D3D11.SamplerState> m_samplerStateLow;
+        private Lazy<D3D11.SamplerState> m_samplerStateMedium;
+        private Lazy<D3D11.SamplerState> m_samplerStateHigh;
 
         /// <summary>
         /// Gets the sampler state with the given requested quality level.
@@ -297,30 +308,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         public override bool IsLoaded => m_defaultBlendState != null;
-
-        #region Blend states
-        private Lazy<D3D11.BlendState> m_defaultBlendState;
-        private Lazy<D3D11.BlendState> m_alphaBlendingBlendState;
-        #endregion
-
-        #region Depth stencil states
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDefault;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateDisableZWrites;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateInvertedZTest;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAllwaysPass;
-        #endregion
-
-        #region Rastarizer states
-        private Lazy<D3D11.RasterizerState> m_rasterStateLines;
-        private Lazy<D3D11.RasterizerState> m_rasterStateDefault;
-        private Lazy<D3D11.RasterizerState> m_rasterStateBiased;
-        private Lazy<D3D11.RasterizerState> m_rasterStateWireframe;
-        #endregion
-
-        #region Sample states
-        private Lazy<D3D11.SamplerState> m_samplerStateLow;
-        private Lazy<D3D11.SamplerState> m_samplerStateMedium;
-        private Lazy<D3D11.SamplerState> m_samplerStateHigh;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -33,24 +30,26 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public abstract partial class SceneObject : IDisposable, IAnimatableObject
     {
-        #region Members for animations
+        // Generic members
+        private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
+        private DetailLevel m_targetDetailLevel;
+        private bool m_isStatic;
+
+        // Some information about parent containers
+        private Scene m_scene;
+        private SceneLayer m_sceneLayer;
+
+        // Collections for describing object hierarchies
+        private List<SceneObject> m_children;
+        private SceneObject m_parent;
+
+        // Members for animations
         private AnimationHandler m_animationHandler;
-        #endregion Members for animations
 
-        #region Members for behaviors
+        // Members for behaviors
         private List<SceneObjectBehavior> m_behaviors;
-        #endregion Members for behaviors
-
-        /// <summary>
-        /// Indicates whether transformation data has changed during last update calls.
-        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
-        /// </summary>
-        internal bool TransormationChanged;
 
         /// <summary>
         /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
@@ -660,20 +659,10 @@ namespace SeeingSharp.Multimedia.Core
             get;
         }
 
-        #region Generic members
-        private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
-        private DetailLevel m_targetDetailLevel;
-        private bool m_isStatic;
-        #endregion Generic members
-
-        #region Some information about parent containers
-        private Scene m_scene;
-        private SceneLayer m_sceneLayer;
-        #endregion Some information about parent containers
-
-        #region Collections for describing object hierarchies
-        private List<SceneObject> m_children;
-        private SceneObject m_parent;
-        #endregion Collections for describing object hierarchies
+        /// <summary>
+        /// Indicates whether transformation data has changed during last update calls.
+        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
+        /// </summary>
+        internal bool TransormationChanged;
     }
 }

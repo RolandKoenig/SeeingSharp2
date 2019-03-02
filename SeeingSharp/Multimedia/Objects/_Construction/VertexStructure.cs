@@ -1,4 +1,3 @@
-#region License information
 /*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,21 +30,21 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// Describes a 3D geometry in memory.
     /// </summary>
     public class VertexStructure
     {
-        #region Description
+        // Description
         private string m_name;
-        #endregion
-
-        #region Geometry
+        
+        // Geometry
         private List<VertexStructureSurface> m_surfaces;
-        #endregion
+
+        // Members for build time transform
+        private bool m_buildTimeTransformEnabled;
+        private Matrix m_buildTransformMatrix;
+        private Func<Vertex, Vertex> m_buildTimeTransformFunc;
 
         /// <summary>
         /// Creates the surface on this VertexStructure.
@@ -825,11 +822,5 @@ namespace SeeingSharp.Multimedia.Objects
                 internal set => m_surfaces[index] = value;
             }
         }
-
-        #region Members for build time transform
-        private bool m_buildTimeTransformEnabled;
-        private Matrix m_buildTransformMatrix;
-        private Func<Vertex, Vertex> m_buildTimeTransformFunc;
-        #endregion
     }
 }

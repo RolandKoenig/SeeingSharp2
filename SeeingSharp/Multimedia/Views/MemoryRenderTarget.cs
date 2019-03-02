@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Namespace mappings
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -35,21 +31,30 @@ using SharpDX;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Views
 {
-    #region using
-    #endregion
-
     //For handling of staging resource see
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
+
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
     {
         /// <summary>
         /// Raises before the render target starts rendering.
         /// </summary>
         public event CancelEventHandler BeforeRender;
+
+        // Configuration
+        private int m_pixelWidth;
+        private int m_pixelHeight;
+
+        // All needed direct3d resources
+        private D3D11.Device m_device;
+        private D3D11.DeviceContext m_deviceContext;
+        private D3D11.Texture2D m_copyHelperTextureStaging;
+        private D3D11.Texture2D m_renderTarget;
+        private D3D11.Texture2D m_renderTargetDepth;
+        private D3D11.RenderTargetView m_renderTargetView;
+        private D3D11.DepthStencilView m_renderTargetDepthView;
 
         /// <summary>
         /// Awaits next render.
@@ -203,23 +208,5 @@ namespace SeeingSharp.Multimedia.Views
         public SynchronizationContext UISynchronizationContext => RenderLoop.UISynchronizationContext;
 
         public bool IsOperational => RenderLoop.IsOperational;
-
-        #region Configuration
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        #endregion
-
-        #region Reference to the render loop
-        #endregion
-
-        #region All needed direct3d resources
-        private D3D11.Device m_device;
-        private D3D11.DeviceContext m_deviceContext;
-        private D3D11.Texture2D m_copyHelperTextureStaging;
-        private D3D11.Texture2D m_renderTarget;
-        private D3D11.Texture2D m_renderTargetDepth;
-        private D3D11.RenderTargetView m_renderTargetView;
-        private D3D11.DepthStencilView m_renderTargetDepthView;
-        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,24 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
+
 using SeeingSharp.Util;
 using DWrite = SharpDX.DirectWrite;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class FactoryHandlerDWrite
     {
-        #region Resources for DirectWrite
+        // Resources for DirectWrite
         private DWrite.Factory m_factory;
-        #endregion
-
+        
         /// <summary>
         /// Unloads all resources.
         /// </summary>

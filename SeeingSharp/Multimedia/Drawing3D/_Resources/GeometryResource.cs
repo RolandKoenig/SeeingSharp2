@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,12 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
-
-// Some namespace mappings
-using System;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
@@ -34,21 +29,41 @@ using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 using Resource = SeeingSharp.Multimedia.Core.Resource;
-#endregion
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    #region using
-    #endregion
-
     public class GeometryResource : Resource
     {
+        // Constants
         private const int MAX_VERTEX_COUNT_PER_BUFFER = 1000000000;
         private const int MAX_INDEX_COUNT_PER_BUFFER = 1000000000;
 
-        #region  Resources for Direct3D 11 rendering
+        // Misc
+        private BoundingBox m_boundingBox;
+        private GeometryFactory m_geometry;
+
+        // Loaded resources
         private LoadedStructureInfo[] m_loadedStructures;
-        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeometryResource"/> class.
+        /// </summary>
+        public GeometryResource(GeometryFactory geometry)
+        {
+            m_geometry = geometry;
+
+            m_loadedStructures = new LoadedStructureInfo[0];
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeometryResource"/> class.
+        /// </summary>
+        /// <param name="vertexStructure">The vertex structures.</param>
+        public GeometryResource(VertexStructure vertexStructure)
+            : this(new GenericGeometryFactory(vertexStructure))
+        {
+
+        }
 
         /// <summary>
         /// Stores all required data into a new <see cref="ExportGeometryInfo"/>.
@@ -69,9 +84,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             for(var loop=0; loop<loadedStructures.Length; loop++)
             {
                 var actLoadedStructure = loadedStructures[loop];
-                if(actLoadedStructure == null) { continue; }
 
-                if(actLoadedStructure.Material != null) { yield return actLoadedStructure.Material; }
+                if(actLoadedStructure?.Material != null) { yield return actLoadedStructure.Material; }
             }
         }
 
@@ -89,10 +103,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             for (var loop = 0; loop < m_loadedStructures.Length; loop++)
             {
                 var actLoadedStructure = m_loadedStructures[loop].VertexStructure;
-
-                var currentDistance = float.NaN;
-
-                if (actLoadedStructure.Intersects(pickingRay, pickingOptions, out currentDistance))
+                if (actLoadedStructure.Intersects(pickingRay, pickingOptions, out var currentDistance))
                 {
                     result = true;
 
@@ -111,18 +122,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, GeometryFactory objectType)
         {
-            //Unload resource first if it was loaded
+            // Unload resource first if it was loaded
             var wasLoaded = IsLoaded;
             if (wasLoaded)
             {
                 UnloadResource();
             }
 
-            //Update members
+            // Update members
             m_geometry = objectType;
             m_boundingBox = new BoundingBox();
 
-            //Reload resources again if they where loaded before
+            // Reload resources again if they where loaded before
             if (wasLoaded)
             {
                 LoadResource();
@@ -210,9 +221,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        /// <summary>
-        /// Loads the resource.
-        /// </summary>
+        /// <inheritdoc />
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Build structures
@@ -222,7 +231,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Build BoundingBox around all vertices
             var vertexLocations = new List<Vector3>();
-
             for (var loop = 0; loop < structures.Length; loop++)
             {
                 foreach (var actVertex in structures[loop].Vertices)
@@ -237,11 +245,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_loadedStructures = BuildBuffers(device, structures, resources);
         }
 
-        /// <summary>
-        /// Unloads the resource.
-        /// </summary>
+        /// <inheritdoc />
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
+            device.EnsureNotNull(nameof(device));
+
             for (var loop = 0; loop < m_loadedStructures.Length; loop++)
             {
                 m_loadedStructures[loop].InputLayout = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].InputLayout);
@@ -274,12 +282,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var indexBufferID = 0;
 
             // Define the action which finishes current index buffer
-            Action actionFinishIndexBuffer = () =>
+            void FinishIndexBuffer()
             {
                 // Create the vertex buffer
-                var indexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(
-                    device,
-                    cachedIndices.ToArray());
+                var indexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, cachedIndices.ToArray());
                 cachedIndices.Clear();
                 actIndexCount = 0;
                 indexBufferID++;
@@ -291,21 +297,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 lastFinishedIndexBufferResultIndex = result.Count - 1;
-            };
+            }
 
             // Define the action which finishes current vertex buffer
-            Action actionFinishVertexBuffer = () =>
+            void FinishVertexBuffer()
             {
                 // Create the vertex buffer
-                var vertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(
-                    device,
-                    cachedVertices.ToArray());
+                var vertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, cachedVertices.ToArray());
                 cachedVertices.Clear();
                 actVertexCount = 0;
                 vertexBufferID++;
 
                 // Do also finish index buffers in this case
-                actionFinishIndexBuffer();
+                FinishIndexBuffer();
 
                 // Do also create index buffer
                 for (var loop = lastFinishedVertexBufferResultIndex + 1; loop < result.Count; loop++)
@@ -314,7 +318,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 lastFinishedVertexBufferResultIndex = result.Count - 1;
-            };
+            }
 
             // Load all structures into memory within a loop
             for(var loopStruct = 0; loopStruct<structuresCount; loopStruct++)
@@ -326,10 +330,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // Handle vertex data
                 var vertexArray = StandardVertex.FromVertexStructure(actStructure);
-
                 if(actVertexCount + vertexArray.Length > MAX_VERTEX_COUNT_PER_BUFFER)
                 {
-                    actionFinishVertexBuffer();
+                    FinishVertexBuffer();
                 }
 
                 cachedVertices.Add(vertexArray);
@@ -364,7 +367,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                     if(actIndexCount + indexArray.Length > MAX_INDEX_COUNT_PER_BUFFER)
                     {
-                        actionFinishIndexBuffer();
+                        FinishIndexBuffer();
                     }
 
                     cachedIndices.Add(indexArray);
@@ -407,34 +410,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Finish all remaining buffers finally
-            if(cachedVertices.Count > 0) { actionFinishVertexBuffer(); }
-            if(cachedIndices.Count > 0) { actionFinishIndexBuffer(); }
+            if(cachedVertices.Count > 0) { FinishVertexBuffer(); }
+            if(cachedIndices.Count > 0) { FinishIndexBuffer(); }
 
             return result.ToArray();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeometryResource"/> class.
-        /// </summary>
-        public GeometryResource(GeometryFactory geometry)
-        {
-            m_geometry = geometry;
-
-            m_loadedStructures = new LoadedStructureInfo[0];
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeometryResource"/> class.
-        /// </summary>
-        /// <param name="vertexStructure">The vertex structures.</param>
-        public GeometryResource(VertexStructure vertexStructure)
-            : this(new GenericGeometryFactory(vertexStructure))
-        {
-        }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
+        /// <inheritdoc />
         public override bool IsLoaded => m_loadedStructures.Length > 0;
 
         /// <summary>
@@ -443,7 +425,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public GeometryFactory Geometry => m_geometry;
 
         /// <summary>
-        /// Gets the bounding box sourounding this object.
+        /// Gets the bounding box surrounding this object.
         /// </summary>
         public BoundingBox BoundingBox => m_boundingBox;
 
@@ -464,10 +446,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             public int VertexBufferID;
             public VertexStructure VertexStructure;
         }
-
-        #region Generic resources
-        private BoundingBox m_boundingBox;
-        private GeometryFactory m_geometry;
-        #endregion
     }
 }

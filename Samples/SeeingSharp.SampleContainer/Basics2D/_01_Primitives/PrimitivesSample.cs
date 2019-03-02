@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -30,9 +27,6 @@ using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
 {
-    #region using
-    #endregion
-
     [SampleDescription(
         "Primitives", 1, nameof(Basics2D),
         "PreviewImage.png",

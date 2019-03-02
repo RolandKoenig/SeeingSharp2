@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-// Some namespace mappings
 using System;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
@@ -32,13 +28,8 @@ using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class makes a Direct3D 11 texture available for 2D rendering with Direct2D.
     /// </summary>
@@ -46,9 +37,16 @@ namespace SeeingSharp.Multimedia.Core
     {
         private static readonly NamedOrGenericKey RES_KEY_FALLBACK_TEXTURE = GraphicsCore.GetNextGenericResourceKey();
 
-        #region Graphics object
+        // Graphics object
         private Graphics2D m_graphics2D;
-        #endregion
+
+        // Given resources
+        private EngineDevice m_device;
+        private D3D11.Texture2D m_renderTarget3D;
+
+        // Own 2D render target resource
+        private D2D.RenderTarget m_renderTarget2D;
+        private D2D.Bitmap1 m_renderTargetBitmap;
 
         /// <summary>
         /// Creates all resources
@@ -163,15 +161,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the 2D graphics object.
         /// </summary>
         internal Graphics2D Graphics => m_graphics2D;
-
-        #region Given resources
-        private EngineDevice m_device;
-        private D3D11.Texture2D m_renderTarget3D;
-        #endregion
-
-        #region Own 2D render target resource
-        private D2D.RenderTarget m_renderTarget2D;
-        private D2D.Bitmap1 m_renderTargetBitmap;
-        #endregion
     }
 }

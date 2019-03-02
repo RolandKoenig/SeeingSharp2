@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,22 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    #region using
-    #endregion using
-
     public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed
     {
-        #region Helper flags
+        // Helper flags
         private bool m_isDisposed;
-        #endregion Helper flags
 
         /// <summary>
         /// Unloads all resources loaded on the given device.

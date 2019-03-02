@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,28 +19,26 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public class SceneLayer
     {
-        #region View related members
+        // View related members
         private IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset> m_viewSubsets;
-        #endregion
+
+        // All generic members
+        private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
+        private List<SceneObject> m_sceneObjectsNotStatic;
+        private List<SceneObject> m_sceneObjectsNotSpacial;
+        private bool m_isInUpdate;
+        private bool m_isInUpdateBeside;
 
         /// <summary>
         /// Registers the given view on this layer.
@@ -534,13 +531,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets total count of objects within the scene.
         /// </summary>
         public int CountObjects => ObjectsInternal.Count;
-
-        #region All generic members
-        private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
-        private List<SceneObject> m_sceneObjectsNotStatic;
-        private List<SceneObject> m_sceneObjectsNotSpacial;
-        private bool m_isInUpdate;
-        private bool m_isInUpdateBeside;
-        #endregion
     }
 }

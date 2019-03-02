@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,19 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-
 using System;
 using System.Runtime.InteropServices;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    #region using
-    #endregion
-
     public unsafe class MemoryMappedTexture32bpp : IDisposable
     {
+        // The native structure of this texture
+        private IntPtr m_pointer;
+        private int* m_pointerNative;
+        private Size2 m_size;
+
         /// <summary>
         /// Converts the underlying buffer to a managed byte array.
         /// </summary>
@@ -134,11 +133,5 @@ namespace SeeingSharp.Multimedia.Core
                 return m_pointer;
             }
         }
-
-        #region The native structure of this texture
-        private IntPtr m_pointer;
-        private int* m_pointerNative;
-        private Size2 m_size;
-        #endregion
     }
 }

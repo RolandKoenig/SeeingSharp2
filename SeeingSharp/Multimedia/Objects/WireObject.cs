@@ -1,5 +1,4 @@
-﻿#region License information
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -20,33 +19,28 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-#endregion
-#region using
 
-//Some namespace mappings
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
-#endregion
-
 namespace SeeingSharp.Multimedia.Objects
 {
-    #region using
-    #endregion
-
     /// <summary>
     /// This class is responsible for rendering simple lines into the 3d scene.
     /// Use the LineData property to define all points of the line.
     /// </summary>
     public class WireObject : SceneObject
     {
-        #region Direct3D resources
-        private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
-        #endregion
+        // Configuration
+        private bool m_forceReloadLineData;
+        private Line[] m_lineData;
 
+        // Direct3D resources
+        private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
+        
         /// <summary>
         /// Loads all resources of the object.
         /// </summary>
@@ -182,10 +176,5 @@ namespace SeeingSharp.Multimedia.Objects
             public LineRenderResources LineRenderResources;
             public D3D11.Buffer LineVertexBuffer;
         }
-
-        #region Configuration
-        private bool m_forceReloadLineData;
-        private Line[] m_lineData;
-        #endregion
     }
 }
