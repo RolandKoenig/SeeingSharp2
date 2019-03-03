@@ -47,5 +47,11 @@ namespace SeeingSharp.WpfSamples
 
             return base.CreateControl(property, options);
         }
+
+        protected override FrameworkElement CreateDefaultControl(PropertyItem property)
+        {
+            property.AutoUpdateText = true;
+            return base.CreateDefaultControl(property);
+        }
     }
 }
