@@ -5,16 +5,16 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public struct TriangleEdge
+    public struct TriangleCorner
     {
-        public TriangleEdge(int index)
+        public TriangleCorner(int index)
             : this()
         {
             this.Index = index;
         }
 
         /// <summary>
-        /// The index of this <see cref="TriangleEdge"/>
+        /// The index of this <see cref="TriangleCorner"/>
         /// </summary>
         public int Index;
 

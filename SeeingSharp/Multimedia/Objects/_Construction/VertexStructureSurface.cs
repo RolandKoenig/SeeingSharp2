@@ -38,16 +38,16 @@ namespace SeeingSharp.Multimedia.Objects
     public partial class VertexStructureSurface
     {
         private Dictionary<Type, object> m_materialPropertiesExtended;
-        private List<TriangleEdge> m_edges;
+        private List<TriangleCorner> m_corners;
 
         internal VertexStructureSurface(VertexStructure owner, int triangleCapacity)
         {
             Owner = owner;
-            m_edges = new List<TriangleEdge>(triangleCapacity * 3);
+            m_corners = new List<TriangleCorner>(triangleCapacity * 3);
 
-            Indices = new IndexCollection(m_edges);
-            Edges = new EdgeCollection(m_edges);
-            Triangles = new TriangleCollection(m_edges);
+            Indices = new IndexCollection(m_corners);
+            Corners = new CornerCollection(m_corners);
+            Triangles = new TriangleCollection(m_corners);
             MaterialProperties = new MaterialProperties();
         }
 
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Objects
             newOwner.EnsureNotNull(nameof(newOwner));
 
             // Create new VertexStructure object
-            var indexCount = m_edges.Count;
+            var indexCount = m_corners.Count;
             var result = new VertexStructureSurface(newOwner, indexCount / 3 * capacityMultiplier);
 
             // Copy geometry
@@ -70,9 +70,9 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 for (var loop = 0; loop < indexCount; loop++)
                 {
-                    var edgeToAdd = m_edges[loop];
-                    edgeToAdd.Index = edgeToAdd.Index + baseIndex;
-                    result.m_edges.Add(edgeToAdd);
+                    var cornerToAdd = m_corners[loop];
+                    cornerToAdd.Index = cornerToAdd.Index + baseIndex;
+                    result.m_corners.Add(cornerToAdd);
                 }
             }
 
@@ -94,17 +94,17 @@ namespace SeeingSharp.Multimedia.Objects
             // Add all vertices to local structure
             Owner.VerticesInternal.AddRange(structure.VerticesInternal);
 
-            // Add all edges to local surface
+            // Add all corners to local surface
             foreach(var actSurface in structure.Surfaces)
             {
-                var edges = actSurface.m_edges;
-                var edgeCount = edges.Count;
+                var corners = actSurface.m_corners;
+                var cornerCount = corners.Count;
 
-                for(var loop=0; loop<edgeCount; loop++)
+                for(var loop=0; loop<cornerCount; loop++)
                 {
-                    var edgeToAdd = edges[loop];
-                    edgeToAdd.Index = edgeToAdd.Index + baseIndex;
-                    m_edges.Add(edgeToAdd);
+                    var cornerToAdd = corners[loop];
+                    cornerToAdd.Index = cornerToAdd.Index + baseIndex;
+                    m_corners.Add(cornerToAdd);
                 }
             }
         }
@@ -117,9 +117,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="index3">Index of the third vertex</param>
         public void AddTriangle(int index1, int index2, int index3)
         {
-            m_edges.Add(new TriangleEdge(index1));
-            m_edges.Add(new TriangleEdge(index2));
-            m_edges.Add(new TriangleEdge(index3));
+            m_corners.Add(new TriangleCorner(index1));
+            m_corners.Add(new TriangleCorner(index2));
+            m_corners.Add(new TriangleCorner(index3));
         }
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="v3">Third vertex</param>
         public void AddTriangle(Vertex v1, Vertex v2, Vertex v3)
         {
-            m_edges.Add(new TriangleEdge(Owner.AddVertex(v1)));
-            m_edges.Add(new TriangleEdge(Owner.AddVertex(v2)));
-            m_edges.Add(new TriangleEdge(Owner.AddVertex(v3)));
+            m_corners.Add(new TriangleCorner(Owner.AddVertex(v1)));
+            m_corners.Add(new TriangleCorner(Owner.AddVertex(v2)));
+            m_corners.Add(new TriangleCorner(Owner.AddVertex(v3)));
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
-        /// <param name="indices">The edges of the polygon's edges.</param>
+        /// <param name="indices">The indices of the polygon's corners.</param>
         /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEars(IEnumerable<int> indices, bool twoSided = false)
         {
@@ -212,7 +212,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
-        /// <param name="indices">The edges of the polygon's edges.</param>
+        /// <param name="indices">The indices of the polygon's corners.</param>
         /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<int> indices, bool twoSided)
         {
@@ -500,10 +500,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public int[] GetIndexArray()
         {
-            var result = new int[m_edges.Count];
-            for (var loop = 0; loop < m_edges.Count; loop++)
+            var result = new int[m_corners.Count];
+            for (var loop = 0; loop < m_corners.Count; loop++)
             {
-                result[loop] = m_edges[loop].Index;
+                result[loop] = m_corners[loop].Index;
             }
             return result;
         }
@@ -551,15 +551,15 @@ namespace SeeingSharp.Multimedia.Objects
             var indexCount = countTriangles * 3;
 
             if (startIndex < 0) { throw new ArgumentException("startTriangleIndex"); }
-            if (startIndex >= m_edges.Count) { throw new ArgumentException("startTriangleIndex"); }
-            if (startIndex + indexCount > m_edges.Count) { throw new ArgumentException("countTriangles"); }
+            if (startIndex >= m_corners.Count) { throw new ArgumentException("startTriangleIndex"); }
+            if (startIndex + indexCount > m_corners.Count) { throw new ArgumentException("countTriangles"); }
 
             for (var loop = 0; loop < indexCount; loop += 3)
             {
                 CalculateNormalsFlat(new Triangle(
-                    m_edges[startIndex + loop].Index,
-                    m_edges[startIndex + loop + 1].Index,
-                    m_edges[startIndex + loop + 2].Index));
+                    m_corners[startIndex + loop].Index,
+                    m_corners[startIndex + loop + 1].Index,
+                    m_corners[startIndex + loop + 2].Index));
             }
         }
 
@@ -622,14 +622,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         internal void ToggleCoordinateSystemInternal()
         {
-            for (var loopTriangle = 0; loopTriangle + 3 <= m_edges.Count; loopTriangle += 3)
+            for (var loopTriangle = 0; loopTriangle + 3 <= m_corners.Count; loopTriangle += 3)
             {
-                var edge1 = m_edges[loopTriangle];
-                var edge2 = m_edges[loopTriangle + 1];
-                var edge3 = m_edges[loopTriangle + 2];
-                m_edges[loopTriangle] = edge3;
-                m_edges[loopTriangle + 1] = edge2;
-                m_edges[loopTriangle + 2] = edge1;
+                var corner1 = m_corners[loopTriangle];
+                var corner2 = m_corners[loopTriangle + 1];
+                var corner3 = m_corners[loopTriangle + 2];
+                m_corners[loopTriangle] = corner3;
+                m_corners[loopTriangle + 1] = corner2;
+                m_corners[loopTriangle + 2] = corner1;
             }
         }
 
@@ -692,7 +692,7 @@ namespace SeeingSharp.Multimedia.Objects
                 indexEnumerator.Dispose();
             }
 
-            //Return found edges
+            //Return found corners
             return triangleIndices;
         }
 
@@ -752,14 +752,14 @@ namespace SeeingSharp.Multimedia.Objects
         public IndexCollection Indices { get; }
 
         /// <summary>
-        /// Gets a collection containing all edges.
+        /// Gets a collection containing all corners.
         /// </summary>
-        public EdgeCollection Edges { get; }
+        public CornerCollection Corners { get; }
 
         /// <summary>
         /// Retrieves total count of all triangles within this structure
         /// </summary>
-        public int CountTriangles => m_edges.Count / 3;
+        public int CountTriangles => m_corners.Count / 3;
 
         /// <summary>
         /// Gets or sets the resource source assembly.
@@ -776,7 +776,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves total count of all indexes within this structure
         /// </summary>
-        internal int CountIndices => m_edges.Count;
+        internal int CountIndices => m_corners.Count;
 
         //*****************************************************************
         //*****************************************************************
@@ -846,11 +846,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public class TriangleCollection : IEnumerable<Triangle>
         {
-            private List<TriangleEdge> m_edges;
+            private List<TriangleCorner> m_corners;
 
-            internal TriangleCollection(List<TriangleEdge> edges)
+            internal TriangleCollection(List<TriangleCorner> corners)
             {
-                m_edges = edges;
+                m_corners = corners;
             }
 
             /// <summary>
@@ -861,11 +861,11 @@ namespace SeeingSharp.Multimedia.Objects
             /// <param name="index3">Index of the third vertex</param>
             public int Add(int index1, int index2, int index3)
             {
-                var result = m_edges.Count / 3;
+                var result = m_corners.Count / 3;
 
-                m_edges.Add(new TriangleEdge(index1));
-                m_edges.Add(new TriangleEdge(index2));
-                m_edges.Add(new TriangleEdge(index3));
+                m_corners.Add(new TriangleCorner(index1));
+                m_corners.Add(new TriangleCorner(index2));
+                m_corners.Add(new TriangleCorner(index3));
 
                 return result;
             }
@@ -881,7 +881,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             public IEnumerator<Triangle> GetEnumerator()
             {
-                var triangleCount = m_edges.Count / 3;
+                var triangleCount = m_corners.Count / 3;
                 for (var loop = 0; loop < triangleCount; loop++)
                 {
                     yield return this[loop];
@@ -890,7 +890,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                var triangleCount = m_edges.Count / 3;
+                var triangleCount = m_corners.Count / 3;
                 for (var loop = 0; loop < triangleCount; loop++)
                 {
                     yield return this[loop];
@@ -905,7 +905,7 @@ namespace SeeingSharp.Multimedia.Objects
                 get
                 {
                     var startIndex = index * 3;
-                    return new Triangle(m_edges[startIndex].Index, m_edges[startIndex + 1].Index, m_edges[startIndex + 2].Index);
+                    return new Triangle(m_corners[startIndex].Index, m_corners[startIndex + 1].Index, m_corners[startIndex + 2].Index);
                 }
             }
         }
@@ -918,64 +918,64 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public class IndexCollection : IEnumerable<int>
         {
-            private List<TriangleEdge> m_edges;
+            private List<TriangleCorner> m_corners;
 
-            internal IndexCollection(List<TriangleEdge> edges)
+            internal IndexCollection(List<TriangleCorner> corners)
             {
-                m_edges = edges;
+                m_corners = corners;
             }
 
             public IEnumerator<int> GetEnumerator()
             {
-                return m_edges.Select(actEdge => actEdge.Index)
+                return m_corners.Select(actCorner => actCorner.Index)
                     .GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_edges.Select(actEdge => actEdge.Index)
+                return m_corners.Select(actCorner => actCorner.Index)
                     .GetEnumerator();
             }
 
             /// <summary>
             /// Returns the index at ghe given index
             /// </summary>
-            public int this[int index] => m_edges[index].Index;
+            public int this[int index] => m_corners[index].Index;
 
-            public int Count => m_edges.Count;
+            public int Count => m_corners.Count;
         }
 
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all edges of a VertexStructure object.
+        /// Contains all corners of a VertexStructure object.
         /// </summary>
-        public class EdgeCollection : IEnumerable<TriangleEdge>
+        public class CornerCollection : IEnumerable<TriangleCorner>
         {
-            private List<TriangleEdge> m_edges;
+            private List<TriangleCorner> m_corners;
 
-            internal EdgeCollection(List<TriangleEdge> edges)
+            internal CornerCollection(List<TriangleCorner> corners)
             {
-                m_edges = edges;
+                m_corners = corners;
             }
 
-            public IEnumerator<TriangleEdge> GetEnumerator()
+            public IEnumerator<TriangleCorner> GetEnumerator()
             {
-                return m_edges.GetEnumerator();
+                return m_corners.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_edges.GetEnumerator();
+                return m_corners.GetEnumerator();
             }
 
             /// <summary>
             /// Returns the index at ghe given index
             /// </summary>
-            public TriangleEdge this[int index] => m_edges[index];
+            public TriangleCorner this[int index] => m_corners[index];
 
-            public int Count => m_edges.Count;
+            public int Count => m_corners.Count;
         }
     }
 }
