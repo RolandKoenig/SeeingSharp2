@@ -466,13 +466,13 @@ namespace SeeingSharp.Multimedia.Objects
                     {
                         var triangleStartIndex = loopTriangle * 3;
 
-                        if (actSurface.IndicesInternal[triangleStartIndex] == actVertexIndex ||
-                            actSurface.IndicesInternal[triangleStartIndex + 1] == actVertexIndex ||
-                            actSurface.IndicesInternal[triangleStartIndex + 2] == actVertexIndex)
+                        if (actSurface.Indices[triangleStartIndex] == actVertexIndex ||
+                            actSurface.Indices[triangleStartIndex + 1] == actVertexIndex ||
+                            actSurface.Indices[triangleStartIndex + 2] == actVertexIndex)
                         {
-                            var v1 = VerticesInternal[actSurface.IndicesInternal[triangleStartIndex]];
-                            var v2 = VerticesInternal[actSurface.IndicesInternal[triangleStartIndex + 1]];
-                            var v3 = VerticesInternal[actSurface.IndicesInternal[triangleStartIndex + 2]];
+                            var v1 = VerticesInternal[actSurface.Indices[triangleStartIndex]];
+                            var v2 = VerticesInternal[actSurface.Indices[triangleStartIndex + 1]];
+                            var v3 = VerticesInternal[actSurface.Indices[triangleStartIndex + 2]];
 
                             finalNormalHelper += Vector3Ex.CalculateTriangleNormal(v1.Geometry.Position, v2.Geometry.Position, v3.Geometry.Position, false);
 

@@ -58,11 +58,11 @@ namespace SeeingSharp.Multimedia.Objects
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < IndicesInternal.Count; loop += 3)
+            for (var loop = 0; loop < m_edges.Count; loop += 3)
             {
-                var vertex1 = Owner.VerticesInternal[IndicesInternal[loop]].Position;
-                var vertex2 = Owner.VerticesInternal[IndicesInternal[loop + 1]].Position;
-                var vertex3 = Owner.VerticesInternal[IndicesInternal[loop + 2]].Position;
+                var vertex1 = Owner.VerticesInternal[m_edges[loop].Index].Position;
+                var vertex2 = Owner.VerticesInternal[m_edges[loop + 1].Index].Position;
+                var vertex3 = Owner.VerticesInternal[m_edges[loop + 2].Index].Position;
 
                 var currentDistance = 0f;
 
@@ -989,14 +989,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for (var loop = 2; loop < IndicesInternal.Count; loop += 3)
+            for (var loop = 2; loop < m_edges.Count; loop += 3)
             {
-                var index1 = IndicesInternal[loop - 2];
-                var index2 = IndicesInternal[loop - 1];
-                var index3 = IndicesInternal[loop];
-                IndicesInternal[loop] = index1;
-                IndicesInternal[loop - 1] = index2;
-                IndicesInternal[loop - 2] = index3;
+                var edge1 = m_edges[loop - 2];
+                var edge2 = m_edges[loop - 1];
+                var edge3 = m_edges[loop];
+                m_edges[loop] = edge1;
+                m_edges[loop - 1] = edge2;
+                m_edges[loop - 2] = edge3;
             }
         }
 

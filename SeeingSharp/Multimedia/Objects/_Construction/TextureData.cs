@@ -49,14 +49,14 @@ namespace SeeingSharp.Multimedia.Objects
 
         /// <summary>
         /// Gets or sets the texture factor.
-        /// This value decides wether a texture is displayed on this vertex or not.
+        /// This value decides whether a texture is displayed on this vertex or not.
         /// A value greater or equal 0 will show the texture, all negatives will hide it.
         /// </summary>
-        public float TextureFactor { get; set; }
+        public float TextureFactor;
 
         /// <summary>
         /// Retrieves or sets first texture coordinate
         /// </summary>
-        public Vector2 Coordinate1 { get; set; }
+        public Vector2 Coordinate1;
     }
 }

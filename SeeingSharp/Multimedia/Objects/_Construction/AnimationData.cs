@@ -30,41 +30,41 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the first bone index.
         /// </summary>
-        public uint BoneIndex01 { get; set; }
+        public uint BoneIndex01;
 
         /// <summary>
         /// Gets or sets the second bone index.
         /// </summary>
-        public uint BoneIndex02 { get; set; }
+        public uint BoneIndex02;
 
         /// <summary>
         /// Gets or sets the third bone index.
         /// </summary>
-        public uint BoneIndex03 { get; set; }
+        public uint BoneIndex03;
 
         /// <summary>
         /// Gets or sets the fourth bone index.
         /// </summary>
-        public uint BoneIndex04 { get; set; }
+        public uint BoneIndex04;
 
         /// <summary>
         /// Gets or sets the first bone weight.
         /// </summary>
-        public float BoneWeight01 { get; set; }
+        public float BoneWeight01;
 
         /// <summary>
         /// Gets or sets the second bone weight.
         /// </summary>
-        public float BoneWeight02 { get; set; }
+        public float BoneWeight02;
 
         /// <summary>
         /// Gets or sets the third bone weight.
         /// </summary>
-        public float BoneWeight03 { get; set; }
+        public float BoneWeight03;
 
         /// <summary>
         /// Gets or sets the fourth bone weight.
         /// </summary>
-        public float BoneWeight04 { get; set; }
+        public float BoneWeight04;
     }
 }

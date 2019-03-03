@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
@@ -36,15 +37,17 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public partial class VertexStructureSurface
     {
-        // Material information
         private Dictionary<Type, object> m_materialPropertiesExtended;
+        private List<TriangleEdge> m_edges;
 
         internal VertexStructureSurface(VertexStructure owner, int triangleCapacity)
         {
             Owner = owner;
-            IndicesInternal = new List<int>(triangleCapacity * 3);
-            Indices = new IndexCollection(IndicesInternal);
-            Triangles = new TriangleCollection(IndicesInternal, Owner.VerticesInternal);
+            m_edges = new List<TriangleEdge>(triangleCapacity * 3);
+
+            Indices = new IndexCollection(m_edges);
+            Edges = new EdgeCollection(m_edges);
+            Triangles = new TriangleCollection(m_edges);
             MaterialProperties = new MaterialProperties();
         }
 
@@ -59,7 +62,7 @@ namespace SeeingSharp.Multimedia.Objects
             newOwner.EnsureNotNull(nameof(newOwner));
 
             // Create new VertexStructure object
-            var indexCount = IndicesInternal.Count;
+            var indexCount = m_edges.Count;
             var result = new VertexStructureSurface(newOwner, indexCount / 3 * capacityMultiplier);
 
             // Copy geometry
@@ -67,7 +70,9 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 for (var loop = 0; loop < indexCount; loop++)
                 {
-                    result.IndicesInternal.Add(IndicesInternal[loop] + baseIndex);
+                    var edgeToAdd = m_edges[loop];
+                    edgeToAdd.Index = edgeToAdd.Index + baseIndex;
+                    result.m_edges.Add(edgeToAdd);
                 }
             }
 
@@ -89,15 +94,17 @@ namespace SeeingSharp.Multimedia.Objects
             // Add all vertices to local structure
             Owner.VerticesInternal.AddRange(structure.VerticesInternal);
 
-            // Add all indices to local surface
+            // Add all edges to local surface
             foreach(var actSurface in structure.Surfaces)
             {
-                var indices = actSurface.IndicesInternal;
-                var indexCount = indices.Count;
+                var edges = actSurface.m_edges;
+                var edgeCount = edges.Count;
 
-                for(var loop=0; loop<indexCount; loop++)
+                for(var loop=0; loop<edgeCount; loop++)
                 {
-                    IndicesInternal.Add(indices[loop] + baseIndex);
+                    var edgeToAdd = edges[loop];
+                    edgeToAdd.Index = edgeToAdd.Index + baseIndex;
+                    m_edges.Add(edgeToAdd);
                 }
             }
         }
@@ -110,9 +117,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="index3">Index of the third vertex</param>
         public void AddTriangle(int index1, int index2, int index3)
         {
-            IndicesInternal.Add(index1);
-            IndicesInternal.Add(index2);
-            IndicesInternal.Add(index3);
+            m_edges.Add(new TriangleEdge(index1));
+            m_edges.Add(new TriangleEdge(index2));
+            m_edges.Add(new TriangleEdge(index3));
         }
 
         /// <summary>
@@ -123,9 +130,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="v3">Third vertex</param>
         public void AddTriangle(Vertex v1, Vertex v2, Vertex v3)
         {
-            IndicesInternal.Add(Owner.AddVertex(v1));
-            IndicesInternal.Add(Owner.AddVertex(v2));
-            IndicesInternal.Add(Owner.AddVertex(v3));
+            m_edges.Add(new TriangleEdge(Owner.AddVertex(v1)));
+            m_edges.Add(new TriangleEdge(Owner.AddVertex(v2)));
+            m_edges.Add(new TriangleEdge(Owner.AddVertex(v3)));
         }
 
         /// <summary>
@@ -156,7 +163,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Adds the given polygon using the cutting ears algorythm for triangulation.
+        /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
         /// <param name="vertices">The vertices to add.</param>
         public void AddPolygonByCuttingEars(IEnumerable<Vertex> vertices)
@@ -174,20 +181,20 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Adds the given polygon using the cutting ears algorythm for triangulation.
+        /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
-        /// <param name="indices">The indices of the polygon's edges.</param>
-        /// <param name="twoSided">The indiexes for front- and backside?</param>
+        /// <param name="indices">The edges of the polygon's edges.</param>
+        /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEars(IEnumerable<int> indices, bool twoSided = false)
         {
             AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
         }
 
         /// <summary>
-        /// Adds the given polygon using the cutting ears algorythm for triangulation.
+        /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
         /// <param name="vertices">The vertices to add.</param>
-        /// <param name = "twoSided" > The indiexes for front- and backside?</param>
+        /// <param name = "twoSided" > The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<Vertex> vertices, bool twoSided = false)
         {
             //Add vertices first
@@ -203,10 +210,10 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Adds the given polygon using the cutting ears algorythm for triangulation.
+        /// Adds the given polygon using the cutting ears algorithm for triangulation.
         /// </summary>
-        /// <param name="indices">The indices of the polygon's edges.</param>
-        /// <param name="twoSided">The indiexes for front- and backside?</param>
+        /// <param name="indices">The edges of the polygon's edges.</param>
+        /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<int> indices, bool twoSided)
         {
             //Add the triangles using cutting ears algorithm
@@ -214,16 +221,38 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Calculate all normals
             var indexEnumerator = addedIndices.GetEnumerator();
-            while (indexEnumerator.MoveNext())
+            try
             {
-                var index1 = indexEnumerator.Current;
-                var index2 = 0;
-                var index3 = 0;
+                while (indexEnumerator.MoveNext())
+                {
+                    var index1 = indexEnumerator.Current;
+                    var index2 = 0;
+                    var index3 = 0;
 
-                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
-                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
+                    if (indexEnumerator.MoveNext())
+                    {
+                        index2 = indexEnumerator.Current;
+                    }
+                    else
+                    {
+                        break;
+                    }
 
-                CalculateNormalsFlat(new Triangle(index1, index2, index3));
+                    if (indexEnumerator.MoveNext())
+                    {
+                        index3 = indexEnumerator.Current;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    CalculateNormalsFlat(new Triangle(index1, index2, index3));
+                }
+            }
+            finally
+            {
+                indexEnumerator.Dispose();
             }
         }
 
@@ -471,7 +500,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public int[] GetIndexArray()
         {
-            return IndicesInternal.ToArray();
+            var result = new int[m_edges.Count];
+            for (var loop = 0; loop < m_edges.Count; loop++)
+            {
+                result[loop] = m_edges[loop].Index;
+            }
+            return result;
         }
 
         /// <summary>
@@ -486,7 +520,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Calculates normals for the given treangle.
+        /// Calculates normals for the given triangle.
         /// </summary>
         /// <param name="actTriangle">The triangle for which to calculate the normal (flat).</param>
         public void CalculateNormalsFlat(Triangle actTriangle)
@@ -507,7 +541,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Calculates normals for the given treangle.
+        /// Calculates normals for the given triangle.
         /// </summary>
         /// <param name="countTriangles">Total count of triangles.</param>
         /// <param name="startTriangleIndex">The triangle on which to start.</param>
@@ -517,15 +551,15 @@ namespace SeeingSharp.Multimedia.Objects
             var indexCount = countTriangles * 3;
 
             if (startIndex < 0) { throw new ArgumentException("startTriangleIndex"); }
-            if (startIndex >= IndicesInternal.Count) { throw new ArgumentException("startTriangleIndex"); }
-            if (startIndex + indexCount > IndicesInternal.Count) { throw new ArgumentException("countTriangles"); }
+            if (startIndex >= m_edges.Count) { throw new ArgumentException("startTriangleIndex"); }
+            if (startIndex + indexCount > m_edges.Count) { throw new ArgumentException("countTriangles"); }
 
             for (var loop = 0; loop < indexCount; loop += 3)
             {
                 CalculateNormalsFlat(new Triangle(
-                    IndicesInternal[startIndex + loop],
-                    IndicesInternal[startIndex + loop + 1],
-                    IndicesInternal[startIndex + loop + 2]));
+                    m_edges[startIndex + loop].Index,
+                    m_edges[startIndex + loop + 1].Index,
+                    m_edges[startIndex + loop + 2].Index));
             }
         }
 
@@ -568,7 +602,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var tangentDir = Vector3.Dot(Vector3.Cross(vertex1.Normal, sdir), tdir) >= 0.0f ? 1f : -1f;
                 var binormal = Vector3.Cross(vertex1.Normal, tangent) * tangentDir;
 
-                // Seting binormals and tangents to each vertex of current face
+                // Setting binormals and tangents to each vertex of current face
                 vertex1.Tangent = tangent;
                 vertex1.Binormal = binormal;
                 vertex2.Tangent = tangent;
@@ -588,14 +622,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         internal void ToggleCoordinateSystemInternal()
         {
-            for (var loopTriangle = 0; loopTriangle + 3 <= IndicesInternal.Count; loopTriangle += 3)
+            for (var loopTriangle = 0; loopTriangle + 3 <= m_edges.Count; loopTriangle += 3)
             {
-                var index1 = IndicesInternal[loopTriangle];
-                var index2 = IndicesInternal[loopTriangle + 1];
-                var index3 = IndicesInternal[loopTriangle + 2];
-                IndicesInternal[loopTriangle] = index3;
-                IndicesInternal[loopTriangle + 1] = index2;
-                IndicesInternal[loopTriangle + 2] = index1;
+                var edge1 = m_edges[loopTriangle];
+                var edge2 = m_edges[loopTriangle + 1];
+                var edge3 = m_edges[loopTriangle + 2];
+                m_edges[loopTriangle] = edge3;
+                m_edges[loopTriangle + 1] = edge2;
+                m_edges[loopTriangle + 2] = edge1;
             }
         }
 
@@ -620,25 +654,45 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Add all triangle data
             var indexEnumerator = triangleIndices.GetEnumerator();
-
-            while (indexEnumerator.MoveNext())
+            try
             {
-                var index1 = indexEnumerator.Current;
-                var index2 = 0;
-                var index3 = 0;
-
-                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
-                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
-
-                AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
-                if(twoSided)
+                while (indexEnumerator.MoveNext())
                 {
-                    AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
-                }
+                    var index1 = indexEnumerator.Current;
+                    var index2 = 0;
+                    var index3 = 0;
 
+                    if (indexEnumerator.MoveNext())
+                    {
+                        index2 = indexEnumerator.Current;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    if (indexEnumerator.MoveNext())
+                    {
+                        index3 = indexEnumerator.Current;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
+                    if (twoSided)
+                    {
+                        AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
+                    }
+
+                }
+            }
+            finally
+            {
+                indexEnumerator.Dispose();
             }
 
-            //Return found indices
+            //Return found edges
             return triangleIndices;
         }
 
@@ -693,14 +747,19 @@ namespace SeeingSharp.Multimedia.Objects
         public TriangleCollection Triangles { get; }
 
         /// <summary>
-        /// Gets a collection containing all indices.
+        /// Gets a collection containing all indexes.
         /// </summary>
         public IndexCollection Indices { get; }
 
         /// <summary>
+        /// Gets a collection containing all edges.
+        /// </summary>
+        public EdgeCollection Edges { get; }
+
+        /// <summary>
         /// Retrieves total count of all triangles within this structure
         /// </summary>
-        public int CountTriangles => IndicesInternal.Count / 3;
+        public int CountTriangles => m_edges.Count / 3;
 
         /// <summary>
         /// Gets or sets the resource source assembly.
@@ -717,9 +776,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves total count of all indexes within this structure
         /// </summary>
-        internal int CountIndices => IndicesInternal.Count;
-
-        internal List<int> IndicesInternal { get; }
+        internal int CountIndices => m_edges.Count;
 
         //*****************************************************************
         //*****************************************************************
@@ -789,37 +846,32 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public class TriangleCollection : IEnumerable<Triangle>
         {
-            private List<int> m_indices;
-            private List<Vertex> m_vertices;
+            private List<TriangleEdge> m_edges;
 
-            /// <summary>
-            ///
-            /// </summary>
-            internal TriangleCollection(List<int> indices, List<Vertex> vertices)
+            internal TriangleCollection(List<TriangleEdge> edges)
             {
-                m_indices = indices;
-                m_vertices = vertices;
+                m_edges = edges;
             }
 
             /// <summary>
-            /// Adds a treangle to this vertex structure
+            /// Adds a triangle to this vertex structure
             /// </summary>
             /// <param name="index1">Index of the first vertex</param>
             /// <param name="index2">Index of the second vertex</param>
             /// <param name="index3">Index of the third vertex</param>
             public int Add(int index1, int index2, int index3)
             {
-                var result = m_indices.Count / 3;
+                var result = m_edges.Count / 3;
 
-                m_indices.Add(index1);
-                m_indices.Add(index2);
-                m_indices.Add(index3);
+                m_edges.Add(new TriangleEdge(index1));
+                m_edges.Add(new TriangleEdge(index2));
+                m_edges.Add(new TriangleEdge(index3));
 
                 return result;
             }
 
             /// <summary>
-            /// Adds a treangle to this vertex structure
+            /// Adds a triangle to this vertex structure
             /// </summary>
             /// <param name="triangle"></param>
             public int Add(Triangle triangle)
@@ -827,41 +879,22 @@ namespace SeeingSharp.Multimedia.Objects
                 return Add(triangle.Index1, triangle.Index2, triangle.Index3);
             }
 
-            /// <summary>
-            /// Gets an array containing all indices
-            /// </summary>
-            public int[] ToIndexArray()
-            {
-                return m_indices.ToArray();
-            }
-
-            /// <summary>
-            /// Gets an array containing all indices
-            /// </summary>
-            public int[] ToIndexArray(int baseIndex)
-            {
-                var result = m_indices.ToArray();
-                for (var loop = 0; loop < result.Length; loop++)
-                {
-                    result[loop] = result[loop] + baseIndex;
-                }
-                return result;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
             public IEnumerator<Triangle> GetEnumerator()
             {
-                return new Enumerator(m_indices);
+                var triangleCount = m_edges.Count / 3;
+                for (var loop = 0; loop < triangleCount; loop++)
+                {
+                    yield return this[loop];
+                }
             }
 
-            /// <summary>
-            ///
-            /// </summary>
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return new Enumerator(m_indices);
+                var triangleCount = m_edges.Count / 3;
+                for (var loop = 0; loop < triangleCount; loop++)
+                {
+                    yield return this[loop];
+                }
             }
 
             /// <summary>
@@ -872,7 +905,7 @@ namespace SeeingSharp.Multimedia.Objects
                 get
                 {
                     var startIndex = index * 3;
-                    return new Triangle(m_indices[startIndex], m_indices[startIndex + 1], m_indices[startIndex + 2]);
+                    return new Triangle(m_edges[startIndex].Index, m_edges[startIndex + 1].Index, m_edges[startIndex + 2].Index);
                 }
             }
         }
@@ -881,37 +914,68 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all indices of a VertexStructure object.
+        /// Contains all indexes of a VertexStructure object.
         /// </summary>
         public class IndexCollection : IEnumerable<int>
         {
-            private List<int> m_indices;
+            private List<TriangleEdge> m_edges;
 
-            internal IndexCollection(List<int> indices)
+            internal IndexCollection(List<TriangleEdge> edges)
             {
-                m_indices = indices;
+                m_edges = edges;
             }
 
-            /// <summary>
-            ///
-            /// </summary>
             public IEnumerator<int> GetEnumerator()
             {
-                return m_indices.GetEnumerator();
+                return m_edges.Select(actEdge => actEdge.Index)
+                    .GetEnumerator();
             }
 
-            /// <summary>
-            ///
-            /// </summary>
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_indices.GetEnumerator();
+                return m_edges.Select(actEdge => actEdge.Index)
+                    .GetEnumerator();
             }
 
             /// <summary>
             /// Returns the index at ghe given index
             /// </summary>
-            public int this[int index] => m_indices[index];
+            public int this[int index] => m_edges[index].Index;
+
+            public int Count => m_edges.Count;
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        /// <summary>
+        /// Contains all edges of a VertexStructure object.
+        /// </summary>
+        public class EdgeCollection : IEnumerable<TriangleEdge>
+        {
+            private List<TriangleEdge> m_edges;
+
+            internal EdgeCollection(List<TriangleEdge> edges)
+            {
+                m_edges = edges;
+            }
+
+            public IEnumerator<TriangleEdge> GetEnumerator()
+            {
+                return m_edges.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return m_edges.GetEnumerator();
+            }
+
+            /// <summary>
+            /// Returns the index at ghe given index
+            /// </summary>
+            public TriangleEdge this[int index] => m_edges[index];
+
+            public int Count => m_edges.Count;
         }
     }
 }

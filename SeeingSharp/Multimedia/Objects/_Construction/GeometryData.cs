@@ -101,26 +101,26 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Retrieves or sets the position of the vertex
         /// </summary>
-        public Vector3 Position { get; set; }
+        public Vector3 Position;
 
         /// <summary>
         /// Retrieves or sets the normal of the vertex
         /// </summary>
-        public Vector3 Normal { get; set; }
+        public Vector3 Normal;
 
         /// <summary>
         /// Retrieves or sets the color of the vertex
         /// </summary>
-        public Color4 Color { get; set; }
+        public Color4 Color;
 
         /// <summary>
         /// Gets or sets the tangent vector.
         /// </summary>
-        public Vector3 Tangent { get; set; }
+        public Vector3 Tangent;
 
         /// <summary>
         /// Gets or sets the binormal vector.
         /// </summary>
-        public Vector3 Binormal { get; set; }
+        public Vector3 Binormal;
     }
 }
