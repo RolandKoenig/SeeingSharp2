@@ -58,7 +58,11 @@ namespace SeeingSharp.Multimedia.Core
 
         DisposeObject,
 
-        DisposeGraphicsObject
+        DisposeGraphicsObject,
+
+        ManipulateFilterList,
+
+        PrepareRendering
     }
 
     public class ManipulateFilterListArgs : EventArgs

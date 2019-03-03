@@ -52,13 +52,15 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cylinder geometry resource
-                var cylinderGeometry = new CylinderGeometryFactory { CountOfSegments = 50 };
-
-                var resPalletGeometry = manipulator.AddResource(
-                    () => new GeometryResource(cylinderGeometry));
+                var resGeometry = manipulator.AddResource(
+                    () => new GeometryResource(
+                        new CylinderGeometryFactory()
+                        {
+                            CountOfSegments = 50
+                        }));
 
                 // Create cylinder object
-                var cylinderObject = manipulator.AddGeneric(resPalletGeometry);
+                var cylinderObject = manipulator.AddGeneric(resGeometry);
                 cylinderObject.Color = Color4Ex.BlueColor;
                 cylinderObject.Position = new Vector3(0f, 0.5f, 0f);
                 cylinderObject.EnableShaderGeneratedBorder();

@@ -20,7 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -33,15 +35,21 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
     [SampleDescription(
         "Generated Border", 8, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder")]
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder",
+        typeof(GeneratedBorderSettings))]
     public class GeneratedBorderSample : SampleBase
     {
+        private GeneratedBorderSettings m_settings;
+        private List<GenericObject> m_cubes = new List<GenericObject>();
+
         /// <summary>
         /// Called when the sample has to startup.
         /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+
+            m_settings = (GeneratedBorderSettings)settings;
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
@@ -54,36 +62,37 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource
-                var cubeGeometry = new CubeGeometryFactory();
-                var resPalletGeometry = manipulator.AddResource(
-                    () => new GeometryResource(cubeGeometry));
-
-                var space = 1.05f;
+                var resGeometry = manipulator.AddResource(
+                    () => new GeometryResource(
+                        new CubeGeometryFactory()));
 
                 // Create cubes with border
+                const float SPACE = 1.05f;
                 for (var loop = 0; loop < 10; loop++)
                 {
-                    var cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    var cubeObject = manipulator.AddGeneric(resGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(0f, 0.5f, loop * space);
-                    cubeObject.EnableShaderGeneratedBorder(2f);
+                    cubeObject.Position = new Vector3(0f, 0.5f, loop * SPACE);
+                    cubeObject.EnableShaderGeneratedBorder(m_settings.BorderThickness);
+                    m_cubes.Add(cubeObject);
 
-                    cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    cubeObject = manipulator.AddGeneric(resGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(-space, 0.5f, loop * space);
-                    cubeObject.EnableShaderGeneratedBorder(2f);
+                    cubeObject.Position = new Vector3(-SPACE, 0.5f, loop * SPACE);
+                    cubeObject.EnableShaderGeneratedBorder(m_settings.BorderThickness);
+                    m_cubes.Add(cubeObject);
                 }
 
                 // Create cubes without border
                 for (var loop = 0; loop < 10; loop++)
                 {
-                    var cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    var cubeObject = manipulator.AddGeneric(resGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(space, 0.5f, loop * space);
+                    cubeObject.Position = new Vector3(SPACE, 0.5f, loop * SPACE);
 
-                    cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                    cubeObject = manipulator.AddGeneric(resGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(2* space, 0.5f, loop * space);
+                    cubeObject.Position = new Vector3(2* SPACE, 0.5f, loop * SPACE);
                 }
             });
 
@@ -94,6 +103,34 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 
             // Append camera behavior
             targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+        }
+
+        public override void Update()
+        {
+            foreach (var actCube in m_cubes)
+            {
+                if (m_settings.BorderEnabled)
+                {
+                    actCube.EnableShaderGeneratedBorder(
+                        m_settings.BorderThickness);
+                }
+                else
+                {
+                    actCube.DisableShaderGeneratedBorder();
+                }
+            }
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        private class GeneratedBorderSettings : SampleSettings
+        {
+            [Category("Generated Border")]
+            public bool BorderEnabled { get; set; } = true;
+
+            [Category("Generated Border")]
+            public float BorderThickness { get; set; } = 2f;
         }
     }
 }

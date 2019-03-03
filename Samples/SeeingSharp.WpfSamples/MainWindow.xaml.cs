@@ -25,6 +25,8 @@ namespace SeeingSharp.WpfSamples
                 var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
                 DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
+
+                this.CtrlRenderer.RenderLoop.PrepareRender += OnRenderLoop_PrepareRender;
             }
         }
 
@@ -84,6 +86,12 @@ namespace SeeingSharp.WpfSamples
             {
                 m_isChangingSample = false;
             }
+        }
+
+        private void OnRenderLoop_PrepareRender(object sender, System.EventArgs e)
+        {
+            var actSample = m_actSample;
+            actSample?.Update();
         }
     }
 }

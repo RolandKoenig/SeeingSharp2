@@ -52,14 +52,14 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create Sphere geometry resource
-                var geometry = new SphereGeometryFactory
-                {
-                    TDiv = 30,
-                    PDiv = 30,
-                    Radius = 1
-                };
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(geometry));
+                    () => new GeometryResource(
+                        new SphereGeometryFactory
+                        {
+                            TDiv = 30,
+                            PDiv = 30,
+                            Radius = 1
+                        }));
 
                 // Create Sphere object
                 var sphereObject = manipulator.AddGeneric(resGeometry);

@@ -33,12 +33,18 @@ namespace SeeingSharp.SampleContainer
     {
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
 
+        public virtual void Update()
+        {
+
+        }
+
         public virtual void NotifyClosed()
         {
+
         }
 
         /// <summary>
-        ///     Builds a floor to the given scene.
+        /// Builds a floor to the given scene.
         /// </summary>
         protected void BuildStandardFloor(SceneManipulator manipulator, string sceneLayer)
         {

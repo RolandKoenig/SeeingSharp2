@@ -53,7 +53,9 @@ namespace SeeingSharp.UwpSamples.Controls
             {
                 ValueType = PropertyValueType.Bool;
             }
-            else if(propertyType == typeof(string))
+            else if((propertyType == typeof(string)) ||
+                    (propertyType == typeof(float)) ||
+                    (propertyType == typeof(double)))
             {
                 ValueType = PropertyValueType.String;
             }
@@ -85,7 +87,16 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public void SetValue(object value)
         {
-            m_propertyInfo.SetValue(m_hostObject, value);
+            Type givenType = value.GetType();
+            Type targetType = m_propertyInfo.PropertyType;
+            if (givenType == targetType)
+            {
+                m_propertyInfo.SetValue(m_hostObject, value);
+            }
+            else
+            {
+                m_propertyInfo.SetValue(m_hostObject, Convert.ChangeType(value, targetType));
+            }
         }
 
         public object ValueAccessor

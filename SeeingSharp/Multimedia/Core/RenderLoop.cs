@@ -106,6 +106,12 @@ namespace SeeingSharp.Multimedia.Core
         public event EventHandler CameraChanged;
 
         /// <summary>
+        /// Raised before start rendering a frame.
+        /// This event is called within the UI thread.
+        /// </summary>
+        public event EventHandler PrepareRender;
+
+        /// <summary>
         /// Raised directly after rendering a frame.
         /// Be careful, this event comes from a background rendering thread!
         /// </summary>
@@ -945,7 +951,24 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Let UI manipulate current filter list
-                ManipulateFilterList.Raise(this, new ManipulateFilterListArgs(Filters));
+                try
+                {
+                    ManipulateFilterList.Raise(this, new ManipulateFilterListArgs(Filters));
+                }
+                catch (Exception ex)
+                {
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.ManipulateFilterList);
+                }
+
+                // Raise prepare render event
+                try
+                {
+                    PrepareRender.Raise(this, EventArgs.Empty);
+                }
+                catch (Exception ex)
+                {
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.PrepareRendering);
+                }                
             });
 
             // Draw all frames to registered VideoWriters

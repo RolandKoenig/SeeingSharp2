@@ -22,6 +22,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;

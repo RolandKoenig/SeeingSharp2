@@ -65,12 +65,12 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 edgeLayer.PostprocessEffectKey = resEdgeDetect;
 
                 // Create pallet geometry resource
-                var cubeGeometry = new CubeGeometryFactory();
-                var resPalletGeometry = manipulator.AddResource(
-                    () => new GeometryResource(cubeGeometry));
+                var resGeometry = manipulator.AddResource(
+                    () => new GeometryResource(
+                        new CubeGeometryFactory()));
 
                 // Create pallet object
-                var cubeObject = manipulator.AddGeneric(resPalletGeometry, "EdgeDetectLayer");
+                var cubeObject = manipulator.AddGeneric(resGeometry, "EdgeDetectLayer");
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();

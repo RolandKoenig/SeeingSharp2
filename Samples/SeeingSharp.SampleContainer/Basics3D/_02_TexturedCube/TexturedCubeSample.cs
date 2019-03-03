@@ -63,14 +63,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
                 var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 
                 // Create cube geometry resource
-                var resPalletGeometry = manipulator.AddGeometry(
+                var resGeometry = manipulator.AddGeometry(
                     new CubeGeometryFactory
                     {
                         Material = resMaterial
                     });
 
                 // Create cube object
-                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.Position = new Vector3(0f, 0.5f, 0f);
                 cubeObject.EnableShaderGeneratedBorder();

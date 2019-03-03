@@ -76,6 +76,13 @@ namespace SeeingSharp.UwpSamples
 
             var viewModel = DataContext as MainWindowViewModel;
             viewModel?.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
+
+            // Start update loop
+            this.CtrlSwapChain.RenderLoop.PrepareRender += (innerSender, eArgs) =>
+            {
+                var actSample = m_actSample;
+                actSample?.Update();
+            };
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)

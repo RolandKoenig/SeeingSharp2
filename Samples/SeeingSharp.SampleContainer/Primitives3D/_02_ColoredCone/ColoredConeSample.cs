@@ -52,12 +52,15 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cone geometry resource
-                var coneGeometry = new ConeGeometryFactory { CountOfSegments = 50 };
-                var resPalletGeometry = manipulator.AddResource(
-                    () => new GeometryResource(coneGeometry));
+                var resGeometry = manipulator.AddResource(
+                    () => new GeometryResource(
+                        new ConeGeometryFactory()
+                    {
+                        CountOfSegments = 50
+                    }));
 
                 // Create cone object
-                var coneObject = manipulator.AddGeneric(resPalletGeometry);
+                var coneObject = manipulator.AddGeneric(resGeometry);
                 coneObject.Color = Color4Ex.BlueColor;
                 coneObject.Position = new Vector3(0f, 0.5f, 0f);
                 coneObject.EnableShaderGeneratedBorder();

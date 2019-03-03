@@ -54,6 +54,9 @@ namespace SeeingSharp.WinFormsSamples
         {
             base.OnLoad(e);
 
+            if (this.DesignMode) { return; }
+            this.m_ctrlRenderPanel.RenderLoop.PrepareRender += OnRenderLoop_PrepareRender;
+
             foreach (var actDevice in GraphicsCore.Current.Devices)
             {
                 var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}")
@@ -346,6 +349,12 @@ namespace SeeingSharp.WinFormsSamples
             if(!(changeButton.Tag is EngineDevice device)) { return; }
 
             m_ctrlRenderPanel.RenderLoop.SetRenderingDevice(device);
+        }
+
+        private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
+        {
+            var actSample = m_actSample;
+            actSample?.Update();
         }
     }
 }

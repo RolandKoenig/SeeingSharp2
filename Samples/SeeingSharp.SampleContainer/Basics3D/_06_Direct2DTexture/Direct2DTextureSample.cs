@@ -90,16 +90,15 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
-                var cubeGeometry = new CubeGeometryFactory
-                {
-                    Material = resD2DMaterial
-                };
-
-                var resPalletGeometry = manipulator.AddResource(
-                    () => new GeometryResource(cubeGeometry));
+                var resGeometry = manipulator.AddResource(
+                    () => new GeometryResource(
+                        new CubeGeometryFactory
+                        {
+                            Material = resD2DMaterial
+                        }));
 
                 // Create cube object
-                var cubeObject = manipulator.AddGeneric(resPalletGeometry);
+                var cubeObject = manipulator.AddGeneric(resGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
                 cubeObject.YPos = 0.5f;
                 cubeObject.EnableShaderGeneratedBorder();
@@ -136,7 +135,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         private class Direct2DTextureSampleSettings : SampleSettings
         {
             [Category("Direct2D Texture")]
-            public string DisplayText { get; } = "Hello Direct2D!";
+            public string DisplayText { get; set; } = "Hello Direct2D!";
         }
     }
 }
