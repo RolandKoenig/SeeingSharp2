@@ -1128,14 +1128,18 @@ namespace SeeingSharp.Multimedia.Core
                         // Perform rendering of custom 2D drawing layers
                         foreach (var act2DLayer in m_2dDrawingLayers)
                         {
-                            act2DLayer.Draw2DInternal(m_d2dOverlay.Graphics);
+                            try
+                            {
+                                act2DLayer.Draw2DInternal(m_d2dOverlay.Graphics);
+                            }
+                            catch (Exception ex)
+                            {
+                                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.Rendering2DDrawingLayer);
+                            }
                         }
 
                         // Draw debug layer if created
-                        if (m_debugDrawingLayer != null)
-                        {
-                            m_debugDrawingLayer.Draw2DInternal(m_d2dOverlay.Graphics);
-                        }
+                        m_debugDrawingLayer?.Draw2DInternal(m_d2dOverlay.Graphics);
                     }
                     finally
                     {

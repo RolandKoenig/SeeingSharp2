@@ -52,6 +52,8 @@ namespace SeeingSharp.Multimedia.Core
     {
         Rendering3DObject,
 
+        Rendering2DDrawingLayer,
+
         Loading3DObject,
 
         UnloadingInvalid3DObject,

@@ -115,7 +115,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         m_firstLoadDone = true;
                         m_pixelWidth = bitmapSource.Size.Width;
                         m_pixelHeight = bitmapSource.Size.Height;
-                        if(m_totalFrameCount > 1)
+                        if (m_totalFrameCount > 1)
                         {
                             m_framePixelWidth = m_pixelWidth / m_framesX;
                             m_framePixelHeight = m_pixelHeight / m_framesY;
