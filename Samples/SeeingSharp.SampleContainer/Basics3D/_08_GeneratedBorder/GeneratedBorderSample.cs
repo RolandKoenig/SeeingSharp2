@@ -124,7 +124,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class GeneratedBorderSettings : SampleSettings
+        private class GeneratedBorderSettings : SampleSettingsWith3D
         {
             [Category("Generated Border")]
             public bool BorderEnabled { get; set; } = true;

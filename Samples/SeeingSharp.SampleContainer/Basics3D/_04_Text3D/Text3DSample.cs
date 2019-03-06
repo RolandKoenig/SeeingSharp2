@@ -33,7 +33,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
     [SampleDescription(
         "Text 3D", 4, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_04_Text3D")]
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_04_Text3D",
+        typeof(SampleSettingsWith3D))]
     public class Text3DSample : SampleBase
     {
         /// <summary>

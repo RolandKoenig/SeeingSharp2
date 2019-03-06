@@ -34,7 +34,8 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
     [SampleDescription(
         "Colored Cylinder", 1, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder")]
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_ColoredCylinder",
+        typeof(SampleSettingsWith3D))]
     public class ColoredCylinderSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)

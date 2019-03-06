@@ -132,7 +132,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class Direct2DTextureSampleSettings : SampleSettings
+        private class Direct2DTextureSampleSettings : SampleSettingsWith3D
         {
             [Category("Direct2D Texture")]
             public string DisplayText { get; set; } = "Hello Direct2D!";

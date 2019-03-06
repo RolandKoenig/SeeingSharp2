@@ -35,7 +35,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
     [SampleDescription(
         "Textured Cube", 2, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_02_TexturedCube")]
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_02_TexturedCube",
+        typeof(SampleSettingsWith3D))]
     public class SkyboxSample : SampleBase
     {
         /// <summary>

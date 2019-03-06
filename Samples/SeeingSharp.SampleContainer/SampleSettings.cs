@@ -29,66 +29,33 @@ namespace SeeingSharp.SampleContainer
 {
     public class SampleSettings : PropertyChangedBase
     {
-        private RenderLoop m_renderLoop;
-        private SampleMetadata m_sampleMetadata;
-
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
             yield return new SampleCommand(
                 "Show Source",
-                () => PlatformDependentMethods.OpenUrlInBrowser(m_sampleMetadata.SourceCodeUrl),
-                () => !string.IsNullOrEmpty(m_sampleMetadata?.SourceCodeUrl));
+                () => PlatformDependentMethods.OpenUrlInBrowser(this.SampleMetadata.SourceCodeUrl),
+                () => !string.IsNullOrEmpty(this.SampleMetadata?.SourceCodeUrl));
         }
 
-        public void SetEnvironment(RenderLoop renderLoop, SampleMetadata sampleMetadata)
+        public virtual void SetEnvironment(RenderLoop renderLoop, SampleMetadata sampleMetadata)
         {
-            m_renderLoop = renderLoop;
-            m_sampleMetadata = sampleMetadata;
+            this.RenderLoop = renderLoop;
+            this.SampleMetadata = sampleMetadata;
 
             // Trigger refresh of all properties
             RaisePropertyChanged();
         }
 
-        [Category("Basics")]
-        public bool EnableAntialiasing
+        protected RenderLoop RenderLoop
         {
-            get => m_renderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
-            set
-            {
-                if(value != m_renderLoop?.ViewConfiguration.AntialiasingEnabled)
-                {
-                    m_renderLoop.ViewConfiguration.AntialiasingEnabled = value;
-                    RaisePropertyChanged(nameof(EnableAntialiasing));
-                }
-            }
+            get;
+            private set;
         }
 
-        [Category("Basics")]
-        public bool EnableWireframe
+        protected SampleMetadata SampleMetadata
         {
-            get => m_renderLoop?.ViewConfiguration.WireframeEnabled ?? false;
-            set
-            {
-                if (value != m_renderLoop?.ViewConfiguration.WireframeEnabled)
-                {
-                    m_renderLoop.ViewConfiguration.WireframeEnabled = value;
-                    RaisePropertyChanged(nameof(EnableWireframe));
-                }
-            }
-        }
-
-        [Category("Basics")]
-        public AntialiasingQualityLevel AntialiasingQuality
-        {
-            get => m_renderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
-            set
-            {
-                if(value != m_renderLoop?.ViewConfiguration.AntialiasingQuality)
-                {
-                    m_renderLoop.ViewConfiguration.AntialiasingQuality = value;
-                    RaisePropertyChanged(nameof(AntialiasingQuality));
-                }
-            }
+            get;
+            private set;
         }
     }
 }
