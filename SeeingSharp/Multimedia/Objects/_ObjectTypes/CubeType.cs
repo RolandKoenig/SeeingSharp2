@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Objects
                 Key = Material
             };
 
-            var size = this.Size;
+            var size = Size;
             var halfSize = size / 2f;
 
             var result = new VertexStructure();

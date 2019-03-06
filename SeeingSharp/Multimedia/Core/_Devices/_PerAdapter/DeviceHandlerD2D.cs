@@ -76,36 +76,18 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public bool IsLoaded
-        {
-            get
-            {
-                return m_renderTarget != null;
-            }
-        }
+        public bool IsLoaded => m_renderTarget != null;
 
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        public D2D.Device Device
-        {
-            get { return m_deviceD2D; }
-        }
+        public D2D.Device Device => m_deviceD2D;
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        public D2D.DeviceContext DeviceContext
-        {
-            get { return m_deviceContextD2D; }
-        }
+        public D2D.DeviceContext DeviceContext => m_deviceContextD2D;
 
-        internal D2D.RenderTarget RenderTarget
-        {
-            get
-            {
-                return m_renderTarget;
-            }
-        }
+        internal D2D.RenderTarget RenderTarget => m_renderTarget;
     }
 }

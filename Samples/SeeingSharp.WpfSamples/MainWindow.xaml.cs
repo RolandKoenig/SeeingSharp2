@@ -45,27 +45,36 @@ namespace SeeingSharp.WpfSamples
         {
             InitializeComponent();
 
-            this.Loaded += OnLoaded;
+            Loaded += OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
-                var sampleRepo = new SampleRepository();
-                sampleRepo.LoadSampleData();
-                this.DataContext = new MainWindowViewModel(sampleRepo, this.CtrlRenderer.RenderLoop);
+                return;
             }
+
+            var sampleRepo = new SampleRepository();
+            sampleRepo.LoadSampleData();
+            DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+            if (!(DataContext is MainWindowViewModel viewModel))
+            {
+                return;
+            }
 
             var selectedSample = viewModel.SelectedSample;
-            if(selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            if (selectedSample == null)
+            {
+                return;
+            }
+
+            ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
         /// <summary>
@@ -73,9 +82,13 @@ namespace SeeingSharp.WpfSamples
         /// </summary>
         private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
-            if (m_isChangingSample) { return; }
+            if (m_isChangingSample)
+            {
+                return;
+            }
 
             m_isChangingSample = true;
+
             try
             {
                 if (m_actSampleInfo == sampleInfo) { return; }
@@ -83,11 +96,12 @@ namespace SeeingSharp.WpfSamples
                 // Clear previous sample
                 if (m_actSampleInfo != null)
                 {
-                    await this.CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+                    await CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
                     {
                         manipulator.Clear(true);
                     });
-                    await this.CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+
+                    await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
 
@@ -99,16 +113,16 @@ namespace SeeingSharp.WpfSamples
                 if (sampleInfo != null)
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(this.CtrlRenderer.RenderLoop, sampleSettings);
+                    await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
                 }
 
                 // Wait for next finished rendering
-                await this.CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
 
-                await this.CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
             }
             finally
             {

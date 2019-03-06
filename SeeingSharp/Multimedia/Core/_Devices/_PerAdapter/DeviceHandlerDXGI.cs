@@ -38,19 +38,15 @@ namespace SeeingSharp.Multimedia.Core
 
     public class DeviceHandlerDXGI
     {
-        private SharpDX.DXGI.Factory2 m_factory;
-        private SharpDX.DXGI.Adapter1 m_adapter;
-        private SharpDX.DXGI.Device3 m_device;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
         /// </summary>
         internal DeviceHandlerDXGI(SharpDX.DXGI.Adapter1 adapter, D3D11.Device device)
         {
-            m_device = device.QueryInterface<SharpDX.DXGI.Device3>();
-            m_adapter = adapter;
+            Device = device.QueryInterface<SharpDX.DXGI.Device3>();
+            Adapter = adapter;
 
-            m_factory = m_adapter.GetParent<SharpDX.DXGI.Factory2>();
+            Factory = Adapter.GetParent<SharpDX.DXGI.Factory2>();
         }
 
         /// <summary>
@@ -58,44 +54,30 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadResources()
         {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
-            m_adapter = SeeingSharpUtil.DisposeObject(m_adapter);
-            m_device = SeeingSharpUtil.DisposeObject(m_device);
+            Factory = SeeingSharpUtil.DisposeObject(Factory);
+            Adapter = SeeingSharpUtil.DisposeObject(Adapter);
+            Device = SeeingSharpUtil.DisposeObject(Device);
         }
 
         /// <summary>
         /// Gets current factory object.
         /// </summary>
         /// <value>The factory.</value>
-        internal SharpDX.DXGI.Factory2 Factory
-        {
-            get { return m_factory; }
-        }
+        internal SharpDX.DXGI.Factory2 Factory { get; private set; }
 
         /// <summary>
         /// Gets the DXGI device.
         /// </summary>
-        internal SharpDX.DXGI.Device3 Device
-        {
-            get { return m_device; }
-        }
+        internal SharpDX.DXGI.Device3 Device { get; private set; }
 
         /// <summary>
         /// Gets current adapter used for drawing.
         /// </summary>
-        internal SharpDX.DXGI.Adapter1 Adapter
-        {
-            get { return m_adapter; }
-        }
+        internal SharpDX.DXGI.Adapter1 Adapter { get; private set; }
 
-        public bool IsInitialized
-        {
-            get
-            {
-                return (m_factory != null) &&
-                       (m_device != null) &&
-                       (m_adapter != null);
-            }
-        }
+        public bool IsInitialized =>
+            (Factory != null) &&
+            (Device != null) &&
+            (Adapter != null);
     }
 }

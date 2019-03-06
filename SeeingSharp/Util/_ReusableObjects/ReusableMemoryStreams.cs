@@ -82,10 +82,7 @@ namespace SeeingSharp.Util
             m_memoryStreams.Clear();
         }
 
-        public int Count
-        {
-            get { return m_memoryStreams.Count; }
-        }
+        public int Count => m_memoryStreams.Count;
 
         public static ReusableMemoryStreams Current
         {

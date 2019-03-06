@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
@@ -54,8 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Resources
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
+
         private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
         private D3D11.InputLayout m_inputLayout;
         #endregion
@@ -73,10 +71,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
+            VertexShader = resources.GetResourceAndEnsureLoaded(
                 KEY_VERTEX_SHADER,
                 () => GraphicsHelper.GetVertexShaderResource(device, "LineRendering", "LineVertexShader"));
-            m_pixelShader = resources.GetResourceAndEnsureLoaded(
+            PixelShader = resources.GetResourceAndEnsureLoaded(
                 KEY_PIXEL_SHADER,
                 () => GraphicsHelper.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
             m_constantBuffer = resources.GetResourceAndEnsureLoaded(
@@ -85,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             m_inputLayout = new D3D11.InputLayout(
                 device.DeviceD3D11_1,
-                m_vertexShader.ShaderBytecode,
+                VertexShader.ShaderBytecode,
                 LineVertex.InputElements);
         }
 
@@ -101,7 +99,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            //Apply constant buffer data
+            // Apply constant buffer data
             var constantData = new ConstantBufferData
             {
                 DiffuseColor = lineColor,
@@ -110,7 +108,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             m_constantBuffer.SetData(deviceContext, constantData);
 
-            //Apply vertex buffer and draw lines
+            // Apply vertex buffer and draw lines
             deviceContext.VertexShader.SetConstantBuffer(4, m_constantBuffer.ConstantBuffer);
             deviceContext.PixelShader.SetConstantBuffer(4, m_constantBuffer.ConstantBuffer);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(lineVertexBuffer, LineVertex.Size, 0));
@@ -124,54 +122,39 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             SeeingSharpTools.SafeDispose(ref m_inputLayout);
 
-            m_vertexShader = null;
-            m_pixelShader = null;
+            VertexShader = null;
+            PixelShader = null;
             m_constantBuffer = null;
         }
 
         /// <summary>
         /// Is the resource loaded correctly?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_pixelShader != null; }
-        }
+        public override bool IsLoaded => PixelShader != null;
 
         /// <summary>
         /// Gets the vertex shader resource.
         /// </summary>
-        public VertexShaderResource VertexShader
-        {
-            get { return m_vertexShader; }
-        }
+        public VertexShaderResource VertexShader { get; private set; }
 
         /// <summary>
         /// Gets the pixel shader resource.
         /// </summary>
-        public PixelShaderResource PixelShader
-        {
-            get { return m_pixelShader; }
-        }
+        public PixelShaderResource PixelShader { get; private set; }
 
         /// <summary>
         /// Gets the constant buffer resource.
         /// </summary>
-        public ConstantBufferResource ConstantBuffer
-        {
-            get { return m_constantBuffer; }
-        }
+        public ConstantBufferResource ConstantBuffer => m_constantBuffer;
 
         /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
-        internal D3D11.InputLayout InputLayout
-        {
-            get { return m_inputLayout; }
-        }
+        internal D3D11.InputLayout InputLayout => m_inputLayout;
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         [StructLayout(LayoutKind.Sequential)]
         private struct ConstantBufferData
         {

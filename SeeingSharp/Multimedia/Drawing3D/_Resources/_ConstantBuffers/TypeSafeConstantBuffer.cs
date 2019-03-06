@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -73,9 +72,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="dataToSet">The data to set.</param>
         internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
         {
-            var dataBox = deviceContext.MapSubresource(base.ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
-            SharpDX.Utilities.Write(dataBox.DataPointer, ref dataToSet);
-            deviceContext.UnmapSubresource(base.ConstantBuffer, 0);
+            var dataBox = deviceContext.MapSubresource(ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
+            Utilities.Write(dataBox.DataPointer, ref dataToSet);
+            deviceContext.UnmapSubresource(ConstantBuffer, 0);
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override D3D11.Buffer CreateConstantBuffer(EngineDevice device)
         {
-            using (var dataStream = new SharpDX.DataStream(SharpDX.Utilities.SizeOf<T>(), true, true))
+            using (var dataStream = new DataStream(Utilities.SizeOf<T>(), true, true))
             {
                 dataStream.Write(m_initialData);
                 dataStream.Position = 0;

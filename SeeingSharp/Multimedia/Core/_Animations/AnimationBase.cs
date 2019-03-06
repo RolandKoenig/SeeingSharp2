@@ -35,15 +35,11 @@ namespace SeeingSharp.Multimedia.Core
     public abstract class AnimationBase : IAnimation
     {
         #region Main properties of this animation
-        private AnimationType m_animationType;
 
         #endregion
 
         #region Control members for AnimationTypes
         private Task m_asyncTask;
-        private TimeSpan m_fixedTime;
-        private TimeSpan m_currentTime;
-        private bool m_finished;
         private bool m_started;
         private bool m_canceled;
         #endregion
@@ -54,9 +50,9 @@ namespace SeeingSharp.Multimedia.Core
         public AnimationBase(object targetObject)
         {
             TargetObject = targetObject;
-            m_fixedTime = TimeSpan.Zero;
-            m_currentTime = TimeSpan.Zero;
-            m_animationType = AnimationType.FinishedByEvent;
+            FixedTime = TimeSpan.Zero;
+            CurrentTime = TimeSpan.Zero;
+            AnimationType = AnimationType.FinishedByEvent;
         }
 
         /// <summary>
@@ -67,7 +63,7 @@ namespace SeeingSharp.Multimedia.Core
         public AnimationBase(object targetObject, AnimationType animationType)
             : this(targetObject)
         {
-            m_animationType = animationType;
+            AnimationType = animationType;
         }
 
         /// <summary>
@@ -81,8 +77,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             fixedTime.EnsureLongerOrEqualZero(nameof(fixedTime));
 
-            m_animationType = animationType;
-            m_fixedTime = fixedTime;
+            AnimationType = animationType;
+            FixedTime = fixedTime;
         }
 
         /// <summary>
@@ -93,10 +89,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             fixedTime.EnsureLongerOrEqualZero(nameof(fixedTime));
 
-            if (m_currentTime > TimeSpan.Zero) { throw new InvalidOperationException("Unable to change animation type when animation was started already!"); }
+            if (CurrentTime > TimeSpan.Zero) { throw new InvalidOperationException("Unable to change animation type when animation was started already!"); }
 
-            m_fixedTime = fixedTime;
-            m_animationType = Core.AnimationType.FixedTime;
+            FixedTime = fixedTime;
+            AnimationType = AnimationType.FixedTime;
         }
 
         /// <summary>
@@ -104,10 +100,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected void ChangeToEventBased()
         {
-            if (m_currentTime > TimeSpan.Zero) { throw new InvalidOperationException("Unable to change animation type when animation was started already!"); }
+            if (CurrentTime > TimeSpan.Zero) { throw new InvalidOperationException("Unable to change animation type when animation was started already!"); }
 
-            m_fixedTime = TimeSpan.Zero;
-            m_animationType = Core.AnimationType.FinishedByEvent;
+            FixedTime = TimeSpan.Zero;
+            AnimationType = AnimationType.FinishedByEvent;
         }
 
         /// <summary>
@@ -115,9 +111,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Reset()
         {
-            m_finished = false;
+            Finished = false;
             m_started = false;
-            m_currentTime = TimeSpan.Zero;
+            CurrentTime = TimeSpan.Zero;
 
             OnReset();
         }
@@ -132,26 +128,26 @@ namespace SeeingSharp.Multimedia.Core
             // Call start animation if m_currentTime is zero
             HandleStartAnimation();
 
-            switch (m_animationType)
+            switch (AnimationType)
             {
                 // Update logic for FixedTime animations
                 case AnimationType.FixedTime:
-                    if (m_fixedTime <= TimeSpan.Zero)
+                    if (FixedTime <= TimeSpan.Zero)
                     {
                         OnStartAnimation();
                         OnFixedTimeAnimationFinished();
-                        m_finished = true;
+                        Finished = true;
                     }
-                    if (m_currentTime < m_fixedTime)
+                    if (CurrentTime < FixedTime)
                     {
-                        m_currentTime = m_currentTime.Add(updateState.UpdateTime);
-                        if (m_currentTime >= m_fixedTime)
+                        CurrentTime = CurrentTime.Add(updateState.UpdateTime);
+                        if (CurrentTime >= FixedTime)
                         {
-                            m_currentTime = m_fixedTime;
+                            CurrentTime = FixedTime;
 
                             OnCurrentTimeUpdated(updateState, animationState);
                             OnFixedTimeAnimationFinished();
-                            m_finished = true;
+                            Finished = true;
                         }
                         else
                         {
@@ -162,15 +158,16 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Update logic for FinishedByEvent animations
                 case AnimationType.FinishedByEvent:
-                    m_currentTime += updateState.UpdateTime;
+                    CurrentTime += updateState.UpdateTime;
 
-                    //Call update method
+                    // Call update method
                     OnCurrentTimeUpdated(updateState, animationState);
                     break;
 
                 // Update logic for async calls
                 case AnimationType.AsyncCall:
-                    m_currentTime += updateState.UpdateTime;
+                    CurrentTime += updateState.UpdateTime;
+
                     if (m_asyncTask == null)
                     {
                         m_asyncTask = OnAsyncAnimationStart();
@@ -181,7 +178,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
                     else if (m_asyncTask.IsCompleted || m_asyncTask.IsCanceled || m_asyncTask.IsFaulted)
                     {
-                        m_finished = true;
+                        Finished = true;
                     }
                     break;
             }
@@ -204,7 +201,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public virtual void OnReset()
         {
-            switch (m_animationType)
+            switch (AnimationType)
             {
                 case AnimationType.AsyncCall:
                     m_asyncTask = null;
@@ -224,7 +221,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected void NotifyAnimationFinished()
         {
-            m_finished = true;
+            Finished = true;
         }
 
         /// <summary>
@@ -232,13 +229,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void HandleStartAnimation()
         {
-            if ((m_currentTime == TimeSpan.Zero) &&
-                (!m_finished) &&
-                (!m_started))
+            if ((CurrentTime != TimeSpan.Zero) || (Finished) || (m_started))
             {
-                OnStartAnimation();
-                m_started = true;
+                return;
             }
+
+            OnStartAnimation();
+            m_started = true;
         }
 
         /// <summary>
@@ -275,26 +272,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the animation type.
         /// </summary>
-        public AnimationType AnimationType
-        {
-            get { return m_animationType; }
-        }
+        public AnimationType AnimationType { get; private set; }
 
         /// <summary>
         /// Complete duration when in FixedTime mode.
         /// </summary>
-        public TimeSpan FixedTime
-        {
-            get { return m_fixedTime; }
-        }
+        public TimeSpan FixedTime { get; private set; }
 
         /// <summary>
         /// Current time in FixedTime mode.
         /// </summary>
-        public TimeSpan CurrentTime
-        {
-            get { return m_currentTime; }
-        }
+        public TimeSpan CurrentTime { get; private set; }
 
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
@@ -310,39 +298,33 @@ namespace SeeingSharp.Multimedia.Core
             HandleStartAnimation();
 
             // Handle the animation type
-            switch (this.AnimationType)
+            switch (AnimationType)
             {
-                case Core.AnimationType.AsyncCall:
+                case AnimationType.AsyncCall:
                     return defaultCycleTime;
 
-                case Core.AnimationType.FinishedByEvent:
+                case AnimationType.FinishedByEvent:
                     return defaultCycleTime;
 
-                case Core.AnimationType.FixedTime:
-                    if (m_fixedTime > m_currentTime) { return m_fixedTime - m_currentTime; }
+                case AnimationType.FixedTime:
+                    if (FixedTime > CurrentTime) { return FixedTime - CurrentTime; }
                     else { return TimeSpan.Zero; }
 
                 default:
-                    throw new SeeingSharpGraphicsException("Unhandled animation type: " + this.AnimationType);
+                    throw new SeeingSharpGraphicsException("Unhandled animation type: " + AnimationType);
             }
         }
 
         /// <summary>
         /// Has this animation finished executing?
         /// </summary>
-        public bool Finished
-        {
-            get { return m_finished; }
-        }
+        public bool Finished { get; private set; }
 
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public virtual bool IsBlockingAnimation
-        {
-            get { return false; }
-        }
+        public virtual bool IsBlockingAnimation => false;
 
         /// <summary>
         /// Gets the target object.
@@ -354,13 +336,19 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool Canceled
         {
-            get { return m_canceled; }
+            get => m_canceled;
             set
             {
-                if (m_canceled != value)
+                if (m_canceled == value)
                 {
-                    m_canceled = value;
-                    if (m_canceled) { this.OnCanceled(); }
+                    return;
+                }
+
+                m_canceled = value;
+
+                if (m_canceled)
+                {
+                    OnCanceled();
                 }
             }
         }

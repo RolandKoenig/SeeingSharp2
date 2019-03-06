@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             // Define all vertices
-            StandardVertex[] vertices = new StandardVertex[]
+            StandardVertex[] vertices =
             {
                 // Front side
                 new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 0f)),
@@ -98,11 +98,11 @@ namespace SeeingSharp.Multimedia.Objects
                 new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 0f)),
                 new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 0f)),
                 new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f)),
+                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f))
             };
 
             // Define all indices
-            int[] indices = new int[]
+            int[] indices =
             {
                 0, 1, 2, 2, 3, 0,        // Font side
                 4, 5, 6, 6, 7, 4,        // Right side
@@ -167,9 +167,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(base.CountRenderPassSubscriptions(layerViewSubset) <= 0)
+            if(CountRenderPassSubscriptions(layerViewSubset) <= 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
+                SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
             }
         }
 

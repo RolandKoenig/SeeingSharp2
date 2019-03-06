@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -91,25 +90,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER_BLUR,
                 () => GraphicsHelper.GetPixelShaderResource(device, "Postprocessing", "PostprocessBlur"));
-            m_singleForcedColor = resources.GetResourceAndEnsureLoaded<SingleForcedColorMaterialResource>(
+            m_singleForcedColor = resources.GetResourceAndEnsureLoaded(
                 KEY_MATERIAL,
-                () => new SingleForcedColorMaterialResource() { FadeIntensity = m_fadeIntensity });
-            m_renderTarget = resources.GetResourceAndEnsureLoaded<RenderTargetTextureResource>(
+                () => new SingleForcedColorMaterialResource { FadeIntensity = m_fadeIntensity });
+            m_renderTarget = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_TARGET,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));
             m_defaultResources = resources.DefaultResources;
 
             // Load constant buffers
-            m_cbFirstPass = resources.GetResourceAndEnsureLoaded<TypeSafeConstantBufferResource<CBPerObject>>(
+            m_cbFirstPass = resources.GetResourceAndEnsureLoaded(
                 KEY_CB_PASS_01,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject()
+                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
                 {
                     BlurIntensity = 0.0f,
                     BlurOpacity = 0.1f
                 }));
-            m_cbSecondPass = resources.GetResourceAndEnsureLoaded<TypeSafeConstantBufferResource<CBPerObject>>(
+            m_cbSecondPass = resources.GetResourceAndEnsureLoaded(
                 KEY_CB_PASS_02,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject()
+                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
                 {
                     BlurIntensity = 0.8f,
                     BlurOpacity = 0.5f
@@ -145,7 +144,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 switch (passID)
                 {
-                    //******************************
+                    // ******************************
                     // 1. Pass: Draw all pixels that ly behind other already rendered elements
                     case 0:
                         // Force the single color material
@@ -162,7 +161,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         renderState.Device.DeviceImmediateContextD3D11.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateInvertedZTest;
                         break;
 
-                    //******************************
+                    // ******************************
                     // 2. Pass: Draw all visible pixels with some blur effect
                     case 1:
                         // Force the single color material
@@ -228,7 +227,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 switch (passID)
                 {
                     case 0:
-                        base.ApplyAlphaBasedSpriteRendering(deviceContext);
+                        ApplyAlphaBasedSpriteRendering(deviceContext);
+
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -239,12 +239,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            base.DiscardAlphaBasedSpriteRendering(deviceContext);
+                            DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
+
                         return true;
 
                     case 1:
-                        base.ApplyAlphaBasedSpriteRendering(deviceContext);
+                        ApplyAlphaBasedSpriteRendering(deviceContext);
+
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -255,8 +257,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            base.DiscardAlphaBasedSpriteRendering(deviceContext);
+                            DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
+
                         return false;
                 }
             }
@@ -276,19 +279,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get
-            {
-                return (m_renderTarget != null) &&
-                       (m_singleForcedColor != null) &&
-                       (m_singleForcedColor.IsLoaded);
-            }
-        }
+        public override bool IsLoaded =>
+            (m_renderTarget != null) &&
+            (m_singleForcedColor != null) &&
+            (m_singleForcedColor.IsLoaded);
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         [StructLayout(LayoutKind.Sequential)]
         private struct CBPerObject
         {

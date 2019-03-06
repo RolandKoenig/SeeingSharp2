@@ -67,7 +67,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
             return obj is ImageDescription && Equals((ImageDescription)obj);
         }
 
@@ -75,7 +79,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             unchecked
             {
-                int hashCode = Dimension.GetHashCode();
+                var hashCode = Dimension.GetHashCode();
                 hashCode = (hashCode * 397) ^ Width;
                 hashCode = (hashCode * 397) ^ Height;
                 hashCode = (hashCode * 397) ^ Depth;
@@ -98,7 +102,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public override string ToString()
         {
-            return string.Format("Dimension: {0}, Width: {1}, Height: {2}, Depth: {3}, Format: {4}, ArraySize: {5}, MipLevels: {6}", Dimension, Width, Height, Depth, Format, ArraySize, MipLevels);
+            return
+                $"Dimension: {Dimension}, Width: {Width}, Height: {Height}, Depth: {Depth}, Format: {Format}, ArraySize: {ArraySize}, MipLevels: {MipLevels}";
         }
     }
 }

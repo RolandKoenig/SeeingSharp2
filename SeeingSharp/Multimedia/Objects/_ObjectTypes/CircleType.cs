@@ -34,17 +34,17 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public CircleType()
         {
-            this.Radius = 2f;
-            this.Width = 0.5f;
-            this.Height = 0.1f;
-            this.CountOfSegments = 10;
+            Radius = 2f;
+            Width = 0.5f;
+            Height = 0.1f;
+            CountOfSegments = 10;
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             var result = new VertexStructure();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCircleFullV(Vector3.Zero, Radius, Width, Height, CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }

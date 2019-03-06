@@ -155,8 +155,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public GeometryData Geometry
         {
-            get { return m_geoData; }
-            set { m_geoData = value; }
+            get => m_geoData;
+            set => m_geoData = value;
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public TextureData Texture
         {
-            get { return m_textureData; }
-            set { m_textureData = value; }
+            get => m_textureData;
+            set => m_textureData = value;
         }
 
         /// <summary>
@@ -178,8 +178,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vector3 Position
         {
-            get { return m_geoData.Position; }
-            set { m_geoData.Position = value; }
+            get => m_geoData.Position;
+            set => m_geoData.Position = value;
         }
 
         /// <summary>
@@ -187,8 +187,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vector3 Normal
         {
-            get { return m_geoData.Normal; }
-            set { m_geoData.Normal = value; }
+            get => m_geoData.Normal;
+            set => m_geoData.Normal = value;
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vector3 Tangent
         {
-            get { return m_geoData.Tangent; }
-            set { m_geoData.Tangent = value; }
+            get => m_geoData.Tangent;
+            set => m_geoData.Tangent = value;
         }
 
         /// <summary>
@@ -205,8 +205,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vector3 Binormal
         {
-            get { return m_geoData.Binormal; }
-            set { m_geoData.Binormal = value; }
+            get => m_geoData.Binormal;
+            set => m_geoData.Binormal = value;
         }
 
         /// <summary>
@@ -214,8 +214,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vector2 TexCoord
         {
-            get { return m_textureData.Coordinate1; }
-            set { m_textureData.Coordinate1 = value; }
+            get => m_textureData.Coordinate1;
+            set => m_textureData.Coordinate1 = value;
         }
 
         /// <summary>
@@ -225,8 +225,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public float TextureFactor
         {
-            get { return m_textureData.TextureFactor; }
-            set { m_textureData.TextureFactor = value; }
+            get => m_textureData.TextureFactor;
+            set => m_textureData.TextureFactor = value;
         }
 
         /// <summary>
@@ -234,8 +234,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Color4 Color
         {
-            get { return m_geoData.Color; }
-            set { m_geoData.Color = value; }
+            get => m_geoData.Color;
+            set => m_geoData.Color = value;
         }
     }
 }

@@ -42,9 +42,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="structure">The structure.</param>
         public BuiltVerticesRange(VertexStructure structure)
         {
-            this.Structure = structure;
-            this.StartVertex = 0;
-            this.VertexCount = 0;
+            Structure = structure;
+            StartVertex = 0;
+            VertexCount = 0;
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="vertexCount">The vertex count.</param>
         public BuiltVerticesRange(VertexStructure structure, int startVertex, int vertexCount)
         {
-            this.Structure = structure;
-            this.StartVertex = startVertex;
-            this.VertexCount = vertexCount;
+            Structure = structure;
+            StartVertex = startVertex;
+            VertexCount = vertexCount;
         }
 
         /// <summary>
@@ -74,87 +74,107 @@ namespace SeeingSharp.Multimedia.Objects
             }
             else
             {
-                if(StartVertex + VertexCount != otherRange.StartVertex)
+                if (StartVertex + VertexCount != otherRange.StartVertex)
                 {
                     throw new SeeingSharpGraphicsException("Unable to merge given vertex ranges!");
                 }
-                VertexCount = (int)(VertexCount + otherRange.VertexCount);
+                VertexCount = VertexCount + otherRange.VertexCount;
             }
         }
 
+        /// <summary>
+        /// DisableTexture
+        /// </summary>
+        /// <returns></returns>
         public BuiltVerticesRange DisableTexture()
         {
-            int lastVertex = StartVertex + VertexCount;
+            var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TextureFactor = -100;
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
         }
 
+        /// <summary>
+        /// FlipTextureCoordinatesX
+        /// </summary>
+        /// <returns></returns>
         public BuiltVerticesRange FlipTextureCoordinatesX()
         {
             var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
         }
 
+        /// <summary>
+        /// FlipTextureCoordinatesY
+        /// </summary>
+        /// <returns></returns>
         public BuiltVerticesRange FlipTextureCoordinatesY()
         {
             var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
         }
 
+        /// <summary>
+        /// FlipTextureCoordinatesXY
+        /// </summary>
+        /// <returns></returns>
         public BuiltVerticesRange FlipTextureCoordinatesXY()
         {
             var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
         }
 
+        /// <summary>
+        /// RotateTextureCoordinates
+        /// </summary>
+        /// <returns></returns>
         public BuiltVerticesRange RotateTextureCoordinates()
         {
             var lastVertex = StartVertex + VertexCount;
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = this.Structure.Vertices[loop];
+                var actVertex = Structure.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.Y,
                     actVertex.TexCoord.X);
-                this.Structure.Vertices[loop] = actVertex;
+                Structure.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -163,9 +183,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this.VertexCount <= 0; }
-        }
+        public bool IsEmpty => VertexCount <= 0;
     }
 }

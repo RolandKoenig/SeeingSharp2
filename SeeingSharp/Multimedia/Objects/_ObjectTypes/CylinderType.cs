@@ -34,16 +34,16 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public CylinderType()
         {
-            this.Radius = 0.5f;
-            this.Height = 1f;
-            this.CountOfSegments = 10;
+            Radius = 0.5f;
+            Height = 1f;
+            CountOfSegments = 10;
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
             var result = new VertexStructure();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCylinderFullV(Vector3.Zero, Radius, Height, CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }

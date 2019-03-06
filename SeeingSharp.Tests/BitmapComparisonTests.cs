@@ -61,7 +61,7 @@ namespace SeeingSharp.Tests
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "ClearedScreen.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             {
-                float comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
+                var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
                 Assert.IsTrue(comparisonResult > 0.25f);
                 Assert.IsTrue(comparisonResult < 0.6f);
             }
@@ -74,7 +74,7 @@ namespace SeeingSharp.Tests
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject_Negative.png"))
             {
-                float comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
+                var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
                 Assert.IsTrue(comparisonResult > 0.9f);
                 Assert.IsTrue(comparisonResult <= 1.0f);
             }
@@ -87,7 +87,7 @@ namespace SeeingSharp.Tests
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "WhiteScreen.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "BlackScreen.png"))
             {
-                float comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
+                var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
                 Assert.IsTrue(comparisonResult == 1.0f);
             }
         }
@@ -99,7 +99,7 @@ namespace SeeingSharp.Tests
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject_Enlighted.png"))
             {
-                float comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
+                var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
                 Assert.IsTrue(comparisonResult > 0.1);
                 Assert.IsTrue(comparisonResult < 0.4);
             }
@@ -112,7 +112,7 @@ namespace SeeingSharp.Tests
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject_Smaller.png"))
             {
-                float comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
+                var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
                 Assert.IsTrue(comparisonResult > 0.1);
                 Assert.IsTrue(comparisonResult < 0.4);
             }

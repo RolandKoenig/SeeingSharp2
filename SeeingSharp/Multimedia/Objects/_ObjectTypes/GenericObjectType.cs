@@ -59,8 +59,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for structure building</param>
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
         {
-            if (buildOptions.IsHighDetail) { return VertexStructure; }
-            else { return VertexStructureLowDetail; }
+            if (buildOptions.IsHighDetail)
+            {
+                return VertexStructure;
+            }
+
+            return VertexStructureLowDetail;
         }
 
         /// <summary>

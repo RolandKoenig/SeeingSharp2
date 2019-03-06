@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         private static readonly NamedOrGenericKey RES_KEY_FALLBACK_TEXTURE = GraphicsCore.GetNextGenericResourceKey();
 
         #region Graphics object
-        private Graphics2D m_graphics2D;
+
         #endregion
 
         #region Given resources
@@ -106,8 +106,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Calculate the screen size in device independent units
             var scaledScreenSize = new Size2F(
-                (float)viewWidth / dpiScaling.ScaleFactorX,
-                (float)viewHeight / dpiScaling.ScaleFactorY);
+                viewWidth / dpiScaling.ScaleFactorX,
+                viewHeight / dpiScaling.ScaleFactorY);
 
             // Cancel here if the device does not support 2D rendering
             if ((!forceInit) &&
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 m_renderTargetBitmap = new SharpDX.Direct2D1.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
                 m_renderTarget2D = m_device.DeviceContextD2D;
-                m_graphics2D = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
+                Graphics = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
             }
         }
 
@@ -164,25 +164,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is this resource loaded correctly?
         /// </summary>
-        public bool IsLoaded
-        {
-            get { return m_renderTarget2D != null; }
-        }
+        public bool IsLoaded => m_renderTarget2D != null;
 
         /// <summary>
         /// Gets the Direct2D render target.
         /// </summary>
-        internal D2D.RenderTarget RenderTarget2D
-        {
-            get { return m_renderTarget2D; }
-        }
+        internal D2D.RenderTarget RenderTarget2D => m_renderTarget2D;
 
         /// <summary>
         /// Gets the 2D graphics object.
         /// </summary>
-        internal Graphics2D Graphics
-        {
-            get { return m_graphics2D; }
-        }
+        internal Graphics2D Graphics { get; private set; }
     }
 }

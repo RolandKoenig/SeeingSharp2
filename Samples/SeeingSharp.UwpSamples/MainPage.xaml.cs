@@ -45,9 +45,9 @@ namespace SeeingSharp.UwpSamples
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.Loaded += OnLoaded;
+            Loaded += OnLoaded;
         }
 
         /// <summary>
@@ -106,19 +106,30 @@ namespace SeeingSharp.UwpSamples
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
 
-            var viewModel = this.DataContext as MainWindowViewModel;
-            viewModel?.LoadSampleData(sampleRepo, this.CtrlSwapChain.RenderLoop);
+            var viewModel = DataContext as MainWindowViewModel;
+            viewModel?.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DesignMode.DesignModeEnabled) { return; }
-            if (!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+            if (DesignMode.DesignModeEnabled)
+            {
+                return;
+            }
+
+            if (!(DataContext is MainWindowViewModel viewModel))
+            {
+                return;
+            }
 
             var selectedSample = viewModel.SelectedSample;
-            if (selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            if (selectedSample == null)
+            {
+                return;
+            }
+
+            ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
     }
 }

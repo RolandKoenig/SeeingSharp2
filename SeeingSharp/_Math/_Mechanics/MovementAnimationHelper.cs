@@ -68,9 +68,10 @@ namespace SeeingSharp
             m_speed.ValidateWithException();
 
             // Calculate length and normal
-            float length = 0f;
+            var length = 0f;
             m_movementNormal = Vector3.Normalize(movementDistance);
             length = movementDistance.Length();
+
             if (length <= EngineMath.TOLERANCE_DOUBLE_POSITIVE)
             {
                 // No movement.. leave all values on defaults
@@ -80,6 +81,7 @@ namespace SeeingSharp
             // Calculate acceleration values
             m_accelerationLength = 0f;
             m_accelerationSeconds = 0f;
+
             if (m_speed.Acceleration > EngineMath.TOLERANCE_DOUBLE_POSITIVE)
             {
                 m_accelerationSeconds = m_speed.MaximumSpeed / m_speed.Acceleration;
@@ -97,12 +99,13 @@ namespace SeeingSharp
 
             // Handle the case where we don't reach full speed
             // => Change length values depending on percentage of these phases on whole movement
-            double fullAccDecLength = m_accelerationLength + m_decelerationLength;
+            var fullAccDecLength = m_accelerationLength + m_decelerationLength;
             m_fullSpeedLength = length;
+
             if (length < fullAccDecLength)
             {
-                double accWeight = m_accelerationLength / fullAccDecLength;
-                double decWeight = m_decelerationLength / fullAccDecLength;
+                var accWeight = m_accelerationLength / fullAccDecLength;
+                var decWeight = m_decelerationLength / fullAccDecLength;
                 m_accelerationLength = length * accWeight;
                 m_decelerationLength = length * decWeight;
                 m_fullSpeedLength = 0.0;
@@ -115,6 +118,7 @@ namespace SeeingSharp
                 m_reachedMaxSpeed = m_speed.MaximumSpeed;
                 m_fullSpeedLength = m_fullSpeedLength - fullAccDecLength;
             }
+
             m_fullSpeedSeconds = m_fullSpeedLength / m_speed.MaximumSpeed;
         }
 
@@ -124,9 +128,9 @@ namespace SeeingSharp
         /// <param name="elapsedTime"></param>
         public Vector3 GetPartialMoveDistance(TimeSpan elapsedTime)
         {
-            double elapsedSeconds = elapsedTime.TotalSeconds;
+            var elapsedSeconds = elapsedTime.TotalSeconds;
+            var movedLength = 0.0;
 
-            double movedLength = 0.0;
             if (elapsedSeconds < m_accelerationSeconds)
             {
                 // We are in acceleration phase
@@ -135,13 +139,13 @@ namespace SeeingSharp
             else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds)
             {
                 // We are in full-speed phase
-                double elapsedSecondsFullSpeed = elapsedSeconds - m_accelerationSeconds;
+                var elapsedSecondsFullSpeed = elapsedSeconds - m_accelerationSeconds;
                 movedLength = m_accelerationLength + m_speed.MaximumSpeed * elapsedSecondsFullSpeed;
             }
             else if (elapsedSeconds < m_accelerationSeconds + m_fullSpeedSeconds + m_decelerationSeconds)
             {
                 // We are in deceleration phase
-                double elapsedSecondsDeceleration = elapsedSeconds - (m_accelerationSeconds + m_fullSpeedSeconds);
+                var elapsedSecondsDeceleration = elapsedSeconds - (m_accelerationSeconds + m_fullSpeedSeconds);
                 movedLength =
                     m_accelerationLength + m_fullSpeedLength +
                     (0.5 * m_speed.Decelration * Math.Pow(elapsedSecondsDeceleration, 2.0)) + m_reachedMaxSpeed * elapsedSecondsDeceleration;
@@ -149,7 +153,7 @@ namespace SeeingSharp
             else
             {
                 // Movement is finished
-                return this.MovementVector;
+                return MovementVector;
             }
 
             // Generate the full movement vector
@@ -159,34 +163,22 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the full movement time.
         /// </summary>
-        public TimeSpan MovementTime
-        {
-            get { return TimeSpan.FromSeconds(m_accelerationSeconds + m_fullSpeedSeconds + m_decelerationSeconds); }
-        }
+        public TimeSpan MovementTime => TimeSpan.FromSeconds(m_accelerationSeconds + m_fullSpeedSeconds + m_decelerationSeconds);
 
         /// <summary>
         /// Gets the time which is needed for acceleration phase.
         /// </summary>
-        public TimeSpan AccelerationTime
-        {
-            get { return TimeSpan.FromSeconds(m_accelerationSeconds); }
-        }
+        public TimeSpan AccelerationTime => TimeSpan.FromSeconds(m_accelerationSeconds);
 
         /// <summary>
         /// Gets the time which is needed for full-speed phase.
         /// </summary>
-        public TimeSpan FullSpeedTime
-        {
-            get { return TimeSpan.FromSeconds(m_fullSpeedSeconds); }
-        }
+        public TimeSpan FullSpeedTime => TimeSpan.FromSeconds(m_fullSpeedSeconds);
 
         /// <summary>
         /// Gets the time which is needed for deceleration phase.
         /// </summary>
-        public TimeSpan DecelerationTime
-        {
-            get { return TimeSpan.FromSeconds(m_decelerationSeconds); }
-        }
+        public TimeSpan DecelerationTime => TimeSpan.FromSeconds(m_decelerationSeconds);
 
         /// <summary>
         /// Gets the full movement vector.

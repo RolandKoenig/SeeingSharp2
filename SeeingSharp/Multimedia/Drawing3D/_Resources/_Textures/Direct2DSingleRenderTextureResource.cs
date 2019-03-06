@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
-                device, m_width, m_height, new GraphicsViewConfiguration() { AntialiasingEnabled = false });
+                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
             m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 
             // Create resources for rendering on the texture
@@ -151,35 +151,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_renderTargetTexture != null; }
-        }
+        public override bool IsLoaded => m_renderTargetTexture != null;
 
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_renderTargetTexture; }
-        }
+        public override D3D11.Texture2D Texture => m_renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_renderTargetTextureView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return 1; }
-        }
+        public override int ArraySize => 1;
     }
 }

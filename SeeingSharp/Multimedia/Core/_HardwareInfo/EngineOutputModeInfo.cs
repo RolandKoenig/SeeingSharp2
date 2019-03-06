@@ -96,10 +96,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public int PixelHeight { get; }
 
-        public int PixelCount
-        {
-            get { return PixelWidth * PixelHeight; }
-        }
+        public int PixelCount => PixelWidth * PixelHeight;
 
         public int RefreshRateNumerator { get; }
 

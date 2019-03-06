@@ -43,16 +43,16 @@ namespace SeeingSharp.Util
     {
         public static void Color4FromWpfColor(ref WpfMedia.Color source, ref SharpDX.Color4 target)
         {
-            target.Red = (float) source.R / 255f;
-            target.Green = (float) source.G / 255f;
-            target.Blue = (float) source.B / 255f;
-            target.Alpha = (float) source.A / 255f;
+            target.Red = source.R / 255f;
+            target.Green = source.G / 255f;
+            target.Blue = source.B / 255f;
+            target.Alpha = source.A / 255f;
         }
 
         public static void WpfColorFromColor4(ref SharpDX.Color4 source, ref WpfMedia.Color target)
         {
             target.A = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
-            target.R= (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
+            target.R = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
             target.G = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
             target.B = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
         }
@@ -63,16 +63,18 @@ namespace SeeingSharp.Util
             dpiScaleFactorX = 1.0;
             dpiScaleFactorY = 1.0;
 
-            if (source?.CompositionTarget != null)
+            if (source?.CompositionTarget == null)
             {
-                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
-                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+                return;
             }
+
+            dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
+            dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
         }
 
         public static Wpf.Size GetPixelSize(Wpf.UIElement uiElement, Wpf.Size minSize)
         {
-            GetDpiScalingFactor(uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY);
+            GetDpiScalingFactor(uiElement, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
             return new Wpf.Size(
                 Math.Max(uiElement.RenderSize.Width * dpiScaleFactorX, 100),

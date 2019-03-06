@@ -57,11 +57,11 @@ namespace SeeingSharp
         /// <param name="timeSpan">The total timespan the movement should take.</param>
         public MovementSpeed(Vector3 movementVector, TimeSpan timeSpan)
         {
-            float totalLength = movementVector.Length();
+            var totalLength = movementVector.Length();
 
-            this.MaximumSpeed = (float)((double)totalLength / timeSpan.TotalSeconds);
-            this.Acceleration = 0f;
-            this.Decelration = 0f;
+            MaximumSpeed = (float)(totalLength / timeSpan.TotalSeconds);
+            Acceleration = 0f;
+            Decelration = 0f;
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace SeeingSharp
         /// <param name="maxSpeed">The maximum speed in m/s.</param>
         public MovementSpeed(float maxSpeed)
         {
-            this.MaximumSpeed = maxSpeed;
-            this.Acceleration = 0f;
-            this.Decelration = 0f;
+            MaximumSpeed = maxSpeed;
+            Acceleration = 0f;
+            Decelration = 0f;
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace SeeingSharp
         /// <param name="acceleration">The acceleration in m/s².</param>
         public MovementSpeed(float maxSpeed, float acceleration)
         {
-            this.MaximumSpeed = maxSpeed;
-            this.Acceleration = EngineMath.ForcePositive(acceleration);
-            this.Decelration = 0f;
+            MaximumSpeed = maxSpeed;
+            Acceleration = EngineMath.ForcePositive(acceleration);
+            Decelration = 0f;
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace SeeingSharp
         /// <param name="deceleration">The deceleration in m/s².</param>
         public MovementSpeed(float maxSpeed, float acceleration, float deceleration)
         {
-            this.MaximumSpeed = EngineMath.ForcePositive(maxSpeed);
-            this.Acceleration = EngineMath.ForcePositive(acceleration);
-            this.Decelration = EngineMath.ForceNegative(deceleration);
+            MaximumSpeed = EngineMath.ForcePositive(maxSpeed);
+            Acceleration = EngineMath.ForcePositive(acceleration);
+            Decelration = EngineMath.ForceNegative(deceleration);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="value">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {
@@ -149,9 +149,9 @@ namespace SeeingSharp
         /// </summary>
         public void ValidateWithException()
         {
-            if (this.MaximumSpeed <= EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for MaximumSpeed (musst be positive)!"); }
-            if (this.Acceleration < EngineMath.TOLERANCE_FLOAT_NEGATIVE) { throw new InvalidOperationException("Invalid value for acceleration (musst be possitive or zero)!"); }
-            if (this.Decelration > EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for deceleration (musst be negative or zero)!"); }
+            if (MaximumSpeed <= EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for MaximumSpeed (musst be positive)!"); }
+            if (Acceleration < EngineMath.TOLERANCE_FLOAT_NEGATIVE) { throw new InvalidOperationException("Invalid value for acceleration (musst be possitive or zero)!"); }
+            if (Decelration > EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for deceleration (musst be negative or zero)!"); }
         }
 
         /// <summary>

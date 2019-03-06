@@ -42,15 +42,14 @@ namespace SeeingSharp.Multimedia.Core
     public class EngineHardwareInfo : IDisposable, ICheckDisposed
     {
         private SharpDX.DXGI.Factory1 m_dxgiFactory;
-        private List<EngineAdapterInfo> m_adapters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
         /// </summary>
         public EngineHardwareInfo()
         {
-            this.CreateFactory();
-            this.LoadAdapterInformation();
+            CreateFactory();
+            LoadAdapterInformation();
         }
 
         /// <summary>
@@ -59,6 +58,7 @@ namespace SeeingSharp.Multimedia.Core
         private void CreateFactory()
         {
             m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory4());
+
             if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory2()); }
             if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new SharpDX.DXGI.Factory1()); }
             if (m_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void LoadAdapterInformation()
         {
-            m_adapters = new List<EngineAdapterInfo>();
+            Adapters = new List<EngineAdapterInfo>();
 
             var adapterCount = m_dxgiFactory.GetAdapterCount1();
 
@@ -78,11 +78,11 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     var actAdapter = m_dxgiFactory.GetAdapter1(loop);
-                    m_adapters.Add(new EngineAdapterInfo(loop, actAdapter));
+                    Adapters.Add(new EngineAdapterInfo(loop, actAdapter));
                 }
                 catch (Exception)
                 {
-                    //No exception handling needed here
+                    // No exception handling needed here
                     // .. adapter information simply can not be gathered
                 }
             }
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal SharpDX.DXGI.Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
         {
-            int adapterCount = m_dxgiFactory.GetAdapterCount1();
+            var adapterCount = m_dxgiFactory.GetAdapterCount1();
 
             if (outputInfo.AdapterIndex >= adapterCount)
             {
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Core
 
             using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
             {
-                int outputCount = adapter.GetOutputCount();
+                var outputCount = adapter.GetOutputCount();
 
                 if (outputInfo.OutputIndex >= outputCount)
                 {
@@ -114,30 +114,31 @@ namespace SeeingSharp.Multimedia.Core
         {
             SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
 
-            foreach(var actAdapter in m_adapters)
+            foreach (var actAdapter in Adapters)
             {
                 SeeingSharpUtil.DisposeObject(actAdapter);
             }
 
-            m_adapters.Clear();
+            Adapters.Clear();
         }
 
         /// <summary>
         /// Gets a collection containing all adapters.
         /// </summary>
-        public List<EngineAdapterInfo> Adapters
-        {
-            get { return m_adapters; }
-        }
+        public List<EngineAdapterInfo> Adapters { get; private set; }
 
         public EngineAdapterInfo SoftwareAdapter
         {
             get
             {
-                foreach(var actAdapter in m_adapters)
+                foreach (var actAdapter in Adapters)
                 {
-                    if (actAdapter.IsSoftwareAdapter) { return actAdapter; }
+                    if (actAdapter.IsSoftwareAdapter)
+                    {
+                        return actAdapter;
+                    }
                 }
+
                 return null;
             }
         }

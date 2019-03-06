@@ -53,28 +53,30 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
+                if ((m_bitmapSource != null) || (m_bitmapSourceTask != null))
                 {
-                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
-
-                    if (sourceLink == null)
-                    {
-                        return null;
-                    }
-
-                    m_bitmapSourceTask = Task.Run(() =>
-                    {
-                        var source = new BitmapImage();
-                        source.BeginInit();
-                        source.StreamSource = sourceLink.OpenRead();
-                        source.EndInit();
-                        source.Freeze();
-
-                        m_bitmapSource = source;
-                    }).ContinueWith(
-                        (task) => RaisePropertyChanged(nameof(BitmapSource)),
-                        TaskScheduler.FromCurrentSynchronizationContext());
+                    return m_bitmapSource;
                 }
+
+                var sourceLink = SampleMetadata.TryGetSampleImageLink();
+
+                if (sourceLink == null)
+                {
+                    return null;
+                }
+
+                m_bitmapSourceTask = Task.Run(() =>
+                {
+                    var source = new BitmapImage();
+                    source.BeginInit();
+                    source.StreamSource = sourceLink.OpenRead();
+                    source.EndInit();
+                    source.Freeze();
+
+                    m_bitmapSource = source;
+                }).ContinueWith(
+                    (task) => RaisePropertyChanged(nameof(BitmapSource)),
+                    TaskScheduler.FromCurrentSynchronizationContext());
 
                 return m_bitmapSource;
             }

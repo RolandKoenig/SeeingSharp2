@@ -28,7 +28,6 @@ namespace SeeingSharp.Multimedia.Objects
 
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.IO.Compression;
     using System.Xml;
     using Core;
@@ -144,9 +143,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            var xglImportOptions = importOptions as XglImportOptions;
-
-            if (xglImportOptions == null)
+            if (!(importOptions is XglImportOptions xglImportOptions))
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }
@@ -168,13 +165,13 @@ namespace SeeingSharp.Multimedia.Objects
                     //  see https://github.com/assimp/assimp/blob/master/code/XGLLoader.cpp
                     inStream.ReadByte();
                     inStream.ReadByte();
-                    nextStream = new System.IO.Compression.DeflateStream(inStream, CompressionMode.Decompress);
+                    nextStream = new DeflateStream(inStream, CompressionMode.Decompress);
                 }
 
                 // Read all xml data
                 try
                 {
-                    using (var inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings() { CloseInput = false }))
+                    using (var inStreamXml = XmlReader.Create(nextStream, new XmlReaderSettings { CloseInput = false }))
                     {
                         while (inStreamXml.Read())
                         {
@@ -212,28 +209,31 @@ namespace SeeingSharp.Multimedia.Objects
                             catch (Exception ex)
                             {
                                 // Get current line and column
-                                int currentLine = 0;
-                                int currentColumn = 0;
-                                var lineInfo = inStreamXml as IXmlLineInfo;
+                                var currentLine = 0;
+                                var currentColumn = 0;
 
-                                if (lineInfo != null)
+                                if (!(inStreamXml is IXmlLineInfo lineInfo))
                                 {
-                                    currentLine = lineInfo.LineNumber;
-                                    currentColumn = lineInfo.LinePosition;
+                                    throw new SeeingSharpGraphicsException(
+                                        $"Unable to read file {sourceFile} because of an error while reading xml at {currentLine + ", " + currentColumn}",
+                                        ex);
                                 }
 
+                                currentLine = lineInfo.LineNumber;
+                                currentColumn = lineInfo.LinePosition;
+
                                 // Throw an exception with more detail where the error was raised originally
-                                throw new SeeingSharpGraphicsException(string.Format(
-                                    "Unable to read file {0} because of an error while reading xml at {1}",
-                                    sourceFile,
-                                    currentLine + ", " + currentColumn), ex);
+                                throw new SeeingSharpGraphicsException($"Unable to read file {sourceFile} because of an error while reading xml at {currentLine + ", " + currentColumn}", ex);
                             }
                         }
                     }
                 }
                 finally
                 {
-                    if (inStream != nextStream) { nextStream.Dispose(); }
+                    if (inStream != nextStream)
+                    {
+                        nextStream.Dispose();
+                    }
                 }
             }
 
@@ -261,9 +261,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="container">The container where to import to.</param>
         private void ImportTexture(XmlReader inStreamXml, ImportedModelContainer container)
         {
-            string id = inStreamXml.GetAttribute("ID");
-            int width = 0;
-            int height = 0;
+            var id = inStreamXml.GetAttribute("ID");
+            var width = 0;
+            var height = 0;
             MemoryMappedTexture32bpp inMemoryTexture = null;
 
             while (inStreamXml.Read())
@@ -285,16 +285,18 @@ namespace SeeingSharp.Multimedia.Objects
                     case NODE_NAME_TEXTURE_RGBA:
                         width = Int32.Parse(inStreamXml.GetAttribute("WIDTH"));
                         height = Int32.Parse(inStreamXml.GetAttribute("HEIGHT"));
+
                         unsafe
                         {
                             inMemoryTexture = new MemoryMappedTexture32bpp(new Size2(width, height));
-                            byte* inMemoryTextureP = (byte*)inMemoryTexture.Pointer.ToPointer();
+                            var inMemoryTextureP = (byte*)inMemoryTexture.Pointer.ToPointer();
 
-                            int fullSize = width * height * 4;
-                            byte[] sourceBuffer = new byte[fullSize];
+                            var fullSize = width * height * 4;
+                            var sourceBuffer = new byte[fullSize];
                             inStreamXml.Read();
                             inStreamXml.ReadContentAsBinHex(sourceBuffer, 0, fullSize);
-                            for (int loop = 0; loop < fullSize; loop += 4)
+
+                            for (var loop = 0; loop < fullSize; loop += 4)
                             {
                                 // Target format is BGRA (default one in Seeing#)
 
@@ -309,17 +311,19 @@ namespace SeeingSharp.Multimedia.Objects
                     case NODE_NAME_TEXTURE_RGB:
                         width = Int32.Parse(inStreamXml.GetAttribute("WIDTH"));
                         height = Int32.Parse(inStreamXml.GetAttribute("HEIGHT"));
+
                         unsafe
                         {
                             inMemoryTexture = new MemoryMappedTexture32bpp(new Size2(width, height));
-                            byte* inMemoryTextureP = (byte*)inMemoryTexture.Pointer.ToPointer();
+                            var inMemoryTextureP = (byte*)inMemoryTexture.Pointer.ToPointer();
 
-                            int fullSize = width * height * 3;
-                            int loopTarget = 0;
-                            byte[] sourceBuffer = new byte[fullSize];
+                            var fullSize = width * height * 3;
+                            var loopTarget = 0;
+                            var sourceBuffer = new byte[fullSize];
                             inStreamXml.Read();
                             inStreamXml.ReadContentAsBinHex(sourceBuffer, 0, fullSize);
-                            for (int loop = 0; loop < fullSize; loop += 3)
+
+                            for (var loop = 0; loop < fullSize; loop += 3)
                             {
                                 // Target format is BGRA (default one in Seeing#)
                                 inMemoryTextureP[loopTarget + 2] = sourceBuffer[loop];
@@ -368,15 +372,15 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="xglImportOptions">Current import options.</param>
         private void ImportMesh(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
-            string id = inStreamXml.GetAttribute("ID");
+            var id = inStreamXml.GetAttribute("ID");
             var actVertexStructure = new VertexStructure();
-            int minVertexID = int.MaxValue;
-            int actVertexIndex = -1;
-            int actNormalIndex = -1;
-            int actTextureIndex = -1;
+            var minVertexID = int.MaxValue;
+            var actVertexIndex = -1;
+            var actNormalIndex = -1;
+            var actTextureIndex = -1;
             var actTempVertex = Vertex.Empty;
-            int[] actFaceReferences = new int[3];
-            Dictionary<int, MaterialProperties> localMaterialInfos = new Dictionary<int, MaterialProperties>();
+            var actFaceReferences = new int[3];
+            var localMaterialInfos = new Dictionary<int, MaterialProperties>();
 
             while (inStreamXml.Read())
             {
@@ -443,9 +447,10 @@ namespace SeeingSharp.Multimedia.Objects
                         actFaceReferences[0] = 0;
                         actFaceReferences[1] = 0;
                         actFaceReferences[2] = 0;
-                        int loopFacePoint = 0;
-                        int referencedMat = -1;
-                        int referencedTexture = -1;
+                        var loopFacePoint = 0;
+                        var referencedMat = -1;
+                        var referencedTexture = -1;
+
                         while (inStreamXml.Read())
                         {
                             // Ending condition
@@ -454,6 +459,7 @@ namespace SeeingSharp.Multimedia.Objects
                             {
                                 break;
                             }
+
                             if (inStreamXml.NodeType != XmlNodeType.Element) { continue; }
 
                             // Read next face index
@@ -476,7 +482,6 @@ namespace SeeingSharp.Multimedia.Objects
                             }
                             else
                             {
-
                             }
                         }
 
@@ -503,7 +508,11 @@ namespace SeeingSharp.Multimedia.Objects
                         //}
 
                         // Add the triangle
-                        if (loopFacePoint != 3) { throw new SeeingSharpGraphicsException("Invalid face index count!"); }
+                        if (loopFacePoint != 3)
+                        {
+                            throw new SeeingSharpGraphicsException("Invalid face index count!");
+                        }
+
                         actVertexStructure
                             .CreateOrGetExistingSurface(referencedMatObject)
                             .AddTriangle(actFaceReferences[0], actFaceReferences[1], actFaceReferences[2]);
@@ -531,7 +540,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="xglImportOptions">Current import options.</param>
         private Tuple<int, MaterialProperties> ImportMaterial(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
-            int resultID = Int32.Parse(inStreamXml.GetAttribute("ID"));
+            var resultID = Int32.Parse(inStreamXml.GetAttribute("ID"));
             var result = new MaterialProperties();
 
             while (inStreamXml.Read())
@@ -594,7 +603,7 @@ namespace SeeingSharp.Multimedia.Objects
             var upVector = Vector3.UnitY;
             var forwardVector = Vector3.UnitZ;
             var positionVector = Vector3.UnitX;
-            string meshID = string.Empty;
+            var meshID = string.Empty;
 
             // Define a action which finally create the new object
             //  (may be called on two locations here.. so this action was defined

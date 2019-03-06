@@ -108,25 +108,16 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension
-        {
-            get { return base.GetExtensionFromFileName(m_resourceLink.ResourceFile); }
-        }
+        public override string FileExtension => GetExtensionFromFileName(m_resourceLink.ResourceFile);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsAsync
-        {
-            get { return true; }
-        }
+        public override bool SupportsAsync => true;
 
         /// <summary>
         /// Are synchronous operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsSync
-        {
-            get { return true; }
-        }
+        public override bool SupportsSync => true;
     }
 }

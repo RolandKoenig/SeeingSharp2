@@ -37,8 +37,8 @@ namespace SeeingSharp.Multimedia.Core
             Exception ex,
             InternalExceptionLocation location)
         {
-            this.Exception = ex;
-            this.Location = location;
+            Exception = ex;
+            Location = location;
         }
 
         public Exception Exception
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
         {
-            this.FilterList = filterList;
+            FilterList = filterList;
         }
 
         public List<SceneObjectFilter> FilterList
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// The default one on windows systems (96 Dpi, = Scaling 100%).
         /// </summary>
-        public static readonly DpiScaling Default = new DpiScaling()
+        public static readonly DpiScaling Default = new DpiScaling
         {
             DpiX = 96.0f,
             DpiY = 96.0f
@@ -100,19 +100,13 @@ namespace SeeingSharp.Multimedia.Core
 
         public DpiScaling(float dpiX, float dpiY)
         {
-            this.DpiX = dpiX;
-            this.DpiY = dpiY;
+            DpiX = dpiX;
+            DpiY = dpiY;
         }
 
-        public float ScaleFactorX
-        {
-            get { return DpiX / 96.0f; }
-        }
+        public float ScaleFactorX => DpiX / 96.0f;
 
-        public float ScaleFactorY
-        {
-            get { return DpiY / 96.0f; }
-        }
+        public float ScaleFactorY => DpiY / 96.0f;
     }
 
     public enum PixelConvertMode
@@ -204,14 +198,14 @@ namespace SeeingSharp.Multimedia.Core
     /// Describes a detail level
     /// </summary>
     [Flags]
-    public enum DetailLevel : int
+    public enum DetailLevel
     {
         /// <summary>
         /// Describes low performance hardware (e. g. Software renderer).
         /// </summary>
         Low = 1,
 
-        //Medium = 2,
+        // Medium = 2,
 
         /// <summary>
         /// Describes high class hardware.

@@ -136,28 +136,30 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="givenViewType">The type of the camera.</param>
         public List<IInputHandler> GetInputHandler(Type givenViewType)
         {
-            List<IInputHandler> result = new List<IInputHandler>();
+            var result = new List<IInputHandler>();
 
             foreach (var actInputHandler in m_inputHandlers)
             {
                 // Query for the input handler's information
-                Type[] actSupportedViewTypes = actInputHandler.GetSupportedViewTypes();
-                bool viewTypeSupported = false;
+                var actSupportedViewTypes = actInputHandler.GetSupportedViewTypes();
+                var viewTypeSupported = false;
 
                 // Check for view-type support
                 if (actSupportedViewTypes == null)
                 {
                     viewTypeSupported = givenViewType == null;
                 }
-                else if(givenViewType != null)
+                else if (givenViewType != null)
                 {
                     foreach (var actViewType in actSupportedViewTypes)
                     {
-                        if (actViewType.GetTypeInfo().IsAssignableFrom(givenViewType.GetTypeInfo()))
+                        if (!actViewType.GetTypeInfo().IsAssignableFrom(givenViewType.GetTypeInfo()))
                         {
-                            viewTypeSupported = true;
-                            break;
+                            continue;
                         }
+
+                        viewTypeSupported = true;
+                        break;
                     }
                 }
 
@@ -175,9 +177,6 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Gets the total count of loaded input handlers
         /// </summary>
-        public int Count
-        {
-            get { return m_inputHandlers.Count; }
-        }
+        public int Count => m_inputHandlers.Count;
     }
 }

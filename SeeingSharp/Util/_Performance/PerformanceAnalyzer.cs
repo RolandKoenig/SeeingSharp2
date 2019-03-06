@@ -140,7 +140,7 @@ namespace SeeingSharp.Util
 
             return new DummyDisposable(() =>
             {
-                this.NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
+                NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
             });
         }
 
@@ -174,7 +174,7 @@ namespace SeeingSharp.Util
                         }
 
                         // Calculate values now
-                        this.CalculateValuesAsync(utcNow);
+                        CalculateValuesAsync(utcNow);
 
                         // Trigger refresh of ui collections
                         await RefreshUICollectionsAsync();
@@ -199,7 +199,7 @@ namespace SeeingSharp.Util
             await SyncContext.PostAlsoIfNullAsync(
                 () =>
                 {
-                    this.RefreshUICollections();
+                    RefreshUICollections();
                 },
                 ActionIfSyncContextIsNull.InvokeSynchronous);
         }
@@ -217,7 +217,7 @@ namespace SeeingSharp.Util
 
                 while (actCalculatorInfo.Results.TryTake(out actResult))
                 {
-                    this.HandleResultForUI(actResult);
+                    HandleResultForUI(actResult);
                 }
             }
         }
@@ -285,9 +285,7 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }
 
-            var result = newCalculatorInfo.Calculator as T;
-
-            if(result == null)
+            if(!(newCalculatorInfo.Calculator is T result))
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }
@@ -300,7 +298,7 @@ namespace SeeingSharp.Util
         /// </summary>
         private void EnsureNotRunning()
         {
-            if (this.IsRunning)
+            if (IsRunning)
             {
                 throw new InvalidOperationException("Unable to perform this operation when OnlineKpiContainer is running!");
             }
@@ -311,8 +309,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public int DelayTimeMS
         {
-            get { return m_delayTimeMS; }
-            set { m_delayTimeMS = value; }
+            get => m_delayTimeMS;
+            set => m_delayTimeMS = value;
         }
 
         /// <summary>
@@ -344,7 +342,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public TimeSpan ValueInterval
         {
-            get { return m_valueInterval; }
+            get => m_valueInterval;
             set
             {
                 EnsureNotRunning();
@@ -358,7 +356,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public TimeSpan CalculationInterval
         {
-            get { return m_calculationInterval; }
+            get => m_calculationInterval;
             set
             {
                 EnsureNotRunning();
@@ -371,7 +369,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public int MaxCountHistoricalEntries
         {
-            get { return m_maxCountHistoricalEntries; }
+            get => m_maxCountHistoricalEntries;
             set
             {
                 EnsureNotRunning();
@@ -384,7 +382,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool GenerateHistoricalCollection
         {
-            get { return m_generateHistoricalCollection; }
+            get => m_generateHistoricalCollection;
             set
             {
                 EnsureNotRunning();
@@ -397,7 +395,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool GenerateCurrentValueCollection
         {
-            get { return m_generateCurrentValueCollection; }
+            get => m_generateCurrentValueCollection;
             set
             {
                 EnsureNotRunning();
@@ -435,8 +433,8 @@ namespace SeeingSharp.Util
         {
             public CalculatorInfo(PerformanceCalculatorBase calculator)
             {
-                this.Calculator = calculator;
-                this.Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
+                Calculator = calculator;
+                Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
             }
 
             public PerformanceCalculatorBase Calculator;

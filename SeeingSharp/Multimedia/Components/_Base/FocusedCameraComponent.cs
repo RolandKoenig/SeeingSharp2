@@ -51,9 +51,9 @@ namespace SeeingSharp.Multimedia.Components
         /// </summary>
         public FocusedCameraComponent()
         {
-            this.CameraDistanceInitial = 4f;
-            this.CameraDistanceMin = 3f;
-            this.CameraDistanceMax = 10f;
+            CameraDistanceInitial = 4f;
+            CameraDistanceMin = 3f;
+            CameraDistanceMax = 10f;
             m_hvRotation = new Vector2(
                 EngineMath.RAD_45DEG,
                 EngineMath.RAD_45DEG);
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Components
         {
             var result = new PerSceneContext
             {
-                CameraDistance = this.CameraDistanceInitial,
+                CameraDistance = CameraDistanceInitial,
                 CameraHVRotation = m_hvRotation
             };
 
@@ -105,18 +105,14 @@ namespace SeeingSharp.Multimedia.Components
                 foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
                 {
                     // Handle keyboard
-                    var actKeyboardState = actInputState as KeyboardState;
-
-                    if (actKeyboardState != null)
+                    if (actInputState is KeyboardState actKeyboardState)
                     {
                         UpdateForKeyboard(componentContext, actCamera, actKeyboardState);
                         continue;
                     }
 
                     // Handle mouse (or pointer)
-                    var mouseState = actInputState as MouseOrPointerState;
-
-                    if (mouseState != null)
+                    if (actInputState is MouseOrPointerState mouseState)
                     {
                         UpdateForMouse(componentContext, actCamera, mouseState);
                     }
@@ -124,12 +120,12 @@ namespace SeeingSharp.Multimedia.Components
             }
 
             // Ensure that our values are in allowed ranges
-            float maxRad = EngineMath.RAD_90DEG * 0.99f;
-            float minRad = EngineMath.RAD_90DEG * -0.99f;
+            var maxRad = EngineMath.RAD_90DEG * 0.99f;
+            var minRad = EngineMath.RAD_90DEG * -0.99f;
             componentContext.CameraHVRotation.X = componentContext.CameraHVRotation.X % EngineMath.RAD_360DEG;
 
-            if (componentContext.CameraDistance < this.CameraDistanceMin) { componentContext.CameraDistance = this.CameraDistanceMin; }
-            if (componentContext.CameraDistance > this.CameraDistanceMax) { componentContext.CameraDistance = this.CameraDistanceMax; }
+            if (componentContext.CameraDistance < CameraDistanceMin) { componentContext.CameraDistance = CameraDistanceMin; }
+            if (componentContext.CameraDistance > CameraDistanceMax) { componentContext.CameraDistance = CameraDistanceMax; }
             if (componentContext.CameraHVRotation.Y <= minRad) { componentContext.CameraHVRotation.Y = minRad; }
             if (componentContext.CameraHVRotation.Y >= maxRad) { componentContext.CameraHVRotation.Y = maxRad; }
 
@@ -142,7 +138,7 @@ namespace SeeingSharp.Multimedia.Components
                 cameraOffset,
                 Matrix.RotationAxis(Vector3.Cross(cameraOffset, Vector3.UnitY), componentContext.CameraHVRotation.Y));
 
-            var focusedLocation = this.GetFocusedLocation();
+            var focusedLocation = GetFocusedLocation();
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;
             actCamera.Target = focusedLocation;
         }
@@ -214,7 +210,7 @@ namespace SeeingSharp.Multimedia.Components
                 if (mouseState.IsButtonDown(MouseButton.Left) &&
                     mouseState.IsButtonDown(MouseButton.Right))
                 {
-                    float multiplyer = 1.05f;
+                    var multiplyer = 1.05f;
 
                     if (moving.Y < 0f)
                     {
@@ -234,17 +230,20 @@ namespace SeeingSharp.Multimedia.Components
             }
 
             // Handle mouse wheel
-            if (mouseState.WheelDelta != 0)
+            if (mouseState.WheelDelta == 0)
             {
-                float multiplyer = 0.95f - (Math.Abs(mouseState.WheelDelta) / 1000f);
-
-                if (mouseState.WheelDelta < 0)
-                {
-                    multiplyer = 1.05f + (Math.Abs(mouseState.WheelDelta) / 1000f);
-                }
-
-                componentContext.CameraDistance = componentContext.CameraDistance * multiplyer;
+                return;
             }
+
+            var multiplyer2 = 0.95f - (Math.Abs(mouseState.WheelDelta) / 1000f);
+
+            if (mouseState.WheelDelta < 0)
+            {
+                multiplyer2 = 1.05f + (Math.Abs(mouseState.WheelDelta) / 1000f);
+            }
+
+            componentContext.CameraDistance = componentContext.CameraDistance * multiplyer2;
+
         }
 
         protected abstract Vector3 GetFocusedLocation();
@@ -272,8 +271,8 @@ namespace SeeingSharp.Multimedia.Components
         /// </summary>
         public float CameraHRotationInitial
         {
-            get { return m_hvRotation.X; }
-            set { m_hvRotation.X = value; }
+            get => m_hvRotation.X;
+            set => m_hvRotation.X = value;
         }
 
         /// <summary>
@@ -289,9 +288,9 @@ namespace SeeingSharp.Multimedia.Components
 
         public override bool IsViewSpecific => true;
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         public class PerSceneContext
         {
             public float CameraDistance;

@@ -56,7 +56,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index to check.</param>
         public bool HasObjectAt(int index)
         {
-            List<T> objectList = m_list;
+            var objectList = m_list;
 
             if (m_listCount <= index) { return false; }
             if (index < 0) { return false; }
@@ -74,11 +74,18 @@ namespace SeeingSharp.Util
             {
                 if (m_objectIndices.ContainsKey(objectToAdd)) { throw new SeeingSharpException("This object is already added!"); }
 
-                int lastValidIndex = -1;
-                for (int loop = m_list.Count - 1; loop >= 0; loop--)
+                var lastValidIndex = -1;
+
+                for (var loop = m_list.Count - 1; loop >= 0; loop--)
                 {
-                    if (m_list[loop] == null) { lastValidIndex = loop; }
-                    else { break; }
+                    if (m_list[loop] == null)
+                    {
+                        lastValidIndex = loop;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 if (lastValidIndex > -1)
@@ -88,13 +95,11 @@ namespace SeeingSharp.Util
                     m_listCount = m_list.Count;
                     return lastValidIndex;
                 }
-                else
-                {
-                    m_list.Add(objectToAdd);
-                    m_objectIndices.Add(objectToAdd, m_list.Count - 1);
-                    m_listCount = m_list.Count;
-                    return m_list.Count - 1;
-                }
+
+                m_list.Add(objectToAdd);
+                m_objectIndices.Add(objectToAdd, m_list.Count - 1);
+                m_listCount = m_list.Count;
+                return m_list.Count - 1;
             }
         }
 
@@ -126,7 +131,7 @@ namespace SeeingSharp.Util
                     throw new SeeingSharpException("There is already an object at the given index!");
                 }
 
-                this.RemoveObject(currentObject);
+                RemoveObject(currentObject);
             }
 
             // Perform all operations for adding this object
@@ -179,14 +184,16 @@ namespace SeeingSharp.Util
         {
             lock (m_lockObject)
             {
-                if (m_objectIndices.ContainsKey(objectToRemove))
+                if (!m_objectIndices.ContainsKey(objectToRemove))
                 {
-                    int objectIndex = m_objectIndices[objectToRemove];
-
-                    m_objectIndices.Remove(objectToRemove);
-                    m_list[objectIndex] = null;
-                    m_listCount = m_list.Count;
+                    return;
                 }
+
+                var objectIndex = m_objectIndices[objectToRemove];
+
+                m_objectIndices.Remove(objectToRemove);
+                m_list[objectIndex] = null;
+                m_listCount = m_list.Count;
             }
         }
 
@@ -219,7 +226,7 @@ namespace SeeingSharp.Util
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            int max = m_list.Count;
+            var max = m_list.Count;
 
             for (var loop = 0; loop < max; loop++)
             {
@@ -256,8 +263,13 @@ namespace SeeingSharp.Util
         {
             get
             {
-                List<T> objectList = m_list;
-                if (index >= m_listCount) { return null; }
+                var objectList = m_list;
+
+                if (index >= m_listCount)
+                {
+                    return null;
+                }
+
                 return objectList[index];
             }
         }
@@ -269,11 +281,13 @@ namespace SeeingSharp.Util
         {
             get
             {
-                List<T> objectList = m_list;
-                for (int loop = 0; loop < objectList.Count; loop++)
+                var objectList = m_list;
+
+                for (var loop = 0; loop < objectList.Count; loop++)
                 {
                     if (objectList[loop] != null) { return objectList[loop]; }
                 }
+
                 return null;
             }
         }

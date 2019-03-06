@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Objects
     public class GenericObject : SceneSpacialObject
     {
         #region Configuration members
-        private NamedOrGenericKey m_resGeometryKey;
+
         #endregion
 
         #region private float m_opacity;
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
 
-            m_resGeometryKey = geometryResource;
+            GeometryResourceKey = geometryResource;
 
             //m_opacity = 1f;
             m_passRelevantValuesChanged = true;
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
         public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
             : this(geometryResource)
         {
-            this.Position = position;
+            Position = position;
         }
 
         /// <summary>
@@ -89,17 +89,14 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
-            {
-                var result = geometryResource.BoundingBox;
-                result.Transform(this.Transform);
-                return result;
-            }
-            else
+            if ((geometryResource == null) || (!geometryResource.IsLoaded))
             {
                 return default(BoundingBox);
             }
+
+            var result = geometryResource.BoundingBox;
+            result.Transform(Transform);
+            return result;
         }
 
         /// <summary>
@@ -111,24 +108,22 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
-            {
-                // Get BoundingBox object
-                var boundingBox = geometryResource.BoundingBox;
-
-                // Calculate bounding sphare
-                BoundingSphere result;
-                BoundingSphere.FromBox(ref boundingBox, out result);
-
-                result.Transform(this.Transform);
-
-                return result;
-            }
-            else
+            if ((geometryResource == null) || (!geometryResource.IsLoaded))
             {
                 return default(BoundingSphere);
             }
+
+            // Get BoundingBox object
+            var boundingBox = geometryResource.BoundingBox;
+
+            // Calculate bounding sphare
+            BoundingSphere result;
+            BoundingSphere.FromBox(ref boundingBox, out result);
+
+            result.Transform(Transform);
+
+            return result;
+
         }
 
         /// <summary>
@@ -148,25 +143,29 @@ namespace SeeingSharp.Multimedia.Objects
 
             var geometryResource = m_localResources[exportDevice.DeviceIndex];
 
-            if (geometryResource != null)
+            if (geometryResource == null)
             {
-                // Ensure that we have geometry infos for the exporter
-                if(!modelContainer.ContainsExportGeometry(geometryResource.Key))
-                {
-                    modelContainer.AddExportGeometry(geometryResource.PrepareForExport());
-
-                    foreach(var actMaterial in geometryResource.GetReferencedMaterials())
-                    {
-                        if(!modelContainer.ContainsExportMaterial(actMaterial.Key))
-                        {
-
-                        }
-                    }
-                }
-
-                //base.UpdateAndApplyRenderParameters(renderState);
-                //geometryResource.Render(renderState);
+                return;
             }
+
+            // Ensure that we have geometry infos for the exporter
+            if (modelContainer.ContainsExportGeometry(geometryResource.Key))
+            {
+                return;
+            }
+
+            modelContainer.AddExportGeometry(geometryResource.PrepareForExport());
+
+            foreach(var actMaterial in geometryResource.GetReferencedMaterials())
+            {
+                if(!modelContainer.ContainsExportMaterial(actMaterial.Key))
+                {
+
+                }
+            }
+
+            //base.UpdateAndApplyRenderParameters(renderState);
+            //geometryResource.Render(renderState);
         }
 
         /// <summary>
@@ -183,37 +182,42 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
 
-            if ((geometryResource != null) &&
-                (geometryResource.IsLoaded))
+            if ((geometryResource == null) || (!geometryResource.IsLoaded))
             {
-                var boundingBox = geometryResource.BoundingBox;
+                return float.NaN;
+            }
 
-                if (!boundingBox.IsEmpty())
-                {
-                    // Transform picking ray to local space
-                    var pickingRay = new Ray(rayStart, rayDirection);
-                    Matrix temp;
-                    var localTransform = base.Transform;
-                    Matrix.Invert(ref localTransform, out temp);
-                    pickingRay.Transform(temp);
+            var boundingBox = geometryResource.BoundingBox;
 
-                    // Check for intersection on the bounding box
-                    float distance = 0f;
+            if (boundingBox.IsEmpty())
+            {
+                return float.NaN;
+            }
 
-                    if (pickingRay.Intersects(ref boundingBox, out distance))
-                    {
-                        if (pickingOptions.OnlyCheckBoundingBoxes)
-                        {
-                            return distance;
-                        }
+            // Transform picking ray to local space
+            var pickingRay = new Ray(rayStart, rayDirection);
+            Matrix temp;
+            var localTransform = Transform;
+            Matrix.Invert(ref localTransform, out temp);
+            pickingRay.Transform(temp);
 
-                        // Perform picking on polygon level
-                        if (geometryResource.Intersects(pickingRay, pickingOptions, out distance))
-                        {
-                            return distance;
-                        }
-                    }
-                }
+            // Check for intersection on the bounding box
+            var distance = 0f;
+
+            if (!pickingRay.Intersects(ref boundingBox, out distance))
+            {
+                return float.NaN;
+            }
+
+            if (pickingOptions.OnlyCheckBoundingBoxes)
+            {
+                return distance;
+            }
+
+            // Perform picking on polygon level
+            if (geometryResource.Intersects(pickingRay, pickingOptions, out distance))
+            {
+                return distance;
             }
 
             return float.NaN;
@@ -227,7 +231,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         internal override bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
         {
-            var boundingSphere = this.TryGetBoundingSphere(viewInfo);
+            var boundingSphere = TryGetBoundingSphere(viewInfo);
 
             if (boundingSphere != default(BoundingSphere))
             {
@@ -245,7 +249,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </returns>
         public override string ToString()
         {
-            return "GenericObject (Geometry: " + m_resGeometryKey + ")";
+            return "GenericObject (Geometry: " + GeometryResourceKey + ")";
         }
 
         /// <summary>
@@ -254,7 +258,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="newGeometry">The new geometry to set.</param>
         public void ChangeGeometry(NamedOrGenericKey newGeometry)
         {
-            m_resGeometryKey = newGeometry;
+            GeometryResourceKey = newGeometry;
         }
 
         /// <summary>
@@ -265,7 +269,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
-                resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
+                resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(GeometryResourceKey),
                 device.DeviceIndex,
                 false);
         }
@@ -283,7 +287,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             var geoResource = m_localResources[device.DeviceIndex];
 
-            if (geoResource.Key != m_resGeometryKey)
+            if (geoResource.Key != GeometryResourceKey)
             {
                 return false;
             }
@@ -309,29 +313,30 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
-            if ((m_passRelevantValuesChanged) ||
-                (base.CountRenderPassSubscriptions(layerViewSubset) == 0))
+            if ((!m_passRelevantValuesChanged) && (CountRenderPassSubscriptions(layerViewSubset) != 0))
             {
-                //Unsubscribe from all passes first
-                base.UnsubsribeFromAllPasses(layerViewSubset);
-
-                //Now subscribe to needed pass
-                if (base.Opacity < 1f)
-                {
-                    base.SubscribeToPass(
-                        RenderPassInfo.PASS_TRANSPARENT_RENDER,
-                        layerViewSubset, OnRenderTransparent);
-                }
-                else
-                {
-                    base.SubscribeToPass(
-                        RenderPassInfo.PASS_PLAIN_RENDER,
-                        layerViewSubset, OnRenderPlain);
-                }
-
-                //Update local flag
-                m_passRelevantValuesChanged = false;
+                return;
             }
+
+            //Unsubscribe from all passes first
+            UnsubsribeFromAllPasses(layerViewSubset);
+
+            //Now subscribe to needed pass
+            if (Opacity < 1f)
+            {
+                SubscribeToPass(
+                    RenderPassInfo.PASS_TRANSPARENT_RENDER,
+                    layerViewSubset, OnRenderTransparent);
+            }
+            else
+            {
+                SubscribeToPass(
+                    RenderPassInfo.PASS_PLAIN_RENDER,
+                    layerViewSubset, OnRenderPlain);
+            }
+
+            //Update local flag
+            m_passRelevantValuesChanged = false;
         }
 
         /// <summary>
@@ -352,11 +357,13 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[renderState.DeviceIndex];
 
-            if (geometryResource != null)
+            if (geometryResource == null)
             {
-                base.UpdateAndApplyRenderParameters(renderState);
-                geometryResource.Render(renderState);
+                return;
             }
+
+            UpdateAndApplyRenderParameters(renderState);
+            geometryResource.Render(renderState);
         }
 
         /// <summary>
@@ -367,24 +374,20 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var geometryResource = m_localResources[renderState.DeviceIndex];
 
-            if (geometryResource != null)
+            if (geometryResource == null)
             {
-                base.UpdateAndApplyRenderParameters(renderState);
-                geometryResource.Render(renderState);
+                return;
             }
+
+            UpdateAndApplyRenderParameters(renderState);
+            geometryResource.Render(renderState);
         }
 
         /// <summary>
         /// Gets the key of the geometry resources used by this object.
         /// </summary>
-        public NamedOrGenericKey GeometryResourceKey
-        {
-            get { return m_resGeometryKey; }
-        }
+        public NamedOrGenericKey GeometryResourceKey { get; private set; }
 
-        public override bool IsExportable
-        {
-            get { return true; }
-        }
+        public override bool IsExportable => true;
     }
 }

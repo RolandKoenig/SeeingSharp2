@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D2D = SharpDX.Direct2D1;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
@@ -99,16 +98,24 @@ namespace SeeingSharp.Multimedia.Core
         {
             add
             {
-                if(value == null) { return; }
-                lock(s_internalExListenersLock)
+                if (value == null)
+                {
+                    return;
+                }
+
+                lock (s_internalExListenersLock)
                 {
                     s_internalExListeners.Add(value);
                 }
             }
             remove
             {
-                if(value == null) { return; }
-                lock(s_internalExListenersLock)
+                if (value == null)
+                {
+                    return;
+                }
+
+                lock (s_internalExListenersLock)
                 {
                     s_internalExListeners.Remove(value);
                 }
@@ -152,7 +159,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Try to load global api factories (mostly for 2D rendering / operations)
                 try
                 {
-                    if(s_throwDeviceInitError)
+                    if (s_throwDeviceInitError)
                     {
                         throw new SeeingSharpException("Simulated device load exception");
                     }
@@ -172,16 +179,17 @@ namespace SeeingSharp.Multimedia.Core
                     m_factoryHandlerDWrite = null;
                     return;
                 }
-                this.FactoryD2D = m_factoryHandlerD2D.Factory2;
-                this.FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
-                this.FactoryDWrite = m_factoryHandlerDWrite.Factory;
-                this.FactoryWIC = m_factoryHandlerWIC.Factory;
+
+                FactoryD2D = m_factoryHandlerD2D.Factory2;
+                FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
+                FactoryDWrite = m_factoryHandlerDWrite.Factory;
+                FactoryWIC = m_factoryHandlerWIC.Factory;
 
                 // Create the object containing all hardware information
                 HardwareInfo = new EngineHardwareInfo();
-                int actIndex = 0;
+                var actIndex = 0;
 
-                foreach(var actAdapterInfo in HardwareInfo.Adapters)
+                foreach (var actAdapterInfo in HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(
                         loadSettings,
@@ -191,13 +199,15 @@ namespace SeeingSharp.Multimedia.Core
                         actAdapterInfo.Adapter,
                         actAdapterInfo.IsSoftwareAdapter);
 
-                    if(actEngineDevice.IsLoadedSuccessfully)
+                    if (!actEngineDevice.IsLoadedSuccessfully)
                     {
-                        actEngineDevice.DeviceIndex = actIndex;
-                        actIndex++;
-
-                        m_devices.Add(actEngineDevice);
+                        continue;
                     }
+
+                    actEngineDevice.DeviceIndex = actIndex;
+                    actIndex++;
+
+                    m_devices.Add(actEngineDevice);
                 }
 
                 m_defaultDevice = m_devices.FirstOrDefault();
@@ -208,11 +218,14 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Start main loop
                 MainLoop = new EngineMainLoop(this);
-                if (m_devices.Count > 0)
+
+                if (m_devices.Count <= 0)
                 {
-                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                    return;
                 }
+
+                m_mainLoopCancelTokenSource = new CancellationTokenSource();
+                m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
             }
             catch (Exception ex2)
             {
@@ -229,23 +242,26 @@ namespace SeeingSharp.Multimedia.Core
             InternalExceptionLocation location)
         {
             List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
-            lock(s_internalExListenersLock)
+
+            lock (s_internalExListenersLock)
             {
-                if(s_internalExListeners.Count > 0)
+                if (s_internalExListeners.Count > 0)
                 {
                     handlers = new List<EventHandler<InternalCatchedExceptionEventArgs>>(
                         s_internalExListeners);
                 }
             }
 
-            foreach(var actEventHandler in handlers)
+            foreach (var actEventHandler in handlers)
             {
                 try
                 {
                     actEventHandler(null, new InternalCatchedExceptionEventArgs(
                         ex, location));
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
 
@@ -304,30 +320,30 @@ namespace SeeingSharp.Multimedia.Core
             // Query for all available FontFamilies installed on the system
             List<string> result = null;
 
-            using (var fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
+            using (var fontCollection = FactoryDWrite.GetSystemFontCollection(false))
             {
-                int fontFamilyCount = fontCollection.FontFamilyCount;
+                var fontFamilyCount = fontCollection.FontFamilyCount;
                 result = new List<string>(fontFamilyCount);
 
-                for(var loop =0; loop< fontFamilyCount; loop++)
+                for (var loop = 0; loop < fontFamilyCount; loop++)
                 {
                     using (var actFamily = fontCollection.GetFontFamily(loop))
                     using (var actLocalizedStrings = actFamily.FamilyNames)
                     {
-                        int localeIndex = -1;
+                        var localeIndex = -1;
 
-                        if ((bool)actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
+                        if (actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
                         {
-                            string actName = actLocalizedStrings.GetString(0);
+                            var actName = actLocalizedStrings.GetString(0);
 
-                            if(!string.IsNullOrWhiteSpace(actName))
+                            if (!string.IsNullOrWhiteSpace(actName))
                             {
                                 result.Add(actName);
                             }
                         }
-                        else if((bool)actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
+                        else if (actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
                         {
-                            string actName = actLocalizedStrings.GetString(0);
+                            var actName = actLocalizedStrings.GetString(0);
 
                             if (!string.IsNullOrWhiteSpace(actName))
                             {
@@ -372,7 +388,9 @@ namespace SeeingSharp.Multimedia.Core
             if (s_current != null) { throw new SeeingSharpException("Graphics is already loaded!"); }
 
             var newCore = new GraphicsCore(loader.LoadSettings, loader);
+
             if (s_current != null) { throw new SeeingSharpException("Parallel loading of GraphicsCore detected!"); }
+
             s_current = newCore;
         }
 
@@ -406,7 +424,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityName">The name of the activity.</param>
         internal IDisposable BeginMeasureActivityDuration(string activityName)
         {
-            return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
+            return PerformanceCalculator.BeginMeasureActivityDuration(activityName);
         }
 
         /// <summary>
@@ -416,7 +434,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityAction">The activity action.</param>
         internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
         {
-            this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
+            PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
         }
 
         /// <summary>
@@ -426,7 +444,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="durationTicks"></param>
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
-            this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
+            PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
         }
 
         /// <summary>
@@ -444,7 +462,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-
                 // Do nothing if we are within the Wpf designer
                 if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
                 {
@@ -453,7 +470,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if (s_current == null)
                 {
-                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Current)} before Load was called or a rendering control created!");
+                    throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Current)} before Load was called or a rendering control created!");
                 }
 
                 return s_current;
@@ -464,7 +481,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(GraphicsCore.Loader)} after successfully loading!"); }
+                if (s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Loader)} after successfully loading!"); }
                 return new SeeingSharpLoader();
             }
         }
@@ -477,37 +494,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the first output monitor.
         /// </summary>
-        public EngineOutputInfo DefaultOutput
-        {
-            get
-            {
-                return HardwareInfo.Adapters
-                    .FirstOrDefault()?
-                    .Outputs.FirstOrDefault();
-            }
-        }
+        public EngineOutputInfo DefaultOutput =>
+            HardwareInfo.Adapters
+                .FirstOrDefault()?
+                .Outputs.FirstOrDefault();
 
         /// <summary>
         /// Is GraphicsCore loaded successfully?
         /// </summary>
-        public static bool IsLoaded
-        {
-            get
-            {
-                return
-                    (s_current != null) &&
-                    (s_current.m_devices.Count > 0) &&
-                    (s_current.m_initException == null);
-            }
-        }
+        public static bool IsLoaded =>
+            (s_current != null) &&
+            (s_current.m_devices.Count > 0) &&
+            (s_current.m_initException == null);
 
-        public Exception InitException
-        {
-            get
-            {
-                return s_current?.m_initException;
-            }
-        }
+        public Exception InitException => s_current?.m_initException;
 
         /// <summary>
         /// Is debug enabled?
@@ -529,7 +529,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public EngineDevice DefaultDevice
         {
-            get{ return m_defaultDevice; }
+            get => m_defaultDevice;
             set
             {
                 if (value == null) { throw new ArgumentNullException("DefaultDevice"); }
@@ -542,18 +542,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all loaded devices.
         /// </summary>
-        public IEnumerable<EngineDevice> Devices
-        {
-            get { return m_devices; }
-        }
+        public IEnumerable<EngineDevice> Devices => m_devices;
 
         /// <summary>
         /// Gets the total count of loaded devices.
         /// </summary>
-        public int DeviceCount
-        {
-            get { return m_devices.Count; }
-        }
+        public int DeviceCount => m_devices.Count;
 
         /// <summary>
         /// Gets the total count of registered RenderLoop objects.
@@ -582,10 +576,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all devices.
         /// </summary>
-        public IEnumerable<EngineDevice> LoadedDevices
-        {
-            get { return m_devices; }
-        }
+        public IEnumerable<EngineDevice> LoadedDevices => m_devices;
 
         /// <summary>
         /// Gets a list containing all input handlers.

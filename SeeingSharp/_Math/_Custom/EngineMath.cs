@@ -57,7 +57,7 @@ namespace SeeingSharp
         {
             if (value <= 1) { return 1; }
 
-            long valueLong = (long)value;
+            long valueLong = value;
             long result = 0;
 
             for (long actValue = 1; actValue <= valueLong; actValue++)
@@ -75,11 +75,11 @@ namespace SeeingSharp
         /// <param name="k">The lower vlaue normally mentioned as 'k'.</param>
         public static decimal BinomialCoefficient(decimal n, decimal k)
         {
-            int upperValueInt = (int)n;
-            int lowerValueInt = (int)k;
+            var upperValueInt = (int)n;
+            var lowerValueInt = (int)k;
 
             return
-                (decimal)Factorial(upperValueInt) /
+                Factorial(upperValueInt) /
                 (decimal)(Factorial(lowerValueInt) * Factorial(upperValueInt - lowerValueInt));
         }
 
@@ -89,10 +89,13 @@ namespace SeeingSharp
         /// <param name="angle">The angle to convert.</param>
         public static float GetAbsoluteAngleRadian(float angle)
         {
-            float result = angle;
-
+            var result = angle;
             result = result % ((float)Math.PI * 2f);
-            if (result < 0) { result = ((float)Math.PI * 2f) + result; }
+
+            if (result < 0)
+            {
+                result = ((float)Math.PI * 2f) + result;
+            }
 
             return result;
         }
@@ -103,10 +106,13 @@ namespace SeeingSharp
         /// <param name="angle">The angle to convert.</param>
         public static float GetAboluteAngleDegree(float angle)
         {
-            float result = angle;
-
+            var result = angle;
             result = result % 360f;
-            if (result < 0) { result = 360f + result; }
+
+            if (result < 0)
+            {
+                result = 360f + result;
+            }
 
             return result;
         }
@@ -151,6 +157,7 @@ namespace SeeingSharp
         {
             if (valueToClamp < minValue) { return minValue; }
             if (valueToClamp > maxValue) { return maxValue; }
+
             return valueToClamp;
         }
 
@@ -164,6 +171,7 @@ namespace SeeingSharp
         {
             if (valueToClamp < minValue) { return minValue; }
             if (valueToClamp > maxValue) { return maxValue; }
+
             return valueToClamp;
         }
 
@@ -177,6 +185,7 @@ namespace SeeingSharp
         {
             if (valueToClamp < minValue) { return minValue; }
             if (valueToClamp > maxValue) { return maxValue; }
+
             return valueToClamp;
         }
 
@@ -220,6 +229,7 @@ namespace SeeingSharp
         internal static float ForceNegative(float floatValue)
         {
             if (floatValue > 0) { return -floatValue; }
+
             return floatValue;
         }
 
@@ -230,6 +240,7 @@ namespace SeeingSharp
         internal static float ForcePositive(float floatValue)
         {
             if (floatValue < 0) { return -floatValue; }
+
             return floatValue;
         }
     }

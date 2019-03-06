@@ -38,40 +38,37 @@ namespace SeeingSharp.Multimedia.Core
         ///// Removes this object from the scene.
         ///// No further animations possible because animations are updated by the scene.
         ///// </summary>
-        //public static IAnimationSequenceBuilder<ObjectType> RemoveObjectFromScene<ObjectType>(this IAnimationSequenceBuilder<ObjectType> builder)
+        // public static IAnimationSequenceBuilder<ObjectType> RemoveObjectFromScene<ObjectType>(this IAnimationSequenceBuilder<ObjectType> builder)
         //    where ObjectType : SceneObject
-        //{
+        // {
         //    SceneObject targetObject = builder.TargetObject;
         //    builder.CallAction(() =>
         //        {
         //            if(targetObject.Scene == null) { return; }
-
         //            targetObject.Scene.ManipulateSceneAsync((manipulator) =>
         //            {
         //                manipulator.Remove(targetObject);
         //            }).FireAndForget();
         //        });
         //    return builder;
-        //}
+        // }
 
         ///// <summary>
         ///// Removes the given object from the scene.
         ///// </summary>
-        //public static IAnimationSequenceBuilder<ObjectType> RemoveObjectFromScene<ObjectType>(this IAnimationSequenceBuilder<ObjectType> builder, SceneObject objectToRemove)
+        // public static IAnimationSequenceBuilder<ObjectType> RemoveObjectFromScene<ObjectType>(this IAnimationSequenceBuilder<ObjectType> builder, SceneObject objectToRemove)
         //    where ObjectType : class
-        //{
+        // {
         //    builder.CallAction(() =>
         //    {
         //        if (objectToRemove.Scene == null) { return; }
-
         //        objectToRemove.Scene.ManipulateSceneAsync((manipulator) =>
         //        {
         //            manipulator.Remove(objectToRemove);
         //        }).FireAndForget();
         //    });
-
         //    return builder;
-        //}
+        // }
 
         /// <summary>
         /// Waits some time before continueing with next animation sequence.

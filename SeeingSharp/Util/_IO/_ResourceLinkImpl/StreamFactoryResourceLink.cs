@@ -91,13 +91,14 @@ namespace SeeingSharp.Util
         {
             var result = m_streamFactory();
 
-            if(!result.CanWrite)
+            if (result.CanWrite)
             {
-                result.Dispose();
-                throw new SeeingSharpException("Can not write to created stream!");
+                return result;
             }
 
-            return result;
+            result.Dispose();
+            throw new SeeingSharpException("Can not write to created stream!");
+
         }
 
         /// <summary>
@@ -115,37 +116,29 @@ namespace SeeingSharp.Util
         {
             var result = m_streamFactory();
 
-            if (!result.CanRead)
+            if (result.CanRead)
             {
-                result.Dispose();
-                throw new SeeingSharpException("Can not read from created stream!");
+                return result;
             }
 
-            return result;
+            result.Dispose();
+            throw new SeeingSharpException("Can not read from created stream!");
+
         }
 
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension
-        {
-            get { return base.GetExtensionFromFileName(m_fileName); }
-        }
+        public override string FileExtension => GetExtensionFromFileName(m_fileName);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsAsync
-        {
-            get { return true; }
-        }
+        public override bool SupportsAsync => true;
 
         /// <summary>
         /// Are synchronous operations supported on this ResourceLink?
         /// </summary>
-        public override bool SupportsSync
-        {
-            get { return true; }
-        }
+        public override bool SupportsSync => true;
     }
 }

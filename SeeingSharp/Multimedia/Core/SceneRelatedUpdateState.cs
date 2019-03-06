@@ -48,9 +48,9 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region parameters for single update step
-        private bool m_isPaused;
+
         private UpdateState m_updateState;
-        private IEnumerable<InputFrame> m_inputFrames;
+
         #endregion
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_owner = owner;
             World = new Matrix4Stack(Matrix.Identity);
-            m_inputFrames = null;
+            InputFrames = null;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace SeeingSharp.Multimedia.Core
             targetScene.EnsureNotNull(nameof(targetScene));
             updateState.EnsureNotNull(nameof(updateState));
 
-            m_isPaused = targetScene.IsPaused;
+            IsPaused = targetScene.IsPaused;
             IgnorePauseState = updateState.IgnorePauseState;
 
             World.ResetStackToIdentity();
@@ -82,8 +82,8 @@ namespace SeeingSharp.Multimedia.Core
             m_updateState = updateState;
             SceneLayer = null;
 
-            m_inputFrames = inputFrames;
-            if(m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
+            InputFrames = inputFrames;
+            if (InputFrames == null) { InputFrames = DUMMY_FRAME_COLLECTION; }
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!IgnorePauseState)) { return TimeSpan.Zero; }
+                if (IsPaused && (!IgnorePauseState)) { return TimeSpan.Zero; }
                 return m_updateState.UpdateTime;
             }
         }
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && (!IgnorePauseState)) { return 0; }
+                if (IsPaused && (!IgnorePauseState)) { return 0; }
                 return m_updateState.UpdateTimeMilliseconds;
             }
         }
@@ -123,24 +123,18 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (SceneLayer == null) { return null; }
-                else { return SceneLayer.Scene; }
+                return SceneLayer.Scene;
             }
         }
 
-        public bool IsPaused
-        {
-            get { return m_isPaused; }
-        }
+        public bool IsPaused { get; private set; }
 
         public bool IgnorePauseState { get; set; }
 
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
-        public IEnumerable<InputFrame> InputFrames
-        {
-            get { return m_inputFrames; }
-        }
+        public IEnumerable<InputFrame> InputFrames { get; private set; }
 
         internal bool ForceTransformUpdatesOnChilds;
     }

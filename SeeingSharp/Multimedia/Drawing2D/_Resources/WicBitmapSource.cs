@@ -27,7 +27,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
     #region using
 
     using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Core;
     using SeeingSharp.Util;
@@ -91,9 +90,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
         }
 
-        internal SharpDX.WIC.BitmapSource BitmapSource
-        {
-            get { return m_wicBitmapSource.Converter; }
-        }
+        internal SharpDX.WIC.BitmapSource BitmapSource => m_wicBitmapSource.Converter;
     }
 }

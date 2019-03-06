@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
     #endregion
 
     [SampleDescription(
-        "Textured Cube", 2, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Textured Cube", 2, nameof(Basics3D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_02_TexturedCube")]
     public class SkyboxSample : SampleBase
@@ -53,18 +53,18 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define texture and material resource
                 var resTexture = manipulator.AddTexture(
                     new AssemblyResourceLink(
-                        this.GetType(),
+                        GetType(),
                         "SimpleTexture.png"));
                 var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 
@@ -74,7 +74,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
                     Material = resMaterial
                 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
                 // Create cube object

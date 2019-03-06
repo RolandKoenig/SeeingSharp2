@@ -38,21 +38,21 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Grid3DType()
         {
-            this.GenerateGround = true;
-            this.LineSmallDevider = 25f;
-            this.LineBigDevider = 100f;
-            this.TileWidth = 1f;
-            this.TilesX = 10;
-            this.TilesZ = 10;
-            this.GroupTileCount = 5;
-            this.BuildBackFaces = true;
+            GenerateGround = true;
+            LineSmallDevider = 25f;
+            LineBigDevider = 100f;
+            TileWidth = 1f;
+            TilesX = 10;
+            TilesZ = 10;
+            GroupTileCount = 5;
+            BuildBackFaces = true;
 
-            this.HighlightXZLines = false;
-            this.ZLineHighlightColor = Color4Ex.BlueColor;
-            this.XLineHighlightColor = Color4Ex.GreenColor;
+            HighlightXZLines = false;
+            ZLineHighlightColor = Color4Ex.BlueColor;
+            XLineHighlightColor = Color4Ex.GreenColor;
 
-            this.GroundColor = Color4Ex.LightSteelBlue;
-            this.LineColor = Color4Ex.LightGray;
+            GroundColor = Color4Ex.LightSteelBlue;
+            LineColor = Color4Ex.LightGray;
         }
 
         /// <summary>
@@ -67,18 +67,18 @@ namespace SeeingSharp.Multimedia.Objects
                 -((TilesX * TileWidth) / 2f),
                 0f,
                 -((TilesZ * TileWidth) / 2f));
-            float tileWidthX = this.TileWidth;
-            float tileWidthZ = this.TileWidth;
-            float fieldWidth = tileWidthX * TilesX;
-            float fieldDepth = tileWidthZ * TilesZ;
-            float fieldWidthHalf = fieldWidth / 2f;
-            float fieldDepthHalf = fieldDepth / 2f;
+            var tileWidthX = TileWidth;
+            var tileWidthZ = TileWidth;
+            var fieldWidth = tileWidthX * TilesX;
+            var fieldDepth = tileWidthZ * TilesZ;
+            var fieldWidthHalf = fieldWidth / 2f;
+            var fieldDepthHalf = fieldDepth / 2f;
 
-            int tileMiddleX = (TilesX % 2 == 0) && (this.HighlightXZLines) ? this.TilesX / 2 : 1;
-            int tileMiddleZ = (TilesZ % 2 == 0) && (this.HighlightXZLines) ? this.TilesZ / 2 : 1;
+            var tileMiddleX = (TilesX % 2 == 0) && (HighlightXZLines) ? TilesX / 2 : 1;
+            var tileMiddleZ = (TilesZ % 2 == 0) && (HighlightXZLines) ? TilesZ / 2 : 1;
 
             // Define lower ground structure
-            if (this.GenerateGround)
+            if (GenerateGround)
             {
                 var lowerGround = result.CreateSurface();
                 lowerGround.EnableTextureTileMode(new Vector2(TileWidth, TileWidth));
@@ -88,8 +88,8 @@ namespace SeeingSharp.Multimedia.Objects
                     new Vector3(fieldWidthHalf, -0.01f, fieldDepthHalf),
                     new Vector3(-fieldWidthHalf, -0.01f, fieldDepthHalf),
                     new Vector3(0f, 1f, 0f),
-                    this.GroundColor);
-                lowerGround.Material = this.GroundMaterial;
+                    GroundColor);
+                lowerGround.Material = GroundMaterial;
             }
 
             // Define line structures
@@ -101,16 +101,16 @@ namespace SeeingSharp.Multimedia.Objects
                 var localStart = firstCoordinate + new Vector3(actTileX * tileWidthX, 0f, 0f);
                 var localEnd = localStart + new Vector3(0f, 0f, tileWidthZ * TilesZ);
 
-                var actLineColor = this.LineColor;
-                float devider = actTileX % this.GroupTileCount == 0 ? this.LineSmallDevider : this.LineBigDevider;
+                var actLineColor = LineColor;
+                var devider = actTileX % GroupTileCount == 0 ? LineSmallDevider : LineBigDevider;
 
-                if (this.HighlightXZLines && (actTileX == tileMiddleX))
+                if (HighlightXZLines && (actTileX == tileMiddleX))
                 {
-                    actLineColor = this.ZLineHighlightColor;
-                    devider = this.LineSmallDevider;
+                    actLineColor = ZLineHighlightColor;
+                    devider = LineSmallDevider;
                 }
 
-                var targetStruture = actTileX % this.GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                var targetStruture = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
                 targetStruture.BuildRect4V(
                     localStart - new Vector3(tileWidthX / devider, 0f, 0f),
                     localStart + new Vector3(tileWidthX / devider, 0f, 0f),
@@ -118,7 +118,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd - new Vector3(tileWidthX / devider, 0f, 0f),
                     actLineColor);
 
-                if(this.BuildBackFaces)
+                if(BuildBackFaces)
                 {
                     targetStruture.BuildRect4V(
                         localEnd - new Vector3(tileWidthX / devider, 0f, 0f),
@@ -134,16 +134,16 @@ namespace SeeingSharp.Multimedia.Objects
                 var localStart = firstCoordinate + new Vector3(0f, 0f, actTileZ * tileWidthZ);
                 var localEnd = localStart + new Vector3(tileWidthX * TilesX, 0f, 0f);
 
-                var actLineColor = this.LineColor;
-                float devider = actTileZ % this.GroupTileCount == 0 ? this.LineSmallDevider : this.LineBigDevider;
+                var actLineColor = LineColor;
+                var devider = actTileZ % GroupTileCount == 0 ? LineSmallDevider : LineBigDevider;
 
-                if (this.HighlightXZLines && (actTileZ == tileMiddleZ))
+                if (HighlightXZLines && (actTileZ == tileMiddleZ))
                 {
-                    actLineColor = this.XLineHighlightColor;
-                    devider = this.LineSmallDevider;
+                    actLineColor = XLineHighlightColor;
+                    devider = LineSmallDevider;
                 }
 
-                var targetStruture = actTileZ % this.GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                var targetStruture = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
                 targetStruture.BuildRect4V(
                     localStart + new Vector3(0f, 0f, tileWidthZ / devider),
                     localStart - new Vector3(0f, 0f, tileWidthZ / devider),
@@ -151,7 +151,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd + new Vector3(0f, 0f, tileWidthZ / devider),
                     actLineColor);
 
-                if(this.BuildBackFaces)
+                if(BuildBackFaces)
                 {
                     targetStruture.BuildRect4V(
                         localEnd + new Vector3(0f, 0f, tileWidthZ / devider),
@@ -161,8 +161,9 @@ namespace SeeingSharp.Multimedia.Objects
                         actLineColor);
                 }
             }
-            genStructureDefaultLine.Material = this.LineMaterial;
-            genStructureGroupLine.Material = this.LineMaterial;
+            genStructureDefaultLine.Material = LineMaterial;
+            genStructureGroupLine.Material = LineMaterial;
+
             if (genStructureDefaultLine.CountTriangles == 0) { result.RemoveSurface(genStructureDefaultLine); }
             if (genStructureGroupLine.CountTriangles == 0) { result.RemoveSurface(genStructureGroupLine); }
 

@@ -162,11 +162,10 @@ namespace SeeingSharp.Util
         /// </summary>
         public List<T> DequeueAll()
         {
-            List<T> result = new List<T>(m_backingQueue.Count);
-
+            var result = new List<T>(m_backingQueue.Count);
             var actItem = default(T);
 
-            while (this.Dequeue(out actItem))
+            while (Dequeue(out actItem))
             {
                 result.Add(actItem);
             }
@@ -181,7 +180,7 @@ namespace SeeingSharp.Util
         {
             var actItem = default(T);
 
-            while (this.Dequeue(out actItem))
+            while (Dequeue(out actItem))
             {
                 targetList.Add(actItem);
             }
@@ -193,15 +192,12 @@ namespace SeeingSharp.Util
         public void Clear()
         {
             var actItem = default(T);
-            while (this.Dequeue(out actItem)) { }
+            while (Dequeue(out actItem)) { }
         }
 
         /// <summary>
         /// Gets the total count of items within the queue.
         /// </summary>
-        public int Count
-        {
-            get { return m_backingQueue.Count; }
-        }
+        public int Count => m_backingQueue.Count;
     }
 }

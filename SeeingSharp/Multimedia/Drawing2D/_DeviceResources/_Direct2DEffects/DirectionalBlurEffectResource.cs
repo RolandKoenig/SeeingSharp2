@@ -42,8 +42,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public DirectionalBlurEffectResource(IImage sourceImage)
             : base(sourceImage)
         {
-            this.StandardDeviation = 1f;
-            this.Angle = 0f;
+            StandardDeviation = 1f;
+            Angle = 0f;
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var dirBlurEffect = new D2D.Effects.DirectionalBlur(device.DeviceContextD2D)
             {
-                Angle = this.Angle,
+                Angle = Angle,
                 BorderMode = D2D.BorderMode.Soft,
-                StandardDeviation = this.StandardDeviation,
+                StandardDeviation = StandardDeviation,
                 Optimization = D2D.DirectionalBlurOptimization.Balanced
             };
 

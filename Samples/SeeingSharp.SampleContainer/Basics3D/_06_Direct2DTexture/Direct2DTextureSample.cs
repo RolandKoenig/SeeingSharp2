@@ -41,7 +41,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
     #endregion
 
     [SampleDescription(
-        "Direct2D Texture", 6, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Direct2D Texture", 6, nameof(Basics3D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_06_Direct2DTexture",
         settingsType: typeof(Direct2DTextureSampleSettings))]
@@ -58,16 +58,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            var castedSettings = settings as Direct2DTextureSampleSettings;
-
-            if (castedSettings == null)
+            if (!(settings is Direct2DTextureSampleSettings castedSettings))
             {
                 castedSettings = new Direct2DTextureSampleSettings();
             }
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
@@ -92,11 +90,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define Direct2D texture resource
-                var resD2DTexture = manipulator.AddResource<Direct2DTextureResource>(
+                var resD2DTexture = manipulator.AddResource(
                     () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
@@ -106,7 +104,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     Material = resD2DMaterial
                 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(pType));
 
                 // Create cube object
@@ -141,9 +139,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
             SeeingSharpUtil.SafeDispose(ref m_textFormat);
         }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         private class Direct2DTextureSampleSettings : SampleSettings
         {
             [Category("Direct2D Texture")]

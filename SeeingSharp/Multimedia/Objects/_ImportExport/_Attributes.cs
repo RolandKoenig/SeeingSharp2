@@ -35,8 +35,8 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public SupportedFileFormatAttribute(string shortFormatName, string shortDescription)
         {
-            this.ShortFormatName = shortFormatName;
-            this.ShortDescription = shortDescription;
+            ShortFormatName = shortFormatName;
+            ShortDescription = shortDescription;
         }
 
         public string ShortFormatName

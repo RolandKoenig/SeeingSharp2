@@ -26,7 +26,6 @@ namespace SeeingSharp.Multimedia.Core
 {
     #region using
 
-    using System;
     using System.Collections.Generic;
     using Checking;
     using Objects;
@@ -52,9 +51,9 @@ namespace SeeingSharp.Multimedia.Core
             // Build child list
             m_childs = new List<SceneObjectInfo>(obj.CountChildren);
 
-            if(buildFullChildTree)
+            if (buildFullChildTree)
             {
-                foreach(var actChildObject in obj.GetAllChildrenInternal())
+                foreach (var actChildObject in obj.GetAllChildrenInternal())
                 {
                     m_childs.Add(new SceneObjectInfo(actChildObject));
                 }
@@ -76,16 +75,13 @@ namespace SeeingSharp.Multimedia.Core
 
         public override string ToString()
         {
-            return $"Type:{this.Type}, #Childs:{this.Childs.Count}";
+            return $"Type:{Type}, #Childs:{Childs.Count}";
         }
 
         public SceneObject OriginalObject { get; }
 
         public SceneObjectInfoType Type { get; }
 
-        public IReadOnlyList<SceneObjectInfo> Childs
-        {
-            get { return m_childs; }
-        }
+        public IReadOnlyList<SceneObjectInfo> Childs => m_childs;
     }
 }

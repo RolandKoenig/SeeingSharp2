@@ -94,9 +94,7 @@ namespace SeeingSharp.Multimedia.Components
                     }
 
                     // Handle mouse (or pointer)
-                    var mouseState = actInputState as MouseOrPointerState;
-
-                    if (mouseState != null)
+                    if (actInputState is MouseOrPointerState mouseState)
                     {
                         UpdateForMouse(actCamera, isControlKeyDown, mouseState);
                     }
@@ -112,7 +110,7 @@ namespace SeeingSharp.Multimedia.Components
             out bool isControlKeyDown)
         {
             // Define multiplyer
-            float multiplyer = 1f;
+            var multiplyer = 1f;
             isControlKeyDown = false;
 
             if (actKeyboardState.IsKeyDown(WinVirtualKey.ControlKey) ||
@@ -203,12 +201,19 @@ namespace SeeingSharp.Multimedia.Components
             }
 
             // Handle mouse wheel
-            if (mouseState.WheelDelta != 0)
+            if (mouseState.WheelDelta == 0)
             {
-                float multiplyer = 1f;
-                if (isControlKeyDown) { multiplyer = 2f; }
-                actCamera.Zoom((mouseState.WheelDelta / 100f) * multiplyer);
+                return;
             }
+
+            var multiplyer = 1f;
+
+            if (isControlKeyDown)
+            {
+                multiplyer = 2f;
+            }
+
+            actCamera.Zoom((mouseState.WheelDelta / 100f) * multiplyer);
         }
 
         public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;

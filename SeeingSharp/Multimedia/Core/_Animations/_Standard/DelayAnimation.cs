@@ -52,16 +52,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <returns></returns>
         public override TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
-            return base.FixedTime;
+            return FixedTime;
         }
 
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

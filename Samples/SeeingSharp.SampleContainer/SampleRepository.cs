@@ -64,7 +64,7 @@ namespace SeeingSharp.SampleContainer
             }
 
             // Sort sample groups
-            Dictionary<string, int> groupOrder = new Dictionary<string, int>
+            var groupOrder = new Dictionary<string, int>
             {
                 [nameof(Basics3D)] = 1,
                 [nameof(Basics2D)] = 2,
@@ -73,10 +73,11 @@ namespace SeeingSharp.SampleContainer
 
             Func<string, int> tryGetGroupOrderID = (groupName) =>
             {
-                groupOrder.TryGetValue(groupName, out int orderID);
+                groupOrder.TryGetValue(groupName, out var orderID);
                 return orderID;
             };
-            this.SampleGroups.Sort((left, right) => tryGetGroupOrderID(left.GroupName).CompareTo(tryGetGroupOrderID(right.GroupName)));
+
+            SampleGroups.Sort((left, right) => tryGetGroupOrderID(left.GroupName).CompareTo(tryGetGroupOrderID(right.GroupName)));
 
             // Sort samples
             foreach (var actSampleGroup in SampleGroups)

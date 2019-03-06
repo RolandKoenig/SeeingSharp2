@@ -125,7 +125,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <unmanaged>void AddLines([In, Buffer] const D2D1_POINT_2F* points,[None] UINT pointsCount)</unmanaged>
         public void AddLines(SharpDX.Mathematics.Interop.RawVector2[] ointsRef)
         {
-            for (int loop = 0; loop < ointsRef.Length; loop++)
+            for (var loop = 0; loop < ointsRef.Length; loop++)
             {
                 m_currentPolygonBuilder.Add(new Vector2(ointsRef[loop].X, ointsRef[loop].Y) - m_origin);
             }
@@ -169,11 +169,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// </remarks>
         public void EndFigure(FigureEnd figureEnd)
         {
-            if (m_currentPolygonBuilder.Count >= 3)
+            if (m_currentPolygonBuilder.Count < 3)
             {
-                m_polygons2D.Add(new Polygon2D(m_currentPolygonBuilder.ToArray()));
-                m_currentPolygonBuilder.Clear();
+                return;
             }
+
+            m_polygons2D.Add(new Polygon2D(m_currentPolygonBuilder.ToArray()));
+            m_currentPolygonBuilder.Clear();
         }
 
         /// <summary>
@@ -236,7 +238,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// This property is set whenever this instance has an unmanaged shadow callback
         /// registered. This callback must be disposed when disposing this instance.
         /// </remarks>
-        public System.IDisposable Shadow
+        public IDisposable Shadow
         {
             get;
             set;
@@ -245,9 +247,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection containing all generated polygons.
         /// </summary>
-        public IEnumerable<Polygon2D> GeneratedPolygons
-        {
-            get { return m_polygons2D; }
-        }
+        public IEnumerable<Polygon2D> GeneratedPolygons => m_polygons2D;
     }
 }

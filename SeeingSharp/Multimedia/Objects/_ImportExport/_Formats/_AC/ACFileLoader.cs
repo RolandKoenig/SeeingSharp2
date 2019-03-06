@@ -136,9 +136,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="transformStack">Current matrix stack (for stacked objects).</param>
         private static void FillVertexStructure(VertexStructure structure, List<ACMaterialInfo> acMaterials, ACObjectInfo objInfo, Matrix4Stack transformStack)
         {
-            List<Tuple<int, int>> standardShadedVertices = new List<Tuple<int, int>>();
-
+            var standardShadedVertices = new List<Tuple<int, int>>();
             transformStack.Push();
+
             try
             {
                 // Perform local transformation for the current AC object
@@ -146,12 +146,12 @@ namespace SeeingSharp.Multimedia.Objects
                 transformStack.TranslateLocal(objInfo.Translation);
 
                 // Build structures material by material
-                for (int actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
+                for (var actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
                 {
                     var actMaterial = acMaterials[actMaterialIndex];
 
                     var actStructSurface = structure.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties());
-                    bool isNewSurface = actStructSurface.CountTriangles == 0;
+                    var isNewSurface = actStructSurface.CountTriangles == 0;
 
                     // Create and configure vertex structure
                     actStructSurface.Material = NamedOrGenericKey.Empty;
@@ -163,10 +163,10 @@ namespace SeeingSharp.Multimedia.Objects
                     actStructSurface.MaterialProperties.SpecularColor = actMaterial.Specular;
 
                     // Initialize local index table (needed for vertex reuse)
-                    int oneSideVertexCount = objInfo.Vertices.Count;
-                    int[] localIndices = new int[oneSideVertexCount * 2];
+                    var oneSideVertexCount = objInfo.Vertices.Count;
+                    var localIndices = new int[oneSideVertexCount * 2];
 
-                    for (int loop = 0; loop < localIndices.Length; loop++)
+                    for (var loop = 0; loop < localIndices.Length; loop++)
                     {
                         localIndices[loop] = int.MaxValue;
                     }
@@ -175,8 +175,8 @@ namespace SeeingSharp.Multimedia.Objects
                     foreach (var actSurface in objInfo.Surfaces)
                     {
                         // Get the vertex index on which to start
-                        int startVertexIndex = structure.CountVertices;
-                        int startTriangleIndex = actStructSurface.CountTriangles;
+                        var startVertexIndex = structure.CountVertices;
+                        var startTriangleIndex = actStructSurface.CountTriangles;
 
                         // Only handle surfaces of the current material
                         if (actSurface.Material != actMaterialIndex) { continue; }
@@ -187,12 +187,12 @@ namespace SeeingSharp.Multimedia.Objects
                         if (actSurface.IsClosedLine) { continue; }
 
                         // Preprocess referenced vertices
-                        int oneSideSurfaceVertexCount = actSurface.VertexReferences.Count;
-                        int countSurfaceSides = actSurface.IsTwoSided ? 2 : 1;
-                        int[] onStructureReferencedVertices = new int[oneSideSurfaceVertexCount * countSurfaceSides];
-                        List<int> surfaceVertexReferences = actSurface.VertexReferences;
+                        var oneSideSurfaceVertexCount = actSurface.VertexReferences.Count;
+                        var countSurfaceSides = actSurface.IsTwoSided ? 2 : 1;
+                        var onStructureReferencedVertices = new int[oneSideSurfaceVertexCount * countSurfaceSides];
+                        var surfaceVertexReferences = actSurface.VertexReferences;
 
-                        for (int loop = 0; loop < surfaceVertexReferences.Count; loop++)
+                        for (var loop = 0; loop < surfaceVertexReferences.Count; loop++)
                         {
                             var actTexCoord = actSurface.TextureCoordinates[loop];
 
@@ -215,6 +215,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 // Store vertex reference for this surface's index
                                 onStructureReferencedVertices[loop] = localIndices[surfaceVertexReferences[loop]];
+
                                 if (actSurface.IsTwoSided)
                                 {
                                     onStructureReferencedVertices[loop + oneSideSurfaceVertexCount] =
@@ -307,11 +308,12 @@ namespace SeeingSharp.Multimedia.Objects
                         else
                         {
                             // Nothing to be done for now..
-                            int vertexCount = structure.CountVertices - startVertexIndex;
+                            var vertexCount = structure.CountVertices - startVertexIndex;
+
                             if (vertexCount > 0)
                             {
                                 standardShadedVertices.Add(
-                                    Tuple.Create((int)startVertexIndex, vertexCount));
+                                    Tuple.Create(startVertexIndex, vertexCount));
                             }
                         }
                     }
@@ -351,33 +353,40 @@ namespace SeeingSharp.Multimedia.Objects
         private static ACFileInfo LoadFile(Stream inStream)
         {
             ACFileInfo result = null;
-
             StreamReader reader = null;
+
             try
             {
                 reader = new StreamReader(inStream);
 
                 //Check for correct header
-                string header = reader.ReadLine();
+                var header = reader.ReadLine();
+
                 if (!header.StartsWith("AC3D")) { throw new SeeingSharpGraphicsException("Header of AC3D file not found!"); }
 
                 //Create file information object
                 result = new ACFileInfo();
 
                 //Create a loaded objects stack
-                Stack<ACObjectInfo> loadedObjects = new Stack<ACObjectInfo>();
-                Stack<ACObjectInfo> parentObjects = new Stack<ACObjectInfo>();
+                var loadedObjects = new Stack<ACObjectInfo>();
+                var parentObjects = new Stack<ACObjectInfo>();
                 ACSurface currentSurface = null;
 
                 //Read the file
                 while (!reader.EndOfStream)
                 {
-                    string actLine = reader.ReadLine().Trim();
+                    var actLine = reader.ReadLine().Trim();
+                    var firstWord = string.Empty;
+                    var spaceIndex = actLine.IndexOf(' ');
 
-                    string firstWord = string.Empty;
-                    int spaceIndex = actLine.IndexOf(' ');
-                    if (spaceIndex == -1) { firstWord = actLine; }
-                    else { firstWord = firstWord = actLine.Substring(0, spaceIndex); }
+                    if (spaceIndex == -1)
+                    {
+                        firstWord = actLine;
+                    }
+                    else
+                    {
+                        firstWord = firstWord = actLine.Substring(0, spaceIndex);
+                    }
 
                     switch (firstWord)
                     {
@@ -386,9 +395,12 @@ namespace SeeingSharp.Multimedia.Objects
                             var materialInfo = new ACMaterialInfo();
                             {
                                 //Get the name of the material
-                                string[] materialData = actLine.Split(' ');
+                                var materialData = actLine.Split(' ');
 
-                                if (materialData.Length > 1) { materialInfo.Name = materialData[1].Trim(' ', '"'); }
+                                if (materialData.Length > 1)
+                                {
+                                    materialInfo.Name = materialData[1].Trim(' ', '"');
+                                }
 
                                 //Parse components
                                 for (var loop = 0; loop < materialData.Length; loop++)
@@ -439,6 +451,7 @@ namespace SeeingSharp.Multimedia.Objects
                                             break;
                                     }
                                 }
+
                                 result.Materials.Add(materialInfo);
                             }
                             break;
@@ -447,11 +460,20 @@ namespace SeeingSharp.Multimedia.Objects
                         case "OBJECT":
                             {
                                 var newObject = new ACObjectInfo();
+                                var lineData = actLine.Split(' ');
 
-                                string[] lineData = actLine.Split(' ');
-                                if (lineData[1] == "poly") { newObject.Type = ACObjectType.Poly; }
-                                else if (lineData[1] == "group") { newObject.Type = ACObjectType.Group; }
-                                else if (lineData[1] == "world") { newObject.Type = ACObjectType.World; }
+                                if (lineData[1] == "poly")
+                                {
+                                    newObject.Type = ACObjectType.Poly;
+                                }
+                                else if (lineData[1] == "group")
+                                {
+                                    newObject.Type = ACObjectType.Group;
+                                }
+                                else if (lineData[1] == "world")
+                                {
+                                    newObject.Type = ACObjectType.World;
+                                }
 
                                 loadedObjects.Push(newObject);
                             }
@@ -462,8 +484,8 @@ namespace SeeingSharp.Multimedia.Objects
                             if (loadedObjects.Count == 0) { break; }
                             {
                                 //Parse kid count
-                                int kidCount = 0;
-                                string[] lineData = actLine.Split(' ');
+                                var kidCount = 0;
+                                var lineData = actLine.Split(' ');
 
                                 if ((lineData != null) && (lineData.Length >= 1))
                                 {
@@ -475,7 +497,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 if (currentObject != null)
                                 {
                                     //Add object to parent object, if any related
-                                    bool addedToParent = false;
+                                    var addedToParent = false;
 
                                     if (parentObjects.Count > 0)
                                     {
@@ -537,7 +559,8 @@ namespace SeeingSharp.Multimedia.Objects
                         case "name":
                             if (loadedObjects.Count == 0) { break; }
                             {
-                                ACObjectInfo currentObject = loadedObjects.Peek();
+                                var currentObject = loadedObjects.Peek();
+
                                 if (currentObject != null)
                                 {
                                     currentObject.Name = actLine.Replace("name ", "").Replace("\"", "");
@@ -555,7 +578,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
+                                    var lineData = actLine.Split(' ');
                                     currentObject.Texture = lineData[1].Trim('"');
                                 }
                             }
@@ -564,11 +587,11 @@ namespace SeeingSharp.Multimedia.Objects
                         case "texrep":
                             if (loadedObjects.Count == 0) { break; }
                             {
-                                ACObjectInfo currentObject = loadedObjects.Peek();
+                                var currentObject = loadedObjects.Peek();
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
+                                    var lineData = actLine.Split(' ');
 
                                     var repetition = new Vector2
                                     {
@@ -588,7 +611,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
+                                    var lineData = actLine.Split(' ');
 
                                     var offset = new Vector2
                                     {
@@ -608,8 +631,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
-
+                                    var lineData = actLine.Split(' ');
                                     var rotation = Matrix.Identity;
                                     rotation.M11 = !string.IsNullOrEmpty(lineData[1]) ? Single.Parse(lineData[1], CultureInfo.InvariantCulture) : 0f;
                                     rotation.M12 = !string.IsNullOrEmpty(lineData[2]) ? Single.Parse(lineData[2], CultureInfo.InvariantCulture) : 0f;
@@ -633,7 +655,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
+                                    var lineData = actLine.Split(' ');
                                     currentObject.Url = lineData[1].Trim('"');
                                 }
                             }
@@ -647,7 +669,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
+                                    var lineData = actLine.Split(' ');
 
                                     var location = new Vector3
                                     {
@@ -668,13 +690,13 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    string[] lineData = actLine.Split(' ');
-                                    int numberOfVertices = Int32.Parse(lineData[1], CultureInfo.InvariantCulture);
+                                    var lineData = actLine.Split(' ');
+                                    var numberOfVertices = Int32.Parse(lineData[1], CultureInfo.InvariantCulture);
 
                                     for (var loop = 0; loop < numberOfVertices; loop++)
                                     {
-                                        string actInnerLine = reader.ReadLine().Trim();
-                                        string[] splittedVertex = actInnerLine.Split(' ');
+                                        var actInnerLine = reader.ReadLine().Trim();
+                                        var splittedVertex = actInnerLine.Split(' ');
 
                                         var position = new Vector3
                                         {
@@ -683,7 +705,7 @@ namespace SeeingSharp.Multimedia.Objects
                                             Z = Single.Parse(splittedVertex[2], CultureInfo.InvariantCulture)
                                         };
 
-                                        currentObject.Vertices.Add(new ACVertex() { Position = position });
+                                        currentObject.Vertices.Add(new ACVertex { Position = position });
                                     }
                                 }
                             }
@@ -698,7 +720,7 @@ namespace SeeingSharp.Multimedia.Objects
                             {
                                 if (currentSurface == null) { currentSurface = new ACSurface(); }
 
-                                string[] lineData = actLine.Split(' ');
+                                var lineData = actLine.Split(' ');
                                 lineData[1] = lineData[1].Substring(2);
                                 currentSurface.Flags = Int32.Parse(lineData[1], NumberStyles.HexNumber);
                             }
@@ -709,7 +731,7 @@ namespace SeeingSharp.Multimedia.Objects
                             {
                                 if (currentSurface == null) { currentSurface = new ACSurface(); }
 
-                                string[] lineData = actLine.Split(' ');
+                                var lineData = actLine.Split(' ');
                                 currentSurface.Material = Int32.Parse(lineData[1], CultureInfo.InvariantCulture);
                             }
                             break;
@@ -723,14 +745,13 @@ namespace SeeingSharp.Multimedia.Objects
                                     currentSurface = new ACSurface();
                                 }
 
-                                string[] lineData = actLine.Split(' ');
-                                int numberOfRefs = Int32.Parse(lineData[1], CultureInfo.InvariantCulture);
+                                var lineData = actLine.Split(' ');
+                                var numberOfRefs = Int32.Parse(lineData[1], CultureInfo.InvariantCulture);
 
                                 for (var loop = 0; loop < numberOfRefs; loop++)
                                 {
-                                    string actInnerLine = reader.ReadLine().Trim();
-                                    string[] splittedRef = actInnerLine.Split(' ');
-
+                                    var actInnerLine = reader.ReadLine().Trim();
+                                    var splittedRef = actInnerLine.Split(' ');
                                     var texCoord = new Vector2();
                                     int vertexReference = UInt16.Parse(splittedRef[0], CultureInfo.InvariantCulture);
                                     texCoord.X = Single.Parse(splittedRef[1], CultureInfo.InvariantCulture);
@@ -767,10 +788,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the default extension (e. g. ".ac").
         /// </summary>
-        public static string DefaultExtension
-        {
-            get { return ".ac"; }
-        }
+        public static string DefaultExtension => ".ac";
 
         //*********************************************************************
         //*********************************************************************
@@ -792,8 +810,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             public ACFileInfo()
             {
-                this.Materials = new List<ACMaterialInfo>();
-                this.Objects = new List<ACObjectInfo>();
+                Materials = new List<ACMaterialInfo>();
+                Objects = new List<ACObjectInfo>();
             }
 
             /// <summary>
@@ -801,7 +819,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public int CountAllObjects()
             {
-                int result = 0;
+                var result = 0;
 
                 foreach (var actObj in Objects)
                 {
@@ -862,10 +880,10 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public ACObjectInfo()
             {
-                this.Childs = new List<ACObjectInfo>();
-                this.Surfaces = new List<ACSurface>();
-                this.Vertices = new List<ACVertex>();
-                this.Rotation = Matrix.Identity;
+                Childs = new List<ACObjectInfo>();
+                Surfaces = new List<ACSurface>();
+                Vertices = new List<ACVertex>();
+                Rotation = Matrix.Identity;
             }
 
             /// <summary>
@@ -876,7 +894,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </returns>
             public override string ToString()
             {
-                return this.Name;
+                return Name;
             }
 
             /// <summary>
@@ -884,7 +902,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public int CountAllChildObjects()
             {
-                int result = 0;
+                var result = 0;
 
                 foreach (var actObj in Childs)
                 {
@@ -917,42 +935,27 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             /// Is this surface built using polygons?
             /// </summary>
-            public bool IsPolygon
-            {
-                get { return (Flags & 0xF0) == 0; }
-            }
+            public bool IsPolygon => (Flags & 0xF0) == 0;
 
             /// <summary>
             /// Is this surface a closed line?
             /// </summary>
-            public bool IsClosedLine
-            {
-                get { return (Flags & 0xF0) == 1; }
-            }
+            public bool IsClosedLine => (Flags & 0xF0) == 1;
 
             /// <summary>
             /// Is this surface a line?
             /// </summary>
-            public bool IsLine
-            {
-                get { return (Flags & 0xF0) == 2; }
-            }
+            public bool IsLine => (Flags & 0xF0) == 2;
 
             /// <summary>
             /// Is this surface flat shaded?
             /// </summary>
-            public bool IsFlatShaded
-            {
-                get { return (Flags & 16) != 16; }
-            }
+            public bool IsFlatShaded => (Flags & 16) != 16;
 
             /// <summary>
             /// Is this surface two sided?
             /// </summary>
-            public bool IsTwoSided
-            {
-                get { return (Flags & 32) == 32; }
-            }
+            public bool IsTwoSided => (Flags & 32) == 32;
         }
 
         //*********************************************************************

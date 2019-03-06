@@ -29,7 +29,6 @@ namespace SeeingSharp.WinFormsSamples
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
     using System.Windows.Forms;
     using Checking;
     using Multimedia.Core;
@@ -77,7 +76,7 @@ namespace SeeingSharp.WinFormsSamples
             TabPage firstTabPage = null;
             ListView firstListView = null;
             ListViewItem firstListViewItem = null;
-            Dictionary<string, ListView> generatedTabs = new Dictionary<string, ListView>();
+            var generatedTabs = new Dictionary<string, ListView>();
 
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
@@ -125,13 +124,15 @@ namespace SeeingSharp.WinFormsSamples
                     // Load the item's image
                     var sampleImageLink = actSample.TryGetSampleImageLink();
 
-                    if (sampleImageLink != null)
+                    if (sampleImageLink == null)
                     {
-                        using (var inStream = sampleImageLink.OpenRead())
-                        {
-                            m_images.Images.Add(Image.FromStream(inStream));
-                            newListItem.ImageIndex = m_images.Images.Count - 1;
-                        }
+                        continue;
+                    }
+
+                    using (var inStream = sampleImageLink.OpenRead())
+                    {
+                        m_images.Images.Add(Image.FromStream(inStream));
+                        newListItem.ImageIndex = m_images.Images.Count - 1;
                     }
                 }
             }
@@ -164,15 +165,15 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            var currentWindowSize = new Size2(this.Width, this.Height);
+            var currentWindowSize = new Size2(Width, Height);
             var difference = new Size2(
                 currentWindowSize.Width - currentViewSize.Width,
                 currentWindowSize.Height - currentViewSize.Height);
             var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
 
-            this.WindowState = FormWindowState.Normal;
-            this.Width = newWindowSize.Width;
-            this.Height = newWindowSize.Height;
+            WindowState = FormWindowState.Normal;
+            Width = newWindowSize.Width;
+            Height = newWindowSize.Height;
         }
 
         /// <summary>
@@ -183,9 +184,10 @@ namespace SeeingSharp.WinFormsSamples
             if (m_isChangingSample) { return; }
 
             m_isChangingSample = true;
+
             try
             {
-                this.UpdateWindowState();
+                UpdateWindowState();
 
                 if (m_actSampleInfo == sampleInfo) { return; }
 
@@ -196,10 +198,12 @@ namespace SeeingSharp.WinFormsSamples
                     {
                         manipulator.Clear(true);
                     });
+
                     await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
-                if (this.IsDisposed || (!this.IsHandleCreated)) { return; }
+
+                if (IsDisposed || (!IsHandleCreated)) { return; }
 
                 // Reset members
                 m_actSample = null;
@@ -222,14 +226,17 @@ namespace SeeingSharp.WinFormsSamples
                     m_propertyGrid.SelectedObject = null;
                     UpdateSampleCommands(null);
                 }
-                if (this.IsDisposed || (!this.IsHandleCreated)) { return; }
+
+                if (IsDisposed || (!IsHandleCreated)) { return; }
 
                 // Wait for next finished rendering
                 await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
-                if (this.IsDisposed || (!this.IsHandleCreated)) { return; }
+
+                if (IsDisposed || (!IsHandleCreated)) { return; }
 
                 await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
-                if (this.IsDisposed || (!this.IsHandleCreated)) { return; }
+
+                if (IsDisposed || (!IsHandleCreated)) { return; }
 
                 //// Apply new camera on child windows
                 //foreach (ChildRenderWindow actChildWindow in m_openedChildRenderers)
@@ -242,7 +249,7 @@ namespace SeeingSharp.WinFormsSamples
                 m_isChangingSample = false;
             }
 
-            this.UpdateWindowState();
+            UpdateWindowState();
         }
 
         private void UpdateSampleCommands(SampleSettings settings)
@@ -254,9 +261,14 @@ namespace SeeingSharp.WinFormsSamples
             }
             m_sampleCommandToolbarItems.Clear();
 
-            if(settings == null) { return; }
-            bool isFirst = true;
-            foreach(var actCommand in settings.GetCommands())
+            if (settings == null)
+            {
+                return;
+            }
+
+            var isFirst = true;
+
+            foreach (var actCommand in settings.GetCommands())
             {
                 var actCommandInner = actCommand;
 
@@ -302,7 +314,7 @@ namespace SeeingSharp.WinFormsSamples
             actListView.EnsureNotNull(nameof(actListView));
             e.Item.EnsureNotNull($"{nameof(e)}.{nameof(e.Item)}");
 
-            SampleMetadata sampleInfo = e.Item.Tag as SampleMetadata;
+            var sampleInfo = e.Item.Tag as SampleMetadata;
             sampleInfo.EnsureNotNull(nameof(sampleInfo));
 
             // Clear selection on other ListViews
@@ -320,7 +332,7 @@ namespace SeeingSharp.WinFormsSamples
             sampleSettings.SetEnvironment(m_ctrlRenderPanel.RenderLoop, sampleInfo);
 
             // Now apply the sample
-            this.ApplySample(sampleInfo, sampleSettings);
+            ApplySample(sampleInfo, sampleSettings);
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
@@ -337,8 +349,8 @@ namespace SeeingSharp.WinFormsSamples
             var splittedResolution = menuItem.Tag.ToString().Split('x');
 
             if (splittedResolution.Length != 2) { return; }
-            if (!int.TryParse(splittedResolution[0], out int width)) { return; }
-            if (!int.TryParse(splittedResolution[1], out int height)) { return; }
+            if (!int.TryParse(splittedResolution[0], out var width)) { return; }
+            if (!int.TryParse(splittedResolution[1], out var height)) { return; }
 
             ChangeRenderResolution(width, height);
         }

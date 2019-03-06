@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Core
     public class FactoryHandlerDWrite
     {
         #region Resources for DirectWrite
-        private DWrite.Factory m_factory;
+
         #endregion
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="core">The core.</param>
         internal FactoryHandlerDWrite(DeviceLoadSettings deviceLoadSettings)
         {
-            //Create DirectWrite Factory object
-            m_factory = new DWrite.Factory(DWrite.FactoryType.Shared);
+            // Create DirectWrite Factory object
+            Factory = new DWrite.Factory(DWrite.FactoryType.Shared);
         }
 
         /// <summary>
@@ -57,23 +57,17 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadResources()
         {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+            Factory = SeeingSharpUtil.DisposeObject(Factory);
         }
 
         /// <summary>
         /// Gets the Factory object.
         /// </summary>
-        internal DWrite.Factory Factory
-        {
-            get { return m_factory; }
-        }
+        internal DWrite.Factory Factory { get; private set; }
 
         /// <summary>
         /// Is DirectWrite initialized successfully?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_factory != null; }
-        }
+        public bool IsInitialized => Factory != null;
     }
 }

@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float changeFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
+            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
             m_targetObject.AccentuationFactor = m_startAccentuation + m_moveAccentuation * changeFactor;
         }
 
@@ -90,7 +90,6 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnFixedTimeAnimationFinished()
         {
             m_targetObject.AccentuationFactor = m_targetAccentuation;
-
             m_moveAccentuation = 0;
             m_startAccentuation = 1;
         }

@@ -97,9 +97,13 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Task AwaitRenderAsync()
         {
-            if (!this.IsOperational) { return Task.Delay(100); }
+            if (!IsOperational)
+            {
+                return Task.Delay(100);
+            }
 
-            TaskCompletionSource<object> result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>();
+
             RenderLoop.EnqueueAfterPresentAction(() =>
             {
                 result.TrySetResult(null);
@@ -136,8 +140,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SharpDX.Mathematics.Interop.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
-            int width = m_pixelWidth;
-            int height = m_pixelHeight;
+            var width = m_pixelWidth;
+            var height = m_pixelHeight;
 
             //Get references to current render device
             m_device = device.DeviceD3D11_1;
@@ -200,35 +204,29 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get { return RenderLoop.Scene; }
-            set { RenderLoop.SetScene(value); }
+            get => RenderLoop.Scene;
+            set => RenderLoop.SetScene(value);
         }
 
         public Camera3DBase Camera
         {
-            get { return RenderLoop.Camera; }
-            set { RenderLoop.Camera = value; }
+            get => RenderLoop.Camera;
+            set => RenderLoop.Camera = value;
         }
 
         public Color4 ClearColor
         {
-            get { return RenderLoop.ClearColor; }
-            set { RenderLoop.ClearColor = value; }
+            get => RenderLoop.ClearColor;
+            set => RenderLoop.ClearColor = value;
         }
 
-        public SynchronizationContext UISynchronizationContext
-        {
-            get { return RenderLoop.UISynchronizationContext; }
-        }
+        public SynchronizationContext UISynchronizationContext => RenderLoop.UISynchronizationContext;
 
         /// <summary>
         /// Gets the renderloop object.
         /// </summary>
         public RenderLoop RenderLoop { get; }
 
-        public bool IsOperational
-        {
-            get { return RenderLoop.IsOperational; }
-        }
+        public bool IsOperational => RenderLoop.IsOperational;
     }
 }

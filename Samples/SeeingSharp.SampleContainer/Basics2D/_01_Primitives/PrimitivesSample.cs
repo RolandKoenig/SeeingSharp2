@@ -35,7 +35,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
     #endregion
 
     [SampleDescription(
-        "Primitives", 1, nameof(SeeingSharp.SampleContainer.Basics2D),
+        "Primitives", 1, nameof(Basics2D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics2D/_01_Primitives")]
     public class PrimitivesSample : SampleBase
@@ -48,11 +48,12 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Primitives
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
             var solidBrush = new SolidBrushResource(Color4Ex.Gray);
+
             await targetRenderLoop.Register2DDrawingLayerAsync((graphics) =>
             {
                 // Full width and height for all primitive objects
-                float allPrimitivesWidth = 180f;
-                float allPrimitivesHeight = 100f;
+                var allPrimitivesWidth = 180f;
+                var allPrimitivesHeight = 100f;
 
                 // Update current transform so that primitive objects are in the middle of the screen
                 var screenBounds = graphics.ScreenBounds;

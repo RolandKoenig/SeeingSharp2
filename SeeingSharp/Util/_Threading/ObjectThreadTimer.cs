@@ -87,17 +87,14 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets current time (thread-time, not pc-time!).
         /// </summary>
-        public DateTime Now
-        {
-            get { return m_startTimeStamp.Add(m_timeSinceStart); }
-        }
+        public DateTime Now => m_startTimeStamp.Add(m_timeSinceStart);
 
         /// <summary>
         /// Gets or sets current speed factor of the timer (default: 1.0).
         /// </summary>
         public double SpeedFactor
         {
-            get { return m_speedFactor; }
+            get => m_speedFactor;
             set
             {
                 if (value < 0.0) { throw new ArgumentException("SpeedFactor can not be less than zero!", "value"); }

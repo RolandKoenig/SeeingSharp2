@@ -65,16 +65,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState"></param>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (m_checkFunction()) { this.NotifyAnimationFinished(); }
+            if (m_checkFunction())
+            {
+                NotifyAnimationFinished();
+            }
         }
 
         /// <summary>
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

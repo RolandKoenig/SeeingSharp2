@@ -45,15 +45,23 @@ namespace SeeingSharp.Multimedia.Core
     {
         public static void UniformRescale(ref int width, ref int height, float maxDimension)
         {
-            int biggerValue = width;
-            if(height > biggerValue) { biggerValue = height; }
+            var biggerValue = width;
+
+            if (height > biggerValue)
+            {
+                biggerValue = height;
+            }
 
             float biggerValueF = biggerValue;
-            if(biggerValueF <= maxDimension) { return; }
 
-            float scaleFactor = maxDimension / biggerValueF;
-            width = (int)((float)width * scaleFactor);
-            height = (int)((float)height * scaleFactor);
+            if (biggerValueF <= maxDimension)
+            {
+                return;
+            }
+
+            var scaleFactor = maxDimension / biggerValueF;
+            width = (int)(width * scaleFactor);
+            height = (int)(height * scaleFactor);
         }
 
         /// <summary>
@@ -89,12 +97,12 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Copy data row by row
                     //  => Rows form datasource may have more pixels because driver changes the size of textures
-                    ulong rowPitch = (ulong)(width * 4);
+                    var rowPitch = (ulong)(width * 4);
 
-                    for (int loopRow = 0; loopRow < height; loopRow++)
+                    for (var loopRow = 0; loopRow < height; loopRow++)
                     {
-                        int rowPitchSource = dataBox.RowPitch;
-                        int rowPitchDestination = width * 4;
+                        var rowPitchSource = dataBox.RowPitch;
+                        var rowPitchDestination = width * 4;
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             targetBitmap.BackBuffer + loopRow * rowPitchDestination,

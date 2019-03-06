@@ -31,14 +31,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
     using Checking;
     using Multimedia.Components;
     using Multimedia.Core;
-    using Multimedia.Drawing3D;
     using Multimedia.Objects;
     using SharpDX;
 
     #endregion
 
     [SampleDescription(
-        "Text 3D", 4, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Text 3D", 4, nameof(Basics3D),
         sampleImageFileName: "PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_04_Text3D")]
     public class Text3DSample : SampleBase
@@ -52,12 +51,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Configure text geometry

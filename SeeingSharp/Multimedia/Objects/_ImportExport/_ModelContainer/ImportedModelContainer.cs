@@ -97,7 +97,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Add the object finally
-            this.Objects.Add(rootObject);
+            Objects.Add(rootObject);
 
             return rootObject;
         }
@@ -132,21 +132,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// Should triangle order be changes by the import logic?
         /// (This property is handled by the importer)
         /// </summary>
-        public bool ChangeTriangleOrder
-        {
-            get { return m_importOptions.IsChangeTriangleOrderNeeded(); }
-        }
+        public bool ChangeTriangleOrder => m_importOptions.IsChangeTriangleOrderNeeded();
 
         /// <summary>
         /// The resize factor for imported geometry.
         /// (This property is handled by the importer)
         /// </summary>
-        public float ResizeFactor
-        {
-            get
-            {
-                return m_importOptions.ResizeFactor;
-            }
-        }
+        public float ResizeFactor => m_importOptions.ResizeFactor;
     }
 }

@@ -42,8 +42,8 @@ namespace SeeingSharp.Multimedia.Objects
 
         public MaterialProperties()
         {
-            this.DiffuseColor = Color4.White;
-            this.Name = string.Empty;
+            DiffuseColor = Color4.White;
+            Name = string.Empty;
         }
 
         /// <summary>
@@ -54,19 +54,19 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var resultBuilder = new StringBuilder(100);
             resultBuilder.Append("DyamicMaterial|");
-            resultBuilder.Append(this.AmbientColor.GetHashCode().ToString());
-            resultBuilder.Append(this.DiffuseColor.GetHashCode().ToString());
-            resultBuilder.Append(this.EmissiveColor.GetHashCode().ToString());
-            resultBuilder.Append(this.Key.GetHashCode().ToString());
-            resultBuilder.Append(this.Shininess.GetHashCode().ToString());
-            resultBuilder.Append(this.SpecularColor.GetHashCode().ToString());
-            resultBuilder.Append(this.TextureKey.GetHashCode().ToString());
+            resultBuilder.Append(AmbientColor.GetHashCode().ToString());
+            resultBuilder.Append(DiffuseColor.GetHashCode().ToString());
+            resultBuilder.Append(EmissiveColor.GetHashCode().ToString());
+            resultBuilder.Append(Key.GetHashCode().ToString());
+            resultBuilder.Append(Shininess.GetHashCode().ToString());
+            resultBuilder.Append(SpecularColor.GetHashCode().ToString());
+            resultBuilder.Append(TextureKey.GetHashCode().ToString());
             return resultBuilder.ToString();
         }
 
         public MaterialProperties Clone()
         {
-            return base.MemberwiseClone() as MaterialProperties;
+            return MemberwiseClone() as MaterialProperties;
         }
 
         public override bool Equals(object obj)
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Objects
                 return false;
             }
 
-            return this.Equals(other);
+            return Equals(other);
         }
 
         /// <summary>
@@ -86,42 +86,45 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public bool Equals(MaterialProperties other)
         {
-            if(other == null) { return false; }
+            if (other == null)
+            {
+                return false;
+            }
 
             return
-                (this.Key == other.Key) &&
-                (this.TextureKey == other.TextureKey) &&
-                (this.DiffuseColor == other.DiffuseColor) &&
-                (this.AmbientColor == other.AmbientColor) &&
-                (this.EmissiveColor == other.EmissiveColor) &&
-                (this.SpecularColor == other.SpecularColor) &&
-                (this.Shininess == other.Shininess);
+                (Key == other.Key) &&
+                (TextureKey == other.TextureKey) &&
+                (DiffuseColor == other.DiffuseColor) &&
+                (AmbientColor == other.AmbientColor) &&
+                (EmissiveColor == other.EmissiveColor) &&
+                (SpecularColor == other.SpecularColor) &&
+                (Shininess == other.Shininess);
         }
 
         public override int GetHashCode()
         {
             return
-                this.Key.GetHashCode() ^
-                this.TextureKey.GetHashCode() ^
-                this.DiffuseColor.GetHashCode() ^
-                this.AmbientColor.GetHashCode() ^
-                this.EmissiveColor.GetHashCode() ^
-                this.SpecularColor.GetHashCode() ^
-                this.Shininess.GetHashCode();
+                Key.GetHashCode() ^
+                TextureKey.GetHashCode() ^
+                DiffuseColor.GetHashCode() ^
+                AmbientColor.GetHashCode() ^
+                EmissiveColor.GetHashCode() ^
+                SpecularColor.GetHashCode() ^
+                Shininess.GetHashCode();
         }
 
         public static bool operator ==(MaterialProperties left, MaterialProperties right)
         {
-            if(Object.ReferenceEquals(left, right)) { return true; }
-            if(Object.ReferenceEquals(left, null)) { return false; }
+            if (ReferenceEquals(left, right)) { return true; }
+            if (ReferenceEquals(left, null)) { return false; }
 
             return left.Equals(right);
         }
 
         public static bool operator !=(MaterialProperties left, MaterialProperties right)
         {
-            if (Object.ReferenceEquals(left, right)) { return false; }
-            if (Object.ReferenceEquals(left, null)) { return true; }
+            if (ReferenceEquals(left, right)) { return false; }
+            if (ReferenceEquals(left, null)) { return true; }
 
             return !left.Equals(right);
         }

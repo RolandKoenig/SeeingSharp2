@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Objects._ObjectTypes
     {
         public SphereType()
         {
-            this.Radius = 2f;
+            Radius = 2f;
         }
 
         public override VertexStructure BuildStructure(StructureBuildOptions buildOptions)
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Objects._ObjectTypes
             var result = new VertexStructure();
 
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildShpere(this.tDiv, this.pDiv, this.Radius, Color4Ex.Transparent);
+            mainSurface.BuildShpere(tDiv, pDiv, Radius, Color4Ex.Transparent);
 
             return result;
         }

@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Objects
                     textLayout.Draw(textRenderer, 0f, 0f);
                 }
             }
-            catch (SharpDX.SharpDXException)
+            catch (SharpDXException)
             {
                 //TODO: Display some error
             }
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Objects
             var polygon = new Polygon(coordinates);
 
             //Try to triangulate it
-            IEnumerable<int> indices = polygon.TriangulateUsingCuttingEars();
+            var indices = polygon.TriangulateUsingCuttingEars();
 
             if (indices == null)
             {
@@ -132,26 +132,26 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Append all vertices
-            int baseIndex = Owner.CountVertices;
+            var baseIndex = Owner.CountVertices;
 
-            for (int loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
+            for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
                 Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
             }
 
             //Append all indices
-            using (IEnumerator<int> indexEnumerator = indices.GetEnumerator())
+            using (var indexEnumerator = indices.GetEnumerator())
             {
                 while (indexEnumerator.MoveNext())
                 {
-                    int index1 = indexEnumerator.Current;
-                    int index2 = 0;
-                    int index3 = 0;
+                    var index1 = indexEnumerator.Current;
+                    var index2 = 0;
+                    var index3 = 0;
 
                     if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
                     if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
 
-                    this.AddTriangle((int)(index1 + baseIndex), (int)(index2 + baseIndex), (int)(index3 + baseIndex));
+                    AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
                 }
             }
         }

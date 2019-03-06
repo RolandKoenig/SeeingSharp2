@@ -26,16 +26,13 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class PickingInformation
     {
-        private SceneObject m_pickedObject;
-        private float m_distance;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PickingInformation" /> class.
         /// </summary>
         public PickingInformation()
         {
-            m_pickedObject = null;
-            m_distance = float.NaN;
+            PickedObject = null;
+            Distance = float.NaN;
         }
 
         /// <summary>
@@ -45,29 +42,24 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="distance">The distance from the origin to the picked point.</param>
         public void NotifyPick(SceneObject pickedObject, float distance)
         {
-            if ((float.IsNaN(m_distance)) ||
-                (distance < m_distance))
+            if ((!float.IsNaN(Distance)) && (!(distance < Distance)))
             {
-                m_distance = distance;
-                m_pickedObject = pickedObject;
+                return;
             }
+
+            Distance = distance;
+            PickedObject = pickedObject;
         }
 
         /// <summary>
         /// The picked object.
         /// </summary>
-        public SceneObject PickedObject
-        {
-            get { return m_pickedObject; }
-        }
+        public SceneObject PickedObject { get; private set; }
 
 
         /// <summary>
         /// Gets the distance to the picked object.
         /// </summary>
-        public float Distance
-        {
-            get { return m_distance; }
-        }
+        public float Distance { get; private set; }
     }
 }

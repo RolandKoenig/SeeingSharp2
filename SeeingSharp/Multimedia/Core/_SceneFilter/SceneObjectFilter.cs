@@ -74,10 +74,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Do update this filter on each frame?
         /// </summary>
-        public virtual bool UpdateEachFrame
-        {
-            get { return false; }
-        }
+        public virtual bool UpdateEachFrame => false;
 
         /// <summary>
         /// Has filter configuration changed?

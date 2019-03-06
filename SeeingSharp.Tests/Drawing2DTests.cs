@@ -125,7 +125,7 @@ namespace SeeingSharp.Tests
                 {
                     // 2D rendering is made here
                     graphics.DrawText(
-                        string.Format("Just a dummy text ;){0}Just a dummy text ;)", Environment.NewLine),
+                        $"Just a dummy text ;){Environment.NewLine}Just a dummy text ;)",
                         textFormat,
                         new RectangleF(10, 10, 512, 512),
                         solidBrush);
@@ -137,7 +137,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleText_SingleColor.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -168,7 +168,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -209,7 +209,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleGeometry2D.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -243,7 +243,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleGeometry2D_Ellipse.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -286,7 +286,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_LinearGradient.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -327,7 +327,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_RadialGradient.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -357,7 +357,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
                     // Define object
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeType()));
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -382,7 +382,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "RoundedRectOver3D.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -406,11 +406,11 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
-                GDI.Bitmap screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "DebugDrawingLayer.png"));
                 Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
             }
@@ -451,11 +451,11 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var resD2DTexture = manipulator.AddResource<Direct2DTextureResource>(
+                    var resD2DTexture = manipulator.AddResource(
                         () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                     var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
-                    var geoResource = manipulator.AddResource<GeometryResource>(
-                        () => new GeometryResource(new CubeType() { Material = resD2DMaterial }));
+                    var geoResource = manipulator.AddResource(
+                        () => new GeometryResource(new CubeType { Material = resD2DMaterial }));
 
                     var newObject = manipulator.AddGeneric(geoResource);
                     newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -469,7 +469,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleObject_D2DTexture.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -485,7 +485,7 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGrahicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4Ex.LightGray))
-            using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Logo.png")))
+            using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(GetType(), "Resources.Bitmaps.Logo.png")))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
@@ -505,7 +505,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Transparency.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
 
@@ -519,7 +519,7 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGrahicsAsync();
 
             using (var bitmap = new StandardBitmapResource(
-                new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Boom.png"),
+                new AssemblyResourceLink(GetType(), "Resources.Bitmaps.Boom.png"),
                 frameCountX: 8, frameCountY: 8))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -550,7 +550,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                float diff = BitmapComparison.CalculatePercentageDifference(
+                var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Animated.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
             }

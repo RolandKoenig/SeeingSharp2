@@ -38,9 +38,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions()
         {
-            this.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            this.ResizeFactor = 1f;
-            this.TwoSidedSurfaces = false;
+            ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
+            ResizeFactor = 1f;
+            TwoSidedSurfaces = false;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         public Matrix GetTransformMatrixForCoordinateSystem()
         {
-            switch (this.ResourceCoordinateSystem)
+            switch (ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                     return Matrix.Identity;
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Objects
                 case CoordinateSystem.LeftHanded_UpZ:
                     return
                         Matrix.Scaling(1f, -1f, 1f) *
-                        Matrix.RotationX(-EngineMath.RAD_90DEG); ;
+                        Matrix.RotationX(-EngineMath.RAD_90DEG);
 
                 case CoordinateSystem.RightHanded_UpY:
                     return Matrix.Scaling(new Vector3(1f, 1f, -1f));
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public bool IsChangeTriangleOrderNeeded()
         {
-            switch (this.ResourceCoordinateSystem)
+            switch (ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                 case CoordinateSystem.RightHanded_UpZ:
@@ -86,9 +86,7 @@ namespace SeeingSharp.Multimedia.Objects
                     return true;
 
                 default:
-                    throw new SeeingSharpGraphicsException(string.Format(
-                        "Unknown coordinate system {0}!",
-                        this.ResourceCoordinateSystem));
+                    throw new SeeingSharpGraphicsException($"Unknown coordinate system {ResourceCoordinateSystem}!");
             }
         }
 

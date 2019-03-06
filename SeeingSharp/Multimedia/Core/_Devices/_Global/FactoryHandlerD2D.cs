@@ -60,17 +60,11 @@ namespace SeeingSharp.Multimedia.Core
             SeeingSharpUtil.SafeDispose(ref m_factory2);
         }
 
-        internal D2D.Factory2 Factory2
-        {
-            get { return m_factory2; }
-        }
+        internal D2D.Factory2 Factory2 => m_factory2;
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_factory2 != null; }
-        }
+        public bool IsInitialized => m_factory2 != null;
     }
 }

@@ -46,9 +46,12 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             if (mipLevels > 1)
             {
-                int maxMips = CountMips(width, height);
+                var maxMips = CountMips(width, height);
+
                 if (mipLevels > maxMips)
-                    throw new InvalidOperationException(String.Format("MipLevels must be <= {0}", maxMips));
+                {
+                    throw new InvalidOperationException($"MipLevels must be <= {maxMips}");
+                }
             }
             else if (mipLevels == 0)
             {
@@ -58,6 +61,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 mipLevels = 1;
             }
+
             return mipLevels;
         }
 
@@ -74,16 +78,23 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             if (mipLevels > 1)
             {
                 if (!IsPow2(width) || !IsPow2(height) || !IsPow2(depth))
+                {
                     throw new InvalidOperationException("Width/Height/Depth must be power of 2");
+                }
 
-                int maxMips = CountMips(width, height, depth);
+                var maxMips = CountMips(width, height, depth);
+
                 if (mipLevels > maxMips)
-                    throw new InvalidOperationException(String.Format("MipLevels must be <= {0}", maxMips));
+                {
+                    throw new InvalidOperationException($"MipLevels must be <= {maxMips}");
+                }
             }
             else if (mipLevels == 0)
             {
                 if (!IsPow2(width) || !IsPow2(height) || !IsPow2(depth))
+                {
                     throw new InvalidOperationException("Width/Height/Depth must be power of 2");
+                }
 
                 mipLevels = CountMips(width, height, depth);
             }
@@ -91,6 +102,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 mipLevels = 1;
             }
+
             return mipLevels;
         }
 
@@ -101,17 +113,21 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         private static int CountMips(int width, int height)
         {
-            int mipLevels = 1;
+            var mipLevels = 1;
 
             while (height > 1 || width > 1)
             {
                 ++mipLevels;
 
                 if (height > 1)
+                {
                     height >>= 1;
+                }
 
                 if (width > 1)
+                {
                     width >>= 1;
+                }
             }
 
             return mipLevels;
@@ -119,20 +135,26 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         private static int CountMips(int width, int height, int depth)
         {
-            int mipLevels = 1;
+            var mipLevels = 1;
 
             while (height > 1 || width > 1 || depth > 1)
             {
                 ++mipLevels;
 
                 if (height > 1)
+                {
                     height >>= 1;
+                }
 
                 if (width > 1)
+                {
                     width >>= 1;
+                }
 
                 if (depth > 1)
+                {
                     depth >>= 1;
+                }
             }
 
             return mipLevels;

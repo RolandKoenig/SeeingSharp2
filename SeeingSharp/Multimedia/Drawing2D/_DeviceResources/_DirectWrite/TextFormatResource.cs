@@ -95,11 +95,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
 
-            if (textFormat != null)
+            if (textFormat == null)
             {
-                SeeingSharpTools.DisposeObject(textFormat);
-                m_loadedTextFormats[engineDevice.DeviceIndex] = null;
+                return;
             }
+
+            SeeingSharpTools.DisposeObject(textFormat);
+            m_loadedTextFormats[engineDevice.DeviceIndex] = null;
         }
 
         /// <summary>
@@ -109,9 +111,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal DWrite.TextFormat GetTextFormat(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedTextFormats[engineDevice.DeviceIndex];
@@ -127,17 +129,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             // Update runtime values on demand
-            if(m_runtimeDataChangedFlags[engineDevice.DeviceIndex])
+            if (!m_runtimeDataChangedFlags[engineDevice.DeviceIndex])
             {
-                m_runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
-
-                SeeingSharpTools.DisposeObject(result);
-                result = new DWrite.TextFormat(
-                    GraphicsCore.Current.FactoryDWrite,
-                    m_fontFamilyName,
-                    m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
-                m_loadedTextFormats[engineDevice.DeviceIndex] = result;
+                return result;
             }
+
+            m_runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
+
+            SeeingSharpTools.DisposeObject(result);
+            result = new DWrite.TextFormat(
+                GraphicsCore.Current.FactoryDWrite,
+                m_fontFamilyName,
+                m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
+            m_loadedTextFormats[engineDevice.DeviceIndex] = result;
 
             return result;
         }
@@ -147,16 +151,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public ParagraphAlignment ParagraphAlignment
         {
-            get { return (ParagraphAlignment)m_paragraphAlignment; }
+            get => (ParagraphAlignment)m_paragraphAlignment;
             set
             {
                 var castedValue = (DWrite.ParagraphAlignment)value;
 
-                if(castedValue != m_paragraphAlignment)
+                if (castedValue == m_paragraphAlignment)
                 {
-                    m_paragraphAlignment = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    return;
                 }
+
+                m_paragraphAlignment = castedValue;
+                m_runtimeDataChangedFlags.SetAllValuesTo(true);
             }
         }
 
@@ -165,16 +171,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public TextAlignment TextAlignment
         {
-            get { return (TextAlignment)m_textAlignment; }
+            get => (TextAlignment)m_textAlignment;
             set
             {
                 var castedValue = (DWrite.TextAlignment)value;
 
-                if(castedValue != m_textAlignment)
+                if (castedValue == m_textAlignment)
                 {
-                    m_textAlignment = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    return;
                 }
+
+                m_textAlignment = castedValue;
+                m_runtimeDataChangedFlags.SetAllValuesTo(true);
             }
         }
 
@@ -183,16 +191,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public WordWrapping WordWrapping
         {
-            get { return (WordWrapping)m_wordWrapping; }
+            get => (WordWrapping)m_wordWrapping;
             set
             {
                 var castedValue = (DWrite.WordWrapping)value;
 
-                if(castedValue != m_wordWrapping)
+                if (castedValue == m_wordWrapping)
                 {
-                    m_wordWrapping = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    return;
                 }
+
+                m_wordWrapping = castedValue;
+                m_runtimeDataChangedFlags.SetAllValuesTo(true);
             }
         }
 
@@ -201,16 +211,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public ReadingDirection ReadingDirection
         {
-            get { return (ReadingDirection)m_readingDirection; }
+            get => (ReadingDirection)m_readingDirection;
             set
             {
                 var castedValue = (DWrite.ReadingDirection)value;
 
-                if(castedValue != m_readingDirection)
+                if (castedValue == m_readingDirection)
                 {
-                    m_readingDirection = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    return;
                 }
+
+                m_readingDirection = castedValue;
+                m_runtimeDataChangedFlags.SetAllValuesTo(true);
             }
         }
     }

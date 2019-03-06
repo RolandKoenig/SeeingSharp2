@@ -152,11 +152,13 @@ namespace SeeingSharp.Util
 
                 case ObjectThreadState.Running:
                 case ObjectThreadState.Starting:
-                    TaskCompletionSource<object> taskSource = new TaskCompletionSource<object>();
-                    this.Stopping += (sender, eArgs) =>
+                    var taskSource = new TaskCompletionSource<object>();
+
+                    Stopping += (sender, eArgs) =>
                     {
                         taskSource.TrySetResult(null);
                     };
+
                     return taskSource.Task;
 
                 default:
@@ -169,9 +171,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public Task StartAsync()
         {
-            this.Start();
+            Start();
 
-            return this.InvokeAsync(() => { });
+            return InvokeAsync(() => { });
         }
 
         /// <summary>
@@ -186,7 +188,7 @@ namespace SeeingSharp.Util
             while (m_taskQueue.TryDequeue(out dummyAction)) ;
 
             //Trigger next update
-            this.Trigger();
+            Trigger();
         }
 
         /// <summary>
@@ -194,7 +196,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task StopAsync(int timeout)
         {
-            this.Stop();
+            Stop();
 
             if (m_threadStopSynchronizeObject != null)
             {
@@ -230,7 +232,7 @@ namespace SeeingSharp.Util
             }
 
             //Enqueues the given action
-            TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+            var taskCompletionSource = new TaskCompletionSource<object>();
 
             m_taskQueue.Enqueue(() =>
             {
@@ -248,7 +250,7 @@ namespace SeeingSharp.Util
             Task result = taskCompletionSource.Task;
 
             //Triggers the main loop
-            this.Trigger();
+            Trigger();
 
             //Returns the result
             return result;
@@ -333,8 +335,9 @@ namespace SeeingSharp.Util
                             stopWatch.Start();
 
                             //Get current taskqueue
-                            List<Action> localTaskQueue = new List<Action>();
+                            var localTaskQueue = new List<Action>();
                             Action dummyAction = null;
+
                             while (m_taskQueue.TryDequeue(out dummyAction))
                             {
                                 localTaskQueue.Add(dummyAction);
@@ -390,10 +393,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets current thread time.
         /// </summary>
-        public DateTime ThreadTime
-        {
-            get { return Timer.Now; }
-        }
+        public DateTime ThreadTime => Timer.Now;
 
         /// <summary>
         /// Gets current timer of the thread.
@@ -403,10 +403,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext
-        {
-            get { return m_syncContext; }
-        }
+        public SynchronizationContext SyncContext => m_syncContext;
 
         /// <summary>
         /// Gets the name of this thread.

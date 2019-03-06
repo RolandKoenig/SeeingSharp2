@@ -136,7 +136,7 @@ namespace SeeingSharp.Util
         {
             using (var inStream = OpenRead(key))
             {
-                byte[] result = new byte[(int)inStream.Length];
+                var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
                 return result;
             }
@@ -150,7 +150,7 @@ namespace SeeingSharp.Util
         {
             using (var inStream = OpenRead(index))
             {
-                byte[] result = new byte[(int)inStream.Length];
+                var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
                 return result;
             }
@@ -216,26 +216,17 @@ namespace SeeingSharp.Util
             /// <summary>
             /// Gets total count of resource files
             /// </summary>
-            public int Count
-            {
-                get { return m_owner.m_resources.Count; }
-            }
+            public int Count => m_owner.m_resources.Count;
 
             /// <summary>
             /// Gets the AssemblyResourceInfo object at the given index
             /// </summary>
-            public AssemblyResourceInfo this[int index]
-            {
-                get { return m_owner.m_resources[index]; }
-            }
+            public AssemblyResourceInfo this[int index] => m_owner.m_resources[index];
 
             /// <summary>
             /// Gets the AssemblyResourceInfo object with the given key
             /// </summary>
-            public AssemblyResourceInfo this[string key]
-            {
-                get { return m_owner.m_resourcesDict[key]; }
-            }
+            public AssemblyResourceInfo this[string key] => m_owner.m_resourcesDict[key];
         }
     }
 }

@@ -84,34 +84,34 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle Y-Filter
-            if ((m_enableYFilter) &&
-                (m_yFilterMin != m_yFilterMax) &&
-                (m_yFilterMax > m_yFilterMin) &&
-                (m_yFilterMax - m_yFilterMin > 0.1f))
+            if ((!m_enableYFilter) || (m_yFilterMin == m_yFilterMax) || (!(m_yFilterMax > m_yFilterMin)) ||
+                (!(m_yFilterMax - m_yFilterMin > 0.1f)))
             {
-                var spacialObject = input as SceneSpacialObject;
+                return true;
+            }
 
-                if (spacialObject != null)
-                {
-                    // Get the bounding box of the object
-                    var boundingBox = spacialObject.TryGetBoundingBox(viewInfo);
+            if (!(input is SceneSpacialObject spacialObject))
+            {
+                return true;
+            }
 
-                    if (boundingBox.IsEmpty())
-                    {
-                        boundingBox = new BoundingBox(spacialObject.Position, spacialObject.Position + new Vector3(0.1f, 0.1f, 0.1f));
-                    }
+            // Get the bounding box of the object
+            var boundingBox = spacialObject.TryGetBoundingBox(viewInfo);
 
-                    // Perform some checks based on the bounding box
-                    if (boundingBox.GetUpperA().Y < m_yFilterMin)
-                    {
-                        return false;
-                    }
+            if (boundingBox.IsEmpty())
+            {
+                boundingBox = new BoundingBox(spacialObject.Position, spacialObject.Position + new Vector3(0.1f, 0.1f, 0.1f));
+            }
 
-                    if (boundingBox.GetLowerA().Y > m_yFilterMax)
-                    {
-                        return false;
-                    }
-                }
+            // Perform some checks based on the bounding box
+            if (boundingBox.GetUpperA().Y < m_yFilterMin)
+            {
+                return false;
+            }
+
+            if (boundingBox.GetLowerA().Y > m_yFilterMax)
+            {
+                return false;
             }
 
             // Object is visible
@@ -123,14 +123,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool EnableYFilter
         {
-            get { return m_enableYFilter; }
+            get => m_enableYFilter;
             set
             {
-                if (m_enableYFilter != value)
+                if (m_enableYFilter == value)
                 {
-                    m_enableYFilter = value;
-                    RaiseFilterConfigurationChanged();
+                    return;
                 }
+
+                m_enableYFilter = value;
+                RaiseFilterConfigurationChanged();
             }
         }
 
@@ -139,14 +141,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMin
         {
-            get { return m_yFilterMin; }
+            get => m_yFilterMin;
             set
             {
-                if (m_yFilterMin != value)
+                if (m_yFilterMin == value)
                 {
-                    m_yFilterMin = value;
-                    RaiseFilterConfigurationChanged();
+                    return;
                 }
+
+                m_yFilterMin = value;
+                RaiseFilterConfigurationChanged();
             }
         }
 
@@ -155,23 +159,22 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMax
         {
-            get { return m_yFilterMax; }
+            get => m_yFilterMax;
             set
             {
-                if (m_yFilterMax != value)
+                if (m_yFilterMax == value)
                 {
-                    m_yFilterMax = value;
-                    RaiseFilterConfigurationChanged();
+                    return;
                 }
+
+                m_yFilterMax = value;
+                RaiseFilterConfigurationChanged();
             }
         }
 
         /// <summary>
         /// Should this filter be updated on each frame?
         /// </summary>
-        public override bool UpdateEachFrame
-        {
-            get { return true; }
-        }
+        public override bool UpdateEachFrame => true;
     }
 }

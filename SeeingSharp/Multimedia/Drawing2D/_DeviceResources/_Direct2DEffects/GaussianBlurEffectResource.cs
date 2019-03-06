@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public GaussianBlurEffectResource(IImage sourceImage)
             : base(sourceImage)
         {
-            this.StandardDeviation = 1f;
+            StandardDeviation = 1f;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 BorderMode = D2D.BorderMode.Soft,
                 Optimization = D2D.GaussianBlurOptimization.Quality,
-                StandardDeviation = this.StandardDeviation
+                StandardDeviation = StandardDeviation
             };
 
             return blurEffect;

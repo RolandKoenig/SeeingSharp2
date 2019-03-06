@@ -140,12 +140,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get
-            {
-                return m_cbPerView != null;
-            }
-        }
+        public override bool IsLoaded => m_cbPerView != null;
     }
 }

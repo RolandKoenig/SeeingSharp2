@@ -48,7 +48,7 @@ namespace SeeingSharp
             m_vertices = vertices;
             Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
 
-            //Define normal calculation method
+            // Define normal calculation method
             m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
         }
 
@@ -57,12 +57,12 @@ namespace SeeingSharp
         /// </summary>
         public Polygon2D Flattern()
         {
-            //Inspired by implementation of the Helix Toolkit from codeplex (http://helixtoolkit.codeplex.com/)
-            //Original sources:
+            // Inspired by implementation of the Helix Toolkit from codeplex (http://helixtoolkit.codeplex.com/)
+            // Original sources:
             // http://forums.xna.com/forums/p/16529/86802.aspx
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
-            //Calculate transform matrix
+            // Calculate transform matrix
             var upVector = m_normal.Value;
             var right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
@@ -70,14 +70,15 @@ namespace SeeingSharp
             var m = new Matrix(
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
-            //Make first point origin
+            // Make first point origin
             var offs = Vector3.Transform(m_vertices[0], m);
             m.M41 = -offs.X;
             m.M42 = -offs.Y;
 
-            //Calculate 2D surface
-            Vector2[] resultVertices = new Vector2[m_vertices.Length];
-            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            // Calculate 2D surface
+            var resultVertices = new Vector2[m_vertices.Length];
+
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
                 var pp = Vector3.Transform(m_vertices[loopVertex], m);
                 resultVertices[loopVertex] = new Vector2(pp.X, pp.Y);
@@ -91,7 +92,7 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            var surface2D = this.Flattern();
+            var surface2D = Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 
@@ -103,9 +104,6 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the normal of this polygon.
         /// </summary>
-        public Vector3 Normal
-        {
-            get { return m_normal.Value; }
-        }
+        public Vector3 Normal => m_normal.Value;
     }
 }

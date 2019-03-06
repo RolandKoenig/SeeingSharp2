@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed
     {
         #region Helper flags
-        private bool m_isDisposed;
+
         #endregion
 
         /// <summary>
@@ -43,12 +43,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public virtual void Dispose()
         {
-            if (!m_isDisposed)
+            if (IsDisposed)
             {
-                m_isDisposed = true;
-
-                GraphicsCore.Current.MainLoop.RegisterForUnload(this);
+                return;
             }
+
+            IsDisposed = true;
+            GraphicsCore.Current.MainLoop.RegisterForUnload(this);
         }
 
         /// <summary>
@@ -60,9 +61,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Is this object disposed?
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return m_isDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
     }
 }

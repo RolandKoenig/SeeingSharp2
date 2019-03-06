@@ -70,9 +70,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return true; }
-        }
+        public override bool IsLoaded => true;
     }
 }

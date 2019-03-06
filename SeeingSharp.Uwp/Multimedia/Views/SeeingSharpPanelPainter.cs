@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Views
             m_lastSizeChange = DateTime.MinValue;
 
             // Create the RenderLoop object
-            RenderLoop = new Core.RenderLoop(SynchronizationContext.Current, this)
+            RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
             {
                 ClearColor = Color4Ex.White
             };
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpPanelPainter(SwapChainBackgroundPanel targetPanel)
             : this()
         {
-            this.Attach(targetPanel);
+            Attach(targetPanel);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpPanelPainter(SwapChainPanel targetPanel)
             : this()
         {
-            this.Attach(targetPanel);
+            Attach(targetPanel);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="targetPanel">The target panel to attach to.</param>
         public void Attach(SwapChainPanel targetPanel)
         {
-            this.AttachInternal(new SwapChainPanelWrapper(targetPanel));
+            AttachInternal(new SwapChainPanelWrapper(targetPanel));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="targetPanel">The target panel to attach to.</param>
         public void Attach(SwapChainBackgroundPanel targetPanel)
         {
-            this.AttachInternal(new SwapChainPanelWrapper(targetPanel));
+            AttachInternal(new SwapChainPanelWrapper(targetPanel));
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void Dispose()
         {
-            this.Detach();
+            Detach();
         }
 
         /// <summary>
@@ -176,7 +176,10 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="targetPanel">The target panel to attach to.</param>
         private void AttachInternal(SwapChainPanelWrapper targetPanel)
         {
-            if (m_targetPanel != null) { throw new InvalidOperationException("Unable to attach to new SwapChainBackgroundPanel: Renderer is already attached to another one!"); }
+            if (m_targetPanel != null)
+            {
+                throw new InvalidOperationException("Unable to attach to new SwapChainBackgroundPanel: Renderer is already attached to another one!");
+            }
 
             m_lastRefreshTargetSize = new Size(0.0, 0.0);
             m_targetPanel = targetPanel;
@@ -208,8 +211,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_targetPanel == null) { return new Size2((int)MIN_PIXEL_SIZE_WIDTH, (int)MIN_PIXEL_SIZE_HEIGHT); }
 
-            double currentWidth = m_targetPanel.ActualWidth * m_targetPanel.CompositionScaleX;
-            double currentHeight = m_targetPanel.ActualHeight * m_targetPanel.CompositionScaleY;
+            var currentWidth = m_targetPanel.ActualWidth * m_targetPanel.CompositionScaleX;
+            var currentHeight = m_targetPanel.ActualHeight * m_targetPanel.CompositionScaleY;
 
             return new Size2(
                 (int)(currentWidth > MIN_PIXEL_SIZE_WIDTH ? currentWidth : MIN_PIXEL_SIZE_WIDTH),
@@ -224,8 +227,8 @@ namespace SeeingSharp.Multimedia.Views
             var viewSize = GetTargetRenderPixelSize();
             RenderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
             RenderLoop.SetCurrentViewSize(
-                (int)viewSize.Width,
-                (int)viewSize.Height);
+                viewSize.Width,
+                viewSize.Height);
         }
 
         /// <summary>
@@ -274,8 +277,8 @@ namespace SeeingSharp.Multimedia.Views
                 // Ignore event, if nothing has changed..
                 var actSize = GetTargetRenderPixelSize();
 
-                if (((int)m_lastRefreshTargetSize.Width == (int)actSize.Width) &&
-                    ((int)m_lastRefreshTargetSize.Height == (int)actSize.Height))
+                if (((int)m_lastRefreshTargetSize.Width == actSize.Width) &&
+                    ((int)m_lastRefreshTargetSize.Height == actSize.Height))
                 {
                     return;
                 }
@@ -302,8 +305,8 @@ namespace SeeingSharp.Multimedia.Views
 
             //Resize render target only on greater size changes
             var viewSize = GetTargetRenderPixelSize();
-            double resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? (double)viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / (double)viewSize.Width;
-            double resizeFactorHeight = (double)viewSize.Height > m_lastRefreshTargetSize.Height ? (double)viewSize.Height / m_lastRefreshTargetSize.Height : m_lastRefreshTargetSize.Height / (double)viewSize.Height;
+            var resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / viewSize.Width;
+            var resizeFactorHeight = (double)viewSize.Height > m_lastRefreshTargetSize.Height ? viewSize.Height / m_lastRefreshTargetSize.Height : m_lastRefreshTargetSize.Height / viewSize.Height;
 
             if ((resizeFactorWidth > 1.3) || (resizeFactorHeight > 1.3))
             {
@@ -320,8 +323,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e"></param>
         private void OnTargetPanel_CompositionScaleChanged(object sender, EventArgs e)
         {
-            this.UpdateRenderLoopViewSize();
-
+            UpdateRenderLoopViewSize();
             m_compositionScaleChanged = true;
         }
 
@@ -435,12 +437,15 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             // Handle thottled resizing of view resources
-            if ((m_lastSizeChange != DateTime.MinValue) &&
-                (DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
+            if ((m_lastSizeChange == DateTime.MinValue) || (DateTime.UtcNow - m_lastSizeChange <=
+                                                            SeeingSharpConstantsUwp
+                                                                .THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE))
             {
-                m_lastSizeChange = DateTime.MinValue;
-                UpdateRenderLoopViewSize();
+                return;
             }
+
+            m_lastSizeChange = DateTime.MinValue;
+            UpdateRenderLoopViewSize();
         }
 
         /// <summary>

@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -84,14 +83,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER_BLUR,
                 () => GraphicsHelper.GetPixelShaderResource(device, "Postprocessing", "PostprocessEdgeDetect"));
-            m_renderTarget = resources.GetResourceAndEnsureLoaded<RenderTargetTextureResource>(
+            m_renderTarget = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_TARGET,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));
             m_defaultResources = resources.DefaultResources;
 
             // Load constant buffer
             m_constantBufferData = new CBPerObject();
-            m_constantBuffer = resources.GetResourceAndEnsureLoaded<TypeSafeConstantBufferResource<CBPerObject>>(
+            m_constantBuffer = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerObject>(m_constantBufferData));
         }
@@ -121,7 +120,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             switch (passID)
             {
-                //******************************
+                // ******************************
                 // 1. Pass: Draw all pixels that ly behind other already rendered elements
                 case 0:
                     // Apply current render target size an push render target texture on current rendering stack
@@ -176,7 +175,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             switch (passID)
             {
                 case 0:
-                    base.ApplyAlphaBasedSpriteRendering(deviceContext);
+                    ApplyAlphaBasedSpriteRendering(deviceContext);
+
                     try
                     {
                         deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -187,8 +187,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
                     finally
                     {
-                        base.DiscardAlphaBasedSpriteRendering(deviceContext);
+                        DiscardAlphaBasedSpriteRendering(deviceContext);
                     }
+
                     return false;
             }
 
@@ -198,28 +199,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get
-            {
-                return (m_renderTarget != null) &&
-                       (m_renderTarget.IsLoaded);
-            }
-        }
+        public override bool IsLoaded =>
+            (m_renderTarget != null) &&
+            (m_renderTarget.IsLoaded);
 
         public float Thickness { get; set; }
 
         public Color4 BorderColor
         {
-            get { return m_borderColor; }
-            set { m_borderColor = value; }
+            get => m_borderColor;
+            set => m_borderColor = value;
         }
 
         public bool DrawOriginalObject { get; set; }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         [StructLayout(LayoutKind.Sequential)]
         private struct CBPerObject
         {

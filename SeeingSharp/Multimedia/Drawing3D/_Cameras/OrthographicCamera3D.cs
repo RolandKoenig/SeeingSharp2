@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (m_zoomFactor <= ZOOM_FACTOR_MIN) { m_zoomFactor = ZOOM_FACTOR_MIN; }
 
             MatrixEx.CreateOrthoLH(
-                (float)ScreenWidth / m_zoomFactor, (float)screenHeight / m_zoomFactor,
+                ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
                 Math.Abs(Math.Max(zNear, zFar)),
                 out projMatrix);
@@ -116,12 +116,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             while (Math.Abs(dist) > 1f)
             {
-                m_zoomFactor = m_zoomFactor + (float)Math.Sign(dist) * (m_zoomFactor / 10f);
-                dist = dist - (float)Math.Sign(dist);
+                m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
+                dist = dist - Math.Sign(dist);
             }
             m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
 
-            base.UpdateCamera();
+            UpdateCamera();
         }
 
         /// <summary>
@@ -129,14 +129,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZoomFactor
         {
-            get { return m_zoomFactor; }
+            get => m_zoomFactor;
             set
             {
-                if (m_zoomFactor != value)
+                if (m_zoomFactor == value)
                 {
-                    m_zoomFactor = value;
-                    base.UpdateCamera();
+                    return;
                 }
+
+                m_zoomFactor = value;
+                UpdateCamera();
             }
         }
     }

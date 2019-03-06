@@ -27,7 +27,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
     #region using
 
     using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Core;
     using SeeingSharp.Util;
@@ -88,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
 
-            byte[] result = new byte[m_wicBitmap.Size.Width * m_wicBitmap.Size.Height * 4];
+            var result = new byte[m_wicBitmap.Size.Width * m_wicBitmap.Size.Height * 4];
             m_wicBitmap.CopyPixels(result, m_wicBitmap.Size.Width * 4);
             return result;
         }
@@ -105,7 +104,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                if (m_wicBitmap == null)
+                {
+                    throw new ObjectDisposedException("WicBitmap");
+                }
+
                 return m_wicBitmap.Size.Width;
             }
         }
@@ -114,7 +117,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                if (m_wicBitmap == null)
+                {
+                    throw new ObjectDisposedException("WicBitmap");
+                }
+
                 return m_wicBitmap.Size.Height;
             }
         }

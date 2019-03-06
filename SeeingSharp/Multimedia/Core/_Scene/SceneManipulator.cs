@@ -149,13 +149,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             CheckValid();
 
-            if (!Owner.ContainsResource(resourceKey))
+            if (Owner.ContainsResource(resourceKey))
             {
-                var result = Owner.AddResource(resourceFactory, resourceKey);
-                m_createdResources.Add(result);
-                return result;
+                return resourceKey;
             }
-            return resourceKey;
+
+            var result = Owner.AddResource(resourceFactory, resourceKey);
+            m_createdResources.Add(result);
+            return result;
         }
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawingAction">The action that draws the scene.</param>
         public void AddDrawingLayer(Action<Graphics2D> drawingAction)
         {
-            this.AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
+            AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
         }
 
         /// <summary>
@@ -309,8 +310,8 @@ namespace SeeingSharp.Multimedia.Core
                 newStructure.RealignToCenter();
             }
 
-            var resTextGeometry = this.AddResource(() => new GeometryResource(newStructure));
-            return this.AddGeneric(resTextGeometry, layer);
+            var resTextGeometry = AddResource(() => new GeometryResource(newStructure));
+            return AddGeneric(resTextGeometry, layer);
         }
 
         /// <summary>
@@ -319,7 +320,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="geometryResource">The geometry to be used.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource)
         {
-            return this.Add(new GenericObject(geometryResource));
+            return Add(new GenericObject(geometryResource));
         }
 
         /// <summary>
@@ -329,7 +330,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, string layer)
         {
-            return this.Add(new GenericObject(geometryResource), layer);
+            return Add(new GenericObject(geometryResource), layer);
         }
 
         /// <summary>
@@ -344,7 +345,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return this.Add(newGenericObject);
+            return Add(newGenericObject);
         }
 
         /// <summary>
@@ -360,7 +361,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return this.Add(newGenericObject, layer);
+            return Add(newGenericObject, layer);
         }
 
         /// <summary>
@@ -371,7 +372,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                this.Add(actObject);
+                Add(actObject);
             }
 
             return sceneObjects;
@@ -386,7 +387,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                this.Add(actObject, layer);
+                Add(actObject, layer);
             }
 
             return sceneObjects;
@@ -562,27 +563,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all created objects.
         /// </summary>
-        public IEnumerable<SceneObject> CreatedObjects
-        {
-            get { return m_createdObjects; }
-        }
+        public IEnumerable<SceneObject> CreatedObjects => m_createdObjects;
 
-        public int CreatedObjectsCount
-        {
-            get { return m_createdObjects.Count; }
-        }
+        public int CreatedObjectsCount => m_createdObjects.Count;
 
         /// <summary>
         /// Gets a list containing all created resources.
         /// </summary>
-        public IEnumerable<NamedOrGenericKey> CreatedResources
-        {
-            get { return m_createdResources; }
-        }
+        public IEnumerable<NamedOrGenericKey> CreatedResources => m_createdResources;
 
-        public int CreatedResourcesCount
-        {
-            get { return m_createdResources.Count; }
-        }
+        public int CreatedResourcesCount => m_createdResources.Count;
     }
 }

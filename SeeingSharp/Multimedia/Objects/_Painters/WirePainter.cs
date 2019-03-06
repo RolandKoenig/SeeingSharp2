@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public void DrawLine(Vector3 start, Vector3 destination)
         {
-            this.DrawLine(start, destination, Color4.Black);
+            DrawLine(start, destination, Color4.Black);
         }
 
         public void DrawLine(Vector3 start, Vector3 destination, Color4 lineColor)
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            this.DrawTriangle(point1, point2, point3, Color4.Black);
+            DrawTriangle(point1, point2, point3, Color4.Black);
         }
 
         public void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3, Color4 lineColor)
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException($"This {nameof(WirePainter)} is only valid in the rendering pass that created it!");
             }
 
-            Line[] lineData = new Line[]
+            Line[] lineData =
             {
                 new Line(point1, point2),
                 new Line(point2, point3),

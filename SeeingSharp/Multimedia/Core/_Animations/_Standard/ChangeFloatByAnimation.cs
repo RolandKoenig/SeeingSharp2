@@ -32,14 +32,14 @@ namespace SeeingSharp.Multimedia.Core
 
     public class ChangeFloatByAnimation : AnimationBase
     {
-        //Configuration members
+        // Configuration members
         private Func<float> m_getValueFunc;
 
         private Action<float> m_setValueAction;
         private float m_increaseTotal;
         private TimeSpan m_timeSpan;
 
-        //Members for running animation
+        // Members for running animation
         private float m_alreadyIncreased;
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float currentLocationPercent = (float)(base.CurrentTime.TotalMilliseconds / base.FixedTime.TotalMilliseconds);
-            float toIncreaseTotal = m_increaseTotal * currentLocationPercent;
-            float toIncrease = toIncreaseTotal - m_alreadyIncreased;
+            var currentLocationPercent = (float)(CurrentTime.TotalMilliseconds / FixedTime.TotalMilliseconds);
+            var toIncreaseTotal = m_increaseTotal * currentLocationPercent;
+            var toIncrease = toIncreaseTotal - m_alreadyIncreased;
 
             m_setValueAction(m_getValueFunc() + toIncrease);
 
@@ -85,9 +85,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return false; }
-        }
+        public override bool IsBlockingAnimation => false;
     }
 }

@@ -42,22 +42,26 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_RelativeNamespace()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
+
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
                 string actLine;
+
                 while(null != (actLine = inStreamReader.ReadLine()))
                 {
-                    if (actLine.StartsWith("#include"))
+                    if (!actLine.StartsWith("#include"))
                     {
-                        foundIncludeLine = true;
-                        break;
+                        continue;
                     }
+
+                    foundIncludeLine = true;
+                    break;
                 }
             }
 
@@ -69,23 +73,27 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_AnotherFile()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
             resLink = resLink.GetForAnotherFile("CommonPixelShader.hlsl", "..", "Dummy2");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
+
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
                 string actLine;
+
                 while (null != (actLine = inStreamReader.ReadLine()))
                 {
-                    if (actLine.StartsWith("#include"))
+                    if (!actLine.StartsWith("#include"))
                     {
-                        foundIncludeLine = true;
-                        break;
+                        continue;
                     }
+
+                    foundIncludeLine = true;
+                    break;
                 }
             }
 
@@ -97,22 +105,26 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_OpenForReading_FullNamespace()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType().Assembly,
+                GetType().Assembly,
                 "SeeingSharp.Tests.AssemblyResourcesAndShaderTests.Dummy",
                 "CommonPixelShader.hlsl");
 
-            bool foundIncludeLine = false;
+            var foundIncludeLine = false;
+
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
                 string actLine;
+
                 while (null != (actLine = inStreamReader.ReadLine()))
                 {
-                    if (actLine.StartsWith("#include"))
+                    if (!actLine.StartsWith("#include"))
                     {
-                        foundIncludeLine = true;
-                        break;
+                        continue;
                     }
+
+                    foundIncludeLine = true;
+                    break;
                 }
             }
 

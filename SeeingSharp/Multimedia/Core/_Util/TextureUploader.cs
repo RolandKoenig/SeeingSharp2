@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         private SharpDX.DXGI.Format m_format;
         private bool m_isMultisampled;
 
-        //Direct3D resources for rendertarget capturing
+        // Direct3D resources for rendertarget capturing
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Core
                 (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING) &&
                 (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D))
             {
-                throw new SeeingSharpGraphicsException(string.Format("Invalid format for texture uploading to a color map ({0})!", m_format));
+                throw new SeeingSharpGraphicsException($"Invalid format for texture uploading to a color map ({m_format})!");
             }
 
             // Upload the texture
@@ -124,16 +124,18 @@ namespace SeeingSharp.Multimedia.Core
                 var rowPitchSource = dataBox.RowPitch;
                 var rowPitchDestination = intBuffer.Width * 4;
 
-                if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
-                    (rowPitchDestination > 0) && (rowPitchDestination < 20000))
+                if ((rowPitchSource <= 0) || (rowPitchSource >= 20000) || (rowPitchDestination <= 0) ||
+                    (rowPitchDestination >= 20000))
                 {
-                    for (var loopY = 0; loopY < m_height; loopY++)
-                    {
-                        SeeingSharpTools.CopyMemory(
-                            dataBox.DataPointer + loopY * rowPitchSource,
-                            intBuffer.Pointer + loopY * rowPitchDestination,
-                            (ulong)rowPitchDestination);
-                    }
+                    return;
+                }
+
+                for (var loopY = 0; loopY < m_height; loopY++)
+                {
+                    SeeingSharpTools.CopyMemory(
+                        dataBox.DataPointer + loopY * rowPitchSource,
+                        intBuffer.Pointer + loopY * rowPitchDestination,
+                        (ulong)rowPitchDestination);
                 }
             }
             finally
@@ -186,19 +188,21 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
 
-                int rowPitchSource = dataBox.RowPitch;
-                int rowPitchDestination = floatBuffer.Width * 4;
+                var rowPitchSource = dataBox.RowPitch;
+                var rowPitchDestination = floatBuffer.Width * 4;
 
-                if ((rowPitchSource > 0) && (rowPitchSource < 20000) &&
-                    (rowPitchDestination > 0) && (rowPitchDestination < 20000))
+                if ((rowPitchSource <= 0) || (rowPitchSource >= 20000) || (rowPitchDestination <= 0) ||
+                    (rowPitchDestination >= 20000))
                 {
-                    for (var loopY = 0; loopY < m_height; loopY++)
-                    {
-                        SeeingSharpTools.CopyMemory(
-                            dataBox.DataPointer + loopY * rowPitchSource,
-                            floatBuffer.Pointer + loopY * rowPitchDestination,
-                            (ulong)rowPitchDestination);
-                    }
+                    return;
+                }
+
+                for (var loopY = 0; loopY < m_height; loopY++)
+                {
+                    SeeingSharpTools.CopyMemory(
+                        dataBox.DataPointer + loopY * rowPitchSource,
+                        floatBuffer.Pointer + loopY * rowPitchDestination,
+                        (ulong)rowPitchDestination);
                 }
             }
             finally

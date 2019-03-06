@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Core
     public class ViewInformation
     {
         #region Runtime values
-        private BoundingFrustum m_cameraFrustum;
+
         #endregion
 
         #region Object filters for the scene model
@@ -47,12 +47,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal ViewInformation(RenderLoop owner)
         {
-            this.Owner = owner;
+            Owner = owner;
 
-            //Initialize scene object filter
+            // Initialize scene object filter
             m_sceneObjectFilters = new List<SceneObjectFilter>();
 
-            this.ViewIndex = -1;
+            ViewIndex = -1;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewProjectionMatrix"></param>
         internal void UpdateFrustum(Matrix viewProjectionMatrix)
         {
-            m_cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
+            CameraBoundingFrustum = new BoundingFrustum(viewProjectionMatrix);
         }
 
         public static implicit operator ViewInformation(RenderLoop renderLoop)
@@ -72,58 +72,37 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current view size.
         /// </summary>
-        public Size2 CurrentViewSize
-        {
-            get { return Owner.CurrentViewSize; }
-        }
+        public Size2 CurrentViewSize => Owner.CurrentViewSize;
 
         /// <summary>
         /// Gets the camera object that belongs to this view.
         /// </summary>
-        public Camera3DBase Camera
-        {
-            get { return Owner.Camera; }
-        }
+        public Camera3DBase Camera => Owner.Camera;
 
         /// <summary>
         /// Gets the device this view is using.
         /// </summary>
-        public EngineDevice Device
-        {
-            get { return Owner.Device; }
-        }
+        public EngineDevice Device => Owner.Device;
 
         /// <summary>
         /// Gets the current scene rendered by this view.
         /// </summary>
-        public Scene Scene
-        {
-            get { return Owner.Scene; }
-        }
+        public Scene Scene => Owner.Scene;
 
         /// <summary>
         /// Gets the bounding frustum defining the area the camera sees in the 3D wordl.
         /// </summary>
-        public BoundingFrustum CameraBoundingFrustum
-        {
-            get { return m_cameraFrustum; }
-        }
+        public BoundingFrustum CameraBoundingFrustum { get; private set; }
 
         /// <summary>
         /// Gets the configuration that belongs to this view.
         /// </summary>
-        public GraphicsViewConfiguration ViewConfiguration
-        {
-            get { return Owner.ViewConfiguration; }
-        }
+        public GraphicsViewConfiguration ViewConfiguration => Owner.ViewConfiguration;
 
         /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> Filters
-        {
-            get { return Owner.Filters; }
-        }
+        internal List<SceneObjectFilter> Filters => Owner.Filters;
 
         /// <summary>
         /// Gets or sets the index of this view.

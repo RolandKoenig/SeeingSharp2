@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             // Check for minimum screen size
             var screenSize = graphics.ScreenSize;
 
-            if((screenSize.Width < 300f) ||
+            if ((screenSize.Width < 300f) ||
                (screenSize.Height < 100f))
             {
                 return;

@@ -44,8 +44,8 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreateOrthoLH(float width, float height, float znear, float zfar, out Matrix result)
         {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
 
             CreateOrthoOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -75,8 +75,8 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreateOrthoRH(float width, float height, float znear, float zfar, out Matrix result)
         {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
 
             CreateOrthoOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -108,7 +108,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
-            float zRange = 1.0f / (zfar - znear);
+            var zRange = 1.0f / (zfar - znear);
 
             result = Matrix.Identity;
             result.M11 = 2.0f / (right - left);
@@ -195,8 +195,8 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreatePerspectiveLH(float width, float height, float znear, float zfar, out Matrix result)
         {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
 
             CreatePerspectiveOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -226,8 +226,8 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreatePerspectiveRH(float width, float height, float znear, float zfar, out Matrix result)
         {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
 
             CreatePerspectiveOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -257,11 +257,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
-            float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
-            float xScale = yScale / aspect;
-
-            float halfWidth = znear / xScale;
-            float halfHeight = znear / yScale;
+            var yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
+            var xScale = yScale / aspect;
+            var halfWidth = znear / xScale;
+            var halfHeight = znear / yScale;
 
             CreatePerspectiveOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -291,11 +290,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
-            float yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
-            float xScale = yScale / aspect;
-
-            float halfWidth = znear / xScale;
-            float halfHeight = znear / yScale;
+            var yScale = (float)(1.0 / Math.Tan(fov * 0.5f));
+            var xScale = yScale / aspect;
+            var halfWidth = znear / xScale;
+            var halfHeight = znear / yScale;
 
             CreatePerspectiveOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
@@ -327,7 +325,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
         public static void CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
-            float zRange = zfar / (zfar - znear);
+            var zRange = zfar / (zfar - znear);
 
             result = new Matrix
             {
@@ -547,11 +545,16 @@ namespace SeeingSharp
         public static float GetValue(Matrix matrix, int row, int column)
         {
             if (row < 0 || row > 3)
+            {
                 throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
-            if (column < 0 || column > 3)
-                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+            }
 
-            return GetValue(matrix,(row * 4) + column);
+            if (column < 0 || column > 3)
+            {
+                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+            }
+
+            return GetValue(matrix, (row * 4) + column);
         }
 
         /// <summary>

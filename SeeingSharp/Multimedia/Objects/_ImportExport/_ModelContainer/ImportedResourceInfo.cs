@@ -41,13 +41,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="resourceFactory">The resource factory.</param>
         public ImportedResourceInfo(NamedOrGenericKey resourceKey, Func<Resource> resourceFactory)
         {
-            this.ResourceKey = resourceKey;
-            this.ResourceFactory = resourceFactory;
+            ResourceKey = resourceKey;
+            ResourceFactory = resourceFactory;
         }
 
         public override string ToString()
         {
-            return this.ResourceKey.ToString();
+            return ResourceKey.ToString();
         }
 
         public NamedOrGenericKey ResourceKey

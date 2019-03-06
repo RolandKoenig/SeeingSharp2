@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal ObjectRenderParameters()
         {
-            this.NeedsRefresh = true;
+            NeedsRefresh = true;
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void MarkForUnloading()
         {
-            if(base.Dictionary != null)
+            if (Dictionary != null)
             {
-                base.Dictionary.MarkForUnloading(this);
+                Dictionary.MarkForUnloading(this);
             }
         }
 
@@ -107,7 +107,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_cbPerObject = null;
 
-            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
+            // resources.RemoveResource(KEY_CONSTANT_BUFFER);
         }
 
         /// <summary>
@@ -118,9 +118,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_cbPerObject != null; }
-        }
+        public override bool IsLoaded => m_cbPerObject != null;
     }
 }

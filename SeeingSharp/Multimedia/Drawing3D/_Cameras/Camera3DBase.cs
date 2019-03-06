@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Vector3 m_look;
         private Matrix m_view;
         private Matrix m_project;
-        private Matrix m_viewProj;
+
         #endregion
 
         #region Additional parameters
@@ -70,7 +70,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Camera3DBase()
             : this(100, 100)
         {
-
         }
 
         /// <summary>
@@ -94,8 +93,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="camera3DViewPoint">The ViewPoint to be applied.</param>
         public virtual void ApplyViewPoint(Camera3DViewPoint camera3DViewPoint)
         {
-            this.Position = camera3DViewPoint.Position;
-            this.TargetRotation = camera3DViewPoint.Rotation;
+            Position = camera3DViewPoint.Position;
+            TargetRotation = camera3DViewPoint.Rotation;
         }
 
         /// <summary>
@@ -105,8 +104,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var result = new Camera3DViewPoint
             {
-                Position = this.Position,
-                Rotation = this.TargetRotation
+                Position = Position,
+                Rotation = TargetRotation
             };
 
             return result;
@@ -129,7 +128,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             CalculateViewProjectionMatrices(
                 m_position, newTarget, m_upVector, m_zNear, m_zFar, ScreenWidth, ScreenHeight,
                 out m_view, out m_project);
-            m_viewProj = m_view * m_project;
+            ViewProjection = m_view * m_project;
 
             // Calculate right, up and look vectors
             m_right.X = m_view.M11;
@@ -142,7 +141,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_look.Y = m_view.M23;
             m_look.Z = m_view.M33;
 
-            this.StateChanged = true;
+            StateChanged = true;
         }
 
         /// <summary>
@@ -303,56 +302,43 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves the view-matrix.
         /// </summary>
-        public Matrix View
-        {
-            get { return m_view; }
-        }
+        public Matrix View => m_view;
 
         /// <summary>
         /// Gets the view-projection matrix.
         /// </summary>
-        public Matrix ViewProjection
-        {
-            get { return m_viewProj; }
-        }
+        public Matrix ViewProjection { get; private set; }
 
         /// <summary>
         /// Retrieves or sets the direction / target.
         /// </summary>
-        public Vector3 Direction
-        {
-            get { return m_look; }
-        }
+        public Vector3 Direction => m_look;
 
         /// <summary>
         /// Retrieves a vector, wich is targeting right.
         /// </summary>
-        public Vector3 Right
-        {
-            get { return m_right; }
-        }
+        public Vector3 Right => m_right;
 
         /// <summary>
         /// Retrieves a vector, wich is targiting upwards.
         /// </summary>
-        public Vector3 Up
-        {
-            get { return m_up; }
-        }
+        public Vector3 Up => m_up;
 
         /// <summary>
         /// Gets or sets the vector that points up.
         /// </summary>
         public Vector3 UpVector
         {
-            get { return m_upVector; }
+            get => m_upVector;
             set
             {
-                if (m_upVector != value)
+                if (m_upVector == value)
                 {
-                    m_upVector = value;
-                    this.UpdateCamera();
+                    return;
                 }
+
+                m_upVector = value;
+                UpdateCamera();
             }
         }
 
@@ -364,7 +350,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector2 TargetRotation
         {
-            get { return new Vector2(m_hRotation, m_vRotation); }
+            get => new Vector2(m_hRotation, m_vRotation);
             set
             {
                 var v = value;
@@ -388,8 +374,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 Target
         {
-            get { return m_relativeTarget + m_position; }
-            set { this.RelativeTarget = value - m_position; }
+            get => m_relativeTarget + m_position;
+            set => RelativeTarget = value - m_position;
         }
 
         /// <summary>
@@ -397,12 +383,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 RelativeTarget
         {
-            get { return m_relativeTarget; }
+            get => m_relativeTarget;
             set
             {
                 m_relativeTarget = Vector3.Normalize(value);
 
-                //Update horizontal and vertical rotation
+                // Update horizontal and vertical rotation
                 Vector3Ex.ToHVRotation(m_relativeTarget, out m_hRotation, out m_vRotation);
 
                 UpdateCamera();
@@ -414,7 +400,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZNear
         {
-            get { return m_zNear; }
+            get => m_zNear;
             set
             {
                 m_zNear = value;
@@ -427,7 +413,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZFar
         {
-            get { return m_zFar; }
+            get => m_zFar;
             set
             {
                 m_zFar = value;
@@ -440,7 +426,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 Position
         {
-            get { return m_position; }
+            get => m_position;
             set
             {
                 m_position = value;
@@ -452,13 +438,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves projection-matrix.
         /// </summary>
-        public Matrix Projection
-        {
-            get
-            {
-                return m_project;
-            }
-        }
+        public Matrix Projection => m_project;
 
         /// <summary>
         /// Width of the screen.

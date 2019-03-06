@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Objects
                     .GetType().GetTypeInfo()
                     .GetCustomAttributes<SupportedFileFormatAttribute>())
                 {
-                    string actFileFormat = actSupportedFile.ShortFormatName.ToLower();
+                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
                     m_importersByFileType[actFileFormat] = actImporter;
                     m_infoByFileType[actFileFormat] = actSupportedFile;
                 }
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Objects
                     .GetType().GetTypeInfo()
                     .GetCustomAttributes<SupportedFileFormatAttribute>())
                 {
-                    string actFileFormat = actSupportedFile.ShortFormatName.ToLower();
+                    var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
                     m_exportersByFileType[actFileFormat] = actExporter;
                     m_infoByFileType[actFileFormat] = actSupportedFile;
                 }
@@ -114,9 +114,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Write first item (all formats)
             filterBuilder.Append("All supported files|");
-            bool isFirst = true;
+            var isFirst = true;
 
-            foreach (var actSupportedFormat in this.GetSupportedImportFormats())
+            foreach (var actSupportedFormat in GetSupportedImportFormats())
             {
                 if (!isFirst)
                 {
@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Write next items (each format separated)
-            foreach (var actSupportedFormat in this.GetSupportedImportFormats())
+            foreach (var actSupportedFormat in GetSupportedImportFormats())
             {
                 filterBuilder.Append('|');
                 filterBuilder.Append("." + actSupportedFormat.ShortFormatName);
@@ -183,7 +183,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Start the loading task
-            return Task.Factory.StartNew<ImportedModelContainer>(() =>
+            return Task.Factory.StartNew(() =>
             {
                 return importer.ImportModel(source, importOptions);
             });
@@ -196,12 +196,13 @@ namespace SeeingSharp.Multimedia.Objects
         private IModelImporter GetImporterBySource(ResourceLink source)
         {
             // Query for file extension
-            string fileExtension = source.FileExtension;
+            var fileExtension = source.FileExtension;
+
             if (string.IsNullOrEmpty(fileExtension))
             {
-                throw new SeeingSharpGraphicsException(string.Format(
-                    "Unable to query for file extension from source {0}", source));
+                throw new SeeingSharpGraphicsException($"Unable to query for file extension from source {source}");
             }
+
             return GetImporterByFileType(fileExtension);
         }
 
@@ -215,11 +216,12 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Query for importer object
             IModelImporter importer = null;
+
             if (!m_importersByFileType.TryGetValue(fileExtension, out importer))
             {
-                throw new SeeingSharpGraphicsException(string.Format(
-                    "No importer found for file type {0}", fileExtension));
+                throw new SeeingSharpGraphicsException($"No importer found for file type {fileExtension}");
             }
+
             return importer;
         }
     }

@@ -88,13 +88,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
 
-            if (loadedBrush.Brush != null)
+            if (loadedBrush.Brush == null)
             {
-                loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
-                loadedBrush.GradientStops = SeeingSharpTools.DisposeObject(loadedBrush.GradientStops);
-
-                m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
+                return;
             }
+
+            loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
+            loadedBrush.GradientStops = SeeingSharpTools.DisposeObject(loadedBrush.GradientStops);
+            m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
         }
 
         /// <summary>
@@ -104,55 +105,57 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
 
-            if (result.Brush == null)
+            if (result.Brush != null)
             {
-                // Convert gradient stops to structure from SharpDX
-                D2D.GradientStop[] d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
-
-                for(var loop =0; loop<d2dGradientStops.Length; loop++)
-                {
-                    d2dGradientStops[loop] = new D2D.GradientStop()
-                    {
-                        Color = m_gradientStops[loop].Color,
-                        Position = m_gradientStops[loop].Position
-                    };
-                }
-
-                // Create the brush
-                result = new LoadedBrushResources
-                {
-                    GradientStops = new D2D.GradientStopCollection(
-                        engineDevice.FakeRenderTarget2D,
-                        d2dGradientStops,
-                        (D2D.Gamma) Gamma,
-                        (D2D.ExtendMode) ExtendMode)
-                };
-
-                result.Brush = new D2D.RadialGradientBrush(
-                    engineDevice.FakeRenderTarget2D,
-                    new D2D.RadialGradientBrushProperties()
-                    {
-                        Center = Center,
-                        GradientOriginOffset = GradientOriginOffset,
-                        RadiusX = RadiusX,
-                        RadiusY = RadiusY
-                    },
-                    new D2D.BrushProperties()
-                    {
-                        Opacity = m_opacity,
-                        Transform = Matrix3x2.Identity
-                    },
-                    result.GradientStops);
-
-                m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                return result.Brush;
             }
+
+            // Convert gradient stops to structure from SharpDX
+            var d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
+
+            for (var loop = 0; loop < d2dGradientStops.Length; loop++)
+            {
+                d2dGradientStops[loop] = new D2D.GradientStop
+                {
+                    Color = m_gradientStops[loop].Color,
+                    Position = m_gradientStops[loop].Position
+                };
+            }
+
+            // Create the brush
+            result = new LoadedBrushResources
+            {
+                GradientStops = new D2D.GradientStopCollection(
+                    engineDevice.FakeRenderTarget2D,
+                    d2dGradientStops,
+                    (D2D.Gamma)Gamma,
+                    (D2D.ExtendMode)ExtendMode)
+            };
+
+            result.Brush = new D2D.RadialGradientBrush(
+                engineDevice.FakeRenderTarget2D,
+                new D2D.RadialGradientBrushProperties
+                {
+                    Center = Center,
+                    GradientOriginOffset = GradientOriginOffset,
+                    RadiusX = RadiusX,
+                    RadiusY = RadiusY
+                },
+                new D2D.BrushProperties
+                {
+                    Opacity = m_opacity,
+                    Transform = Matrix3x2.Identity
+                },
+                result.GradientStops);
+
+            m_loadedBrushes[engineDevice.DeviceIndex] = result;
 
             return result.Brush;
         }
@@ -169,9 +172,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public float RadiusY { get; }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         /// <summary>
         /// A simple helper storing both resurces..
         ///  - the GradientStopCollection

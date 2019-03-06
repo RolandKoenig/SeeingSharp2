@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Core
             m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
             m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
 
-            this.CachedUpdateState = new SceneRelatedUpdateState(this);
+            CachedUpdateState = new SceneRelatedUpdateState(this);
 
             // Try to initialize this scene object
             InitializeResourceDictionaries();
@@ -148,8 +148,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">Only return objects of this layer (empty means all layers).</param>
         public async Task<List<SceneObjectInfo>> GetSceneObjectInfoAsync(string layer = "")
         {
-            List<SceneObjectInfo> result = new List<SceneObjectInfo>(16);
-            await this.PerformBesideRenderingAsync(() =>
+            var result = new List<SceneObjectInfo>(16);
+
+            await PerformBesideRenderingAsync(() =>
             {
                 foreach(var actLayer in m_sceneLayers)
                 {
@@ -162,8 +163,12 @@ namespace SeeingSharp.Multimedia.Core
 
                     foreach(var actSceneObject in actLayer.ObjectsInternal)
                     {
-                        if (actSceneObject.HasChilds) { continue; }
-                        result.Add(new Core.SceneObjectInfo(actSceneObject, buildFullChildTree: true));
+                        if (actSceneObject.HasChilds)
+                        {
+                            continue;
+                        }
+
+                        result.Add(new SceneObjectInfo(actSceneObject, buildFullChildTree: true));
                     }
                 }
             });
@@ -181,7 +186,8 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureObjectOfScene(this, nameof(sceneObject));
 
             SceneObjectInfo result = null;
-            await this.PerformBesideRenderingAsync(() =>
+
+            await PerformBesideRenderingAsync(() =>
             {
                 result = new SceneObjectInfo(sceneObject, buildFullChildTree: true);
             });
@@ -200,10 +206,11 @@ namespace SeeingSharp.Multimedia.Core
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            TaskCompletionSource<object> taskComplSource = new TaskCompletionSource<object>();
+            var taskComplSource = new TaskCompletionSource<object>();
 
             // Define the poll action (polling is done inside scene update
             Action pollAction = null;
+
             pollAction = () =>
             {
                 if (AreAllObjectsVisible(sceneObjects, viewInfo))
@@ -285,7 +292,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var manipulator = new SceneManipulator(this);
 
-            return this.PerformBeforeUpdateAsync(() =>
+            return PerformBeforeUpdateAsync(() =>
             {
                 try
                 {
@@ -398,7 +405,7 @@ namespace SeeingSharp.Multimedia.Core
             pickingOptions.EnsureNotNull(nameof(pickingOptions));
 
             // Query for all objects below the cursor
-            List<Tuple<SceneObject, float>> pickedObjects = new List<Tuple<SceneObject, float>>();
+            var pickedObjects = new List<Tuple<SceneObject, float>>();
 
             foreach (var actLayer in m_sceneLayers)
             {
@@ -407,7 +414,7 @@ namespace SeeingSharp.Multimedia.Core
                     if (!actObject.IsVisible(viewInformation)) { continue; }
                     if (!actObject.IsPickingTestVisible) { continue; }
 
-                    float actDistance = actObject.Pick(rayStart, rayDirection, viewInformation, pickingOptions);
+                    var actDistance = actObject.Pick(rayStart, rayDirection, viewInformation, pickingOptions);
 
                     if (!float.IsNaN(actDistance))
                     {
@@ -491,7 +498,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             viewInformation.EnsureNotNull(nameof(viewInformation));
 
-            bool isFirstView = m_registeredViews.Count == 0;
+            var isFirstView = m_registeredViews.Count == 0;
 
             InitializeResourceDictionaries();
 
@@ -512,7 +519,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Register this view on this scene and on all layers
-            int viewIndex = m_registeredViews.AddObject(viewInformation);
+            var viewIndex = m_registeredViews.AddObject(viewInformation);
 
             foreach (var actLayer in m_sceneLayers)
             {
@@ -556,7 +563,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Deregister the view on this scene and all layers
-            int viewIndex = m_registeredViews.IndexOf(viewInformation);
+            var viewIndex = m_registeredViews.IndexOf(viewInformation);
             m_registeredViews.RemoveObject(viewInformation);
 
             foreach (var actLayer in m_sceneLayers)
@@ -569,7 +576,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Mark this scene for deletion if we don't have any other view registered
             if ((m_registeredViews.Count <= 0) &&
-                (!this.DiscardAutomaticUnload))
+                (!DiscardAutomaticUnload))
             {
                 GraphicsCore.Current.MainLoop.RegisterSceneForUnload(this);
             }
@@ -644,7 +651,7 @@ namespace SeeingSharp.Multimedia.Core
             layer.OrderID = newOrderID;
 
             // Sort local layer list
-            this.SortLayers();
+            SortLayers();
         }
 
         /// <summary>
@@ -746,31 +753,35 @@ namespace SeeingSharp.Multimedia.Core
                 var actLayer = m_sceneLayers[loop];
                 actLayer.ClearObjects();
 
-                if (actLayer.Name != DEFAULT_LAYER_NAME)
+                if (actLayer.Name == DEFAULT_LAYER_NAME)
                 {
-                    m_sceneLayers.RemoveAt(loop);
-                    loop--;
+                    continue;
                 }
+
+                m_sceneLayers.RemoveAt(loop);
+                loop--;
             }
 
             // Clears all 2D drawing layers
             m_drawing2DLayers.Clear();
 
             // Clear all resources
-            if (clearResources)
+            if (!clearResources)
             {
-                foreach (var actDictionary in m_registeredResourceDicts)
-                {
-                    actDictionary.Clear();
-                }
+                return;
+            }
 
-                m_renderParameters.Clear();
+            foreach (var actDictionary in m_registeredResourceDicts)
+            {
+                actDictionary.Clear();
+            }
 
-                for (var loop = 0; loop < m_sceneLayers.Count; loop++)
-                {
-                    SceneLayer actLayer = m_sceneLayers[loop];
-                    actLayer.ClearResources();
-                }
+            m_renderParameters.Clear();
+
+            for (var loop = 0; loop < m_sceneLayers.Count; loop++)
+            {
+                var actLayer = m_sceneLayers[loop];
+                actLayer.ClearResources();
             }
         }
 
@@ -780,7 +791,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach(var actObject in sceneObjects)
             {
-                this.Remove(actObject);
+                Remove(actObject);
             }
         }
 
@@ -790,7 +801,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach (var actObject in sceneObjects)
             {
-                this.Remove(actObject, layerName);
+                Remove(actObject, layerName);
             }
         }
 
@@ -831,7 +842,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>();
 
             m_asyncInvokesBeforeUpdate.Enqueue(() =>
             {
@@ -859,7 +870,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>();
 
             m_asyncInvokesUpdateBesideRendering.Enqueue(() =>
             {
@@ -894,12 +905,12 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneComponents.UpdateSceneComponents(updateState);
 
             // Invoke all async action attached to this scene
-            int asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
+            var asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
 
             if (asyncActionsBeforeUpdateCount > 0)
             {
                 Action actAsyncAction = null;
-                int actIndex = 0;
+                var actIndex = 0;
 
                 while ((actIndex < asyncActionsBeforeUpdateCount) &&
                        m_asyncInvokesBeforeUpdate.Dequeue(out actAsyncAction))
@@ -1024,7 +1035,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (renderParameters == null)
             {
-                renderParameters = resources.GetResourceAndEnsureLoaded<SceneRenderParameters>(
+                renderParameters = resources.GetResourceAndEnsureLoaded(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new SceneRenderParameters());
                 m_renderParameters.AddObject(renderParameters, renderState.DeviceIndex);
@@ -1065,7 +1076,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var graphics = renderState.Graphics2D;
 
-            graphics.PushTransformSettings(new Graphics2DTransformSettings()
+            graphics.PushTransformSettings(new Graphics2DTransformSettings
             {
                 CustomTransform = CustomTransform2D,
                 TransformMode = TransformMode2D,
@@ -1168,7 +1179,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                int result = 0;
+                var result = 0;
 
                 foreach (var actLayer in m_sceneLayers)
                 {

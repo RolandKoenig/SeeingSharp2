@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -66,19 +65,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if (m_texture == null)
+            if (m_texture != null)
             {
-                // Load from mapped texture
-                if(m_mappedTexture != null)
-                {
-                    m_texture = GraphicsHelper.LoadTexture2DFromMappedTexture(device, m_mappedTexture);
-                    m_textureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_texture);
+                return;
+            }
 
-                    return;
-                }
-
+            // Load from mapped texture
+            if (m_mappedTexture == null)
+            {
                 throw new SeeingSharpException("Unable to load BitmapTextureResource: No resource loader implemented!");
             }
+
+            m_texture = GraphicsHelper.LoadTexture2DFromMappedTexture(device, m_mappedTexture);
+            m_textureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_texture);
+
+            return;
         }
 
         /// <summary>
@@ -86,45 +87,35 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if (m_texture != null)
+            if (m_texture == null)
             {
-                m_textureView = SeeingSharpTools.DisposeObject(m_textureView);
-                m_texture = SeeingSharpTools.DisposeObject(m_texture);
+                return;
             }
+
+            m_textureView = SeeingSharpTools.DisposeObject(m_textureView);
+            m_texture = SeeingSharpTools.DisposeObject(m_texture);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_texture != null; }
-        }
+        public override bool IsLoaded => m_texture != null;
 
         /// <summary>
         /// Gets the texture.
         /// </summary>
-        public override D3D11.Texture2D Texture
-        {
-            get { return m_texture; }
-        }
+        public override D3D11.Texture2D Texture => m_texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView
-        {
-            get { return m_textureView; }
-        }
+        public override D3D11.ShaderResourceView TextureView => m_textureView;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize
-        {
-            get { return m_texture.Description.ArraySize; }
-        }
+        public override int ArraySize => m_texture.Description.ArraySize;
     }
 }

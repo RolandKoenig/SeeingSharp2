@@ -52,7 +52,11 @@ namespace SeeingSharp.Util
         // Creates a new instance with the specified degree of parallelism.
         public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
         {
-            if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
+            if (maxDegreeOfParallelism < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
+            }
+
             MaximumConcurrencyLevel = maxDegreeOfParallelism;
         }
 
@@ -64,11 +68,14 @@ namespace SeeingSharp.Util
             lock (_tasks)
             {
                 _tasks.AddLast(task);
-                if (_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
+
+                if (_delegatesQueuedOrRunning >= MaximumConcurrencyLevel)
                 {
-                    ++_delegatesQueuedOrRunning;
-                    NotifyThreadPoolOfPendingWork();
+                    return;
                 }
+
+                ++_delegatesQueuedOrRunning;
+                NotifyThreadPoolOfPendingWork();
             }
         }
 
@@ -103,7 +110,7 @@ namespace SeeingSharp.Util
                             }
 
                             // Execute the task we pulled out of the queue
-                            base.TryExecuteTask(item);
+                            TryExecuteTask(item);
                         }
                     }
                     // We're done processing items on the current thread
@@ -116,17 +123,28 @@ namespace SeeingSharp.Util
         protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             // If this thread isn't already processing a task, we don't support inlining
-            if (!_currentThreadIsProcessingItems) return false;
+            if (!_currentThreadIsProcessingItems)
+            {
+                return false;
+            }
 
             // If the task was previously queued, remove it from the queue
             if (taskWasPreviouslyQueued)
+            {
                 // Try to run the task.
                 if (TryDequeue(task))
-                    return base.TryExecuteTask(task);
+                {
+                    return TryExecuteTask(task);
+                }
                 else
+                {
                     return false;
+                }
+            }
             else
-                return base.TryExecuteTask(task);
+            {
+                return TryExecuteTask(task);
+            }
         }
 
         // Attempt to remove a previously scheduled task from the scheduler.
@@ -141,16 +159,27 @@ namespace SeeingSharp.Util
         // Gets an enumerable of the tasks currently scheduled on this scheduler.
         protected sealed override IEnumerable<Task> GetScheduledTasks()
         {
-            bool lockTaken = false;
+            var lockTaken = false;
+
             try
             {
                 Monitor.TryEnter(_tasks, ref lockTaken);
-                if (lockTaken) return _tasks;
-                else throw new NotSupportedException();
+
+                if (lockTaken)
+                {
+                    return _tasks;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
             finally
             {
-                if (lockTaken) Monitor.Exit(_tasks);
+                if (lockTaken)
+                {
+                    Monitor.Exit(_tasks);
+                }
             }
         }
     }

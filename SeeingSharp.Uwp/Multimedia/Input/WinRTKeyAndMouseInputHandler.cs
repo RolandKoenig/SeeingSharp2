@@ -74,9 +74,10 @@ namespace SeeingSharp.Multimedia.Input
         static WinRTKeyAndMouseInputHandler()
         {
             s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
-            foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
+
+            foreach (VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
             {
-                short actVirtualKeyCode = (short)actVirtualKey;
+                var actVirtualKeyCode = (short)actVirtualKey;
                 var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
                 s_keyMappingDict[actVirtualKey] = actWinVirtualKey;
             }
@@ -100,7 +101,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             return new Type[]
             {
-                typeof(SeeingSharpPanelPainter),
+                typeof(SeeingSharpPanelPainter)
             };
         }
 
@@ -113,14 +114,14 @@ namespace SeeingSharp.Multimedia.Input
             m_painter = viewObject as SeeingSharpPanelPainter;
             if (m_painter == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
-            m_viewInterface = m_painter as IInputEnabledView;
+            m_viewInterface = m_painter;
             if (m_viewInterface == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             m_renderLoop = m_viewInterface.RenderLoop;
             if (m_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             m_dispatcher = m_painter.Disptacher;
-            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDisptacher from target panel!"); }
+            if (m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDisptacher from target panel!"); }
 
             // Deligate start logic to UI thread
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -165,8 +166,9 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             m_hasFocus = false;
-            if(m_painter == null) { return; }
-            if(m_dispatcher == null) { return; }
+
+            if (m_painter == null) { return; }
+            if (m_dispatcher == null) { return; }
 
             // Deregister all events on UI thread
             var dummyButtonForFocus = m_dummyButtonForFocus;
@@ -217,7 +219,7 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if(m_painter == null) { return; }
+            if (m_painter == null) { return; }
 
             // This enables bubbling of the keyboard event
             e.Handled = false;
@@ -369,30 +371,39 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnTargetPanel_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            if (m_painter == null) { return; }
-            if (!m_hasFocus) { return; }
+            if (m_painter == null)
+            {
+                return;
+            }
+
+            if (!m_hasFocus)
+            {
+                return;
+            }
 
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
             var pointProperties = currentPoint.Properties;
-            int wheelDelta = pointProperties.MouseWheelDelta;
+            var wheelDelta = pointProperties.MouseWheelDelta;
 
-            if (pointProperties.IsPrimary)
+            if (!pointProperties.IsPrimary)
             {
-                m_stateMouseOrPointer.Internals.NotifyButtonStates(
-                    pointProperties.IsLeftButtonPressed,
-                    pointProperties.IsMiddleButtonPressed,
-                    pointProperties.IsRightButtonPressed,
-                    pointProperties.IsXButton1Pressed,
-                    pointProperties.IsXButton2Pressed);
-                m_stateMouseOrPointer.Internals.NotifyMouseWheel(wheelDelta);
+                return;
             }
+
+            m_stateMouseOrPointer.Internals.NotifyButtonStates(
+                pointProperties.IsLeftButtonPressed,
+                pointProperties.IsMiddleButtonPressed,
+                pointProperties.IsRightButtonPressed,
+                pointProperties.IsXButton1Pressed,
+                pointProperties.IsXButton2Pressed);
+            m_stateMouseOrPointer.Internals.NotifyMouseWheel(wheelDelta);
         }
 
         /// <summary>
         /// Called when mouse leaves the target panel.
         /// </summary>
-        private void OnTargetPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnTargetPanel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (m_painter == null) { return; }
 

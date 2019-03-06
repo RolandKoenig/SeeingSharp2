@@ -53,8 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         #endregion
 
         #region Generic resources
-        private BoundingBox m_boundingBox;
-        private ObjectType m_objectType;
+
         #endregion
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public GeometryResource(ObjectType objectType)
         {
-            m_objectType = objectType;
+            ObjectType = objectType;
 
             m_loadedStructures = new LoadedStructureInfo[0];
         }
@@ -82,8 +81,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ExportGeometryInfo PrepareForExport()
         {
             return new ExportGeometryInfo(
-                this.Key,
-                this.ObjectType);
+                Key,
+                ObjectType);
         }
 
         /// <summary>
@@ -92,12 +91,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public IEnumerable<MaterialResource> GetReferencedMaterials()
         {
             var loadedStructures = m_loadedStructures;
-            for(int loop=0; loop<loadedStructures.Length; loop++)
+
+            for (var loop = 0; loop < loadedStructures.Length; loop++)
             {
                 var actLoadedStructure = loadedStructures[loop];
-                if(actLoadedStructure == null) { continue; }
 
-                if(actLoadedStructure.Material != null) { yield return actLoadedStructure.Material; }
+                if (actLoadedStructure == null) { continue; }
+                if (actLoadedStructure.Material != null) { yield return actLoadedStructure.Material; }
             }
         }
 
@@ -115,17 +115,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
             for (var loop = 0; loop < m_loadedStructures.Length; loop++)
             {
                 var actLoadedStructure = m_loadedStructures[loop].VertexStructure;
+                var currentDistance = float.NaN;
 
-                float currentDistance = float.NaN;
-
-                if (actLoadedStructure.Intersects(pickingRay, pickingOptions, out currentDistance))
+                if (!actLoadedStructure.Intersects(pickingRay, pickingOptions, out currentDistance))
                 {
-                    result = true;
+                    continue;
+                }
 
-                    if (currentDistance < distance)
-                    {
-                        distance = currentDistance;
-                    }
+                result = true;
+
+                if (currentDistance < distance)
+                {
+                    distance = currentDistance;
                 }
             }
 
@@ -137,21 +138,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, ObjectType objectType)
         {
-            //Unload resource first if it was loaded
-            bool wasLoaded = this.IsLoaded;
+            // Unload resource first if it was loaded
+            var wasLoaded = IsLoaded;
+
             if (wasLoaded)
             {
-                this.UnloadResource();
+                UnloadResource();
             }
 
-            //Update members
-            m_objectType = objectType;
-            m_boundingBox = new BoundingBox();
+            // Update members
+            ObjectType = objectType;
+            BoundingBox = new BoundingBox();
 
-            //Reload resources again if they where loaded before
+            // Reload resources again if they where loaded before
             if (wasLoaded)
             {
-                this.LoadResource();
+                LoadResource();
             }
         }
 
@@ -160,7 +162,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, VertexStructure vertexStructures)
         {
-            this.Redefine(resources, new GenericObjectType(vertexStructures));
+            Redefine(resources, new GenericObjectType(vertexStructures));
         }
 
         /// <summary>
@@ -170,7 +172,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="pickingRay">The picking ray.</param>
         public void Pick(PickingInformation pickInformation, Ray pickingRay)
         {
-            if (pickingRay.Intersects(m_boundingBox))
+            if (pickingRay.Intersects(BoundingBox))
             {
 
             }
@@ -209,7 +211,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Apply material
                 renderState.ApplyMaterial(structureToDraw.Material);
                 D3D11.InputLayout newInputLayout = null;
-                if(renderState.ForcedMaterial != null)
+
+                if (renderState.ForcedMaterial != null)
                 {
                     newInputLayout = renderState.ForcedMaterial.GenerateInputLayout(
                         renderState.Device,
@@ -217,6 +220,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         MaterialApplyInstancingMode.SingleObject);
                     deviceContext.InputAssembler.InputLayout = newInputLayout;
                 }
+
                 try
                 {
                     // Draw current rener block
@@ -242,13 +246,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Build structures
-            VertexStructure[] structures = new VertexStructure[]
+            VertexStructure[] structures =
             {
-                m_objectType.BuildStructure(new StructureBuildOptions(device.SupportedDetailLevel))
+                ObjectType.BuildStructure(new StructureBuildOptions(device.SupportedDetailLevel))
             };
 
             // Build BoundingBox around all vertices
-            List<Vector3> vertexLocations = new List<Vector3>();
+            var vertexLocations = new List<Vector3>();
 
             for (var loop = 0; loop < structures.Length; loop++)
             {
@@ -258,7 +262,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
 
-            m_boundingBox = BoundingBoxEx.Create(vertexLocations);
+            BoundingBox = BoundingBoxEx.Create(vertexLocations);
 
             // Build geometry
             m_loadedStructures = BuildBuffers(device, structures, resources);
@@ -269,14 +273,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            for (int loop = 0; loop < m_loadedStructures.Length; loop++)
+            for (var loop = 0; loop < m_loadedStructures.Length; loop++)
             {
                 m_loadedStructures[loop].InputLayout = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].InputLayout);
                 m_loadedStructures[loop].VertexBuffer = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].VertexBuffer);
                 m_loadedStructures[loop].IndexBuffer = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].IndexBuffer);
             }
-            m_loadedStructures = new LoadedStructureInfo[0];
 
+            m_loadedStructures = new LoadedStructureInfo[0];
             device = null;
         }
 
@@ -288,17 +292,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">The current resource dictionary</param>
         protected virtual LoadedStructureInfo[] BuildBuffers(EngineDevice device, VertexStructure[] structures, ResourceDictionary resources)
         {
-            List<LoadedStructureInfo> result = new List<LoadedStructureInfo>(structures.Length * 2);
-            List<StandardVertex[]> cachedVertices = new List<StandardVertex[]>(2);
-            List<int[]> cachedIndices = new List<int[]>(6);
-
-            int structuresCount = structures.Length;
-            int actVertexCount = 0;
-            int actIndexCount = 0;
-            int lastFinishedVertexBufferResultIndex = -1;
-            int lastFinishedIndexBufferResultIndex = -1;
-            int vertexBufferID = 0;
-            int indexBufferID = 0;
+            var result = new List<LoadedStructureInfo>(structures.Length * 2);
+            var cachedVertices = new List<StandardVertex[]>(2);
+            var cachedIndices = new List<int[]>(6);
+            var structuresCount = structures.Length;
+            var actVertexCount = 0;
+            var actIndexCount = 0;
+            var lastFinishedVertexBufferResultIndex = -1;
+            var lastFinishedIndexBufferResultIndex = -1;
+            var vertexBufferID = 0;
+            var indexBufferID = 0;
 
             // Define the action which finishes current index buffer
             Action actionFinishIndexBuffer = () =>
@@ -344,32 +347,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
             };
 
             // Load all structures into memory within a loop
-            for(int loopStruct = 0; loopStruct<structuresCount; loopStruct++)
+            for (var loopStruct = 0; loopStruct < structuresCount; loopStruct++)
             {
                 var actStructure = structures[loopStruct];
 
-                if(actStructure.CountVertices == 0) { continue; }
-                if(actStructure.CountSurfaces == 0) { continue; }
+                if (actStructure.CountVertices == 0) { continue; }
+                if (actStructure.CountSurfaces == 0) { continue; }
 
                 // Handle vertex data
-                StandardVertex[] vertexArray = StandardVertex.FromVertexStructure(actStructure);
+                var vertexArray = StandardVertex.FromVertexStructure(actStructure);
 
-                if(actVertexCount + vertexArray.Length > MAX_VERTEX_COUNT_PER_BUFFER)
+                if (actVertexCount + vertexArray.Length > MAX_VERTEX_COUNT_PER_BUFFER)
                 {
                     actionFinishVertexBuffer();
                 }
 
                 cachedVertices.Add(vertexArray);
-                int actBaseVertex = actVertexCount;
+                var actBaseVertex = actVertexCount;
                 actVertexCount += vertexArray.Length;
 
                 // Sort all surfaces by material
-                List<VertexStructureSurface> surfaceList = new List<VertexStructureSurface>(actStructure.Surfaces);
+                var surfaceList = new List<VertexStructureSurface>(actStructure.Surfaces);
                 surfaceList.Sort((left, right) => left.MaterialProperties.GetHashCode().CompareTo(right.MaterialProperties.GetHashCode()));
 
-                int surfaceCount = surfaceList.Count;
+                var surfaceCount = surfaceList.Count;
 
-                for(var loopSurface =0; loopSurface<surfaceCount; loopSurface++)
+                for (var loopSurface = 0; loopSurface < surfaceCount; loopSurface++)
                 {
                     var actSurface = surfaceList[loopSurface];
 
@@ -379,17 +382,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
 
                     // Handle index data
-                    int[] indexArray = actSurface.GetIndexArray();
+                    var indexArray = actSurface.GetIndexArray();
 
-                    if(actBaseVertex > 0)
+                    if (actBaseVertex > 0)
                     {
-                        for(var loopIndex =0; loopIndex<indexArray.Length; loopIndex++)
+                        for (var loopIndex = 0; loopIndex < indexArray.Length; loopIndex++)
                         {
                             indexArray[loopIndex] = indexArray[loopIndex] + actBaseVertex;
                         }
                     }
 
-                    if(actIndexCount + indexArray.Length > MAX_INDEX_COUNT_PER_BUFFER)
+                    if (actIndexCount + indexArray.Length > MAX_INDEX_COUNT_PER_BUFFER)
                     {
                         actionFinishIndexBuffer();
                     }
@@ -434,8 +437,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Finish all remaining buffers finally
-            if(cachedVertices.Count > 0) { actionFinishVertexBuffer(); }
-            if(cachedIndices.Count > 0) { actionFinishIndexBuffer(); }
+            if (cachedVertices.Count > 0) { actionFinishVertexBuffer(); }
+            if (cachedIndices.Count > 0) { actionFinishIndexBuffer(); }
 
             return result.ToArray();
         }
@@ -443,30 +446,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_loadedStructures.Length > 0; }
-        }
+        public override bool IsLoaded => m_loadedStructures.Length > 0;
 
         /// <summary>
         /// Gets the source of geometry data.
         /// </summary>
-        public ObjectType ObjectType
-        {
-            get { return m_objectType; }
-        }
+        public ObjectType ObjectType { get; private set; }
 
         /// <summary>
         /// Gets the bounding box sourounding this object.
         /// </summary>
-        public BoundingBox BoundingBox
-        {
-            get { return m_boundingBox; }
-        }
+        public BoundingBox BoundingBox { get; private set; }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         protected class LoadedStructureInfo
         {
             public int VertexBufferID;

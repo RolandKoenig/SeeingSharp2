@@ -75,11 +75,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override void UnloadResources(EngineDevice engineDevice)
         {
             D2D.Brush brush = m_loadedBrushes[engineDevice.DeviceIndex];
-            if(brush != null)
+
+            if (brush == null)
             {
-                SeeingSharpTools.DisposeObject(brush);
-                m_loadedBrushes[engineDevice.DeviceIndex] = null;
+                return;
             }
+
+            SeeingSharpTools.DisposeObject(brush);
+            m_loadedBrushes[engineDevice.DeviceIndex] = null;
         }
 
         /// <summary>
@@ -89,26 +92,28 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
 
-            if (result == null)
+            if (result != null)
             {
-                // Load the brush
-                result = new D2D.SolidColorBrush(
-                    engineDevice.FakeRenderTarget2D,
-                    Color,
-                    new D2D.BrushProperties()
-                    {
-                        Opacity = Opacity,
-                        Transform = Matrix3x2.Identity
-                    });
-                m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                return result;
             }
+
+            // Load the brush
+            result = new D2D.SolidColorBrush(
+                engineDevice.FakeRenderTarget2D,
+                Color,
+                new D2D.BrushProperties
+                {
+                    Opacity = Opacity,
+                    Transform = Matrix3x2.Identity
+                });
+            m_loadedBrushes[engineDevice.DeviceIndex] = result;
 
             return result;
         }

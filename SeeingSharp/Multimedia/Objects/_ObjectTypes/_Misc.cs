@@ -39,16 +39,12 @@ namespace SeeingSharp.Multimedia.Objects
 
         public DetailLevel TargetDetailLevel { get; }
 
-        public bool IsHighDetail
-        {
-            get { return (TargetDetailLevel & DetailLevel.High) == DetailLevel.High; }
-        }
+        public bool IsHighDetail => (TargetDetailLevel & DetailLevel.High) == DetailLevel.High;
     }
 
     public enum SpiralChuteRotationDirection
     {
         Clockwise,
-
         Counterclockwise
     }
 }

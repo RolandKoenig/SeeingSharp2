@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Fill export container beside rendering
             //  (there it is ensured that no one changes the scene)
-            await this.PerformBeforeUpdateAsync(() =>
+            await PerformBeforeUpdateAsync(() =>
             {
                 // First step: Register all objects which we want to export
                 foreach (var actObject in objectsToExport)
@@ -95,14 +95,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="importOptions">All options for import logic.</param>
         public async Task<IEnumerable<SceneObject>> ImportAsync(ResourceLink objSource, ImportOptions importOptions)
         {
-            List<SceneObject> result = new List<SceneObject>();
+            var result = new List<SceneObject>();
 
             // Import all data
             var modelContainer = await GraphicsCore.Current.ImportersAndExporters
                 .ImportAsync(objSource, importOptions);
 
             // Append all data to the scene
-            await this.ManipulateSceneAsync((manipulator) =>
+            await ManipulateSceneAsync((manipulator) =>
             {
                 // Add all resources first
                 foreach(var actResourceInfo in modelContainer.ImportedResources)

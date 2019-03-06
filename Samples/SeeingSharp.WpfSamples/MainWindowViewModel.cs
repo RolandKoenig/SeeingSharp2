@@ -39,24 +39,25 @@ namespace SeeingSharp.WpfSamples
         private SampleRepository m_sampleRepo;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
-        private SampleSettings m_sampleSettings;
         private RenderLoop m_renderLoop;
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             m_selectedGroup = string.Empty;
 
-            m_sampleSettings = null;
+            SampleSettings = null;
             m_renderLoop = renderLoop;
 
             // Load samples
             m_sampleRepo = sampleRepo;
-            foreach(string actSampleGroupName in m_sampleRepo.SampleGroups
+
+            foreach (var actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select((actGroup) => actGroup.GroupName))
             {
-                this.SampleGroups.Add(actSampleGroupName);
+                SampleGroups.Add(actSampleGroupName);
             }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+
+            SelectedGroup = SampleGroups.FirstOrDefault();
         }
 
         private void UpdateSampleCollection()
@@ -64,14 +65,20 @@ namespace SeeingSharp.WpfSamples
             var sampleGroup = m_sampleRepo.SampleGroups
                 .Where((actGroup) => actGroup.GroupName == m_selectedGroup)
                 .FirstOrDefault();
-            if (sampleGroup == null) { return; }
 
-            this.Samples.Clear();
-            foreach(var actSampleMetadata in sampleGroup.Samples)
+            if (sampleGroup == null)
             {
-                this.Samples.Add(new SampleViewModel(actSampleMetadata));
+                return;
             }
-            this.SelectedSample = this.Samples.FirstOrDefault();
+
+            Samples.Clear();
+
+            foreach (var actSampleMetadata in sampleGroup.Samples)
+            {
+                Samples.Add(new SampleViewModel(actSampleMetadata));
+            }
+
+            SelectedSample = Samples.FirstOrDefault();
         }
 
         public ObservableCollection<string> SampleGroups
@@ -85,13 +92,15 @@ namespace SeeingSharp.WpfSamples
             get => m_selectedGroup;
             set
             {
-                if(m_selectedGroup != value)
+                if (m_selectedGroup == value)
                 {
-                    m_selectedGroup = value;
-                    RaisePropertyChanged(nameof(SelectedGroup));
-
-                    this.UpdateSampleCollection();
+                    return;
                 }
+
+                m_selectedGroup = value;
+                RaisePropertyChanged(nameof(SelectedGroup));
+
+                UpdateSampleCollection();
             }
         }
 
@@ -106,28 +115,36 @@ namespace SeeingSharp.WpfSamples
             get => m_selectedSample;
             set
             {
-                if(m_selectedSample != value)
+                if (m_selectedSample == value)
                 {
-                    m_selectedSample = value;
+                    return;
+                }
 
-                    if(m_selectedSample == null) { m_sampleSettings = null; }
-                    else
-                    {
-                        m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
-                        m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
-                    }
+                m_selectedSample = value;
 
-                    RaisePropertyChanged(nameof(SelectedSample));
-                    RaisePropertyChanged(nameof(SampleSettings));
+                if (m_selectedSample == null)
+                {
+                    SampleSettings = null;
+                }
+                else
+                {
+                    SampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
+                    SampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
+                }
 
-                    this.SampleCommands.Clear();
-                    if (m_sampleSettings != null)
-                    {
-                        foreach (var actSampleCommand in m_sampleSettings.GetCommands())
-                        {
-                            this.SampleCommands.Add(actSampleCommand);
-                        }
-                    }
+                RaisePropertyChanged(nameof(SelectedSample));
+                RaisePropertyChanged(nameof(SampleSettings));
+
+                SampleCommands.Clear();
+
+                if (SampleSettings == null)
+                {
+                    return;
+                }
+
+                foreach (var actSampleCommand in SampleSettings.GetCommands())
+                {
+                    SampleCommands.Add(actSampleCommand);
                 }
             }
         }
@@ -138,9 +155,6 @@ namespace SeeingSharp.WpfSamples
             private set;
         } = new ObservableCollection<SampleCommand>();
 
-        public SampleSettings SampleSettings
-        {
-            get => m_sampleSettings;
-        }
+        public SampleSettings SampleSettings { get; private set; }
     }
 }

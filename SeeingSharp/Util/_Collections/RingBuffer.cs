@@ -74,9 +74,13 @@ namespace SeeingSharp.Util
             else
             {
                 m_itemStart = (m_itemStart + 1) % Count;
+                var nextIndex = m_itemStart - 1;
 
-                int nextIndex = m_itemStart - 1;
-                if(nextIndex < 0) { nextIndex = Count - 1; }
+                if (nextIndex < 0)
+                {
+                    nextIndex = Count - 1;
+                }
+
                 m_buffer[nextIndex] = newItem;
             }
         }
@@ -121,7 +125,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for(int loop=0; loop<Count; loop++)
+            for(var loop =0; loop<Count; loop++)
             {
                 m_buffer[loop] = default(T);
             }

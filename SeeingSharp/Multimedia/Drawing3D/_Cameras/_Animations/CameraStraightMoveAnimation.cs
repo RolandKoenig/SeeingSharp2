@@ -29,7 +29,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     using System;
     using Checking;
     using Core;
-    using SharpDX;
 
     #endregion
 
@@ -73,9 +72,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.OnCurrentTimeUpdated(updateState, animationState);
 
             // Calculate factor by what to transform all coordinates
-            double maxMilliseconds = base.FixedTime.TotalMilliseconds;
-            double currentMillis = base.CurrentTime.TotalMilliseconds;
-            float actFrameFactor = (float)(currentMillis / maxMilliseconds);
+            var maxMilliseconds = FixedTime.TotalMilliseconds;
+            var currentMillis = CurrentTime.TotalMilliseconds;
+            var actFrameFactor = (float)(currentMillis / maxMilliseconds);
 
             // Transform position and rotation
             var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
@@ -84,11 +83,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_camera.TargetRotation = m_viewPointSource.Rotation + (rotationVector * actFrameFactor);
 
             // Special handling for orthographics cameras
-            if (m_cameraOrthographic != null)
+            if (m_cameraOrthographic == null)
             {
-                float zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;
-                m_cameraOrthographic.ZoomFactor = m_viewPointSource.OrthographicZoomFactor + (zoomValue * actFrameFactor);
+                return;
             }
+
+            var zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;
+            m_cameraOrthographic.ZoomFactor = m_viewPointSource.OrthographicZoomFactor + (zoomValue * actFrameFactor);
         }
 
         /// <summary>
@@ -98,7 +99,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void OnFixedTimeAnimationFinished()
         {
             base.OnFixedTimeAnimationFinished();
-
             m_camera.ApplyViewPoint(m_viewPointTarget);
         }
     }

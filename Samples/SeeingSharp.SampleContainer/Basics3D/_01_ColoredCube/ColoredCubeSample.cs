@@ -38,7 +38,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
     #endregion
 
     [SampleDescription(
-        "Colored Cube", 1, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Colored Cube", 1, nameof(Basics3D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_01_ColoredCube")]
     public class ColoredCubeSample : SampleBase
@@ -52,17 +52,17 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
                 var cubeType = new CubeType();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
                 // Create cube object

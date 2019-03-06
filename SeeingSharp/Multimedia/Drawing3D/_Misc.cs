@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     #endregion
 
     [Flags]
-    internal enum RenderTargetCreationMode : int
+    internal enum RenderTargetCreationMode
     {
         /// <summary>
         /// Do create the color buffer.
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// Describes the mode how a RenderTargetTexture pushes itself on the rendering stack.
     /// </summary>
     [Flags]
-    internal enum PushRenderTargetMode : int
+    internal enum PushRenderTargetMode
     {
         /// <summary>
         /// Use all buffers from this RenderTargetTexture.

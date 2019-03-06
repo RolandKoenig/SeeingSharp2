@@ -34,7 +34,7 @@ namespace SeeingSharp
     {
         public static Vector2 ToVector2(this ref Size2 size)
         {
-            return new Vector2((float)size.Width, (float)size.Height);
+            return new Vector2(size.Width, size.Height);
         }
     }
 }

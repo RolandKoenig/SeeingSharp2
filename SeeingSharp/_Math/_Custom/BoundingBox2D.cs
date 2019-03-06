@@ -44,8 +44,8 @@ namespace SeeingSharp
         /// <param name="size">The size.</param>
         public BoundingBox2D(Vector2 location, Vector2 size)
         {
-            this.Location = location;
-            this.Size = size;
+            Location = location;
+            Size = size;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace SeeingSharp
         /// </returns>
         public override string ToString()
         {
-            return "Pos: " + this.Location.ToString() + "; Size: " + this.Size.ToString();
+            return "Pos: " + Location.ToString() + "; Size: " + Size.ToString();
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace SeeingSharp
         /// <param name="otherOne"></param>
         public bool IsContainedBy(BoundingBox2D otherOne)
         {
-            var thisMinimum = this.Location;
-            var thisMaximum = this.Location + this.Size;
+            var thisMinimum = Location;
+            var thisMaximum = Location + Size;
             var otherMinimum = otherOne.Location;
             var otherMaximum = otherOne.Location + otherOne.Size;
 
@@ -89,9 +89,6 @@ namespace SeeingSharp
         /// <summary>
         /// Is this box empty?
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this.Location.IsEmpty() && this.Size.IsEmpty(); }
-        }
+        public bool IsEmpty => Location.IsEmpty() && Size.IsEmpty();
     }
 }

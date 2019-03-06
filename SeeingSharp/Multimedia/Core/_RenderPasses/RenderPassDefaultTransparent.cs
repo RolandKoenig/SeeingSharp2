@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -79,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            //Get default resources
+            // Get default resources
             m_defaultResources = resources.GetResourceAndEnsureLoaded(
                 DefaultResources.RESOURCE_KEY,
                 () => new DefaultResources());
@@ -98,9 +97,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_defaultResources != null; }
-        }
+        public override bool IsLoaded => m_defaultResources != null;
     }
 }

@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new VertexStructure();
 
             //Find all edges from given view direction
-            List<Line> shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
+            var shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
 
             //Build the structure based on the found edges
             var lightNormal = Vector3.Normalize(lightDirection);
@@ -74,8 +74,8 @@ namespace SeeingSharp.Multimedia.Objects
         public static List<Line> GenerateEdgesSeenFromViewpoint(this IEnumerable<VertexStructure> structures, Vector3 viewDirection)
         {
             //Find all shadow volume edges
-            List<Line> foundEndges = new List<Line>(2048);
-            List<Line> edgesToRemove = new List<Line>(2048);
+            var foundEndges = new List<Line>(2048);
+            var edgesToRemove = new List<Line>(2048);
 
             foreach (var actStructure in structures)
             {
@@ -83,50 +83,60 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     foreach (var actTriangle in actSurface.Triangles)
                     {
-                        if (Vector3.Dot(viewDirection, actStructure.Vertices[actTriangle.Index1].Normal) >= 0)
+                        if (!(Vector3.Dot(viewDirection, actStructure.Vertices[actTriangle.Index1].Normal) >= 0))
                         {
-                            Line[] actEdges = actTriangle.GetEdges(actStructure);
+                            continue;
+                        }
 
-                            for (var loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
+                        var actEdges = actTriangle.GetEdges(actStructure);
+
+                        for (var loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
+                        {
+                            var actEdge = actEdges[loopEdge];
+
+                            //Was this edge already removed?
+                            var alreadyRemoved = false;
+
+                            foreach (var edgesRemoved in edgesToRemove)
                             {
-                                var actEdge = actEdges[loopEdge];
-
-                                //Was this edge already removed?
-                                var alreadyRemoved = false;
-
-                                foreach (var edgesRemoved in edgesToRemove)
-                                {
-                                    if (edgesRemoved.EqualsWithTolerance(actEdge))
-                                    {
-                                        alreadyRemoved = true;
-                                        break;
-                                    }
-                                }
-
-                                if (alreadyRemoved)
+                                if (!edgesRemoved.EqualsWithTolerance(actEdge))
                                 {
                                     continue;
                                 }
 
-                                //Was this edge already added?
-                                var alreadyAdded = false;
-
-                                for (var loopShadowEdge = 0; loopShadowEdge < foundEndges.Count; loopShadowEdge++)
-                                {
-                                    if (foundEndges[loopShadowEdge].EqualsWithTolerance(actEdge))
-                                    {
-                                        //Remove the edge because it can't be member of the contour when it is found twice
-                                        alreadyAdded = true;
-                                        foundEndges.RemoveAt(loopShadowEdge);
-                                        edgesToRemove.Add(actEdge);
-                                        break;
-                                    }
-                                }
-                                if (alreadyAdded) { continue; }
-
-                                //Add the edge to the result list finally
-                                foundEndges.Add(actEdge);
+                                alreadyRemoved = true;
+                                break;
                             }
+
+                            if (alreadyRemoved)
+                            {
+                                continue;
+                            }
+
+                            //Was this edge already added?
+                            var alreadyAdded = false;
+
+                            for (var loopShadowEdge = 0; loopShadowEdge < foundEndges.Count; loopShadowEdge++)
+                            {
+                                if (!foundEndges[loopShadowEdge].EqualsWithTolerance(actEdge))
+                                {
+                                    continue;
+                                }
+
+                                //Remove the edge because it can't be member of the contour when it is found twice
+                                alreadyAdded = true;
+                                foundEndges.RemoveAt(loopShadowEdge);
+                                edgesToRemove.Add(actEdge);
+                                break;
+                            }
+
+                            if (alreadyAdded)
+                            {
+                                continue;
+                            }
+
+                            //Add the edge to the result list finally
+                            foundEndges.Add(actEdge);
                         }
                     }
                 }

@@ -47,7 +47,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public NamedOrGenericKey GetNextGeneric()
         {
-            long result = Interlocked.Increment(ref m_nextGenericKey);
+            var result = Interlocked.Increment(ref m_nextGenericKey);
             result--;
             return new NamedOrGenericKey(result);
         }

@@ -26,8 +26,6 @@ namespace SeeingSharp.Multimedia.Core
 {
     public abstract class SceneObjectBehavior
     {
-        private SceneObject m_host;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectBehavior"/> class.
         /// </summary>
@@ -42,10 +40,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="hostObject">The object that hosts this behavior.</param>
         internal void SetHostObject(SceneObject hostObject)
         {
-            var oldHostObject = m_host;
-            m_host = hostObject;
+            var oldHostObject = HostObject;
+            HostObject = hostObject;
 
-            OnHostObjectChanged(oldHostObject, m_host);
+            OnHostObjectChanged(oldHostObject, HostObject);
         }
 
         /// <summary>
@@ -77,9 +75,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the host object for this behavior.
         /// </summary>
-        public SceneObject HostObject
-        {
-            get { return m_host; }
-        }
+        public SceneObject HostObject { get; private set; }
     }
 }

@@ -40,10 +40,12 @@ namespace SeeingSharp.Multimedia.Core
 
         internal SeeingSharpLoader()
         {
-            m_extensions = new List<ISeeingSharpExtensions>();
-            m_extensions.Add(new DefaultImporterExporterExtensions());
+            m_extensions = new List<ISeeingSharpExtensions>
+            {
+                new DefaultImporterExporterExtensions()
+            };
 
-            this.LoadSettings = new DeviceLoadSettings();
+            LoadSettings = new DeviceLoadSettings();
         }
 
         public void RegisterExtensions(ISeeingSharpExtensions extensions)
@@ -66,7 +68,7 @@ namespace SeeingSharp.Multimedia.Core
         public SeeingSharpLoader Configure(DeviceLoadSettings loadSettings)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
-            this.LoadSettings = loadSettings;
+            LoadSettings = loadSettings;
 
             return this;
         }
@@ -75,20 +77,17 @@ namespace SeeingSharp.Multimedia.Core
         {
             manipulateConfigAction.EnsureNotNull(nameof(manipulateConfigAction));
 
-            manipulateConfigAction(this.LoadSettings);
+            manipulateConfigAction(LoadSettings);
             return this;
         }
 
         public SeeingSharpLoader EnableDirectXDebugMode()
         {
-            return this.Configure(
+            return Configure(
                 loadSettings => loadSettings.DebugEnabled = true);
         }
 
-        public IEnumerable<ISeeingSharpExtensions> Extensions
-        {
-            get => m_extensions;
-        }
+        public IEnumerable<ISeeingSharpExtensions> Extensions => m_extensions;
 
         public DeviceLoadSettings LoadSettings
         {

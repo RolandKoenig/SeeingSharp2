@@ -122,13 +122,13 @@ namespace SeeingSharp.Multimedia.Objects
                 IEnumerable<Polygon2D> fillingPolygons = geometryExtruder.GeneratedPolygons
                     .Where(actPolygon => actPolygon.EdgeOrder == EdgeOrder.CounterClockwise)
                     .OrderBy(actPolygon => actPolygon.BoundingBox.Size.X * actPolygon.BoundingBox.Size.Y);
-                List<Polygon2D> holePolygons = geometryExtruder.GeneratedPolygons
+                var holePolygons = geometryExtruder.GeneratedPolygons
                     .Where(actPolygon => actPolygon.EdgeOrder == EdgeOrder.Clockwise)
                     .OrderByDescending(actPolygon => actPolygon.BoundingBox.Size.X * actPolygon.BoundingBox.Size.Y)
                     .ToList();
 
                 // Build geometry for all polygons
-                int loopPolygon = 0;
+                var loopPolygon = 0;
 
                 foreach (var actFillingPolygon in fillingPolygons)
                 {
@@ -143,20 +143,20 @@ namespace SeeingSharp.Multimedia.Objects
                     // - Remove found holes from current hole list
                     var polygonForRendering = actFillingPolygon;
                     var polygonForTriangulation = actFillingPolygon.Clone();
-                    List<SDX.Vector2> cutPoints = new List<SDX.Vector2>();
+                    var cutPoints = new List<SDX.Vector2>();
 
                     foreach (var actHole in correspondingHoles)
                     {
                         holePolygons.Remove(actHole);
                         polygonForRendering = polygonForRendering.MergeWithHole(actHole, Polygon2DMergeOptions.Default, cutPoints);
-                        polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions() { MakeMergepointSpaceForTriangulation = true });
+                        polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions { MakeMergepointSpaceForTriangulation = true });
                     }
 
                     loopPolygon++;
-                    int actBaseIndex = (int)tempStructure.CountVertices;
+                    var actBaseIndex = tempStructure.CountVertices;
 
                     var edgeOrder = polygonForRendering.EdgeOrder;
-                    float edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
+                    var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
                     // Append all vertices to temporary VertexStructure
                     for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Objects
                         for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                         {
                             var colorToUse = Color4Ex.GreenColor;
-                            float pointRenderSize = 0.1f;
+                            var pointRenderSize = 0.1f;
 
                             if (cutPoints.Contains(polygonForRendering.Vertices[loop]))
                             {
@@ -212,40 +212,40 @@ namespace SeeingSharp.Multimedia.Objects
                     }
 
                     // Triangulate the polygon
-                    IEnumerable<int> triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
+                    var triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
 
                     if (triangleIndices == null) { continue; }
                     if (triangleIndices == null) { throw new SeeingSharpGraphicsException("Unable to triangulate given PathGeometry object!"); }
 
                     // Append all triangles to the temporary structure
-                    using (IEnumerator<int> indexEnumerator = triangleIndices.GetEnumerator())
+                    using (var indexEnumerator = triangleIndices.GetEnumerator())
                     {
                         while (indexEnumerator.MoveNext())
                         {
-                            int index1 = indexEnumerator.Current;
-                            int index2 = 0;
-                            int index3 = 0;
+                            var index1 = indexEnumerator.Current;
+                            var index2 = 0;
+                            var index3 = 0;
 
                             if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
                             if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
 
                             tempSurface.AddTriangle(
-                                (int)(actBaseIndex + index3),
-                                (int)(actBaseIndex + index2),
-                                (int)(actBaseIndex + index1));
+                                actBaseIndex + index3,
+                                actBaseIndex + index2,
+                                actBaseIndex + index1);
                         }
                     }
                 }
             }
 
             // Make volumetric outlines
-            int triangleCountWithoutSide = tempSurface.CountTriangles;
+            var triangleCountWithoutSide = tempSurface.CountTriangles;
 
             if (m_geometryOptions.MakeVolumetricText)
             {
-                float volumetricTextDepth = m_geometryOptions.VolumetricTextDepth;
+                var volumetricTextDepth = m_geometryOptions.VolumetricTextDepth;
 
-                if(m_geometryOptions.VerticesScaleFactor > 0f)
+                if (m_geometryOptions.VerticesScaleFactor > 0f)
                 {
                     volumetricTextDepth = volumetricTextDepth / m_geometryOptions.VerticesScaleFactor;
                 }

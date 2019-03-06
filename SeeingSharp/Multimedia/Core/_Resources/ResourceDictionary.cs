@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
         internal ResourceDictionary(EngineDevice device)
         {
             Device = device;
-            this.DeviceIndex = Device.DeviceIndex;
+            DeviceIndex = Device.DeviceIndex;
 
             m_lastRenderBlockID = -1;
 
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Core
                         "SeeingSharp.Multimedia.Resources.Textures.Blank_16x16.png")) as T;
 #endif
             }
-            else if(resourceType == typeof(GeometryResource))
+            else if (resourceType == typeof(GeometryResource))
             {
                 var dummyStructure = new VertexStructure();
                 dummyStructure.FirstSurface.BuildCube24V(
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Core
                 result = new GeometryResource(dummyStructure) as T;
             }
 
-            //Try to create the resource using the standard constructor
+            // Try to create the resource using the standard constructor
             if (result == null)
             {
 #if DESKTOP
@@ -143,11 +143,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actResource in m_resources.Values)
             {
-                if (actResource.Resource.IsLoaded)
+                if (!actResource.Resource.IsLoaded)
                 {
-                    actResource.Resource.UnloadResource();
-                    actResource.Resource.Dictionary = null;
+                    continue;
                 }
+
+                actResource.Resource.UnloadResource();
+                actResource.Resource.Dictionary = null;
             }
 
             m_renderableResources.Clear();
@@ -172,21 +174,25 @@ namespace SeeingSharp.Multimedia.Core
         internal ResourceType AddResource<ResourceType>(NamedOrGenericKey resourceKey, ResourceType resource)
             where ResourceType : Resource
         {
-            //Perform some checks
-            if (resource == null) { throw new ArgumentNullException("resource"); }
+            // Perform some checks
+            if (resource == null)
+            {
+                throw new ArgumentNullException("resource");
+            }
+
             if (resource.Dictionary != null)
             {
                 if (resource.Dictionary == this) { return resource; }
                 if (resource.Dictionary != this) { throw new ArgumentException("Given resource belongs to another ResourceDictionary!", "resource"); }
             }
 
-            //Check given keys
+            // Check given keys
             if ((!resource.IsKeyEmpty) && (!resourceKey.IsEmpty) && (resource.Key != resourceKey))
             {
                 throw new ArgumentException("Unable to override existing key on given resource!");
             }
 
-            //Remove another resource with the same name
+            // Remove another resource with the same name
             if (!resource.IsKeyEmpty)
             {
                 RemoveResource(resource.Key);
@@ -196,7 +202,7 @@ namespace SeeingSharp.Multimedia.Core
                 RemoveResource(resourceKey);
             }
 
-            //Apply a valid key on the given resource object
+            // Apply a valid key on the given resource object
             if (resource.Key.IsEmpty)
             {
                 if (resourceKey.IsEmpty)
@@ -209,7 +215,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            //Add the resource
+            // Add the resource
             var newResource = new ResourceInfo(resource);
             m_resources[resource.Key] = newResource;
 
@@ -218,7 +224,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_renderableResources.Add(newResource.RenderableResource);
             }
 
-            //Register this dictionary on the resource
+            // Register this dictionary on the resource
             resource.Dictionary = this;
 
             return resource;
@@ -229,11 +235,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadAllMarkedResources()
         {
-            foreach(var actResource in m_resourcesMarkedForUnloading.DequeueAll())
+            foreach (var actResource in m_resourcesMarkedForUnloading.DequeueAll())
             {
                 if (!actResource.IsKeyEmpty)
                 {
-                    this.RemoveResource(actResource.Key);
+                    RemoveResource(actResource.Key);
                 }
             }
         }
@@ -251,37 +257,37 @@ namespace SeeingSharp.Multimedia.Core
         ///// Adds a new material for texture drawing pointing to the given texture resource.
         ///// </summary>
         ///// <param name="textureResourceKey">The key of the texture the material is pointing to.</param>
-        //public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey textureResourceKey)
-        //{
+        // public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey textureResourceKey)
+        // {
         //    return this.AddResource(new SimpleColoredMaterialResource(textureResourceKey));
-        //}
+        // }
 
         ///// <summary>
         ///// Adds a new material for texture drawing pointing to the given texture resource.
         ///// </summary>
         ///// <param name="resourceKey">The key of the resource.</param>
         ///// <param name="textureResourceKey">The key of the texture the material is pointing to.</param>
-        //public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey resourceKey, NamedOrGenericKey textureResourceKey)
-        //{
+        // public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey resourceKey, NamedOrGenericKey textureResourceKey)
+        // {
         //    return this.AddResource(resourceKey, new SimpleColoredMaterialResource(textureResourceKey));
-        //}
+        // }
 
         ///// <summary>
         ///// Adds a new material for drawing a simple colored mesh.
         ///// </summary>
-        //public SimpleColoredMaterialResource AddSimpleColoredMaterial()
-        //{
+        // public SimpleColoredMaterialResource AddSimpleColoredMaterial()
+        // {
         //    return this.AddResource(new SimpleColoredMaterialResource());
-        //}
+        // }
 
         ///// <summary>
         ///// Adds a new material for drawing a simple colored mesh.
         ///// </summary>
         ///// <param name="resourceKey">The key of the resource.</param>
-        //public SimpleColoredMaterialResource AddSimpleColoredMaterial(NamedOrGenericKey resourceKey)
-        //{
+        // public SimpleColoredMaterialResource AddSimpleColoredMaterial(NamedOrGenericKey resourceKey)
+        // {
         //    return this.AddResource(resourceKey, new SimpleColoredMaterialResource());
-        //}
+        // }
 
         /// <summary>
         /// Adds the given resource to the dictionary and loads it directly.
@@ -303,19 +309,28 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="key">The key to check.</param>
         internal void RemoveResource(NamedOrGenericKey key)
         {
-            if (m_resources.ContainsKey(key))
+            if (!m_resources.ContainsKey(key))
             {
-                var resourceInfo = m_resources[key];
-
-                //Unload the resource
-                if (resourceInfo.Resource.IsLoaded) { resourceInfo.Resource.UnloadResource(); }
-                if (resourceInfo.RenderableResource != null) { m_renderableResources.Remove(resourceInfo.RenderableResource); }
-
-                //Remove the resource
-                m_resources.Remove(key);
-
-                resourceInfo.Resource.Dictionary = null;
+                return;
             }
+
+            var resourceInfo = m_resources[key];
+
+            // Unload the resource
+            if (resourceInfo.Resource.IsLoaded)
+            {
+                resourceInfo.Resource.UnloadResource();
+            }
+
+            if (resourceInfo.RenderableResource != null)
+            {
+                m_renderableResources.Remove(resourceInfo.RenderableResource);
+            }
+
+            // Remove the resource
+            m_resources.Remove(key);
+
+            resourceInfo.Resource.Dictionary = null;
         }
 
         /// <summary>
@@ -340,9 +355,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_resources.ContainsKey(resourceKey))
             {
-                var result = m_resources[resourceKey].Resource as T;
-
-                if (result != null)
+                if (m_resources[resourceKey].Resource is T result)
                 {
                     return result;
                 }
@@ -372,28 +385,36 @@ namespace SeeingSharp.Multimedia.Core
             where T : Resource
         {
             T result = null;
+
             if (!ContainsResource(resourceKey))
             {
                 // Try to query for existing default resources if given key is empty
-                if(resourceKey.IsEmpty)
+                if (resourceKey.IsEmpty)
                 {
                     resourceKey = new NamedOrGenericKey(typeof(T).FullName);
-                    if (ContainsResource(resourceKey)) { result = GetResource<T>(resourceKey); }
+
+                    if (ContainsResource(resourceKey))
+                    {
+                        result = GetResource<T>(resourceKey);
+                    }
                 }
 
                 // Create a default resource if still nothing found
-                if (result == null)
+                if (result != null)
                 {
-                    result = CreateDefaultResource<T>();
-                    this.AddResource<T>(resourceKey, result);
+                    return result;
                 }
+
+                result = CreateDefaultResource<T>();
+                AddResource(resourceKey, result);
             }
             else
             {
                 // Resource does exist, so return existing
                 var currentResource = m_resources[resourceKey].Resource;
                 result = currentResource as T;
-                if((currentResource != null) && (result == null))
+
+                if ((currentResource != null) && (result == null))
                 {
                     throw new SeeingSharpGraphicsException("Resource type mismatch: Behind the requested key " + resourceKey + " is a resource of another type (requested: " + typeof(T).FullName + ", current: " + currentResource.GetType().FullName + ")");
                 }
@@ -444,22 +465,24 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void LoadResources()
         {
-            List<ResourceInfo> allResources = new List<ResourceInfo>(m_resources.Values);
+            var allResources = new List<ResourceInfo>(m_resources.Values);
 
             foreach (var actResourceInfo in allResources)
             {
-                //Load the resource
+                // Load the resource
                 if (!actResourceInfo.Resource.IsLoaded)
                 {
                     actResourceInfo.Resource.LoadResource();
                 }
 
-                //Reload the resource
-                if (actResourceInfo.Resource.IsMarkedForReloading)
+                // Reload the resource
+                if (!actResourceInfo.Resource.IsMarkedForReloading)
                 {
-                    actResourceInfo.Resource.UnloadResource();
-                    actResourceInfo.Resource.LoadResource();
+                    continue;
                 }
+
+                actResourceInfo.Resource.UnloadResource();
+                actResourceInfo.Resource.LoadResource();
             }
         }
 
@@ -511,10 +534,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the resource with the given key.
         /// </summary>
         /// <param name="key">Key of the resource.</param>
-        public Resource this[NamedOrGenericKey key]
-        {
-            get { return m_resources[key].Resource; }
-        }
+        public Resource this[NamedOrGenericKey key] => m_resources[key].Resource;
 
         /// <summary>
         /// Gets an enumeration containing all renderable resources.
@@ -524,25 +544,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a reference to default resources object.
         /// </summary>
-        public DefaultResources DefaultResources
-        {
-            get
-            {
-                return GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
-            }
-        }
+        public DefaultResources DefaultResources => GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
         /// <summary>
         /// Gets total count of resource.
         /// </summary>
-        public int Count
-        {
-            get { return m_resources.Count; }
-        }
+        public int Count => m_resources.Count;
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         private class ResourceInfo
         {
             public Resource Resource;
@@ -554,14 +565,14 @@ namespace SeeingSharp.Multimedia.Core
             /// <param name="resource">The resource.</param>
             public ResourceInfo(Resource resource)
             {
-                this.Resource = resource;
-                this.RenderableResource = resource as IRenderableResource;
+                Resource = resource;
+                RenderableResource = resource as IRenderableResource;
             }
         }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         private class ResourceEnumerator : IEnumerator<Resource>
         {
             private IEnumerator<ResourceInfo> m_resourceInfoEnumerator;
@@ -615,10 +626,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public Resource Current
-            {
-                get { return m_resourceInfoEnumerator.Current.Resource; }
-            }
+            public Resource Current => m_resourceInfoEnumerator.Current.Resource;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.
@@ -627,10 +635,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            object IEnumerator.Current
-            {
-                get { return Current; }
-            }
+            object IEnumerator.Current => Current;
         }
     }
 }

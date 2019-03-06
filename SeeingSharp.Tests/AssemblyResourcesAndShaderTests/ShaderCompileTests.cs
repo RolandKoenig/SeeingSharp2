@@ -42,7 +42,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         public void Check_ReadAndMergeFromAssemblyResources()
         {
             var resLink = new AssemblyResourceLink(
-                this.GetType(),
+                GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 

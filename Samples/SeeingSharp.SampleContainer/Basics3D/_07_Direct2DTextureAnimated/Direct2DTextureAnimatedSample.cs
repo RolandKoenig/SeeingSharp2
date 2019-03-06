@@ -40,7 +40,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
     #endregion
 
     [SampleDescription(
-        "Direct2D Texture (animated)", 7, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Direct2D Texture (animated)", 7, nameof(Basics3D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated")]
     public class Direct2DTextureAnimatedSample : SampleBase
@@ -58,10 +58,10 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             // Whole animation takes x milliseconds
-            float animationMillis = 3000f;
+            var animationMillis = 3000f;
 
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
@@ -77,7 +77,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                     m_solidBrush);
 
                 // Recalculate current location of the red rectangle on each frame
-                float currentLocation = ((float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis) / animationMillis;
+                var currentLocation = ((float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis) / animationMillis;
                 var rectPos = GetAnimationLocation(currentLocation, 165f, 165f);
                 graphics.FillRectangle(
                     new RectangleF(
@@ -91,11 +91,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define Direct2D texture resource
-                var resD2DTexture = manipulator.AddResource<Direct2DTextureResource>(
+                var resD2DTexture = manipulator.AddResource(
                     () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
@@ -105,7 +105,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                     Material = resD2DMaterial
                 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(pType));
 
                 // Create cube object
@@ -142,20 +142,21 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
         public (float x, float y) GetAnimationLocation(float procentualLoc, float maxWidth, float maxHeight)
         {
-            float xPos = 0f;
-            float yPos = 0f;
-            float currentLineLoc = (procentualLoc % 0.25f) / 0.25f;
-            if(procentualLoc < 0.25f)
+            var xPos = 0f;
+            var yPos = 0f;
+            var currentLineLoc = (procentualLoc % 0.25f) / 0.25f;
+
+            if (procentualLoc < 0.25f)
             {
                 xPos = maxWidth * currentLineLoc;
                 yPos = 0f;
             }
-            else if(procentualLoc < 0.5f)
+            else if (procentualLoc < 0.5f)
             {
                 xPos = maxWidth;
                 yPos = maxHeight * currentLineLoc;
             }
-            else if(procentualLoc < 0.75f)
+            else if (procentualLoc < 0.75f)
             {
                 xPos = maxWidth - (maxWidth * currentLineLoc);
                 yPos = maxHeight;

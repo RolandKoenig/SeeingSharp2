@@ -38,7 +38,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
     #endregion
 
     [SampleDescription(
-        "Edge detect", 1, nameof(SeeingSharp.SampleContainer.Postprocessing),
+        "Edge detect", 1, nameof(Postprocessing),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Postprocessing/_01_EdgeDetect")]
     public class EdgeDetectSample : SampleBase
@@ -52,16 +52,16 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create edge detect resource
-                var resEdgeDetect = manipulator.AddResource(() => new EdgeDetectPostprocessEffectResource()
+                var resEdgeDetect = manipulator.AddResource(() => new EdgeDetectPostprocessEffectResource
                 {
                     BorderColor = Color4Ex.BlueColor,
                     Thickness = 5f
@@ -72,7 +72,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
                 // Create pallet geometry resource
                 var cubeType = new CubeType();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
                 // Create pallet object

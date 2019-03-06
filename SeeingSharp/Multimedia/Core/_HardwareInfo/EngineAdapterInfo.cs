@@ -64,9 +64,10 @@ namespace SeeingSharp.Multimedia.Core
 
             m_d3d11FeatureLevel = D3D11.Device.GetSupportedFeatureLevel(adapter);
 
-            //Query for output information
-            SharpDX.DXGI.Output[] outputs = adapter.Outputs;
-            for (int loop = 0; loop < outputs.Length; loop++)
+            // Query for output information
+            var outputs = adapter.Outputs;
+
+            for (var loop = 0; loop < outputs.Length; loop++)
             {
                 try
                 {
@@ -83,7 +84,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception)
                 {
-                    //Query for output information not possible
+                    // Query for output information not possible
                     // .. no special handling needed here
                 }
             }
@@ -103,45 +104,27 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the corresponding adapter.
         /// </summary>
-        internal SharpDX.DXGI.Adapter1 Adapter
-        {
-            get { return m_adapter; }
-        }
+        internal SharpDX.DXGI.Adapter1 Adapter => m_adapter;
 
         /// <summary>
         /// Gets the index of the adapter.
         /// </summary>
         public int AdapterIndex { get; }
 
-        public string MaxFeatureLevelD3D11
-        {
-            get { return m_d3d11FeatureLevel.ToString(); }
-        }
+        public string MaxFeatureLevelD3D11 => m_d3d11FeatureLevel.ToString();
 
         public bool IsSoftwareAdapter { get; }
 
         /// <summary>
         /// Gets the description of the adapter.
         /// </summary>
-        public string AdapterDescription
-        {
-            get { return m_adapterDescription.Description; }
-        }
+        public string AdapterDescription => m_adapterDescription.Description;
 
-        public string DedicatedSystemMemory
-        {
-            get { return m_adapterDescription.DedicatedSystemMemory.ToString(); }
-        }
+        public string DedicatedSystemMemory => m_adapterDescription.DedicatedSystemMemory.ToString();
 
-        public string DedicatedVideoMemory
-        {
-            get { return m_adapterDescription.DedicatedVideoMemory.ToString(); }
-        }
+        public string DedicatedVideoMemory => m_adapterDescription.DedicatedVideoMemory.ToString();
 
-        public string SharedSystemMemory
-        {
-            get { return m_adapterDescription.SharedSystemMemory.ToString(); }
-        }
+        public string SharedSystemMemory => m_adapterDescription.SharedSystemMemory.ToString();
 
         public bool IsDisposed => m_adapter == null;
     }

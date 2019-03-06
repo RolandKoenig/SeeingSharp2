@@ -47,34 +47,43 @@ namespace SeeingSharp.Multimedia.Core
             m_outputDescription = output.Description;
 
             // Get all supported modes
-            SharpDX.DXGI.ModeDescription[] modes = output.GetDisplayModeList(
+            var modes = output.GetDisplayModeList(
                 GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
                 SharpDX.DXGI.DisplayModeEnumerationFlags.Interlaced);
 
             // Convert and sort them
-            EngineOutputModeInfo[] engineModes = new EngineOutputModeInfo[modes.Length];
-            for(int loop=0; loop<engineModes.Length; loop++)
+            var engineModes = new EngineOutputModeInfo[modes.Length];
+
+            for (var loop = 0; loop < engineModes.Length; loop++)
             {
                 engineModes[loop] = new EngineOutputModeInfo(this, modes[loop]);
             }
+
             Array.Sort(engineModes, (left, right) =>
             {
-                int result = left.PixelCount.CompareTo(right.PixelCount);
-                if (result == 0) { result = left.RefreshRateNumerator.CompareTo(right.RefreshRateNumerator); }
+                var result = left.PixelCount.CompareTo(right.PixelCount);
+
+                if (result == 0)
+                {
+                    result = left.RefreshRateNumerator.CompareTo(right.RefreshRateNumerator);
+                }
+
                 return result;
             });
 
             // Strip them (we want to have each relevant mode once)
-            List<EngineOutputModeInfo> strippedModeList = new List<EngineOutputModeInfo>(engineModes.Length);
+            var strippedModeList = new List<EngineOutputModeInfo>(engineModes.Length);
             var lastOutputMode = new EngineOutputModeInfo();
 
-            for (var loop =engineModes.Length - 1; loop > -1; loop--)
+            for (var loop = engineModes.Length - 1; loop > -1; loop--)
             {
-                if(!engineModes[loop].Equals(lastOutputMode))
+                if (engineModes[loop].Equals(lastOutputMode))
                 {
-                    lastOutputMode = engineModes[loop];
-                    strippedModeList.Add(lastOutputMode);
+                    continue;
                 }
+
+                lastOutputMode = engineModes[loop];
+                strippedModeList.Add(lastOutputMode);
             }
 
             // Store mode list
@@ -84,19 +93,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the name of the output device.
         /// </summary>
-        public string DeviceName
-        {
-            get { return m_outputDescription.DeviceName; }
-        }
+        public string DeviceName => m_outputDescription.DeviceName;
 
         public int AdapterIndex { get; }
 
         public int OutputIndex { get; }
 
-        public bool IsAttachedToDesktop
-        {
-            get { return m_outputDescription.IsAttachedToDesktop; }
-        }
+        public bool IsAttachedToDesktop => m_outputDescription.IsAttachedToDesktop;
 
         /// <summary>
         /// Gets the total count of pixels on X axis.
@@ -112,34 +115,16 @@ namespace SeeingSharp.Multimedia.Core
 
         public int DesktopYPos => m_outputDescription.DesktopBounds.Top;
 
-        public string DesktopResolution
-        {
-            get
-            {
-                return
-                    (m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left) +
-                    "x" +
-                    (m_outputDescription.DesktopBounds.Bottom - m_outputDescription.DesktopBounds.Top);
-            }
-        }
+        public string DesktopResolution =>
+            (m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left) +
+            "x" +
+            (m_outputDescription.DesktopBounds.Bottom - m_outputDescription.DesktopBounds.Top);
 
-        public string DesktopLocation
-        {
-            get
-            {
-                return "X = " + m_outputDescription.DesktopBounds.Left + ", Y = " + m_outputDescription.DesktopBounds.Top;
-            }
-        }
+        public string DesktopLocation => "X = " + m_outputDescription.DesktopBounds.Left + ", Y = " + m_outputDescription.DesktopBounds.Top;
 
-        public string Rotation
-        {
-            get { return m_outputDescription.Rotation.ToString(); }
-        }
+        public string Rotation => m_outputDescription.Rotation.ToString();
 
-        public EngineOutputModeInfo DefaultMode
-        {
-            get { return SupportedModes[0]; }
-        }
+        public EngineOutputModeInfo DefaultMode => SupportedModes[0];
 
         public EngineOutputModeInfo[] SupportedModes { get; }
     }

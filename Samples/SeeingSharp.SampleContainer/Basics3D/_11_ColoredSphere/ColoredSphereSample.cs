@@ -49,12 +49,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create Sphere geometry resource
@@ -65,12 +65,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._11_ColoredSphere
                     Radius = 1
                 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(sphereType));
 
                 // Create Sphere object
                 var sphereObject = manipulator.AddGeneric(resPalletGeometry);
-                sphereObject.Color = Color4Ex.BlueColor;
+                sphereObject.Color = Color4Ex.GreenColor;
                 sphereObject.Position = new Vector3(0f, 2.5f, 0f);
                 sphereObject.EnableShaderGeneratedBorder();
                 sphereObject.BuildAnimationSequence()

@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float changeFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
+            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
             m_targetObject.Opacity = m_startOpacity + m_moveOpacity * changeFactor;
         }
 
@@ -90,7 +90,6 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnFixedTimeAnimationFinished()
         {
             m_targetObject.Opacity = m_targetOpacity;
-
             m_moveOpacity = 0;
             m_startOpacity = 1;
         }

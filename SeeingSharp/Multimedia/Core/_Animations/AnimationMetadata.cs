@@ -39,8 +39,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="finishedCallback">The finished callback.</param>
         public AnimationMetadata(IAnimation animation, Action finishedCallback)
         {
-            this.Animation = animation;
-            this.FinishedCallback = finishedCallback;
+            Animation = animation;
+            FinishedCallback = finishedCallback;
         }
 
         /// <summary>

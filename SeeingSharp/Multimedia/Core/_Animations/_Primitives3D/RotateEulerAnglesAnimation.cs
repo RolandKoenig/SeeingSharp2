@@ -75,7 +75,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Prepare this animation
             m_startRotation = m_targetObject.RotationEuler;
-            switch(m_stateChangeMode)
+
+            switch (m_stateChangeMode)
             {
                 case AnimationStateChangeMode.ChangeStateTo:
                     m_changeRotation = m_paramRotation - m_startRotation;
@@ -102,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_changeRotation.Z < -EngineMath.RAD_180DEG) { m_changeRotation.Z = -(m_changeRotation.Z + EngineMath.RAD_180DEG); }
 
             // Set components to zero which should not not be changed using this animation
-            if(!m_calculationComponents.HasFlag(RotationCalculationComponent.Pitch))
+            if (!m_calculationComponents.HasFlag(RotationCalculationComponent.Pitch))
             {
                 m_changeRotation.X = 0f;
             }
@@ -121,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float percentagePassed = (float)base.CurrentTime.Ticks / (float)m_duration.Ticks;
+            var percentagePassed = CurrentTime.Ticks / (float)m_duration.Ticks;
             m_targetObject.RotationEuler = m_startRotation + m_changeRotation * percentagePassed;
         }
 

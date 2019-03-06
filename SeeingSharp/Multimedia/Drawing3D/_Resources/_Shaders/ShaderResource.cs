@@ -26,8 +26,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     #region using
 
-    using System.IO;
-    using System.Text;
     using Core;
     using SeeingSharp.Util;
     using SharpDX.D3DCompiler;
@@ -38,7 +36,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         #region Generic members
         private string m_shaderProfile;
-        private byte[] m_shaderBytecode;
         private ResourceLink m_resourceLink;
         private ShaderResourceKind m_resourceKind;
         #endregion
@@ -61,17 +58,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if(m_shaderBytecode == null)
+            if (ShaderBytecode == null)
             {
-                m_shaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
+                ShaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
             }
 
-            LoadShader(device, m_shaderBytecode);
+            LoadShader(device, ShaderBytecode);
         }
 
         private static byte[] GetShaderBytecode(EngineDevice device, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel)
         {
-            switch(resourceKind)
+            switch (resourceKind)
             {
                 case ShaderResourceKind.Bytecode:
                     using (var inStream = resourceLink.OpenInputStream())
@@ -93,10 +90,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             shaderModel,
                             shaderFlags: device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             sourceFileName: resourceLink.ToString());
-                        if(compileResult.HasErrors)
+
+                        if (compileResult.HasErrors)
                         {
                             throw new SeeingSharpGraphicsException($"Unable to compile shader from {resourceLink}: {compileResult.ResultCode} - {compileResult.Message}");
                         }
+
                         return compileResult.Bytecode.Data;
                     }
 
@@ -126,9 +125,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the shader's raw bytecode.
         /// </summary>
-        public byte[] ShaderBytecode
-        {
-            get { return m_shaderBytecode; }
-        }
+        public byte[] ShaderBytecode { get; private set; }
     }
 }

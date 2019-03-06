@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -64,22 +63,22 @@ namespace SeeingSharp.Multimedia.Core
             Name = name;
             Scene = parentScene;
 
-            //Create list holding all information for individual views
+            // Create list holding all information for individual views
             m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
 
-            //Create standard collections
+            // Create standard collections
             ObjectsInternal = new List<SceneObject>();
             Objects = new ReadOnlyCollection<SceneObject>(ObjectsInternal);
 
-            //Create specialized collections
+            // Create specialized collections
             SpacialObjects = new List<SceneSpacialObject>(1024);
             m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
             m_sceneObjectsNotStatic = new List<SceneObject>(1024);
             m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
 
-            this.AllowPick = true;
-            this.IsRenderingEnabled = true;
-            this.ClearDepthBufferAfterRendering = false;
+            AllowPick = true;
+            IsRenderingEnabled = true;
+            ClearDepthBufferAfterRendering = false;
         }
 
         /// <summary>
@@ -154,10 +153,8 @@ namespace SeeingSharp.Multimedia.Core
             ObjectsInternal.Add(sceneObject);
             sceneObject.SetSceneAndLayer(Scene, this);
 
-            //Append object to specialized collections
-            var spacialObject = sceneObject as SceneSpacialObject;
-
-            if (spacialObject != null)
+            // Append object to specialized collections
+            if (sceneObject is SceneSpacialObject spacialObject)
             {
                 SpacialObjects.Add(spacialObject);
             }
@@ -167,7 +164,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle static / non static objects
-            if(sceneObject.IsStatic)
+            if (sceneObject.IsStatic)
             {
                 m_sceneObjectsForSingleUpdateCall.Enqueue(sceneObject);
             }
@@ -176,7 +173,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_sceneObjectsNotStatic.Add(sceneObject);
             }
 
-            //Register the given object on all view subsets
+            // Register the given object on all view subsets
             foreach (var actViewSubset in m_viewSubsets)
             {
                 actViewSubset.RegisterObjectRange(sceneObject);
@@ -228,38 +225,40 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">Object to remove.</param>
         internal void RemoveObject(SceneObject sceneObject)
         {
-            if (m_isInUpdate || m_isInUpdateBeside) { throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!"); }
-
-            if (ObjectsInternal.Contains(sceneObject))
+            if (m_isInUpdate || m_isInUpdateBeside)
             {
-                sceneObject.UnloadResources();
+                throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!");
+            }
 
-                ObjectsInternal.Remove(sceneObject);
-                sceneObject.ResetSceneAndLayer();
+            if (!ObjectsInternal.Contains(sceneObject))
+            {
+                return;
+            }
 
-                // Remove object from specialized collections
-                var spacialObject = sceneObject as SceneSpacialObject;
+            sceneObject.UnloadResources();
+            ObjectsInternal.Remove(sceneObject);
+            sceneObject.ResetSceneAndLayer();
 
-                if (spacialObject != null)
-                {
-                    SpacialObjects.Remove(spacialObject);
-                }
-                else
-                {
-                    m_sceneObjectsNotSpacial.Remove(sceneObject);
-                }
+            // Remove object from specialized collections
+            if (sceneObject is SceneSpacialObject spacialObject)
+            {
+                SpacialObjects.Remove(spacialObject);
+            }
+            else
+            {
+                m_sceneObjectsNotSpacial.Remove(sceneObject);
+            }
 
-                // Remove object form non-static collection
-                if(!sceneObject.IsStatic)
-                {
-                    m_sceneObjectsNotStatic.Remove(sceneObject);
-                }
+            // Remove object form non-static collection
+            if (!sceneObject.IsStatic)
+            {
+                m_sceneObjectsNotStatic.Remove(sceneObject);
+            }
 
-                // Remove this object on all view subsets
-                foreach (var actViewSubset in m_viewSubsets)
-                {
-                    actViewSubset.DeregisterObject(sceneObject);
-                }
+            // Remove this object on all view subsets
+            foreach (var actViewSubset in m_viewSubsets)
+            {
+                actViewSubset.DeregisterObject(sceneObject);
             }
         }
 
@@ -268,7 +267,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadResources()
         {
-            //Unload resources of all scene objects
+            // Unload resources of all scene objects
             foreach (var actObject in ObjectsInternal)
             {
                 actObject.UnloadResources();
@@ -284,8 +283,8 @@ namespace SeeingSharp.Multimedia.Core
             List<SceneObject> invalidObjects = null;
 
             // Load all resources
-            int sceneObjectArrayLength = ObjectsInternal.Count;
-            SceneObject[] sceneObjectArray = ObjectsInternal.GetBackingArray();
+            var sceneObjectArrayLength = ObjectsInternal.Count;
+            var sceneObjectArray = ObjectsInternal.GetBackingArray();
 
             for (var loop = 0; loop < sceneObjectArrayLength; loop++)
             {
@@ -301,10 +300,9 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    GraphicsCore.PublishInternalExceptionInfo(
-                        ex, InternalExceptionLocation.Loading3DObject);
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.Loading3DObject);
 
-                    //Build list of invalid objects
+                    // Build list of invalid objects
                     if (invalidObjects == null)
                     {
                         invalidObjects = new List<SceneObject>();
@@ -314,7 +312,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            //Remove all invalid objects
+            // Remove all invalid objects
             if (invalidObjects != null)
             {
                 HandleInvalidObjects(invalidObjects);
@@ -329,23 +327,27 @@ namespace SeeingSharp.Multimedia.Core
         {
             updateState.SceneLayer = this;
             m_isInUpdate = true;
+
             try
             {
                 // Update all objects which are registered for initial update call
-                int initialUpdateCallCount = m_sceneObjectsForSingleUpdateCall.Count;
-                if(initialUpdateCallCount > 0)
+                var initialUpdateCallCount = m_sceneObjectsForSingleUpdateCall.Count;
+
+                if (initialUpdateCallCount > 0)
                 {
-                    SceneObject[] initialUpdateCallItems = m_sceneObjectsForSingleUpdateCall.GetBackingArray();
-                    for(int loop=0; loop<initialUpdateCallCount; loop++)
+                    var initialUpdateCallItems = m_sceneObjectsForSingleUpdateCall.GetBackingArray();
+
+                    for (var loop = 0; loop < initialUpdateCallCount; loop++)
                     {
                         initialUpdateCallItems[loop].Update(updateState);
                     }
                 }
 
                 // Call default update method for each object
-                int updateListLength = m_sceneObjectsNotStatic.Count;
-                SceneObject[] updateList = m_sceneObjectsNotStatic.GetBackingArray();
-                for(int actIndex = 0; actIndex < updateListLength; actIndex++)
+                var updateListLength = m_sceneObjectsNotStatic.Count;
+                var updateList = m_sceneObjectsNotStatic.GetBackingArray();
+
+                for (var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
                     if (!updateList[actIndex].HasParent)
                     {
@@ -354,7 +356,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Call overall updates on all objects
-                for (int loop = 0; loop < updateListLength; loop++)
+                for (var loop = 0; loop < updateListLength; loop++)
                 {
                     if (!updateList[loop].HasParent)
                     {
@@ -383,6 +385,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             updateState.SceneLayer = this;
             m_isInUpdateBeside = true;
+
             try
             {
                 // Now update all view specific references
@@ -406,12 +409,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void Render(RenderState renderState)
         {
-            if (!this.IsRenderingEnabled)
+            if (!IsRenderingEnabled)
             {
                 return;
             }
 
-            //Delegate render call to corresponding view subset
+            // Delegate render call to corresponding view subset
             var viewSubset = m_viewSubsets[renderState.ViewIndex];
 
             if (viewSubset != null)
@@ -426,7 +429,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">State of the render.</param>
         internal void Render2DOverlay(RenderState renderState)
         {
-            //Delegate render call to corresponding view subset
+            // Delegate render call to corresponding view subset
             var viewSubset = m_viewSubsets[renderState.ViewIndex];
 
             if (viewSubset != null)
@@ -443,7 +446,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in invalidObjects)
             {
-                //Unload the object if it is loaded
+                // Unload the object if it is loaded
                 try
                 {
                     actObject.UnloadResources();
@@ -454,8 +457,8 @@ namespace SeeingSharp.Multimedia.Core
                         ex, InternalExceptionLocation.UnloadingInvalid3DObject);
                 }
 
-                //Remove this object from this layer
-                this.RemoveObject(actObject);
+                // Remove this object from this layer
+                RemoveObject(actObject);
             }
         }
 
@@ -544,9 +547,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets total count of objects within the scene.
         /// </summary>
-        public int CountObjects
-        {
-            get { return ObjectsInternal.Count; }
-        }
+        public int CountObjects => ObjectsInternal.Count;
     }
 }

@@ -39,8 +39,8 @@ namespace SeeingSharp
 
         public Line(Vector3 start, Vector3 end)
         {
-            this.StartPosition = start;
-            this.EndPosition = end;
+            StartPosition = start;
+            EndPosition = end;
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace SeeingSharp
         /// <param name="xLocation">The location to set.</param>
         public void SetAllXLocations(float xLocation)
         {
-            this.StartPosition.X = xLocation;
-            this.EndPosition.X = xLocation;
+            StartPosition.X = xLocation;
+            EndPosition.X = xLocation;
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace SeeingSharp
         /// <param name="yLocation">The location to set.</param>
         public void SetAllYLocations(float yLocation)
         {
-            this.StartPosition.Y = yLocation;
-            this.EndPosition.Y = yLocation;
+            StartPosition.Y = yLocation;
+            EndPosition.Y = yLocation;
         }
 
         /// <summary>
@@ -92,8 +92,8 @@ namespace SeeingSharp
         /// <param name="zLocation">The location to set.</param>
         public void SetAllZLocations(float zLocation)
         {
-            this.StartPosition.Z = zLocation;
-            this.EndPosition.Z = zLocation;
+            StartPosition.Z = zLocation;
+            EndPosition.Z = zLocation;
         }
     }
 }

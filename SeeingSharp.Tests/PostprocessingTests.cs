@@ -38,7 +38,6 @@ namespace SeeingSharp.Tests
     using Multimedia.Drawing3D;
     using Multimedia.Objects;
     using Multimedia.Views;
-    using SeeingSharp.Util;
     using SharpDX;
     using Util;
 
@@ -70,13 +69,13 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var keyPostprocess = manipulator.AddResource<FocusPostprocessEffectResource>(
+                    var keyPostprocess = manipulator.AddResource(
                         () => new FocusPostprocessEffectResource(false, 0f));
 
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeType()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -92,7 +91,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Postprocessing", "PostProcess_Focus.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
@@ -120,8 +119,8 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync((manipulator) =>
                 {
-                    var keyPostprocess = manipulator.AddResource<EdgeDetectPostprocessEffectResource>(
-                        () => new EdgeDetectPostprocessEffectResource()
+                    var keyPostprocess = manipulator.AddResource(
+                        () => new EdgeDetectPostprocessEffectResource
                         {
                             Thickness = 10f
                         });
@@ -129,7 +128,7 @@ namespace SeeingSharp.Tests
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    var geoResource = manipulator.AddResource<GeometryResource>(
+                    var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeType()));
 
                     var newObject = manipulator.AddGeneric(geoResource);
@@ -145,7 +144,7 @@ namespace SeeingSharp.Tests
                 // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
-                bool isNearEqual = BitmapComparison.IsNearEqual(
+                var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Postprocessing", "PostProcess_EdgeDetect.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }

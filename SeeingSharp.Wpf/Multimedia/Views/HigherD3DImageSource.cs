@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace Mappings
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
 
@@ -62,7 +61,7 @@ namespace SeeingSharp.Multimedia.Views
             m_d3dContext = deviceHandlerD3D9.Context;
             m_d3dDevice = deviceHandlerD3D9.Device;
 
-            if(m_d3dDevice == null)
+            if (m_d3dDevice == null)
             {
                 throw new SeeingSharpException("Unable to create Wpf image source: No Direct3D 9 device available on " + device);
             }
@@ -77,7 +76,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             SetRenderTarget(null);
 
-            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(this.m_d3dRenderTarget);
+            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(m_d3dRenderTarget);
             s_activeClients--;
         }
 
@@ -86,9 +85,9 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void InvalidateD3DImage()
         {
-            if (this.m_d3dRenderTarget != null)
+            if (m_d3dRenderTarget != null)
             {
-                base.AddDirtyRect(new Int32Rect(0, 0, base.PixelWidth, base.PixelHeight));
+                AddDirtyRect(new Int32Rect(0, 0, PixelWidth, PixelHeight));
             }
         }
 
@@ -98,22 +97,26 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="renderTarget">The render target to set.</param>
         public void SetRenderTarget(D3D11.Texture2D renderTarget)
         {
-            if (this.m_d3dRenderTarget != null)
+            if (m_d3dRenderTarget != null)
             {
-                this.m_d3dRenderTarget = null;
+                m_d3dRenderTarget = null;
 
-                base.Lock();
-                base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
-                base.Unlock();
+                Lock();
+                SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
+                Unlock();
             }
 
-            if (renderTarget == null) { return; }
+            if (renderTarget == null)
+            {
+                return;
+            }
+
             if (!IsShareable(renderTarget))
             {
                 throw new ArgumentException("texture must be created with ResourceOptionFlags.Shared");
             }
 
-            var format = HigherD3DImageSource.TranslateFormat(renderTarget);
+            var format = TranslateFormat(renderTarget);
 
             if (format == D3D9.Format.Unknown)
             {
@@ -127,21 +130,21 @@ namespace SeeingSharp.Multimedia.Views
                 throw new ArgumentNullException(nameof(handle));
             }
 
-            //Map the texture to the D3DImage base class
-            bool tDisposed = renderTarget.IsDisposed;
+            // Map the texture to the D3DImage base class
+            var tDisposed = renderTarget.IsDisposed;
             float tWidth = renderTarget.Description.Width;
             float tHeight = renderTarget.Description.Height;
-            this.m_d3dRenderTarget = new D3D9.Texture(
+            m_d3dRenderTarget = new D3D9.Texture(
                 m_d3dDevice,
                 renderTarget.Description.Width,
                 renderTarget.Description.Height,
                 1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
 
-            using (var surface = this.m_d3dRenderTarget.GetSurfaceLevel(0))
+            using (var surface = m_d3dRenderTarget.GetSurfaceLevel(0))
             {
-                base.Lock();
-                base.SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
-                base.Unlock();
+                Lock();
+                SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
+                Unlock();
             }
         }
 

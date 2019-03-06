@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public EngineDevice ExportDevice
         {
-            get { return m_device; }
+            get => m_device;
             set
             {
                 value.EnsureNotNull(nameof(value));

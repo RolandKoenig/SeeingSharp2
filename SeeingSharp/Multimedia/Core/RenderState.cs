@@ -24,7 +24,6 @@
 
 #region using
 
-//Same namespace mappings.
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -50,18 +49,15 @@ namespace SeeingSharp.Multimedia.Core
         #endregion
 
         #region  Generic fields
-        private bool m_disposed;
+
         private Stack<RenderStackEntry> m_renderSettingsStack;
         private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
         private RenderStackEntry m_currentRenderSettings;
-        private Scene m_currentScene;
-        private ResourceDictionary m_currentResourceDictionary;
-        private Matrix4Stack m_world;
         private PerformanceAnalyzer m_perfomanceCalculator;
         #endregion
 
         #region Current state
-        private MaterialResource m_forcedMaterial;
+
         private MaterialResource m_lastAppliedMaterial;
         private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
         #endregion
@@ -73,17 +69,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="performanceCalculator">The object used to calculate performance values</param>
         private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
         {
-            //Set device members
+            // Set device members
             Device = device;
-            this.DeviceIndex = device.DeviceIndex;
+            DeviceIndex = device.DeviceIndex;
 
-            //Initialize world matrix
-            m_world = new Matrix4Stack(Matrix.Identity);
+            // Initialize world matrix
+            World = new Matrix4Stack(Matrix.Identity);
 
-            //Create settings stack
+            // Create settings stack
             m_renderSettingsStack = new Stack<RenderStackEntry>();
-            m_sceneStack = new Stack<Tuple<Core.Scene, ResourceDictionary>>();
-
+            m_sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
             m_perfomanceCalculator = performanceCalculator;
         }
 
@@ -108,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void ForceMaterial(MaterialResource material)
         {
             m_lastAppliedMaterial = null;
-            m_forcedMaterial = material;
+            ForcedMaterial = material;
         }
 
         /// <summary>
@@ -128,10 +123,10 @@ namespace SeeingSharp.Multimedia.Core
         internal void ApplyMaterial(MaterialResource resourceToApply, MaterialApplyInstancingMode instancingMode)
         {
             // Use forced material if any set
-            if ((m_forcedMaterial != null) &&
-                (resourceToApply != m_forcedMaterial))
+            if ((ForcedMaterial != null) &&
+                (resourceToApply != ForcedMaterial))
             {
-                resourceToApply = m_forcedMaterial;
+                resourceToApply = ForcedMaterial;
             }
 
             // Disable logic if given material is null
@@ -141,14 +136,16 @@ namespace SeeingSharp.Multimedia.Core
                 return;
             }
 
-            if ((m_lastAppliedMaterial != resourceToApply) || (m_lastMaterialInstancingMode != instancingMode))
+            if ((m_lastAppliedMaterial == resourceToApply) && (m_lastMaterialInstancingMode == instancingMode))
             {
-                // Apply material (material or instancing mode has changed)
-                resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
-
-                m_lastAppliedMaterial = resourceToApply;
-                m_lastMaterialInstancingMode = instancingMode;
+                return;
             }
+
+            // Apply material (material or instancing mode has changed)
+            resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
+
+            m_lastAppliedMaterial = resourceToApply;
+            m_lastMaterialInstancingMode = instancingMode;
         }
 
         /// <summary>
@@ -168,9 +165,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            if (m_disposed) { return; }
+            if (Disposed) { return; }
 
-            m_disposed = true;
+            Disposed = true;
         }
 
         /// <summary>
@@ -187,10 +184,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_renderSettingsStack.Clear();
             m_sceneStack.Clear();
-            m_currentScene = null;
-            m_world = new Matrix4Stack(Matrix.Identity);
+            CurrentScene = null;
+            World = new Matrix4Stack(Matrix.Identity);
 
-            //Inititialize current render properties
+            // Inititialize current render properties
             m_currentRenderSettings = new RenderStackEntry
             {
                 Matrix4Stack = new Matrix4Stack(),
@@ -200,7 +197,7 @@ namespace SeeingSharp.Multimedia.Core
                 ViewInformation = viewInformation
             };
 
-            //Apply initial render properties
+            // Apply initial render properties
             m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
         }
 
@@ -209,11 +206,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ClearState()
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
 
             // Clear material properties
             m_lastAppliedMaterial = null;
-            m_forcedMaterial = null;
+            ForcedMaterial = null;
             m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
 
             Device.DeviceImmediateContextD3D11.ClearState();
@@ -235,12 +232,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="stencil">The stencil value to write over the whole buffer.</param>
         public void ClearCurrentDepthBuffer(float depth, byte stencil)
         {
-            if (m_disposed)
+            if (Disposed)
             {
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.DepthStencilBuffer != null)
             {
@@ -257,12 +254,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="color">The culor used for clering.</param>
         public void ClearCurrentColorBuffer(Color4 color)
         {
-            if (m_disposed)
+            if (Disposed)
             {
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.ColorBuffer != null)
             {
@@ -277,12 +274,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ClearCurrentNormalDepth()
         {
-            if (m_disposed)
+            if (Disposed)
             {
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = this.CurrentRenderTargets;
+            var currentTargets = CurrentRenderTargets;
 
             if (currentTargets.NormalDepthBuffer != null)
             {
@@ -299,14 +296,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceDictionary">The <see cref="ResourceDictionary"/> to be pushed onto the stack.</param>
         public IDisposable PushScene(Scene scene, ResourceDictionary resourceDictionary)
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
-            if (m_currentScene == scene) { return new DummyDisposable(() => { }); };
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (CurrentScene == scene) { return new DummyDisposable(() => { }); };
 
-            m_sceneStack.Push(Tuple.Create(m_currentScene, m_currentResourceDictionary));
-            m_currentScene = scene;
-            m_currentResourceDictionary = resourceDictionary;
+            m_sceneStack.Push(Tuple.Create(CurrentScene, CurrentResources));
+            CurrentScene = scene;
+            CurrentResources = resourceDictionary;
 
-            return new DummyDisposable(() => this.PopScene());
+            return new DummyDisposable(() => PopScene());
         }
 
         /// <summary>
@@ -314,12 +311,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void PopScene()
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
             if (m_sceneStack.Count < 0) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
 
             var lowerContent = m_sceneStack.Pop();
-            m_currentScene = lowerContent.Item1;
-            m_currentResourceDictionary = lowerContent.Item2;
+            CurrentScene = lowerContent.Item1;
+            CurrentResources = lowerContent.Item2;
         }
 
         /// <summary>
@@ -335,12 +332,12 @@ namespace SeeingSharp.Multimedia.Core
             SharpDX.Mathematics.Interop.RawViewportF viewport,
             Camera3DBase camera, ViewInformation viewInformation)
         {
-            if (m_disposed)
+            if (Disposed)
             {
                 throw new ObjectDisposedException("RenderState");
             }
 
-            //Build new render stack entry
+            // Build new render stack entry
             var newEntry = new RenderStackEntry
             {
                 Matrix4Stack = new Matrix4Stack(),
@@ -350,10 +347,10 @@ namespace SeeingSharp.Multimedia.Core
                 ViewInformation = viewInformation
             };
 
-            //Overtake device settings
+            // Overtake device settings
             newEntry.Apply(Device.DeviceImmediateContextD3D11);
 
-            //Push new entry onto the stack
+            // Push new entry onto the stack
             m_renderSettingsStack.Push(m_currentRenderSettings);
             m_currentRenderSettings = newEntry;
         }
@@ -363,13 +360,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void PopRenderTarget()
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
             if (m_renderSettingsStack.Count < 1) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
 
-            //Pop last entry
+            // Pop last entry
             m_currentRenderSettings = m_renderSettingsStack.Pop();
 
-            //Apply old configuration
+            // Apply old configuration
             m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
         }
 
@@ -378,7 +375,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ApplyCurrentTarget()
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
 
             if (m_currentRenderSettings != null)
             {
@@ -392,7 +389,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="world">The world matrix.</param>
         public Matrix GenerateWorldViewProj(Matrix world)
         {
-            if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (Disposed) { throw new ObjectDisposedException("RenderState"); }
 
             return world * m_currentRenderSettings.ViewProj;
         }
@@ -405,35 +402,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the ViewProj matrix.
         /// </summary>
-        public Matrix ViewProj
-        {
-            get { return m_currentRenderSettings.ViewProj; }
-        }
+        public Matrix ViewProj => m_currentRenderSettings.ViewProj;
 
         /// <summary>
         /// Gets current world matrix.
         /// </summary>
         /// <value>The world.</value>
-        public Matrix4Stack World
-        {
-            get { return m_world; }
-        }
+        public Matrix4Stack World { get; private set; }
 
         /// <summary>
         /// Gets current scene object.
         /// </summary>
-        public Scene CurrentScene
-        {
-            get { return m_currentScene; }
-        }
+        public Scene CurrentScene { get; private set; }
 
         /// <summary>
         /// Gets the current ResourceDictionary object.
         /// </summary>
-        public ResourceDictionary CurrentResources
-        {
-            get { return m_currentResourceDictionary; }
-        }
+        public ResourceDictionary CurrentResources { get; private set; }
 
         /// <summary>
         /// Gets current camera.
@@ -474,10 +459,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is this object disposed?
         /// </summary>
-        public bool Disposed
-        {
-            get { return m_disposed; }
-        }
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Gets or sets the current view index.
@@ -489,7 +471,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal int DeviceIndex;
 
-        //internal int LastRenderBlockID;
+        // internal int LastRenderBlockID;
 
         /// <summary>
         /// Gets or sets the current render target for 2D rendering.
@@ -499,10 +481,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the currently forced material.
         /// </summary>
-        public MaterialResource ForcedMaterial
-        {
-            get { return m_forcedMaterial; }
-        }
+        public MaterialResource ForcedMaterial { get; private set; }
 
         /// <summary>
         /// Gets or sets the current object for 2D rendering.
@@ -525,9 +504,9 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         /// <summary>
         /// HelperClass for RenderState class
         /// </summary>
@@ -553,10 +532,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <summary>
             /// Gets the current view projection matrix.
             /// </summary>
-            public Matrix ViewProj
-            {
-                get { return Camera.ViewProjection; }
-            }
+            public Matrix ViewProj => Camera.ViewProjection;
 
             /// <summary>
             /// Applies all properties.
@@ -574,7 +550,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Set render targets to output merger
-                //deviceContext.Rasterizer.SetViewport(SingleViewport);
+                // deviceContext.Rasterizer.SetViewport(SingleViewport);
                 deviceContext.Rasterizer.SetViewports(new SharpDX.Mathematics.Interop.RawViewportF[] { SingleViewport, SingleViewport, SingleViewport });
                 deviceContext.OutputMerger.SetTargets(RenderTargets.DepthStencilBuffer, m_targetArray);
             }

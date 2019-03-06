@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions CreateDefaultImportOptions()
         {
-            return new ObjImportOptions() { ResizeFactor = 0.01f };
+            return new ObjImportOptions { ResizeFactor = 0.01f };
         }
 
         /// <summary>
@@ -49,9 +49,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            var objImportOptions = importOptions as ObjImportOptions;
-
-            if (objImportOptions == null)
+            if (!(importOptions is ObjImportOptions objImportOptions))
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }

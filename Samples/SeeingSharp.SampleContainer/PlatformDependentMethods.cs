@@ -42,7 +42,10 @@ namespace SeeingSharp.SampleContainer
 
         public static void OpenUrlInBrowser(string url)
         {
-            if(s_showUrlInBrowser != null) { s_showUrlInBrowser(url); }
+            if (s_showUrlInBrowser != null)
+            {
+                s_showUrlInBrowser(url);
+            }
             else
             {
                 // Default implementation

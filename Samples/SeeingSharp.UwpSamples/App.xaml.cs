@@ -48,7 +48,7 @@ namespace SeeingSharp.UwpSamples
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             PlatformDependentMethods.SetOpenUrlInBrowser(async (url) =>
             {
@@ -56,8 +56,8 @@ namespace SeeingSharp.UwpSamples
                 await Windows.System.Launcher.LaunchUriAsync(targetUrl);
             });
 
-            this.Suspending += OnSuspending;
-            this.Resuming += OnResuming;
+            Suspending += OnSuspending;
+            Resuming += OnResuming;
         }
 
         /// <summary>
@@ -72,11 +72,9 @@ namespace SeeingSharp.UwpSamples
                 .SupportUwp()
                 .Load();
 
-            var rootFrame = Window.Current.Content as Frame;
-
             // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
             // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
                 rootFrame = new Frame();
@@ -92,18 +90,21 @@ namespace SeeingSharp.UwpSamples
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (e.PrelaunchActivated != false)
             {
-                if (rootFrame.Content == null)
-                {
-                    // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
-                    // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
-                    // übergeben werden
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // Sicherstellen, dass das aktuelle Fenster aktiv ist
-                Window.Current.Activate();
+                return;
             }
+
+            if (rootFrame.Content == null)
+            {
+                // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
+                // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
+                // übergeben werden
+                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+            }
+
+            // Sicherstellen, dass das aktuelle Fenster aktiv ist
+            Window.Current.Activate();
         }
 
         /// <summary>

@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -41,7 +40,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class VertexShaderResource : ShaderResource
     {
         #region Resources for Direct3D 11 rendering
-        private D3D11.VertexShader m_vertexShader;
+
         #endregion
 
         /// <summary>
@@ -60,9 +59,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
         {
-            if (m_vertexShader == null)
+            if (VertexShader == null)
             {
-                m_vertexShader = new D3D11.VertexShader(device.DeviceD3D11_1, shaderBytecode);
+                VertexShader = new D3D11.VertexShader(device.DeviceD3D11_1, shaderBytecode);
             }
         }
 
@@ -71,23 +70,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            m_vertexShader = SeeingSharpTools.DisposeObject(m_vertexShader);
+            VertexShader = SeeingSharpTools.DisposeObject(VertexShader);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_vertexShader != null; }
-        }
+        public override bool IsLoaded => VertexShader != null;
 
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        public D3D11.VertexShader VertexShader
-        {
-            get { return m_vertexShader; }
-        }
+        public D3D11.VertexShader VertexShader { get; private set; }
     }
 }

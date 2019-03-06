@@ -60,8 +60,9 @@ namespace SeeingSharp
 
         public static void Transform(this ref BoundingBox bBox, Matrix matrix)
         {
-            Vector3[] corners = bBox.GetCorners();
-            for (int loop = 0; loop < corners.Length; loop++)
+            var corners = bBox.GetCorners();
+
+            for (var loop = 0; loop < corners.Length; loop++)
             {
                 corners[loop] = Vector3.Transform(corners[loop], matrix).ToXYZ();
             }
@@ -343,7 +344,7 @@ namespace SeeingSharp
         /// </summary>
         public static List<Vector3> BuildLineListForBorders(this ref BoundingBox boundingBox)
         {
-            List<Vector3> result = new List<Vector3>();
+            var result = new List<Vector3>();
             var size = boundingBox.Size;
 
             //Add front face

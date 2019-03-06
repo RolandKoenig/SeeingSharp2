@@ -73,9 +73,9 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
-                new LocalResourceData()
+                new LocalResourceData
                 {
-                    LineRenderResources = resourceDictionary.GetResourceAndEnsureLoaded<LineRenderResources>(
+                    LineRenderResources = resourceDictionary.GetResourceAndEnsureLoaded(
                         LineRenderResources.RESOURCE_KEY,
                         () => new LineRenderResources()),
                     LineVertexBuffer = null
@@ -109,11 +109,13 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
             // Handle line data reloading flag
-            if(m_forceReloadLineData)
+            if (!m_forceReloadLineData)
             {
-                m_localResources.ForEachInEnumeration((actItem) => actItem.LineDataLoaded = false);
-                m_forceReloadLineData = false;
+                return;
             }
+
+            m_localResources.ForEachInEnumeration((actItem) => actItem.LineDataLoaded = false);
+            m_forceReloadLineData = false;
         }
 
         /// <summary>
@@ -123,9 +125,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
             }
         }
 
@@ -166,14 +168,16 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Line[] LineData
         {
-            get { return m_lineData; }
+            get => m_lineData;
             set
             {
-                if (m_lineData != value)
+                if (m_lineData == value)
                 {
-                    m_lineData = value;
-                    m_forceReloadLineData = true;
+                    return;
                 }
+
+                m_lineData = value;
+                m_forceReloadLineData = true;
             }
         }
 

@@ -108,48 +108,56 @@ namespace SeeingSharp.Util
         public AssemblyResourceLink GetForAnotherFile(string fileName, params string[] subdirectories)
         {
             // Build new namespace
-            string newTargetNamespace = ResourceNamespace;
-            if (subdirectories.Length > 0)
+            var newTargetNamespace = ResourceNamespace;
+
+            if (subdirectories.Length <= 0)
             {
-                // Build a stack representing the current namespace path
-                string[] currentDirectorySplitted = ResourceNamespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                Stack<string> currentDirectoryPathStack = new Stack<string>(currentDirectorySplitted.Length);
-                for(int loop=0; loop<currentDirectorySplitted.Length; loop++)
-                {
-                    currentDirectoryPathStack.Push(currentDirectorySplitted[loop]);
-                }
-
-                // Modify the stack using given subdirectories
-                foreach (string actSubdirectory in subdirectories)
-                {
-                    switch (actSubdirectory)
-                    {
-                        case ".":
-                            // Nothing to do.. directory remains the same
-                            break;
-
-                        case "..":
-                            // Go one level down
-                            if (currentDirectoryPathStack.Count <= 0)
-                            {
-                                string requestedSubdirectoryPath = subdirectories.ToCommaSeparatedString("/");
-                                throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {ResourceNamespace}, Requested path: {requestedSubdirectoryPath}");
-                            }
-                            currentDirectoryPathStack.Pop();
-                            break;
-
-                        default:
-                            // Go one level up
-                            currentDirectoryPathStack.Push(actSubdirectory);
-                            break;
-                    }
-                }
-
-                // Generate new target namespace out of the stack
-                newTargetNamespace = currentDirectoryPathStack
-                    .Reverse()
-                    .ToCommaSeparatedString(".");
+                return new AssemblyResourceLink(
+                    TargetAssembly,
+                    newTargetNamespace,
+                    fileName);
             }
+
+            // Build a stack representing the current namespace path
+            var currentDirectorySplitted = ResourceNamespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var currentDirectoryPathStack = new Stack<string>(currentDirectorySplitted.Length);
+
+            for (var loop =0; loop<currentDirectorySplitted.Length; loop++)
+            {
+                currentDirectoryPathStack.Push(currentDirectorySplitted[loop]);
+            }
+
+            // Modify the stack using given subdirectories
+            foreach (var actSubdirectory in subdirectories)
+            {
+                switch (actSubdirectory)
+                {
+                    case ".":
+                        // Nothing to do.. directory remains the same
+                        break;
+
+                    case "..":
+                        // Go one level down
+                        if (currentDirectoryPathStack.Count <= 0)
+                        {
+                            var requestedSubdirectoryPath = subdirectories.ToCommaSeparatedString("/");
+                            throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {ResourceNamespace}, Requested path: {requestedSubdirectoryPath}");
+                        }
+
+                        currentDirectoryPathStack.Pop();
+                        break;
+
+                    default:
+                        // Go one level up
+                        currentDirectoryPathStack.Push(actSubdirectory);
+                        break;
+                }
+            }
+
+            // Generate new target namespace out of the stack
+            newTargetNamespace = currentDirectoryPathStack
+                .Reverse()
+                .ToCommaSeparatedString(".");
 
             // Build new resource link
             return new AssemblyResourceLink(
@@ -163,8 +171,13 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead()
         {
-            var result = TargetAssembly.GetManifestResourceStream(this.ResourcePath);
-            if(result == null) { throw new SeeingSharpException($"Resource {this.ResourcePath} not found in assembly {TargetAssembly.FullName}!"); }
+            var result = TargetAssembly.GetManifestResourceStream(ResourcePath);
+
+            if (result == null)
+            {
+                throw new SeeingSharpException($"Resource {ResourcePath} not found in assembly {TargetAssembly.FullName}!");
+            }
+
             return result;
         }
 
@@ -173,7 +186,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool IsValid()
         {
-            var resourceInfo = TargetAssembly.GetManifestResourceInfo(this.ResourcePath);
+            var resourceInfo = TargetAssembly.GetManifestResourceInfo(ResourcePath);
             return resourceInfo != null;
         }
 

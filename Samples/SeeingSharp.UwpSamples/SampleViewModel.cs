@@ -69,13 +69,16 @@ namespace SeeingSharp.UwpSamples
         {
             get
             {
-                if((m_bitmapSource == null) && (m_bitmapSourceTask == null))
+                if ((m_bitmapSource != null) || (m_bitmapSourceTask != null))
                 {
-                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
-                    if(sourceLink == null) { return null; }
-
-                    m_bitmapSourceTask = LoadSampleImageAsync(sourceLink);
+                    return m_bitmapSource;
                 }
+
+                var sourceLink = SampleMetadata.TryGetSampleImageLink();
+
+                if (sourceLink == null) { return null; }
+
+                m_bitmapSourceTask = LoadSampleImageAsync(sourceLink);
                 return m_bitmapSource;
             }
         }

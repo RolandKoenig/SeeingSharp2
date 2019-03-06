@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -93,7 +92,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">Graphics device.</param>
         /// <param name="rawImage">Raw image data.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, SeeingSharp.Multimedia.Util.SdxTK.Image rawImage)
+        public static D3D11.Texture2D CreateTexture(EngineDevice device, Util.SdxTK.Image rawImage)
         {
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -110,7 +109,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             // Special handling for cube textures
-            if (rawImage.Description.Dimension == SeeingSharp.Multimedia.Util.SdxTK.TextureDimension.TextureCube)
+            if (rawImage.Description.Dimension == Util.SdxTK.TextureDimension.TextureCube)
             {
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.TextureCube;
             }
@@ -225,11 +224,11 @@ namespace SeeingSharp.Multimedia.Core
 
         public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture32bpp m_mappedTexture)
         {
-            //Create the texture
-            var dataRectangle = new SharpDX.DataRectangle(
+            // Create the texture
+            var dataRectangle = new DataRectangle(
                 m_mappedTexture.Pointer,
                 m_mappedTexture.Width * 4);
-            var result = new D3D11.Texture2D(device.DeviceD3D11_1, new SharpDX.Direct3D11.Texture2DDescription()
+            var result = new D3D11.Texture2D(device.DeviceD3D11_1, new SharpDX.Direct3D11.Texture2DDescription
             {
                 Width = m_mappedTexture.Width,
                 Height = m_mappedTexture.Height,
@@ -240,12 +239,12 @@ namespace SeeingSharp.Multimedia.Core
                 Format = DEFAULT_TEXTURE_FORMAT,
                 MipLevels = 0,
                 OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
             }, new DataRectangle[] { dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle });
 
-            //Workaround for now... auto generate mip-levels
+            // Workaround for now... auto generate mip-levels
             // TODO: Dispatch this call to render-thread..
-            using (D3D11.ShaderResourceView shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
+            using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
             {
                 device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
             }
@@ -267,16 +266,17 @@ namespace SeeingSharp.Multimedia.Core
             SharpDX.WIC.BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
             // Allocate DataStream to receive the WIC image pixels
-            int stride = bitmapSource.Size.Width * 4;
-            using (var buffer = new SharpDX.DataStream(bitmapSource.Size.Height * stride, true, true))
+            var stride = bitmapSource.Size.Width * 4;
+
+            using (var buffer = new DataStream(bitmapSource.Size.Height * stride, true, true))
             {
                 // Copy the content of the WIC to the buffer
                 bitmapSource.CopyPixels(stride, buffer);
 
-                //Create the texture
-                var dataRectangle = new SharpDX.DataRectangle(buffer.DataPointer, stride);
+                // Create the texture
+                var dataRectangle = new DataRectangle(buffer.DataPointer, stride);
 
-                var result = new D3D11.Texture2D(device.DeviceD3D11_1, new SharpDX.Direct3D11.Texture2DDescription()
+                var result = new D3D11.Texture2D(device.DeviceD3D11_1, new SharpDX.Direct3D11.Texture2DDescription
                 {
                     Width = bitmapSource.Size.Width,
                     Height = bitmapSource.Size.Height,
@@ -287,17 +287,17 @@ namespace SeeingSharp.Multimedia.Core
                     Format = DEFAULT_TEXTURE_FORMAT,
                     MipLevels = 0,
                     OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
-                    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
                 }, new DataRectangle[] { dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle });
 
-                //Workaround for now... auto generate mip-levels
+                // Workaround for now... auto generate mip-levels
                 // TODO: Dispatch this call to render-thread..
                 using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
                 {
                     device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
                 }
 
-                //Return the generated texture
+                // Return the generated texture
                 return result;
             }
         }
@@ -310,12 +310,12 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            var result = new SharpDX.Mathematics.Interop.RawViewportF()
+            var result = new SharpDX.Mathematics.Interop.RawViewportF
             {
                 X = 0f,
                 Y = 0f,
-                Width = (float)width,
-                Height = (float)height,
+                Width = width,
+                Height = height,
                 MinDepth = 0f,
                 MaxDepth = 1f
             };
@@ -390,7 +390,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="rawData">Raw data to be loaded into the texture.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, SharpDX.DataBox[] rawData)
+        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DataBox[] rawData)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositive(nameof(width));
@@ -427,7 +427,7 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            //For handling of staging resource see
+            // For handling of staging resource see
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
 
             var textureDescription = new D3D11.Texture2DDescription
@@ -459,7 +459,7 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            //For handling of staging resource see
+            // For handling of staging resource see
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
 
             var textureDescription = new D3D11.Texture2DDescription
@@ -725,7 +725,7 @@ namespace SeeingSharp.Multimedia.Core
                 case HardwareDriverLevel.Direct3D9_1:
                 case HardwareDriverLevel.Direct3D9_2:
                 case HardwareDriverLevel.Direct3D9_3:
-                    return (int)(Math.Floor(zValue * (1f / (float)(2 ^ 24))));
+                    return (int)(Math.Floor(zValue * (1f / (2 ^ 24))));
 
                 default:
                     throw new SeeingSharpGraphicsException("Unable to calculate depth bias value: Target hardware unknown!");
@@ -745,7 +745,7 @@ namespace SeeingSharp.Multimedia.Core
             vertexCount.EnsurePositive(nameof(vertexCount));
 
             var vertexType = typeof(T);
-            int vertexSize = Marshal.SizeOf<T>();
+            var vertexSize = Marshal.SizeOf<T>();
 
             var bufferDescription = new D3D11.BufferDescription
             {
@@ -773,13 +773,13 @@ namespace SeeingSharp.Multimedia.Core
             vertices.EnsureNotNull(nameof(vertices));
 
             var vertexType = typeof(T);
-            int vertexCount = vertices.Sum((actArray) => actArray.Length);
-            int vertexSize = Marshal.SizeOf<T>();
+            var vertexCount = vertices.Sum((actArray) => actArray.Length);
+            var vertexSize = Marshal.SizeOf<T>();
             var outStream = new DataStream(
                 vertexCount * vertexSize,
                 true, true);
 
-            foreach (T[] actArray in vertices)
+            foreach (var actArray in vertices)
             {
                 outStream.WriteRange(actArray);
             }
@@ -812,17 +812,17 @@ namespace SeeingSharp.Multimedia.Core
             device.EnsureNotNull(nameof(device));
             indices.EnsureNotNull(nameof(indices));
 
-            int countIndices = indices.Sum((actArray) => actArray.Length);
-            int bytesPerIndex = device.SupportsOnly16BitIndexBuffer ? Marshal.SizeOf<ushort>() : Marshal.SizeOf<uint>();
+            var countIndices = indices.Sum((actArray) => actArray.Length);
+            var bytesPerIndex = device.SupportsOnly16BitIndexBuffer ? Marshal.SizeOf<ushort>() : Marshal.SizeOf<uint>();
 
             var outStreamIndex = new DataStream(
                 countIndices *
                 bytesPerIndex, true, true);
 
             // Write all instance data to the target stream
-            foreach (int[] actArray in indices)
+            foreach (var actArray in indices)
             {
-                int actArrayLength = actArray.Length;
+                var actArrayLength = actArray.Length;
 
                 for (var loop = 0; loop < actArrayLength; loop++)
                 {

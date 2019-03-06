@@ -105,19 +105,13 @@ namespace SeeingSharp.Util
         /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </summary>
         /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
-        public int Count
-        {
-            get { return m_dictionary.Count; }
-        }
+        public int Count => m_dictionary.Count;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
         /// </summary>
         /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.</returns>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Removes the specified item.
@@ -130,6 +124,7 @@ namespace SeeingSharp.Util
             {
                 return m_dictionary.Remove(item);
             }
+
             return false;
         }
     }

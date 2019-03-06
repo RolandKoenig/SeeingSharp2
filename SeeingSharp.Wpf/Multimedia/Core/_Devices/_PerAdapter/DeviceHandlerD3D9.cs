@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D9 = SharpDX.Direct3D9;
 
 #endregion
@@ -62,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Just needed when on true hardware
                 if (!isSoftwareAdapter)
                 {
-                    //Prepare device creation
+                    // Prepare device creation
                     var createFlags =
                         D3D9.CreateFlags.HardwareVertexProcessing |
                         D3D9.CreateFlags.PureDevice |
@@ -78,30 +77,34 @@ namespace SeeingSharp.Multimedia.Core
                         BackBufferCount = 1
                     };
 
-                    //Create the device finally
+                    // Create the device finally
                     m_direct3DEx = new D3D9.Direct3DEx();
 
                     // Try to find the Direct3D9 adapter that maches given DXGI adapter
                     m_adapterIndex = -1;
-                    for (int loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
+
+                    for (var loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
                     {
                         var d3d9AdapterInfo = m_direct3DEx.GetAdapterIdentifier(loop);
-                        if (d3d9AdapterInfo.DeviceId == m_dxgiAdapter.Description1.DeviceId)
+
+                        if (d3d9AdapterInfo.DeviceId != m_dxgiAdapter.Description1.DeviceId)
                         {
-                            m_adapterIndex = loop;
-                            break;
+                            continue;
                         }
+
+                        m_adapterIndex = loop;
+                        break;
                     }
 
                     // Direct3D 9 is only relevant on the primary device
-                    if(m_adapterIndex < 0) { return; }
+                    if (m_adapterIndex < 0) { return; }
 
                     // Try to create the device
                     m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, m_adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, createFlags, presentparams);
                 }
                 else
                 {
-                    //Not supported in software mode
+                    // Not supported in software mode
                 }
             }
             catch (Exception)
@@ -130,25 +133,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the device successfully initialized?
         /// </summary>
-        public bool IsInitialized
-        {
-            get { return m_deviceEx != null; }
-        }
+        public bool IsInitialized => m_deviceEx != null;
 
         /// <summary>
         /// Gets the initialized device.
         /// </summary>
-        internal D3D9.DeviceEx Device
-        {
-            get { return m_deviceEx; }
-        }
+        internal D3D9.DeviceEx Device => m_deviceEx;
 
         /// <summary>
         /// Gets current DirectX context.
         /// </summary>
-        internal D3D9.Direct3DEx Context
-        {
-            get { return m_direct3DEx; }
-        }
+        internal D3D9.Direct3DEx Context => m_direct3DEx;
     }
 }

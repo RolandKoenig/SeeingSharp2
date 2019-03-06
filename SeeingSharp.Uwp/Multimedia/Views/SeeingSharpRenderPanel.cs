@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Views
 
     #endregion
 
-    //[ContentProperty(Name = "SceneComponents")]
+    // [ContentProperty(Name = "SceneComponents")]
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
         #region Dependency properties
@@ -82,13 +82,11 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (!GraphicsCore.IsLoaded) { return; }
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) { return; }
+            if (!(sender is SeeingSharpRenderPanel renderPanel)) { return; }
 
-            var renderPanel = sender as SeeingSharpRenderPanel;
-            if(renderPanel == null) { return; }
-
-            if (e.Property == SeeingSharpRenderPanel.SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
-            else if (e.Property == SeeingSharpRenderPanel.CameraProperty) { renderPanel.Camera = e.NewValue as Camera3DBase; }
-            else if (e.Property == SeeingSharpRenderPanel.DrawingLayer2DProperty)
+            if (e.Property == SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
+            else if (e.Property == CameraProperty) { renderPanel.Camera = e.NewValue as Camera3DBase; }
+            else if (e.Property == DrawingLayer2DProperty)
             {
                 if (e.OldValue != null) { await renderPanel.RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
                 if (e.NewValue != null) { await renderPanel.RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
@@ -100,8 +98,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public bool DiscardRendering
         {
-            get { return m_painter.DiscardRendering; }
-            set { m_painter.DiscardRendering = value; }
+            get => m_painter.DiscardRendering;
+            set => m_painter.DiscardRendering = value;
         }
 
         /// <summary>
@@ -109,8 +107,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get { return (Scene)GetValue(SceneProperty); }
-            set { SetValue(SceneProperty, value); }
+            get => (Scene)GetValue(SceneProperty);
+            set => SetValue(SceneProperty, value);
         }
 
         /// <summary>
@@ -118,8 +116,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Custom2DDrawingLayer DrawingLayer2D
         {
-            get { return (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty); }
-            set { SetValue(DrawingLayer2DProperty, value); }
+            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
+            set => SetValue(DrawingLayer2DProperty, value);
         }
 
         /// <summary>
@@ -127,25 +125,19 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get { return (Camera3DBase)GetValue(CameraProperty); }
-            set { SetValue(CameraProperty, value); }
+            get => (Camera3DBase)GetValue(CameraProperty);
+            set => SetValue(CameraProperty, value);
         }
 
         /// <summary>
         /// Gets the RenderLoop that is currently in use.
         /// </summary>
-        public RenderLoop RenderLoop
-        {
-            get { return m_painter.RenderLoop; }
-        }
+        public RenderLoop RenderLoop => m_painter.RenderLoop;
 
         /// <summary>
         /// Does the target control have focus?
         /// </summary>
-        public bool Focused
-        {
-            get { return ((IInputEnabledView)m_painter).Focused; }
-        }
+        public bool Focused => ((IInputEnabledView)m_painter).Focused;
 
         public EngineDevice SelectedDevice
         {

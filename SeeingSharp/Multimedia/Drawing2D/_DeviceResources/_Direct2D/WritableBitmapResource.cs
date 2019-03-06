@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="pitch"></param>
         public void SetBitmapContent(Graphics2D graphics, IntPtr pointer, int pitch)
         {
-            var bitmap = this.GetBitmap(graphics.Device);
+            var bitmap = GetBitmap(graphics.Device);
             bitmap.CopyFromMemory(pointer, pitch);
         }
 
@@ -90,22 +90,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (base.IsDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];
 
-            if (result == null)
+            if (result != null)
             {
-                // Load the bitmap initially
-                result = new D2D.Bitmap(
-                    engineDevice.FakeRenderTarget2D,
-                    m_bitmapSize,
-                    new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
-                m_loadedBitmaps[engineDevice.DeviceIndex] = result;
+                return result;
             }
+
+            // Load the bitmap initially
+            result = new D2D.Bitmap(
+                engineDevice.FakeRenderTarget2D,
+                m_bitmapSize,
+                new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
+            m_loadedBitmaps[engineDevice.DeviceIndex] = result;
 
             return result;
         }
@@ -118,65 +120,31 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
 
-            if (brush != null)
+            if (brush == null)
             {
-                SeeingSharpTools.DisposeObject(brush);
-                m_loadedBitmaps[engineDevice.DeviceIndex] = null;
+                return;
             }
+
+            SeeingSharpTools.DisposeObject(brush);
+            m_loadedBitmaps[engineDevice.DeviceIndex] = null;
         }
 
-        public override int PixelWidth
-        {
-            get { return m_bitmapSize.Width; }
-        }
+        public override int PixelWidth => m_bitmapSize.Width;
 
-        public override int PixelHeight
-        {
-            get { return m_bitmapSize.Height; }
-        }
+        public override int PixelHeight => m_bitmapSize.Height;
 
-        public override double DpiX
-        {
-            get
-            {
-                return m_dpiX;
-            }
-        }
+        public override double DpiX => m_dpiX;
 
-        public override double DpiY
-        {
-            get
-            {
-                return m_dpiY;
-            }
-        }
+        public override double DpiY => m_dpiY;
 
-        public override int FrameCountX
-        {
-            get { return 1; }
-        }
+        public override int FrameCountX => 1;
 
-        public override int FrameCountY
-        {
-            get { return 1; }
-        }
+        public override int FrameCountY => 1;
 
-        public override int TotalFrameCount
-        {
-            get
-            {
-                return 1;
-            }
-        }
+        public override int TotalFrameCount => 1;
 
-        public override int SingleFramePixelWidth
-        {
-            get { return m_bitmapSize.Width; }
-        }
+        public override int SingleFramePixelWidth => m_bitmapSize.Width;
 
-        public override int SingleFramePixelHeight
-        {
-            get { return m_bitmapSize.Height; }
-        }
+        public override int SingleFramePixelHeight => m_bitmapSize.Height;
     }
 }

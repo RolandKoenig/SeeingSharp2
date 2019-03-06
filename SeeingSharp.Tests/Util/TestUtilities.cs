@@ -79,7 +79,7 @@ namespace SeeingSharp.Tests.Util
         /// <param name="fileName">The target file name.</param>
         public static void DumpToDesktop(Bitmap bitmap, string fileName)
         {
-            string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             bitmap.Save(Path.Combine(desktopDir, fileName));
         }
 
@@ -90,11 +90,13 @@ namespace SeeingSharp.Tests.Util
 
             EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (object sender, InternalCatchedExceptionEventArgs e) =>
             {
-                if (internalEx == null)
+                if (internalEx != null)
                 {
-                    internalEx = e.Exception;
-                    location = e.Location;
+                    return;
                 }
+
+                internalEx = e.Exception;
+                location = e.Location;
             };
 
             GraphicsCore.InternalCachedException += eventHandler;

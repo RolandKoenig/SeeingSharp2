@@ -61,10 +61,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="format"></param>
         private PixelFormat(Format format)
         {
-            this.Value = format;
+            Value = format;
         }
 
-        public int SizeInBytes { get { return (int)FormatHelper.SizeOfInBytes(this); } }
+        public int SizeInBytes => FormatHelper.SizeOfInBytes(this);
 
         public static readonly PixelFormat Unknown = new PixelFormat(Format.Unknown);
 
@@ -438,7 +438,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public override string ToString()
         {
-            return string.Format("{0}", Value);
+            return $"{Value}";
         }
     }
 }

@@ -55,7 +55,6 @@ namespace SeeingSharp.Multimedia.Core
         private Vector3 m_rotationForward;
         private Vector3 m_rotationUp;
         private Vector3 m_scaling;
-        private Matrix m_transform;
         private Matrix m_customTransform;
         private SceneSpacialObject m_transformSourceObject;
         private bool m_transformParamsChanged;
@@ -90,7 +89,7 @@ namespace SeeingSharp.Multimedia.Core
             m_position = Vector3.Zero;
             m_rotation = Vector3.Zero;
             m_scaling = new Vector3(1f, 1f, 1f);
-            m_transform = Matrix.Identity;
+            Transform = Matrix.Identity;
             m_rotationQuaternion = Quaternion.Identity;
             m_transformParamsChanged = true;
         }
@@ -100,8 +99,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void EnableShaderGeneratedBorder(float borderThicknes = 1f)
         {
-            this.BorderMultiplyer = 50f;
-            this.BorderPart = 0.01f * borderThicknes;
+            BorderMultiplyer = 50f;
+            BorderPart = 0.01f * borderThicknes;
         }
 
         /// <summary>
@@ -109,8 +108,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void DisableShaderGeneratedBorder()
         {
-            this.BorderMultiplyer = 0f;
-            this.BorderPart = 0f;
+            BorderMultiplyer = 0f;
+            BorderPart = 0f;
         }
 
         /// <summary>
@@ -120,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderLoop">The RenderLoop object.</param>
         public BoundingBox TryGetBoundingBox(RenderLoop renderLoop)
         {
-            return this.TryGetBoundingBox(renderLoop.ViewInformation);
+            return TryGetBoundingBox(renderLoop.ViewInformation);
         }
 
         /// <summary>
@@ -143,7 +142,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dist">The Distance you want to zoom.</param>
         public void MoveForward(float dist)
         {
-            var look = this.Look;
+            var look = Look;
 
             m_position.X += dist * look.X;
             m_position.Y += dist * look.Y;
@@ -170,7 +169,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDown(float points)
         {
-            var up = this.Up;
+            var up = Up;
 
             m_position.X = m_position.X + up.X * points;
             m_position.Y = m_position.Y + up.Y * points;
@@ -184,7 +183,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDownWithoutMoving(float points)
         {
-            var up = this.Up;
+            var up = Up;
 
             m_position.Y = m_position.Y + up.Y * points;
 
@@ -196,7 +195,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Strave(float points)
         {
-            var right = this.Right;
+            var right = Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Y = m_position.Y + right.Y * points;
@@ -210,7 +209,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void StraveAtPlane(float points)
         {
-            var right = this.Right;
+            var right = Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Z = m_position.Z + right.Z * points;
@@ -273,23 +272,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateState">Current update state.</param>
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
-            //Calculates local transform matrix (transforms local space to world space)
-            bool doRecreateShaderParameters = false;
-            base.TransormationChanged =
+            // Calculates local transform matrix (transforms local space to world space)
+            var doRecreateShaderParameters = false;
+            TransormationChanged =
                 m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds;
 
             // Update local transform matrix if transform values have changed
             if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds)
             {
                 m_transformParamsChanged = false;
-                m_forceTransformUpdateOnChilds = this.HasChilds;
+                m_forceTransformUpdateOnChilds = HasChilds;
                 doRecreateShaderParameters = true;
 
                 // Calculate new transformation matrix
                 switch (m_transformationType)
                 {
                     case SpacialTransformationType.ScalingTranslationEulerAngles:
-                        m_transform =
+                        Transform =
                             Matrix.Scaling(m_scaling) *
                             Matrix.RotationYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
                             Matrix.Translation(m_position) *
@@ -297,7 +296,7 @@ namespace SeeingSharp.Multimedia.Core
                         break;
 
                     case SpacialTransformationType.ScalingTranslationQuaternion:
-                        m_transform =
+                        Transform =
                             Matrix.Scaling(m_scaling) *
                             Matrix.RotationQuaternion(m_rotationQuaternion) *
                             Matrix.Translation(m_position) *
@@ -305,7 +304,7 @@ namespace SeeingSharp.Multimedia.Core
                         break;
 
                     case SpacialTransformationType.ScalingTranslationDirection:
-                        m_transform =
+                        Transform =
                             Matrix.Scaling(m_scaling) *
                             MatrixEx.RotationDirection(m_rotationUp, m_rotationForward) *
                             Matrix.Translation(m_position) *
@@ -313,52 +312,52 @@ namespace SeeingSharp.Multimedia.Core
                         break;
 
                     case SpacialTransformationType.ScalingTranslation:
-                        m_transform =
+                        Transform =
                             Matrix.Scaling(m_scaling) *
                             Matrix.Translation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationEulerAngles:
-                        m_transform =
+                        Transform =
                             Matrix.RotationYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
                             Matrix.Translation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationQuaternion:
-                        m_transform =
+                        Transform =
                             Matrix.RotationQuaternion(m_rotationQuaternion) *
                             Matrix.Translation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationDirection:
-                        m_transform =
+                        Transform =
                             MatrixEx.RotationDirection(m_rotationUp, m_rotationForward) *
                             Matrix.Translation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.Translation:
-                        m_transform =
+                        Transform =
                             Matrix.Translation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.CustomTransform:
-                        m_transform =
+                        Transform =
                             m_customTransform *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TakeFromOtherObject:
-                        if (m_transformSourceObject != null) { m_transform = m_transformSourceObject.m_transform; }
-                        else { m_transform = updateState.World.Top; }
+                        if (m_transformSourceObject != null) { Transform = m_transformSourceObject.Transform; }
+                        else { Transform = updateState.World.Top; }
                         break;
 
                     case SpacialTransformationType.None:
-                        m_transform = updateState.World.Top;
+                        Transform = updateState.World.Top;
                         break;
                 }
             }
@@ -377,18 +376,19 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="children">The full list of children that should be updated.</param>
         protected override void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
-            bool prevForceState = updateState.ForceTransformUpdatesOnChilds;
+            var prevForceState = updateState.ForceTransformUpdatesOnChilds;
             updateState.ForceTransformUpdatesOnChilds = prevForceState || m_forceTransformUpdateOnChilds;
             m_forceTransformUpdateOnChilds = false;
+
             try
             {
-                int childCount = children.Count;
+                var childCount = children.Count;
 
                 for (var loop = 0; loop < childCount; loop++)
                 {
                     // Forward current transform matrix to child objects
                     var currentWorld = updateState.World;
-                    currentWorld.Push(m_transform);
+                    currentWorld.Push(Transform);
 
                     try
                     {
@@ -444,7 +444,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (renderParameters == null)
             {
-                renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded<ObjectRenderParameters>(
+                renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new ObjectRenderParameters());
                 RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
@@ -453,18 +453,18 @@ namespace SeeingSharp.Multimedia.Core
             if (renderParameters.NeedsRefresh)
             {
                 // Create constant buffer structure
-                CBPerObject cbPerObject = new CBPerObject
+                var cbPerObject = new CBPerObject
                 {
                     AccentuationFactor = m_accentuationFactor,
                     Color = m_color.ToVector4(),
                     Opacity = m_opacity,
-                    World = Matrix.Transpose(m_transform),
+                    World = Matrix.Transpose(Transform),
                     BorderPart = m_borderPart,
                     BorderMultiplyer = m_borderMultiplyer,
                     ObjectScaling = m_scaling
                 };
 
-                //Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
+                // Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
 
                 // Update constant buffer
                 renderParameters.UpdateValues(renderState, cbPerObject);
@@ -490,20 +490,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current AnimationHandler object.
         /// </summary>
-        public override AnimationHandler AnimationHandler
-        {
-            get
-            {
-                return base.AnimationHandler;
-            }
-        }
+        public override AnimationHandler AnimationHandler => base.AnimationHandler;
 
         /// <summary>
         /// Gets or sets current position.
         /// </summary>
         public Vector3 Position
         {
-            get { return m_position; }
+            get => m_position;
             set
             {
                 m_position = value;
@@ -516,7 +510,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float XPos
         {
-            get { return m_position.X; }
+            get => m_position.X;
             set
             {
                 m_position.X = value;
@@ -529,7 +523,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YPos
         {
-            get { return m_position.Y; }
+            get => m_position.Y;
             set
             {
                 m_position.Y = value;
@@ -542,7 +536,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float ZPos
         {
-            get { return m_position.Z; }
+            get => m_position.Z;
             set
             {
                 m_position.Z = value;
@@ -555,7 +549,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Vector3 RotationEuler
         {
-            get { return m_rotation; }
+            get => m_rotation;
             set
             {
                 m_rotation = value;
@@ -565,7 +559,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public Quaternion RotationQuaternion
         {
-            get { return m_rotationQuaternion; }
+            get => m_rotationQuaternion;
             set
             {
                 m_rotationQuaternion = value;
@@ -578,7 +572,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public SpacialTransformationType TransformationType
         {
-            get { return m_transformationType; }
+            get => m_transformationType;
             set
             {
                 m_transformationType = value;
@@ -591,7 +585,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Vector3 Scaling
         {
-            get { return m_scaling; }
+            get => m_scaling;
             set
             {
                 m_scaling = value;
@@ -605,7 +599,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Vector3 RotationUp
         {
-            get { return m_rotationUp; }
+            get => m_rotationUp;
             set
             {
                 m_rotationUp = value;
@@ -619,7 +613,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Vector3 RotationForward
         {
-            get { return m_rotationForward; }
+            get => m_rotationForward;
             set
             {
                 m_rotationForward = value;
@@ -650,24 +644,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a matrix that transforms local space to world space.
         /// </summary>
-        public Matrix Transform
-        {
-            get { return m_transform; }
-        }
+        public Matrix Transform { get; private set; }
 
         /// <summary>
         /// Gets or sets the source of the transformation value when SpacialTransformationType.CustomTransform is set.
         /// </summary>
         public SceneSpacialObject TransformSourceObject
         {
-            get { return m_transformSourceObject; }
+            get => m_transformSourceObject;
             set
             {
-                if (m_transformSourceObject != value)
+                if (m_transformSourceObject == value)
                 {
-                    m_transformSourceObject = value;
-                    m_transformParamsChanged = true;
+                    return;
                 }
+
+                m_transformSourceObject = value;
+                m_transformParamsChanged = true;
             }
         }
 
@@ -676,7 +669,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Matrix CustomTransform
         {
-            get { return m_customTransform; }
+            get => m_customTransform;
             set
             {
                 m_customTransform = value;
@@ -687,49 +680,33 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the vector that looks up.
         /// </summary>
-        public Vector3 Up
-        {
-            get
-            {
-                return Vector3.Transform(new Vector3(0f, 1f, 0f), m_transform).ToXYZ();
-            }
-        }
+        public Vector3 Up => Vector3.Transform(new Vector3(0f, 1f, 0f), Transform).ToXYZ();
 
         /// <summary>
         /// Gets the vector that looks into front.
         /// </summary>
-        public Vector3 Look
-        {
-            get
-            {
-                return Vector3.Transform(new Vector3(0f, 0f, 1f), m_transform).ToXYZ();
-            }
-        }
+        public Vector3 Look => Vector3.Transform(new Vector3(0f, 0f, 1f), Transform).ToXYZ();
 
         /// <summary>
         /// Gets the vector that looks to the right.
         /// </summary>
-        public Vector3 Right
-        {
-            get
-            {
-                return Vector3.Transform(new Vector3(1f, 0f, 0f), m_transform).ToXYZ();
-            }
-        }
+        public Vector3 Right => Vector3.Transform(new Vector3(1f, 0f, 0f), Transform).ToXYZ();
 
         /// <summary>
         /// The color of this object.
         /// </summary>
         public Color4 Color
         {
-            get { return m_color; }
+            get => m_color;
             set
             {
-                if (m_color != value)
+                if (m_color == value)
                 {
-                    m_color = value;
-                    TriggerRecreateOfParameters();
+                    return;
                 }
+
+                m_color = value;
+                TriggerRecreateOfParameters();
             }
         }
 
@@ -738,14 +715,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float AccentuationFactor
         {
-            get { return m_accentuationFactor; }
+            get => m_accentuationFactor;
             set
             {
-                if (m_accentuationFactor != value)
+                if (m_accentuationFactor == value)
                 {
-                    m_accentuationFactor = value;
-                    TriggerRecreateOfParameters();
+                    return;
                 }
+
+                m_accentuationFactor = value;
+                TriggerRecreateOfParameters();
             }
         }
 
@@ -754,42 +733,47 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float Opacity
         {
-            get { return m_opacity; }
+            get => m_opacity;
             set
             {
-                if (m_opacity != value)
+                if (m_opacity == value)
                 {
-                    m_opacity = value;
-
-                    TriggerRecreateOfParameters();
-                    OnOpacityChanged();
+                    return;
                 }
+
+                m_opacity = value;
+                TriggerRecreateOfParameters();
+                OnOpacityChanged();
             }
         }
 
         public float BorderPart
         {
-            get { return m_borderPart; }
+            get => m_borderPart;
             set
             {
-                if (m_borderPart != value)
+                if (m_borderPart == value)
                 {
-                    m_borderPart = value;
-                    TriggerRecreateOfParameters();
+                    return;
                 }
+
+                m_borderPart = value;
+                TriggerRecreateOfParameters();
             }
         }
 
         public float BorderMultiplyer
         {
-            get { return m_borderMultiplyer; }
+            get => m_borderMultiplyer;
             set
             {
-                if (m_borderMultiplyer != value)
+                if (m_borderMultiplyer == value)
                 {
-                    m_borderMultiplyer = value;
-                    TriggerRecreateOfParameters();
+                    return;
                 }
+
+                m_borderMultiplyer = value;
+                TriggerRecreateOfParameters();
             }
         }
     }

@@ -38,7 +38,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
     #endregion
 
     [SampleDescription(
-        "Parent/Child", 5, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Parent/Child", 5, nameof(Basics3D),
         sampleImageFileName: "PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_05_ParentChild")]
     public class ParentChildSample : SampleBase
@@ -52,20 +52,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
                 var cubeType = new CubeType();
-                var resCubeGeometry = manipulator.AddResource<GeometryResource>(
+                var resCubeGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
-                //********************************
+                // ********************************
                 // Create parent object
                 var cubeObject = manipulator.AddGeneric(resCubeGeometry);
                 cubeObject.Color = Color4Ex.GreenColor;
@@ -79,7 +79,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
 
-                //********************************
+                // ********************************
                 // Create first level childs
                 var actChild = manipulator.AddGeneric(resCubeGeometry);
                 actChild.Position = new Vector3(-2f, 0f, 0f);
@@ -91,7 +91,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
                 manipulator.AddChild(cubeObject, actChild);
 
-                //********************************
+                // ********************************
                 // Create second level parent/child relationships
                 var actSecondLevelParent = manipulator.AddGeneric(resCubeGeometry);
                 actSecondLevelParent.Position = new Vector3(3f, 0f, 0f);

@@ -70,18 +70,21 @@ namespace SeeingSharp.Multimedia.Input
         static WinFormsKeyAndMouseInputHandler()
         {
             // First look for all key codes we have
-            Dictionary<int, WinVirtualKey> supportedKeyCodes = new Dictionary<int, WinVirtualKey>();
-            foreach(WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
+            var supportedKeyCodes = new Dictionary<int, WinVirtualKey>();
+
+            foreach (WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
             {
                 supportedKeyCodes[(int)actVirtualKey] = actVirtualKey;
             }
 
             // Build the mapping dictionary
             s_keyMappingDict = new Dictionary<WinForms.Keys, WinVirtualKey>();
+
             foreach (WinForms.Keys actKeyMember in Enum.GetValues(typeof(WinForms.Keys)))
             {
-                int actKeyCode = (int)actKeyMember;
-                if(supportedKeyCodes.ContainsKey(actKeyCode))
+                var actKeyCode = (int)actKeyMember;
+
+                if (supportedKeyCodes.ContainsKey(actKeyCode))
                 {
                     s_keyMappingDict[actKeyMember] = supportedKeyCodes[actKeyCode];
                 }
@@ -130,7 +133,7 @@ namespace SeeingSharp.Multimedia.Input
                 }
             }
 
-            m_focusHandler = viewObject as IInputEnabledView;
+            m_focusHandler = viewObject;
 
             if (m_focusHandler == null)
             {
@@ -184,7 +187,7 @@ namespace SeeingSharp.Multimedia.Input
 
                 var removeEventRegistrationsAction = new Action(() =>
                 {
-                    if(currentControl == null) { return; }
+                    if (currentControl == null) { return; }
 
                     currentControl.MouseEnter -= OnMouseEnter;
                     currentControl.MouseClick -= OnMouseClick;
@@ -223,7 +226,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseEnter(object sender, EventArgs e)
         {
-            if(m_currentControl == null) { return; }
+            if (m_currentControl == null) { return; }
 
             m_lastMousePoint = m_currentControl.PointToClient(WinForms.Cursor.Position);
             m_isMouseInside = true;
@@ -323,16 +326,18 @@ namespace SeeingSharp.Multimedia.Input
                 return;
             }
 
-            if (m_isMouseInside)
+            if (!m_isMouseInside)
             {
-                var moving = new GDI.Point(e.X - m_lastMousePoint.X, e.Y - m_lastMousePoint.Y);
-                m_lastMousePoint = e.Location;
-
-                m_stateMouseOrPointer.Internals.NotifyMouseLocation(
-                    new Vector2((float)e.X, (float)e.Y),
-                    new Vector2((float)moving.X, (float)moving.Y),
-                    Vector2Ex.FromSize2(m_renderLoop.ViewInformation.CurrentViewSize));
+                return;
             }
+
+            var moving = new GDI.Point(e.X - m_lastMousePoint.X, e.Y - m_lastMousePoint.Y);
+            m_lastMousePoint = e.Location;
+
+            m_stateMouseOrPointer.Internals.NotifyMouseLocation(
+                new Vector2(e.X, e.Y),
+                new Vector2(moving.X, moving.Y),
+                Vector2Ex.FromSize2(m_renderLoop.ViewInformation.CurrentViewSize));
         }
 
         /// <summary>

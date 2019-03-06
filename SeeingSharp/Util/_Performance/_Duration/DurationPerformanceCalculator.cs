@@ -69,42 +69,42 @@ namespace SeeingSharp.Util
             {
                 return null;
             }
-            else
+
+            // Throw away all items which are too old
+            foreach (var dummy in m_lastDurationItems.DequeueWhile((actItem) => actItem.Item1 < minTimeStamp)) { }
+
+            // Check again wether we have any items
+            if(!m_lastDurationItems.HasAny())
             {
-                // Throw away all items which are too old
-                foreach (var dummy in m_lastDurationItems.DequeueWhile((actItem) => actItem.Item1 < minTimeStamp)) { }
-
-                // Check again wether we have any items
-                if(!m_lastDurationItems.HasAny())
-                {
-                    return null;
-                }
-
-                // Calculate result values
-                long minValue = long.MaxValue;
-                long maxValue = long.MinValue;
-                long sumValue = 0;
-                long itemCount = 0;
-                foreach (var actItem in m_lastDurationItems.PeekWhile((actTuple) => actTuple.Item1 < maxTimeStamp))
-                {
-                    if (minValue > actItem.Item2) { minValue = actItem.Item2; }
-                    if (maxValue < actItem.Item2) { maxValue = actItem.Item2; }
-                    sumValue += actItem.Item2;
-                    itemCount++;
-                }
-
-                // Check again wether we have any items
-                if(itemCount == 0)
-                {
-                    return null;
-                }
-
-                // Calculate average time value
-                long avgValue = sumValue / itemCount;
-
-                // Create result object
-                return new DurationPerformanceResult(this, keyTimeStamp, avgValue, maxValue, minValue);
+                return null;
             }
+
+            // Calculate result values
+            var minValue = long.MaxValue;
+            var maxValue = long.MinValue;
+            long sumValue = 0;
+            long itemCount = 0;
+
+            foreach (var actItem in m_lastDurationItems.PeekWhile((actTuple) => actTuple.Item1 < maxTimeStamp))
+            {
+                if (minValue > actItem.Item2) { minValue = actItem.Item2; }
+                if (maxValue < actItem.Item2) { maxValue = actItem.Item2; }
+
+                sumValue += actItem.Item2;
+                itemCount++;
+            }
+
+            // Check again wether we have any items
+            if (itemCount == 0)
+            {
+                return null;
+            }
+
+            // Calculate average time value
+            var avgValue = sumValue / itemCount;
+
+            // Create result object
+            return new DurationPerformanceResult(this, keyTimeStamp, avgValue, maxValue, minValue);
         }
     }
 }

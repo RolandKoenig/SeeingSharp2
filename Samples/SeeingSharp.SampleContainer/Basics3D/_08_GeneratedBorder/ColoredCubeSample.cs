@@ -37,7 +37,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
     #endregion
 
     [SampleDescription(
-        "Generated Border", 8, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Generated Border", 8, nameof(Basics3D),
         sampleImageFileName:"PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder")]
     public class GeneratedBorderSample : SampleBase
@@ -51,20 +51,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource
                 var cubeType = new CubeType();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
-                float space = 1.05f;
+                var space = 1.05f;
 
                 // Create cubes with border
                 for (var loop = 0; loop < 10; loop++)
@@ -89,7 +89,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 
                     cubeObject = manipulator.AddGeneric(resPalletGeometry);
                     cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(2* space, 0.5f, loop * space);
+                    cubeObject.Position = new Vector3(2 * space, 0.5f, loop * space);
                 }
             });
 

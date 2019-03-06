@@ -41,20 +41,20 @@ namespace SeeingSharp.UwpSamples.Controls
         {
             var newPropertyMetadata = new List<ConfigurablePropertyMetadata>();
 
-            var selectedObject = this.SelectedObject;
+            var selectedObject = SelectedObject;
 
-            if(selectedObject == null)
+            if (selectedObject == null)
             {
-                this.PropertyMetadata = newPropertyMetadata;
+                PropertyMetadata = newPropertyMetadata;
                 return;
             }
 
-            foreach(var actProperty in selectedObject.GetType().GetProperties())
+            foreach (var actProperty in selectedObject.GetType().GetProperties())
             {
                 // Check browsable attribute
                 var browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
 
-                if((browseAttrib != null) &&
+                if ((browseAttrib != null) &&
                    (!browseAttrib.Browsable))
                 {
                     continue;
@@ -63,7 +63,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 newPropertyMetadata.Add(new ConfigurablePropertyMetadata(actProperty, selectedObject));
             }
 
-            this.PropertyMetadata = newPropertyMetadata;
+            PropertyMetadata = newPropertyMetadata;
         }
 
         public object SelectedObject
@@ -71,13 +71,15 @@ namespace SeeingSharp.UwpSamples.Controls
             get => m_selectedObject;
             set
             {
-                if(m_selectedObject != value)
+                if (m_selectedObject == value)
                 {
-                    m_selectedObject = value;
-                    RaisePropertyChanged();
-
-                    UpdatePropertyCollection();
+                    return;
                 }
+
+                m_selectedObject = value;
+                RaisePropertyChanged();
+
+                UpdatePropertyCollection();
             }
         }
 
@@ -86,11 +88,13 @@ namespace SeeingSharp.UwpSamples.Controls
             get => m_propertyMetadata;
             set
             {
-                if(m_propertyMetadata != value)
+                if (m_propertyMetadata == value)
                 {
-                    m_propertyMetadata = value;
-                    RaisePropertyChanged();
+                    return;
                 }
+
+                m_propertyMetadata = value;
+                RaisePropertyChanged();
             }
         }
     }

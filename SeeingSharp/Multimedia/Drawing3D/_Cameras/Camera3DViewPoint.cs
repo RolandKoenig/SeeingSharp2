@@ -41,31 +41,30 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Camera3DViewPoint()
         {
-            this.OrthographicZoomFactor = 10f;
-            this.CameraType = Camera3DType.Perspective;
+            OrthographicZoomFactor = 10f;
+            CameraType = Camera3DType.Perspective;
         }
 
         ///// <summary>
         ///// Loads a Camera3DViewPoint from the given resource.
         ///// </summary>
         ///// <param name="resourceLink">The resource link.</param>
-        //public static Camera3DViewPoint FromResourceLink(ResourceLink resourceLink)
-        //{
+        // public static Camera3DViewPoint FromResourceLink(ResourceLink resourceLink)
+        // {
         //    resourceLink.EnsureNotNull(nameof(resourceLink));
-
         //    XmlSerializer serializer = SerializerRepository.Current.GetSerializer(typeof(Camera3DViewPoint));
         //    using (Stream inStream = resourceLink.OpenInputStream())
         //    {
         //        return serializer.Deserialize(inStream) as Camera3DViewPoint;
         //    }
-        //}
+        // }
 
         ///// <summary>
         ///// Loads a Camera3DViewPoint from the given resource.
         ///// </summary>
         ///// <param name="resourceLink">The resource link.</param>
-        //public static async Task<Camera3DViewPoint> FromResourceLinkAsync(ResourceLink resourceLink)
-        //{
+        // public static async Task<Camera3DViewPoint> FromResourceLinkAsync(ResourceLink resourceLink)
+        // {
         //    resourceLink.EnsureNotNull(nameof(resourceLink));
 
         //    XmlSerializer serializer = SerializerRepository.Current.GetSerializer(typeof(Camera3DViewPoint));
@@ -73,22 +72,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //    {
         //        return await Task.Run(() => serializer.Deserialize(inStream) as Camera3DViewPoint);
         //    }
-        //}
+        // }
 
         ///// <summary>
         ///// Writes this Camera3DViewPoint to the given resource link.
         ///// </summary>
         ///// <param name="resourceLink">The resource link.</param>
-        //public void ToResourceLink(ResourceLink resourceLink)
-        //{
+        // public void ToResourceLink(ResourceLink resourceLink)
+        // {
         //    resourceLink.EnsureNotNull(nameof(resourceLink));
-
         //    XmlSerializer serializer = SerializerRepository.Current.GetSerializer(typeof(Camera3DViewPoint));
         //    using (Stream outStream = resourceLink.OpenOutputStream())
         //    {
         //        serializer.Serialize(outStream, this);
         //    }
-        //}
+        // }
 
         public Camera3DType CameraType
         {
@@ -101,14 +99,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public string CameraTypeString
         {
-            get { return this.CameraType.ToString(); }
+            get => CameraType.ToString();
             set
             {
                 var valueParsed = Camera3DType.Perspective;
 
                 if (Enum.TryParse(value, out valueParsed))
                 {
-                    this.CameraType = valueParsed;
+                    CameraType = valueParsed;
                 }
             }
         }

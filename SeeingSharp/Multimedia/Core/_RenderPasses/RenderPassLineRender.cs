@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
@@ -97,9 +96,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Is the resource loaded?
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override bool IsLoaded
-        {
-            get { return m_defaultResources != null; }
-        }
+        public override bool IsLoaded => m_defaultResources != null;
     }
 }

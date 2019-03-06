@@ -38,7 +38,7 @@ namespace SeeingSharp
         /// <param name="point">The point to calculate the distance to.</param>
         public static float Distance(this ref Plane plane, ref Vector3 point)
         {
-            float distance = Vector3.Dot(plane.Normal, point);
+            var distance = Vector3.Dot(plane.Normal, point);
             distance += plane.D;
 
             return distance;

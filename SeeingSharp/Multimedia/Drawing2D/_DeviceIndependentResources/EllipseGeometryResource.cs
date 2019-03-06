@@ -48,9 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         #endregion
 
         #region Configuration
-        private Vector2 m_center;
-        private float m_radiusX;
-        private float m_radiusY;
+
         #endregion
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="radiusY">The radius in y direction.</param>
         public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
         {
-            this.SetContent(center, radiusX, radiusY);
+            SetContent(center, radiusX, radiusY);
         }
 
         /// <summary>
@@ -75,9 +73,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusX.EnsurePositive(nameof(radiusX));
             radiusY.EnsurePositive(nameof(radiusY));
 
-            m_center = center;
-            m_radiusX = radiusX;
-            m_radiusY = radiusY;
+            Center = center;
+            RadiusX = radiusX;
+            RadiusY = radiusY;
 
             SeeingSharpTools.SafeDispose(ref m_geometry);
             m_geometry = new D2D.EllipseGeometry(
@@ -102,15 +100,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_geometry);
         }
 
-        public override bool IsDisposed
-        {
-            get { return m_geometry == null; }
-        }
+        public override bool IsDisposed => m_geometry == null;
 
-        public Vector2 Center { get { return m_center; } }
+        public Vector2 Center { get; private set; }
 
-        public float RadiusX { get { return m_radiusX; } }
+        public float RadiusX { get; private set; }
 
-        public float RadiusY { get { return m_radiusY; } }
+        public float RadiusY { get; private set; }
     }
 }

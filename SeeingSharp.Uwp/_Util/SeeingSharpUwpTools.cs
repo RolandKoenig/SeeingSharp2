@@ -36,10 +36,10 @@ namespace SeeingSharp.Util
         public static SDX.Color4 Color4FromUIColor(ref Windows.UI.Color uiColor)
         {
             return new SDX.Color4(
-                (float)uiColor.R / 255f,
-                (float)uiColor.G / 255f,
-                (float)uiColor.B / 255f,
-                (float)uiColor.A / 255f);
+                uiColor.R / 255f,
+                uiColor.G / 255f,
+                uiColor.B / 255f,
+                uiColor.A / 255f);
         }
 
         public static Windows.UI.Color UIColorFromColor4(ref SDX.Color4 color)

@@ -47,11 +47,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             base.OnCurrentTimeUpdated(updateState, animationState);
 
-            if(m_taskToWaitFor.IsCanceled ||
+            if (m_taskToWaitFor.IsCanceled ||
                m_taskToWaitFor.IsCompleted ||
                m_taskToWaitFor.IsFaulted)
             {
-                base.NotifyAnimationFinished();
+                NotifyAnimationFinished();
             }
         }
 
@@ -59,9 +59,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return true; }
-        }
+        public override bool IsBlockingAnimation => true;
     }
 }

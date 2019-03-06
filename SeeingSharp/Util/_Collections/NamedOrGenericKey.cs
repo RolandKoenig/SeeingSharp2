@@ -82,7 +82,7 @@ namespace SeeingSharp.Util
         /// </returns>
         public override string ToString()
         {
-            return this.Description;
+            return Description;
         }
 
         /// <summary>
@@ -94,15 +94,17 @@ namespace SeeingSharp.Util
         /// </returns>
         public bool Equals(NamedOrGenericKey other)
         {
-            if (NameKey != null)
-            {
-                if (other.NameKey == null) { return false; }
-                return NameKey == other.NameKey;
-            }
-            else
+            if (NameKey == null)
             {
                 return GenericKey == other.GenericKey;
             }
+
+            if (other.NameKey == null)
+            {
+                return false;
+            }
+
+            return NameKey == other.NameKey;
         }
 
         /// <summary>
@@ -111,19 +113,22 @@ namespace SeeingSharp.Util
         /// <param name="other"></param>
         public int CompareTo(NamedOrGenericKey other)
         {
-            int result = m_hashCode.CompareTo(other.m_hashCode);
-            if(result == 0)
+            var result = m_hashCode.CompareTo(other.m_hashCode);
+
+            if (result != 0)
             {
-                if (NameKey != null)
-                {
-                    if (other.NameKey == null) { result = -1; }
-                    else { result = NameKey.CompareTo(other.NameKey); }
-                }
-                else
-                {
-                    if (other.NameKey != null) { result = 1; }
-                    else { result = GenericKey.CompareTo(other.GenericKey); }
-                }
+                return result;
+            }
+
+            if (NameKey != null)
+            {
+                if (other.NameKey == null) { result = -1; }
+                else { result = NameKey.CompareTo(other.NameKey); }
+            }
+            else
+            {
+                if (other.NameKey != null) { result = 1; }
+                else { result = GenericKey.CompareTo(other.GenericKey); }
             }
             return result;
         }
@@ -140,7 +145,7 @@ namespace SeeingSharp.Util
             if (obj is NamedOrGenericKey)
             {
                 var other = (NamedOrGenericKey)obj;
-                return this.Equals(other);
+                return Equals(other);
             }
             else
             {
@@ -184,13 +189,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Is this key empty?
         /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return (GenericKey == 0) && (NameKey == null);
-            }
-        }
+        public bool IsEmpty => (GenericKey == 0) && (NameKey == null);
 
         /// <summary>
         /// Gets or sets a hint for this resource key (a custom description which helps identifying what is behind this key).
@@ -213,10 +212,7 @@ namespace SeeingSharp.Util
 
                 return result;
             }
-            set
-            {
-                m_hint = value;
-            }
+            set => m_hint = value;
         }
 
         /// <summary>

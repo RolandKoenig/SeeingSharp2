@@ -37,7 +37,6 @@ namespace SeeingSharp.Multimedia.Core
         #region The native structure of this texture
         private IntPtr m_pointer;
         private int* m_pointerNative;
-        private Size2 m_size;
 
         #endregion
 
@@ -49,8 +48,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
             m_pointerNative = (int*)m_pointer.ToPointer();
-            m_size = size;
-            CountInts = m_size.Width * m_size.Height;
+            PixelSize = size;
+            CountInts = PixelSize.Width * PixelSize.Height;
         }
 
         /// <summary>
@@ -58,8 +57,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public byte[] ToArray()
         {
-            byte[] result = new byte[this.SizeInBytes];
-            Marshal.Copy(m_pointer, result, 0, (int)this.SizeInBytes);
+            var result = new byte[SizeInBytes];
+            Marshal.Copy(m_pointer, result, 0, (int)SizeInBytes);
             return result;
         }
 
@@ -71,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
             Marshal.FreeHGlobal(m_pointer);
             m_pointer = IntPtr.Zero;
             m_pointerNative = (int*)0;
-            m_size = new Size2(0, 0);
+            PixelSize = new Size2(0, 0);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="yPos">The y position.</param>
         public int GetValue(int xPos, int yPos)
         {
-            return m_pointerNative[xPos + (yPos * m_size.Width)];
+            return m_pointerNative[xPos + (yPos * PixelSize.Width)];
         }
 
         /// <summary>
@@ -89,9 +88,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void SetAllAlphaValuesToOne_ARGB()
         {
-            uint alphaByteValue = 0xFF000000;
-            uint* pointerUInt = (uint*)m_pointerNative;
-            for (int loopIndex = 0; loopIndex < CountInts; loopIndex++)
+            var alphaByteValue = 0xFF000000;
+            var pointerUInt = (uint*)m_pointerNative;
+
+            for (var loopIndex = 0; loopIndex < CountInts; loopIndex++)
             {
                 pointerUInt[loopIndex] |= alphaByteValue;
             }
@@ -100,60 +100,36 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the total size of the buffer in bytes.
         /// </summary>
-        public uint SizeInBytes
-        {
-            get
-            {
-                return (uint)(m_size.Width * m_size.Height * 4);
-            }
-        }
+        public uint SizeInBytes => (uint)(PixelSize.Width * PixelSize.Height * 4);
 
         public int CountInts { get; }
 
         /// <summary>
         /// Gets the width of the buffer.
         /// </summary>
-        public int Width
-        {
-            get { return m_size.Width; }
-        }
+        public int Width => PixelSize.Width;
 
         /// <summary>
         /// Gets the pitch of the underlying texture data.
         /// (pitch = stride, see https://msdn.microsoft.com/en-us/library/windows/desktop/aa473780(v=vs.85).aspx )
         /// </summary>
-        public int Pitch
-        {
-            get { return m_size.Width * 4; }
-        }
+        public int Pitch => PixelSize.Width * 4;
 
         /// <summary>
         /// Gets the pitch of the underlying texture data.
         /// (pitch = stride, see https://msdn.microsoft.com/en-us/library/windows/desktop/aa473780(v=vs.85).aspx )
         /// </summary>
-        public int Stride
-        {
-            get { return m_size.Width * 4; }
-        }
+        public int Stride => PixelSize.Width * 4;
 
         /// <summary>
         /// Gets the height of the buffer.
         /// </summary>
-        public int Height
-        {
-            get { return m_size.Height; }
-        }
+        public int Height => PixelSize.Height;
 
         /// <summary>
         /// Gets the pixel size of this texture.
         /// </summary>
-        public Size2 PixelSize
-        {
-            get
-            {
-                return m_size;
-            }
-        }
+        public Size2 PixelSize { get; private set; }
 
         /// <summary>
         /// Gets the pointer of the buffer.

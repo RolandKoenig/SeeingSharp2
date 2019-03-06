@@ -65,12 +65,11 @@ namespace SeeingSharp.Multimedia.Objects
                 capacityMultiplier: m_stackSize);
 
             // Build geometry
-            for (int loop = 0; loop < m_stackSize; loop++)
+            for (var loop = 0; loop < m_stackSize; loop++)
             {
-                float actYCorrection = childStructBox.Height * loop;
+                var actYCorrection = childStructBox.Height * loop;
                 var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
-
-                int baseVertex = loop * structureFromChild.CountVertices;
+                var baseVertex = loop * structureFromChild.CountVertices;
 
                 foreach (var actVertex in structureFromChild.Vertices)
                 {

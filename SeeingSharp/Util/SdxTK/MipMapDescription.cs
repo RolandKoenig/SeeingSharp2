@@ -103,20 +103,35 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public bool Equals(MipMapDescription other)
         {
             if (ReferenceEquals(null, other))
+            {
                 return false;
+            }
+
             if (ReferenceEquals(this, other))
+            {
                 return true;
-            return this.Width == other.Width && this.Height == other.Height && this.WidthPacked == other.WidthPacked && this.HeightPacked == other.HeightPacked && this.Depth == other.Depth && this.RowStride == other.RowStride && this.MipmapSize == other.MipmapSize && this.DepthStride == other.DepthStride;
+            }
+
+            return Width == other.Width && Height == other.Height && WidthPacked == other.WidthPacked && HeightPacked == other.HeightPacked && Depth == other.Depth && RowStride == other.RowStride && MipmapSize == other.MipmapSize && DepthStride == other.DepthStride;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
+            {
                 return false;
+            }
+
             if (ReferenceEquals(this, obj))
+            {
                 return true;
-            if (obj.GetType() != this.GetType())
+            }
+
+            if (obj.GetType() != GetType())
+            {
                 return false;
+            }
+
             return Equals((MipMapDescription)obj);
         }
 
@@ -124,14 +139,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             unchecked
             {
-                int hashCode = this.Width;
-                hashCode = (hashCode * 397) ^ this.Height;
-                hashCode = (hashCode * 397) ^ this.WidthPacked;
-                hashCode = (hashCode * 397) ^ this.HeightPacked;
-                hashCode = (hashCode * 397) ^ this.Depth;
-                hashCode = (hashCode * 397) ^ this.RowStride;
-                hashCode = (hashCode * 397) ^ this.MipmapSize;
-                hashCode = (hashCode * 397) ^ this.DepthStride;
+                var hashCode = Width;
+                hashCode = (hashCode * 397) ^ Height;
+                hashCode = (hashCode * 397) ^ WidthPacked;
+                hashCode = (hashCode * 397) ^ HeightPacked;
+                hashCode = (hashCode * 397) ^ Depth;
+                hashCode = (hashCode * 397) ^ RowStride;
+                hashCode = (hashCode * 397) ^ MipmapSize;
+                hashCode = (hashCode * 397) ^ DepthStride;
                 return hashCode;
             }
         }

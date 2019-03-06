@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public struct TextGeometryOptions
     {
-        public static readonly TextGeometryOptions Default = new TextGeometryOptions()
+        public static readonly TextGeometryOptions Default = new TextGeometryOptions
         {
             FontSize = 20,
             FontFamily = "Sergoe UI",

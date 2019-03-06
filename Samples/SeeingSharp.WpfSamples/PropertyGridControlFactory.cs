@@ -38,19 +38,20 @@ namespace SeeingSharp.WpfSamples
     {
         public override FrameworkElement CreateControl(PropertyItem property, PropertyControlFactoryOptions options)
         {
-            if(property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
+            if (!property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
             {
-                property.HeaderPlacement = HeaderPlacement.Hidden;
-
-                var result = new Button()
-                {
-                    Content = property.DisplayName,
-                };
-                result.SetBinding(Button.CommandProperty, property.CreateBinding());
-                return result;
+                return base.CreateControl(property, options);
             }
 
-            return base.CreateControl(property, options);
+            property.HeaderPlacement = HeaderPlacement.Hidden;
+
+            var result = new Button
+            {
+                Content = property.DisplayName
+            };
+
+            result.SetBinding(Button.CommandProperty, property.CreateBinding());
+            return result;
         }
     }
 }

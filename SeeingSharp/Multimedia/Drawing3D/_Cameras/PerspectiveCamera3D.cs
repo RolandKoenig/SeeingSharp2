@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         #region Configuration
         private float m_fov = (float)Math.PI / 4.0f;
-        private float m_aspectRatio;
+
         #endregion
 
         /// <summary>
@@ -74,13 +74,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix viewMatrix, out Matrix projMatrix)
         {
-            m_aspectRatio = (float)screenWidth / (float)screenHeight;
+            AspectRatio = screenWidth / (float)screenHeight;
             MatrixEx.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             MatrixEx.CreatePerspectiveFovLH(
                 m_fov,
-                m_aspectRatio,
+                AspectRatio,
                 zNear, zFar, out projMatrix);
         }
 
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float FieldOfView
         {
-            get { return m_fov; }
+            get => m_fov;
             set
             {
                 m_fov = value;
@@ -100,9 +100,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the current aspect ratio.
         /// </summary>
-        public float AspectRatio
-        {
-            get { return m_aspectRatio; }
-        }
+        public float AspectRatio { get; private set; }
     }
 }

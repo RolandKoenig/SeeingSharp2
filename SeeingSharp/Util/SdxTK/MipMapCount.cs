@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <param name="allMipMaps">if set to <c>true</c> generates all mip maps.</param>
         public MipMapCount(bool allMipMaps)
         {
-            this.Count = allMipMaps ? 0 : 1;
+            Count = allMipMaps ? 0 : 1;
         }
 
         /// <summary>
@@ -71,8 +71,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public MipMapCount(int count)
         {
             if (count < 0)
+            {
                 throw new ArgumentException("mipCount must be >= 0");
-            this.Count = count;
+            }
+
+            Count = count;
         }
 
         /// <summary>
@@ -85,19 +88,22 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
         public bool Equals(MipMapCount other)
         {
-            return this.Count == other.Count;
+            return Count == other.Count;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
+            {
                 return false;
+            }
+
             return obj is MipMapCount && Equals((MipMapCount)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.Count;
+            return Count;
         }
 
         public static bool operator ==(MipMapCount left, MipMapCount right)

@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class ConstantBufferResource : Resource
     {
         #region Direct3D resources
-        private D3D11.Buffer m_constantBuffer;
+
         #endregion
 
         #region Configuration
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = CreateConstantBuffer(device);
+            ConstantBuffer = CreateConstantBuffer(device);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = SeeingSharpTools.DisposeObject(m_constantBuffer);
+            ConstantBuffer = SeeingSharpTools.DisposeObject(ConstantBuffer);
         }
 
         /// <summary>
@@ -92,18 +92,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the buffer loaded correctly?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_constantBuffer != null; }
-        }
+        public override bool IsLoaded => ConstantBuffer != null;
 
         /// <summary>
         /// Gets the buffer object.
         /// </summary>
-        internal D3D11.Buffer ConstantBuffer
-        {
-            get { return m_constantBuffer; }
-        }
+        internal D3D11.Buffer ConstantBuffer { get; private set; }
 
         /// <summary>
         /// Gets the total size of the constant buffer.

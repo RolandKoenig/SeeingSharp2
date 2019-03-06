@@ -96,15 +96,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_cbPerFrame = null;
 
-            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
+            // resources.RemoveResource(KEY_CONSTANT_BUFFER);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_cbPerFrame != null; }
-        }
+        public override bool IsLoaded => m_cbPerFrame != null;
     }
 }

@@ -81,7 +81,7 @@ namespace SeeingSharp.Multimedia.Core
             return new SharpDX.DXGI.SwapChain1(
                 device.FactoryDxgi, device.DeviceD3D11_1, targetControl.Handle,
                 ref swapChainDesc,
-                new SharpDX.DXGI.SwapChainFullScreenDescription()
+                new SharpDX.DXGI.SwapChainFullScreenDescription
                 {
                     RefreshRate = new SharpDX.DXGI.Rational(60, 1),
                     Scaling = SharpDX.DXGI.DisplayModeScaling.Centered,
@@ -127,7 +127,7 @@ namespace SeeingSharp.Multimedia.Core
                 var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
-                result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription()
+                result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
                 {
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
@@ -170,28 +170,28 @@ namespace SeeingSharp.Multimedia.Core
             width.EnsurePositive(nameof(width));
             height.EnsurePositive(nameof(height));
 
-            //Prepare target bitmap
+            // Prepare target bitmap
             var resultBitmap = new GDI.Bitmap(width, height);
             var dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
 
             try
             {
-                //Lock bitmap so it can be accessed for texture loading
+                // Lock bitmap so it can be accessed for texture loading
                 var bitmapData = resultBitmap.LockBits(
                     new System.Drawing.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
                     System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
                 try
                 {
-                    //Copy data row by row
+                    // Copy data row by row
                     // => Rows form datasource may have more pixels because driver changes the size of textures
-                    ulong rowPitch = (ulong)(width * 4);
+                    var rowPitch = (ulong)(width * 4);
 
                     for (var loopRow = 0; loopRow < height; loopRow++)
                     {
                         // Copy bitmap data
-                        int rowPitchSource = dataBox.RowPitch;
-                        int rowPitchDestination = width * 4;
+                        var rowPitchSource = dataBox.RowPitch;
+                        var rowPitchDestination = width * 4;
                         SeeingSharpTools.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             bitmapData.Scan0 + loopRow * rowPitchDestination,

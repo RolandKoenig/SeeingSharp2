@@ -37,7 +37,7 @@ namespace SeeingSharp
         #region Stack data
         private Stack<Matrix3x2> m_stack;
         private int m_pushTimes;
-        private Matrix3x2 m_top;
+
         #endregion
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SeeingSharp
         public Matrix3x2Stack()
         {
             m_stack = new Stack<Matrix3x2>();
-            m_top = Matrix3x2.Identity;
+            Top = Matrix3x2.Identity;
 
             m_pushTimes = 0;
         }
@@ -57,7 +57,7 @@ namespace SeeingSharp
         public Matrix3x2Stack(Matrix3x2 top)
             : this()
         {
-            m_top = top;
+            Top = top;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SeeingSharp
         {
             m_stack.Clear();
             m_pushTimes = 0;
-            m_top = Matrix3x2.Identity;
+            Top = Matrix3x2.Identity;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(float transX, float transY)
         {
-            m_top = Matrix3x2.Translation(transX, transY) * m_top;
+            Top = Matrix3x2.Translation(transX, transY) * Top;
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(Vector2 transVector)
         {
-            m_top = Matrix3x2.Translation(transVector) * m_top;
+            Top = Matrix3x2.Translation(transVector) * Top;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SeeingSharp
         /// <param name="radians">The angle in radians.</param>
         public void RotateYawPitchRollLocal(float radians)
         {
-            m_top = Matrix3x2.Rotation(radians) * m_top;
+            Top = Matrix3x2.Rotation(radians) * Top;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SeeingSharp
         /// <param name="centerPoint">The center point of the rotation.</param>
         public void RotateYawPitchRollLocal(float radians, Vector2 centerPoint)
         {
-            m_top = Matrix3x2.Rotation(radians, centerPoint) * m_top;
+            Top = Matrix3x2.Rotation(radians, centerPoint) * Top;
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleX, float scaleY)
         {
-            m_top = Matrix3x2.Scaling(scaleX, scaleY) * m_top;
+            Top = Matrix3x2.Scaling(scaleX, scaleY) * Top;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(Vector2 scaling)
         {
-            m_top = Matrix3x2.Scaling(scaling) * m_top;
+            Top = Matrix3x2.Scaling(scaling) * Top;
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleFactor)
         {
-            m_top = Matrix3x2.Scaling(scaleFactor, scaleFactor) * m_top;
+            Top = Matrix3x2.Scaling(scaleFactor, scaleFactor) * Top;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SeeingSharp
         /// </summary>
         public void TransformLocal(Matrix3x2 transformMatrix)
         {
-            m_top = transformMatrix * m_top;
+            Top = transformMatrix * Top;
         }
 
         /// <summary>
@@ -143,8 +143,7 @@ namespace SeeingSharp
         public Object Clone()
         {
             var cloned = new Matrix3x2Stack();
-
-            Matrix3x2[] allElements = m_stack.ToArray();
+            var allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix3x2>();
 
@@ -154,7 +153,7 @@ namespace SeeingSharp
                 cloned.m_pushTimes++;
             }
 
-            cloned.m_top = m_top;
+            cloned.Top = Top;
 
             return cloned;
         }
@@ -164,7 +163,7 @@ namespace SeeingSharp
         /// </summary>
         public void Push()
         {
-            m_stack.Push(m_top);
+            m_stack.Push(Top);
             m_pushTimes++;
         }
 
@@ -173,8 +172,8 @@ namespace SeeingSharp
         /// </summary>
         public void Push(Matrix3x2 matrixToPush)
         {
-            m_stack.Push(m_top);
-            m_top = matrixToPush;
+            m_stack.Push(Top);
+            Top = matrixToPush;
             m_pushTimes++;
         }
 
@@ -183,19 +182,18 @@ namespace SeeingSharp
         /// </summary>
         public void Pop()
         {
-            if (m_pushTimes > 0)
+            if (m_pushTimes <= 0)
             {
-                m_top = m_stack.Pop();
-                m_pushTimes--;
+                return;
             }
+
+            Top = m_stack.Pop();
+            m_pushTimes--;
         }
 
         /// <summary>
         /// Gets the top matrix
         /// </summary>
-        public Matrix3x2 Top
-        {
-            get { return m_top; }
-        }
+        public Matrix3x2 Top { get; private set; }
     }
 }

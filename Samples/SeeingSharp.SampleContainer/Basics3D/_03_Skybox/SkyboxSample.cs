@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
     #endregion
 
     [SampleDescription(
-        "Skybox", 3, nameof(SeeingSharp.SampleContainer.Basics3D),
+        "Skybox", 3, nameof(Basics3D),
         sampleImageFileName: "PreviewImage.png",
         sourceCodeUrl: "https://github.com/RolandKoenig/SeeingSharp2/tree/master/_Samples/SeeingSharp.SampleContainer/Basics3D/_03_Skybox")]
     public class SkyboxSample : SampleBase
@@ -53,16 +53,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
+                BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
                 var cubeType = new CubeType();
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cubeType));
 
                 // Create cube object
@@ -80,7 +80,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
 
                 var resSkyboxTexture = manipulator.AddTexture(
                     new AssemblyResourceLink(
-                       this.GetType(),
+                       GetType(),
                         "SkyBox.dds"));
 
                 // Create the skybox on a new layer

@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Core
                 sourceView.EnsureNotNull(nameof(sourceView));
             }
 
-            m_componentRequests.Enqueue(new SceneComponentRequest()
+            m_componentRequests.Enqueue(new SceneComponentRequest
             {
                 RequestType = SceneComponentRequestType.Attach,
                 Component = component,
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
                 sourceView.EnsureNotNull(nameof(sourceView));
             }
 
-            m_componentRequests.Enqueue(new SceneComponentRequest()
+            m_componentRequests.Enqueue(new SceneComponentRequest
             {
                 RequestType = SceneComponentRequestType.Detach,
                 Component = component,
@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sourceView">The view from which we've to detach all components.</param>
         internal void DetachAllComponents(ViewInformation sourceView)
         {
-            m_componentRequests.Enqueue(new SceneComponentRequest()
+            m_componentRequests.Enqueue(new SceneComponentRequest
             {
                 RequestType = SceneComponentRequestType.DetachAll,
                 CorrespondingView = sourceView
@@ -116,7 +116,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateSceneComponents(SceneRelatedUpdateState updateState)
         {
             // Update all components
-            int attachedComponentsCount = m_attachedComponents.Count;
+            var attachedComponentsCount = m_attachedComponents.Count;
 
             for (var loop = 0; loop < attachedComponentsCount; loop++)
             {
@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Attach all components which are comming in
             var actRequest = default(SceneComponentRequest);
-            int actIndex = 0;
+            var actIndex = 0;
 
             while (m_componentRequests.Dequeue(out actRequest))
             {
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Core
                                 actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
-                                m_componentRequests.Enqueue(new SceneComponentRequest()
+                                m_componentRequests.Enqueue(new SceneComponentRequest
                                 {
                                     RequestType = SceneComponentRequestType.Detach,
                                     Component = actObsoleteComponent.Component,
@@ -250,8 +250,9 @@ namespace SeeingSharp.Multimedia.Core
 
         private IEnumerable<SceneComponentInfo> GetExistingComponentsByGroup(string groupName, ViewInformation correspondingView)
         {
-            int attachedComponentCount = m_attachedComponents.Count;
-            for (int loop = 0; loop < attachedComponentCount; loop++)
+            var attachedComponentCount = m_attachedComponents.Count;
+
+            for (var loop = 0; loop < attachedComponentCount; loop++)
             {
                 if((m_attachedComponents[loop].Component.ComponentGroup == groupName) &&
                    (m_attachedComponents[loop].CorrespondingView == correspondingView))
@@ -268,28 +269,32 @@ namespace SeeingSharp.Multimedia.Core
             SceneComponentBase component, ViewInformation correspondingView,
             out SceneComponentInfo componentInfo, out int componentIndex)
         {
-            int attachedComponentCount = m_attachedComponents.Count;
-            for (int loop=0; loop<attachedComponentCount; loop++)
+            var attachedComponentCount = m_attachedComponents.Count;
+
+            for (var loop =0; loop<attachedComponentCount; loop++)
             {
                 if(component.IsViewSpecific)
                 {
-                    if((component == m_attachedComponents[loop].Component) &&
-                       (correspondingView != null) &&
-                       (correspondingView == m_attachedComponents[loop].CorrespondingView))
+                    if ((component != m_attachedComponents[loop].Component) || (correspondingView == null) ||
+                        (correspondingView != m_attachedComponents[loop].CorrespondingView))
                     {
-                        componentInfo = m_attachedComponents[loop];
-                        componentIndex = loop;
-                        return true;
+                        continue;
                     }
+
+                    componentInfo = m_attachedComponents[loop];
+                    componentIndex = loop;
+                    return true;
                 }
                 else
                 {
-                    if (component == m_attachedComponents[loop].Component)
+                    if (component != m_attachedComponents[loop].Component)
                     {
-                        componentInfo = m_attachedComponents[loop];
-                        componentIndex = loop;
-                        return true;
+                        continue;
                     }
+
+                    componentInfo = m_attachedComponents[loop];
+                    componentIndex = loop;
+                    return true;
                 }
             }
 

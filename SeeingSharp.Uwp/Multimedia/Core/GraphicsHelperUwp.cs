@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            var desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SharpDX.DXGI.SwapChainDescription1
             {
                 Width = width,
                 Height = height,
@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
                 AlphaMode = SharpDX.DXGI.AlphaMode.Ignore
             };
 
-            //Creates the swap chain for the given CoreWindow object
+            // Creates the swap chain for the given CoreWindow object
             return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
         }
 
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsurePositive(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            var desc = new SharpDX.DXGI.SwapChainDescription1()
+            var desc = new SharpDX.DXGI.SwapChainDescription1
             {
                 Width = width,
                 Height = height,
@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Core
                 AlphaMode = gfxConfig.AlphaEnabledSwapChain ? SharpDX.DXGI.AlphaMode.Premultiplied : SharpDX.DXGI.AlphaMode.Ignore
             };
 
-            //Creates the swap chain for XAML composition
+            // Creates the swap chain for XAML composition
             return new SharpDX.DXGI.SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
         }
     }

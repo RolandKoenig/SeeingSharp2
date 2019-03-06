@@ -52,22 +52,19 @@ namespace SeeingSharp.Checking
             // Check for positive value
             if(sizeValue < 1)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Texture Size value {0} within method {1} musst not be smaller that 1!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException($"Texture Size value {checkedVariableName} within method {callerMethod} musst not be smaller that 1!");
             }
 
             // Check for "power of 2"
             if (Math.Abs((double)sizeValue / 2) > EngineMath.TOLERANCE_DOUBLE_POSITIVE)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Texture Size value {0} within method {1} musst be a power of 2!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException($"Texture Size value {checkedVariableName} within method {callerMethod} musst be a power of 2!");
             }
 
             // Check for maximum dimension
             //  see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx#Overview
-            int maxDimension = 0;
+            var maxDimension = 0;
+
             switch(driverLevel)
             {
                 case HardwareDriverLevel.Direct3D9_1:
@@ -90,10 +87,8 @@ namespace SeeingSharp.Checking
             }
             if(sizeValue > maxDimension)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Texture Size value {0} within method {1} can have a maximum of {2}!",
-                    checkedVariableName, callerMethod, maxDimension));
+                throw new SeeingSharpCheckException($"Texture Size value {checkedVariableName} within method {callerMethod} can have a maximum of {maxDimension}!");
             }
         }
-   }
+    }
 }

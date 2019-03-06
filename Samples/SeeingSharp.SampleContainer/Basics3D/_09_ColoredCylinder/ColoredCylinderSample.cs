@@ -49,23 +49,23 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ColoredCylinder
 
             // Build dummy scene
             var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera as Camera3DBase;
+            var camera = targetRenderLoop.Camera;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
-                base.BuildStandardFloor(
+                BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cylinder geometry resource
                 var cylinderType = new CylinderType { CountOfSegments = 50 };
 
-                var resPalletGeometry = manipulator.AddResource<GeometryResource>(
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(cylinderType));
 
                 // Create cylinder object
                 var cylinderObject = manipulator.AddGeneric(resPalletGeometry);
-                cylinderObject.Color = Color4Ex.BlueColor;
+                cylinderObject.Color = Color4Ex.GreenColor;
                 cylinderObject.Position = new Vector3(0f, 0.5f, 0f);
                 cylinderObject.EnableShaderGeneratedBorder();
                 cylinderObject.BuildAnimationSequence()

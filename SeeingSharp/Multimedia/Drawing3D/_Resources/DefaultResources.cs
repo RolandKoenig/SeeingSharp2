@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -113,7 +112,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Create alpha blending blend state
             m_alphaBlendingBlendState = new Lazy<D3D11.BlendState>(() =>
             {
-                //Define the blend state (based on http://www.rastertek.com/dx11tut26.html)
+                // Define the blend state (based on http://www.rastertek.com/dx11tut26.html)
                 var blendDesc = D3D11.BlendStateDescription.Default();
                 blendDesc.RenderTarget[0].IsBlendEnabled = true;
                 blendDesc.RenderTarget[0].SourceBlend = D3D11.BlendOption.SourceAlpha;
@@ -124,7 +123,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 blendDesc.RenderTarget[0].AlphaBlendOperation = D3D11.BlendOperation.Maximum;
                 blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11.ColorWriteMaskFlags.All;
 
-                //Create the blendstate object
+                // Create the blendstate object
                 return new D3D11.BlendState(device.DeviceD3D11_1, blendDesc);
             });
 
@@ -230,10 +229,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Are resources loaded?
         /// </summary>
-        public bool ResourcesLoaded
-        {
-            get { return m_defaultBlendState != null; }
-        }
+        public bool ResourcesLoaded => m_defaultBlendState != null;
 
         internal D3D11.BlendState DefaultBlendState
         {
@@ -311,7 +307,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if(m_rasterStateWireframe == null) { return null; }
+                if (m_rasterStateWireframe == null) { return null; }
                 return m_rasterStateWireframe.Value;
             }
         }
@@ -334,9 +330,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        public override bool IsLoaded
-        {
-            get { return m_defaultBlendState != null; }
-        }
+        public override bool IsLoaded => m_defaultBlendState != null;
     }
 }

@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected InputStateBase()
         {
-            CurrentType = this.GetType();
+            CurrentType = GetType();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(RelatedView == null) { return -1; }
+                if (RelatedView == null) { return -1; }
                 else { return RelatedView.ViewIndex; }
             }
         }

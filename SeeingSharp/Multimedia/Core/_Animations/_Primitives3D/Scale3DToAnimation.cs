@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float scaleFactor = (float)base.CurrentTime.Ticks / (float)base.FixedTime.Ticks;
+            var scaleFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
 
             m_targetObject.Scaling = m_startScaleVector + m_differenceVector * scaleFactor;
         }

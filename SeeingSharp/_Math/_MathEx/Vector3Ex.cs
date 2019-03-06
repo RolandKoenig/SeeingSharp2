@@ -44,12 +44,12 @@ namespace SeeingSharp
         {
             var result = Vector3.Zero;
 
-            //Generate vector
+            // Generate vector
             result.X = (float)(1f * Math.Cos(verticalRotation) * Math.Cos(horizontalRotation));
             result.Y = (float)(1f * Math.Sin(verticalRotation));
             result.Z = (float)(1f * Math.Cos(verticalRotation) * Math.Sin(horizontalRotation));
 
-            //Normalize the generated vector
+            // Normalize the generated vector
             result = Vector3.Normalize(result);
 
             return result;
@@ -75,11 +75,11 @@ namespace SeeingSharp
                 return Vector3.Zero;
             }
 
-            var result = Vector3Ex.Sum(vectors);
+            var result = Sum(vectors);
 
-            result.X = result.X / (float)vectors.Length;
-            result.Y = result.Y / (float)vectors.Length;
-            result.Z = result.Z / (float)vectors.Length;
+            result.X = result.X / vectors.Length;
+            result.Y = result.Y / vectors.Length;
+            result.Z = result.Z / vectors.Length;
 
             return result;
         }
@@ -95,11 +95,11 @@ namespace SeeingSharp
                 return Vector3.Zero;
             }
 
-            var result = Vector3Ex.Sum(vectors);
+            var result = Sum(vectors);
 
-            result.X = result.X / (float)vectors.Count;
-            result.Y = result.Y / (float)vectors.Count;
-            result.Z = result.Z / (float)vectors.Count;
+            result.X = result.X / vectors.Count;
+            result.Y = result.Y / vectors.Count;
+            result.Z = result.Z / vectors.Count;
 
             return result;
         }
@@ -237,7 +237,7 @@ namespace SeeingSharp
         /// whether the original vector was close enough to the surface to hit it.</remarks>
         public static void Reflect(ref Vector3 vector, ref Vector3 normal, out Vector3 result)
         {
-            float dot = (vector.X * normal.X) + (vector.Y * normal.Y) + (vector.Z * normal.Z);
+            var dot = (vector.X * normal.X) + (vector.Y * normal.Y) + (vector.Z * normal.Z);
 
             result.X = vector.X - ((2.0f * dot) * normal.X);
             result.Y = vector.Y - ((2.0f * dot) * normal.Y);
@@ -247,7 +247,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(this Vector3 vector, int index)
         {
-            switch(index)
+            switch (index)
             {
                 case 1: return vector.X;
                 case 2: return vector.Y;
@@ -259,7 +259,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetValue(this Vector3 vector, int index, float value)
         {
-            switch(index)
+            switch (index)
             {
                 case 1: vector.X = value; break;
                 case 2: vector.Y = value; break;
@@ -271,13 +271,13 @@ namespace SeeingSharp
         public static Vector3 MinValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return new Vector3(float.MinValue, float.MinValue, float.MinValue); }
+            get => new Vector3(float.MinValue, float.MinValue, float.MinValue);
         }
 
         public static Vector3 MaxValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return new Vector3(float.MaxValue, float.MaxValue, float.MaxValue); }
+            get => new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         }
     }
 }

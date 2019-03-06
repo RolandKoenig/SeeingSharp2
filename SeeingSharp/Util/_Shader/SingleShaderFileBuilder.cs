@@ -67,21 +67,34 @@ namespace SeeingSharp.Util
                     }
 
                     // Handle include line
-                    int indexStringStart = actLine.IndexOf('"');
-                    int indexStringEnd = actLine.LastIndexOf('"');
-                    if(indexStringStart < 0) { continue; }
-                    if(indexStringStart == indexStringEnd) { continue; }
+                    var indexStringStart = actLine.IndexOf('"');
+                    var indexStringEnd = actLine.LastIndexOf('"');
 
-                    int includeFilePathLength = (indexStringEnd - indexStringStart) - 1;
-                    if(includeFilePathLength <= 0) { continue; }
+                    if (indexStringStart < 0)
+                    {
+                        continue;
+                    }
+
+                    if (indexStringStart == indexStringEnd)
+                    {
+                        continue;
+                    }
+
+                    var includeFilePathLength = (indexStringEnd - indexStringStart) - 1;
+
+                    if (includeFilePathLength <= 0)
+                    {
+                        continue;
+                    }
 
                     // Get full include file path in split it using path separators
-                    string includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);
-                    string[] includeFilePathSplitted = includeFilePath.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                    var includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);
+                    var includeFilePathSplitted = includeFilePath.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
                     // Build the link to the include file
-                    string fileName = includeFilePathSplitted[includeFilePathSplitted.Length - 1];
+                    var fileName = includeFilePathSplitted[includeFilePathSplitted.Length - 1];
                     ResourceLink resLinkInner = null;
+
                     if (includeFilePathSplitted.Length < 2)
                     {
                         resLinkInner = resourceLink.GetForAnotherFile(fileName);

@@ -80,34 +80,34 @@ namespace SeeingSharp.Util
             {
                 return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
             }
-            else
+
+            // Throw away all items which are too old
+            foreach (var dummy in m_lastReportedTimestamps.DequeueWhile((actItem) => actItem < minTimeStamp)) { }
+
+            // Check again wether we have any items
+            if (!m_lastReportedTimestamps.HasAny())
             {
-                // Throw away all items which are too old
-                foreach (var dummy in m_lastReportedTimestamps.DequeueWhile((actItem) => actItem < minTimeStamp)) { }
+                return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
+            }
 
-                // Check again wether we have any items
-                if (!m_lastReportedTimestamps.HasAny())
-                {
-                    return new FlowRatePerformanceResult(this, keyTimeStamp, 0.0);
-                }
+            // Counts all relevant items
+            double resultValue = m_lastReportedTimestamps
+                .PeekWhile((actTuple) => actTuple < maxTimeStamp)
+                .Count();
 
-                // Counts all relevant items
-                double resultValue = (double)(m_lastReportedTimestamps
-                    .PeekWhile((actTuple) => actTuple < maxTimeStamp)
-                    .Count());
+            // Handle case where measured timespan in more less than the calculation timespan
+            var currentValueTimespan = maxTimeStamp - minTimeStamp;
 
-                // Handle case where measured timespan in more less than the calculation timespan
-                var currentValueTimespan = maxTimeStamp - minTimeStamp;
-
-                if(currentValueTimespan != calculationInterval)
-                {
-                    double timespanFactor = (double)calculationInterval.Ticks / (double)currentValueTimespan.Ticks;
-                    resultValue *= timespanFactor;
-                }
-
-                // Generate the result object
+            if (currentValueTimespan == calculationInterval)
+            {
                 return new FlowRatePerformanceResult(this, keyTimeStamp, resultValue);
             }
+
+            var timespanFactor = calculationInterval.Ticks / (double)currentValueTimespan.Ticks;
+            resultValue *= timespanFactor;
+
+            // Generate the result object
+            return new FlowRatePerformanceResult(this, keyTimeStamp, resultValue);
         }
     }
 }

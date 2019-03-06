@@ -39,9 +39,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal SharpDX.WIC.ImagingFactory Factory { get; }
 
-        public bool IsInitialized
-        {
-            get { return Factory != null; }
-        }
+        public bool IsInitialized => Factory != null;
     }
 }

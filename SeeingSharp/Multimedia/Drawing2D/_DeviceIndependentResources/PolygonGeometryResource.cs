@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             using (var geoSink = m_d2dGeometry.Open())
             {
-                ReadOnlyCollection<Vector2> vertices = polygon.Vertices;
+                var vertices = polygon.Vertices;
 
                 // Start the figure
                 var startPoint = vertices[0];
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     D2D.FigureBegin.Filled);
 
                 // Add all lines
-                int vertexCount = vertices.Count;
+                var vertexCount = vertices.Count;
 
                 for (var loop = 1; loop < vertexCount; loop++)
                 {
@@ -133,12 +133,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             SeeingSharpTools.SafeDispose(ref m_d2dGeometry);
         }
 
-        public override bool IsDisposed
-        {
-            get
-            {
-                return m_d2dGeometry == null;
-            }
-        }
+        public override bool IsDisposed => m_d2dGeometry == null;
     }
 }

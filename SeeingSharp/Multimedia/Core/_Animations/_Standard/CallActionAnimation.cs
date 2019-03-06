@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            if(m_actionToCall != null)
+            if (m_actionToCall != null)
             {
                 m_actionToCall();
             }

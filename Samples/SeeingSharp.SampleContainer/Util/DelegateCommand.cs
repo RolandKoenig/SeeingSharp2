@@ -51,8 +51,12 @@ namespace SeeingSharp.SampleContainer.Util
 
         public bool CanExecute(object parameter)
         {
-            if(m_canExecuteAction == null) { return true; }
-            else { return m_canExecuteAction(); }
+            if (m_canExecuteAction == null)
+            {
+                return true;
+            }
+
+            return m_canExecuteAction();
         }
 
         public void Execute(object parameter)

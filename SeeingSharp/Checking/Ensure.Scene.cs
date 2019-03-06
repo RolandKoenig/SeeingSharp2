@@ -45,9 +45,7 @@ namespace SeeingSharp.Checking
 
             if (sceneObject.Scene != scene)
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "The object {0} within method {1} is not part of the expected Scene!",
-                    checkedVariableName, callerMethod));
+                throw new SeeingSharpCheckException($"The object {checkedVariableName} within method {callerMethod} is not part of the expected Scene!");
             }
         }
 

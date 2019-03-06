@@ -39,9 +39,7 @@ namespace SeeingSharp.Util
         private void HandleResultForUI(PerformanceAnalyzeResultBase actResult)
         {
             // Handle duration kpi results
-            var actDurationResult = actResult as DurationPerformanceResult;
-
-            if (actDurationResult != null)
+            if (actResult is DurationPerformanceResult actDurationResult)
             {
                 HandleResultForUIForFlowRateKpi(
                     actDurationResult,
@@ -50,15 +48,13 @@ namespace SeeingSharp.Util
             }
 
             // Put here other result handlers
-            var actFlowRateResult = actResult as FlowRatePerformanceResult;
-
-            if (actFlowRateResult != null)
+            if (!(actResult is FlowRatePerformanceResult actFlowRateResult))
             {
-                HandleResultForUIForFlowRateKpi(
-                    actFlowRateResult,
-                    UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
                 return;
             }
+
+            HandleResultForUIForFlowRateKpi(actFlowRateResult, UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
+            return;
         }
 
         /// <summary>
@@ -90,16 +86,19 @@ namespace SeeingSharp.Util
             }
 
             // Handle most current entires
-            if (m_generateCurrentValueCollection)
+            if (!m_generateCurrentValueCollection)
             {
-                kpisCurrents.Add(kpiResult);
-                for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
+                return;
+            }
+
+            kpisCurrents.Add(kpiResult);
+
+            for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
+            {
+                if ((kpisCurrents[loop] != kpiResult) &&
+                    (kpisCurrents[loop].Calculator == kpiResult.Calculator))
                 {
-                    if ((kpisCurrents[loop] != kpiResult) &&
-                        (kpisCurrents[loop].Calculator == kpiResult.Calculator))
-                    {
-                        kpisCurrents.RemoveAt(loop);
-                    }
+                    kpisCurrents.RemoveAt(loop);
                 }
             }
         }

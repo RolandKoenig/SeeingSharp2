@@ -48,12 +48,13 @@ namespace SeeingSharp
         {
             if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
 
-            //Apply given vertices (remove the last one if it is equal to the first one)
+            // Apply given vertices (remove the last one if it is equal to the first one)
             m_vertices = vertices;
+
             if ((m_vertices.Length > 1) &&
                (m_vertices[m_vertices.Length - 1] == m_vertices[0]))
             {
-                Vector2[] newArray = new Vector2[m_vertices.Length - 1];
+                var newArray = new Vector2[m_vertices.Length - 1];
                 Array.Copy(m_vertices, newArray, m_vertices.Length - 1);
                 m_vertices = newArray;
             }
@@ -84,19 +85,21 @@ namespace SeeingSharp
         /// </summary>
          public Polygon2D MergeWithHole(Polygon2D actHole, Polygon2DMergeOptions mergeOptions, List<Vector2> cutPoints)
         {
-            //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
+            // This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
-            //Find the hole vertex with the highest x value
+            // Find the hole vertex with the highest x value
             var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
-            int holeVertexIndexWithHighestX = -1;
+            var holeVertexIndexWithHighestX = -1;
 
             for (var loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
             {
-                if (actHole.m_vertices[loopVertex].X > holeVertexWithHighestX.X)
+                if (!(actHole.m_vertices[loopVertex].X > holeVertexWithHighestX.X))
                 {
-                    holeVertexWithHighestX = actHole.m_vertices[loopVertex];
-                    holeVertexIndexWithHighestX = loopVertex;
+                    continue;
                 }
+
+                holeVertexWithHighestX = actHole.m_vertices[loopVertex];
+                holeVertexIndexWithHighestX = loopVertex;
             }
 
             if (cutPoints != null)
@@ -104,14 +107,14 @@ namespace SeeingSharp
                 cutPoints.Add(holeVertexWithHighestX);
             }
 
-            //Define a ray from the found vertex pointing in x direction
+            // Define a ray from the found vertex pointing in x direction
             var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
-            //Find the line on current filling polygon with intersects first with the created ray
+            // Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
-            int actLineIndex = 0;
+            var actLineIndex = 0;
 
-            foreach (var actLine in this.Lines)
+            foreach (var actLine in Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
 
@@ -120,88 +123,95 @@ namespace SeeingSharp
                     var rayToIntersectionPoint = new Ray2D(
                         ray2D.Origin,
                         Vector2.Normalize(actIntersection.Item2 - ray2D.Origin));
-                    float lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
+                    var lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
 
                     if ((lengthToIntersectionPoint > 0f) &&
                         (rayToIntersectionPoint.EqualsWithTolerance(ray2D)))
                     {
                         if (foundLine == null)
                         {
-                            //First found intersection
+                            // First found intersection
                             foundLine = Tuple.Create(actLineIndex, lengthToIntersectionPoint, actIntersection.Item2);
                         }
                         else if (lengthToIntersectionPoint < foundLine.Item2)
                         {
-                            //More intersections found.. take the one with smalles distance to intersection point
+                            // More intersections found.. take the one with smalles distance to intersection point
                             foundLine = Tuple.Create(actLineIndex, lengthToIntersectionPoint, actIntersection.Item2);
                         }
                     }
                 }
+
                 actLineIndex++;
             }
+
             if (cutPoints != null) { cutPoints.Add(foundLine.Item3); }
 
-            //Check for found intersection
+            // Check for found intersection
             if (foundLine == null)
             {
                 throw new SeeingSharpException("No point found on which given polygons can be combinded!");
             }
 
-            //Now generate result polygon
-            List<Vector2> resultBuilder = new List<Vector2>(this.m_vertices.Length + actHole.m_vertices.Length + 2);
-            for (int loopFillVertex = 0; loopFillVertex < this.m_vertices.Length; loopFillVertex++)
+            // Now generate result polygon
+            var resultBuilder = new List<Vector2>(m_vertices.Length + actHole.m_vertices.Length + 2);
+
+            for (var loopFillVertex = 0; loopFillVertex < m_vertices.Length; loopFillVertex++)
             {
-                //Add current vertex from filling polygon first
+                // Add current vertex from filling polygon first
                 resultBuilder.Add(m_vertices[loopFillVertex]);
 
-                //Do special logic on cut point
-                if (loopFillVertex == foundLine.Item1)
+                // Do special logic on cut point
+                if (loopFillVertex != foundLine.Item1)
                 {
-                    //Cut point.. place here the hole polygon
-                    if (!m_vertices[loopFillVertex].Equals(foundLine.Item3))
-                    {
-                        resultBuilder.Add(foundLine.Item3);
-                    }
+                    continue;
+                }
 
-                    //Add all vertices from the hole polygon
+                // Cut point.. place here the hole polygon
+                if (!m_vertices[loopFillVertex].Equals(foundLine.Item3))
+                {
+                    resultBuilder.Add(foundLine.Item3);
+                }
+
+                // Add all vertices from the hole polygon
+                resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
+                var loopHoleVertex = holeVertexIndexWithHighestX + 1;
+
+                while (loopHoleVertex != holeVertexIndexWithHighestX)
+                {
+                    if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
+
+                    resultBuilder.Add(actHole.m_vertices[loopHoleVertex]);
+
+                    loopHoleVertex++;
+
+                    if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
+                }
+
+                // Add cutpoints again to continue with main polygon
+                if (mergeOptions.MakeMergepointSpaceForTriangulation)
+                {
+                    resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX] + new Vector2(0f, 0.001f));
+
+                    // Add the cutpoint again
+                    resultBuilder.Add(foundLine.Item3 + new Vector2(0f, 0.001f));
+                }
+                else
+                {
                     resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
-                    int loopHoleVertex = holeVertexIndexWithHighestX + 1;
-                    while (loopHoleVertex != holeVertexIndexWithHighestX)
-                    {
-                        if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
 
-                        resultBuilder.Add(actHole.m_vertices[loopHoleVertex]);
+                    // Add the cutpoint again
+                    resultBuilder.Add(foundLine.Item3);
+                }
 
-                        loopHoleVertex++;
-                        if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
-                    }
-
-                    //Add cutpoints again to continue with main polygon
-                    if (mergeOptions.MakeMergepointSpaceForTriangulation)
-                    {
-                        resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX] + new Vector2(0f, 0.001f));
-
-                        //Add the cutpoint again
-                        resultBuilder.Add(foundLine.Item3 + new Vector2(0f, 0.001f));
-                    }
-                    else
-                    {
-                        resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
-
-                        //Add the cutpoint again
-                        resultBuilder.Add(foundLine.Item3);
-                    }
-
-                    //Handle the case in which next vertex would equal current cut point
-                    if ((m_vertices.Length > loopFillVertex + 1) &&
-                        (m_vertices[loopFillVertex + 1].Equals(foundLine.Item3)))
-                    {
-                        loopFillVertex++;
-                    }
+                // Handle the case in which next vertex would equal current cut point
+                if ((m_vertices.Length > loopFillVertex + 1) &&
+                    (m_vertices[loopFillVertex + 1].Equals(foundLine.Item3)))
+                {
+                    loopFillVertex++;
                 }
             }
 
-            //Return new generate polygon
+            // Return new generate polygon
             return new Polygon2D(resultBuilder.ToArray());
         }
 
@@ -236,28 +246,30 @@ namespace SeeingSharp
         /// </summary>
         private EdgeOrder CalculateEdgeOrder()
         {
-            //Calculation method taken from http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
-            //Formula:
-            // For each Edge: (x2-x1)(y2+y1)
-            // Take sum from each result
-            // If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise
+            // Calculation method taken from http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
+            // Formula:
+            //  For each Edge: (x2-x1)(y2+y1)
+            //  Take sum from each result
+            //  If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise
 
             if (m_vertices.Length < 2) { return EdgeOrder.Unknown; }
 
-            float currentSum = 0f;
-            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            var currentSum = 0f;
+
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
-                //Get index of following vertex
-                int loopNext = loopVertex + 1;
+                // Get index of following vertex
+                var loopNext = loopVertex + 1;
+
                 if (loopNext >= m_vertices.Length) { loopNext = 0; }
 
-                //Calculate sum
+                // Calculate sum
                 currentSum +=
                     (m_vertices[loopNext].X - m_vertices[loopVertex].X) *
                     (m_vertices[loopNext].Y + m_vertices[loopVertex].Y);
             }
 
-            //Return result depending on sum
+            // Return result depending on sum
             if (currentSum > 0f) { return EdgeOrder.Clockwise; }
             else { return EdgeOrder.CounterClockwise; }
         }
@@ -269,7 +281,7 @@ namespace SeeingSharp
         {
             get
             {
-                for (int loop = 0; loop < m_vertices.Length; loop++)
+                for (var loop = 0; loop < m_vertices.Length; loop++)
                 {
                     if (loop >= m_vertices.Length - 1)
                     {
@@ -299,17 +311,11 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the bounding box of this polygon.
         /// </summary>
-        public BoundingBox2D BoundingBox
-        {
-            get { return m_boundingBox2D.Value; }
-        }
+        public BoundingBox2D BoundingBox => m_boundingBox2D.Value;
 
         /// <summary>
         /// Gets the current edge order.
         /// </summary>
-        public EdgeOrder EdgeOrder
-        {
-            get { return m_edgeOrder.Value; }
-        }
+        public EdgeOrder EdgeOrder => m_edgeOrder.Value;
     }
 }

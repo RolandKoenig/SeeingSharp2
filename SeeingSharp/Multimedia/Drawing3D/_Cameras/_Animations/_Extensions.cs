@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             where TargetObject : Camera3DBase
         {
             sequenceBuilder.Add(
-                new CameraStraightMoveAnimation(sequenceBuilder.TargetObject as Camera3DBase, targetViewPoint, animationTime));
+                new CameraStraightMoveAnimation(sequenceBuilder.TargetObject, targetViewPoint, animationTime));
             return sequenceBuilder;
         }
     }

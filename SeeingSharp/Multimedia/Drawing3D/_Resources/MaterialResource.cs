@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -77,9 +76,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="instancingMode">Instancing mode for which to generate the input layout for.</param>
         internal abstract D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements, MaterialApplyInstancingMode instancingMode);
 
-        public virtual bool IsExportable
-        {
-            get { return false; }
-        }
+        public virtual bool IsExportable => false;
     }
 }

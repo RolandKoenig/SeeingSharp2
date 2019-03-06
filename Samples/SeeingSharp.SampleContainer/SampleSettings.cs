@@ -66,11 +66,13 @@ namespace SeeingSharp.SampleContainer
             get => m_renderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
             set
             {
-                if(value != m_renderLoop?.ViewConfiguration.AntialiasingEnabled)
+                if (value == m_renderLoop?.ViewConfiguration.AntialiasingEnabled)
                 {
-                    m_renderLoop.ViewConfiguration.AntialiasingEnabled = value;
-                    RaisePropertyChanged(nameof(EnableAntialiasing));
+                    return;
                 }
+
+                m_renderLoop.ViewConfiguration.AntialiasingEnabled = value;
+                RaisePropertyChanged(nameof(EnableAntialiasing));
             }
         }
 
@@ -80,11 +82,13 @@ namespace SeeingSharp.SampleContainer
             get => m_renderLoop?.ViewConfiguration.WireframeEnabled ?? false;
             set
             {
-                if (value != m_renderLoop?.ViewConfiguration.WireframeEnabled)
+                if (value == m_renderLoop?.ViewConfiguration.WireframeEnabled)
                 {
-                    m_renderLoop.ViewConfiguration.WireframeEnabled = value;
-                    RaisePropertyChanged(nameof(EnableWireframe));
+                    return;
                 }
+
+                m_renderLoop.ViewConfiguration.WireframeEnabled = value;
+                RaisePropertyChanged(nameof(EnableWireframe));
             }
         }
 
@@ -94,11 +98,13 @@ namespace SeeingSharp.SampleContainer
             get => m_renderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
             set
             {
-                if(value != m_renderLoop?.ViewConfiguration.AntialiasingQuality)
+                if (value == m_renderLoop?.ViewConfiguration.AntialiasingQuality)
                 {
-                    m_renderLoop.ViewConfiguration.AntialiasingQuality = value;
-                    RaisePropertyChanged(nameof(AntialiasingQuality));
+                    return;
                 }
+
+                m_renderLoop.ViewConfiguration.AntialiasingQuality = value;
+                RaisePropertyChanged(nameof(AntialiasingQuality));
             }
         }
     }

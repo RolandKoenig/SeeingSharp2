@@ -60,7 +60,7 @@ namespace SeeingSharp.Util
 
         public void PushNext(T nextObject)
         {
-            for(int loop=0; loop<m_observers.Count; loop++)
+            for(var loop=0; loop<m_observers.Count; loop++)
             {
                 m_observers[loop].OnNext(nextObject);
             }
@@ -71,7 +71,8 @@ namespace SeeingSharp.Util
             m_isFinished.EnsureFalse(nameof(m_isFinished));
 
             m_isFinished = true;
-            for (int loop = 0; loop < m_observers.Count; loop++)
+
+            for (var loop = 0; loop < m_observers.Count; loop++)
             {
                 m_observers[loop].OnError(error);
             }
@@ -82,7 +83,8 @@ namespace SeeingSharp.Util
             m_isFinished.EnsureFalse(nameof(m_isFinished));
 
             m_isFinished = true;
-            for (int loop = 0; loop < m_observers.Count; loop++)
+
+            for (var loop = 0; loop < m_observers.Count; loop++)
             {
                 m_observers[loop].OnCompleted();
             }

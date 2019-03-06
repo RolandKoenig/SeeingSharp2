@@ -75,9 +75,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            var stlImportOptions = importOptions as StlImportOptions;
-
-            if(stlImportOptions == null)
+            if(!(importOptions is StlImportOptions stlImportOptions))
             {
                 throw new SeeingSharpException("Invalid import options for StlImporter!");
             }
@@ -89,7 +87,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Try to read in BINARY format first
                 using (var inStream = sourceFile.OpenInputStream())
                 {
-                    result = this.TryReadBinary(inStream, stlImportOptions);
+                    result = TryReadBinary(inStream, stlImportOptions);
                 }
 
                 // Read in ASCII format (if binary did not work)
@@ -97,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     using (var inStream = sourceFile.OpenInputStream())
                     {
-                        result = this.TryReadAscii(inStream, stlImportOptions);
+                        result = TryReadAscii(inStream, stlImportOptions);
                     }
                 }
             }
@@ -129,7 +127,8 @@ namespace SeeingSharp.Multimedia.Objects
         private static void ParseLine(string line, out string id, out string values)
         {
             line = line.Trim();
-            int idx = line.IndexOf(' ');
+            var idx = line.IndexOf(' ');
+
             if (idx == -1)
             {
                 id = line;
@@ -153,9 +152,9 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpException($"Unexpected line while reading Stl file. Line content: {Environment.NewLine}{input}");
             }
 
-            float x = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-            float y = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-            float z = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+            var x = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            var y = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            var z = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
 
             return new Vector3(x, y, z);
         }
@@ -228,9 +227,9 @@ namespace SeeingSharp.Multimedia.Objects
                 return false;
             }
 
-            float x = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-            float y = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-            float z = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+            var x = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            var y = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            var z = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
 
             point = new Vector3(x, y, z);
             return true;
@@ -249,7 +248,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             while (true)
             {
-                string line = reader.ReadLine();
+                var line = reader.ReadLine();
                 Vector3 point;
 
                 if (TryParseVertex(line, out point))
@@ -299,10 +298,11 @@ namespace SeeingSharp.Multimedia.Objects
                     break;
 
                 default:
-                    int[] indices = new int[pointCount];
+                    var indices = new int[pointCount];
+
                     if (importOptions.IsChangeTriangleOrderNeeded())
                     {
-                        for (int loop = pointCount - 1; loop > -1; loop--)
+                        for (var loop = pointCount - 1; loop > -1; loop--)
                         {
                             indices[loop] = newStructure.AddVertex(
                                 new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
@@ -310,7 +310,7 @@ namespace SeeingSharp.Multimedia.Objects
                     }
                     else
                     {
-                        for (int loop = 0; loop < pointCount; loop++)
+                        for (var loop = 0; loop < pointCount; loop++)
                         {
                             indices[loop] = newStructure.AddVertex(
                                 new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
@@ -327,24 +327,24 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void ReadTriangle(BinaryReader reader, VertexStructure vertexStructure, StlImportOptions importOptions)
         {
-            float ni = ReadFloat(reader);
-            float nj = ReadFloat(reader);
-            float nk = ReadFloat(reader);
+            var ni = ReadFloat(reader);
+            var nj = ReadFloat(reader);
+            var nk = ReadFloat(reader);
             var normal = new Vector3(ni, nj, nk);
 
-            float x1 = ReadFloat(reader);
-            float y1 = ReadFloat(reader);
-            float z1 = ReadFloat(reader);
+            var x1 = ReadFloat(reader);
+            var y1 = ReadFloat(reader);
+            var z1 = ReadFloat(reader);
             var v1 = new Vector3(x1, y1, z1);
 
-            float x2 = ReadFloat(reader);
-            float y2 = ReadFloat(reader);
-            float z2 = ReadFloat(reader);
+            var x2 = ReadFloat(reader);
+            var y2 = ReadFloat(reader);
+            var z2 = ReadFloat(reader);
             var v2 = new Vector3(x2, y2, z2);
 
-            float x3 = ReadFloat(reader);
-            float y3 = ReadFloat(reader);
-            float z3 = ReadFloat(reader);
+            var x3 = ReadFloat(reader);
+            var y3 = ReadFloat(reader);
+            var z3 = ReadFloat(reader);
             var v3 = new Vector3(x3, y3, z3);
 
             // Try to read color information
@@ -354,26 +354,26 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (hasColor)
             {
-                int blue = attrib[15].Equals('1') ? 1 : 0;
+                var blue = attrib[15].Equals('1') ? 1 : 0;
                 blue = attrib[14].Equals('1') ? blue + 2 : blue;
                 blue = attrib[13].Equals('1') ? blue + 4 : blue;
                 blue = attrib[12].Equals('1') ? blue + 8 : blue;
                 blue = attrib[11].Equals('1') ? blue + 16 : blue;
-                int b = blue * 8;
+                var b = blue * 8;
 
-                int green = attrib[10].Equals('1') ? 1 : 0;
+                var green = attrib[10].Equals('1') ? 1 : 0;
                 green = attrib[9].Equals('1') ? green + 2 : green;
                 green = attrib[8].Equals('1') ? green + 4 : green;
                 green = attrib[7].Equals('1') ? green + 8 : green;
                 green = attrib[6].Equals('1') ? green + 16 : green;
-                int g = green * 8;
+                var g = green * 8;
 
-                int red = attrib[5].Equals('1') ? 1 : 0;
+                var red = attrib[5].Equals('1') ? 1 : 0;
                 red = attrib[4].Equals('1') ? red + 2 : red;
                 red = attrib[3].Equals('1') ? red + 4 : red;
                 red = attrib[2].Equals('1') ? red + 8 : red;
                 red = attrib[1].Equals('1') ? red + 16 : red;
-                int r = red * 8;
+                var r = red * 8;
 
                 currentColor = new Color(Convert.ToByte(r), Convert.ToByte(g), Convert.ToByte(b));
             }
@@ -424,6 +424,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                     string id, values;
                     ParseLine(line, out id, out values);
+
                     switch (id)
                     {
                             // Header.. not needed here
@@ -432,7 +433,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                             // Geometry data
                         case "facet":
-                            this.ReadFacet(reader, values, newStructure, importOptions);
+                            ReadFacet(reader, values, newStructure, importOptions);
                             break;
 
                             // End of file
@@ -465,7 +466,8 @@ namespace SeeingSharp.Multimedia.Objects
         private ImportedModelContainer TryReadBinary(Stream stream, StlImportOptions importOptions)
         {
             // Check length
-            long length = stream.Length;
+            var length = stream.Length;
+
             if (length < 84)
             {
                 throw new SeeingSharpException("Incomplete file (smaller that 84 bytes)");
@@ -473,11 +475,12 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Read number of triangles
             uint numberTriangles = 0;
+
             using (var reader = new BinaryReader(stream, Encoding.GetEncoding("us-ascii"), true))
             {
                 // Read header (is not needed)
                 //  (solid stands for Ascii format)
-                string header = ENCODING.GetString(reader.ReadBytes(80), 0, 80).Trim();
+                var header = ENCODING.GetString(reader.ReadBytes(80), 0, 80).Trim();
 
                 if(header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
 
@@ -494,7 +497,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 for (var loop = 0; loop < numberTriangles; loop++)
                 {
-                    this.ReadTriangle(reader, newStructure, importOptions);
+                    ReadTriangle(reader, newStructure, importOptions);
                 }
 
                 // Generate result container

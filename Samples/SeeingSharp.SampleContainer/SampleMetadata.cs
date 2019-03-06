@@ -46,21 +46,23 @@ namespace SeeingSharp.SampleContainer
             m_description = description;
             m_sampleType = sampleType;
 
-            this.Name = m_description.SampleName;
-            this.OrderId = m_description.OrderID;
-            this.Group = m_description.SampleGroupName;
-            this.SourceCodeUrl = m_description.SourceCodeUrl;
+            Name = m_description.SampleName;
+            OrderId = m_description.OrderID;
+            Group = m_description.SampleGroupName;
+            SourceCodeUrl = m_description.SourceCodeUrl;
         }
 
         public SampleBase CreateSampleObject()
         {
-            if(m_sampleType == null)
+            if (m_sampleType == null)
             {
                 throw new ApplicationException($"No sample type given!");
             }
 
-            var result = Activator.CreateInstance(m_sampleType) as SampleBase;
-            if(result == null) { throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
+            if (!(Activator.CreateInstance(m_sampleType) is SampleBase result))
+            {
+                throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!");
+            }
 
             return result;
         }
@@ -74,9 +76,7 @@ namespace SeeingSharp.SampleContainer
                 return new SampleSettings();
             }
 
-            var result = Activator.CreateInstance(settingsType) as SampleSettings;
-
-            if (result == null)
+            if (!(Activator.CreateInstance(settingsType) is SampleSettings result))
             {
                 throw new ApplicationException($"SampleSettings type {m_sampleType.FullName} is not derived from {nameof(SampleSettings)}!");
             }

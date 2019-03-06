@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -99,10 +98,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Get a reference to default resource object
             m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
-            //Load the texture if any configured.
+            // Load the texture if any configured.
             if (!TextureKey.IsEmpty)
             {
-                //Get texture resource
+                // Get texture resource
                 m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(TextureKey);
             }
         }
@@ -133,7 +132,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -146,16 +145,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal override void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            bool isResourceSameType =
+            var isResourceSameType =
                 (previousMaterial != null) &&
-                (previousMaterial.ResourceType == base.ResourceType);
+                (previousMaterial.ResourceType == ResourceType);
 
             // Apply local shader configuration
             if (m_cbPerMaterialDataChanged)
             {
                 m_cbPerMaterial.SetData(
                     deviceContext,
-                    new CBPerMaterial()
+                    new CBPerMaterial
                     {
                         ClipFactor = m_clipFactor,
                         MaxClipDistance = m_maxClipDistance,
@@ -187,11 +186,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Set shader resources
-            if (!isResourceSameType)
+            if (isResourceSameType)
             {
-                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-                deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
+                return;
             }
+
+            deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
+            deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
         }
 
         /// <summary>
@@ -202,10 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_vertexShader != null; }
-        }
+        public override bool IsLoaded => m_vertexShader != null;
 
         /// <summary>
         /// Gets or sets the ClipFactor.
@@ -213,14 +211,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ClipFactor
         {
-            get { return m_clipFactor; }
+            get => m_clipFactor;
             set
             {
-                if (m_clipFactor != value)
+                if (m_clipFactor == value)
                 {
-                    m_clipFactor = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_clipFactor = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
 
@@ -229,14 +229,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float MaxClipDistance
         {
-            get { return m_maxClipDistance; }
+            get => m_maxClipDistance;
             set
             {
-                if(m_maxClipDistance != value)
+                if (m_maxClipDistance == value)
                 {
-                    m_maxClipDistance = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_maxClipDistance = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
 
@@ -245,14 +247,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public bool AdjustTextureCoordinates
         {
-            get { return m_adjustTextureCoordinates; }
+            get => m_adjustTextureCoordinates;
             set
             {
-                if (m_adjustTextureCoordinates != value)
+                if (m_adjustTextureCoordinates == value)
                 {
-                    m_adjustTextureCoordinates = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_adjustTextureCoordinates = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
 
@@ -261,27 +265,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float AddToAlpha
         {
-            get { return m_addToAlpha; }
+            get => m_addToAlpha;
             set
             {
-                if(m_addToAlpha != value)
+                if (m_addToAlpha == value)
                 {
-                    m_addToAlpha = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_addToAlpha = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
 
         public Color4 MaterialDiffuseColor
         {
-            get { return m_materialDiffuseColor; }
+            get => m_materialDiffuseColor;
             set
             {
-                if(m_materialDiffuseColor != value)
+                if (m_materialDiffuseColor == value)
                 {
-                    m_materialDiffuseColor = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_materialDiffuseColor = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
     }

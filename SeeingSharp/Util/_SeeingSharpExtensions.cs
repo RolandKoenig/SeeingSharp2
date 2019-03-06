@@ -46,7 +46,7 @@ namespace SeeingSharp.Util
     {
         private static readonly CultureInfo CULTURE_EN = new CultureInfo("en-GB");
 
-        private static Dictionary<System.Threading.Timer, object> s_timerDict;
+        private static Dictionary<Timer, object> s_timerDict;
         private static object s_timerDictLock;
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SeeingSharp.Util
         /// </summary>
         static CommonExtensions()
         {
-            s_timerDict = new Dictionary<System.Threading.Timer, object>();
+            s_timerDict = new Dictionary<Timer, object>();
             s_timerDictLock = new object();
         }
 
@@ -102,7 +102,7 @@ namespace SeeingSharp.Util
         /// <param name="newValue">The new value.</param>
         public static void SetAllValuesTo<T>(this T[] array, T newValue)
         {
-            for(int loop=0 ; loop<array.Length; loop++)
+            for(var loop =0 ; loop<array.Length; loop++)
             {
                 array[loop] = newValue;
             }
@@ -116,7 +116,7 @@ namespace SeeingSharp.Util
         /// <param name="comparison">The comparison mode.</param>
         public static bool ContainsString(this IEnumerable<string> collection, string compareString, StringComparison comparison = StringComparison.CurrentCulture)
         {
-            foreach(string actString in collection)
+            foreach(var actString in collection)
             {
                 if (string.Equals(actString, compareString, StringComparison.OrdinalIgnoreCase))
                 {
@@ -220,11 +220,13 @@ namespace SeeingSharp.Util
 
         public static T[] Subset<T>(this T[] givenArray, int startIndex, int count)
         {
-            T[] result = new T[count];
-            for (int loop = 0; loop < count; loop++)
+            var result = new T[count];
+
+            for (var loop = 0; loop < count; loop++)
             {
                 result[loop] = givenArray[startIndex + loop];
             }
+
             return result;
         }
 
@@ -258,7 +260,7 @@ namespace SeeingSharp.Util
         {
             if (inStream.Length > Int32.MaxValue) { throw new NotSupportedException("Given stream is to big!"); }
 
-            byte[] result = new byte[inStream.Length];
+            var result = new byte[inStream.Length];
             inStream.Read(result, 0, (int)inStream.Length);
             return result;
         }
@@ -279,7 +281,7 @@ namespace SeeingSharp.Util
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> for parsing <see cref="System.Single"/> values.</param>
         public static Vector3 ReadContentAsVector3(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
-            string[] components = xmlReader.ReadContentAsString().Split(',');
+            var components = xmlReader.ReadContentAsString().Split(',');
 
             if (components.Length != 3)
             {
@@ -312,7 +314,7 @@ namespace SeeingSharp.Util
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> for parsing <see cref="System.Single"/> values.</param>
         public static Vector2 ReadContentAsVector2(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
-            string[] components = xmlReader.ReadContentAsString().Split(',');
+            var components = xmlReader.ReadContentAsString().Split(',');
 
             if (components.Length != 2)
             {
@@ -344,7 +346,7 @@ namespace SeeingSharp.Util
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> for parsing <see cref="System.Single"/> values.</param>
         public static Vector3 ReadElementContentAsVector3(this XmlReader xmlReader, IFormatProvider formatProvider)
         {
-            string[] components = xmlReader.ReadElementContentAsString().Split(',');
+            var components = xmlReader.ReadElementContentAsString().Split(',');
 
             if (components.Length != 3)
             {
@@ -373,6 +375,7 @@ namespace SeeingSharp.Util
             {
                 SeeingSharpUtil.DisposeObject(actDisposeable);
             }
+
             listOfDisposables.Clear();
         }
 
@@ -457,7 +460,10 @@ namespace SeeingSharp.Util
         /// <param name="actionIfNull">What should we do if weg get no SyncContext?</param>
         public static void PostAlsoIfNull(this SynchronizationContext syncContext, Action actionToSend, ActionIfSyncContextIsNull actionIfNull)
         {
-            if (syncContext != null) { syncContext.Post((arg) => actionToSend(), null); }
+            if (syncContext != null)
+            {
+                syncContext.Post((arg) => actionToSend(), null);
+            }
             else
             {
                 switch (actionIfNull)
@@ -487,7 +493,8 @@ namespace SeeingSharp.Util
         /// <param name="actionIfNull">What should we do if we get no SyncContext?</param>
         public static Task PostAlsoIfNullAsync(this SynchronizationContext syncContext, Action postAction, ActionIfSyncContextIsNull actionIfNull)
         {
-            TaskCompletionSource<object> completionSource = new TaskCompletionSource<object>();
+            var completionSource = new TaskCompletionSource<object>();
+
             syncContext.PostAlsoIfNull(() =>
                 {
                     try
@@ -511,7 +518,8 @@ namespace SeeingSharp.Util
         /// <param name="postAction">The action to be posted.</param>
         public static Task PostAsync(this SynchronizationContext syncContext, Action postAction)
         {
-            TaskCompletionSource<object> completionSource = new TaskCompletionSource<object>();
+            var completionSource = new TaskCompletionSource<object>();
+
             syncContext.Post((arg) =>
             {
                 try
@@ -543,8 +551,8 @@ namespace SeeingSharp.Util
             //Start and register timer in local timer store (ensures that no dispose gets called..)
             lock (s_timerDictLock)
             {
-                System.Threading.Timer newTimer = null;
-                newTimer = new System.Threading.Timer(
+                Timer newTimer = null;
+                newTimer = new Timer(
                     (arg) =>
                     {
                         lock (s_timerDictLock)

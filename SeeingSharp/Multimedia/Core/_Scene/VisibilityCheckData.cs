@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal VisibilityCheckData()
         {
-            this.FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
+            FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
         }
 
         /// <summary>

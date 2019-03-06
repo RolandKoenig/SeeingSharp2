@@ -40,7 +40,7 @@ namespace SeeingSharp.WpfSamples
             {
                 var sampleRepo = new SampleRepository();
 
-                for(var loop =1; loop<5; loop++)
+                for (var loop = 1; loop < 5; loop++)
                 {
                     var actGroupName = $"DummyGroup {loop}";
                     var actGroup = new SampleGroupMetadata(actGroupName);

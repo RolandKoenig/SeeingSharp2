@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             public DDS.PixelFormat PixelFormat;
         };
 
-        private static readonly LegacyMap[] LegacyMaps = new[]
+        private static readonly LegacyMap[] LegacyMaps =
                                                              {
                                                                  new LegacyMap(SharpDX.DXGI.Format.BC1_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT1), // D3DFMT_DXT1
                                                                  new LegacyMap(SharpDX.DXGI.Format.BC2_UNorm, ConversionFlags.None, DDS.PixelFormat.DXT3), // D3DFMT_DXT3
@@ -194,32 +194,39 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             conversionFlags = ConversionFlags.None;
 
-            int index = 0;
+            var index = 0;
+
             for (index = 0; index < LegacyMaps.Length; ++index)
             {
                 var entry = LegacyMaps[index];
 
-                if ((pixelFormat.Flags & entry.PixelFormat.Flags) != 0)
+                if ((pixelFormat.Flags & entry.PixelFormat.Flags) == 0)
                 {
-                    if ((entry.PixelFormat.Flags & DDS.PixelFormatFlags.FourCC) != 0)
+                    continue;
+                }
+
+                if ((entry.PixelFormat.Flags & DDS.PixelFormatFlags.FourCC) != 0)
+                {
+                    if (pixelFormat.FourCC == entry.PixelFormat.FourCC)
                     {
-                        if (pixelFormat.FourCC == entry.PixelFormat.FourCC)
-                            break;
+                        break;
                     }
-                    else if ((entry.PixelFormat.Flags & DDS.PixelFormatFlags.Pal8) != 0)
+                }
+                else if ((entry.PixelFormat.Flags & DDS.PixelFormatFlags.Pal8) != 0)
+                {
+                    if (pixelFormat.RGBBitCount == entry.PixelFormat.RGBBitCount)
                     {
-                        if (pixelFormat.RGBBitCount == entry.PixelFormat.RGBBitCount)
-                            break;
+                        break;
                     }
-                    else if (pixelFormat.RGBBitCount == entry.PixelFormat.RGBBitCount)
-                    {
-                        // RGB, RGBA, ALPHA, LUMINANCE
-                        if (pixelFormat.RBitMask == entry.PixelFormat.RBitMask
-                            && pixelFormat.GBitMask == entry.PixelFormat.GBitMask
-                            && pixelFormat.BBitMask == entry.PixelFormat.BBitMask
-                            && pixelFormat.ABitMask == entry.PixelFormat.ABitMask)
-                            break;
-                    }
+                }
+                else if (pixelFormat.RGBBitCount == entry.PixelFormat.RGBBitCount)
+                {
+                    // RGB, RGBA, ALPHA, LUMINANCE
+                    if (pixelFormat.RBitMask == entry.PixelFormat.RBitMask
+                        && pixelFormat.GBitMask == entry.PixelFormat.GBitMask
+                        && pixelFormat.BBitMask == entry.PixelFormat.BBitMask
+                        && pixelFormat.ABitMask == entry.PixelFormat.ABitMask)
+                        break;
                 }
             }
 
@@ -340,7 +347,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         break;
 
                     default:
-                        throw new InvalidOperationException(string.Format("Unexpected dimension [{0}] from DDS HeaderDX10", headerDX10.ResourceDimension));
+                        throw new InvalidOperationException($"Unexpected dimension [{headerDX10.ResourceDimension}] from DDS HeaderDX10");
                 }
             }
             else
@@ -385,7 +392,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             // Special flag for handling BGR DXGI 1.1 formats
             if ((flags & DDSFlags.ForceRgb) != 0)
             {
-                switch ((SharpDX.DXGI.Format)description.Format)
+                switch (description.Format)
                 {
                     case SharpDX.DXGI.Format.B8G8R8A8_UNorm:
                         description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
@@ -424,21 +431,26 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 convFlags |= ConversionFlags.CopyMemory;
 
             // Special flag for handling 16bpp formats
-            if ((flags & DDSFlags.No16Bpp) != 0)
+            if ((flags & DDSFlags.No16Bpp) == 0)
             {
-                switch ((SharpDX.DXGI.Format)description.Format)
-                {
-                    case SharpDX.DXGI.Format.B5G6R5_UNorm:
-                    case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
+                return true;
+            }
+
+            switch (description.Format)
+            {
+                case SharpDX.DXGI.Format.B5G6R5_UNorm:
+                case SharpDX.DXGI.Format.B5G5R5A1_UNorm:
 #if DIRECTX11_1
                     case Format.B4G4R4A4_UNorm:
 #endif
-                        description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
-                        convFlags |= ConversionFlags.Expand;
-                        if (description.Format == SharpDX.DXGI.Format.B5G6R5_UNorm)
-                            convFlags |= ConversionFlags.NoAlpha;
-                        break;
-                }
+                    description.Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
+                    convFlags |= ConversionFlags.Expand;
+
+                    if (description.Format == SharpDX.DXGI.Format.B5G6R5_UNorm)
+                    {
+                        convFlags |= ConversionFlags.NoAlpha;
+                    }
+                    break;
             }
             return true;
         }
@@ -753,8 +765,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 3, ocount += 4)
                         {
                             // 24bpp Direct3D 9 files are actually BGR, so need to swizzle as well
-                            int t1 = (*(sPtr) << 16);
-                            int t2 = (*(sPtr + 1) << 8);
+                            var t1 = (*(sPtr) << 16);
+                            var t2 = (*(sPtr + 1) << 8);
                             int t3 = *(sPtr + 2);
 
                             *(dPtr++) = (int)(t1 | t2 | t3 | 0xff000000);
@@ -774,11 +786,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                                 for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); ++icount, ocount += 4)
                                 {
-                                    byte t = *(sPtr++);
-
-                                    int t1 = (t & 0xe0) | ((t & 0xe0) >> 3) | ((t & 0xc0) >> 6);
-                                    int t2 = ((t & 0x1c) << 11) | ((t & 0x1c) << 8) | ((t & 0x18) << 5);
-                                    int t3 = ((t & 0x03) << 22) | ((t & 0x03) << 20) | ((t & 0x03) << 18) | ((t & 0x03) << 16);
+                                    var t = *(sPtr++);
+                                    var t1 = (t & 0xe0) | ((t & 0xe0) >> 3) | ((t & 0xc0) >> 6);
+                                    var t2 = ((t & 0x1c) << 11) | ((t & 0x1c) << 8) | ((t & 0x18) << 5);
+                                    var t3 = ((t & 0x03) << 22) | ((t & 0x03) << 20) | ((t & 0x03) << 18) | ((t & 0x03) << 16);
 
                                     *(dPtr++) = (int)(t1 | t2 | t3 | 0xff000000);
                                 }
@@ -793,8 +804,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                                 for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); ++icount, ocount += 2)
                                 {
-                                    byte t = *(sPtr++);
-
+                                    var t = *(sPtr++);
                                     var t1 = (short)(((t & 0xe0) << 8) | ((t & 0xc0) << 5));
                                     var t2 = (short)(((t & 0x1c) << 6) | ((t & 0x1c) << 3));
                                     var t3 = (short)(((t & 0x03) << 3) | ((t & 0x03) << 1) | ((t & 0x02) >> 1));
@@ -817,12 +827,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                         for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
                         {
-                            short t = *(sPtr++);
-
-                            int t1 = (t & 0x00e0) | ((t & 0x00e0) >> 3) | ((t & 0x00c0) >> 6);
-                            int t2 = ((t & 0x001c) << 11) | ((t & 0x001c) << 8) | ((t & 0x0018) << 5);
-                            int t3 = ((t & 0x0003) << 22) | ((t & 0x0003) << 20) | ((t & 0x0003) << 18) | ((t & 0x0003) << 16);
-                            uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16));
+                            var t = *(sPtr++);
+                            var t1 = (t & 0x00e0) | ((t & 0x00e0) >> 3) | ((t & 0x00c0) >> 6);
+                            var t2 = ((t & 0x001c) << 11) | ((t & 0x001c) << 8) | ((t & 0x0018) << 5);
+                            var t3 = ((t & 0x0003) << 22) | ((t & 0x0003) << 20) | ((t & 0x0003) << 18) | ((t & 0x0003) << 16);
+                            var ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16));
 
                             *(dPtr++) = (int)(t1 | t2 | t3 | ta);
                         }
@@ -831,16 +840,18 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                 case TEXP_LEGACY_FORMAT.P8:
                     if ((outFormat != SharpDX.DXGI.Format.R8G8B8A8_UNorm) || pal8 == null)
+                    {
                         return false;
+                    }
 
                     // D3DFMT_P8 -> Format.R8G8B8A8_UNorm
                     {
-                        byte* sPtr = (byte*)(pSource);
-                        int* dPtr = (int*)(pDestination);
+                        var sPtr = (byte*)(pSource);
+                        var dPtr = (int*)(pDestination);
 
                         for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); ++icount, ocount += 4)
                         {
-                            byte t = *(sPtr++);
+                            var t = *(sPtr++);
 
                             *(dPtr++) = pal8[t];
                         }
@@ -853,15 +864,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                     // D3DFMT_A8P8 -> Format.R8G8B8A8_UNorm
                     {
-                        short* sPtr = (short*)(pSource);
-                        int* dPtr = (int*)(pDestination);
+                        var sPtr = (short*)(pSource);
+                        var dPtr = (int*)(pDestination);
 
                         for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
                         {
-                            short t = *(sPtr++);
-
-                            int t1 = pal8[t & 0xff];
-                            uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16));
+                            var t = *(sPtr++);
+                            var t1 = pal8[t & 0xff];
+                            var ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)((t & 0xff00) << 16));
 
                             *(dPtr++) = (int)(t1 | ta);
                         }
@@ -874,15 +884,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 case SharpDX.DXGI.Format.B4G4R4A4_UNorm :
                     // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm
                     {
-                        byte * sPtr = (byte*)(pSource);
-                        short * dPtr = (short*)(pDestination);
+                        var sPtr = (byte*)(pSource);
+                        var dPtr = (short*)(pDestination);
 
                         for( int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); ++icount, ocount += 2 )
                         {
-                            byte t = *(sPtr++);
-
-                            short t1 = (short)(t & 0x0f);
-                            ushort ta = (flags & ScanlineFlags.SetAlpha ) != 0 ?  (ushort)0xf000 : (ushort)((t & 0xf0) << 8);
+                            var t = *(sPtr++);
+                            var t1 = (short)(t & 0x0f);
+                            var ta = (flags & ScanlineFlags.SetAlpha ) != 0 ?  (ushort)0xf000 : (ushort)((t & 0xf0) << 8);
 
                             *(dPtr++) = (short)(t1 | (t1 << 4) | (t1 << 8) | ta);
                         }
@@ -893,15 +902,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         case SharpDX.DXGI.Format.R8G8B8A8_UNorm:
                             // D3DFMT_A4L4 -> Format.R8G8B8A8_UNorm
                             {
-                                byte* sPtr = (byte*)(pSource);
-                                int* dPtr = (int*)(pDestination);
+                                var sPtr = (byte*)(pSource);
+                                var dPtr = (int*)(pDestination);
 
                                 for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); ++icount, ocount += 4)
                                 {
-                                    byte t = *(sPtr++);
-
-                                    int t1 = ((t & 0x0f) << 4) | (t & 0x0f);
-                                    uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf0) << 24) | ((t & 0xf0) << 20)));
+                                    var t = *(sPtr++);
+                                    var t1 = ((t & 0x0f) << 4) | (t & 0x0f);
+                                    var ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf0) << 24) | ((t & 0xf0) << 20)));
 
                                     *(dPtr++) = (int)(t1 | (t1 << 8) | (t1 << 16) | ta);
                                 }
@@ -916,17 +924,16 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                     // D3DFMT_A4R4G4B4 -> Format.R8G8B8A8_UNorm
                     {
-                        short* sPtr = (short*)(pSource);
-                        int* dPtr = (int*)(pDestination);
+                        var sPtr = (short*)(pSource);
+                        var dPtr = (int*)(pDestination);
 
                         for (int ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
                         {
-                            short t = *(sPtr++);
-
-                            int t1 = ((t & 0x0f00) >> 4) | ((t & 0x0f00) >> 8);
-                            int t2 = ((t & 0x00f0) << 8) | ((t & 0x00f0) << 4);
-                            int t3 = ((t & 0x000f) << 20) | ((t & 0x000f) << 16);
-                            uint ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf000) << 16) | ((t & 0xf000) << 12)));
+                            var t = *(sPtr++);
+                            var t1 = ((t & 0x0f00) >> 4) | ((t & 0x0f00) >> 8);
+                            var t2 = ((t & 0x00f0) << 8) | ((t & 0x00f0) << 4);
+                            var t3 = ((t & 0x000f) << 20) | ((t & 0x000f) << 16);
+                            var ta = ((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint)(((t & 0xf000) << 16) | ((t & 0xf000) << 12)));
 
                             *(dPtr++) = (int)(t1 | t2 | t3 | ta);
                         }
@@ -950,15 +957,22 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
             ConversionFlags convFlags;
             ImageDescription mdata;
+
             // If the memory pointed is not a DDS memory, return null.
             if (!DecodeDDSHeader(pSource, size, flags, out mdata, out convFlags))
+            {
                 return null;
+            }
 
-            int offset = sizeof(uint) + SDX.Utilities.SizeOf<DDS.Header>();
+            var offset = sizeof(uint) + SDX.Utilities.SizeOf<DDS.Header>();
+
             if ((convFlags & ConversionFlags.DX10) != 0)
+            {
                 offset += SDX.Utilities.SizeOf<DDS.HeaderDXT10>();
+            }
 
             var pal8 = (int*)0;
+
             if ((convFlags & ConversionFlags.Pal8) != 0)
             {
                 pal8 = (int*)((byte*)(pSource) + offset);
@@ -966,7 +980,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
 
             if (size < offset)
+            {
                 throw new InvalidOperationException();
+            }
 
             var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Image.PitchFlags.LegacyDword : Image.PitchFlags.None, convFlags, pal8, handle);
             return image;
@@ -983,19 +999,22 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         public unsafe static void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription metadata, DDSFlags flags, System.IO.Stream stream)
         {
             // Determine memory required
-            int totalSize = 0;
-            int headerSize = 0;
+            var totalSize = 0;
+            var headerSize = 0;
             EncodeDDSHeader(metadata, flags, IntPtr.Zero, 0, out totalSize);
             headerSize = totalSize;
 
-            int maxSlice = 0;
+            var maxSlice = 0;
 
-            for (int i = 0; i < pixelBuffers.Length; ++i)
+            for (var i = 0; i < pixelBuffers.Length; ++i)
             {
-                int slice = pixelBuffers[i].BufferStride;
+                var slice = pixelBuffers[i].BufferStride;
                 totalSize += slice;
+
                 if (slice > maxSlice)
+                {
                     maxSlice = slice;
+                }
             }
 
             Debug.Assert(totalSize > 0);
@@ -1010,26 +1029,29 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 stream.Write(buffer, 0, headerSize);
             }
 
-            int remaining = totalSize - headerSize;
+            var remaining = totalSize - headerSize;
             Debug.Assert(remaining > 0);
 
-            int index = 0;
-            for (int item = 0; item < metadata.ArraySize; ++item)
-            {
-                int d = metadata.Depth;
+            var index = 0;
 
-                for (int level = 0; level < metadata.MipLevels; ++level)
+            for (var item = 0; item < metadata.ArraySize; ++item)
+            {
+                var d = metadata.Depth;
+
+                for (var level = 0; level < metadata.MipLevels; ++level)
                 {
-                    for (int slice = 0; slice < d; ++slice)
+                    for (var slice = 0; slice < d; ++slice)
                     {
-                        int pixsize = pixelBuffers[index].BufferStride;
+                        var pixsize = pixelBuffers[index].BufferStride;
                         SDX.Utilities.Read(pixelBuffers[index].DataPointer, buffer, 0, pixsize);
                         stream.Write(buffer, 0, pixsize);
                         ++index;
                     }
 
                     if (d > 1)
+                    {
                         d >>= 1;
+                    }
                 }
             }
         }
@@ -1051,11 +1073,20 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             if ((convFlags & ConversionFlags.Expand) != 0)
             {
                 if ((convFlags & ConversionFlags.Format888) != 0)
+                {
                     cpFlags |= Image.PitchFlags.Bpp24;
-                else if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551 | ConversionFlags.Format4444 | ConversionFlags.Format8332 | ConversionFlags.FormatA8P8)) != 0)
+                }
+                else if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551 |
+                                       ConversionFlags.Format4444 | ConversionFlags.Format8332 |
+                                       ConversionFlags.FormatA8P8)) != 0)
+                {
                     cpFlags |= Image.PitchFlags.Bpp16;
-                else if ((convFlags & (ConversionFlags.Format44 | ConversionFlags.Format332 | ConversionFlags.Pal8)) != 0)
+                }
+                else if ((convFlags & (ConversionFlags.Format44 | ConversionFlags.Format332 | ConversionFlags.Pal8)) !=
+                         0)
+                {
                     cpFlags |= Image.PitchFlags.Bpp8;
+                }
             }
 
             // If source image == dest image and no swizzle/alpha is required, we can return it as-is
@@ -1067,34 +1098,42 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             //Debug.Assert(size <= image.TotalSizeInBytes);
 
             if (!isCopyNeeded && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
+            {
                 return image;
+            }
 
             var imageDst = isCopyNeeded ? new Image(metadata, IntPtr.Zero, 0, null, false) : image;
 
             var images = image.PixelBuffer;
             var imagesDst = imageDst.PixelBuffer;
 
-            ScanlineFlags tflags = (convFlags & ConversionFlags.NoAlpha) != 0 ? ScanlineFlags.SetAlpha : ScanlineFlags.None;
+            var tflags = (convFlags & ConversionFlags.NoAlpha) != 0 ? ScanlineFlags.SetAlpha : ScanlineFlags.None;
+
             if ((convFlags & ConversionFlags.Swizzle) != 0)
-                tflags |= ScanlineFlags.Legacy;
-
-            int index = 0;
-
-            int checkSize = size;
-
-            for (int arrayIndex = 0; arrayIndex < metadata.ArraySize; arrayIndex++)
             {
-                int d = metadata.Depth;
+                tflags |= ScanlineFlags.Legacy;
+            }
+
+            var index = 0;
+            var checkSize = size;
+
+            for (var arrayIndex = 0; arrayIndex < metadata.ArraySize; arrayIndex++)
+            {
+                var d = metadata.Depth;
+
                 // Else we need to go through each mips/depth slice to convert all scanlines.
-                for (int level = 0; level < metadata.MipLevels; ++level)
+                for (var level = 0; level < metadata.MipLevels; ++level)
                 {
-                    for (int slice = 0; slice < d; ++slice, ++index)
+                    for (var slice = 0; slice < d; ++slice, ++index)
                     {
-                        IntPtr pSrc = images[index].DataPointer;
-                        IntPtr pDest = imagesDst[index].DataPointer;
+                        var pSrc = images[index].DataPointer;
+                        var pDest = imagesDst[index].DataPointer;
                         checkSize -= images[index].BufferStride;
+
                         if (checkSize < 0)
+                        {
                             throw new InvalidOperationException("Unexpected end of buffer");
+                        }
 
                         if (SharpDX.DXGI.FormatHelper.IsCompressed(metadata.Format))
                         {
@@ -1102,10 +1141,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         }
                         else
                         {
-                            int spitch = images[index].RowStride;
-                            int dpitch = imagesDst[index].RowStride;
+                            var spitch = images[index].RowStride;
+                            var dpitch = imagesDst[index].RowStride;
 
-                            for (int h = 0; h < images[index].Height; ++h)
+                            for (var h = 0; h < images[index].Height; ++h)
                             {
                                 if ((convFlags & ConversionFlags.Expand) != 0)
                                 {
@@ -1130,7 +1169,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                 else
                                 {
                                     if (pSrc != pDest)
+                                    {
                                         CopyScanline(pDest, dpitch, pSrc, spitch, metadata.Format, tflags);
+                                    }
                                 }
 
                                 pSrc = (IntPtr)((byte*)pSrc + spitch);
@@ -1140,16 +1181,21 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     }
 
                     if (d > 1)
+                    {
                         d >>= 1;
+                    }
                 }
             }
 
             // Return the imageDst or the original image
-            if (isCopyNeeded)
+            if (!isCopyNeeded)
             {
-                image.Dispose();
-                image = imageDst;
+                return image;
             }
+
+            image.Dispose();
+            image = imageDst;
+
             return image;
         }
 
@@ -1183,11 +1229,10 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                         for (uint ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
                         {
-                            ushort t = *(sPtr++);
-
-                            uint t1 = (uint)(((t & 0xf800) >> 8) | ((t & 0xe000) >> 13));
-                            uint t2 = (uint)(((t & 0x07e0) << 5) | ((t & 0x0600) >> 5));
-                            uint t3 = (uint)(((t & 0x001f) << 19) | ((t & 0x001c) << 14));
+                            var t = *(sPtr++);
+                            var t1 = (uint)(((t & 0xf800) >> 8) | ((t & 0xe000) >> 13));
+                            var t2 = (uint)(((t & 0x07e0) << 5) | ((t & 0x0600) >> 5));
+                            var t3 = (uint)(((t & 0x001f) << 19) | ((t & 0x001c) << 14));
 
                             *(dPtr++) = t1 | t2 | t3 | 0xff000000;
                         }
@@ -1202,12 +1247,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
                         for (uint ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
                         {
-                            ushort t = *(sPtr++);
-
-                            uint t1 = (uint)(((t & 0x7c00) >> 7) | ((t & 0x7000) >> 12));
-                            uint t2 = (uint)(((t & 0x03e0) << 6) | ((t & 0x0380) << 1));
-                            uint t3 = (uint)(((t & 0x001f) << 19) | ((t & 0x001c) << 14));
-                            uint ta = (uint)((flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (((t & 0x8000) != 0 ? 0xff000000 : 0)));
+                            var t = *(sPtr++);
+                            var t1 = (uint)(((t & 0x7c00) >> 7) | ((t & 0x7000) >> 12));
+                            var t2 = (uint)(((t & 0x03e0) << 6) | ((t & 0x0380) << 1));
+                            var t3 = (uint)(((t & 0x001f) << 19) | ((t & 0x001c) << 14));
+                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (((t & 0x8000) != 0 ? 0xff000000 : 0));
 
                             *(dPtr++) = t1 | t2 | t3 | ta;
                         }
@@ -1265,17 +1309,25 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     case SharpDX.DXGI.Format.R32G32B32A32_SInt:
                         {
                             uint alpha;
+
                             if (format == SharpDX.DXGI.Format.R32G32B32A32_Float)
+                            {
                                 alpha = 0x3f800000;
+                            }
                             else if (format == SharpDX.DXGI.Format.R32G32B32A32_SInt)
+                            {
                                 alpha = 0x7fffffff;
+                            }
                             else
+                            {
                                 alpha = 0xffffffff;
+                            }
 
                             if (pDestination == pSource)
                             {
                                 var dPtr = (uint*)(pDestination);
-                                for (int count = 0; count < outSize; count += 16)
+
+                                for (var count = 0; count < outSize; count += 16)
                                 {
                                     dPtr += 3;
                                     *(dPtr++) = alpha;
@@ -1285,8 +1337,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 var sPtr = (uint*)(pSource);
                                 var dPtr = (uint*)(pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 16)
+                                var size = Math.Min(outSize, inSize);
+
+                                for (var count = 0; count < size; count += 16)
                                 {
                                     *(dPtr++) = *(sPtr++);
                                     *(dPtr++) = *(sPtr++);
@@ -1307,17 +1360,26 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     case SharpDX.DXGI.Format.R16G16B16A16_SInt:
                         {
                             ushort alpha;
+
                             if (format == SharpDX.DXGI.Format.R16G16B16A16_Float)
+                            {
                                 alpha = 0x3c00;
-                            else if (format == SharpDX.DXGI.Format.R16G16B16A16_SNorm || format == SharpDX.DXGI.Format.R16G16B16A16_SInt)
+                            }
+                            else if (format == SharpDX.DXGI.Format.R16G16B16A16_SNorm ||
+                                     format == SharpDX.DXGI.Format.R16G16B16A16_SInt)
+                            {
                                 alpha = 0x7fff;
+                            }
                             else
+                            {
                                 alpha = 0xffff;
+                            }
 
                             if (pDestination == pSource)
                             {
                                 var dPtr = (ushort*)(pDestination);
-                                for (int count = 0; count < outSize; count += 8)
+
+                                for (var count = 0; count < outSize; count += 8)
                                 {
                                     dPtr += 3;
                                     *(dPtr++) = alpha;
@@ -1327,8 +1389,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 var sPtr = (ushort*)(pSource);
                                 var dPtr = (ushort*)(pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 8)
+                                var size = Math.Min(outSize, inSize);
+
+                                for (var count = 0; count < size; count += 8)
                                 {
                                     *(dPtr++) = *(sPtr++);
                                     *(dPtr++) = *(sPtr++);
@@ -1338,6 +1401,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                 }
                             }
                         }
+
                         return;
 
                     //-----------------------------------------------------------------------------
@@ -1349,7 +1413,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             if (pDestination == pSource)
                             {
                                 var dPtr = (uint*)(pDestination);
-                                for (int count = 0; count < outSize; count += 4)
+
+                                for (var count = 0; count < outSize; count += 4)
                                 {
                                     *dPtr |= 0xC0000000;
                                     ++dPtr;
@@ -1359,8 +1424,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 var sPtr = (uint*)(pSource);
                                 var dPtr = (uint*)(pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 4)
+                                var size = Math.Min(outSize, inSize);
+
+                                for (var count = 0; count < size; count += 4)
                                 {
                                     *(dPtr++) = *(sPtr++) | 0xC0000000;
                                 }
@@ -1379,14 +1445,15 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     case SharpDX.DXGI.Format.B8G8R8A8_Typeless:
                     case SharpDX.DXGI.Format.B8G8R8A8_UNorm_SRgb:
                         {
-                            uint alpha = (format == SharpDX.DXGI.Format.R8G8B8A8_SNorm || format == SharpDX.DXGI.Format.R8G8B8A8_SInt) ? 0x7f000000 : 0xff000000;
+                            var alpha = (format == SharpDX.DXGI.Format.R8G8B8A8_SNorm || format == SharpDX.DXGI.Format.R8G8B8A8_SInt) ? 0x7f000000 : 0xff000000;
 
                             if (pDestination == pSource)
                             {
                                 var dPtr = (uint*)(pDestination);
-                                for (int count = 0; count < outSize; count += 4)
+
+                                for (var count = 0; count < outSize; count += 4)
                                 {
-                                    uint t = *dPtr & 0xFFFFFF;
+                                    var t = *dPtr & 0xFFFFFF;
                                     t |= alpha;
                                     *(dPtr++) = t;
                                 }
@@ -1395,10 +1462,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 var sPtr = (uint*)(pSource);
                                 var dPtr = (uint*)(pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 4)
+                                var size = Math.Min(outSize, inSize);
+
+                                for (var count = 0; count < size; count += 4)
                                 {
-                                    uint t = *(sPtr++) & 0xFFFFFF;
+                                    var t = *(sPtr++) & 0xFFFFFF;
                                     t |= alpha;
                                     *(dPtr++) = t;
                                 }
@@ -1412,7 +1480,8 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             if (pDestination == pSource)
                             {
                                 var dPtr = (ushort*)(pDestination);
-                                for (int count = 0; count < outSize; count += 2)
+
+                                for (var count = 0; count < outSize; count += 2)
                                 {
                                     *(dPtr++) |= 0x8000;
                                 }
@@ -1421,8 +1490,9 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 var sPtr = (ushort*)(pSource);
                                 var dPtr = (ushort*)(pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 2)
+                                var size = Math.Min(outSize, inSize);
+
+                                for (var count = 0; count < size; count += 2)
                                 {
                                     *(dPtr++) = (ushort)(*(sPtr++) | 0x8000);
                                 }
@@ -1498,14 +1568,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         if (pDestination == pSource)
                         {
                             var dPtr = (uint*)(pDestination);
-                            for (int count = 0; count < outSize; count += 4)
-                            {
-                                uint t = *dPtr;
 
-                                uint t1 = (t & 0x3ff00000) >> 20;
-                                uint t2 = (t & 0x000003ff) << 20;
-                                uint t3 = (t & 0x000ffc00);
-                                uint ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : (t & 0xC0000000);
+                            for (var count = 0; count < outSize; count += 4)
+                            {
+                                var t = *dPtr;
+                                var t1 = (t & 0x3ff00000) >> 20;
+                                var t2 = (t & 0x000003ff) << 20;
+                                var t3 = (t & 0x000ffc00);
+                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : (t & 0xC0000000);
 
                                 *(dPtr++) = t1 | t2 | t3 | ta;
                             }
@@ -1514,15 +1584,15 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         {
                             var sPtr = (uint*)(pSource);
                             var dPtr = (uint*)(pDestination);
-                            int size = Math.Min(outSize, inSize);
-                            for (int count = 0; count < size; count += 4)
-                            {
-                                uint t = *(sPtr++);
+                            var size = Math.Min(outSize, inSize);
 
-                                uint t1 = (t & 0x3ff00000) >> 20;
-                                uint t2 = (t & 0x000003ff) << 20;
-                                uint t3 = (t & 0x000ffc00);
-                                uint ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : (t & 0xC0000000);
+                            for (var count = 0; count < size; count += 4)
+                            {
+                                var t = *(sPtr++);
+                                var t1 = (t & 0x3ff00000) >> 20;
+                                var t2 = (t & 0x000003ff) << 20;
+                                var t3 = (t & 0x000ffc00);
+                                var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xC0000000 : (t & 0xC0000000);
 
                                 *(dPtr++) = t1 | t2 | t3 | ta;
                             }
@@ -1545,14 +1615,14 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     if (pDestination == pSource)
                     {
                         var dPtr = (uint*)(pDestination);
-                        for (int count = 0; count < outSize; count += 4)
-                        {
-                            uint t = *dPtr;
 
-                            uint t1 = (t & 0x00ff0000) >> 16;
-                            uint t2 = (t & 0x000000ff) << 16;
-                            uint t3 = (t & 0x0000ff00);
-                            uint ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (t & 0xFF000000);
+                        for (var count = 0; count < outSize; count += 4)
+                        {
+                            var t = *dPtr;
+                            var t1 = (t & 0x00ff0000) >> 16;
+                            var t2 = (t & 0x000000ff) << 16;
+                            var t3 = (t & 0x0000ff00);
+                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (t & 0xFF000000);
 
                             *(dPtr++) = t1 | t2 | t3 | ta;
                         }
@@ -1561,15 +1631,15 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     {
                         var sPtr = (uint*)(pSource);
                         var dPtr = (uint*)(pDestination);
-                        int size = Math.Min(outSize, inSize);
-                        for (int count = 0; count < size; count += 4)
-                        {
-                            uint t = *(sPtr++);
+                        var size = Math.Min(outSize, inSize);
 
-                            uint t1 = (t & 0x00ff0000) >> 16;
-                            uint t2 = (t & 0x000000ff) << 16;
-                            uint t3 = (t & 0x0000ff00);
-                            uint ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (t & 0xFF000000);
+                        for (var count = 0; count < size; count += 4)
+                        {
+                            var t = *(sPtr++);
+                            var t1 = (t & 0x00ff0000) >> 16;
+                            var t2 = (t & 0x000000ff) << 16;
+                            var t3 = (t & 0x0000ff00);
+                            var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (t & 0xFF000000);
 
                             *(dPtr++) = t1 | t2 | t3 | ta;
                         }
@@ -1579,10 +1649,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
 
             // Fall-through case is to just use memcpy (assuming this is not an in-place operation)
             if (pDestination == pSource)
+            {
                 return;
+            }
 
             SDX.Utilities.CopyMemory(pDestination, pSource, Math.Min(outSize, inSize));
         }
-
     }
 }

@@ -32,6 +32,8 @@
     <None Remove="Basics3D\_09_ColoredCylinder\PreviewImage.png" />
     <None Remove="Basics3D\_10_ColoredCone\PreviewImage.png" />
     <None Remove="Basics3D\_11_ColoredSphere\PreviewImage.png" />
+    <None Remove="Basics3D\_12_ColoredPyramid\PreviewImage.png" />
+    <None Remove="Basics3D\_13_ColoredCuboid\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +55,8 @@
     <EmbeddedResource Include="Basics3D\_09_ColoredCylinder\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_10_ColoredCone\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_11_ColoredSphere\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_12_ColoredPyramid\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_13_ColoredCuboid\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>

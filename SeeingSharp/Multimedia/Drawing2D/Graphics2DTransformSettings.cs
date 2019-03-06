@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
     public struct Graphics2DTransformSettings
     {
-        public static readonly Graphics2DTransformSettings Default = new Graphics2DTransformSettings()
+        public static readonly Graphics2DTransformSettings Default = new Graphics2DTransformSettings
         {
             TransformMode = Graphics2DTransformMode.Custom,
             VirtualScreenSize = new Size2F(),

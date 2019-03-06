@@ -79,10 +79,7 @@ namespace SeeingSharp.Util
             s_stringBuilders.Clear();
         }
 
-        public int Count
-        {
-            get { return s_stringBuilders.Count; }
-        }
+        public int Count => s_stringBuilders.Count;
 
         public static ReusableStringBuilders Current
         {

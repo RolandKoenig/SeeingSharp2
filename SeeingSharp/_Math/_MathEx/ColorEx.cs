@@ -34,7 +34,7 @@ namespace SeeingSharp
     {
         public static Color FromArgb(byte a, byte r, byte g, byte b)
         {
-            SharpDX.Color4 d;
+            Color4 d;
             return new Color(r, g, b, a);
         }
 

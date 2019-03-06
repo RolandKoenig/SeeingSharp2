@@ -34,9 +34,9 @@ namespace SeeingSharp.SampleContainer
     {
         public SampleGroupMetadata(string groupName)
         {
-            this.Samples = new List<SampleMetadata>();
+            Samples = new List<SampleMetadata>();
 
-            this.GroupName = groupName;
+            GroupName = groupName;
         }
 
         public string GroupName

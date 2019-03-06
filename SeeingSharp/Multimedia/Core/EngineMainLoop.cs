@@ -106,12 +106,14 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task SuspendAsync()
         {
-            if (m_suspendWaiter == null)
+            if (m_suspendWaiter != null)
             {
-                m_suspendCallWaiterSource = new TaskCompletionSource<object>();
-                m_suspendWaiterSource = new TaskCompletionSource<object>();
-                m_suspendWaiter = m_suspendWaiterSource.Task;
+                return m_suspendCallWaiterSource.Task;
             }
+
+            m_suspendCallWaiterSource = new TaskCompletionSource<object>();
+            m_suspendWaiterSource = new TaskCompletionSource<object>();
+            m_suspendWaiter = m_suspendWaiterSource.Task;
 
             return m_suspendCallWaiterSource.Task;
         }
@@ -121,14 +123,19 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Resume()
         {
-            if (m_suspendWaiter != null)
+            if (m_suspendWaiter == null)
             {
-                if (!m_suspendCallWaiterSource.Task.IsCompleted) { m_suspendCallWaiterSource.TrySetResult(null); }
-
-                m_suspendWaiterSource.TrySetResult(null);
-                m_suspendWaiterSource = null;
-                m_suspendWaiter = null;
+                return;
             }
+
+            if (!m_suspendCallWaiterSource.Task.IsCompleted)
+            {
+                m_suspendCallWaiterSource.TrySetResult(null);
+            }
+
+            m_suspendWaiterSource.TrySetResult(null);
+            m_suspendWaiterSource = null;
+            m_suspendWaiter = null;
         }
 
         /// <summary>
@@ -136,11 +143,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task WaitForNextPassedLoop()
         {
-            TaskCompletionSource<object> result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>();
+
             m_globalLoopAwaiters.Enqueue(() =>
             {
                 result.SetResult(null);
             });
+
             return result.Task;
         }
 
@@ -161,11 +170,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             lock (m_registeredRenderLoopsLock)
             {
-                if (!m_registeredRenderLoops.Contains(renderLoop))
+                if (m_registeredRenderLoops.Contains(renderLoop))
                 {
-                    m_registeredRenderLoops.Add(renderLoop);
-                    renderLoop.IsRegisteredOnMainLoop = true;
+                    return;
                 }
+
+                m_registeredRenderLoops.Add(renderLoop);
+                renderLoop.IsRegisteredOnMainLoop = true;
             }
         }
 
@@ -201,11 +212,11 @@ namespace SeeingSharp.Multimedia.Core
                 var renderStopWatch = new Stopwatch();
                 renderStopWatch.Start();
 
-                List<RenderLoop> renderingRenderLoops = new List<RenderLoop>(16);
-                List<Scene> scenesToRender = new List<Scene>(16);
-                List<Camera3DBase> camerasToUpdate = new List<Camera3DBase>(16);
-                List<EngineDevice> devicesInUse = new List<EngineDevice>(16);
-                List<InputFrame> inputFrames = new List<InputFrame>(16);
+                var renderingRenderLoops = new List<RenderLoop>(16);
+                var scenesToRender = new List<Scene>(16);
+                var camerasToUpdate = new List<Camera3DBase>(16);
+                var devicesInUse = new List<EngineDevice>(16);
+                var inputFrames = new List<InputFrame>(16);
                 var updateState = new UpdateState(TimeSpan.Zero);
 
                 while (!cancelToken.IsCancellationRequested)
@@ -217,8 +228,8 @@ namespace SeeingSharp.Multimedia.Core
                         using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_PER_FRAME))
                         {
                             // Wait some time before doing anything..
-                            double lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
-                            double delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
+                            var lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
+                            var delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
 
                             if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS)
                             {
@@ -232,6 +243,7 @@ namespace SeeingSharp.Multimedia.Core
 
                             // Get all render loops
                             renderingRenderLoops.Clear();
+
                             lock (m_registeredRenderLoopsLock)
                             {
                                 renderingRenderLoops.AddRange(m_registeredRenderLoops);
@@ -274,15 +286,15 @@ namespace SeeingSharp.Multimedia.Core
                             RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
 
                             // Raise generic input event (if registered)
-                            if (this.GenericInput != null)
+                            if (GenericInput != null)
                             {
-                                this.GenericInput.Raise(this, new GenericInputEventArgs(inputFrames));
+                                GenericInput.Raise(this, new GenericInputEventArgs(inputFrames));
                             }
 
                             // Clear unreferenced Scenes finally
-                            lock(m_scenesForUnloadLock)
+                            lock (m_scenesForUnloadLock)
                             {
-                                foreach(var actScene in m_scenesForUnload)
+                                foreach (var actScene in m_scenesForUnload)
                                 {
                                     actScene.UnloadResources();
                                     actScene.Clear(true);
@@ -309,16 +321,17 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute global awaiters
-                    while(m_globalLoopAwaiters.Count > 0)
+                    while (m_globalLoopAwaiters.Count > 0)
                     {
                         Action currentAction = null;
-                        if(m_globalLoopAwaiters.TryDequeue(out currentAction))
+
+                        if (m_globalLoopAwaiters.TryDequeue(out currentAction))
                         {
                             currentAction();
                         }
                     }
 
-                    if(exceptionOccurred)
+                    if (exceptionOccurred)
                     {
                         // Wait some time and try rendering again
                         await Task.Delay(1000);
@@ -327,9 +340,12 @@ namespace SeeingSharp.Multimedia.Core
                     // Handle suspend / resume
                     var suspendWaiter = m_suspendWaiter;
 
-                    if (suspendWaiter != null)
+                    if (suspendWaiter == null)
                     {
-                        m_suspendCallWaiterSource.TrySetResult(null);
+                        continue;
+                    }
+
+                    m_suspendCallWaiterSource.TrySetResult(null);
 
 #if UNIVERSAL
                         // Call Trim on all devices
@@ -339,9 +355,8 @@ namespace SeeingSharp.Multimedia.Core
                         }
 #endif
 
-                        // Wait for resuming
-                        await suspendWaiter;
-                    }
+                    // Wait for resuming
+                    await suspendWaiter;
                 }
             });
 
@@ -360,11 +375,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_UPDATE_AND_PREPARE))
             {
-                List<Action> additionalContinuationActions = new List<Action>();
+                var additionalContinuationActions = new List<Action>();
                 var additionalContinuationActionsLock = new object();
 
                 // Trigger all tasks for preparing views
-                List<Task<List<Action>>> prepareRenderTasks = new List<Task<List<Action>>>(renderingRenderLoops.Count);
+                var prepareRenderTasks = new List<Task<List<Action>>>(renderingRenderLoops.Count);
 
                 for (var actDeviceIndex = 0; actDeviceIndex < devicesInUse.Count; actDeviceIndex++)
                 {
@@ -374,71 +389,77 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         var actRenderLoop = renderingRenderLoops[loop];
 
-                        if (actRenderLoop.Device == actDevice)
+                        if (actRenderLoop.Device != actDevice)
                         {
-                            // Call prepare render and wait for the answer
-                            //  => Error handling is a bit tricky..
-                            //     Errors are catched by the continuation action
-                            var actTask = actRenderLoop.PrepareRenderAsync();
-
-                            prepareRenderTasks.Add(actTask.ContinueWith((givenTask) =>
-                            {
-                                if (!givenTask.IsFaulted)
-                                {
-                                    return givenTask.Result;
-                                }
-                                else
-                                {
-                                    // Deregister this RenderLoop
-                                    lock (additionalContinuationActionsLock)
-                                    {
-                                        additionalContinuationActions.Add(() =>
-                                        {
-                                            this.DeregisterRenderLoop(actRenderLoop);
-                                            renderingRenderLoops.Remove(actRenderLoop);
-                                        });
-                                    }
-
-                                    return new List<Action>();
-                                }
-                            }));
+                            continue;
                         }
+
+                        // Call prepare render and wait for the answer
+                        //  => Error handling is a bit tricky..
+                        //     Errors are catched by the continuation action
+                        var actTask = actRenderLoop.PrepareRenderAsync();
+
+                        prepareRenderTasks.Add(actTask.ContinueWith((givenTask) =>
+                        {
+                            if (!givenTask.IsFaulted)
+                            {
+                                return givenTask.Result;
+                            }
+                            else
+                            {
+                                // Deregister this RenderLoop
+                                lock (additionalContinuationActionsLock)
+                                {
+                                    additionalContinuationActions.Add(() =>
+                                    {
+                                        DeregisterRenderLoop(actRenderLoop);
+                                        renderingRenderLoops.Remove(actRenderLoop);
+                                    });
+                                }
+
+                                return new List<Action>();
+                            }
+                        }));
                     }
                 }
 
                 // Handle initial configuration of render loops (=> No current device)
-                for (int loop = 0; loop < renderingRenderLoops.Count; loop++)
+                for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
                 {
-                    RenderLoop actRenderLoop = renderingRenderLoops[loop];
-                    if (actRenderLoop.Device == null)
-                    {
-                        try
-                        {
-                            Task<List<Action>> actPrepareRenderTask = actRenderLoop.PrepareRenderAsync();
-                            await actPrepareRenderTask;
+                    var actRenderLoop = renderingRenderLoops[loop];
 
-                            lock (additionalContinuationActionsLock)
-                            {
-                                additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
-                            }
-                        }
-                        catch(Exception)
+                    if (actRenderLoop.Device != null)
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        var actPrepareRenderTask = actRenderLoop.PrepareRenderAsync();
+                        await actPrepareRenderTask;
+
+                        lock (additionalContinuationActionsLock)
                         {
-                            // Deregister this RenderLoop
-                            lock (additionalContinuationActionsLock)
+                            additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Deregister this RenderLoop
+                        lock (additionalContinuationActionsLock)
+                        {
+                            additionalContinuationActions.Add(() =>
                             {
-                                additionalContinuationActions.Add(() =>
-                                {
-                                    this.DeregisterRenderLoop(actRenderLoop);
-                                    renderingRenderLoops.Remove(actRenderLoop);
-                                });
-                            }
+                                DeregisterRenderLoop(actRenderLoop);
+                                renderingRenderLoops.Remove(actRenderLoop);
+                            });
                         }
                     }
                 }
 
                 // Update all scenes
-                ThreadSaveQueue<Exception> exceptionsDuringUpdate = new ThreadSaveQueue<Exception>();
+                var exceptionsDuringUpdate = new ThreadSaveQueue<Exception>();
+
                 Parallel.For(0, scenesToRender.Count, (actTaskIndex) =>
                 {
                     try
@@ -454,7 +475,7 @@ namespace SeeingSharp.Multimedia.Core
                             actScene.Update(actUpdateState);
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         exceptionsDuringUpdate.Enqueue(ex);
                     }
@@ -515,7 +536,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
             {
-                ThreadSaveQueue<RenderLoop> invalidRenderLoops = new ThreadSaveQueue<RenderLoop>();
+                var invalidRenderLoops = new ThreadSaveQueue<RenderLoop>();
 
                 // Trigger all tasks for 'Update' pass
                 Parallel.For(0, devicesInUse.Count + scenesToRender.Count, (actTaskIndex) =>
@@ -549,7 +570,7 @@ namespace SeeingSharp.Multimedia.Core
                     else
                     {
                         // Perform updates beside rendering for the current scene
-                        int sceneIndex = actTaskIndex - devicesInUse.Count;
+                        var sceneIndex = actTaskIndex - devicesInUse.Count;
 
                         using (var perfTokenInner = m_host.BeginMeasureActivityDuration(string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_BESIDE, sceneIndex)))
                         {
@@ -563,16 +584,16 @@ namespace SeeingSharp.Multimedia.Core
                 });
 
                 // Handle all invalid render loops
-                if(invalidRenderLoops.HasAny())
+                if (invalidRenderLoops.HasAny())
                 {
-                    foreach(var actRenderLoop in invalidRenderLoops.DequeueAll())
+                    foreach (var actRenderLoop in invalidRenderLoops.DequeueAll())
                     {
                         DeregisterRenderLoop(actRenderLoop);
                     }
                 }
 
                 // Reset camera changed flags
-                foreach(var actRenderLoop in registeredRenderLoops)
+                foreach (var actRenderLoop in registeredRenderLoops)
                 {
                     actRenderLoop.Camera.StateChanged = false;
                 }
@@ -647,7 +668,7 @@ namespace SeeingSharp.Multimedia.Core
                     scenesToRender.Add(actScene);
                 }
 
-                Camera3DBase actCamera = registeredRenderLoops[loop].Camera;
+                var actCamera = registeredRenderLoops[loop].Camera;
 
                 if ((actCamera != null) && (!camerasToUpdate.Contains(actCamera)))
                 {
@@ -693,7 +714,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal void DeregisterSceneForUnload(Scene scene)
         {
-            lock(m_scenesForUnloadLock)
+            lock (m_scenesForUnloadLock)
             {
                 while (m_scenesForUnload.Remove(scene)) { }
             }
@@ -702,17 +723,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the MainLoop running?
         /// </summary>
-        public bool IsRunning
-        {
-            get { return m_runningTask != null; }
-        }
+        public bool IsRunning => m_runningTask != null;
 
         /// <summary>
         /// Gets the total count of registered RenderLoop objects.
         /// </summary>
-        public int RegisteredRenderLoopCount
-        {
-            get { return m_registeredRenderLoops.Count; }
-        }
+        public int RegisteredRenderLoopCount => m_registeredRenderLoops.Count;
     }
 }

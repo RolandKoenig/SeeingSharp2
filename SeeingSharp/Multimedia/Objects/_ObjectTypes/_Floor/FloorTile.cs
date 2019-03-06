@@ -62,10 +62,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the material used by this tile.
         /// </summary>
-        public NamedOrGenericKey Material
-        {
-            get { return m_tileInfo.Material; }
-        }
+        public NamedOrGenericKey Material => m_tileInfo.Material;
 
         /// <summary>
         /// Gets the x-position of the tile.

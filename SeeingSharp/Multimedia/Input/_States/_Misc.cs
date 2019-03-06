@@ -24,7 +24,7 @@
 
 namespace SeeingSharp.Multimedia.Input
 {
-    public enum MouseButton : int
+    public enum MouseButton
     {
         Left = 0,
         Middle = 1,

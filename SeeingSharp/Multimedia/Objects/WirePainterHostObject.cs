@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
-                resourceDictionary.GetResourceAndEnsureLoaded<LineRenderResources>(
+                resourceDictionary.GetResourceAndEnsureLoaded(
                     LineRenderResources.RESOURCE_KEY,
                     () => new LineRenderResources()),
                 device.DeviceIndex);
@@ -107,9 +107,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (base.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                base.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
             }
         }
 
@@ -121,18 +121,20 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var resourceData = m_localResources[renderState.DeviceIndex];
 
-            if (PaintAction != null)
+            if (PaintAction == null)
             {
-                var wirePainter = new WirePainter(renderState, resourceData);
+                return;
+            }
 
-                try
-                {
-                    PaintAction(wirePainter);
-                }
-                finally
-                {
-                    wirePainter.SetInvalid();
-                }
+            var wirePainter = new WirePainter(renderState, resourceData);
+
+            try
+            {
+                PaintAction(wirePainter);
+            }
+            finally
+            {
+                wirePainter.SetInvalid();
             }
         }
 

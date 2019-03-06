@@ -73,9 +73,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            float currentLocationPercent = (float)(base.CurrentTime.TotalMilliseconds / base.FixedTime.TotalMilliseconds);
-            int toIncreaseTotal = (int)(m_increaseTotal * currentLocationPercent);
-            int toIncrease = toIncreaseTotal - m_alreadyIncreased;
+            var currentLocationPercent = (float)(CurrentTime.TotalMilliseconds / FixedTime.TotalMilliseconds);
+            var toIncreaseTotal = (int)(m_increaseTotal * currentLocationPercent);
+            var toIncrease = toIncreaseTotal - m_alreadyIncreased;
 
             m_setValueAction(m_getValueFunc() + toIncrease);
 
@@ -86,9 +86,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this animation a blocking animation?
         /// If true, all following animation have to wait for finish-event.
         /// </summary>
-        public override bool IsBlockingAnimation
-        {
-            get { return false; }
-        }
+        public override bool IsBlockingAnimation => false;
     }
 }

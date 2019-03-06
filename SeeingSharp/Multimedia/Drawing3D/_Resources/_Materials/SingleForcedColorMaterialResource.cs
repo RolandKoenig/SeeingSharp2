@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -99,10 +99,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 m_cbPerMaterial.SetData(
                     deviceContext,
-                    new CBPerMaterial()
+                    new CBPerMaterial
                     {
                         FadeIntensity = m_fadeIntensity
                     });
+
                 m_cbPerMaterialDataChanged = false;
             }
 
@@ -142,25 +143,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_cbPerMaterial = null;
         }
 
-        public override bool IsLoaded
-        {
-            get
-            {
-                return (m_vertexShader != null) &&
-                       (m_pixelShader != null);
-            }
-        }
+        public override bool IsLoaded =>
+            (m_vertexShader != null) &&
+            (m_pixelShader != null);
 
         public float FadeIntensity
         {
-            get { return m_fadeIntensity; }
+            get => m_fadeIntensity;
             set
             {
-                if(m_fadeIntensity != value)
+                if (m_fadeIntensity == value)
                 {
-                    m_fadeIntensity = value;
-                    m_cbPerMaterialDataChanged = true;
+                    return;
                 }
+
+                m_fadeIntensity = value;
+                m_cbPerMaterialDataChanged = true;
             }
         }
     }

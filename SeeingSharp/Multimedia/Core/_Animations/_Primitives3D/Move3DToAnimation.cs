@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetVector">The target position of the object.</param>
-        ///´<param name="speed">The total movement speed.</param>
+        /// <param name="speed">The total movement speed.</param>
         public Move3DToAnimation(IAnimatableObjectPosition targetObject, Vector3 targetVector, MovementSpeed speed)
             : base(targetObject)
         {
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
                     new MovementSpeed(moveVector, m_paramDuration),
                     moveVector);
             }
-            else if(m_paramMoveSpeed != MovementSpeed.Empty)
+            else if (m_paramMoveSpeed != MovementSpeed.Empty)
             {
                 m_moveHelper = new MovementAnimationHelper(m_paramMoveSpeed, moveVector);
             }
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Change the type of this animation in the base class
-            base.ChangeToFixedTime(m_moveHelper.MovementTime);
+            ChangeToFixedTime(m_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Core
         public override void OnReset()
         {
             base.OnReset();
-            base.ChangeToEventBased();
+            ChangeToEventBased();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(base.CurrentTime);
+            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(CurrentTime);
         }
 
         /// <summary>

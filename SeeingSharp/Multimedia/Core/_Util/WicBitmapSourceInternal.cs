@@ -35,14 +35,14 @@ namespace SeeingSharp.Multimedia.Core
     {
         public WicBitmapSourceInternal(SharpDX.WIC.BitmapDecoder decoder, SharpDX.WIC.FormatConverter converter)
         {
-            this.Decoder = decoder;
-            this.Converter = converter;
+            Decoder = decoder;
+            Converter = converter;
         }
 
         public void Dispose()
         {
-            this.Converter = SeeingSharpTools.DisposeObject(this.Converter);
-            this.Decoder = SeeingSharpTools.DisposeObject(this.Decoder);
+            Converter = SeeingSharpTools.DisposeObject(Converter);
+            Decoder = SeeingSharpTools.DisposeObject(Decoder);
         }
 
         public SharpDX.WIC.BitmapDecoder Decoder
@@ -57,9 +57,6 @@ namespace SeeingSharp.Multimedia.Core
             private set;
         }
 
-        public bool IsDisposed
-        {
-            get { return this.Converter == null; }
-        }
+        public bool IsDisposed => Converter == null;
     }
 }

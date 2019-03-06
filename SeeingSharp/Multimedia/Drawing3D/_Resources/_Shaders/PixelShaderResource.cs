@@ -24,7 +24,6 @@
 
 #region using
 
-//Some namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 #endregion
@@ -41,7 +40,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PixelShaderResource : ShaderResource
     {
         #region Resources for Direct3D 11 rendering
-        private D3D11.PixelShader m_pixelShader;
+
         #endregion
 
         /// <summary>
@@ -59,9 +58,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
         {
-            if (m_pixelShader == null)
+            if (PixelShader == null)
             {
-                m_pixelShader = new D3D11.PixelShader(device.DeviceD3D11_1, shaderBytecode);
+                PixelShader = new D3D11.PixelShader(device.DeviceD3D11_1, shaderBytecode);
             }
         }
 
@@ -70,23 +69,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            m_pixelShader = SeeingSharpTools.DisposeObject(m_pixelShader);
+            PixelShader = SeeingSharpTools.DisposeObject(PixelShader);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded
-        {
-            get { return m_pixelShader != null; }
-        }
+        public override bool IsLoaded => PixelShader != null;
 
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        internal D3D11.PixelShader PixelShader
-        {
-            get { return m_pixelShader; }
-        }
+        internal D3D11.PixelShader PixelShader { get; private set; }
     }
 }

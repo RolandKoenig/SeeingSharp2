@@ -37,15 +37,13 @@ namespace SeeingSharp
         private Stack<Matrix> m_stack;
         private int m_pushTimes;
 
-        private Matrix m_top;
-
         /// <summary>
         /// Cretaes a new matrix stack using 4x4 matrices
         /// </summary>
         public Matrix4Stack()
         {
             m_stack = new Stack<Matrix>();
-            m_top = Matrix.Identity;
+            Top = Matrix.Identity;
 
             m_pushTimes = 0;
         }
@@ -56,7 +54,7 @@ namespace SeeingSharp
         public Matrix4Stack(Matrix top)
             : this()
         {
-            m_top = top;
+            Top = top;
         }
 
         /// <summary>
@@ -66,7 +64,7 @@ namespace SeeingSharp
         {
             m_stack.Clear();
             m_pushTimes = 0;
-            m_top = Matrix.Identity;
+            Top = Matrix.Identity;
         }
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(float transX, float transY, float transZ)
         {
-            m_top = Matrix.Translation(transX, transY, transZ) * m_top;
+            Top = Matrix.Translation(transX, transY, transZ) * Top;
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace SeeingSharp
         /// </summary>
         public void TranslateLocal(Vector3 transVector)
         {
-            m_top = Matrix.Translation(transVector) * m_top;
+            Top = Matrix.Translation(transVector) * Top;
         }
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace SeeingSharp
         /// <param name="roll">Roll around z-axis.</param>
         public void RotateYawPitchRollLocal(float yaw, float pitch, float roll)
         {
-            m_top = Matrix.RotationYawPitchRoll(yaw, pitch, roll) * m_top;
+            Top = Matrix.RotationYawPitchRoll(yaw, pitch, roll) * Top;
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace SeeingSharp
         /// <param name="vRotation">The vertical rotation angle.</param>
         public void RotateHVLocal(float hRotation, float vRotation)
         {
-            m_top = Matrix.RotationYawPitchRoll(vRotation, hRotation, 0f) * m_top; //Matrix.RotationHV(hRotation, vRotation) * m_top;
+            Top = Matrix.RotationYawPitchRoll(vRotation, hRotation, 0f) * Top; // Matrix.RotationHV(hRotation, vRotation) * m_top;
         }
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace SeeingSharp
         /// <param name="rotation">Vector containing horizontal and vertical rotations.</param>
         public void RotateHVLocal(Vector2 rotation)
         {
-            m_top = Matrix.RotationYawPitchRoll(rotation.X, rotation.Y, 0f) * m_top;
+            Top = Matrix.RotationYawPitchRoll(rotation.X, rotation.Y, 0f) * Top;
         }
 
         /// <summary>
@@ -120,7 +118,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleX, float scaleY, float scaleZ)
         {
-            m_top = Matrix.Scaling(scaleX, scaleY, scaleZ) * m_top;
+            Top = Matrix.Scaling(scaleX, scaleY, scaleZ) * Top;
         }
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(Vector3 scaling)
         {
-            m_top = Matrix.Scaling(scaling) * m_top;
+            Top = Matrix.Scaling(scaling) * Top;
         }
 
         /// <summary>
@@ -136,7 +134,7 @@ namespace SeeingSharp
         /// </summary>
         public void ScaleLocal(float scaleFactor)
         {
-            m_top = Matrix.Scaling(scaleFactor, scaleFactor, scaleFactor) * m_top;
+            Top = Matrix.Scaling(scaleFactor, scaleFactor, scaleFactor) * Top;
         }
 
         /// <summary>
@@ -144,7 +142,7 @@ namespace SeeingSharp
         /// </summary>
         public void RotateXLocal(float angle)
         {
-            m_top = Matrix.RotationX(angle) * m_top;
+            Top = Matrix.RotationX(angle) * Top;
         }
 
         /// <summary>
@@ -152,7 +150,7 @@ namespace SeeingSharp
         /// </summary>
         public void RotateYLocal(float angle)
         {
-            m_top = Matrix.RotationY(angle) * m_top;
+            Top = Matrix.RotationY(angle) * Top;
         }
 
         /// <summary>
@@ -160,7 +158,7 @@ namespace SeeingSharp
         /// </summary>
         public void RotateZLocal(float angle)
         {
-            m_top = Matrix.RotationZ(angle) * m_top;
+            Top = Matrix.RotationZ(angle) * Top;
         }
 
         /// <summary>
@@ -168,7 +166,7 @@ namespace SeeingSharp
         /// </summary>
         public void TransformLocal(Matrix transformMatrix)
         {
-            m_top = transformMatrix * m_top;
+            Top = transformMatrix * Top;
         }
 
         /// <summary>
@@ -177,9 +175,7 @@ namespace SeeingSharp
         public Object Clone()
         {
             var cloned = new Matrix4Stack();
-
-            Matrix[] allElements = m_stack.ToArray();
-
+            var allElements = m_stack.ToArray();
             cloned.m_stack = new Stack<Matrix>();
 
             for (var loop = 0; loop < allElements.Length; loop++)
@@ -188,7 +184,7 @@ namespace SeeingSharp
                 cloned.m_pushTimes++;
             }
 
-            cloned.m_top = m_top;
+            cloned.Top = Top;
 
             return cloned;
         }
@@ -198,7 +194,7 @@ namespace SeeingSharp
         /// </summary>
         public void Push()
         {
-            m_stack.Push(m_top);
+            m_stack.Push(Top);
             m_pushTimes++;
         }
 
@@ -207,8 +203,8 @@ namespace SeeingSharp
         /// </summary>
         public void Push(Matrix matrixToPush)
         {
-            m_stack.Push(m_top);
-            m_top = matrixToPush;
+            m_stack.Push(Top);
+            Top = matrixToPush;
             m_pushTimes++;
         }
 
@@ -217,19 +213,18 @@ namespace SeeingSharp
         /// </summary>
         public void Pop()
         {
-            if (m_pushTimes > 0)
+            if (m_pushTimes <= 0)
             {
-                m_top = m_stack.Pop();
-                m_pushTimes--;
+                return;
             }
+
+            Top = m_stack.Pop();
+            m_pushTimes--;
         }
 
         /// <summary>
         /// Gets the top matrix
         /// </summary>
-        public Matrix Top
-        {
-            get { return m_top; }
-        }
+        public Matrix Top { get; private set; }
     }
 }

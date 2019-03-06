@@ -35,12 +35,12 @@ namespace SeeingSharp.SampleContainer
     {
         public SampleDescriptionAttribute(string sampleName, int orderID, string sampleGroupName, string sampleImageFileName = "", string sourceCodeUrl = "", Type settingsType = null)
         {
-            this.SampleName = sampleName;
-            this.OrderID = orderID;
-            this.SampleGroupName = sampleGroupName;
-            this.SampleImageFileName = sampleImageFileName;
-            this.SourceCodeUrl = sourceCodeUrl;
-            this.SettingsType = settingsType;
+            SampleName = sampleName;
+            OrderID = orderID;
+            SampleGroupName = sampleGroupName;
+            SampleImageFileName = sampleImageFileName;
+            SourceCodeUrl = sourceCodeUrl;
+            SettingsType = settingsType;
         }
 
         public string SampleName

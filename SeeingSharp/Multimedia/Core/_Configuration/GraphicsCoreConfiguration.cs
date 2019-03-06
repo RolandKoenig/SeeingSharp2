@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public GraphicsCoreConfiguration()
         {
-            this.DebugEnabled = false;
+            DebugEnabled = false;
         }
 
         /// <summary>

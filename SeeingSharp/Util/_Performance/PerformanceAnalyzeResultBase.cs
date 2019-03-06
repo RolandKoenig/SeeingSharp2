@@ -51,10 +51,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the name of the calculator.
         /// </summary>
-        public string CalculatorName
-        {
-            get { return Calculator.CalculatorName; }
-        }
+        public string CalculatorName => Calculator.CalculatorName;
 
         /// <summary>
         /// Gets the key of this kpi.

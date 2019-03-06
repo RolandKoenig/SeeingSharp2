@@ -158,7 +158,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("ViewRelatedLayerSubset");
             }
 
-            int length = sceneObjects.Length;
+            var length = sceneObjects.Length;
 
             for (var loop = 0; loop < length; loop++)
             {
@@ -169,7 +169,7 @@ namespace SeeingSharp.Multimedia.Core
                     continue;
                 }
 
-                if((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
+                if ((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
                 {
                     sceneObjects[loop].RegisterLayerViewSubset(this);
                 }
@@ -193,17 +193,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">The object to be removed.</param>
         internal void DeregisterObject(SceneObject sceneObject)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("ViewRelatedLayerSubset");
+            }
 
             // Perform unsubscription here (allowed because this call comes from update process)
             m_isSubscribeUnsubscribeAllowed = true;
+
             try
             {
-                if (sceneObject.IsLayerViewSubsetRegistered(this.ViewIndex))
+                if (!sceneObject.IsLayerViewSubsetRegistered(ViewIndex))
                 {
-                    sceneObject.UnsubsribeFromAllPasses(this);
-                    sceneObject.DeregisterLayerViewSubset(this);
+                    return;
                 }
+
+                sceneObject.UnsubsribeFromAllPasses(this);
+                sceneObject.DeregisterLayerViewSubset(this);
             }
             finally
             {
@@ -217,18 +223,22 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="allObjects">A collection containing all objects of the current layer.</param>
         internal void ClearAllSubscriptions(List<SceneObject> allObjects)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("ViewRelatedLayerSubset");
+            }
 
             // Clear all subscriptions on the SceneObject intances
-            int length = allObjects.Count;
-            for (int loop = 0; loop < length; loop++)
+            var length = allObjects.Count;
+
+            for (var loop = 0; loop < length; loop++)
             {
                 allObjects[loop].ClearSubscriptionsWithoutUnsubscribeCall(this);
                 allObjects[loop].DeregisterLayerViewSubset(this);
             }
 
             // Clear local subscription information
-            foreach(var actSubscriptionList in m_objectsPerPassDict.Values)
+            foreach (var actSubscriptionList in m_objectsPerPassDict.Values)
             {
                 actSubscriptionList.Subscriptions.Clear();
             }
@@ -244,7 +254,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // TODO: Trigger some other logic to update transparent object order
             // TODO: Performance improvement!!!
-            bool anyOrderChanges = false;
+            var anyOrderChanges = false;
             var camera = ViewInformation.Camera;
 
             m_objectsPassTransparentRender.Subscriptions.Sort(new Comparison<RenderPassSubscription>((left, right) =>
@@ -254,8 +264,8 @@ namespace SeeingSharp.Multimedia.Core
 
                 if ((leftSpacial != null) && (rightSpacial != null))
                 {
-                    float leftDistance = (camera.Position - leftSpacial.Position).LengthSquared();
-                    float rightDistance = (camera.Position - rightSpacial.Position).LengthSquared();
+                    var leftDistance = (camera.Position - leftSpacial.Position).LengthSquared();
+                    var rightDistance = (camera.Position - rightSpacial.Position).LengthSquared();
                     anyOrderChanges = true;
                     return rightDistance.CompareTo(leftDistance);
                 }
@@ -272,10 +282,10 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }));
 
-            if(anyOrderChanges)
+            if (anyOrderChanges)
             {
                 // Synchronize ordering changes with corresponding scene object
-                for(var loop =0 ; loop<m_objectsPassTransparentRender.Subscriptions.Count; loop++)
+                for (var loop = 0; loop < m_objectsPassTransparentRender.Subscriptions.Count; loop++)
                 {
                     var actSubscription = m_objectsPassTransparentRender.Subscriptions[loop];
                     actSubscription.SubscriptionIndex = loop;
@@ -290,7 +300,7 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Update subscriptions based on visibility check result
-                if(m_changedVisibilitiesAction != null)
+                if (m_changedVisibilitiesAction != null)
                 {
                     m_changedVisibilitiesAction();
                     m_changedVisibilitiesAction = null;
@@ -298,30 +308,37 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Unsubscribe all invalid objects
                 SceneObject actInvalidObject = null;
-                while(m_invalidObjectsToDeregister.Count > 0)
+
+                while (m_invalidObjectsToDeregister.Count > 0)
                 {
                     actInvalidObject = m_invalidObjectsToDeregister.Dequeue();
                     actInvalidObject.UnsubsribeFromAllPasses(this);
                 }
 
                 // Update subsccriptions based on boject state
-                List<SceneObject> allObjects = m_sceneLayer.ObjectsInternal;
-                int allObjectsLength = allObjects.Count;
-                int visibleObjectCount = ViewInformation.Owner.VisibleObjectCountInternal;
+                var allObjects = m_sceneLayer.ObjectsInternal;
+                var allObjectsLength = allObjects.Count;
+                var visibleObjectCount = ViewInformation.Owner.VisibleObjectCountInternal;
 
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actSceneObject = allObjects[loop];
 
-                    if (m_invalidObjects.ContainsKey(actSceneObject)) { continue; }
-
-                    if (actSceneObject.IsLayerViewSubsetRegistered(this.ViewIndex) &&
-                        actSceneObject.IsVisible(ViewInformation))
+                    if (m_invalidObjects.ContainsKey(actSceneObject))
                     {
-                        actSceneObject.UpdateForView(updateState, this);
-                        visibleObjectCount++;
+                        continue;
                     }
+
+                    if (!actSceneObject.IsLayerViewSubsetRegistered(ViewIndex) ||
+                        !actSceneObject.IsVisible(ViewInformation))
+                    {
+                        continue;
+                    }
+
+                    actSceneObject.UpdateForView(updateState, this);
+                    visibleObjectCount++;
                 }
+
                 ViewInformation.Owner.VisibleObjectCountInternal = visibleObjectCount;
             }
             finally
@@ -330,49 +347,53 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Reorganize subscriptions if there is anything unsubscribed
-            if(m_anythingUnsubscribed)
+            if (!m_anythingUnsubscribed)
             {
-                m_anythingUnsubscribed = false;
-                foreach(var actPassProperties in m_objectsPerPass)
+                return;
+            }
+
+            m_anythingUnsubscribed = false;
+
+            foreach (var actPassProperties in m_objectsPerPass)
+            {
+                if (actPassProperties.UnsubscribeCallCount <= 0) { continue; }
+
+                // Variables for consistency checking
+                var givenUnsubscribeCount = actPassProperties.UnsubscribeCallCount;
+                var trueUnsubscribeCount = 0;
+
+                // Handle case where we have unsubscribed some
+                //  => Build new subscription list and ignore all whith 'IsSubscribed' == false
+                var newSubscriptionList = new List<RenderPassSubscription>(
+                    (actPassProperties.Subscriptions.Count - actPassProperties.UnsubscribeCallCount) + 128);
+
+                for (var loop = 0; loop < actPassProperties.Subscriptions.Count; loop++)
                 {
-                    if (actPassProperties.UnsubscribeCallCount <= 0) { continue; }
+                    var actSubscription = actPassProperties.Subscriptions[loop];
 
-                    // Variables for consistency checking
-                    int givenUnsubscribeCount = actPassProperties.UnsubscribeCallCount;
-                    int trueUnsubscribeCount = 0;
-
-                    // Handle case where we have unsubscribed some
-                    //  => Build new subscription list and ignore all whith 'IsSubscribed' == false
-                    List<RenderPassSubscription> newSubscriptionList = new List<RenderPassSubscription>(
-                        (actPassProperties.Subscriptions.Count - actPassProperties.UnsubscribeCallCount) + 128);
-
-                    for(var loop =0 ; loop<actPassProperties.Subscriptions.Count; loop++)
+                    if (!actSubscription.IsSubscribed)
                     {
-                        var actSubscription = actPassProperties.Subscriptions[loop];
-
-                        if (!actSubscription.IsSubscribed)
-                        {
-                            actSubscription.SceneObject.ClearSubscriptionsWithoutUnsubscribeCall(this, actSubscription);
-                            trueUnsubscribeCount++;
-                            continue;
-                        }
-
-                        // Add this item to new subscription list
-                        actSubscription.SubscriptionIndex = newSubscriptionList.Count;
-                        newSubscriptionList.Add(actSubscription);
-
-                        actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
+                        actSubscription.SceneObject.ClearSubscriptionsWithoutUnsubscribeCall(this, actSubscription);
+                        trueUnsubscribeCount++;
+                        continue;
                     }
-                    actPassProperties.Subscriptions = newSubscriptionList;
-                    actPassProperties.UnsubscribeCallCount = 0;
 
-                    // Check for consistency: Does unsubscribe-count match true unsubscriptions using IsSubscribed flag
-                    if(givenUnsubscribeCount != trueUnsubscribeCount)
-                    {
-                        throw new SeeingSharpException("Inconsistency: Given unsubscribe count does not mach true count of unsubscriptions!");
-                    }
+                    // Add this item to new subscription list
+                    actSubscription.SubscriptionIndex = newSubscriptionList.Count;
+                    newSubscriptionList.Add(actSubscription);
+
+                    actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
+                }
+                actPassProperties.Subscriptions = newSubscriptionList;
+                actPassProperties.UnsubscribeCallCount = 0;
+
+                // Check for consistency: Does unsubscribe-count match true unsubscriptions using IsSubscribed flag
+                if (givenUnsubscribeCount != trueUnsubscribeCount)
+                {
+                    throw new SeeingSharpException("Inconsistency: Given unsubscribe count does not mach true count of unsubscriptions!");
                 }
             }
+
         }
 
         /// <summary>
@@ -382,7 +403,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjectsForSingleUpdateCall">A collection of scene objects for a single update call. These are normally a list of newly inserted static objects.</param>
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState, Queue<SceneObject> sceneObjectsForSingleUpdateCall)
         {
-            List<SceneObjectFilter> filters = ViewInformation.Filters;
+            var filters = ViewInformation.Filters;
             m_tmpChangedVisibilities.Clear();
 
             // Perform some pre-logic on filters
@@ -399,24 +420,24 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check whether we have to update all objects
-            bool refreshAllObjects =
+            var refreshAllObjects =
                 ViewInformation.Camera.StateChanged ||
                 anyFilterChanged;
 
             // Perform viewbox culling for all standard objects
-            List<SceneObject> allObjects = m_sceneLayer.ObjectsInternal;
-            int allObjectsLength = allObjects.Count;
+            var allObjects = m_sceneLayer.ObjectsInternal;
+            var allObjectsLength = allObjects.Count;
 
             if (allObjectsLength > 0)
             {
-                SceneObject[] allObjectsArray = allObjects.GetBackingArray();
+                var allObjectsArray = allObjects.GetBackingArray();
 
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actObject = allObjectsArray[loop];
 
                     // Don't handle static objects here if we don't want to handle them
-                    if(!refreshAllObjects)
+                    if (!refreshAllObjects)
                     {
                         if (actObject.IsStatic) { continue; }
                         if (!actObject.TransormationChanged) { continue; }
@@ -431,13 +452,13 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update objects which are passed for a single update call (normally newly inserted static objects)
-            int singleUpdateCallCount = sceneObjectsForSingleUpdateCall.Count;
+            var singleUpdateCallCount = sceneObjectsForSingleUpdateCall.Count;
 
-            if((!refreshAllObjects) && (singleUpdateCallCount  >0))
+            if ((!refreshAllObjects) && (singleUpdateCallCount > 0))
             {
-                SceneObject[] singleUpdateArray = sceneObjectsForSingleUpdateCall.GetBackingArray();
+                var singleUpdateArray = sceneObjectsForSingleUpdateCall.GetBackingArray();
 
-                for(var loop =0 ; loop<singleUpdateCallCount; loop++)
+                for (var loop = 0; loop < singleUpdateCallCount; loop++)
                 {
                     // Perform culling
                     PerformViewboxCulling(
@@ -448,29 +469,31 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle changed visibility in standard update logic
-            if (m_tmpChangedVisibilities.Count > 0)
+            if (m_tmpChangedVisibilities.Count <= 0)
             {
-                var startingScene = m_scene;
-
-                m_changedVisibilitiesAction = () =>
-                {
-                    if (m_disposed) { return; }
-                    if (startingScene != m_scene) { return; }
-
-                    foreach (var actChangedVisibility in m_tmpChangedVisibilities)
-                    {
-                        // Check whether this objet is still here..
-                        if (actChangedVisibility.Item1.Scene != m_scene) { continue; }
-                        if (actChangedVisibility.Item1.SceneLayer != m_sceneLayer) { continue; }
-
-                        // Handle changed visibility
-                        HandleObjectVisibilityChanged(
-                            actChangedVisibility.Item1,
-                            actChangedVisibility.Item2,
-                            actChangedVisibility.Item3);
-                    }
-                };
+                return;
             }
+
+            var startingScene = m_scene;
+
+            m_changedVisibilitiesAction = () =>
+            {
+                if (m_disposed) { return; }
+                if (startingScene != m_scene) { return; }
+
+                foreach (var actChangedVisibility in m_tmpChangedVisibilities)
+                {
+                    // Check whether this objet is still here..
+                    if (actChangedVisibility.Item1.Scene != m_scene) { continue; }
+                    if (actChangedVisibility.Item1.SceneLayer != m_sceneLayer) { continue; }
+
+                    // Handle changed visibility
+                    HandleObjectVisibilityChanged(
+                        actChangedVisibility.Item1,
+                        actChangedVisibility.Item2,
+                        actChangedVisibility.Item3);
+                }
+            };
         }
 
         /// <summary>
@@ -509,11 +532,11 @@ namespace SeeingSharp.Multimedia.Core
                 GradientFactor = viewConfiguration.GeneratedColorGradientFactor,
                 BorderFactor = viewConfiguration.GeneratedBorderFactor,
                 Ambient = viewConfiguration.AmbientFactor,
-                CameraPosition = this.ViewInformation.Camera.Position,
-                ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize(),
+                CameraPosition = ViewInformation.Camera.Position,
+                ScreenPixelSize = ViewInformation.Camera.GetScreenSize(),
                 LightPower = viewConfiguration.LightPower,
                 StrongLightFactor = viewConfiguration.StrongLightFactor,
-                ViewProj = Matrix.Transpose(this.ViewInformation.Camera.ViewProjection)
+                ViewProj = Matrix.Transpose(ViewInformation.Camera.ViewProjection)
             };
 
             m_renderParameters.UpdateValues(renderState, cbPerView);
@@ -532,8 +555,8 @@ namespace SeeingSharp.Multimedia.Core
             // Perform main renderpass logic
             m_renderParameters.Apply(renderState);
 
-            int passID = 0;
-            bool continueWithNextPass = true;
+            var passID = 0;
+            var continueWithNextPass = true;
 
             while (continueWithNextPass)
             {
@@ -579,7 +602,7 @@ namespace SeeingSharp.Multimedia.Core
                 renderState.ClearCurrentDepthBuffer();
             }
 
-            //Remove all invalid objects
+            // Remove all invalid objects
             if (invalidObjects != null)
             {
                 HandleInvalidObjects(invalidObjects);
@@ -602,8 +625,8 @@ namespace SeeingSharp.Multimedia.Core
             var subscriptionProperties = m_objectsPerPassDict[passInfo];
 
             // Append new subscription to subscription list
-            List<RenderPassSubscription> subscriptions = subscriptionProperties.Subscriptions;
-            int subscriptionsCount = subscriptions.Count;
+            var subscriptions = subscriptionProperties.Subscriptions;
+            var subscriptionsCount = subscriptions.Count;
             var newSubscription = new RenderPassSubscription(this, passInfo, sceneObject, renderMethod, zOrder);
 
             if (!passInfo.IsSorted)
@@ -615,22 +638,26 @@ namespace SeeingSharp.Multimedia.Core
             else
             {
                 // Perform BinaryInsert to the correct position
-                int newIndex = SeeingSharpTools.BinaryInsert(subscriptions, newSubscription, SubscriptionZOrderComparer.Instance);
+                var newIndex = SeeingSharpTools.BinaryInsert(subscriptions, newSubscription, SubscriptionZOrderComparer.Instance);
 
                 // Increment all subscription indices after the inserted position
                 subscriptionsCount++;
                 RenderPassSubscription actSubscription;
-                for (int loop = newIndex; loop < subscriptionsCount; loop++)
+
+                for (var loop = newIndex; loop < subscriptionsCount; loop++)
                 {
                     actSubscription = subscriptions[loop];
-                    if (actSubscription.SubscriptionIndex != loop)
-                    {
-                        actSubscription.SubscriptionIndex = loop;
-                        subscriptions[loop] = actSubscription;
 
-                        actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
+                    if (actSubscription.SubscriptionIndex == loop)
+                    {
+                        continue;
                     }
+
+                    actSubscription.SubscriptionIndex = loop;
+                    subscriptions[loop] = actSubscription;
+                    actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
                 }
+
                 newSubscription = subscriptions[newIndex];
             }
 
@@ -642,25 +669,30 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnsubscribeForPass(RenderPassSubscription subscription)
         {
-            if (!m_isSubscribeUnsubscribeAllowed) { throw new SeeingSharpException("Subscription is not allowed currently!"); }
-
-            if (subscription.IsSubscribed)
+            if (!m_isSubscribeUnsubscribeAllowed)
             {
-                // Set unsubscribed flag
-                m_anythingUnsubscribed = true;
-
-                // Register unsubscription call
-                var subscriptionInfo = m_objectsPerPassDict[subscription.RenderPass];
-
-                subscriptionInfo.UnsubscribeCallCount++;
-
-                // Update subscription info and reinsert it on the pass collection
-                subscription.IsSubscribed = false;
-                subscriptionInfo.Subscriptions[subscription.SubscriptionIndex] = subscription;
-
-                // Post changes to the scene object holding this info too
-                subscription.SceneObject.UpdateSubscription(subscription, this);
+                throw new SeeingSharpException("Subscription is not allowed currently!");
             }
+
+            if (!subscription.IsSubscribed)
+            {
+                return;
+            }
+
+            // Set unsubscribed flag
+            m_anythingUnsubscribed = true;
+
+            // Register unsubscription call
+            var subscriptionInfo = m_objectsPerPassDict[subscription.RenderPass];
+
+            subscriptionInfo.UnsubscribeCallCount++;
+
+            // Update subscription info and reinsert it on the pass collection
+            subscription.IsSubscribed = false;
+            subscriptionInfo.Subscriptions[subscription.SubscriptionIndex] = subscription;
+
+            // Post changes to the scene object holding this info too
+            subscription.SceneObject.UpdateSubscription(subscription, this);
         }
 
         /// <summary>
@@ -671,7 +703,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="refreshStaticObjects">A flag inicating whether we have to update all objects.</param>
         private void PerformViewboxCulling(SceneObject actObject, List<SceneObjectFilter> filters, bool refreshStaticObjects)
         {
-            if (!actObject.IsLayerViewSubsetRegistered(this.ViewIndex)) { return; }
+            if (!actObject.IsLayerViewSubsetRegistered(ViewIndex)) { return; }
             if (m_invalidObjects.ContainsKey(actObject)) { return; }
 
             // Get visiblity check data about current object
@@ -680,9 +712,9 @@ namespace SeeingSharp.Multimedia.Core
             if (checkData == null) { return; }
 
             // Execute all filters in configured order step by step
-            int filterCount = filters.Count;
-            bool previousFilterExecuted = false;
-            bool previousFilterResult = true;
+            var filterCount = filters.Count;
+            var previousFilterExecuted = false;
+            var previousFilterResult = true;
             VisibilityCheckFilterStageData lastFilterStageData = null;
 
             for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
@@ -712,7 +744,7 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         // Re-Filter this object because any above condition has passed and
                         // this object successfully past the previous filter
-                        bool isObjectVisible = actFilter.IsObjectVisible(actObject, ViewInformation);
+                        var isObjectVisible = actFilter.IsObjectVisible(actObject, ViewInformation);
 
                         filterStageData.HasExecuted = true;
                         filterStageData.HasPassed = isObjectVisible;
@@ -736,13 +768,16 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle changed visibility of the object
-            bool oldVisible = checkData.IsVisible;
-            bool newVisible = lastFilterStageData != null ? lastFilterStageData.HasPassed : true;
-            if (oldVisible != newVisible)
+            var oldVisible = checkData.IsVisible;
+            var newVisible = lastFilterStageData != null ? lastFilterStageData.HasPassed : true;
+
+            if (oldVisible == newVisible)
             {
-                checkData.IsVisible = newVisible;
-                m_tmpChangedVisibilities.Add(Tuple.Create(actObject, oldVisible, newVisible));
+                return;
             }
+
+            checkData.IsVisible = newVisible;
+            m_tmpChangedVisibilities.Add(Tuple.Create(actObject, oldVisible, newVisible));
         }
 
         /// <summary>
@@ -806,52 +841,54 @@ namespace SeeingSharp.Multimedia.Core
             RenderPassBase renderPass, PassSubscribionProperties subscriptions,
             RenderState renderState, ref List<SceneObject> invalidObjects)
         {
-            if (subscriptions.Subscriptions.Count > 0)
+            if (subscriptions.Subscriptions.Count <= 0)
+            {
+                return;
+            }
+
+            if (renderPass != null)
+            {
+                // Ensure loaded resources for transparency pass
+                if (!renderPass.IsLoaded)
+                {
+                    renderPass.LoadResource();
+                }
+
+                // Render all subscriptions
+                renderPass.Apply(renderState);
+            }
+            try
+            {
+                var subscriptionCount = subscriptions.Subscriptions.Count;
+
+                for (var loopPass = 0; loopPass < subscriptionCount; loopPass++)
+                {
+                    var actSubscription = subscriptions.Subscriptions[loopPass];
+
+                    try
+                    {
+                        actSubscription.RenderMethod(renderState);
+                    }
+                    catch (Exception ex)
+                    {
+                        GraphicsCore.PublishInternalExceptionInfo(
+                            ex, InternalExceptionLocation.Rendering3DObject);
+
+                        // Mark this object as invalid
+                        if (invalidObjects == null)
+                        {
+                            invalidObjects = new List<SceneObject>();
+                        }
+
+                        invalidObjects.Add(actSubscription.SceneObject);
+                    }
+                }
+            }
+            finally
             {
                 if (renderPass != null)
                 {
-                    //Ensure loaded resources for transparency pass
-                    if (!renderPass.IsLoaded)
-                    {
-                        renderPass.LoadResource();
-                    }
-
-                    //Render all subscriptions
-                    renderPass.Apply(renderState);
-                }
-                try
-                {
-                    int subscriptionCount = subscriptions.Subscriptions.Count;
-
-                    for (var loopPass = 0; loopPass < subscriptionCount; loopPass++)
-                    {
-                        var actSubscription = subscriptions.Subscriptions[loopPass];
-
-                        try
-                        {
-                            actSubscription.RenderMethod(renderState);
-                        }
-                        catch (Exception ex)
-                        {
-                            GraphicsCore.PublishInternalExceptionInfo(
-                                ex, InternalExceptionLocation.Rendering3DObject);
-
-                            // Mark this object as invalid
-                            if (invalidObjects == null)
-                            {
-                                invalidObjects = new List<SceneObject>();
-                            }
-
-                            invalidObjects.Add(actSubscription.SceneObject);
-                        }
-                    }
-                }
-                finally
-                {
-                    if (renderPass != null)
-                    {
-                        renderPass.Discard(renderState);
-                    }
+                    renderPass.Discard(renderState);
                 }
             }
         }
@@ -885,7 +922,7 @@ namespace SeeingSharp.Multimedia.Core
         private void HandleInvalidObjects(List<SceneObject> invalidObjects)
         {
             // Register the given objects as invalid
-            foreach(var actInvalidObject in invalidObjects)
+            foreach (var actInvalidObject in invalidObjects)
             {
                 m_invalidObjects.Add(actInvalidObject, null);
                 m_invalidObjectsToDeregister.Enqueue(actInvalidObject);
@@ -902,9 +939,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public ViewInformation ViewInformation { get; }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         /// <summary>
         /// Helper class holding some information abount subscriptions per pass.
         /// </summary>
@@ -914,9 +951,9 @@ namespace SeeingSharp.Multimedia.Core
             internal List<RenderPassSubscription> Subscriptions = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
         }
 
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
+        // *********************************************************************
+        // *********************************************************************
+        // *********************************************************************
         /// <summary>
         /// Helper for sorting render pass subscriptions by z order.
         /// </summary>
