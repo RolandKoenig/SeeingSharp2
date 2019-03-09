@@ -62,8 +62,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 
                 // Create cylinder object
                 var cylinderObject = manipulator.AddGeneric(resGeometry);
-                cylinderObject.Color = Color4Ex.BlueColor;
-                cylinderObject.Position = new Vector3(0f, 0.5f, 0f);
+                cylinderObject.Color = Color4Ex.GreenColor;
                 cylinderObject.EnableShaderGeneratedBorder();
                 cylinderObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))

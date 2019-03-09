@@ -49,6 +49,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             get;
             set;
-        } = 1f;
+        } = 0.5f;
     }
 }

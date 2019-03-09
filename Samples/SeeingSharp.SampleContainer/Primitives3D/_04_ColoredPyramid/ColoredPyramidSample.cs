@@ -29,15 +29,18 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
+namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
 {
     [SampleDescription(
-        "Colored Sphere", 3, nameof(Primitives3D),
+        "Colored Pyramid", 4, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_03_ColoredSphere",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_04_ColoredPyramid",
         typeof(SampleSettingsWith3D))]
-    public class ColoredSphereSample : SampleBase
+    public class ColoredPyramidSample : SampleBase
     {
+        /// <summary>
+        /// Called when the sample has to startup.
+        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
@@ -46,33 +49,27 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
             var scene = targetRenderLoop.Scene;
             var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
             {
                 // Create floor
                 BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create Sphere geometry resource
-                var resGeometry = manipulator.AddResource(
+                // Create Pyramid geometry resource
+                var resPalletGeometry = manipulator.AddResource(
                     () => new GeometryResource(
-                        new SphereGeometryFactory
-                        {
-                            TDiv = 30,
-                            PDiv = 30,
-                            Radius = 0.5f
-                        }));
+                        new PyramidGeometryFactory()));
 
                 // Create Sphere object
-                var sphereObject = manipulator.AddGeneric(resGeometry);
-                sphereObject.Color = Color4Ex.GreenColor;
-                sphereObject.Position = new Vector3(0f, 0.5f, 0f);
-                sphereObject.EnableShaderGeneratedBorder();
-                sphereObject.BuildAnimationSequence()
+                var pyramidObject = manipulator.AddGeneric(resPalletGeometry);
+                pyramidObject.Color = Color4Ex.GreenColor;
+                pyramidObject.EnableShaderGeneratedBorder();
+                pyramidObject.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => sphereObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => pyramidObject.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
             });
 

@@ -37,6 +37,7 @@
     <None Remove="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <None Remove="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
+    <None Remove="Primitives3D\_04_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Background.dds" />
@@ -60,6 +61,7 @@
     <EmbeddedResource Include="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_04_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" Version="4.2.0" />

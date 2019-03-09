@@ -222,6 +222,73 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Create a 4 Side Pyramid
+        /// </summary>
+        public BuiltVerticesRange BuildPyramidFullV(Vector3 lowerMiddle, float width, float height, Color4 color)
+        {
+            var halfWidth = width / 2f;
+            var start = new Vector3(lowerMiddle.X - halfWidth, lowerMiddle.Y, lowerMiddle.Z - halfWidth);
+            var dest = start + new Vector3(width, 0f, width);
+            var centerTopCoordination = new Vector3((dest.X + start.X) / 2, start.Y + height, (dest.Z + start.Z) / 2);
+
+            BuildRect4V(
+                new Vector3(start.X, dest.Y, start.Z),
+                new Vector3(start.X, dest.Y, dest.Z),
+                new Vector3(dest.X, dest.Y, dest.Z),
+                new Vector3(dest.X, dest.Y, start.Z),
+                new Vector3(0f, -1f, 0f),
+                color);
+
+            BuildTriangleV(
+                new Vector3(start.X, dest.Y, start.Z),
+                new Vector3(dest.X, dest.Y, start.Z),
+                centerTopCoordination,
+                color);
+            BuildTriangleV(
+                new Vector3(start.X, dest.Y, dest.Z),
+                new Vector3(start.X, dest.Y, start.Z),
+                centerTopCoordination,
+                color);
+            BuildTriangleV(
+                new Vector3(dest.X, dest.Y, dest.Z),
+                new Vector3(start.X, dest.Y, dest.Z),
+                centerTopCoordination,
+                color);
+            BuildTriangleV(
+                new Vector3(dest.X, dest.Y, start.Z),
+                new Vector3(dest.X, dest.Y, dest.Z),
+                centerTopCoordination,
+                color);
+
+            return new BuiltVerticesRange(Owner, Owner.CountVertices - 4, 4);
+        }
+
+        /// <summary>
+        /// Build a Triangle.
+        /// </summary>
+        public BuiltVerticesRange BuildTriangleV(Vector3 pointA, Vector3 pointB, Vector3 pointC, Color4 color)
+        {
+            var texX = 1f;
+            var texY = 1f;
+
+            if (m_tileSize != Vector2.Zero)
+            {
+                texX = (pointB - pointA).Length() / m_tileSize.X;
+                texY = (pointC - pointB).Length() / m_tileSize.Y;
+            }
+
+            var vertex = new Vertex(pointA, color, new Vector2(0f, texY));
+
+            var a = Owner.AddVertex(vertex);
+            var b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
+            var c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(texX, 0f)));
+
+            AddTriangleAndCalculateNormalsFlat(a, c, b);
+
+            return new BuiltVerticesRange(Owner, Owner.CountVertices - 4, 4);
+        }
+
+        /// <summary>
         /// Builds a cone into the structure with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
@@ -477,8 +544,22 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildShpere(int tDiv, int pDiv, double radius, Color4 color)
         {
-            var startVertex = Owner.CountVertices;
+            Vector3 SphereGetPosition(double theta, double phi)
+            {
+                var x = radius * Math.Sin(theta) * Math.Sin(phi);
+                var y = radius * Math.Cos(phi);
+                var z = radius * Math.Cos(theta) * Math.Sin(phi);
 
+                return new Vector3((float)x, (float)y, (float)z);
+            }
+            Vector2 SphereGetTextureCoordinate(double theta, double phi)
+            {
+                return new Vector2(
+                    (float)(theta / (2 * Math.PI)),
+                    (float)(phi / Math.PI));
+            }
+
+            var startVertex = Owner.CountVertices;
             var dt = Math.PI * 2 / tDiv;
             var dp = Math.PI / pDiv;
 
@@ -491,7 +572,7 @@ namespace SeeingSharp.Multimedia.Objects
                     // we want to start the mesh on the x axis
                     var theta = ti * dt;
 
-                    var position = SphereGetPosition(theta, phi, radius);
+                    var position = SphereGetPosition(theta, phi);
                     var vertex = new Vertex(
                         position,
                         color,
@@ -998,28 +1079,6 @@ namespace SeeingSharp.Multimedia.Objects
                 m_corners[loop - 1] = edge2;
                 m_corners[loop - 2] = edge3;
             }
-        }
-
-        /// <summary>
-        /// Helper method for spehere creation.
-        /// </summary>
-        private Vector3 SphereGetPosition(double theta, double phi, double radius)
-        {
-            var x = radius * Math.Sin(theta) * Math.Sin(phi);
-            var y = radius * Math.Cos(phi);
-            var z = radius * Math.Cos(theta) * Math.Sin(phi);
-
-            return new Vector3((float)x, (float)y, (float)z);
-        }
-
-        /// <summary>
-        /// Helper method for spehere creation.
-        /// </summary>
-        private Vector2 SphereGetTextureCoordinate(double theta, double phi)
-        {
-            return new Vector2(
-                (float)(theta / (2 * Math.PI)),
-                (float)(phi / Math.PI));
         }
     }
 }
