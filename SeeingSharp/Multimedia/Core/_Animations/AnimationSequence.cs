@@ -798,7 +798,7 @@ namespace SeeingSharp.Multimedia.Core
         public TimeSpan TimeTillCurrentAnimationStepFinished => m_timeTillNextPartFinished;
 
         /// <summary>
-        /// Gets or sets the default cycletime (cycles time in continous calculation model).
+        /// Gets or sets the default cycle time (cycles time in continuous calculation model).
         /// </summary>
         public TimeSpan DefaultCycleTime { get; set; } = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
     }

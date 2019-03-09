@@ -24,10 +24,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -35,8 +37,17 @@ namespace SeeingSharp.Util
     {
         public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
         {
+            sourceObject.EnsureNotNull(nameof(sourceObject));
+
             var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
-            return (T)fInfo.GetValue(sourceObject);
+            if (fInfo != null)
+            {
+                return (T)fInfo.GetValue(sourceObject);
+            }
+            else
+            {
+                throw new SeeingSharpException($"Private member {memberName} not found in object of type {sourceObject.GetType().FullName}!");
+            }
         }
 
         /// <summary>
@@ -45,12 +56,15 @@ namespace SeeingSharp.Util
         /// <param name="lst">The list from which to get the backing array for faster loop access.</param>
         public static T[] GetBackingArray<T>(List<T> lst)
         {
-#if !WINRT && !UNIVERSAL
             var fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
-            return fInfo.GetValue(lst) as T[];
-#else
-            return lst.ToArray();
-#endif
+            if (fInfo != null)
+            {
+                return fInfo.GetValue(lst) as T[];
+            }
+            else
+            {
+                throw new SeeingSharpException($"Unable to get backing array from List<T>!");
+            }
         }
 
         /// <summary>
@@ -59,12 +73,15 @@ namespace SeeingSharp.Util
         /// <param name="queue">The queue from which to get the backing array for faster loop access.</param>
         public static T[] GetBackingArray<T>(Queue<T> queue)
         {
-#if !WINRT && !UNIVERSAL
             var fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
-            return fInfo.GetValue(queue) as T[];
-#else
-            return queue.ToArray();
-#endif
+            if (fInfo != null)
+            {
+                return fInfo.GetValue(queue) as T[];
+            }
+            else
+            {
+                throw new SeeingSharpException($"Unable to get backing array from Queue<T>!");
+            }
         }
 
         public static T TryExecute<T>(Func<T> funcToExec)
@@ -87,6 +104,7 @@ namespace SeeingSharp.Util
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -144,14 +162,14 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Formats the given timespan to a compact string.
         /// </summary>
-        /// <param name="timespan">The Tiemspan value to be formated.</param>
+        /// <param name="timespan">The TimeSpan value to be formatted.</param>
         public static string FormatTimespanCompact(TimeSpan timespan)
         {
             return
                 Math.Floor(timespan.TotalHours).ToString("F0") + ":" +
                 timespan.Minutes.ToString().PadLeft(2, '0') + ":" +
                 timespan.Seconds.ToString().PadLeft(2, '0') + ":" +
-                timespan.TotalMilliseconds.ToString().PadLeft(3, '0');
+                timespan.TotalMilliseconds.ToString(CultureInfo.InvariantCulture).PadLeft(3, '0');
         }
 
         /// <summary>
@@ -310,6 +328,7 @@ namespace SeeingSharp.Util
             try { objectToDispose.Dispose(); }
             catch (Exception)
             {
+                // ignored
             }
             return null;
         }
@@ -335,10 +354,7 @@ namespace SeeingSharp.Util
         public static void DisposeObjects<T>(IEnumerable<T> enumeration)
             where T : class, IDisposable
         {
-            if (enumeration == null)
-            {
-                throw new ArgumentNullException("enumeration");
-            }
+            enumeration.EnsureNotNull(nameof(enumeration));
 
             foreach (var actItem in enumeration)
             {

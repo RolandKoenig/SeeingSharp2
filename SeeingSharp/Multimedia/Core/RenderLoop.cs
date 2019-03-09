@@ -592,60 +592,6 @@ namespace SeeingSharp.Multimedia.Core
             return result.Task;
         }
 
-#if DESKTOP
-
-        /// <summary>
-        /// Takes a screenshot and returns it as a gdi bitmap.
-        /// </summary>
-        public Task<GDI.Bitmap> GetScreenshotGdiAsync()
-        {
-            TaskCompletionSource<GDI.Bitmap> result = new TaskCompletionSource<GDI.Bitmap>();
-
-            m_afterPresentActions.Enqueue(() =>
-            {
-                try
-                {
-                    GDI.Bitmap resultBitmap = GetScreenshotGdiInternal();
-
-                    result.SetResult(resultBitmap);
-                }
-                catch (Exception ex)
-                {
-                    result.SetException(ex);
-                }
-            });
-
-            return result.Task;
-        }
-
-        /// <summary>
-        /// Gets a screenshot in form of a gdi bitmap.
-        /// (be careful. This call is executed synchronous.
-        /// </summary>
-        internal GDI.Bitmap GetScreenshotGdiInternal()
-        {
-            // Concept behind this see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-            int width = m_currentViewSize.Width;
-            int height = m_currentViewSize.Height;
-            if (width <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
-            if (height <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
-
-            //Get and read data from the gpu (create copy helper texture on demand)
-            if (m_copyHelperTextureStaging == null)
-            {
-                m_copyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(m_currentDevice, width, height);
-                m_copyHelperTextureStandard = GraphicsHelper.CreateTexture(m_currentDevice, width, height);
-            }
-            m_currentDevice.DeviceImmediateContextD3D11.ResolveSubresource(m_renderTarget, 0, m_copyHelperTextureStandard, 0, GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
-            m_currentDevice.DeviceImmediateContextD3D11.CopyResource(m_copyHelperTextureStandard, m_copyHelperTextureStaging);
-
-            // Load the bitmap
-            GDI.Bitmap resultBitmap = GraphicsHelper.LoadBitmapFromStagingTexture(m_currentDevice, m_copyHelperTextureStaging, width, height);
-            return resultBitmap;
-        }
-
-#endif
-
         /// <summary>
         /// Resets the render counter to zero.
         /// </summary>

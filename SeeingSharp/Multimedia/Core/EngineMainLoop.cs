@@ -318,14 +318,6 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         m_suspendCallWaiterSource.TrySetResult(null);
 
-#if UNIVERSAL
-                        // Call Trim on all devices
-                        foreach(EngineDevice actDevice in m_host.Devices)
-                        {
-                            if(actDevice.DeviceDxgi != null) { actDevice.DeviceDxgi.Trim(); }
-                        }
-#endif
-
                         // Wait for resuming
                         await suspendWaiter;
                     }

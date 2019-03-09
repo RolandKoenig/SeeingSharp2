@@ -62,32 +62,6 @@ namespace SeeingSharp.Multimedia.Core
             m_isMultisampled = textureDesc.SampleDescription.Count > 1 || textureDesc.SampleDescription.Quality > 0;
         }
 
-#if DESKTOP
-        /// <summary>
-        /// Takes a screenshot and returns it as a gdi bitmap.
-        /// </summary>
-        public GDI.Bitmap UploadToGdiBitmap()
-        {
-            // Check current format
-            if ((m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT) &&
-               (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING) &&
-               (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D))
-            {
-                throw new SeeingSharpGraphicsException("Invalid format for texture uploading to gdi bitmap (" + m_format + ")!");
-            }
-
-            // Upload the texture
-            CopyTextureToStagingResource();
-
-            // Load the bitmap
-            GDI.Bitmap resultBitmap = GraphicsHelper.LoadBitmapFromStagingTexture(
-                m_device,
-                m_copyHelperTextureStaging, m_width, m_height);
-
-            return resultBitmap;
-        }
-#endif
-
         /// <summary>
         /// Takes a color texture and uploads it to the given buffer.
         /// </summary>

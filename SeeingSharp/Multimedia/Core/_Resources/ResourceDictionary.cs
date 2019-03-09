@@ -143,18 +143,10 @@ namespace SeeingSharp.Multimedia.Core
             }
             else if (resourceType == typeof(TextureResource))
             {
-#if DESKTOP
-                result = new LinearGradientTextureResource(
-                    Color4.White,
-                    Color4.LightGray,
-                    GradientDirection.Directional,
-                    32, 32) as T;
-#else
                 result = new StandardTextureResource(
                     new AssemblyResourceLink(
                         typeof(ResourceDictionary),
                         "SeeingSharp.Multimedia.Resources.Textures.Blank_16x16.png")) as T;
-#endif
             }
             else if(resourceType == typeof(GeometryResource))
             {
@@ -169,15 +161,9 @@ namespace SeeingSharp.Multimedia.Core
             //Try to create the resource using the standard constructor
             if (result == null)
             {
-#if DESKTOP
-                ConstructorInfo standardConstructor = resourceType.GetConstructor(
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
-                    null, Type.EmptyTypes, null);
-#else
                 var standardConstructor =
                     resourceType.GetTypeInfo().DeclaredConstructors
                     .FirstOrDefault(actConstructor => actConstructor.GetParameters().Length <= 0);
-#endif
                 if (standardConstructor != null)
                 {
                     result = Activator.CreateInstance(resourceType) as T;

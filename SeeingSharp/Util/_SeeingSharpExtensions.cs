@@ -407,41 +407,6 @@ namespace SeeingSharp.Util
             }
         }
 
-#if WINRT || UNIVERSAL
-        /// <summary>
-        /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
-        /// can see them.
-        /// </summary>
-        /// <param name="asyncAction">The action to be fired.</param>
-        public static async void FireAndForget(this IAsyncAction asyncAction)
-        {
-            await asyncAction;
-        }
-
-        /// <summary>
-        /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
-        /// can see them.
-        /// </summary>
-        /// <param name="asyncAction">The action to be fired.</param>
-        public static async void FireAndForget(this Task asyncAction)
-        {
-            await asyncAction;
-        }
-#endif
-
-#if DESKTOP
-        /// <summary>
-        /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
-        /// can see them.
-        /// </summary>
-        /// <param name="asyncAction">The action to be fired.</param>
-        public static async void FireAndForget(this Task asyncAction)
-        {
-            await asyncAction;
-        }
-
-#endif
-
         /// <summary>
         /// Posts the given action to the given synchronization context also if it is null.
         /// If it is null, then a new task will be started.
@@ -522,7 +487,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Executes a delayd post to the given synchronization context.
+        /// Executes a delayed post to the given synchronization context.
         /// </summary>
         /// <param name="syncContext">The synchronization context to post to.</param>
         /// <param name="callBack">The delegate to be called.</param>

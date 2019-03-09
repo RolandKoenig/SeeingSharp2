@@ -106,19 +106,11 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-#if DESKTOP
             if (!File.Exists(filePath))
             {
-                throw new SeeingSharpCheckException(string.Format(
-                    "Filepath {0} within method {1} could not be resolved (value: {2})!",
-                    checkedVariableName, callerMethod,
-                    filePath));
+                throw new SeeingSharpCheckException(
+                    $"Filepath {checkedVariableName} within method {callerMethod} could not be resolved (value: {filePath})!");
             }
-#else
-            // Not possible on WinRT at all (no direct filesystem access)
-            throw new SeeingSharpCheckException(
-                $"Filepath {checkedVariableName} within method {callerMethod} could not be resolved (value: {filePath})!");
-#endif
         }
     }
 }
