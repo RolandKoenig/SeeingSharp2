@@ -78,13 +78,11 @@ namespace SeeingSharp.Multimedia.Core
 
             // Handle Y-Filter
             if (m_enableYFilter &&
-                m_yFilterMin != m_yFilterMax &&
-                m_yFilterMax > m_yFilterMin &&
-                m_yFilterMax - m_yFilterMin > 0.1f)
+                (!EngineMath.EqualsWithTolerance(m_yFilterMin, m_yFilterMax)) &&
+                (m_yFilterMax > m_yFilterMin) &&
+                (m_yFilterMax - m_yFilterMin > 0.1f))
             {
-                var spacialObject = input as SceneSpacialObject;
-
-                if (spacialObject != null)
+                if (input is SceneSpacialObject spacialObject)
                 {
                     // Get the bounding box of the object
                     var boundingBox = spacialObject.TryGetBoundingBox(viewInfo);
@@ -135,7 +133,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_yFilterMin;
             set
             {
-                if (m_yFilterMin != value)
+                if (!EngineMath.EqualsWithTolerance(m_yFilterMin, value))
                 {
                     m_yFilterMin = value;
                     RaiseFilterConfigurationChanged();
@@ -151,7 +149,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_yFilterMax;
             set
             {
-                if (m_yFilterMax != value)
+                if (!EngineMath.EqualsWithTolerance(m_yFilterMax, value))
                 {
                     m_yFilterMax = value;
                     RaiseFilterConfigurationChanged();

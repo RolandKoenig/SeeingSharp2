@@ -86,7 +86,12 @@ namespace SeeingSharp.Multimedia.Core
                 return false;
             }
 
-            return Equals((EngineOutputInfo)value);
+            var other = (EngineOutputModeInfo)value;
+            return
+                PixelWidth == other.PixelWidth &&
+                PixelHeight == other.PixelHeight &&
+                RefreshRateNumerator == other.RefreshRateNumerator &&
+                RefreshRateDenominator == other.RefreshRateDenominator;
         }
 
         public EngineOutputInfo HostOutput { get; }

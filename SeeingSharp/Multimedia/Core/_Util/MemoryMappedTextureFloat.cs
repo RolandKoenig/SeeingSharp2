@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Read current value and compare with last one
                 //  (If equal, than at least two pixels are the same => Return this ObjectID)
                 var currObjID = m_pointerNative[currentY * m_size.Width + currentX];
-                if (currObjID == lastObjID) { return currObjID; }
+                if (EngineMath.EqualsWithTolerance(currObjID, lastObjID)) { return currObjID; }
 
                 // No match found, continue with next one
                 lastObjID = currObjID;
@@ -97,9 +97,6 @@ namespace SeeingSharp.Multimedia.Core
             return 0f;
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             Marshal.FreeHGlobal(m_pointer);

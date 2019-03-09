@@ -70,17 +70,15 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void SetAllAlphaValuesToOne_ARGB()
         {
-            var alphaByteValue = 0xFF000000;
+            const uint ALPHA_BYTE_VALUE = 0xFF000000;
+
             var pointerUInt = (uint*)m_pointerNative;
             for (var loopIndex = 0; loopIndex < CountInts; loopIndex++)
             {
-                pointerUInt[loopIndex] |= alphaByteValue;
+                pointerUInt[loopIndex] |= ALPHA_BYTE_VALUE;
             }
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             Marshal.FreeHGlobal(m_pointer);

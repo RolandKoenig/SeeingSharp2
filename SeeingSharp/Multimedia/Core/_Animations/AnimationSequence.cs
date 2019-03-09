@@ -65,10 +65,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void BeginCancelAnimation()
         {
-            m_preUpdateActions.Enqueue(() =>
-            {
-                CancelAnimations();
-            });
+            m_preUpdateActions.Enqueue(CancelAnimations);
             Interlocked.Increment(ref m_preUpdateActionsCount);
         }
 
@@ -198,8 +195,6 @@ namespace SeeingSharp.Multimedia.Core
             PreCheckExecutionInternal();
             try
             {
-                var countSteps = 0;
-
                 PrecalculateAnimations();
 
                 // Create shared UpdateState object
@@ -217,9 +212,8 @@ namespace SeeingSharp.Multimedia.Core
                     var timeTillNext = TimeTillCurrentAnimationStepFinished;
                     updateState.Reset(timeTillNext);
                     var updateResult = Update(updateState);
-                    countSteps++;
 
-                    // Generate resport data
+                    // Generate report data
                     steps.Add(new EventDrivenStepInfo
                     {
                         AnimationCount = updateResult.CountFinishedAnimations,
@@ -451,11 +445,11 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
-        /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
+        /// This method is relevant for event-driven processing and tells the system by what amount the clock is to be increased next.
         /// </summary>
         /// <param name="previousMinFinishTime">The minimum TimeSpan previous animations take.</param>
         /// <param name="previousMaxFinishTime">The maximum TimeSpan previous animations take.</param>
-        /// <param name="defaultCycleTime">The default cycle time if we would be in continous calculation mode.</param>
+        /// <param name="defaultCycleTime">The default cycle time if we would be in continuous calculation mode.</param>
         public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
             return m_timeTillNextPartFinished;
@@ -528,8 +522,7 @@ namespace SeeingSharp.Multimedia.Core
         private void PerformPreupdateActionsInternal(bool updateTimeTillNextTime = false)
         {
             // Walk through preupdate action queue and perform each
-            Action actPreUpdateAction = null;
-            while (m_preUpdateActions.TryDequeue(out actPreUpdateAction))
+            while (m_preUpdateActions.TryDequeue(out var actPreUpdateAction))
             {
                 Interlocked.Decrement(ref m_preUpdateActionsCount);
                 actPreUpdateAction();
@@ -666,7 +659,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateState">Current update state.</param>
         /// <param name="animationState">Current animation state.</param>
         /// <param name="animationQueue">The queue which should be updated.</param>
-        private bool UpdateQueueInternal(IAnimationUpdateState updateState, AnimationState animationState, Queue<IAnimation> animationQueue)
+        private bool UpdateQueueInternal(IAnimationUpdateState updateState, AnimationState animationState, IEnumerable<IAnimation> animationQueue)
         {
             var anyFinishedOrCanceled = false;
             var animationStateInner = new AnimationState();

@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Updades all subscription info for given subscription row.
+        /// Updates all subscription info for given subscription row.
         /// This method is needed because 'RenderPassSubscription" is a struct and values are changed by host object.
         /// </summary>
         /// <param name="newSubscriptionInfo">The subscription information passed by host object.</param>

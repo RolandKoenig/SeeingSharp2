@@ -22,7 +22,7 @@
 namespace SeeingSharp.Multimedia.Core
 {
     /// <summary>
-    /// Helper structure which holds informatin about all currently
+    /// Helper structure which holds information about all currently
     /// attached components.
     /// </summary>
     internal struct SceneComponentInfo
@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Core
 
     /// <summary>
     /// Helper structure which holds information about a request
-    /// for a component (attach, detach) which normaly comes
+    /// for a component (attach, detach) which normally comes
     /// from the UI thread
     /// </summary>
     internal struct SceneComponentRequest

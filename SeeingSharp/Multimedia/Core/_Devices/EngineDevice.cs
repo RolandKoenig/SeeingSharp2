@@ -44,7 +44,6 @@ namespace SeeingSharp.Multimedia.Core
         private Adapter1 m_adapter1;
         private AdapterDescription1 m_adapterDesc1;
         private DeviceLoadSettings m_deviceLoadSettings;
-        private EngineFactory m_engineFactory;
 
         // Some configuration
         private bool m_isDetailLevelForced;
@@ -78,7 +77,6 @@ namespace SeeingSharp.Multimedia.Core
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
-            m_engineFactory = engineFactory;
             m_deviceLoadSettings = loadSettings;
             m_adapter1 = adapter;
             m_adapterDesc1 = m_adapter1.Description1;
@@ -99,6 +97,7 @@ namespace SeeingSharp.Multimedia.Core
                 InitializationException = ex;
                 m_handlerD3D11 = null;
                 m_handlerDXGI = null;
+                return;
             }
 
             // Set default configuration
@@ -114,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
             // Initialize direct2D handler finally
             if (m_handlerD3D11 != null)
             {
-                m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
+                m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, engineFactory, this);
                 FakeRenderTarget2D = m_handlerD2D.RenderTarget;
             }
 
@@ -179,8 +178,6 @@ namespace SeeingSharp.Multimedia.Core
         public override string ToString()
         {
             return AdapterDescription;
-            //if (m_initializationException != null) { return m_adapter1.Description1.Description; }
-            //else { return m_handlerD3D11.DeviceModeDescription; }
         }
 
         /// <summary>
@@ -234,7 +231,7 @@ namespace SeeingSharp.Multimedia.Core
             // Check for quality levels
             var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
             var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
-            var hightQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
+            var highQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
 
             // Generate sample descriptions for each possible quality level
             if (lowQualityLevels > 0)
@@ -245,9 +242,9 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_antialiasingConfigMedium = new SampleDescription(4, mediumQualityLevels - 1);
             }
-            if (hightQualityLevels > 0)
+            if (highQualityLevels > 0)
             {
-                m_antialiasingConfigHigh = new SampleDescription(8, hightQualityLevels - 1);
+                m_antialiasingConfigHigh = new SampleDescription(8, highQualityLevels - 1);
             }
 
             return lowQualityLevels > 0;

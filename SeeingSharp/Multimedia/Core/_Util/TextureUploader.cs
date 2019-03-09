@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         private Format m_format;
         private bool m_isMultisampled;
 
-        //Direct3D resources for rendertarget capturing
+        //Direct3D resources for render target capturing
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
@@ -107,8 +107,8 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Upload a floatingpoint texture from the graphics hardware.
-        /// This method is only valid for resources of type R32_Floatfloat.
+        /// Upload a floating point texture from the graphics hardware.
+        /// This method is only valid for resources of type R32_Float.
         /// </summary>
         public MemoryMappedTextureFloat UploadToFloatBuffer()
         {
@@ -119,8 +119,8 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Upload a floatingpoint texture from the graphics hardware.
-        /// This method is only valid for resources of type R32_Floatfloat.
+        /// Upload a floating point texture from the graphics hardware.
+        /// This method is only valid for resources of type R32_Float.
         /// </summary>
         /// <param name="floatBuffer">The target float buffer to which to copy all ObjectIDs.</param>
         public void UploadToFloatBuffer(MemoryMappedTextureFloat floatBuffer)
@@ -199,9 +199,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);

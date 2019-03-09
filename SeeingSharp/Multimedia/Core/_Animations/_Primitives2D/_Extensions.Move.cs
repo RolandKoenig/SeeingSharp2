@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object by the given move vector.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="moveVector">The move vector.</param>
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object by the given move vector.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="moveVector">The move vector.</param>
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object by the given move vector.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="moveVector">The move vector.</param>
@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Moves current object to the given target position.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetVector">The target position for the object.</param>
         /// <param name="speed">The speed for animation calculation.</param>
@@ -171,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Moves current object to the given target position.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetVector">The target position for the object.</param>
         /// <param name="speed">The speed for animation calculation.</param>
@@ -190,7 +190,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object to the given target position.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetVector">The target position for the object.</param>
@@ -209,7 +209,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object to the given target position.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetVector">The target position for the object.</param>
@@ -228,7 +228,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object to the given target position.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObjects">A collection containing all target objects.</param>
         /// <param name="targetVector">The target position for the object.</param>
@@ -250,7 +250,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object to the given target position.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObjects">A collection containing all target objects.</param>
         /// <param name="targetVector">The target position for the object.</param>
@@ -271,7 +271,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Moves current object to the given target position.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetVector">The target position for the object.</param>

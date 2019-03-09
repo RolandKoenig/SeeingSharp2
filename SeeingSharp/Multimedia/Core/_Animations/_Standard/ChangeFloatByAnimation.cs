@@ -28,12 +28,11 @@ namespace SeeingSharp.Multimedia.Core
     {
         //Members for running animation
         private float m_alreadyIncreased;
+
         //Configuration members
         private Func<float> m_getValueFunc;
         private float m_increaseTotal;
-
         private Action<float> m_setValueAction;
-        private TimeSpan m_timeSpan;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeFloatByAnimation" /> class.
@@ -49,7 +48,6 @@ namespace SeeingSharp.Multimedia.Core
             m_getValueFunc = getValueFunc;
             m_setValueAction = setValueAction;
             m_increaseTotal = increaseTotal;
-            m_timeSpan = timeSpan;
         }
 
         /// <summary>

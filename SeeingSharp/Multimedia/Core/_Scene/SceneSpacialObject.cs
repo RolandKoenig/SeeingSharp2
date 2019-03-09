@@ -48,14 +48,14 @@ namespace SeeingSharp.Multimedia.Core
         private Matrix m_customTransform;
         private SceneSpacialObject m_transformSourceObject;
         private bool m_transformParamsChanged;
-        private bool m_forceTransformUpdateOnChilds;
+        private bool m_forceTransformUpdateOnChildren;
 
         // Rendering parameters
         private Color4 m_color;
         private float m_accentuationFactor;
         private float m_opacity;
         private float m_borderPart;
-        private float m_borderMultiplyer;
+        private float m_borderMultiplier;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneSpacialObject"/> class.
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
             m_color = Color4.White;
             m_accentuationFactor = 0f;
             m_borderPart = 0.01f;
-            m_borderMultiplyer = 0f;
+            m_borderMultiplier = 0f;
 
             m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
             m_position = Vector3.Zero;
@@ -85,10 +85,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Enables a shader generated border.
         /// </summary>
-        public void EnableShaderGeneratedBorder(float borderThicknes = 1f)
+        public void EnableShaderGeneratedBorder(float borderThickness = 1f)
         {
-            BorderMultiplyer = 50f;
-            BorderPart = 0.01f * borderThicknes;
+            BorderMultiplier = 50f;
+            BorderPart = 0.01f * borderThickness;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void DisableShaderGeneratedBorder()
         {
-            BorderMultiplyer = 0f;
+            BorderMultiplier = 0f;
             BorderPart = 0f;
         }
 
@@ -193,7 +193,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Streaves the object.
+        /// Straves the object.
         /// </summary>
         public void StraveAtPlane(float points)
         {
@@ -277,14 +277,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             //Calculates local transform matrix (transforms local space to world space)
             var doRecreateShaderParameters = false;
-            TransormationChanged =
+            TransformationChanged =
                 m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds;
 
             // Update local transform matrix if transform values have changed
             if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds)
             {
                 m_transformParamsChanged = false;
-                m_forceTransformUpdateOnChilds = HasChilds;
+                m_forceTransformUpdateOnChildren = HasChildren;
                 doRecreateShaderParameters = true;
 
                 // Calculate new transformation matrix
@@ -380,8 +380,8 @@ namespace SeeingSharp.Multimedia.Core
         protected override void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             var prevForceState = updateState.ForceTransformUpdatesOnChilds;
-            updateState.ForceTransformUpdatesOnChilds = prevForceState || m_forceTransformUpdateOnChilds;
-            m_forceTransformUpdateOnChilds = false;
+            updateState.ForceTransformUpdatesOnChilds = prevForceState || m_forceTransformUpdateOnChildren;
+            m_forceTransformUpdateOnChildren = false;
             try
             {
                 var childCount = children.Count;
@@ -421,7 +421,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The render state on which to apply.</param>
         internal void UpdateAndApplyRenderParameters(RenderState renderState)
         {
-            // Get or create RenderParamters object on object level
+            // Get or create RenderParameters object on object level
             var renderParameters = RenderParameters[renderState.DeviceIndex];
 
             if (renderParameters == null)
@@ -442,7 +442,7 @@ namespace SeeingSharp.Multimedia.Core
                     Opacity = m_opacity,
                     World = Matrix.Transpose(m_transform),
                     BorderPart = m_borderPart,
-                    BorderMultiplyer = m_borderMultiplyer,
+                    BorderMultiplyer = m_borderMultiplier,
                     ObjectScaling = m_scaling
                 };
 
@@ -477,7 +477,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_accentuationFactor;
             set
             {
-                if (m_accentuationFactor != value)
+                if (!EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
                 {
                     m_accentuationFactor = value;
                     TriggerRecreateOfParameters();
@@ -506,7 +506,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_opacity;
             set
             {
-                if (m_opacity != value)
+                if (!EngineMath.EqualsWithTolerance(m_opacity, value))
                 {
                     m_opacity = value;
 
@@ -727,7 +727,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_borderPart;
             set
             {
-                if (m_borderPart != value)
+                if (!EngineMath.EqualsWithTolerance(m_borderPart, value))
                 {
                     m_borderPart = value;
                     TriggerRecreateOfParameters();
@@ -735,14 +735,14 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public float BorderMultiplyer
+        public float BorderMultiplier
         {
-            get => m_borderMultiplyer;
+            get => m_borderMultiplier;
             set
             {
-                if (m_borderMultiplyer != value)
+                if (!EngineMath.EqualsWithTolerance(m_borderMultiplier, value))
                 {
-                    m_borderMultiplyer = value;
+                    m_borderMultiplier = value;
                     TriggerRecreateOfParameters();
                 }
             }

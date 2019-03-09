@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
-        /// It may also be called from multiple scenes in parallel or simply withoud previous Detach call.
+        /// It may also be called from multiple scenes in parallel or simply without previous Detach call.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>

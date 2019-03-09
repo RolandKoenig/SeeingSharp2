@@ -27,7 +27,7 @@ using SeeingSharp.Util;
 namespace SeeingSharp.Multimedia.Core
 {
     /// <summary>
-    /// This is mostly logic of the Scene class but experted here
+    /// This is mostly logic of the Scene class but extracted here
     /// following the Flyweight pattern.
     /// </summary>
     internal class SceneComponentFlyweight
@@ -119,11 +119,8 @@ namespace SeeingSharp.Multimedia.Core
                     m_attachedComponents[loop].Context);
             }
 
-            // Attach all components which are comming in
-            var actRequest = default(SceneComponentRequest);
-            var actIndex = 0;
-
-            while (m_componentRequests.Dequeue(out actRequest))
+            // Attach all components which are coming in
+            while (m_componentRequests.Dequeue(out var actRequest))
             {
                 SceneComponentInfo actComponent;
                 int actComponentIndex;
@@ -173,8 +170,6 @@ namespace SeeingSharp.Multimedia.Core
                                 Context = actRequest.Component.AttachInternal(
                                     actManipulator, actRequest.CorrespondingView)
                             };
-
-                            actIndex++;
 
                             // Register the component on local list of attached ones
                             m_attachedComponents.Add(newRegisteredComponentInfo);

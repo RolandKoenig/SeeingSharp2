@@ -77,11 +77,11 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// </summary>
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null)
         {
             if (AnimationHandler == null)
@@ -110,11 +110,11 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// </summary>
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void ApplyAsSecondary(Action actionToCall, Action cancelAction, bool? ignorePause = null)
         {
             if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// The caller can await the finish of this animation using the returned task object.
         /// </summary>
         public Task ApplyAsync()
@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// The caller can await the finish of this animation using the returned task object.
         /// </summary>
         public Task ApplyAsSecondaryAsync()
@@ -172,15 +172,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Finishes the animation and starts from beginning.
         /// </summary>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void ApplyAndRewind(bool? ignorePause = null)
         {
             if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 
             // Define rewind action
             //  a bit complicated because there a problems with the finished flag
-            Action rewindAction = null;
-            rewindAction = () =>
+            void RewindAction()
             {
                 var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
                 foreach (var actAnimationStep in m_sequenceList)
@@ -188,13 +187,13 @@ namespace SeeingSharp.Multimedia.Core
                     actAnimationStep.Reset();
                     newAnimationList.Add(actAnimationStep);
                 }
-                newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(rewindAction);
+                newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(RewindAction);
                 AnimationHandler.BeginAnimation(newAnimationList);
-            };
+            }
 
-            // Apend rewind action to the sequence
+            // Append rewind action to the sequence
             this.WaitFinished()
-                .CallAction(rewindAction);
+                .CallAction(RewindAction);
 
             // Change the 'Ignore pause state'
             if (ignorePause != null)
@@ -219,8 +218,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Define rewind action
             //  a bit complicated because there a problems with the finished flag
-            Action rewindAction = null;
-            rewindAction = () =>
+            void RewindAction()
             {
                 var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
                 foreach (var actAnimationStep in m_sequenceList)
@@ -228,13 +226,13 @@ namespace SeeingSharp.Multimedia.Core
                     actAnimationStep.Reset();
                     newAnimationList.Add(actAnimationStep);
                 }
-                newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(rewindAction);
+                newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(RewindAction);
                 AnimationHandler.BeginSecondaryAnimation(newAnimationList);
-            };
+            }
 
-            // Apend rewind action to the sequence
+            // Append rewind action to the sequence
             this.WaitFinished()
-                .CallAction(rewindAction);
+                .CallAction(RewindAction);
 
             // Start the animation
             AnimationHandler.BeginSecondaryAnimation(m_sequenceList);

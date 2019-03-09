@@ -55,10 +55,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public override void OnCanceled()
         {
-            if (m_cancelAction != null)
-            {
-                m_cancelAction();
-            }
+            m_cancelAction?.Invoke();
         }
 
         /// <summary>
@@ -66,10 +63,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            if(m_actionToCall != null)
-            {
-                m_actionToCall();
-            }
+            m_actionToCall?.Invoke();
         }
     }
 }

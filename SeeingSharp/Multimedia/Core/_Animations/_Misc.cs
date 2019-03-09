@@ -124,7 +124,6 @@ namespace SeeingSharp.Multimedia.Core
         public IAnimation Animation
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -133,7 +132,6 @@ namespace SeeingSharp.Multimedia.Core
         public Exception Exception
         {
             get;
-            private set;
         }
     }
 }

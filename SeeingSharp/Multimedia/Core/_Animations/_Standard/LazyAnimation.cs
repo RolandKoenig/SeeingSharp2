@@ -70,18 +70,17 @@ namespace SeeingSharp.Multimedia.Core
         public void Reset()
         {
             if (m_animation == null) { m_animation = m_animationCreator(); }
-            if (m_animation == null) { return; }
 
-            m_animation.Reset();
+            m_animation?.Reset();
         }
 
         /// <summary>
         /// Gets the time in milliseconds till this animation is finished.
-        /// This method is relevant for event-driven processing and tells the system by what amound the clock is to be increased next.
+        /// This method is relevant for event-driven processing and tells the system by what amount the clock is to be increased next.
         /// </summary>
         /// <param name="previousMinFinishTime">The minimum TimeSpan previous animations take.</param>
         /// <param name="previousMaxFinishTime">The maximum TimeSpan previous animations take.</param>
-        /// <param name="defaultCycleTime">The default cycle time if we would be in continous calculation mode.</param>
+        /// <param name="defaultCycleTime">The default cycle time if we would be in continuous calculation mode.</param>
         public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
             if (m_animation == null) { m_animation = m_animationCreator(); }

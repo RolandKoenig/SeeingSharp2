@@ -35,15 +35,15 @@ namespace SeeingSharp.Multimedia.Core
         IAnimationSequenceBuilder<TargetType> Add(IAnimation animationSequence);
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// </summary>
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null);
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// The caller can await the finish of this animation using the returned task object.
         /// </summary>
         Task ApplyAsync();
@@ -51,19 +51,19 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Finishes the animation and starts from beginning.
         /// </summary>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         void ApplyAndRewind(bool? ignorePause = null);
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// </summary>
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
-        /// <param name="ignorePause">Should this animation ignore pause stateß</param>
+        /// <param name="ignorePause">Should this animation ignore pause state</param>
         void ApplyAsSecondary(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null);
 
         /// <summary>
-        /// Finishes the AnimationSequence and adds it to the AninationHandler it was created with.
+        /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
         /// The caller can await the finish of this animation using the returned task object.
         /// </summary>
         Task ApplyAsSecondaryAsync();

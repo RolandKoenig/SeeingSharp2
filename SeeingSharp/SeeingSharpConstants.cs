@@ -50,7 +50,6 @@ namespace SeeingSharp
         public const string PERF_RENDERLOOP_PRESENT = "Graphics.RenderLoop.Present (Scene: {0}, View: {1})";
         public const string PERF_RENDERLOOP_RENDER = "Graphics.RenderLoop.Render (Scene: {0}, View: {1})";
         public const string PERF_RENDERLOOP_RENDER_2D = "Graphics.RenderLoop.Render.2D (Scene: {0}, View: {1})";
-        public const double UPDATE_DEFAULT_CYCLE_MS = 50.0;
         public const long UPDATE_DEFAULT_CYCLES_TICKS = 500000;
 
         // Constants for animation system

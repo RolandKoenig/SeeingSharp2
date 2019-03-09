@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Core
             //Create a dynamic container for custom data
             CustomData = new ExpandoObject();
 
-            TransormationChanged = true;
+            TransformationChanged = true;
             IsPickingTestVisible = true;
         }
 
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The view info to check.</param>
         public bool IsVisible(ViewInformation viewInfo)
         {
-            if (viewInfo.ViewIndex < 0) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not assoziated to any view!"); }
+            if (viewInfo.ViewIndex < 0) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not associated to any view!"); }
             if (viewInfo.Scene == null) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to any scene!"); }
             if (viewInfo.Scene != Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
-        /// <param name="resourceDictionary">Current resource dicionary.</param>
+        /// <param name="resourceDictionary">Current resource dictionary.</param>
         public abstract void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary);
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Updates this object for the given view.
         /// </summary>
         /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected abstract void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset);
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
+        /// This method stores all data related to this object into the given <see cref="ExportModelContainer"/>.
         /// </summary>
         /// <param name="modelContainer">The target container.</param>
         /// <param name="exportOptions">Options for export.</param>
@@ -317,7 +317,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// This methode stores all data related to this object into the given <see cref="ExportModelContainer"/>.
+        /// This method stores all data related to this object into the given <see cref="ExportModelContainer"/>.
         /// </summary>
         /// <param name="modelContainer">The target container.</param>
         /// <param name="exportOptions">Options for export.</param>
@@ -387,7 +387,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void AddChildInternal(SceneObject childToAdd)
         {
             if (childToAdd == this) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
-            if (childToAdd.Scene != Scene) { throw new SeeingSharpGraphicsException("Child musst have the same scene!"); }
+            if (childToAdd.Scene != Scene) { throw new SeeingSharpGraphicsException("Child must have the same scene!"); }
             if (childToAdd.m_parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
             if (childToAdd.IsParentOf(this)) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
             if (m_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
@@ -403,7 +403,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
         internal void RemoveChildInternal(SceneObject childToRemove)
         {
-            if (childToRemove.Scene != Scene) { throw new ArgumentException("Child musst have the same scene!"); }
+            if (childToRemove.Scene != Scene) { throw new ArgumentException("Child must have the same scene!"); }
 
             // Destroy parent/child relation
             m_children.Remove(childToRemove);
@@ -428,7 +428,6 @@ namespace SeeingSharp.Multimedia.Core
         internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
         {
             var checkData = m_visibilityData[viewInfo.ViewIndex];
-
             if (checkData == null)
             {
                 checkData = m_visibilityData.AddObject(
@@ -514,10 +513,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update current animation state
-            if (m_animationHandler != null)
-            {
-                m_animationHandler.Update(updateState);
-            }
+            m_animationHandler?.Update(updateState);
 
             // Update the object
             UpdateInternal(updateState);
@@ -554,7 +550,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Updates this object for the given view.
         /// </summary>
         /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         internal void UpdateForView(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             UpdateForViewInternal(updateState, layerViewSubset);
@@ -638,12 +634,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Does this object have any child?
         /// </summary>
-        public bool HasChilds
+        public bool HasChildren
         {
             get
             {
-                var childs = m_children;
-                return childs != null && childs.Count > 0;
+                var children = m_children;
+                return children != null && children.Count > 0;
             }
         }
 
@@ -664,6 +660,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Indicates whether transformation data has changed during last update calls.
         /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
         /// </summary>
-        internal bool TransormationChanged;
+        internal bool TransformationChanged;
     }
 }

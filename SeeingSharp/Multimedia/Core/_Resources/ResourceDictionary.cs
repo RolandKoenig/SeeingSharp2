@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
@@ -210,12 +211,13 @@ namespace SeeingSharp.Multimedia.Core
         internal ResourceType AddResource<ResourceType>(NamedOrGenericKey resourceKey, ResourceType resource)
             where ResourceType : Resource
         {
+            resource.EnsureNotNull(nameof(resource));
+
             //Perform some checks
-            if (resource == null) { throw new ArgumentNullException("resource"); }
             if (resource.Dictionary != null)
             {
                 if (resource.Dictionary == this) { return resource; }
-                if (resource.Dictionary != this) { throw new ArgumentException("Given resource belongs to another ResourceDictionary!", "resource"); }
+                if (resource.Dictionary != this) { throw new ArgumentException("Given resource belongs to another ResourceDictionary!", nameof(resource)); }
             }
 
             //Check given keys
@@ -285,42 +287,6 @@ namespace SeeingSharp.Multimedia.Core
             m_resourcesMarkedForUnloading.Enqueue(resourceToUnload);
         }
 
-        ///// <summary>
-        ///// Adds a new material for texture drawing pointing to the given texture resource.
-        ///// </summary>
-        ///// <param name="textureResourceKey">The key of the texture the material is pointing to.</param>
-        //public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey textureResourceKey)
-        //{
-        //    return this.AddResource(new SimpleColoredMaterialResource(textureResourceKey));
-        //}
-
-        ///// <summary>
-        ///// Adds a new material for texture drawing pointing to the given texture resource.
-        ///// </summary>
-        ///// <param name="resourceKey">The key of the resource.</param>
-        ///// <param name="textureResourceKey">The key of the texture the material is pointing to.</param>
-        //public SimpleColoredMaterialResource AddSimpleTexturedMaterial(NamedOrGenericKey resourceKey, NamedOrGenericKey textureResourceKey)
-        //{
-        //    return this.AddResource(resourceKey, new SimpleColoredMaterialResource(textureResourceKey));
-        //}
-
-        ///// <summary>
-        ///// Adds a new material for drawing a simple colored mesh.
-        ///// </summary>
-        //public SimpleColoredMaterialResource AddSimpleColoredMaterial()
-        //{
-        //    return this.AddResource(new SimpleColoredMaterialResource());
-        //}
-
-        ///// <summary>
-        ///// Adds a new material for drawing a simple colored mesh.
-        ///// </summary>
-        ///// <param name="resourceKey">The key of the resource.</param>
-        //public SimpleColoredMaterialResource AddSimpleColoredMaterial(NamedOrGenericKey resourceKey)
-        //{
-        //    return this.AddResource(resourceKey, new SimpleColoredMaterialResource());
-        //}
-
         /// <summary>
         /// Adds the given resource to the dictionary and loads it directly.
         /// </summary>
@@ -336,7 +302,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Removes the resource with the givenkey.
+        /// Removes the resource with the given key.
         /// </summary>
         /// <param name="key">The key to check.</param>
         internal void RemoveResource(NamedOrGenericKey key)
@@ -361,15 +327,13 @@ namespace SeeingSharp.Multimedia.Core
         /// the resource if it is not available yet.
         /// </summary>
         /// <param name="resourceKey">Key of the resource.</param>
-        /// <param name="createMethod">Method wich creates the resource.</param>
+        /// <param name="createMethod">Method which creates the resource.</param>
         internal T GetResource<T>(NamedOrGenericKey resourceKey, Func<T> createMethod)
             where T : Resource
         {
             if (m_resources.ContainsKey(resourceKey))
             {
-                var result = m_resources[resourceKey].Resource as T;
-
-                if (result != null)
+                if (m_resources[resourceKey].Resource is T result)
                 {
                     return result;
                 }
@@ -388,7 +352,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the resource with the gien name.
+        /// Gets the resource with the given name.
         /// </summary>
         /// <typeparam name="T">Type of the resource.</typeparam>
         /// <param name="resourceKey">Key of the resource.</param>
@@ -431,7 +395,7 @@ namespace SeeingSharp.Multimedia.Core
         /// the resource if it is not available yet.
         /// </summary>
         /// <param name="resourceKey">Key of the resource.</param>
-        /// <param name="createMethod">Method wich creates the resource.</param>
+        /// <param name="createMethod">Method which creates the resource.</param>
         internal T GetResourceAndEnsureLoaded<T>(NamedOrGenericKey resourceKey, Func<T> createMethod)
             where T : Resource
         {

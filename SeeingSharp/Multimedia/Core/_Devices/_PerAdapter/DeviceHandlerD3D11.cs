@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
     // Overview Feature levels:
     //http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx
 
-    // Informations on WARP
+    // Information on WARP
     //http://msdn.microsoft.com/en-us/library/windows/desktop/gg615082(v=vs.85).aspx#capabilities
 
     /// <summary>
@@ -60,19 +60,18 @@ namespace SeeingSharp.Multimedia.Core
 
             // Define possible create flags
             var createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
-            var createFlags = D3D11.DeviceCreationFlags.None;
-
+            var createFlagsNormal = D3D11.DeviceCreationFlags.None;
             if (deviceLoadSettings.DebugEnabled)
             {
                 createFlagsBgra |= D3D11.DeviceCreationFlags.Debug;
-                createFlags |= D3D11.DeviceCreationFlags.Debug;
+                createFlagsNormal |= D3D11.DeviceCreationFlags.Debug;
             }
 
             // Define all steps on which we try to initialize Direct3D
             var initParameterQueue =
                 new List<Tuple<D3D.FeatureLevel, D3D11.DeviceCreationFlags, HardwareDriverLevel>>();
 
-            // Define all trys for hardware initialization
+            // Define all tries for hardware initialization
             initParameterQueue.Add(Tuple.Create(
                 D3D.FeatureLevel.Level_11_1, createFlagsBgra, HardwareDriverLevel.Direct3D11));
             initParameterQueue.Add(Tuple.Create(
@@ -86,25 +85,21 @@ namespace SeeingSharp.Multimedia.Core
             initParameterQueue.Add(Tuple.Create(
                 D3D.FeatureLevel.Level_9_1, createFlagsBgra, HardwareDriverLevel.Direct3D9_1));
             initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_10_0, createFlags, HardwareDriverLevel.Direct3D10));
+                D3D.FeatureLevel.Level_10_0, createFlagsNormal, HardwareDriverLevel.Direct3D10));
             initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_3, createFlags, HardwareDriverLevel.Direct3D9_3));
+                 D3D.FeatureLevel.Level_9_3, createFlagsNormal, HardwareDriverLevel.Direct3D9_3));
             initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_2, createFlags, HardwareDriverLevel.Direct3D9_2));
+                 D3D.FeatureLevel.Level_9_2, createFlagsNormal, HardwareDriverLevel.Direct3D9_2));
             initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_1, createFlags, HardwareDriverLevel.Direct3D9_1));
+                 D3D.FeatureLevel.Level_9_1, createFlagsNormal, HardwareDriverLevel.Direct3D9_1));
 
             // Try to create the device, each defined configuration step by step
-            foreach (var actInitParameters in initParameterQueue)
+            foreach (var (actFeatureLevel, actCreateFlags, actDriverLevel) in initParameterQueue)
             {
-                var featureLevel = actInitParameters.Item1;
-                var direct3D11Flags = actInitParameters.Item2;
-                var actDriverLevel = actInitParameters.Item3;
-
                 try
                 {
                     // Try to create the device using current parameters
-                    using (var device = new D3D11.Device(dxgiAdapter, direct3D11Flags, featureLevel))
+                    using (var device = new D3D11.Device(dxgiAdapter, actCreateFlags, actFeatureLevel))
                     {
                         m_device1 = device.QueryInterface<D3D11.Device1>();
                         m_device3 = SeeingSharpUtil.TryExecute(() => m_device1.QueryInterface<D3D11.Device3>());
@@ -116,12 +111,15 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Device successfully created, save all parameters and break this loop
-                    m_featureLevel = featureLevel;
-                    m_creationFlags = direct3D11Flags;
+                    m_featureLevel = actFeatureLevel;
+                    m_creationFlags = actCreateFlags;
                     DriverLevel = actDriverLevel;
                     break;
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
 
             // Throw exception on failure

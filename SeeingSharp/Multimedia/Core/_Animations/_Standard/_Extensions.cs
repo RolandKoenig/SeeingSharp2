@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
     public static class Extensions
     {
         /// <summary>
-        /// Waits some time before continueing with next animation sequence.
+        /// Waits some time before continuing with next animation sequence.
         /// </summary>
         /// <param name="builder">The AnimationSequenceBuilder object.</param>
         /// <param name="milliseconds">The total milliseconds to wait.</param>
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Waits some time before continueing with next animation sequence.
+        /// Waits some time before continuing with next animation sequence.
         /// </summary>
         /// <param name="builder">The AnimationSequenceBuilder object.</param>
         /// <param name="duration">Total duration to wait.</param>

@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
 
-            // Some optimisation logic to take the shortest way
+            // Some optimization logic to take the shortest way
             //  => e. g. object rotation 45° instead of 315°
             if (m_changeRotation.X > EngineMath.RAD_180DEG) { m_changeRotation.X = -(m_changeRotation.X - EngineMath.RAD_180DEG); }
             if (m_changeRotation.Y > EngineMath.RAD_180DEG) { m_changeRotation.Y = -(m_changeRotation.Y - EngineMath.RAD_180DEG); }

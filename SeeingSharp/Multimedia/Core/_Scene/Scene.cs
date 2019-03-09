@@ -68,12 +68,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Scene" /> class.
         /// </summary>
-        /// <param name="name">The global name of this scene.</param>
-        /// <param name="registerOnMessenger">
-        /// Do register this scene for application messaging?
-        /// If true, then the caller has to ensure that the name is only used once
-        /// across the currently executed application.
-        /// </param>
         public Scene()
         {
             m_perFrameData = new CBPerFrame();
@@ -139,7 +133,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     foreach(var actSceneObject in actLayer.ObjectsInternal)
                     {
-                        if (actSceneObject.HasChilds) { continue; }
+                        if (actSceneObject.HasChildren) { continue; }
                         result.Add(new SceneObjectInfo(actSceneObject, true));
                     }
                 }
@@ -180,8 +174,7 @@ namespace SeeingSharp.Multimedia.Core
             var taskComplSource = new TaskCompletionSource<object>();
 
             // Define the poll action (polling is done inside scene update
-            Action pollAction = null;
-            pollAction = () =>
+            void PollAction()
             {
                 if (AreAllObjectsVisible(sceneObjects, viewInfo))
                 {
@@ -193,12 +186,12 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 else
                 {
-                    m_asyncInvokesBeforeUpdate.Enqueue(pollAction);
+                    m_asyncInvokesBeforeUpdate.Enqueue((Action) PollAction);
                 }
-            };
+            }
 
             // Register first call of the polling action
-            m_asyncInvokesBeforeUpdate.Enqueue(pollAction);
+            m_asyncInvokesBeforeUpdate.Enqueue((Action) PollAction);
 
             return taskComplSource.Task;
         }
@@ -253,7 +246,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Triggers scene manipulation using the given lambda action.
         /// The action gets processed directly before scene update process.
         ///
-        /// Be carefull: The action is called by worker-threads of SeeingSharp!
+        /// Be careful: The action is called by worker-threads of SeeingSharp!
         /// </summary>
         /// <param name="manipulatorAction">The action which is able to manipulate the scene.</param>
         public Task ManipulateSceneAsync(Action<SceneManipulator> manipulatorAction)
@@ -496,7 +489,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Adds the given object to the scene.
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
-        /// <param name="layer">Layer on wich the object should be added.</param>
+        /// <param name="layer">Layer on which the object should be added.</param>
         internal T Add<T>(T sceneObject, string layer)
             where T : SceneObject
         {
@@ -620,7 +613,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (currentLayer != null)
             {
-                throw new ArgumentException("There is already a SceneLayer with the given name!", "name");
+                throw new ArgumentException("There is already a SceneLayer with the given name!", nameof(name));
             }
 
             // Create the new layer
@@ -634,7 +627,7 @@ namespace SeeingSharp.Multimedia.Core
             // Sort local layer list
             SortLayers();
 
-            // Register all views on the newsly generated layer
+            // Register all views on the newly generated layer
             foreach (var actViewInfo in m_registeredViews)
             {
                 newLayer.RegisterView(
@@ -688,9 +681,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             layer.EnsureNotNull(nameof(layer));
 
-            if (layer == null) { throw new ArgumentNullException("layer"); }
-            if (layer.Scene != this) { throw new ArgumentException("Given layer does not belong to this scene!", "layer"); }
-            if (layer.Name == DEFAULT_LAYER_NAME) { throw new ArgumentNullException("Unable to remove the default layer!", "layer"); }
+            if (layer == null) { throw new ArgumentNullException(nameof(layer)); }
+            if (layer.Scene != this) { throw new ArgumentException("Given layer does not belong to this scene!", nameof(layer)); }
+            if (layer.Name == DEFAULT_LAYER_NAME) { throw new ArgumentNullException("Unable to remove the default layer!", nameof(layer)); }
 
             layer.UnloadResources();
             m_sceneLayers.Remove(layer);
@@ -719,8 +712,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             layer.EnsureNotNull(nameof(layer));
 
-            if (layer == null) { throw new ArgumentNullException("layer"); }
-            if (layer.Scene != this) { throw new ArgumentException("Given layer does not belong to this scene!", "layer"); }
+            if (layer == null) { throw new ArgumentNullException(nameof(layer)); }
+            if (layer.Scene != this) { throw new ArgumentException("Given layer does not belong to this scene!", nameof(layer)); }
 
             layer.ClearObjects();
         }
@@ -735,7 +728,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (string.IsNullOrEmpty(layerName))
             {
-                throw new ArgumentException("Given layer name is not valid!", "layerName");
+                throw new ArgumentException("Given layer name is not valid!", nameof(layerName));
             }
 
             foreach (var actLayer in m_sceneLayers)
@@ -845,7 +838,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Removes the given object from the scene.
         /// </summary>
         /// <param name="sceneObject">Object to remove.</param>
-        /// <param name="layerName">Layer on wich the scene object was added.</param>
+        /// <param name="layerName">Layer on which the scene object was added.</param>
         internal void Remove(SceneObject sceneObject, string layerName)
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
@@ -875,11 +868,9 @@ namespace SeeingSharp.Multimedia.Core
 
             if (asyncActionsBeforeUpdateCount > 0)
             {
-                Action actAsyncAction = null;
                 var actIndex = 0;
-
                 while (actIndex < asyncActionsBeforeUpdateCount &&
-                       m_asyncInvokesBeforeUpdate.Dequeue(out actAsyncAction))
+                       m_asyncInvokesBeforeUpdate.Dequeue(out var actAsyncAction))
                 {
                     actAsyncAction();
                     actIndex++;
@@ -911,9 +902,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState)
         {
             // Invoke all async action attached to this scene
-            Action actAsyncAction = null;
-
-            while (m_asyncInvokesUpdateBesideRendering.Dequeue(out actAsyncAction))
+            while (m_asyncInvokesUpdateBesideRendering.Dequeue(out var actAsyncAction))
             {
                 actAsyncAction();
             }
@@ -956,7 +945,7 @@ namespace SeeingSharp.Multimedia.Core
             resources.UnloadAllMarkedResources();
 
             // Render all renderable resources first
-            // (ensure here that we don't corrup device state)
+            // (ensure here that we don't corrupt device state)
             foreach (var actRenderableResource in resources.RenderableResources)
             {
                 if (actRenderableResource.IsLoaded)
@@ -996,7 +985,7 @@ namespace SeeingSharp.Multimedia.Core
                 deviceContext.Rasterizer.State = defaultResource.RasterStateDefault;
             }
 
-            // Get or create RenderParamters object on scene level
+            // Get or create RenderParameters object on scene level
             var renderParameters = m_renderParameters[renderState.DeviceIndex];
 
             if (renderParameters == null)

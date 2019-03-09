@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 namespace SeeingSharp.Multimedia.Core
 {
     public class GraphicsCoreConfiguration
@@ -35,12 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Can enable debug mode for all created devices.
         /// </summary>
         public bool DebugEnabled
-        {
-            get;
-            set;
-        }
-
-        public bool PerformanceMeasuringEnabled
         {
             get;
             set;

@@ -131,19 +131,17 @@ namespace SeeingSharp.Multimedia.Core
         internal bool AddObject(SceneObject sceneObject)
         {
             if (m_isInUpdate || m_isInUpdateBeside) { throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!"); }
-            if (sceneObject == null) { throw new ArgumentNullException("sceneObject"); }
+            if (sceneObject == null) { throw new ArgumentNullException(nameof(sceneObject)); }
             if (sceneObject.Scene == Scene) { return false; }
-            if (sceneObject.Scene != null) { throw new ArgumentException("Given object does already belong to another scene!", "sceneObject"); }
+            if (sceneObject.Scene != null) { throw new ArgumentException("Given object does already belong to another scene!", nameof(sceneObject)); }
             if (sceneObject.SceneLayer == this) { return false; }
-            if (sceneObject.SceneLayer != null) { throw new ArgumentException("Given object does already belong to another scene layer!", "sceneObject"); }
+            if (sceneObject.SceneLayer != null) { throw new ArgumentException("Given object does already belong to another scene layer!", nameof(sceneObject)); }
 
             ObjectsInternal.Add(sceneObject);
             sceneObject.SetSceneAndLayer(Scene, this);
 
-            //Append object to specialized collections
-            var spacialObject = sceneObject as SceneSpacialObject;
-
-            if (spacialObject != null)
+            // Append object to specialized collections
+            if (sceneObject is SceneSpacialObject spacialObject)
             {
                 SpacialObjects.Add(spacialObject);
             }
@@ -162,7 +160,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_sceneObjectsNotStatic.Add(sceneObject);
             }
 
-            //Register the given object on all view subsets
+            // Register the given object on all view subsets
             foreach (var actViewSubset in m_viewSubsets)
             {
                 actViewSubset.RegisterObjectRange(sceneObject);
@@ -224,9 +222,7 @@ namespace SeeingSharp.Multimedia.Core
                 sceneObject.ResetSceneAndLayer();
 
                 // Remove object from specialized collections
-                var spacialObject = sceneObject as SceneSpacialObject;
-
-                if (spacialObject != null)
+                if (sceneObject is SceneSpacialObject spacialObject)
                 {
                     SpacialObjects.Remove(spacialObject);
                 }

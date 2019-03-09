@@ -33,10 +33,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class SceneManipulator
     {
-        // Main members
-
         // Objects that remember all changes on object/resource collections
-
         private List<SceneObject> m_createdObjects;
         private List<NamedOrGenericKey> m_createdResources;
 
@@ -233,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Adds the given object to the scene.
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
-        /// <param name="layer">Layer on wich the object should be added.</param>
+        /// <param name="layer">Layer on which the object should be added.</param>
         public T Add<T>(T sceneObject, string layer)
             where T : SceneObject
         {
@@ -374,7 +371,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Removes the given object from the scene.
         /// </summary>
         /// <param name="sceneObject">Object to remove.</param>
-        /// <param name="layerName">Layer on wich the scene object was added.</param>
+        /// <param name="layerName">Layer on which the scene object was added.</param>
         public void Remove(SceneObject sceneObject, string layerName)
         {
             CheckValid();

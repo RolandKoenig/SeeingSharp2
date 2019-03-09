@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Occurs when any configuration flag has changed.
-        /// This event may occure in different threads!
+        /// This event may occur in different threads!
         /// </summary>
         public event EventHandler ConfigurationChanged;
 

@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Core
         TranslationEulerAngles,
 
         /// <summary>
-        /// Tranlation and Rotation using quaternion.
+        /// Translation and Rotation using quaternion.
         /// </summary>
         TranslationQuaternion,
 

@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="rotateVector">The rotate vector.</param>
         /// <param name="animationTime">The animation time.</param>
@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object to the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="rotateVector">The rotate vector.</param>
         /// <param name="animationTime">The animation time.</param>
@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="rotateVector">The rotate vector.</param>
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetYaw">The target value for the Yaw (Y) rotation component.</param>
         /// <param name="animationTime">The animation time.</param>
@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetYaw">The target value for the Yaw (Y) rotation component.</param>
@@ -123,7 +123,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object to the given quaternion.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetQuaternion">The target quaternion.</param>
         /// <param name="animationTime">The animation time.</param>
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Rotates the object to the given quaternion.
         /// </summary>
         /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the arget object.</typeparam>
+        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetQuaternion">The target quaternion.</param>
