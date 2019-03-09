@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Input
             }
             if(targetState == null)
             {
-                targetState = Activator.CreateInstance(inputState.CurrentType) as InputStateBase;
+                targetState = (InputStateBase) Activator.CreateInstance(inputState.CurrentType);
             }
 
             // Copy all state data
@@ -118,9 +118,7 @@ namespace SeeingSharp.Multimedia.Input
             // Register first MouseOrPointer state as default
             if (DefaultMouseOrPointer == MouseOrPointerState.Dummy)
             {
-                var mouseOrPointer = inputState as MouseOrPointerState;
-
-                if (mouseOrPointer != null)
+                if (inputState is MouseOrPointerState mouseOrPointer)
                 {
                     DefaultMouseOrPointer = mouseOrPointer;
                 }
@@ -129,9 +127,7 @@ namespace SeeingSharp.Multimedia.Input
             // Register first Gamepad state as default
             if (DefaultGamepad == GamepadState.Dummy)
             {
-                var gamepadState = inputState as GamepadState;
-
-                if (gamepadState != null)
+                if (inputState is GamepadState gamepadState)
                 {
                     DefaultGamepad = gamepadState;
                 }
@@ -140,9 +136,7 @@ namespace SeeingSharp.Multimedia.Input
             // Register first keyboard state as default
             if (DefaultKeyboard == KeyboardState.Dummy)
             {
-                var keyboardState = inputState as KeyboardState;
-
-                if (keyboardState != null)
+                if (inputState is KeyboardState keyboardState)
                 {
                     DefaultKeyboard = keyboardState;
                 }

@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Input
 
     /// <summary>
     /// A win32 virtual key.
-    /// Copied from Win.Forms Keys and modiefied (remoted some entries).
+    /// Copied from Win.Forms Keys and modified (removed some entries).
     /// </summary>
     [Flags]
     public enum WinVirtualKey

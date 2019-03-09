@@ -35,7 +35,6 @@ namespace SeeingSharp.Multimedia.Views
 {
     //For handling of staging resource see
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
-
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
     {
         // Configuration
@@ -64,13 +63,13 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="syncContext">Sets the SynchronizationContext which should be used by default.</param>
         public MemoryRenderTarget(int pixelWidth, int pixelHeight, SynchronizationContext syncContext = null)
         {
-            //Set confiugration
+            // Set configuration
             m_pixelWidth = pixelWidth;
             m_pixelHeight = pixelHeight;
 
             if (syncContext == null) { syncContext = new SynchronizationContext(); }
 
-            //Create the RenderLoop object
+            // Create the RenderLoop object
             RenderLoop = new RenderLoop(syncContext, this);
             RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
             RenderLoop.RegisterRenderLoop();
@@ -92,9 +91,6 @@ namespace SeeingSharp.Multimedia.Views
             return result.Task;
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             RenderLoop.Dispose();
@@ -143,16 +139,13 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when RenderLoop object checks wheter it is possible to render.
+        /// Called when RenderLoop object checks whether it is possible to render.
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
         {
             var eventArgs = new CancelEventArgs(false);
 
-            if (BeforeRender != null)
-            {
-                BeforeRender(this, eventArgs);
-            }
+            BeforeRender?.Invoke(this, eventArgs);
 
             return !eventArgs.Cancel;
         }

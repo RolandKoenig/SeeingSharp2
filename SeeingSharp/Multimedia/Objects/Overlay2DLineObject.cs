@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
-        /// <param name="resourceDictionary">Current resource dicionary.</param>
+        /// <param name="resourceDictionary">Current resource dictionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
         }

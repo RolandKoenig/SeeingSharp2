@@ -97,9 +97,8 @@ namespace SeeingSharp.Multimedia.Objects
                 // Get BoundingBox object
                 var boundingBox = geometryResource.BoundingBox;
 
-                // Calculate bounding sphare
-                BoundingSphere result;
-                BoundingSphere.FromBox(ref boundingBox, out result);
+                // Calculate bounding sphere
+                BoundingSphere.FromBox(ref boundingBox, out var result);
 
                 result.Transform(Transform);
 
@@ -132,7 +131,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
-        /// <param name="resourceDictionary">Current resource dicionary.</param>
+        /// <param name="resourceDictionary">Current resource dictionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             m_localResources.AddObject(
@@ -173,7 +172,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// This methode stores all data related to this object into the given <see cref="ExportModelContainer" />.
+        /// This method stores all data related to this object into the given <see cref="ExportModelContainer" />.
         /// </summary>
         /// <param name="modelContainer">The target container.</param>
         /// <param name="exportOptions">Options for export.</param>
@@ -214,7 +213,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Updates this object for the given view.
         /// </summary>
         /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
@@ -276,15 +275,12 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     // Transform picking ray to local space
                     var pickingRay = new Ray(rayStart, rayDirection);
-                    Matrix temp;
                     var localTransform = Transform;
-                    Matrix.Invert(ref localTransform, out temp);
+                    Matrix.Invert(ref localTransform, out var temp);
                     pickingRay.Transform(temp);
 
                     // Check for intersection on the bounding box
-                    var distance = 0f;
-
-                    if (pickingRay.Intersects(ref boundingBox, out distance))
+                    if (pickingRay.Intersects(ref boundingBox, out float distance))
                     {
                         if (pickingOptions.OnlyCheckBoundingBoxes)
                         {

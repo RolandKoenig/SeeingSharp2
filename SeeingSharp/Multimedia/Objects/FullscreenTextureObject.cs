@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Updates this object for the given view.
         /// </summary>
         /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes

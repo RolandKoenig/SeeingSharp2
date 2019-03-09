@@ -74,24 +74,20 @@ namespace SeeingSharp.Multimedia.Components
 
             foreach (var actInputFrame in updateState.InputFrames)
             {
+                var isControlKeyDown = false;
                 foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
                 {
-                    // Handle keyboard
-                    var actKeyboardState = actInputState as KeyboardState;
-                    var isControlKeyDown = false;
-
-                    if (actKeyboardState != null)
+                    switch (actInputState)
                     {
-                        UpdateForKeyboard(actCamera, actKeyboardState, out isControlKeyDown);
-                        continue;
-                    }
+                        // Handle keyboard
+                        case KeyboardState actKeyboardState:
+                            UpdateForKeyboard(actCamera, actKeyboardState, out isControlKeyDown);
+                            continue;
 
-                    // Handle mouse (or pointer)
-                    var mouseState = actInputState as MouseOrPointerState;
-
-                    if (mouseState != null)
-                    {
-                        UpdateForMouse(actCamera, isControlKeyDown, mouseState);
+                        // Handle mouse (or pointer)
+                        case MouseOrPointerState mouseState:
+                            UpdateForMouse(actCamera, isControlKeyDown, mouseState);
+                            continue;
                     }
                 }
             }
@@ -105,14 +101,14 @@ namespace SeeingSharp.Multimedia.Components
             out bool isControlKeyDown)
         {
             // Define multiplyer
-            var multiplyer = 1f;
+            var multiplier = 1f;
             isControlKeyDown = false;
 
             if (actKeyboardState.IsKeyDown(WinVirtualKey.ControlKey) ||
                 actKeyboardState.IsKeyDown(WinVirtualKey.LControlKey) ||
                 actKeyboardState.IsKeyDown(WinVirtualKey.RControlKey))
             {
-                multiplyer = 2f;
+                multiplier = 2f;
                 isControlKeyDown = true;
             }
 
@@ -122,32 +118,32 @@ namespace SeeingSharp.Multimedia.Components
                 {
                     case WinVirtualKey.Up:
                     case WinVirtualKey.W:
-                        actCamera.Zoom(MOVEMENT * multiplyer);
+                        actCamera.Zoom(MOVEMENT * multiplier);
                         break;
 
                     case WinVirtualKey.Down:
                     case WinVirtualKey.S:
-                        actCamera.Zoom(-MOVEMENT * multiplyer);
+                        actCamera.Zoom(-MOVEMENT * multiplier);
                         break;
 
                     case WinVirtualKey.Left:
                     case WinVirtualKey.A:
-                        actCamera.Strave(-MOVEMENT * multiplyer);
+                        actCamera.Strave(-MOVEMENT * multiplier);
                         break;
 
                     case WinVirtualKey.Right:
                     case WinVirtualKey.D:
-                        actCamera.Strave(MOVEMENT * multiplyer);
+                        actCamera.Strave(MOVEMENT * multiplier);
                         break;
 
                     case WinVirtualKey.Q:
                     case WinVirtualKey.NumPad3:
-                        actCamera.Move(new Vector3(0f, -MOVEMENT * multiplyer, 0f));
+                        actCamera.Move(new Vector3(0f, -MOVEMENT * multiplier, 0f));
                         break;
 
                     case WinVirtualKey.E:
                     case WinVirtualKey.NumPad9:
-                        actCamera.Move(new Vector3(0f, MOVEMENT * multiplyer, 0f));
+                        actCamera.Move(new Vector3(0f, MOVEMENT * multiplier, 0f));
                         break;
 
                     case WinVirtualKey.NumPad4:
@@ -198,9 +194,9 @@ namespace SeeingSharp.Multimedia.Components
             // Handle mouse wheel
             if (mouseState.WheelDelta != 0)
             {
-                var multiplyer = 1f;
-                if (isControlKeyDown) { multiplyer = 2f; }
-                actCamera.Zoom(mouseState.WheelDelta / 100f * multiplyer);
+                var multiplier = 1f;
+                if (isControlKeyDown) { multiplier = 2f; }
+                actCamera.Zoom(mouseState.WheelDelta / 100f * multiplier);
             }
         }
 

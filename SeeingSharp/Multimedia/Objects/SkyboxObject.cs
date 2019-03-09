@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class SkyboxObject : SceneObject
     {
-        //Resources
+        // Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
-        /// <param name="resourceDictionary">Current resource dicionary.</param>
+        /// <param name="resourceDictionary">Current resource dictionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             // Define all vertices
@@ -177,7 +177,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Updates this object for the given view.
         /// </summary>
         /// <param name="updateState">Current state of the update pass.</param>
-        /// <param name="layerViewSubset">The layer view subset wich called this update method.</param>
+        /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             if(CountRenderPassSubscriptions(layerViewSubset) <= 0)

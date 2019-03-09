@@ -83,21 +83,17 @@ namespace SeeingSharp.Multimedia.Input
             // Execute all commands within the command queue
             if(m_commandQueue.Count > 0)
             {
-                Action actCommand = null;
-
-                while(m_commandQueue.Dequeue(out actCommand))
+                while(m_commandQueue.Dequeue(out var actCommand))
                 {
                     actCommand();
                 }
             }
 
             // Gather all input data
-            var expectedStateCount = m_lastInputFrame != null ? m_lastInputFrame.CountStates : 6;
+            var expectedStateCount = m_lastInputFrame?.CountStates ?? 6;
 
             // Create new InputFrame object or reuse an old one
-            InputFrame newInputFrame = null;
-
-            if(m_recoveredInputFrames.Dequeue(out newInputFrame))
+            if(m_recoveredInputFrames.Dequeue(out var newInputFrame))
             {
                 newInputFrame.Reset(expectedStateCount, SINGLE_FRAME_DURATION);
             }
@@ -143,8 +139,7 @@ namespace SeeingSharp.Multimedia.Input
             //  (older input is obsolete)
             while (m_gatheredInputFrames.Count > SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
             {
-                InputFrame dummyFrame = null;
-                m_gatheredInputFrames.Dequeue(out dummyFrame);
+                m_gatheredInputFrames.Dequeue(out _);
             }
         }
 
@@ -179,9 +174,9 @@ namespace SeeingSharp.Multimedia.Input
                 {
                     var oldList = m_viewInputHandlers[view];
 
-                    foreach(var actOldInputHanlder in oldList)
+                    foreach(var actOldInputHandler in oldList)
                     {
-                        actOldInputHanlder.Stop();
+                        actOldInputHandler.Stop();
                     }
                     m_viewInputHandlers.Remove(view);
                 }
@@ -209,9 +204,9 @@ namespace SeeingSharp.Multimedia.Input
                 {
                     var oldList = m_viewInputHandlers[view];
 
-                    foreach (var actOldInputHanlder in oldList)
+                    foreach (var actOldInputHandler in oldList)
                     {
-                        actOldInputHanlder.Stop();
+                        actOldInputHandler.Stop();
                     }
 
                     m_viewInputHandlers.Remove(view);

@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         private bool m_hasFinished;
         private Exception m_startException;
         private Exception m_drawException;
-        private Exception m_finishExeption;
+        private Exception m_finishException;
 
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.
         /// </summary>
         /// <param name="targetFile">The target file to write to.</param>
-        public SeeingSharpVideoWriter(ResourceLink targetFile)
+        protected SeeingSharpVideoWriter(ResourceLink targetFile)
         {
             TargetFile = targetFile;
         }
@@ -126,7 +126,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             // Reset exceptions
             m_drawException = null;
             m_startException = null;
-            m_finishExeption = null;
+            m_finishException = null;
 
             // Ensure that the target directory exists
             try
@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             }
             catch(Exception ex)
             {
-                m_finishExeption = ex;
+                m_finishException = ex;
             }
             finally
             {
@@ -197,6 +197,6 @@ namespace SeeingSharp.Multimedia.DrawingVideo
 
         public Exception LastDrawException => m_drawException;
 
-        public Exception LastFinishException => m_finishExeption;
+        public Exception LastFinishException => m_finishException;
     }
 }

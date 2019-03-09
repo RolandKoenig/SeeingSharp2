@@ -124,12 +124,12 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewObject">The object of the view control.</param>
         /// <param name="inputHandlers">The collection of input handlers managed by the view object.</param>
         /// <param name="renderLoop">The renderloop used by the view object.</param>
-        /// <param name="currentlyDispsoing">Is the view currently disposing?</param>
+        /// <param name="currentlyDisposing">Is the view currently disposing?</param>
         internal static void UpdateInputHandlerList(
             IInputEnabledView viewObject,
             List<IInputHandler> inputHandlers,
             RenderLoop renderLoop,
-            bool currentlyDispsoing)
+            bool currentlyDisposing)
         {
             viewObject.EnsureNotNull(nameof(viewObject));
             inputHandlers.EnsureNotNull(nameof(inputHandlers));
@@ -146,11 +146,10 @@ namespace SeeingSharp.Multimedia.Input
             }
 
             // Check whether this object is disposed
-            if (currentlyDispsoing) { return; }
+            if (currentlyDisposing) { return; }
 
             // Check for other dependencies
-            if (renderLoop == null ||
-                renderLoop.Camera == null)
+            if (renderLoop?.Camera == null)
             {
                 return;
             }

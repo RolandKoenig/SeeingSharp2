@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Input
         void Stop();
 
         /// <summary>
-        /// Querries all current input states.
+        /// Queries all current input states.
         /// </summary>
         IEnumerable<InputStateBase> GetInputStates();
     }

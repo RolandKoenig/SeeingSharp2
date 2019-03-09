@@ -240,8 +240,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if (m_screenSizePixel.X == 0f) { return Vector2.Zero; }
-                if (m_screenSizePixel.Y == 0f) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X,0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
                 return m_moveDistancePixel / m_screenSizePixel;
             }
@@ -251,8 +251,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(m_screenSizePixel.X == 0f) { return Vector2.Zero; }
-                if(m_screenSizePixel.Y == 0f) { return Vector2.Zero; }
+                if(EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if(EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
                 return m_positionPixel / m_screenSizePixel;
             }
