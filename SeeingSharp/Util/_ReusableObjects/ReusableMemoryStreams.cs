@@ -45,13 +45,12 @@ namespace SeeingSharp.Util
             memoryStream = TakeMemoryStream(requiredCapacity);
 
             var cachedMemoryStream = memoryStream;
-            return new DummyDisposable(() => ReregisterMemoryStream(cachedMemoryStream));
+            return new DummyDisposable(() => ReRegisterMemoryStream(cachedMemoryStream));
         }
 
         public MemoryStream TakeMemoryStream(int requiredCapacity = 128)
         {
-            MemoryStream result;
-            if(!m_memoryStreams.TryPop(out result))
+            if(!m_memoryStreams.TryPop(out var result))
             {
                 result = new MemoryStream(requiredCapacity);
             }
@@ -62,7 +61,7 @@ namespace SeeingSharp.Util
             return result;
         }
 
-        public void ReregisterMemoryStream(MemoryStream memoryStream)
+        public void ReRegisterMemoryStream(MemoryStream memoryStream)
         {
             var buffer = memoryStream.GetBuffer();
             var newAroundSameBuffer = new MemoryStream(buffer, 0, buffer.Length, true, true);

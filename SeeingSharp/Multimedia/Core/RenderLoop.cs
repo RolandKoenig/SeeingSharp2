@@ -676,7 +676,7 @@ namespace SeeingSharp.Multimedia.Core
             m_renderLoopHost.OnRenderLoop_DisposeViewResources(m_currentDevice);
 
             // Free direct2d render target (if created)
-            SeeingSharpTools.SafeDispose(ref m_d2dOverlay);
+            SeeingSharpUtil.SafeDispose(ref m_d2dOverlay);
 
             // Set values to initial
             m_renderTarget = null;
@@ -687,8 +687,8 @@ namespace SeeingSharp.Multimedia.Core
             m_currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
-            SeeingSharpTools.SafeDispose(ref m_copyHelperTextureStaging);
-            SeeingSharpTools.SafeDispose(ref m_copyHelperTextureStandard);
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
         }
 
         /// <summary>
@@ -1170,7 +1170,7 @@ namespace SeeingSharp.Multimedia.Core
             // Deregister this Renderloop object
             GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
 
-            SeeingSharpTools.SafeDispose(ref m_debugDrawingLayer);
+            SeeingSharpUtil.SafeDispose(ref m_debugDrawingLayer);
 
             // Assign new dummy camera
             //  (this call detaches the previous camera from this renderloop)

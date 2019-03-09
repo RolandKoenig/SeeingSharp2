@@ -105,11 +105,11 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice device)
         {
-            m_renderTargetDepthView = SeeingSharpTools.DisposeObject(m_renderTargetDepthView);
-            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
-            m_renderTargetView = SeeingSharpTools.DisposeObject(m_renderTargetView);
-            m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
-            m_copyHelperTextureStaging = SeeingSharpTools.DisposeObject(m_copyHelperTextureStaging);
+            m_renderTargetDepthView = SeeingSharpUtil.DisposeObject(m_renderTargetDepthView);
+            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
+            m_renderTargetView = SeeingSharpUtil.DisposeObject(m_renderTargetView);
+            m_renderTarget = SeeingSharpUtil.DisposeObject(m_renderTarget);
+            m_copyHelperTextureStaging = SeeingSharpUtil.DisposeObject(m_copyHelperTextureStaging);
 
             m_device = null;
             m_deviceContext = null;

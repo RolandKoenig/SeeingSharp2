@@ -214,7 +214,7 @@ namespace SeeingSharp.Multimedia.Core
 
                             using (var perfTokenInner = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_WAIT_TIME))
                             {
-                                SeeingSharpTools.MaximumDelay(delayTime);
+                                SeeingSharpUtil.MaximumDelay(delayTime);
                             }
 
                             // Get all render loops

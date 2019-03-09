@@ -71,12 +71,12 @@ namespace SeeingSharp.Util
 
                     // Get full include file path in split it using path separators
                     var includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);
-                    var includeFilePathSplitted = includeFilePath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                    var includeFilePathParts = includeFilePath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
                     // Build the link to the include file
-                    var fileName = includeFilePathSplitted[includeFilePathSplitted.Length - 1];
+                    var fileName = includeFilePathParts[includeFilePathParts.Length - 1];
                     ResourceLink resLinkInner = null;
-                    if (includeFilePathSplitted.Length < 2)
+                    if (includeFilePathParts.Length < 2)
                     {
                         resLinkInner = resourceLink.GetForAnotherFile(fileName);
                     }
@@ -84,7 +84,7 @@ namespace SeeingSharp.Util
                     {
                         resLinkInner = resourceLink.GetForAnotherFile(
                             fileName,
-                            includeFilePathSplitted.Subset(0, includeFilePathSplitted.Length - 1));
+                            includeFilePathParts.Subset(0, includeFilePathParts.Length - 1));
                     }
 
                     // Include the source file

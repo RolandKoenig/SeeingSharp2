@@ -29,6 +29,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using SeeingSharp.Checking;
 using SharpDX;
 
 namespace SeeingSharp.Util
@@ -230,7 +231,7 @@ namespace SeeingSharp.Util
         /// <param name="eventArgs">The event args parameter.</param>
         public static void Raise(this EventHandler eventHandler, object sender, EventArgs eventArgs)
         {
-            if (eventHandler != null) { eventHandler(sender, eventArgs); }
+            eventHandler?.Invoke(sender, eventArgs);
         }
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace SeeingSharp.Util
         /// <param name="eventArgs">The event args parameter.</param>
         public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArgs)
         {
-            if (eventHandler != null) { eventHandler(sender, eventArgs); }
+            eventHandler?.Invoke(sender, eventArgs);
         }
 
         /// <summary>
@@ -363,9 +364,9 @@ namespace SeeingSharp.Util
         public static void ClearAndDisposeAll<T>(this ICollection<T> listOfDisposables)
             where T : class, IDisposable
         {
-            foreach (var actDisposeable in listOfDisposables)
+            foreach (var actDisposable in listOfDisposables)
             {
-                SeeingSharpUtil.DisposeObject(actDisposeable);
+                SeeingSharpUtil.DisposeObject(actDisposable);
             }
             listOfDisposables.Clear();
         }
@@ -495,9 +496,9 @@ namespace SeeingSharp.Util
         /// <param name="delayTime">The total time to wait.</param>
         public static void PostDelayed(this SynchronizationContext syncContext, SendOrPostCallback callBack, object state, TimeSpan delayTime)
         {
-            if (syncContext == null) { throw new ArgumentNullException("syncContext"); }
-            if (callBack == null) { throw new ArgumentNullException("callBack"); }
-            if (delayTime <= TimeSpan.Zero) { throw new ArgumentException("Delay time musst be greater than zero!", "delayTime"); }
+            syncContext.EnsureNotNull(nameof(syncContext));
+            callBack.EnsureNotNull(nameof(callBack));
+            delayTime.EnsureLongerThanZero(nameof(delayTime));
 
             //Start and register timer in local timer store (ensures that no dispose gets called..)
             lock (s_timerDictLock)

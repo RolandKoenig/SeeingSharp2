@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (textFormat != null)
             {
-                SeeingSharpTools.DisposeObject(textFormat);
+                SeeingSharpUtil.DisposeObject(textFormat);
                 m_loadedTextFormats[engineDevice.DeviceIndex] = null;
             }
         }
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 m_runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
 
-                SeeingSharpTools.DisposeObject(result);
+                SeeingSharpUtil.DisposeObject(result);
                 result = new DWrite.TextFormat(
                     GraphicsCore.Current.FactoryDWrite,
                     m_fontFamilyName,

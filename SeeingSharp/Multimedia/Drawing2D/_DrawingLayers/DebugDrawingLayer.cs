@@ -55,9 +55,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_textFormat);
-            SeeingSharpTools.SafeDispose(ref m_solidBrushBackground);
-            SeeingSharpTools.SafeDispose(ref m_solidBrushForeground);
+            SeeingSharpUtil.SafeDispose(ref m_textFormat);
+            SeeingSharpUtil.SafeDispose(ref m_solidBrushBackground);
+            SeeingSharpUtil.SafeDispose(ref m_solidBrushForeground);
         }
 
         /// <summary>

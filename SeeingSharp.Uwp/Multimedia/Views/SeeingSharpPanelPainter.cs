@@ -315,12 +315,12 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice engineDevice)
         {
-            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
-            m_depthBuffer = SeeingSharpTools.DisposeObject(m_depthBuffer);
-            m_renderTargetView = SeeingSharpTools.DisposeObject(m_renderTargetView);
-            m_backBuffer = SeeingSharpTools.DisposeObject(m_backBuffer);
-            m_backBufferMultisampled = SeeingSharpTools.DisposeObject(m_backBufferMultisampled);
-            m_swapChain = SeeingSharpTools.DisposeObject(m_swapChain);
+            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
+            m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
+            m_renderTargetView = SeeingSharpUtil.DisposeObject(m_renderTargetView);
+            m_backBuffer = SeeingSharpUtil.DisposeObject(m_backBuffer);
+            m_backBufferMultisampled = SeeingSharpUtil.DisposeObject(m_backBufferMultisampled);
+            m_swapChain = SeeingSharpUtil.DisposeObject(m_swapChain);
         }
 
         /// <summary>

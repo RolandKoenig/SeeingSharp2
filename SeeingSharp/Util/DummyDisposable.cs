@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
     /// </summary>
     public class DummyDisposable : IDisposable
     {
-        private Action m_onDispsoeAction;
+        private Action m_onDisposeAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DummyDisposable"/> class.
@@ -37,7 +37,7 @@ namespace SeeingSharp.Util
         /// <param name="onDisposeAction">The action to call on Dispose.</param>
         public DummyDisposable(Action onDisposeAction)
         {
-            m_onDispsoeAction = onDisposeAction;
+            m_onDisposeAction = onDisposeAction;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Dispose()
         {
-            if (m_onDispsoeAction != null) { m_onDispsoeAction(); }
+            m_onDisposeAction?.Invoke();
         }
     }
 }

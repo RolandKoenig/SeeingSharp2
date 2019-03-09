@@ -596,7 +596,7 @@ namespace SeeingSharp.Multimedia.Core
             else
             {
                 // Perform BinaryInsert to the correct position
-                var newIndex = SeeingSharpTools.BinaryInsert(subscriptions, newSubscription, SubscriptionZOrderComparer.Instance);
+                var newIndex = SeeingSharpUtil.BinaryInsert(subscriptions, newSubscription, SubscriptionZOrderComparer.Instance);
 
                 // Increment all subscription indices after the inserted position
                 subscriptionsCount++;

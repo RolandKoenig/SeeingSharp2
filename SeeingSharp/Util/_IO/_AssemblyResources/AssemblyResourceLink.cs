@@ -98,7 +98,7 @@ namespace SeeingSharp.Util
         /// Gets the resource link for another file within the same assembly and namespace.
         /// </summary>
         /// <param name="fileName">The filename for which to get the link.</param>
-        /// <param name="subdirectories">The subdirectory path to the file (optional).</param>
+        /// <param name="subdirectories">The sub directory path to the file (optional).</param>
         public AssemblyResourceLink GetForAnotherFile(string fileName, params string[] subdirectories)
         {
             // Build new namespace
@@ -106,11 +106,11 @@ namespace SeeingSharp.Util
             if (subdirectories.Length > 0)
             {
                 // Build a stack representing the current namespace path
-                var currentDirectorySplitted = ResourceNamespace.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                var currentDirectoryPathStack = new Stack<string>(currentDirectorySplitted.Length);
-                for(var loop=0; loop<currentDirectorySplitted.Length; loop++)
+                var currentDirectoryParts = ResourceNamespace.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var currentDirectoryPathStack = new Stack<string>(currentDirectoryParts.Length);
+                for(var loop=0; loop<currentDirectoryParts.Length; loop++)
                 {
-                    currentDirectoryPathStack.Push(currentDirectorySplitted[loop]);
+                    currentDirectoryPathStack.Push(currentDirectoryParts[loop]);
                 }
 
                 // Modify the stack using given subdirectories
@@ -126,8 +126,8 @@ namespace SeeingSharp.Util
                             // Go one level down
                             if (currentDirectoryPathStack.Count <= 0)
                             {
-                                var requestedSubdirectoryPath = subdirectories.ToCommaSeparatedString("/");
-                                throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {ResourceNamespace}, Requested path: {requestedSubdirectoryPath}");
+                                var requestedSubDirectoryPath = subdirectories.ToCommaSeparatedString("/");
+                                throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {ResourceNamespace}, Requested path: {requestedSubDirectoryPath}");
                             }
                             currentDirectoryPathStack.Pop();
                             break;

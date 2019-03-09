@@ -43,7 +43,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Enqueues the specified item.
+        /// Enqueue the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void Enqueue(T item)
@@ -52,9 +52,9 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Enqueues all items within the given collection.
+        /// Enqueue all items within the given collection.
         /// </summary>
-        /// <param name="items">The items to be enqueued.</param>
+        /// <param name="items">The items to enqueue.</param>
         public void Enqueue(IEnumerable<T> items)
         {
             foreach(var actItem in items)
@@ -87,11 +87,11 @@ namespace SeeingSharp.Util
         /// <param name="checkPeekItem">The checking func.</param>
         public IEnumerable<T> PeekWhile(Func<T, bool> checkPeekItem)
         {
-            IEnumerable<T> enumarableForPeek = m_backingQueue;
+            IEnumerable<T> enumerableForPeek = m_backingQueue;
 
             // Peek all following items on which checkPeekItem returns true
             //         .. and stop on first "false"
-            foreach (var loopItem in enumarableForPeek)
+            foreach (var loopItem in enumerableForPeek)
             {
                 if (!checkPeekItem(loopItem))
                 {
@@ -103,7 +103,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Dequeues the specified item.
+        /// Dequeue the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
@@ -113,14 +113,13 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Dequeues items from the queue as long as checkDequeueItem func returns true.
+        /// Dequeue items from the queue as long as checkDequeueItem func returns true.
         /// </summary>
         /// <param name="checkDequeueItem">The checking function.</param>
         public IEnumerable<T> DequeueWhile(Func<T, bool> checkDequeueItem)
         {
             // Dequeue and return items as long as checkDequeueItem returns true
-            var actItem = default(T);
-            while (m_backingQueue.TryPeek(out actItem) &&
+            while (m_backingQueue.TryPeek(out var actItem) &&
                   checkDequeueItem(actItem) &&
                   m_backingQueue.TryDequeue(out actItem))
             {
@@ -152,15 +151,13 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Deques all items within this queue and returns them using a List object.
+        /// Deque all items within this queue and returns them using a List object.
         /// </summary>
         public List<T> DequeueAll()
         {
             var result = new List<T>(m_backingQueue.Count);
 
-            var actItem = default(T);
-
-            while (Dequeue(out actItem))
+            while (Dequeue(out var actItem))
             {
                 result.Add(actItem);
             }
@@ -169,7 +166,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Deques all items within this queue and puts the items to the given target list.
+        /// Deque all items within this queue and puts the items to the given target list.
         /// </summary>
         public void DequeueAll(List<T> targetList)
         {
@@ -186,8 +183,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            var actItem = default(T);
-            while (Dequeue(out actItem)) { }
+            while (Dequeue(out _)) { }
         }
 
         /// <summary>

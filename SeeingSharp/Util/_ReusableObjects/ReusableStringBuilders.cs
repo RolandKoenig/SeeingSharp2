@@ -45,13 +45,12 @@ namespace SeeingSharp.Util
             stringBuilder = TakeStringBuilder(requiredCapacity);
 
             var cachedStringBuilder = stringBuilder;
-            return new DummyDisposable(() => ReregisterStringBuilder(cachedStringBuilder));
+            return new DummyDisposable(() => ReRegisterStringBuilder(cachedStringBuilder));
         }
 
         public StringBuilder TakeStringBuilder(int requiredCapacity = 128)
         {
-            StringBuilder result;
-            if(!s_stringBuilders.TryPop(out result))
+            if(!s_stringBuilders.TryPop(out var result))
             {
                 result = new StringBuilder(requiredCapacity);
             }
@@ -62,7 +61,7 @@ namespace SeeingSharp.Util
             return result;
         }
 
-        public void ReregisterStringBuilder(StringBuilder stringBuilder)
+        public void ReRegisterStringBuilder(StringBuilder stringBuilder)
         {
             stringBuilder.Remove(0, stringBuilder.Length);
             s_stringBuilders.Push(stringBuilder);

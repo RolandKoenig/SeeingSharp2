@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (actEffect != null)
             {
-                SeeingSharpTools.DisposeObject(actEffect);
+                SeeingSharpUtil.DisposeObject(actEffect);
                 m_loadedEffects[engineDevice.DeviceIndex] = null;
             }
         }

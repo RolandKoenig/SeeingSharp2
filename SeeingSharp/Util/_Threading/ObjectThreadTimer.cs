@@ -68,7 +68,7 @@ namespace SeeingSharp.Util
         /// </summary>
         internal void Add(TimeSpan timeSpan)
         {
-            if (m_speedFactor == 1.0)
+            if (EngineMath.EqualsWithTolerance(m_speedFactor, 1.0))
             {
                 m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
             }

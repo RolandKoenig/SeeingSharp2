@@ -93,8 +93,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_bgPanelNative);
-            SeeingSharpTools.SafeDispose(ref m_panelNative);
+            SeeingSharpUtil.SafeDispose(ref m_bgPanelNative);
+            SeeingSharpUtil.SafeDispose(ref m_panelNative);
         }
 
         private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)

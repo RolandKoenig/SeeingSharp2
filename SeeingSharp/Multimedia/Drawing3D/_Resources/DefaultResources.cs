@@ -173,14 +173,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultBlendState = SeeingSharpTools.DisposeObjectLazy(m_defaultBlendState);
-            m_depthStencilStateDefault = SeeingSharpTools.DisposeObjectLazy(m_depthStencilStateDefault);
-            m_depthStencilStateDisableZWrites = SeeingSharpTools.DisposeObjectLazy(m_depthStencilStateDisableZWrites);
-            m_rasterStateLines = SeeingSharpTools.DisposeObjectLazy(m_rasterStateLines);
-            m_rasterStateDefault = SeeingSharpTools.DisposeObjectLazy(m_rasterStateDefault);
-            m_samplerStateLow = SeeingSharpTools.DisposeObjectLazy(m_samplerStateLow);
-            m_samplerStateMedium = SeeingSharpTools.DisposeObjectLazy(m_samplerStateMedium);
-            m_samplerStateHigh = SeeingSharpTools.DisposeObjectLazy(m_samplerStateHigh);
+            m_defaultBlendState = SeeingSharpUtil.DisposeObjectLazy(m_defaultBlendState);
+            m_depthStencilStateDefault = SeeingSharpUtil.DisposeObjectLazy(m_depthStencilStateDefault);
+            m_depthStencilStateDisableZWrites = SeeingSharpUtil.DisposeObjectLazy(m_depthStencilStateDisableZWrites);
+            m_rasterStateLines = SeeingSharpUtil.DisposeObjectLazy(m_rasterStateLines);
+            m_rasterStateDefault = SeeingSharpUtil.DisposeObjectLazy(m_rasterStateDefault);
+            m_samplerStateLow = SeeingSharpUtil.DisposeObjectLazy(m_samplerStateLow);
+            m_samplerStateMedium = SeeingSharpUtil.DisposeObjectLazy(m_samplerStateMedium);
+            m_samplerStateHigh = SeeingSharpUtil.DisposeObjectLazy(m_samplerStateHigh);
         }
 
         /// <summary>

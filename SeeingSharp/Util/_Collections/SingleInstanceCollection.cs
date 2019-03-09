@@ -22,6 +22,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -43,6 +44,8 @@ namespace SeeingSharp.Util
         /// <param name="item">The item.</param>
         public void Add(T item)
         {
+            item.EnsureNotNull(nameof(item));
+
             m_dictionary[item] = null;
         }
 
@@ -63,6 +66,8 @@ namespace SeeingSharp.Util
         /// </returns>
         public bool Contains(T item)
         {
+            item.EnsureNotNull(nameof(item));
+
             return m_dictionary.ContainsKey(item);
         }
 
@@ -83,6 +88,8 @@ namespace SeeingSharp.Util
         /// <returns></returns>
         public bool Remove(T item)
         {
+            item.EnsureNotNull(nameof(item));
+
             if (m_dictionary.ContainsKey(item))
             {
                 return m_dictionary.Remove(item);

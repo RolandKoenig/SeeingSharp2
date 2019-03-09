@@ -366,10 +366,10 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void UpdateDrawingResourcesForFailoverRendering()
         {
-            SeeingSharpTools.SafeDispose(ref m_backBrush);
-            SeeingSharpTools.SafeDispose(ref m_foreBrushText);
-            SeeingSharpTools.SafeDispose(ref m_backBrushText);
-            SeeingSharpTools.SafeDispose(ref m_borderPen);
+            SeeingSharpUtil.SafeDispose(ref m_backBrush);
+            SeeingSharpUtil.SafeDispose(ref m_foreBrushText);
+            SeeingSharpUtil.SafeDispose(ref m_backBrushText);
+            SeeingSharpUtil.SafeDispose(ref m_borderPen);
 
             m_backBrush = new HatchBrush(
                 HatchStyle.DottedGrid,
@@ -454,11 +454,11 @@ namespace SeeingSharp.Multimedia.Views
             m_renderDevice = null;
             m_renderDeviceContext = null;
 
-            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
-            m_depthBuffer = SeeingSharpTools.DisposeObject(m_depthBuffer);
-            m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
-            m_backBuffer = SeeingSharpTools.DisposeObject(m_backBuffer);
-            m_swapChain = SeeingSharpTools.DisposeObject(m_swapChain);
+            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
+            m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
+            m_renderTarget = SeeingSharpUtil.DisposeObject(m_renderTarget);
+            m_backBuffer = SeeingSharpUtil.DisposeObject(m_backBuffer);
+            m_swapChain = SeeingSharpUtil.DisposeObject(m_swapChain);
         }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
         public static readonly NamedOrGenericKey Empty = new NamedOrGenericKey();
 
         private string m_hint;
-        private int m_hashCode;
+        private readonly int m_hashCode;
 
         /// <summary>
         /// Private constructor - Just to be used for generated keys.
@@ -108,7 +108,7 @@ namespace SeeingSharp.Util
                 if (NameKey != null)
                 {
                     if (other.NameKey == null) { result = -1; }
-                    else { result = NameKey.CompareTo(other.NameKey); }
+                    else { result = string.Compare(NameKey, other.NameKey, StringComparison.Ordinal); }
                 }
                 else
                 {
@@ -128,9 +128,8 @@ namespace SeeingSharp.Util
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (obj is NamedOrGenericKey)
+            if (obj is NamedOrGenericKey other)
             {
-                var other = (NamedOrGenericKey)obj;
                 return Equals(other);
             }
             return false;

@@ -153,7 +153,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (brush != null)
             {
-                SeeingSharpTools.DisposeObject(brush);
+                SeeingSharpUtil.DisposeObject(brush);
                 m_loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }

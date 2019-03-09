@@ -76,8 +76,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (loadedBrush.Brush != null)
             {
-                loadedBrush.Brush = SeeingSharpTools.DisposeObject(loadedBrush.Brush);
-                loadedBrush.GradientStops = SeeingSharpTools.DisposeObject(loadedBrush.GradientStops);
+                loadedBrush.Brush = SeeingSharpUtil.DisposeObject(loadedBrush.Brush);
+                loadedBrush.GradientStops = SeeingSharpUtil.DisposeObject(loadedBrush.GradientStops);
 
                 m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
             }

@@ -61,9 +61,9 @@ namespace SeeingSharp.Tests
             }
             finally
             {
-                SeeingSharpTools.SafeDispose(ref ellipseGeometry01);
-                SeeingSharpTools.SafeDispose(ref ellipseGeometry02);
-                SeeingSharpTools.SafeDispose(ref ellipseGeometry03);
+                SeeingSharpUtil.SafeDispose(ref ellipseGeometry01);
+                SeeingSharpUtil.SafeDispose(ref ellipseGeometry02);
+                SeeingSharpUtil.SafeDispose(ref ellipseGeometry03);
             }
         }
 
@@ -87,9 +87,9 @@ namespace SeeingSharp.Tests
             }
             finally
             {
-                SeeingSharpTools.SafeDispose(ref ellipseGeometry01);
-                SeeingSharpTools.SafeDispose(ref ellipseGeometry02);
-                SeeingSharpTools.SafeDispose(ref polygonGeometry);
+                SeeingSharpUtil.SafeDispose(ref ellipseGeometry01);
+                SeeingSharpUtil.SafeDispose(ref ellipseGeometry02);
+                SeeingSharpUtil.SafeDispose(ref polygonGeometry);
             }
         }
 

@@ -107,7 +107,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public override void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_d2dGeometry);
+            SeeingSharpUtil.SafeDispose(ref m_d2dGeometry);
         }
 
         /// <summary>

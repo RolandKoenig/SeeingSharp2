@@ -93,24 +93,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 m_antialiasingQuality != currentAntialiasingQuality)
             {
                 // Dispose color-buffer resources
-                SeeingSharpTools.SafeDispose(ref m_colorBuffer);
-                SeeingSharpTools.SafeDispose(ref m_colorBufferRenderTargetView);
-                SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResourceView);
-                if (m_shaderResourceCreated) { SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResource); }
+                SeeingSharpUtil.SafeDispose(ref m_colorBuffer);
+                SeeingSharpUtil.SafeDispose(ref m_colorBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResourceView);
+                if (m_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResource); }
 
                 // Dispose depth-buffer resources
-                SeeingSharpTools.SafeDispose(ref m_depthBufferView);
-                SeeingSharpTools.SafeDispose(ref m_depthBuffer);
+                SeeingSharpUtil.SafeDispose(ref m_depthBufferView);
+                SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
 
                 // Dispose object-id buffer
-                SeeingSharpTools.SafeDispose(ref m_objectIDBufferRenderTargetView);
-                SeeingSharpTools.SafeDispose(ref m_objectIDBuffer);
+                SeeingSharpUtil.SafeDispose(ref m_objectIDBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref m_objectIDBuffer);
 
                 // Dispose normal-depth resources
-                SeeingSharpTools.SafeDispose(ref m_normalDepthBuffer);
-                SeeingSharpTools.SafeDispose(ref m_normalDepthBufferRenderTargetView);
-                SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResourceView);
-                if (m_shaderResourceCreated) { SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResource); }
+                SeeingSharpUtil.SafeDispose(ref m_normalDepthBuffer);
+                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResourceView);
+                if (m_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResource); }
 
                 // Create color-buffer resources
                 if (m_creationMode.HasFlag(RenderTargetCreationMode.Color))
@@ -187,20 +187,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpTools.SafeDispose(ref m_depthBufferView);
-            SeeingSharpTools.SafeDispose(ref m_colorBufferRenderTargetView);
-            SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResourceView);
-            SeeingSharpTools.SafeDispose(ref m_depthBuffer);
-            SeeingSharpTools.SafeDispose(ref m_colorBuffer);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferRenderTargetView);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResourceView);
-            SeeingSharpTools.SafeDispose(ref m_normalDepthBuffer);
+            SeeingSharpUtil.SafeDispose(ref m_depthBufferView);
+            SeeingSharpUtil.SafeDispose(ref m_colorBufferRenderTargetView);
+            SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResourceView);
+            SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
+            SeeingSharpUtil.SafeDispose(ref m_colorBuffer);
+            SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferRenderTargetView);
+            SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResourceView);
+            SeeingSharpUtil.SafeDispose(ref m_normalDepthBuffer);
 
             // Unload shader resource if it was created explecitely
             if (m_shaderResourceCreated)
             {
-                SeeingSharpTools.SafeDispose(ref m_colorBufferShaderResource);
-                SeeingSharpTools.SafeDispose(ref m_normalDepthBufferShaderResource);
+                SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResource);
+                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResource);
                 m_shaderResourceCreated = false;
             }
         }

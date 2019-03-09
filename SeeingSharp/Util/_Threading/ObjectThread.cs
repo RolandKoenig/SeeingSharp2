@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -164,11 +165,10 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Stop()
         {
-            if (m_currentState != ObjectThreadState.Running) { throw new InvalidOperationException("Unable to stop thread: Illegal state: " + m_currentState + "!"); }
+            if (m_currentState != ObjectThreadState.Running) { throw new InvalidOperationException($"Unable to stop thread: Illegal state: {m_currentState}!"); }
             m_currentState = ObjectThreadState.Stopping;
 
-            Action dummyAction = null;
-            while (m_taskQueue.TryDequeue(out dummyAction))
+            while (m_taskQueue.TryDequeue(out _))
             {
                 ;
             }
@@ -200,10 +200,7 @@ namespace SeeingSharp.Util
         {
             var synchronizationObject = m_mainLoopSynchronizeObject;
 
-            if (synchronizationObject != null)
-            {
-                synchronizationObject.Release();
-            }
+            synchronizationObject?.Release();
         }
 
         /// <summary>
@@ -212,12 +209,9 @@ namespace SeeingSharp.Util
         /// <param name="actionToInvoke">The delegate to invoke.</param>
         public Task InvokeAsync(Action actionToInvoke)
         {
-            if (actionToInvoke == null)
-            {
-                throw new ArgumentNullException("actionToInvoke");
-            }
+            actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            //Enqueues the given action
+            // Enqueue the given action
             var taskCompletionSource = new TaskCompletionSource<object>();
 
             m_taskQueue.Enqueue(() =>
@@ -372,7 +366,10 @@ namespace SeeingSharp.Util
 
             // Notify thread stop event
             try { m_threadStopSynchronizeObject.Release(); }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         /// <summary>

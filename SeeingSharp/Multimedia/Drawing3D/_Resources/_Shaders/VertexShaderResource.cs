@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            m_vertexShader = SeeingSharpTools.DisposeObject(m_vertexShader);
+            m_vertexShader = SeeingSharpUtil.DisposeObject(m_vertexShader);
         }
 
         /// <summary>

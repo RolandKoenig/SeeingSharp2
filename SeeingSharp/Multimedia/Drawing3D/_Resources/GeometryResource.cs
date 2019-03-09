@@ -216,7 +216,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     if (newInputLayout != null)
                     {
                         deviceContext.InputAssembler.InputLayout = null;
-                        SeeingSharpTools.SafeDispose(ref newInputLayout);
+                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
                     }
                 }
             }
@@ -253,9 +253,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             for (var loop = 0; loop < m_loadedStructures.Length; loop++)
             {
-                m_loadedStructures[loop].InputLayout = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].InputLayout);
-                m_loadedStructures[loop].VertexBuffer = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].VertexBuffer);
-                m_loadedStructures[loop].IndexBuffer = SeeingSharpTools.DisposeObject(m_loadedStructures[loop].IndexBuffer);
+                m_loadedStructures[loop].InputLayout = SeeingSharpUtil.DisposeObject(m_loadedStructures[loop].InputLayout);
+                m_loadedStructures[loop].VertexBuffer = SeeingSharpUtil.DisposeObject(m_loadedStructures[loop].VertexBuffer);
+                m_loadedStructures[loop].IndexBuffer = SeeingSharpUtil.DisposeObject(m_loadedStructures[loop].IndexBuffer);
             }
             m_loadedStructures = new LoadedStructureInfo[0];
 

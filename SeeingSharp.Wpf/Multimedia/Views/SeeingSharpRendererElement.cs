@@ -284,12 +284,12 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             // Dispose all other resources
-            m_renderTarget2DDxgi = SeeingSharpTools.DisposeObject(m_renderTarget2DDxgi);
-            m_renderTargetDepth = SeeingSharpTools.DisposeObject(m_renderTargetDepth);
-            m_depthBuffer = SeeingSharpTools.DisposeObject(m_depthBuffer);
-            m_renderTarget = SeeingSharpTools.DisposeObject(m_renderTarget);
-            m_backBufferForWpf = SeeingSharpTools.DisposeObject(m_backBufferForWpf);
-            m_backBufferD3D11 = SeeingSharpTools.DisposeObject(m_backBufferD3D11);
+            m_renderTarget2DDxgi = SeeingSharpUtil.DisposeObject(m_renderTarget2DDxgi);
+            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
+            m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
+            m_renderTarget = SeeingSharpUtil.DisposeObject(m_renderTarget);
+            m_backBufferForWpf = SeeingSharpUtil.DisposeObject(m_backBufferForWpf);
+            m_backBufferD3D11 = SeeingSharpUtil.DisposeObject(m_backBufferD3D11);
 
             // Reset composition mode
             CompositionMode = WpfSeeingSharpCompositionMode.None;
@@ -391,12 +391,12 @@ namespace SeeingSharp.Multimedia.Views
                         initializedSuccessfully = false;
                         forceFallbackSolution = true;
 
-                        SeeingSharpTools.SafeDispose(ref m_d3dImageSource);
-                        SeeingSharpTools.SafeDispose(ref m_renderTargetDepth);
-                        SeeingSharpTools.SafeDispose(ref m_depthBuffer);
-                        SeeingSharpTools.SafeDispose(ref m_renderTarget);
-                        SeeingSharpTools.SafeDispose(ref m_backBufferForWpf);
-                        SeeingSharpTools.SafeDispose(ref m_backBufferD3D11);
+                        SeeingSharpUtil.SafeDispose(ref m_d3dImageSource);
+                        SeeingSharpUtil.SafeDispose(ref m_renderTargetDepth);
+                        SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
+                        SeeingSharpUtil.SafeDispose(ref m_renderTarget);
+                        SeeingSharpUtil.SafeDispose(ref m_backBufferForWpf);
+                        SeeingSharpUtil.SafeDispose(ref m_backBufferD3D11);
                     }
                 }
                 else

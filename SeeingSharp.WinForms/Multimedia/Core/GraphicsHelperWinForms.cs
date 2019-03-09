@@ -182,7 +182,7 @@ namespace SeeingSharp.Multimedia.Core
                         // Copy bitmap data
                         var rowPitchSource = dataBox.RowPitch;
                         var rowPitchDestination = width * 4;
-                        SeeingSharpTools.CopyMemory(
+                        SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             bitmapData.Scan0 + loopRow * rowPitchDestination,
                             rowPitch);

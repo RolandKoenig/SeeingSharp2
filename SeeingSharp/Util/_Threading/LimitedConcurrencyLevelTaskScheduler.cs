@@ -27,53 +27,59 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
-    // Provides a task scheduler that ensures a maximum concurrency level while
-    // running on top of the thread pool.
+    /// <summary>
+    /// Provides a task scheduler that ensures a maximum concurrency level while
+    /// running on top of the thread pool.
+    /// </summary>
     public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     {
         // Indicates whether the current thread is processing work items.
         [ThreadStatic]
-        private static bool _currentThreadIsProcessingItems;
+        private static bool m_currentThreadIsProcessingItems;
 
         // The list of tasks to be executed
-        private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)d
-
-        // The maximum concurrency level allowed by this scheduler.
+        private readonly LinkedList<Task> m_tasks = new LinkedList<Task>(); // protected by lock(m_tasks)d
 
         // Indicates whether the scheduler is currently processing work items.
-        private int _delegatesQueuedOrRunning;
+        private int m_delegatesQueuedOrRunning;
 
-        // Creates a new instance with the specified degree of parallelism.
+        /// <summary>
+        /// Creates a new instance with the specified degree of parallelism.
+        /// </summary>
         public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
         {
             if (maxDegreeOfParallelism < 1)
             {
-                throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
+                throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
             }
             MaximumConcurrencyLevel = maxDegreeOfParallelism;
         }
 
-        // Queues a task to the scheduler.
+        /// <summary>
+        /// Queues a task to the scheduler.
+        /// </summary>
         protected sealed override void QueueTask(Task task)
         {
             // Add the task to the list of tasks to be processed.  If there aren't enough
             // delegates currently queued or running to process tasks, schedule another.
-            lock (_tasks)
+            lock (m_tasks)
             {
-                _tasks.AddLast(task);
-                if (_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
+                m_tasks.AddLast(task);
+                if (m_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
                 {
-                    ++_delegatesQueuedOrRunning;
+                    ++m_delegatesQueuedOrRunning;
                     NotifyThreadPoolOfPendingWork();
                 }
             }
         }
 
-        // Attempts to execute the specified task on the current thread.
+        /// <summary>
+        /// Attempts to execute the specified task on the current thread.
+        /// </summary>
         protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             // If this thread isn't already processing a task, we don't support inlining
-            if (!_currentThreadIsProcessingItems)
+            if (!m_currentThreadIsProcessingItems)
             {
                 return false;
             }
@@ -91,25 +97,30 @@ namespace SeeingSharp.Util
             return TryExecuteTask(task);
         }
 
-        // Attempt to remove a previously scheduled task from the scheduler.
+        /// <summary>
+        /// Attempt to remove a previously scheduled task from the scheduler.
+        /// </summary>
         protected sealed override bool TryDequeue(Task task)
         {
-            lock (_tasks)
+            lock (m_tasks)
             {
-                return _tasks.Remove(task);
+                return m_tasks.Remove(task);
             }
         }
 
-        // Gets an enumerable of the tasks currently scheduled on this scheduler.
+        /// <summary>
+        /// Gets an enumerable of the tasks currently scheduled on this scheduler.
+        /// </summary>
+        /// <returns></returns>
         protected sealed override IEnumerable<Task> GetScheduledTasks()
         {
             var lockTaken = false;
             try
             {
-                Monitor.TryEnter(_tasks, ref lockTaken);
+                Monitor.TryEnter(m_tasks, ref lockTaken);
                 if (lockTaken)
                 {
-                    return _tasks;
+                    return m_tasks;
                 }
                 else
                 {
@@ -120,12 +131,14 @@ namespace SeeingSharp.Util
             {
                 if (lockTaken)
                 {
-                    Monitor.Exit(_tasks);
+                    Monitor.Exit(m_tasks);
                 }
             }
         }
 
-        // Inform the ThreadPool that there's work to be executed for this scheduler.
+        /// <summary>
+        /// Inform the ThreadPool that there's work to be executed for this scheduler.
+        /// </summary>
         private void NotifyThreadPoolOfPendingWork()
         {
             ThreadPool.UnsafeQueueUserWorkItem(
@@ -133,26 +146,26 @@ namespace SeeingSharp.Util
                 {
                     // Note that the current thread is now processing work items.
                     // This is necessary to enable inlining of tasks into this thread.
-                    _currentThreadIsProcessingItems = true;
+                    m_currentThreadIsProcessingItems = true;
                     try
                     {
                         // Process all available items in the queue.
                         while (true)
                         {
                             Task item;
-                            lock (_tasks)
+                            lock (m_tasks)
                             {
                                 // When there are no more items to be processed,
                                 // note that we're done processing, and get out.
-                                if (_tasks.Count == 0)
+                                if (m_tasks.Count == 0)
                                 {
-                                    --_delegatesQueuedOrRunning;
+                                    --m_delegatesQueuedOrRunning;
                                     break;
                                 }
 
                                 // Get the next item from the queue
-                                item = _tasks.First.Value;
-                                _tasks.RemoveFirst();
+                                item = m_tasks.First.Value;
+                                m_tasks.RemoveFirst();
                             }
 
                             // Execute the task we pulled out of the queue
@@ -160,12 +173,14 @@ namespace SeeingSharp.Util
                         }
                     }
                     // We're done processing items on the current thread
-                    finally { _currentThreadIsProcessingItems = false; }
+                    finally { m_currentThreadIsProcessingItems = false; }
                 },
                 null);
         }
 
-        // Gets the maximum concurrency level supported by this scheduler.
+        /// <summary>
+        /// Gets the maximum concurrency level supported by this scheduler.
+        /// </summary>
         public sealed override int MaximumConcurrencyLevel { get; }
     }
 }

@@ -103,12 +103,12 @@ namespace SeeingSharp.Multimedia.Core
             // Dispose all created objects
             if (m_renderTarget2D != null)
             {
-                SeeingSharpTools.SafeDispose(ref m_renderTargetBitmap);
+                SeeingSharpUtil.SafeDispose(ref m_renderTargetBitmap);
                 m_renderTarget2D = null;
             }
             else
             {
-                SeeingSharpTools.SafeDispose(ref m_renderTarget2D);
+                SeeingSharpUtil.SafeDispose(ref m_renderTarget2D);
             }
         }
 

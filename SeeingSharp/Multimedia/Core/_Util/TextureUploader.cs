@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     for (var loopY = 0; loopY < m_height; loopY++)
                     {
-                        SeeingSharpTools.CopyMemory(
+                        SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
                             intBuffer.Pointer + loopY * rowPitchDestination,
                             (ulong)rowPitchDestination);
@@ -158,7 +158,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     for (var loopY = 0; loopY < m_height; loopY++)
                     {
-                        SeeingSharpTools.CopyMemory(
+                        SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
                             floatBuffer.Pointer + loopY * rowPitchDestination,
                             (ulong)rowPitchDestination);
@@ -204,8 +204,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_copyHelperTextureStaging);
-            SeeingSharpTools.SafeDispose(ref m_copyHelperTextureStandard);
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             D2D.Brush brush = m_loadedBrushes[engineDevice.DeviceIndex];
             if(brush != null)
             {
-                SeeingSharpTools.DisposeObject(brush);
+                SeeingSharpUtil.DisposeObject(brush);
                 m_loadedBrushes[engineDevice.DeviceIndex] = null;
             }
         }

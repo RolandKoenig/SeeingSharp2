@@ -187,7 +187,7 @@ namespace SeeingSharp.Util
                 await Task.Delay(2);
             }
 
-            // Do short delay pahses until we reach a point where we are "near" the target value
+            // Do short delay phases until we reach a point where we are "near" the target value
             while(stopwatch.GetTrueElapsedMilliseconds() < delayMilliseconds - 10.0)
             {
                 await Task.Delay(2);
@@ -210,24 +210,20 @@ namespace SeeingSharp.Util
 
         public static bool HasAnyElement<T>(IEnumerable<T> collection)
         {
-            var readonlyCollection = collection as IReadOnlyCollection<T>;
-            if (readonlyCollection != null)
+            switch (collection)
             {
-                return readonlyCollection.Count > 0;
-            }
-            var simpleCollection = collection as ICollection;
+                case IReadOnlyCollection<T> readonlyCollection:
+                    return readonlyCollection.Count > 0;
+                case ICollection simpleCollection:
+                    return simpleCollection.Count > 0;
 
-            if (simpleCollection != null)
-            {
-                return simpleCollection.Count > 0;
+                default:
+                    foreach (var actElement in collection)
+                    {
+                        return true;
+                    }
+                    return false;
             }
-            // Try to loop forward to the first element
-            foreach(var actElement in collection)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -235,19 +231,16 @@ namespace SeeingSharp.Util
         /// </summary>
         public static int GetCollectionCount<T>(IEnumerable<T> collection)
         {
-            var readonlyCollection = collection as IReadOnlyCollection<T>;
-
-            if (readonlyCollection != null)
+            switch (collection)
             {
-                return readonlyCollection.Count;
-            }
-            var simpleCollection = collection as ICollection;
+                case IReadOnlyCollection<T> readonlyCollection:
+                    return readonlyCollection.Count;
+                case ICollection simpleCollection:
+                    return simpleCollection.Count;
 
-            if (simpleCollection != null)
-            {
-                return simpleCollection.Count;
+                default:
+                    return collection.Count();
             }
-            return collection.Count();
         }
 
         /// <summary>

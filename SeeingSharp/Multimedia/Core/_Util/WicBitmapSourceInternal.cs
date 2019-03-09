@@ -36,8 +36,8 @@ namespace SeeingSharp.Multimedia.Core
 
         public void Dispose()
         {
-            Converter = SeeingSharpTools.DisposeObject(Converter);
-            Decoder = SeeingSharpTools.DisposeObject(Decoder);
+            Converter = SeeingSharpUtil.DisposeObject(Converter);
+            Decoder = SeeingSharpUtil.DisposeObject(Decoder);
         }
 
         public bool IsDisposed => Converter == null;

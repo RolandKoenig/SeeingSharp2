@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpTools.SafeDispose(ref m_inputLayout);
+            SeeingSharpUtil.SafeDispose(ref m_inputLayout);
 
             m_vertexShader = null;
             m_pixelShader = null;

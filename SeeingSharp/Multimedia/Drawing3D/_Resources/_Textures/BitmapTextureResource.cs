@@ -74,8 +74,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             if (m_texture != null)
             {
-                m_textureView = SeeingSharpTools.DisposeObject(m_textureView);
-                m_texture = SeeingSharpTools.DisposeObject(m_texture);
+                m_textureView = SeeingSharpUtil.DisposeObject(m_textureView);
+                m_texture = SeeingSharpUtil.DisposeObject(m_texture);
             }
         }
 

@@ -131,8 +131,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
+            SeeingSharpUtil.SafeDispose(ref m_renderTargetTextureView);
+            SeeingSharpUtil.SafeDispose(ref m_renderTargetTexture);
         }
 
         /// <summary>

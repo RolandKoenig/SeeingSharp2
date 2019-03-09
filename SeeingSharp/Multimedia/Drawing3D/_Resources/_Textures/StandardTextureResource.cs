@@ -116,8 +116,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_textureView = SeeingSharpTools.DisposeObject(m_textureView);
-            m_texture = SeeingSharpTools.DisposeObject(m_texture);
+            m_textureView = SeeingSharpUtil.DisposeObject(m_textureView);
+            m_texture = SeeingSharpUtil.DisposeObject(m_texture);
 
             m_isCubeTexture = false;
             m_isRenderTarget = false;

@@ -92,8 +92,8 @@ namespace SeeingSharp.Multimedia.Core
             catch (Exception)
             {
                 // No direct3d 9 interface support
-                SeeingSharpTools.SafeDispose(ref m_direct3DEx);
-                SeeingSharpTools.SafeDispose(ref m_deviceEx);
+                SeeingSharpUtil.SafeDispose(ref m_direct3DEx);
+                SeeingSharpUtil.SafeDispose(ref m_deviceEx);
             }
         }
 
@@ -102,8 +102,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            m_deviceEx = SeeingSharpTools.DisposeObject(m_deviceEx);
-            m_direct3DEx = SeeingSharpTools.DisposeObject(m_direct3DEx);
+            m_deviceEx = SeeingSharpUtil.DisposeObject(m_deviceEx);
+            m_direct3DEx = SeeingSharpUtil.DisposeObject(m_direct3DEx);
         }
 
         /// <summary>

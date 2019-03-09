@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             using (var inStream = await resourceLink.OpenInputStreamAsync())
             {
-                wicBitmapSource = await SeeingSharpTools.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream));
+                wicBitmapSource = await SeeingSharpUtil.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream));
             }
 
             return new WicBitmapSource(wicBitmapSource);
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_wicBitmapSource);
+            SeeingSharpUtil.SafeDispose(ref m_wicBitmapSource);
         }
 
         public int Width

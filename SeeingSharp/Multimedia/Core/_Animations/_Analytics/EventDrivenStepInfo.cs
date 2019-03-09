@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public override string ToString()
         {
-            return "" + AnimationCount + " Animations (Time: " + SeeingSharpTools.FormatTimespanCompact(UpdateTime) + ")";
+            return "" + AnimationCount + " Animations (Time: " + SeeingSharpUtil.FormatTimespanCompact(UpdateTime) + ")";
         }
 
         public int AnimationCount

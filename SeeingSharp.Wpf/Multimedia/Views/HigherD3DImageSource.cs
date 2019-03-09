@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             SetRenderTarget(null);
 
-            m_d3dRenderTarget = SeeingSharpTools.DisposeObject(m_d3dRenderTarget);
+            m_d3dRenderTarget = SeeingSharpUtil.DisposeObject(m_d3dRenderTarget);
             s_activeClients--;
         }
 

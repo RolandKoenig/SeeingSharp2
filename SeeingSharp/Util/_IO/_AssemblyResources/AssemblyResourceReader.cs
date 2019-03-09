@@ -56,23 +56,23 @@ namespace SeeingSharp.Util
             m_resources = new List<AssemblyResourceInfo>();
             m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
 
-            foreach (var actAttrib in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
+            foreach (var actAttribute in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
             {
-                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttrib.ResourcePath);
+                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttribute.ResourcePath);
 
                 if (resInfo != null)
                 {
-                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttrib.ResourcePath, actAttrib.Key);
+                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttribute.ResourcePath, actAttribute.Key);
                     m_resources.Add(fileInfo);
 
-                    if (actAttrib.Key != null && !m_resourcesDict.ContainsKey(actAttrib.Key))
+                    if (actAttribute.Key != null && !m_resourcesDict.ContainsKey(actAttribute.Key))
                     {
-                        m_resourcesDict.Add(actAttrib.Key, fileInfo);
+                        m_resourcesDict.Add(actAttribute.Key, fileInfo);
                     }
                 }
                 else
                 {
-                    throw new SeeingSharpException("Resource " + actAttrib.ResourcePath + " not found!");
+                    throw new SeeingSharpException("Resource " + actAttribute.ResourcePath + " not found!");
                 }
             }
 
@@ -162,7 +162,7 @@ namespace SeeingSharp.Util
         public Assembly TargetAssembly { get; }
 
         /// <summary>
-        /// Gets a collection contaning all resource files
+        /// Gets a collection containing all resource files
         /// </summary>
         public ResourceInfoCollection ResourceFiles { get; }
 

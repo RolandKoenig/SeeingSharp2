@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_radiusX = radiusX;
             m_radiusY = radiusY;
 
-            SeeingSharpTools.SafeDispose(ref m_geometry);
+            SeeingSharpUtil.SafeDispose(ref m_geometry);
             m_geometry = new D2D.EllipseGeometry(
                 GraphicsCore.Current.FactoryD2D,
                 new D2D.Ellipse(
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public override void Dispose()
         {
-            SeeingSharpTools.SafeDispose(ref m_geometry);
+            SeeingSharpUtil.SafeDispose(ref m_geometry);
         }
 
         /// <summary>

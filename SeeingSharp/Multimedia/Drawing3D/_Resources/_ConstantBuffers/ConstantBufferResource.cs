@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = SeeingSharpTools.DisposeObject(m_constantBuffer);
+            m_constantBuffer = SeeingSharpUtil.DisposeObject(m_constantBuffer);
         }
 
         /// <summary>

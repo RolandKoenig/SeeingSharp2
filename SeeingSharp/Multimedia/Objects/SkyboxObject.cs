@@ -130,8 +130,8 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 if (actLocalResource == null) { continue; }
 
-                SeeingSharpTools.SafeDispose(ref actLocalResource.IndexBuffer);
-                SeeingSharpTools.SafeDispose(ref actLocalResource.VertexBuffer);
+                SeeingSharpUtil.SafeDispose(ref actLocalResource.IndexBuffer);
+                SeeingSharpUtil.SafeDispose(ref actLocalResource.VertexBuffer);
             }
 
             // Clear local resource container

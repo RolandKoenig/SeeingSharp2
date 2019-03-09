@@ -117,9 +117,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             m_graphics2D = null;
-            SeeingSharpTools.SafeDispose(ref m_overlayRenderer);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTextureView);
-            SeeingSharpTools.SafeDispose(ref m_renderTargetTexture);
+            SeeingSharpUtil.SafeDispose(ref m_overlayRenderer);
+            SeeingSharpUtil.SafeDispose(ref m_renderTargetTextureView);
+            SeeingSharpUtil.SafeDispose(ref m_renderTargetTexture);
         }
 
         /// <summary>
