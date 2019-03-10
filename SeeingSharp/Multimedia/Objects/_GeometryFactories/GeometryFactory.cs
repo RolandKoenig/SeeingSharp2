@@ -24,9 +24,9 @@ namespace SeeingSharp.Multimedia.Objects
     public abstract class GeometryFactory
     {
         /// <summary>
-        /// Builds a <see cref="VertexStructure"/> using given parameters (like DetailLevel).
+        /// Builds a <see cref="Geometry"/> using given parameters (like DetailLevel).
         /// </summary>
         /// <param name="buildOptions">Some generic options for geometry building</param>
-        public abstract VertexStructure BuildStructure(GeometryBuildOptions buildOptions);
+        public abstract Geometry BuildStructure(GeometryBuildOptions buildOptions);
     }
 }

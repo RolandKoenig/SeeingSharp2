@@ -41,10 +41,10 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds all vertex structures for the given detail level.
+        /// Builds the geometry for the given detail level.
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
             var structureFromChild = m_geometryToStack.BuildStructure(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
             var childStructBox = structureFromChild.GenerateBoundingBox();
             var correctionVector = -childStructBox.GetBottomCenter();
 
-            // Copy metadata information of the VertexStructures
+            // Copy metadata information of the Geometry
             var result = structureFromChild.Clone(
                 false,
                 m_stackSize);

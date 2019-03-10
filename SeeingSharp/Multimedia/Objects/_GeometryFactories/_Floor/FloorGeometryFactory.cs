@@ -175,12 +175,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds the structure.
         /// </summary>
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
 
-            // Hold dictionary containing materials and corresponding structures
-            var materialRelated = new Dictionary<NamedOrGenericKey, VertexStructureSurface>();
+            // Hold dictionary containing materials and corresponding geometry
+            var materialRelated = new Dictionary<NamedOrGenericKey, GeometrySurface>();
 
             // Build bottom structure
             var bottomSurface = result.CreateSurface();
@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Get surface object
-                VertexStructureSurface actSurface = null;
+                GeometrySurface actSurface = null;
 
                 if (materialRelated.ContainsKey(actMaterial))
                 {
@@ -222,7 +222,7 @@ namespace SeeingSharp.Multimedia.Objects
                     0f,
                     actTile.YPos * m_tileSize.Y - totalHalfSize.Y);
 
-                // Add tile information to current VertexStructures
+                // Add tile information to current Geometry
                 actSurface.BuildCubeTop4V(
                     new Vector3(tilePosition.X, -m_height, tilePosition.Z),
                     new Vector3(m_tileSize.X, m_height, m_tileSize.Y),
@@ -234,7 +234,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Build all borders
-            VertexStructureSurface borderSurface = null;
+            GeometrySurface borderSurface = null;
             if (materialRelated.ContainsKey(BorderMaterial)) { borderSurface = materialRelated[BorderMaterial]; }
             else
             {
@@ -289,7 +289,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            //Return all generated VertexStructures
+            // Return all generated Geometry
             return result;
         }
 

@@ -29,46 +29,46 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
         /// </summary>
-        /// <param name="vertexStructure">The vertex structures.</param>
-        public GenericGeometryFactory(VertexStructure vertexStructure)
+        /// <param name="geometry">The geometry.</param>
+        public GenericGeometryFactory(Geometry geometry)
         {
-            VertexStructure = vertexStructure;
-            VertexStructureLowDetail = vertexStructure;
+            Geometry = geometry;
+            GeometryLowDetail = geometry;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericGeometryFactory"/> class.
         /// </summary>
-        /// <param name="vertexStructure">The vertex structures.</param>
-        /// <param name="vertexStructureLowDetail">The vertex structures for low detail level.</param>
-        public GenericGeometryFactory(VertexStructure vertexStructure, VertexStructure vertexStructureLowDetail)
+        /// <param name="geometry">The geometry.</param>
+        /// <param name="geometryLowDetail">The geometry for low detail level.</param>
+        public GenericGeometryFactory(Geometry geometry, Geometry geometryLowDetail)
         {
-            VertexStructure = vertexStructure;
-            VertexStructureLowDetail = vertexStructureLowDetail;
+            Geometry = geometry;
+            GeometryLowDetail = geometryLowDetail;
         }
 
         /// <summary>
         /// Builds the structure.
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
-            if (buildOptions.IsHighDetail) { return VertexStructure; }
-            return VertexStructureLowDetail;
+            if (buildOptions.IsHighDetail) { return Geometry; }
+            return GeometryLowDetail;
         }
 
         /// <summary>
-        /// Applies the given material to all contained vertex structures.
+        /// Applies the given material to all contained surfaces.
         /// </summary>
         /// <param name="materialToApply">The materials to apply.</param>
         public void ApplyMaterialForAll(NamedOrGenericKey materialToApply)
         {
-            foreach (var actSurface in VertexStructure.Surfaces)
+            foreach (var actSurface in Geometry.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
 
-            foreach (var actSurface in VertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in GeometryLowDetail.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
@@ -81,7 +81,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialNameNew">The new material to be converted to.</param>
         public void ConvertMaterial(NamedOrGenericKey materialNameOld, NamedOrGenericKey materialNameNew)
         {
-            foreach (var actSurface in VertexStructure.Surfaces)
+            foreach (var actSurface in Geometry.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            foreach (var actSurface in VertexStructureLowDetail.Surfaces)
+            foreach (var actSurface in GeometryLowDetail.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -99,13 +99,13 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets the array containing all loaded vertex structures.
+        /// Gets the containing geometry.
         /// </summary>
-        public VertexStructure VertexStructure { get; }
+        public Geometry Geometry { get; }
 
         /// <summary>
-        /// Gets an array containing all loaded vertex structures for low detail level.
+        /// Gets the containing geometry for low detail level.
         /// </summary>
-        public VertexStructure VertexStructureLowDetail { get; }
+        public Geometry GeometryLowDetail { get; }
     }
 }

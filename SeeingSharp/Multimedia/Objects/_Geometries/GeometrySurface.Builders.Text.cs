@@ -27,7 +27,7 @@ using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public partial class VertexStructureSurface
+    public partial class GeometrySurface
     {
         /// <summary>
         /// Builds the text geometry for the given string.
@@ -90,8 +90,8 @@ namespace SeeingSharp.Multimedia.Objects
                         writeFactory, geometryOptions.FontFamily, fontWeight, fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
-                // Render the text using the vertex structure text renderer
-                using (var textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
+                // Render the text using the geometry text renderer
+                using (var textRenderer = new GeometryTextRenderer(this, geometryOptions))
                 {
                     textLayout.Draw(textRenderer, 0f, 0f);
                 }

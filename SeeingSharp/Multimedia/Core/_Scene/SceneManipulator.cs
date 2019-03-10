@@ -263,7 +263,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject Add3DText(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false, string layer = Scene.DEFAULT_LAYER_NAME)
         {
-            var newStructure = new VertexStructure();
+            var newStructure = new Geometry();
             newStructure.FirstSurface.BuildTextGeometry(
                 textToDisplay,
                 textOptions);

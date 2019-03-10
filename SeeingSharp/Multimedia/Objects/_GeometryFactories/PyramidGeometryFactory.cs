@@ -8,14 +8,14 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class PyramidGeometryFactory : GeometryFactory
     {
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
             var matProperties = new MaterialProperties
             {
                 Key = Material
             };
 
-            var result = new VertexStructure();
+            var result = new Geometry();
             result.CreateOrGetExistingSurface(matProperties)
                 .BuildPyramidFullV(
                     new Vector3(0f, 0f, 0f),

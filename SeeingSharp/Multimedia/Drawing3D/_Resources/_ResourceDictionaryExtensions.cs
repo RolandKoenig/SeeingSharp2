@@ -30,9 +30,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
     internal static class ResourceDictionaryExtensions
     {
         /// <summary>
-        /// Gets or creates the material resource for the given VertexStructure object.
+        /// Gets or creates the material resource for the given <see cref="GeometrySurface"/> object.
         /// </summary>
-        internal static MaterialResource GetOrCreateMaterialResourceAndEnsureLoaded(this ResourceDictionary resourceDict, VertexStructureSurface targetSurface)
+        internal static MaterialResource GetOrCreateMaterialResourceAndEnsureLoaded(this ResourceDictionary resourceDict, GeometrySurface targetSurface)
         {
             var materialResource = GetOrCreateMaterialResource(resourceDict, targetSurface);
 
@@ -45,9 +45,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Gets or creates the material resource for the given VertexStructure object.
+        /// Gets or creates the material resource for the given <see cref="GeometrySurface"/> object.
         /// </summary>
-        internal static MaterialResource GetOrCreateMaterialResource(this ResourceDictionary resourceDict, VertexStructureSurface targetSurface)
+        internal static MaterialResource GetOrCreateMaterialResource(this ResourceDictionary resourceDict, GeometrySurface targetSurface)
         {
             var materialKey = targetSurface.Material;
             var textureKey = targetSurface.TextureKey;
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, VertexStructure structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, Geometry structure)
         {
             return resourceDictionary.AddResource(new GeometryResource(structure));
         }
@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, VertexStructure structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, Geometry structure)
         {
             return resourceDictionary.AddResource(resourceKey, new GeometryResource(structure));
         }
@@ -197,7 +197,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            var newStructure = new VertexStructure();
+            var newStructure = new Geometry();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDictionary.AddGeometry(newStructure);
@@ -208,7 +208,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            var newStructure = new VertexStructure();
+            var newStructure = new Geometry();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDictionary.AddGeometry(resourceKey, newStructure);

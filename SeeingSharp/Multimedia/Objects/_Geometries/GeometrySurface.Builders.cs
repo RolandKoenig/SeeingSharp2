@@ -26,7 +26,7 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public partial class VertexStructureSurface
+    public partial class GeometrySurface
     {
         // Members for build-time transform
         private Vector2 m_tileSize = Vector2.Zero;
@@ -600,7 +600,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into a vertex structure (this cube is built up of just 8 vertices, so not texturing is supported)
+        /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so not texturing is supported)
         /// </summary>
         /// <param name="start">Start point of the cube (left-lower-front point)</param>
         /// <param name="size">Size of the cube</param>
@@ -610,7 +610,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into a vertex structure (this cube is built up of just 8 vertices, so no texturing is supported)
+        /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so no texturing is supported)
         /// </summary>
         /// <param name="start">Start point of the cube (left-lower-front point)</param>
         /// <param name="size">Size of the cube</param>
@@ -648,7 +648,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into this VertexStructure (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>
@@ -658,7 +658,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into this VertexStructure (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>
@@ -773,7 +773,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into this VertexStructure (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="box">Box defining bounds of generated cube.</param>
         /// <param name="color">Color of generated vertices.</param>
@@ -783,7 +783,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into this VertexStructure (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="box">Box defining bounds of generated cube.</param>
         public BuiltVerticesRange BuildCube24V(BoundingBox box)
@@ -806,7 +806,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into this VertexStructure (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="bottomCenter">Bottom center point of the cube.</param>
         /// <param name="width">Width (and depth) of the cube.</param>
@@ -823,7 +823,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure (Supports texturing and normal vectors)
+        /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, TextureCoordinateCalculationAlignment uCoordAlignment, TextureCoordinateCalculationAlignment vCoordAlignment, float coordRepeatUnit)
         {
@@ -877,7 +877,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds the top side of a cube into this VertexStructure (Built up of 4 vertices, so texture coordinates and normals are set)
+        /// Builds the top side of a cube into this Geometry (Built up of 4 vertices, so texture coordinates and normals are set)
         /// </summary>
         public BuiltVerticesRange BuildCubeTop4V(Vector3 start, Vector3 size, Color4 color)
         {
@@ -893,7 +893,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds the bottom side of a cube into this VertexStructure (Built up of 4 vertices, so texture coordinates and normals are set)
+        /// Builds the bottom side of a cube into this Geometry (Built up of 4 vertices, so texture coordinates and normals are set)
         /// </summary>
         public BuiltVerticesRange BuildCubeBottom4V(Vector3 start, Vector3 size, Color4 color)
         {
@@ -909,7 +909,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds cube sides into this VertexStructure (these sides are built up of  16 vertices, so texture coordinates and normals are set)
+        /// Builds cube sides into this Geometry (these sides are built up of  16 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>
@@ -972,7 +972,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure
+        /// Build a single rectangle into the geometry
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD)
         {
@@ -980,7 +980,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure (Supports texturing)
+        /// Build a single rectangle into the geometry (Supports texturing)
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Color4 color)
         {
@@ -1007,7 +1007,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure (Supports texturing and normal vectors)
+        /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal)
         {
@@ -1015,7 +1015,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure (Supports texturing and normal vectors)
+        /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Color4 color)
         {
@@ -1042,7 +1042,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the vertex structure (Supports texturing and normal vectors)
+        /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Color4 color, Vector2 minTexCoord, Vector2 maxTexCoord)
         {

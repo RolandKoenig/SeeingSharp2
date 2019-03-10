@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 KEY_GEOMETRY,
                 () =>
                 {
-                    var structure = new VertexStructure();
+                    var structure = new Geometry();
                     structure.FirstSurface.BuildRect4V(
                         new Vector3(-1f, -1f, 0f),
                         new Vector3(1f, -1f, 0f),

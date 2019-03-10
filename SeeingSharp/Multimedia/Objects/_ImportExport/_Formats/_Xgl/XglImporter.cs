@@ -343,7 +343,7 @@ namespace SeeingSharp.Multimedia.Objects
         private void ImportMesh(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
             var id = inStreamXml.GetAttribute("ID");
-            var actVertexStructure = new VertexStructure();
+            var actGeometry = new Geometry();
             var minVertexID = int.MaxValue;
             var actVertexIndex = -1;
             var actNormalIndex = -1;
@@ -385,31 +385,31 @@ namespace SeeingSharp.Multimedia.Objects
                         // Read next point
                         if (minVertexID == int.MaxValue) { minVertexID = int.Parse(inStreamXml.GetAttribute("ID")); }
                         actVertexIndex++;
-                        actTempVertex = actVertexStructure.EnsureVertexAt(actVertexIndex);
+                        actTempVertex = actGeometry.EnsureVertexAt(actVertexIndex);
                         actTempVertex.Color = Color4.White;
                         inStreamXml.Read();
                         actTempVertex.Position = inStreamXml.ReadContentAsVector3() * xglImportOptions.ResizeFactor;
-                        actVertexStructure.Vertices[actVertexIndex] = actTempVertex;
+                        actGeometry.Vertices[actVertexIndex] = actTempVertex;
                         break;
 
                     case NODE_NAME_NORMAL:
                         // Read next normal
                         if (minVertexID == int.MaxValue) { minVertexID = int.Parse(inStreamXml.GetAttribute("ID")); }
                         actNormalIndex++;
-                        actTempVertex = actVertexStructure.EnsureVertexAt(actNormalIndex);
+                        actTempVertex = actGeometry.EnsureVertexAt(actNormalIndex);
                         inStreamXml.Read();
                         actTempVertex.Normal = inStreamXml.ReadContentAsVector3();
-                        actVertexStructure.Vertices[actNormalIndex] = actTempVertex;
+                        actGeometry.Vertices[actNormalIndex] = actTempVertex;
                         break;
 
                     case NODE_NAME_TC:
                         // Read next texture coordinate
                         if (minVertexID == int.MaxValue) { minVertexID = int.Parse(inStreamXml.GetAttribute("ID")); }
                         actTextureIndex++;
-                        actTempVertex = actVertexStructure.EnsureVertexAt(actTextureIndex);
+                        actTempVertex = actGeometry.EnsureVertexAt(actTextureIndex);
                         inStreamXml.Read();
                         actTempVertex.TexCoord = inStreamXml.ReadContentAsVector2();
-                        actVertexStructure.Vertices[actTextureIndex] = actTempVertex;
+                        actGeometry.Vertices[actTextureIndex] = actTempVertex;
                         break;
 
                     case NODE_NAME_FACE:
@@ -464,17 +464,9 @@ namespace SeeingSharp.Multimedia.Objects
                             referencedMatObject.TextureKey = container.GetResourceKey(RES_CLASS_TEXTURE, referencedTexture.ToString());
                         }
 
-                        //for (int actFaceLoc = 0; actFaceLoc < 3; actFaceLoc++)
-                        //{
-                        //    int actVertexIndexInner = actFaceReferences[actFaceLoc];
-                        //    actTempVertex = actVertexStructure.Vertices[actVertexIndexInner];
-                        //    actTempVertex.Color = referencedMatObject.DiffuseColor;
-                        //    actVertexStructure.Vertices[actVertexIndexInner] = actTempVertex;
-                        //}
-
                         // Add the triangle
                         if (loopFacePoint != 3) { throw new SeeingSharpGraphicsException("Invalid face index count!"); }
-                        actVertexStructure
+                        actGeometry
                             .CreateOrGetExistingSurface(referencedMatObject)
                             .AddTriangle(actFaceReferences[0], actFaceReferences[1], actFaceReferences[2]);
                         break;
@@ -484,7 +476,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Add the geometry resource
             container.ImportedResources.Add(new ImportedResourceInfo(
                 container.GetResourceKey(RES_CLASS_MESH, id),
-                () => new GeometryResource(actVertexStructure)));
+                () => new GeometryResource(actGeometry)));
         }
 
         /// <summary>

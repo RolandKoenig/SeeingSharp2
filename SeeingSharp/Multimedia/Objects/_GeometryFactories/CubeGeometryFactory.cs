@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class CubeGeometryFactory : GeometryFactory
     {
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
             var matProperties = new MaterialProperties
             {
@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Objects
             var size = Size;
             var halfSize = size / 2f;
 
-            var result = new VertexStructure();
+            var result = new Geometry();
             result.CreateOrGetExistingSurface(matProperties)
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),

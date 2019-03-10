@@ -48,8 +48,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public static GeometryFactory ImportObjectType(Stream inStream)
         {
-            var structures = ImportVertexStructure(inStream);
-            return new GenericGeometryFactory(structures);
+            var geometry = ImportGeometry(inStream);
+            return new GenericGeometryFactory(geometry);
         }
 
         /// <summary>
@@ -60,30 +60,30 @@ namespace SeeingSharp.Multimedia.Objects
         {
             using (var inStream = resourceLink.OpenInputStream())
             {
-                var structure = ImportVertexStructure(inStream, resourceLink);
+                var structure = ImportGeometry(inStream, resourceLink);
                 return new GenericGeometryFactory(structure);
             }
         }
 
         /// <summary>
-        /// Imports a VertexStructure from the given stream.
+        /// Imports a Geometry from the given stream.
         /// </summary>
         /// <param name="inStream">The stream to load the data from.</param>
-        public static VertexStructure ImportVertexStructure(Stream inStream)
+        public static Geometry ImportGeometry(Stream inStream)
         {
-            return ImportVertexStructure(inStream, null);
+            return ImportGeometry(inStream, null);
         }
 
         /// <summary>
-        /// Imports VertexStructures from the given stream.
+        /// Import Geometry from the given stream.
         /// </summary>
         /// <param name="inStream">The stream to load the data from.</param>
         /// <param name="originalSource">The original source of the generated geometry.</param>
-        public static VertexStructure ImportVertexStructure(Stream inStream, ResourceLink originalSource)
+        public static Geometry ImportGeometry(Stream inStream, ResourceLink originalSource)
         {
             try
             {
-                // Load the file and generate all VertexStructures
+                // Load the file and generate all Geometries
                 var fileInfo = LoadFile(inStream);
                 var result = GenerateStructure(fileInfo);
                 result.ResourceLink = originalSource;
@@ -93,8 +93,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
             catch (Exception)
             {
-                // Create dummy VertexStructure
-                var dummyStructure = new VertexStructure();
+                // Create dummy Geometry
+                var dummyStructure = new Geometry();
                 dummyStructure.FirstSurface.BuildCube24V(
                     new Vector3(),
                     new Vector3(1f, 1f, 1f),
@@ -104,31 +104,30 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Generates all vertex structures needed for this object
+        /// Generates the geometry needed for this object
         /// </summary>
-        private static VertexStructure GenerateStructure(ACFileInfo fileInfo)
+        private static Geometry GenerateStructure(ACFileInfo fileInfo)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
 
-            // Create all vertex structures
+            // Fill the geometry
             var transformStack = new Matrix4Stack();
-
             foreach (var actObject in fileInfo.Objects)
             {
-                FillVertexStructure(result, fileInfo.Materials, actObject, transformStack);
+                FillGeometry(result, fileInfo.Materials, actObject, transformStack);
             }
 
             return result;
         }
 
         /// <summary>
-        /// Fills the given vertex structure using information from the given AC-File-Objects.
+        /// Fills the given geometry using information from the given AC-File-Objects.
         /// </summary>
         /// <param name="objInfo">The object information from the AC file.</param>
         /// <param name="acMaterials">A list containing all materials from the AC file.</param>
-        /// <param name="structure">The VertexStructure to be filled.</param>
+        /// <param name="geometry">The Geometry to be filled.</param>
         /// <param name="transformStack">Current matrix stack (for stacked objects).</param>
-        private static void FillVertexStructure(VertexStructure structure, List<ACMaterialInfo> acMaterials, ACObjectInfo objInfo, Matrix4Stack transformStack)
+        private static void FillGeometry(Geometry geometry, List<ACMaterialInfo> acMaterials, ACObjectInfo objInfo, Matrix4Stack transformStack)
         {
             var standardShadedVertices = new List<Tuple<int, int>>();
 
@@ -139,15 +138,15 @@ namespace SeeingSharp.Multimedia.Objects
                 transformStack.TransformLocal(objInfo.Rotation);
                 transformStack.TranslateLocal(objInfo.Translation);
 
-                // Build structures material by material
+                // Build geometry material by material
                 for (var actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
                 {
                     var actMaterial = acMaterials[actMaterialIndex];
 
-                    var actStructSurface = structure.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties());
+                    var actStructSurface = geometry.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties());
                     var isNewSurface = actStructSurface.CountTriangles == 0;
 
-                    // Create and configure vertex structure
+                    // Create and configure vertex geometry
                     actStructSurface.Material = NamedOrGenericKey.Empty;
                     actStructSurface.TextureKey = !string.IsNullOrEmpty(objInfo.Texture) ? new NamedOrGenericKey(objInfo.Texture) : NamedOrGenericKey.Empty;
                     actStructSurface.MaterialProperties.DiffuseColor = actMaterial.Diffuse;
@@ -169,7 +168,7 @@ namespace SeeingSharp.Multimedia.Objects
                     foreach (var actSurface in objInfo.Surfaces)
                     {
                         // Get the vertex index on which to start
-                        var startVertexIndex = structure.CountVertices;
+                        var startVertexIndex = geometry.CountVertices;
                         var startTriangleIndex = actStructSurface.CountTriangles;
 
                         // Only handle surfaces of the current material
@@ -198,11 +197,11 @@ namespace SeeingSharp.Multimedia.Objects
                                     var position = Vector3.Transform(
                                         objInfo.Vertices[surfaceVertexReferences[loop]].Position,
                                         transformStack.Top).ToXYZ();
-                                    localIndices[surfaceVertexReferences[loop]] = structure.AddVertex(new Vertex(
+                                    localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new Vertex(
                                         position, Color4.White, actTexCoord, Vector3.Zero));
                                     if (actSurface.IsTwoSided)
                                     {
-                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = structure.AddVertex(new Vertex(
+                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = geometry.AddVertex(new Vertex(
                                             position, Color4.White, actTexCoord, Vector3.Zero));
                                     }
                                 }
@@ -221,12 +220,12 @@ namespace SeeingSharp.Multimedia.Objects
                                 var position = Vector3.Transform(
                                     objInfo.Vertices[surfaceVertexReferences[loop]].Position,
                                     transformStack.Top).ToXYZ();
-                                onStructureReferencedVertices[loop] = structure.AddVertex(new Vertex(
+                                onStructureReferencedVertices[loop] = geometry.AddVertex(new Vertex(
                                     position, Color4.White, actTexCoord, Vector3.Zero));
 
                                 if (actSurface.IsTwoSided)
                                 {
-                                    onStructureReferencedVertices[loop + oneSideSurfaceVertexCount] = structure.AddVertex(new Vertex(
+                                    onStructureReferencedVertices[loop + oneSideSurfaceVertexCount] = geometry.AddVertex(new Vertex(
                                         position, Color4.White, actTexCoord, Vector3.Zero));
                                 }
                             }
@@ -301,7 +300,7 @@ namespace SeeingSharp.Multimedia.Objects
                         else
                         {
                             // Nothing to be done for now..
-                            var vertexCount = structure.CountVertices - startVertexIndex;
+                            var vertexCount = geometry.CountVertices - startVertexIndex;
                             if (vertexCount > 0)
                             {
                                 standardShadedVertices.Add(
@@ -313,24 +312,24 @@ namespace SeeingSharp.Multimedia.Objects
                     // Calculate default shading finally (if any)
                     foreach (var actStandardShadedPair in standardShadedVertices)
                     {
-                        structure.CalculateNormals(
+                        geometry.CalculateNormals(
                             actStandardShadedPair.Item1,
                             actStandardShadedPair.Item2);
                     }
                     standardShadedVertices.Clear();
 
-                    // Append generated VertexStructure to the output collection
+                    // Append generated Geometry to the output collection
                     if (actStructSurface.CountTriangles <= 0 &&
                         isNewSurface)
                     {
-                        structure.RemoveSurface(actStructSurface);
+                        geometry.RemoveSurface(actStructSurface);
                     }
                 }
 
                 //Fill in all child object data
                 foreach (var actObjInfo in objInfo.Children)
                 {
-                    FillVertexStructure(structure, acMaterials, actObjInfo, transformStack);
+                    FillGeometry(geometry, acMaterials, actObjInfo, transformStack);
                 }
             }
             finally

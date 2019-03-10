@@ -50,11 +50,11 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds the structures.
+        /// Builds the geometry
         /// </summary>
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
 
             // Calculate parameters
             var firstCoordinate = new Vector3(
@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Objects
                 lowerGround.Material = GroundMaterial;
             }
 
-            // Define line structures
+            // Define line geometry
             var genStructureDefaultLine = result.CreateSurface();
             var genStructureGroupLine = result.CreateSurface();
 
@@ -160,7 +160,7 @@ namespace SeeingSharp.Multimedia.Objects
             if (genStructureDefaultLine.CountTriangles == 0) { result.RemoveSurface(genStructureDefaultLine); }
             if (genStructureGroupLine.CountTriangles == 0) { result.RemoveSurface(genStructureGroupLine); }
 
-            // Return all generated structures
+            // Return the generated geometry
             return result;
         }
 

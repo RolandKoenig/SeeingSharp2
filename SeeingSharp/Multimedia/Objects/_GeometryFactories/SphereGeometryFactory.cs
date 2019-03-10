@@ -23,9 +23,9 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class SphereGeometryFactory : GeometryFactory
     {
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
 
             var mainSurface = result.CreateSurface();
             mainSurface.BuildShpere(TDiv, PDiv, Radius, Color4Ex.Transparent);

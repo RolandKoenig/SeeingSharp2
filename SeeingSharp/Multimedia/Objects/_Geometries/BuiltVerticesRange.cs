@@ -26,7 +26,7 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public struct BuiltVerticesRange
     {
-        public VertexStructure Structure;
+        public Geometry Structure;
         public int StartVertex;
         public int VertexCount;
 
@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Initializes a new instance of the <see cref="BuiltVerticesRange" /> struct.
         /// </summary>
         /// <param name="structure">The structure.</param>
-        public BuiltVerticesRange(VertexStructure structure)
+        public BuiltVerticesRange(Geometry structure)
         {
             Structure = structure;
             StartVertex = 0;
@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="structure">The structure.</param>
         /// <param name="startVertex">The start vertex.</param>
         /// <param name="vertexCount">The vertex count.</param>
-        public BuiltVerticesRange(VertexStructure structure, int startVertex, int vertexCount)
+        public BuiltVerticesRange(Geometry structure, int startVertex, int vertexCount)
         {
             Structure = structure;
             StartVertex = startVertex;

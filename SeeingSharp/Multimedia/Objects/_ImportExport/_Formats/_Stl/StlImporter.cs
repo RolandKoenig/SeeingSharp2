@@ -229,7 +229,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Reads a facet.
         /// </summary>
-        private void ReadFacet(StreamReader reader, string normalString, VertexStructure newStructure, StlImportOptions importOptions)
+        private void ReadFacet(StreamReader reader, string normalString, Geometry newStructure, StlImportOptions importOptions)
         {
             m_cachedPoints.Clear();
 
@@ -313,7 +313,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Reads a triangle from a binary STL file.
         /// </summary>
-        private void ReadTriangle(BinaryReader reader, VertexStructure vertexStructure, StlImportOptions importOptions)
+        private static void ReadTriangle(BinaryReader reader, Geometry geometry, StlImportOptions importOptions)
         {
             var ni = ReadFloat(reader);
             var nj = ReadFloat(reader);
@@ -366,7 +366,7 @@ namespace SeeingSharp.Multimedia.Objects
                 currentColor = new Color(Convert.ToByte(r), Convert.ToByte(g), Convert.ToByte(b));
             }
 
-            var targetSurface = vertexStructure.FirstSurface;
+            var targetSurface = geometry.FirstSurface;
 
             if (importOptions.IsChangeTriangleOrderNeeded())
             {
@@ -391,7 +391,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             using (var reader = new StreamReader(stream, ENCODING, false, 128, true))
             {
-                var newStructure = new VertexStructure();
+                var newStructure = new Geometry();
 
                 while (!reader.EndOfStream)
                 {
@@ -475,7 +475,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Read geometry data
-                var newStructure = new VertexStructure((int)numberTriangles * 3);
+                var newStructure = new Geometry((int)numberTriangles * 3);
                 newStructure.CreateSurface((int)numberTriangles);
 
                 for (var loop = 0; loop < numberTriangles; loop++)

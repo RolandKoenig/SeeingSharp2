@@ -22,7 +22,7 @@
 namespace SeeingSharp.Multimedia.Objects
 {
     /// <summary>
-    /// A Triangle inside a VertexStructure object
+    /// A Triangle inside a Geometry object
     /// </summary>
     public struct Triangle
     {
@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Gets all edges defined by this triangle.
         /// </summary>
         /// <param name="sourceStructure">The source structure.</param>
-        public Line[] GetEdges(VertexStructure sourceStructure)
+        public Line[] GetEdges(Geometry sourceStructure)
         {
             return new[]
             {

@@ -33,9 +33,9 @@ namespace SeeingSharp.Multimedia.Objects
             CountOfSegments = 10;
         }
 
-        public override VertexStructure BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
             var mainSurface = result.CreateSurface();
             mainSurface.BuildConeFullV(Vector3.Zero, Radius, Height, CountOfSegments, Color4Ex.Transparent);
 

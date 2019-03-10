@@ -34,13 +34,13 @@ namespace SeeingSharp.Multimedia.Objects
     /// <summary>
     /// Describes a 3D geometry in memory.
     /// </summary>
-    public class VertexStructure
+    public class Geometry
     {
         // Description
         private string m_name;
 
         // Geometry
-        private List<VertexStructureSurface> m_surfaces;
+        private List<GeometrySurface> m_surfaces;
 
         // Members for build time transform
         private bool m_buildTimeTransformEnabled;
@@ -50,34 +50,34 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Creates a new Vertex structure object
         /// </summary>
-        public VertexStructure()
+        public Geometry()
             : this(512)
         {
         }
 
         /// <summary>
-        /// Creates a new Vertex structure object
+        /// Creates a new Geometry object
         /// </summary>
-        public VertexStructure(int verticesCapacity)
+        public Geometry(int verticesCapacity)
         {
             m_name = string.Empty;
             Description = string.Empty;
 
             VerticesInternal = new List<Vertex>(verticesCapacity);
-            m_surfaces = new List<VertexStructureSurface>();
+            m_surfaces = new List<GeometrySurface>();
 
             Vertices = new VertexCollection(VerticesInternal);
             Surfaces = new SurfaceCollection(m_surfaces);
         }
 
         /// <summary>
-        /// Creates the surface on this VertexStructure.
+        /// Creates the surface on this Geometry.
         /// </summary>
         /// <param name="triangleCapacity">The triangle capacity.</param>
         /// <param name="name">The internal name of the material.</param>
-        public VertexStructureSurface CreateSurface(int triangleCapacity = 512, string name = "")
+        public GeometrySurface CreateSurface(int triangleCapacity = 512, string name = "")
         {
-            var newSurface = new VertexStructureSurface(this, triangleCapacity)
+            var newSurface = new GeometrySurface(this, triangleCapacity)
             {
                 MaterialProperties = {Name = name}
             };
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="name">The internal name of the material.</param>
         /// <param name="triangleCapacity">The triangle capacity.</param>
-        public VertexStructureSurface CreateOrGetExistingSurfaceByName(string name, int triangleCapacity = 512)
+        public GeometrySurface CreateOrGetExistingSurfaceByName(string name, int triangleCapacity = 512)
         {
             foreach (var actSurface in m_surfaces)
             {
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="matProperties">The material properties.</param>
         /// <param name="triangleCapacity">The triangle capacity.</param>
-        public VertexStructureSurface CreateOrGetExistingSurface(MaterialProperties matProperties, int triangleCapacity = 512)
+        public GeometrySurface CreateOrGetExistingSurface(MaterialProperties matProperties, int triangleCapacity = 512)
         {
             foreach(var actSurface in m_surfaces)
             {
@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="name">The internal name of the material.</param>
         /// <param name="triangleCapacity">The triangle capacity.</param>
-        public VertexStructureSurface CreateOrGetExistingSurface(string name, int triangleCapacity = 512)
+        public GeometrySurface CreateOrGetExistingSurface(string name, int triangleCapacity = 512)
         {
             foreach (var actSurface in m_surfaces)
             {
@@ -148,7 +148,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Realigns all given structures to their center coordinate.
+        /// Realigns all given geometries to their center coordinate.
         /// </summary>
         public void RealignToCenter()
         {
@@ -253,7 +253,7 @@ namespace SeeingSharp.Multimedia.Objects
             UpdateVerticesUsingRelocationBy(targetCornerALocation);
         }
 
-        public void RemoveSurface(VertexStructureSurface surface)
+        public void RemoveSurface(GeometrySurface surface)
         {
             m_surfaces.Remove(surface);
         }
@@ -320,29 +320,29 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets a vector to the bottom center of given structures.
+        /// Gets a vector to the bottom center of given geometries.
         /// </summary>
-        public static Vector3 GetBottomCenter(VertexStructure[] structures)
+        public static Vector3 GetBottomCenter(Geometry[] geometries)
         {
-            var box = GetBoundingBox(structures);
+            var box = GetBoundingBox(geometries);
             return box.GetBottomCenter();
         }
 
         /// <summary>
-        /// Gets a bounding box for given vertex structure array.
+        /// Gets a bounding box for given geometry array.
         /// </summary>
-        /// <param name="structures">Array of structures.</param>
-        public static BoundingBox GetBoundingBox(VertexStructure[] structures)
+        /// <param name="geometries">Array of geometries.</param>
+        public static BoundingBox GetBoundingBox(Geometry[] geometries)
         {
             var result = new BoundingBox();
 
-            if (structures != null)
+            if (geometries != null)
             {
-                for (var loop = 0; loop < structures.Length; loop++)
+                for (var loop = 0; loop < geometries.Length; loop++)
                 {
-                    if (structures[loop] != null)
+                    if (geometries[loop] != null)
                     {
-                        result.MergeWith(structures[loop].GenerateBoundingBox());
+                        result.MergeWith(geometries[loop].GenerateBoundingBox());
                     }
                 }
             }
@@ -351,28 +351,28 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets a vector to the middle center of given structures.
+        /// Gets a vector to the middle center of given geometries.
         /// </summary>
-        public static Vector3 GetMiddleCenter(VertexStructure[] structures)
+        public static Vector3 GetMiddleCenter(Geometry[] structures)
         {
             var box = GetBoundingBox(structures);
             return box.GetMiddleCenter();
         }
 
         /// <summary>
-        /// Adds all triangles of the given VertexStructure to this one.
+        /// Adds all triangles of the given Geometry to this one.
         /// </summary>
-        /// <param name="otherStructure">The structure to add to this one.</param>
-        public void AddStructure(VertexStructure otherStructure)
+        /// <param name="otherGeometry">The geometry to add to this one.</param>
+        public void AddStructure(Geometry otherGeometry)
         {
             var baseIndex = VerticesInternal.Count;
 
-            VerticesInternal.AddRange(otherStructure.Vertices);
-            var otherStructureSurfaceCount = otherStructure.m_surfaces.Count;
+            VerticesInternal.AddRange(otherGeometry.Vertices);
+            var otherGeometrySurfaceCount = otherGeometry.m_surfaces.Count;
 
-            for (var loopSurface = 0; loopSurface < otherStructureSurfaceCount; loopSurface++)
+            for (var loopSurface = 0; loopSurface < otherGeometrySurfaceCount; loopSurface++)
             {
-                m_surfaces.Add(otherStructure.m_surfaces[loopSurface].Clone(
+                m_surfaces.Add(otherGeometry.m_surfaces[loopSurface].Clone(
                     this,
                     baseIndex: baseIndex));
             }
@@ -495,13 +495,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Clones this object
         /// </summary>
-        public VertexStructure Clone(bool copyGeometryData = true, int capacityMultiplier = 1)
+        public Geometry Clone(bool copyGeometryData = true, int capacityMultiplier = 1)
         {
             capacityMultiplier.EnsurePositiveAndNotZero(nameof(capacityMultiplier));
 
-            // Create new VertexStructure object
+            // Create new Geometry object
             var vertexCount = VerticesInternal.Count;
-            var result = new VertexStructure(
+            var result = new Geometry(
                 vertexCount * capacityMultiplier);
 
             // Copy geometry
@@ -614,7 +614,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets an array with this object as a single item.
         /// </summary>
-        public VertexStructure[] ToSingleItemArray()
+        public Geometry[] ToSingleItemArray()
         {
             return new[] { this };
         }
@@ -648,7 +648,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Gets the first surface of  this structure.
         /// It there is no surface, then one gets created automatically.
         /// </summary>
-        public VertexStructureSurface FirstSurface
+        public GeometrySurface FirstSurface
         {
             get
             {
@@ -739,7 +739,7 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all vertices of a VertexStructure object
+        /// Contains all vertices of a Geometry object
         /// </summary>
         public class VertexCollection : IEnumerable<Vertex>
         {
@@ -785,23 +785,23 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all vertices of a VertexStructure object
+        /// Contains all vertices of a Geometry object
         /// </summary>
-        public class SurfaceCollection : IEnumerable<VertexStructureSurface>
+        public class SurfaceCollection : IEnumerable<GeometrySurface>
         {
-            private List<VertexStructureSurface> m_surfaces;
+            private List<GeometrySurface> m_surfaces;
 
-            internal SurfaceCollection(List<VertexStructureSurface> surfaces)
+            internal SurfaceCollection(List<GeometrySurface> surfaces)
             {
                 m_surfaces = surfaces;
             }
 
-            public void Add(VertexStructureSurface surface)
+            public void Add(GeometrySurface surface)
             {
                 m_surfaces.Add(surface);
             }
 
-            public IEnumerator<VertexStructureSurface> GetEnumerator()
+            public IEnumerator<GeometrySurface> GetEnumerator()
             {
                 return m_surfaces.GetEnumerator();
             }
@@ -814,7 +814,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <summary>
             /// Returns the surface at ghe given index
             /// </summary>
-            public VertexStructureSurface this[int index]
+            public GeometrySurface this[int index]
             {
                 get => m_surfaces[index];
                 internal set => m_surfaces[index] = value;

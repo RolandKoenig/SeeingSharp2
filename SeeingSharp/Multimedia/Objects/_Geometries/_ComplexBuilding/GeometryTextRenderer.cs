@@ -29,15 +29,15 @@ using SDX = SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    internal class VertexStructureTextRenderer : TextRendererBase
+    internal class GeometryTextRenderer : TextRendererBase
     {
         private TextGeometryOptions m_geometryOptions;
-        private VertexStructureSurface m_targetSurface;
+        private GeometrySurface m_targetSurface;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VertexStructureTextRenderer" /> class.
+        /// Initializes a new instance of the <see cref="GeometryTextRenderer" /> class.
         /// </summary>
-        public VertexStructureTextRenderer(VertexStructureSurface targetSurface, TextGeometryOptions textGeometryOptions)
+        public GeometryTextRenderer(GeometrySurface targetSurface, TextGeometryOptions textGeometryOptions)
         {
             m_targetSurface = targetSurface;
             m_geometryOptions = textGeometryOptions;
@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Structure for caching the result
-            var tempStructure = new VertexStructure();
+            var tempStructure = new Geometry();
             var tempSurface = tempStructure.CreateSurface();
 
             // Create the text surface
@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var edgeOrder = polygonForRendering.EdgeOrder;
                     var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
-                    // Append all vertices to temporary VertexStructure
+                    // Append all vertices to temporary Geometry
                     for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                     {
                         // Calculate 3d location and texture coordinate

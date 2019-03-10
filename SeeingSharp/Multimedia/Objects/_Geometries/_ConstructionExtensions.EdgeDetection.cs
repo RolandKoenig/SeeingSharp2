@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Objects
     public static partial class ConstructionExtensions
     {
         /// <summary>
-        /// Generates a shadow volume structure out of the given vertex structures.
+        /// Generates a shadow volume structure out of the given geometry.
         /// </summary>
-        public static VertexStructure GenerateShadowVolume(this IEnumerable<VertexStructure> structures, Vector3 lightDirection, float shadowVolumeLength)
+        public static Geometry GenerateShadowVolume(this IEnumerable<Geometry> geometries, Vector3 lightDirection, float shadowVolumeLength)
         {
-            var result = new VertexStructure();
+            var result = new Geometry();
 
             //Find all edges from given view direction
-            var shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(structures, lightDirection);
+            var shadowVolumeEdges = GenerateEdgesSeenFromViewpoint(geometries, lightDirection);
 
             //Build the structure based on the found edges
             var lightNormal = Vector3.Normalize(lightDirection);
@@ -63,23 +63,23 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Search all edges seen from the given direction.
         /// </summary>
-        /// <param name="structures">The structures to search edges for.</param>
+        /// <param name="geometries">The geometries to search edges for.</param>
         /// <param name="viewDirection">The view direction.</param>
-        public static List<Line> GenerateEdgesSeenFromViewpoint(this IEnumerable<VertexStructure> structures, Vector3 viewDirection)
+        public static List<Line> GenerateEdgesSeenFromViewpoint(this IEnumerable<Geometry> geometries, Vector3 viewDirection)
         {
             //Find all shadow volume edges
             var foundEdges = new List<Line>(2048);
             var edgesToRemove = new List<Line>(2048);
 
-            foreach (var actStructure in structures)
+            foreach (var actGeometry in geometries)
             {
-                foreach (var actSurface in actStructure.Surfaces)
+                foreach (var actSurface in actGeometry.Surfaces)
                 {
                     foreach (var actTriangle in actSurface.Triangles)
                     {
-                        if (Vector3.Dot(viewDirection, actStructure.Vertices[actTriangle.Index1].Normal) >= 0)
+                        if (Vector3.Dot(viewDirection, actGeometry.Vertices[actTriangle.Index1].Normal) >= 0)
                         {
-                            var actEdges = actTriangle.GetEdges(actStructure);
+                            var actEdges = actTriangle.GetEdges(actGeometry);
 
                             for (var loopEdge = 0; loopEdge < actEdges.Length; loopEdge++)
                             {

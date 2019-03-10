@@ -32,15 +32,15 @@ using SharpDX;
 namespace SeeingSharp.Multimedia.Objects
 {
     /// <summary>
-    /// A set of triangles of a VertexStructure which share the
+    /// A set of triangles of a Geometry which share the
     /// same material settings.
     /// </summary>
-    public partial class VertexStructureSurface
+    public partial class GeometrySurface
     {
         private Dictionary<Type, object> m_materialPropertiesExtended;
         private List<TriangleCorner> m_corners;
 
-        internal VertexStructureSurface(VertexStructure owner, int triangleCapacity)
+        internal GeometrySurface(Geometry owner, int triangleCapacity)
         {
             Owner = owner;
             m_corners = new List<TriangleCorner>(triangleCapacity * 3);
@@ -54,16 +54,16 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Clones this object.
         /// </summary>
-        public VertexStructureSurface Clone(
-            VertexStructure newOwner,
+        public GeometrySurface Clone(
+            Geometry newOwner,
             bool copyGeometryData = true, int capacityMultiplier = 1,
             int baseIndex = 0)
         {
             newOwner.EnsureNotNull(nameof(newOwner));
 
-            // Create new VertexStructure object
+            // Create new Geometry object
             var indexCount = m_corners.Count;
-            var result = new VertexStructureSurface(newOwner, indexCount / 3 * capacityMultiplier);
+            var result = new GeometrySurface(newOwner, indexCount / 3 * capacityMultiplier);
 
             // Copy geometry
             if (copyGeometryData)
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// All surfaces of the given structure are merged to this single surface.
         /// </summary>
         /// <param name="structure">The structure.</param>
-        public void AddStructure(VertexStructure structure)
+        public void AddStructure(Geometry structure)
         {
             var baseIndex = Owner.VerticesInternal.Count;
 
@@ -610,7 +610,7 @@ namespace SeeingSharp.Multimedia.Objects
                 vertex3.Tangent = tangent;
                 vertex3.Binormal = binormal;
 
-                // Overtake changes made in vertex structures
+                // Overtake changes made in geometry
                 Owner.VerticesInternal[actTriangle.Index1] = vertex1;
                 Owner.VerticesInternal[actTriangle.Index2] = vertex2;
                 Owner.VerticesInternal[actTriangle.Index3] = vertex3;
@@ -771,7 +771,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ResourceLink ResourceLink => Owner.ResourceLink;
 
-        public VertexStructure Owner { get; }
+        public Geometry Owner { get; }
 
         /// <summary>
         /// Retrieves total count of all indexes within this structure
@@ -782,7 +782,7 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all triangles of a VertexStructure object
+        /// Contains all triangles of a Geometry object
         /// </summary>
         public class TriangleCollection : IEnumerable<Triangle>
         {
@@ -794,7 +794,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             /// <summary>
-            /// Adds a triangle to this vertex structure
+            /// Adds a triangle to this geometry
             /// </summary>
             /// <param name="index1">Index of the first vertex</param>
             /// <param name="index2">Index of the second vertex</param>
@@ -811,7 +811,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             /// <summary>
-            /// Adds a triangle to this vertex structure
+            /// Adds a triangle to this geometry
             /// </summary>
             /// <param name="triangle"></param>
             public int Add(Triangle triangle)
@@ -854,7 +854,7 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all indexes of a VertexStructure object.
+        /// Contains all indexes of a Geometry object.
         /// </summary>
         public class IndexCollection : IEnumerable<int>
         {
@@ -889,7 +889,7 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// Contains all corners of a VertexStructure object.
+        /// Contains all corners of a Geometry object.
         /// </summary>
         public class CornerCollection : IEnumerable<TriangleCorner>
         {
