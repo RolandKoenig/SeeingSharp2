@@ -37,7 +37,7 @@ namespace SeeingSharp
         /// </summary>
         public Polygon(params Vector3[] vertices)
         {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+            if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
             m_vertices = vertices;
             Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
@@ -51,7 +51,7 @@ namespace SeeingSharp
         /// </summary>
         public Polygon2D Flattern()
         {
-            //Inspired by implementation of the Helix Toolkit from codeplex (http://helixtoolkit.codeplex.com/)
+            //Inspired by implementation of the Helix Toolkit from Codeplex (http://helixtoolkit.codeplex.com/)
             //Original sources:
             // http://forums.xna.com/forums/p/16529/86802.aspx
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane

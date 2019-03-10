@@ -176,7 +176,7 @@ namespace SeeingSharp.Multimedia.Objects
                             continue;
                         }
 
-                        // Handle multiline entris (they have a \ at the end of the line)
+                        // Handle multiline entries (they have a \ at the end of the line)
                         if (actLine[actLine.Length - 1] == '\\')
                         {
                             multiLineBuilder.Append(actLine.TrimEnd('\\'));
@@ -191,10 +191,7 @@ namespace SeeingSharp.Multimedia.Objects
                         }
 
                         // Parse current keyword and arguments
-                        string actKeyword = null;
-                        string actArguments = null;
-
-                        if (!TrySplitLine(actLine, out actKeyword, out actArguments))
+                        if (!TrySplitLine(actLine, out var actKeyword, out var actArguments))
                         {
                             continue;
                         }
@@ -287,7 +284,7 @@ namespace SeeingSharp.Multimedia.Objects
                             continue;
                         }
 
-                        // Handle multiline entris (they have a \ at the end of the line)
+                        // Handle multiline entries (they have a \ at the end of the line)
                         if (actLine[actLine.Length - 1] == '\\')
                         {
                             multiLineBuilder.Append(actLine.TrimEnd('\\'));
@@ -302,10 +299,7 @@ namespace SeeingSharp.Multimedia.Objects
                         }
 
                         // Parse current keyword and arguments
-                        string actKeyword = null;
-                        string actArguments = null;
-
-                        if (!TrySplitLine(actLine, out actKeyword, out actArguments))
+                        if (!TrySplitLine(actLine, out var actKeyword, out var actArguments))
                         {
                             continue;
                         }
@@ -374,7 +368,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Reads the definition of a new material.
         /// </summary>
-        /// <param name="arguments">Passed argumetns.</param>
+        /// <param name="arguments">Passed arguments.</param>
         private void HandleKeyword_Mtl_NewMtl(string arguments)
         {
             var names = arguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -428,7 +422,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Applies the material with the given name for following surfaces.
         /// </summary>
-        /// <param name="arguments">Passed argumetns.</param>
+        /// <param name="arguments">Passed arguments.</param>
         private void HandleKeyword_Obj_UseMtl(string arguments)
         {
             var names = arguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -544,7 +538,7 @@ namespace SeeingSharp.Multimedia.Objects
             else if (faceArguments.Length == 4) { faceIndices = m_dummyFaceIndices_4; }
             else { faceIndices = new FaceIndices[faceArguments.Length]; }
 
-            // Parse and preprocess all arumgents
+            // Parse and preprocess all arguments
             for (var loop = 0; loop < faceArguments.Length; loop++)
             {
                 ParseFaceData(faceArguments[loop], m_dummyIntArguments_3);
@@ -693,8 +687,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             for (var loop = 0; loop < countValuesToParse; loop++)
             {
-                var actParsedFloat = 0f;
-                if(!float.TryParse(sourceStrings[loop], NumberStyles.Float, FILE_NUMBER_FORMAT, out actParsedFloat))
+                if(!float.TryParse(sourceStrings[loop], NumberStyles.Float, FILE_NUMBER_FORMAT, out var actParsedFloat))
                 {
                     return false;
                 }
@@ -713,8 +706,7 @@ namespace SeeingSharp.Multimedia.Objects
             var length = sourceStrings.Length;
             for (var loop = 0; loop < length; loop++)
             {
-                var actParsedInt = 0;
-                if (!int.TryParse(sourceStrings[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out actParsedInt))
+                if (!int.TryParse(sourceStrings[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out var actParsedInt))
                 {
                     return false;
                 }
@@ -751,8 +743,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
                 else
                 {
-                    var parsedValue = 0;
-                    if(!int.TryParse(splitted[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out parsedValue))
+                    if(!int.TryParse(splitted[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out var parsedValue))
                     {
                         throw new SeeingSharpGraphicsException($"Invalid face argument: {sourceString} (unable to parse int)!");
                     }

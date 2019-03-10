@@ -198,7 +198,7 @@ namespace SeeingSharp
             // Calculation of the normal based on 'Mathematics for 3D Game Programming and Computer Graphics (Eric Lengyel, 2012)
             //  Page 175: 7.7.1 Calculating Normal Vectors
             //
-            //  We have two modes: Normalized and unnormalized form of the result
+            //  We have two modes: Normalized and un-normalized form of the result
             if (doNormalize)
             {
                 var crossProductVector = Vector3.Cross(p1 - p0, p2 - p0);

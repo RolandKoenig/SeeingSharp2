@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
@@ -76,6 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 result.MaterialDiffuseColor = targetSurface.MaterialProperties.DiffuseColor;
                 return result;
             }
+
             // Create texture resource if needed
             try
             {
@@ -117,7 +119,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
                 }
             }
-            catch { }
+            catch(Exception ex)
+            {
+                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.LoadingTexture);
+                textureKey = NamedOrGenericKey.Empty;
+            }
 
             // Create a default textured material
             if (!textureKey.IsEmpty)
@@ -141,87 +147,87 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, VertexStructure structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, VertexStructure structure)
         {
-            return resourceDiciontary.AddResource(new GeometryResource(structure));
+            return resourceDictionary.AddResource(new GeometryResource(structure));
         }
 
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, VertexStructure structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, VertexStructure structure)
         {
-            return resourceDiciontary.AddResource(resourceKey, new GeometryResource(structure));
+            return resourceDictionary.AddResource(resourceKey, new GeometryResource(structure));
         }
 
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, GeometryFactory objectType)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, GeometryFactory objectType)
         {
-            return resourceDiciontary.AddResource(new GeometryResource(objectType));
+            return resourceDictionary.AddResource(new GeometryResource(objectType));
         }
 
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, GeometryFactory objectType)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, GeometryFactory objectType)
         {
-            return resourceDiciontary.AddResource(resourceKey, new GeometryResource(objectType));
+            return resourceDictionary.AddResource(resourceKey, new GeometryResource(objectType));
         }
 
         /// <summary>
         /// Adds a new text geometry with the given text.
         /// </summary>
-        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, string textToAdd)
+        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, string textToAdd)
         {
-            return resourceDiciontary.AddTextGeometry(textToAdd, TextGeometryOptions.Default);
+            return resourceDictionary.AddTextGeometry(textToAdd, TextGeometryOptions.Default);
         }
 
         /// <summary>
         /// Adds a new text geometry with the given text.
         /// </summary>
-        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, string textToAdd)
+        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, string textToAdd)
         {
-            return resourceDiciontary.AddTextGeometry(resourceKey, textToAdd, TextGeometryOptions.Default);
+            return resourceDictionary.AddTextGeometry(resourceKey, textToAdd, TextGeometryOptions.Default);
         }
 
         /// <summary>
         /// Adds a new text geometry with the given text.
         /// </summary>
-        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, string textToAdd, TextGeometryOptions textGeometryOptions)
+        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
             var newStructure = new VertexStructure();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
-            return resourceDiciontary.AddGeometry(newStructure);
+            return resourceDictionary.AddGeometry(newStructure);
         }
 
         /// <summary>
         /// Adds a new text geometry with the given text.
         /// </summary>
-        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, string textToAdd, TextGeometryOptions textGeometryOptions)
+        internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
             var newStructure = new VertexStructure();
             newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
             newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
-            return resourceDiciontary.AddGeometry(resourceKey, newStructure);
+            return resourceDictionary.AddGeometry(resourceKey, newStructure);
         }
 
         /// <summary>
         /// Adds a new texture resource pointing to the given texture file name.
         /// </summary>
-        internal static StandardTextureResource AddTexture(this ResourceDictionary resourceDiciontary, string textureFileName)
+        internal static StandardTextureResource AddTexture(this ResourceDictionary resourceDictionary, string textureFileName)
         {
-            return resourceDiciontary.AddResource(new StandardTextureResource(textureFileName));
+            return resourceDictionary.AddResource(new StandardTextureResource(textureFileName));
         }
 
         /// <summary>
         /// Adds a new texture resource pointing to the given texture file name.
         /// </summary>
-        internal static StandardTextureResource AddTexture(this ResourceDictionary resourceDiciontary, NamedOrGenericKey resourceKey, string textureFileName)
+        internal static StandardTextureResource AddTexture(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, string textureFileName)
         {
-            return resourceDiciontary.AddResource(resourceKey, new StandardTextureResource(textureFileName));
+            return resourceDictionary.AddResource(resourceKey, new StandardTextureResource(textureFileName));
         }
     }
 }

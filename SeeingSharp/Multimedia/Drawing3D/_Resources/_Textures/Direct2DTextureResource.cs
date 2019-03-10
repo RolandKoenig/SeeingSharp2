@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.Texture2D m_renderTargetTexture;
         private D3D11.ShaderResourceView m_renderTargetTextureView;
 
-        // Resourcs for Direct2D
+        // Resources for Direct2D
         private Graphics2D m_graphics2D;
         private Direct2DOverlayRenderer m_overlayRenderer;
 

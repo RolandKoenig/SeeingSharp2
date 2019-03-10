@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
 
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAllwaysPassDepth;
+            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAlwaysPassDepth;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
 
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAllwaysPassDepth;
+            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAlwaysPassDepth;
             deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
         }
 

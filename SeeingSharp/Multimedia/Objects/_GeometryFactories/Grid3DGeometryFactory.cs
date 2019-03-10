@@ -33,8 +33,8 @@ namespace SeeingSharp.Multimedia.Objects
         public Grid3DGeometryFactory()
         {
             GenerateGround = true;
-            LineSmallDevider = 25f;
-            LineBigDevider = 100f;
+            LineSmallDivider = 25f;
+            LineBigDivider = 100f;
             TileWidth = 1f;
             TilesX = 10;
             TilesZ = 10;
@@ -96,29 +96,29 @@ namespace SeeingSharp.Multimedia.Objects
                 var localEnd = localStart + new Vector3(0f, 0f, tileWidthZ * TilesZ);
 
                 var actLineColor = LineColor;
-                var devider = actTileX % GroupTileCount == 0 ? LineSmallDevider : LineBigDevider;
+                var divider = actTileX % GroupTileCount == 0 ? LineSmallDivider : LineBigDivider;
 
                 if (HighlightXZLines && actTileX == tileMiddleX)
                 {
                     actLineColor = ZLineHighlightColor;
-                    devider = LineSmallDevider;
+                    divider = LineSmallDivider;
                 }
 
-                var targetStruture = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
-                targetStruture.BuildRect4V(
-                    localStart - new Vector3(tileWidthX / devider, 0f, 0f),
-                    localStart + new Vector3(tileWidthX / devider, 0f, 0f),
-                    localEnd + new Vector3(tileWidthX / devider, 0f, 0f),
-                    localEnd - new Vector3(tileWidthX / devider, 0f, 0f),
+                var targetStructure = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                targetStructure.BuildRect4V(
+                    localStart - new Vector3(tileWidthX / divider, 0f, 0f),
+                    localStart + new Vector3(tileWidthX / divider, 0f, 0f),
+                    localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
+                    localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
                     actLineColor);
 
                 if(BuildBackFaces)
                 {
-                    targetStruture.BuildRect4V(
-                        localEnd - new Vector3(tileWidthX / devider, 0f, 0f),
-                        localEnd + new Vector3(tileWidthX / devider, 0f, 0f),
-                        localStart + new Vector3(tileWidthX / devider, 0f, 0f),
-                        localStart - new Vector3(tileWidthX / devider, 0f, 0f),
+                    targetStructure.BuildRect4V(
+                        localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
+                        localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
+                        localStart + new Vector3(tileWidthX / divider, 0f, 0f),
+                        localStart - new Vector3(tileWidthX / divider, 0f, 0f),
                         actLineColor);
                 }
             }
@@ -129,29 +129,29 @@ namespace SeeingSharp.Multimedia.Objects
                 var localEnd = localStart + new Vector3(tileWidthX * TilesX, 0f, 0f);
 
                 var actLineColor = LineColor;
-                var devider = actTileZ % GroupTileCount == 0 ? LineSmallDevider : LineBigDevider;
+                var divider = actTileZ % GroupTileCount == 0 ? LineSmallDivider : LineBigDivider;
 
                 if (HighlightXZLines && actTileZ == tileMiddleZ)
                 {
                     actLineColor = XLineHighlightColor;
-                    devider = LineSmallDevider;
+                    divider = LineSmallDivider;
                 }
 
-                var targetStruture = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
-                targetStruture.BuildRect4V(
-                    localStart + new Vector3(0f, 0f, tileWidthZ / devider),
-                    localStart - new Vector3(0f, 0f, tileWidthZ / devider),
-                    localEnd - new Vector3(0f, 0f, tileWidthZ / devider),
-                    localEnd + new Vector3(0f, 0f, tileWidthZ / devider),
+                var targetStructure = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                targetStructure.BuildRect4V(
+                    localStart + new Vector3(0f, 0f, tileWidthZ / divider),
+                    localStart - new Vector3(0f, 0f, tileWidthZ / divider),
+                    localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
+                    localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
                     actLineColor);
 
                 if(BuildBackFaces)
                 {
-                    targetStruture.BuildRect4V(
-                        localEnd + new Vector3(0f, 0f, tileWidthZ / devider),
-                        localEnd - new Vector3(0f, 0f, tileWidthZ / devider),
-                        localStart - new Vector3(0f, 0f, tileWidthZ / devider),
-                        localStart + new Vector3(0f, 0f, tileWidthZ / devider),
+                    targetStructure.BuildRect4V(
+                        localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
+                        localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
+                        localStart - new Vector3(0f, 0f, tileWidthZ / divider),
+                        localStart + new Vector3(0f, 0f, tileWidthZ / divider),
                         actLineColor);
                 }
             }
@@ -248,13 +248,13 @@ namespace SeeingSharp.Multimedia.Objects
             set;
         }
 
-        public float LineSmallDevider
+        public float LineSmallDivider
         {
             get;
             set;
         }
 
-        public float LineBigDevider
+        public float LineBigDivider
         {
             get;
             set;

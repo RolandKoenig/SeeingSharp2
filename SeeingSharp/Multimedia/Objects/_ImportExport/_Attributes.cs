@@ -36,13 +36,11 @@ namespace SeeingSharp.Multimedia.Objects
         public string ShortFormatName
         {
             get;
-            private set;
         }
 
         public string ShortDescription
         {
             get;
-            private set;
         }
     }
 }

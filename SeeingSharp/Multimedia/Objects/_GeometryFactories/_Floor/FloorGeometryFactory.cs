@@ -32,16 +32,12 @@ namespace SeeingSharp.Multimedia.Objects
         public const float DEFAULT_HEIGHT = 0.1f;
 
         //Material names
-        private NamedOrGenericKey m_borderMaterial;
         private List<BorderInformation> m_borders;
 
         //Properties
         private float m_borderSize;
-        private NamedOrGenericKey m_bottomMaterial;
-        private NamedOrGenericKey m_groundMaterial;
         private List<FloorTile> m_groundTiles;
         private float m_height;
-        private NamedOrGenericKey m_sideMaterial;
         private Vector2 m_tileSize;
         private int m_tilesX;
         private int m_tilesY;
@@ -69,8 +65,8 @@ namespace SeeingSharp.Multimedia.Objects
             //Get width and height of the tilemap
             var tilesX = tileMap.GetLength(0);
             var tilesY = tileMap.GetLength(1);
-            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", "tileMap"); }
-            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", "tileMap"); }
+            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap)); }
+            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap)); }
             m_tilesX = tilesX;
             m_tilesY = tilesY;
 
@@ -122,20 +118,20 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="tileMap">The new tilemap to apply (use null for empty tiles).</param>
         public void SetTilemap(bool[,] tileMap)
         {
-            //Get width and height of the tilemap
+            // Get width and height of the tilemap
             var tilesX = tileMap.GetLength(0);
             var tilesY = tileMap.GetLength(1);
-            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", "tileMap"); }
-            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", "tileMap"); }
+            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap)); }
+            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap)); }
             m_tilesX = tilesX;
             m_tilesY = tilesY;
 
-            //Update total size
+            // Update total size
             m_totalSizeWithoutBorder = new Vector2(
                 tilesX * m_tileSize.X,
                 tilesY * m_tileSize.Y);
 
-            //Generate all tiles
+            // Generate all tiles
             m_groundTiles.Clear();
 
             for (var loopX = 0; loopX < tilesX; loopX++)
@@ -150,7 +146,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            //Generate all borders
+            // Generate all borders
             GenerateBorders(tileMap, tilesX, tilesY);
         }
 
@@ -162,8 +158,8 @@ namespace SeeingSharp.Multimedia.Objects
         public Vector3 GetTilePosition(int xPos, int yPos)
         {
             //Check parameters
-            if (xPos < 0 || xPos >= m_tilesX) { throw new ArgumentException("Invalid x position!", "xPos"); }
-            if (yPos < 0 || yPos >= m_tilesY) { throw new ArgumentException("Invalid y position!", "yPos"); }
+            if (xPos < 0 || xPos >= m_tilesX) { throw new ArgumentException("Invalid x position!", nameof(xPos)); }
+            if (yPos < 0 || yPos >= m_tilesY) { throw new ArgumentException("Invalid y position!", nameof(yPos)); }
 
             //Calculate half sizes
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -183,13 +179,13 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new VertexStructure();
 
-            // Hold dictionary containg materials and corresponding structures
+            // Hold dictionary containing materials and corresponding structures
             var materialRelated = new Dictionary<NamedOrGenericKey, VertexStructureSurface>();
 
             // Build bottom structure
             var bottomSurface = result.CreateSurface();
-            bottomSurface.Material = m_bottomMaterial;
-            materialRelated[m_bottomMaterial] = bottomSurface;
+            bottomSurface.Material = BottomMaterial;
+            materialRelated[BottomMaterial] = bottomSurface;
 
             // Calculate half vector of total ground size.
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -203,7 +199,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if (actMaterial.IsEmpty)
                 {
-                    actMaterial = m_groundMaterial;
+                    actMaterial = DefaultFloorMaterial;
                 }
 
                 // Get surface object
@@ -239,12 +235,12 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Build all borders
             VertexStructureSurface borderSurface = null;
-            if (materialRelated.ContainsKey(m_borderMaterial)) { borderSurface = materialRelated[m_borderMaterial]; }
+            if (materialRelated.ContainsKey(BorderMaterial)) { borderSurface = materialRelated[BorderMaterial]; }
             else
             {
                 borderSurface = result.CreateSurface();
-                borderSurface.Material = m_borderMaterial;
-                materialRelated[m_borderMaterial] = borderSurface;
+                borderSurface.Material = BorderMaterial;
+                materialRelated[BorderMaterial] = borderSurface;
             }
             foreach (var actBorder in m_borders)
             {
@@ -358,62 +354,22 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the border material
         /// </summary>
-        public NamedOrGenericKey BorderMaterial
-        {
-            get => m_borderMaterial;
-            set
-            {
-                if (m_borderMaterial != value)
-                {
-                    m_borderMaterial = value;
-                }
-            }
-        }
+        public NamedOrGenericKey BorderMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets the ground material
         /// </summary>
-        public NamedOrGenericKey DefaultFloorMaterial
-        {
-            get => m_groundMaterial;
-            set
-            {
-                if (m_groundMaterial != value)
-                {
-                    m_groundMaterial = value;
-                }
-            }
-        }
+        public NamedOrGenericKey DefaultFloorMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets material for sides.
         /// </summary>
-        public NamedOrGenericKey SideMaterial
-        {
-            get => m_sideMaterial;
-            set
-            {
-                if (m_sideMaterial != value)
-                {
-                    m_sideMaterial = value;
-                }
-            }
-        }
+        public NamedOrGenericKey SideMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets the material for bottom.
         /// </summary>
-        public NamedOrGenericKey BottomMaterial
-        {
-            get => m_bottomMaterial;
-            set
-            {
-                if (m_bottomMaterial != value)
-                {
-                    m_bottomMaterial = value;
-                }
-            }
-        }
+        public NamedOrGenericKey BottomMaterial { get; set; }
 
         //*********************************************************************
         //*********************************************************************

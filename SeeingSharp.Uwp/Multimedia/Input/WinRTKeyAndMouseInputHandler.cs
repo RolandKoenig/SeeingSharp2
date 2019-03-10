@@ -109,10 +109,10 @@ namespace SeeingSharp.Multimedia.Input
             m_renderLoop = m_viewInterface.RenderLoop;
             if (m_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
-            m_dispatcher = m_painter.Disptacher;
-            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDisptacher from target panel!"); }
+            m_dispatcher = m_painter.Dispatcher;
+            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
 
-            // Deligate start logic to UI thread
+            // Delegate start logic to UI thread
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Register all events
@@ -197,7 +197,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Querries all current input states.
+        /// Queries all current input states.
         /// </summary>
         public IEnumerable<InputStateBase> GetInputStates()
         {
@@ -261,10 +261,7 @@ namespace SeeingSharp.Multimedia.Input
             if (m_painter == null) { return; }
 
             // Set focus on target
-            if (m_dummyButtonForFocus != null)
-            {
-                m_dummyButtonForFocus.Focus(FocusState.Programmatic);
-            }
+            m_dummyButtonForFocus?.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
@@ -289,10 +286,7 @@ namespace SeeingSharp.Multimedia.Input
             if (m_painter == null) { return; }
 
             // Set focus on target
-            if (m_dummyButtonForFocus != null)
-            {
-                m_dummyButtonForFocus.Focus(FocusState.Programmatic);
-            }
+            m_dummyButtonForFocus?.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);

@@ -112,9 +112,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="clearColor">Color of the clear.</param>
         public void Clear(Color4 clearColor)
         {
-            if (m_renderTarget == null) { return; }
-
-            m_renderTarget.Clear(clearColor);
+            m_renderTarget?.Clear(clearColor);
         }
 
         /// <summary>
@@ -521,7 +519,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             image.EnsureNotNull(nameof(image));
 
-            var internalImage = image as IImageInternal;
+            var internalImage = (IImageInternal)image;
             internalImage.EnsureNotNull(nameof(internalImage));
 
             if (m_deviceContext != null)
@@ -549,7 +547,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Sets current transform settings on this graphics object.
-        /// (be carefull, the state is changed on device level!)
+        /// (be careful, the state is changed on device level!)
         /// </summary>
         /// <param name="transformSettings">The settings to be set.</param>
         internal void PushTransformSettings(Graphics2DTransformSettings transformSettings)
@@ -567,8 +565,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 case Graphics2DTransformMode.AutoScaleToVirtualScreen:
                     var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
                     var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
-                    if(virtualWidth == 0f) { virtualWidth = ScreenPixelSize.Width; }
-                    if(virtualHeight == 0f) { virtualHeight = ScreenPixelSize.Height; }
+                    if(EngineMath.EqualsWithTolerance(virtualWidth, 0f)) { virtualWidth = ScreenPixelSize.Width; }
+                    if(EngineMath.EqualsWithTolerance(virtualHeight, 0f)) { virtualHeight = ScreenPixelSize.Height; }
 
                     var scaleFactorX = ScreenPixelSize.Width / virtualWidth;
                     var scaleFactorY = ScreenPixelSize.Height / virtualHeight;
@@ -594,7 +592,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Resets the transform setting son this graphics object.
-        /// (be carefull, the state is changed on device level!)
+        /// (be careful, the state is changed on device level!)
         /// </summary>
         internal void PopTransformSettings()
         {

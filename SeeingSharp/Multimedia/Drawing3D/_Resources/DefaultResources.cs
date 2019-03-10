@@ -39,9 +39,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Lazy<D3D11.DepthStencilState> m_depthStencilStateDefault;
         private Lazy<D3D11.DepthStencilState> m_depthStencilStateDisableZWrites;
         private Lazy<D3D11.DepthStencilState> m_depthStencilStateInvertedZTest;
-        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAllwaysPass;
+        private Lazy<D3D11.DepthStencilState> m_depthStencilStateAlwaysPass;
 
-        // Rastarizer states
+        // Rasterizer states
         private Lazy<D3D11.RasterizerState> m_rasterStateLines;
         private Lazy<D3D11.RasterizerState> m_rasterStateDefault;
         private Lazy<D3D11.RasterizerState> m_rasterStateBiased;
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 blendDesc.RenderTarget[0].AlphaBlendOperation = D3D11.BlendOperation.Maximum;
                 blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11.ColorWriteMaskFlags.All;
 
-                //Create the blendstate object
+                //Create the BlendState object
                 return new D3D11.BlendState(device.DeviceD3D11_1, blendDesc);
             });
 
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
             });
 
-            // Create the depth stencil state for diabling z writes
+            // Create the depth stencil state for disabling z writes
             m_depthStencilStateDisableZWrites = new Lazy<D3D11.DepthStencilState>(() =>
             {
                 var stateDesc = D3D11.DepthStencilStateDescription.Default();
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
             });
 
-            m_depthStencilStateAllwaysPass = new Lazy<D3D11.DepthStencilState>(() =>
+            m_depthStencilStateAlwaysPass = new Lazy<D3D11.DepthStencilState>(() =>
             {
                 var stateDesc = D3D11.DepthStencilStateDescription.Default();
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
@@ -120,10 +120,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             });
 
             // Create default rasterizer state
-            m_rasterStateDefault = new Lazy<D3D11.RasterizerState>(() =>
-            {
-                return new D3D11.RasterizerState(device.DeviceD3D11_1, D3D11.RasterizerStateDescription.Default());
-            });
+            m_rasterStateDefault = new Lazy<D3D11.RasterizerState>(
+                () => new D3D11.RasterizerState(device.DeviceD3D11_1, D3D11.RasterizerStateDescription.Default()));
 
             // Create a raster state with depth bias
             m_rasterStateBiased = new Lazy<D3D11.RasterizerState>(() =>
@@ -152,18 +150,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             });
 
             // Create sampler states
-            m_samplerStateLow = new Lazy<D3D11.SamplerState>(() =>
-            {
-                return GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low);
-            });
-            m_samplerStateMedium = new Lazy<D3D11.SamplerState>(() =>
-            {
-                return GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium);
-            });
-            m_samplerStateHigh = new Lazy<D3D11.SamplerState>(() =>
-            {
-                return GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High);
-            });
+            m_samplerStateLow = new Lazy<D3D11.SamplerState>(
+                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low));
+            m_samplerStateMedium = new Lazy<D3D11.SamplerState>(
+                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium));
+            m_samplerStateHigh = new Lazy<D3D11.SamplerState>(
+                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High));
         }
 
         /// <summary>
@@ -215,8 +207,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_defaultBlendState == null) { return null; }
-                return m_defaultBlendState.Value;
+                return m_defaultBlendState?.Value;
             }
         }
 
@@ -224,8 +215,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_alphaBlendingBlendState == null) { return null; }
-                return m_alphaBlendingBlendState.Value;
+                return m_alphaBlendingBlendState?.Value;
             }
         }
 
@@ -233,8 +223,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_depthStencilStateDefault == null) { return null; }
-                return m_depthStencilStateDefault.Value;
+                return m_depthStencilStateDefault?.Value;
             }
         }
 
@@ -242,17 +231,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_depthStencilStateDisableZWrites == null) { return null; }
-                return m_depthStencilStateDisableZWrites.Value;
+                return m_depthStencilStateDisableZWrites?.Value;
             }
         }
 
-        internal D3D11.DepthStencilState DepthStencilStateAllwaysPassDepth
+        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth
         {
             get
             {
-                if (m_depthStencilStateAllwaysPass == null) { return null; }
-                return m_depthStencilStateAllwaysPass.Value;
+                return m_depthStencilStateAlwaysPass?.Value;
             }
         }
 
@@ -260,8 +247,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_depthStencilStateInvertedZTest == null) { return null; }
-                return m_depthStencilStateInvertedZTest.Value;
+                return m_depthStencilStateInvertedZTest?.Value;
             }
         }
 
@@ -269,8 +255,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_rasterStateDefault == null) { return null; }
-                return m_rasterStateDefault.Value;
+                return m_rasterStateDefault?.Value;
             }
         }
 
@@ -278,8 +263,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_rasterStateBiased == null) { return null; }
-                return m_rasterStateBiased.Value;
+                return m_rasterStateBiased?.Value;
             }
         }
 
@@ -287,8 +271,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if(m_rasterStateWireframe == null) { return null; }
-                return m_rasterStateWireframe.Value;
+                return m_rasterStateWireframe?.Value;
             }
         }
 
@@ -296,8 +279,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_rasterStateLines == null) { return null; }
-                return m_rasterStateLines.Value;
+                return m_rasterStateLines?.Value;
             }
         }
 
@@ -305,8 +287,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_samplerStateMedium == null) { return null; }
-                return m_samplerStateMedium.Value;
+                return m_samplerStateMedium?.Value;
             }
         }
     }

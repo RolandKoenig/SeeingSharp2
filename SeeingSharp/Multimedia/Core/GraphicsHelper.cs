@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads the texture2D from stream.
         /// </summary>
-        /// <param name="device">The device on wich to create the texture.</param>
+        /// <param name="device">The device on which to create the texture.</param>
         /// <param name="inStream">The source stream.</param>
         /// <returns></returns>
         public static D3D11.Texture2D LoadTexture2D(EngineDevice device, Stream inStream)
@@ -127,7 +127,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a new texture from the given file path.
         /// </summary>
-        /// <param name="device">The device on wich to create the texture.</param>
+        /// <param name="device">The device on which to create the texture.</param>
         /// <param name="fileName">The source file</param>
         /// <returns></returns>
         public static D3D11.Texture2D LoadTexture2D(EngineDevice device, string fileName)
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a bitmap using WIC.
         /// </summary>
-        /// <param name="inStream">The stream from wich to load the texture file.</param>
+        /// <param name="inStream">The stream from which to load the texture file.</param>
         public static WicBitmapSourceInternal LoadBitmapSource(Stream inStream)
         {
             inStream.EnsureNotNull(nameof(inStream));
@@ -189,13 +189,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a bitmap using WIC.
         /// </summary>
-        /// <param name="inStream">The stream from wich to load the texture file.</param>
+        /// <param name="inStream">The stream from which to load the texture file.</param>
         public static WicBitmapSourceInternal LoadBitmapSource_D2D(Stream inStream)
         {
             inStream.EnsureNotNull(nameof(inStream));
             inStream.EnsureReadable(nameof(inStream));
 
-            // Parameter changed to represent this article (importand is the correct Direct2D format):
+            // Parameter changed to represent this article (important is the correct Direct2D format):
             // https://msdn.microsoft.com/en-us/library/windows/desktop/dd756686(v=vs.85).aspx
 
             var bitmapDecoder = new BitmapDecoder(
@@ -704,7 +704,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             device.EnsureNotNull(nameof(device));
 
-            // Calulation depends on depth buffer format
+            // Calculation depends on depth buffer format
             // see http://msdn.microsoft.com/de-de/library/windows/desktop/cc308048(v=vs.85).aspx
             // see Book "3D Game Programming With Direct3D 11, Frank D. Luna, 2012" Page 678
 
@@ -844,7 +844,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates a default exture sampler state.
+        /// Creates a default texture sampler state.
         /// </summary>
         /// <param name="device">The device to create the state for.</param>
         /// <param name="samplerQualityLevel">The target sampler quality</param>

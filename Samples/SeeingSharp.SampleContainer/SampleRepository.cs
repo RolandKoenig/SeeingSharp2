@@ -79,7 +79,6 @@ namespace SeeingSharp.SampleContainer
         public List<SampleGroupMetadata> SampleGroups
         {
             get;
-            private set;
         }
     }
 }

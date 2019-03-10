@@ -35,6 +35,8 @@ namespace SeeingSharp.SampleContainer
             get => base.RenderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
             set
             {
+                if (base.RenderLoop == null){ return; }
+
                 if(value != base.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
                 {
                     base.RenderLoop.ViewConfiguration.AntialiasingEnabled = value;
@@ -49,6 +51,8 @@ namespace SeeingSharp.SampleContainer
             get => base.RenderLoop?.ViewConfiguration.WireframeEnabled ?? false;
             set
             {
+                if (base.RenderLoop == null) { return; }
+
                 if (value != base.RenderLoop?.ViewConfiguration.WireframeEnabled)
                 {
                     base.RenderLoop.ViewConfiguration.WireframeEnabled = value;
@@ -63,7 +67,9 @@ namespace SeeingSharp.SampleContainer
             get => base.RenderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
             set
             {
-                if(value != base.RenderLoop?.ViewConfiguration.AntialiasingQuality)
+                if (base.RenderLoop == null) { return; }
+
+                if (value != base.RenderLoop?.ViewConfiguration.AntialiasingQuality)
                 {
                     base.RenderLoop.ViewConfiguration.AntialiasingQuality = value;
                     RaisePropertyChanged(nameof(AntialiasingQuality));

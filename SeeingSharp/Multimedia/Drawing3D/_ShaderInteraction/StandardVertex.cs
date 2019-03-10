@@ -27,7 +27,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX;
 using SharpDX.DXGI;
-// Namespace mappings
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D

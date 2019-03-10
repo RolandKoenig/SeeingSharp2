@@ -42,8 +42,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
         /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
+        /// <param name="width">Width of the render window.</param>
+        /// <param name="height">Height of the render window.</param>
         public PerspectiveCamera3D(int width, int height)
             : base(width, height)
         {
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="target">The target point of the camera.</param>
         /// <param name="upVector">The current up vector.</param>
         /// <param name="zNear">Distance to the nearest rendered pixel.</param>
-        /// <param name="zFar">Distance to the farest rendered pixel.</param>
+        /// <param name="zFar">Distance to the most far rendered pixel.</param>
         /// <param name="screenWidth">The current width of the screen in pixel.</param>
         /// <param name="screenHeight">The current height of the screen in pixel.</param>
         /// <param name="viewMatrix">The calculated view matrix.</param>

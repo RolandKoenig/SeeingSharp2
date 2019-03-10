@@ -168,8 +168,7 @@ namespace SeeingSharp.Multimedia.Objects
             token.EnsureNotNull(nameof(token));
 
             var line = reader.ReadLine();
-            string id, values;
-            ParseLine(line, out id, out values);
+            ParseLine(line, out var id, out _);
 
             if (!string.Equals(token, id, StringComparison.OrdinalIgnoreCase))
             {
@@ -241,16 +240,14 @@ namespace SeeingSharp.Multimedia.Objects
             while (true)
             {
                 var line = reader.ReadLine();
-                Vector3 point;
 
-                if (TryParseVertex(line, out point))
+                if (TryParseVertex(line, out var point))
                 {
                     m_cachedPoints.Add(point);
                     continue;
                 }
 
-                string id, values;
-                ParseLine(line, out id, out values);
+                ParseLine(line, out var id, out _);
 
                 if (id == "endloop")
                 {
@@ -262,7 +259,7 @@ namespace SeeingSharp.Multimedia.Objects
             ReadLine(reader, "endfacet");
 
             // Overtake geometry data
-            var targetSurfae = newStructure.FirstSurface;
+            var targetSurface = newStructure.FirstSurface;
             var pointCount = m_cachedPoints.Count;
 
             switch (m_cachedPoints.Count)
@@ -275,14 +272,14 @@ namespace SeeingSharp.Multimedia.Objects
                 case 3:
                     if (importOptions.IsChangeTriangleOrderNeeded())
                     {
-                        targetSurfae.AddTriangle(
+                        targetSurface.AddTriangle(
                             new Vertex(m_cachedPoints[2], Color4Ex.Transparent, Vector2.Zero, normal),
                             new Vertex(m_cachedPoints[1], Color4Ex.Transparent, Vector2.Zero, normal),
                             new Vertex(m_cachedPoints[0], Color4Ex.Transparent, Vector2.Zero, normal));
                     }
                     else
                     {
-                        targetSurfae.AddTriangle(
+                        targetSurface.AddTriangle(
                             new Vertex(m_cachedPoints[0], Color4Ex.Transparent, Vector2.Zero, normal),
                             new Vertex(m_cachedPoints[1], Color4Ex.Transparent, Vector2.Zero, normal),
                             new Vertex(m_cachedPoints[2], Color4Ex.Transparent, Vector2.Zero, normal));
@@ -308,7 +305,7 @@ namespace SeeingSharp.Multimedia.Objects
                         }
                     }
 
-                    targetSurfae.AddPolygonByCuttingEars(indices);
+                    targetSurface.AddPolygonByCuttingEars(indices);
                     break;
             }
         }
@@ -413,8 +410,7 @@ namespace SeeingSharp.Multimedia.Objects
                         continue;
                     }
 
-                    string id, values;
-                    ParseLine(line, out id, out values);
+                    ParseLine(line, out var id, out var values);
                     switch (id)
                     {
                             // Header.. not needed here
@@ -463,7 +459,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Read number of triangles
-            uint numberTriangles = 0;
             using (var reader = new BinaryReader(stream, Encoding.GetEncoding("us-ascii"), true))
             {
                 // Read header (is not needed)
@@ -473,7 +468,7 @@ namespace SeeingSharp.Multimedia.Objects
                 if(header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
 
                 // Read and check number of triangles
-                numberTriangles = ReadUInt32(reader);
+                var numberTriangles = ReadUInt32(reader);
                 if (length - 84 != numberTriangles * 50)
                 {
                     throw new SeeingSharpException("Incomplete file (smaller that expected byte count)");

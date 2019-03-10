@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         //*********************************************************************
         //*********************************************************************
         /// <summary>
-        /// A simple helper storing both resurces..
+        /// A simple helper storing both resources..
         ///  - the GradientStopCollection
         ///  - and the RadialGradientBrush itself
         /// </summary>

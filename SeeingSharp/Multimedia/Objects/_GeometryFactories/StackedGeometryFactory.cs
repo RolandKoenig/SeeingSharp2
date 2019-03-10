@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
             var childStructBox = structureFromChild.GenerateBoundingBox();
             var correctionVector = -childStructBox.GetBottomCenter();
 
-            // Copy metadata infomration of the VertexStructures
+            // Copy metadata information of the VertexStructures
             var result = structureFromChild.Clone(
                 false,
                 m_stackSize);

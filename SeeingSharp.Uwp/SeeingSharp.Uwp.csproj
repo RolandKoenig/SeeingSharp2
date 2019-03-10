@@ -53,7 +53,7 @@
     <Compile Include="SeeingSharpConstantsUwp.cs" />
     <Compile Include="SeeingSharpUwpExtensions.cs" />
     <Compile Include="_Extensions.cs" />
-    <Compile Include="_Util\SeeingSharpUwpTools.cs" />
+    <Compile Include="_Util\SeeingSharpUwpUtil.cs" />
     <EmbeddedResource Include="Properties\SeeingSharp.Uwp.rd.xml" />
   </ItemGroup>
   <ItemGroup>

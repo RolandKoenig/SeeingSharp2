@@ -28,7 +28,6 @@ namespace SeeingSharp
     {
         // Constants for design-time
         public const string DESIGNER_CATEGORY_RENDERER = "Renderer";
-        public const string DESIGNER_CATEGORY_CAMERA = "Camera";
 
         // Misc
         public static readonly TimeSpan MOUSE_CLICK_MAX_TIME = TimeSpan.FromMilliseconds(200.0);

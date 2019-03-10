@@ -278,10 +278,10 @@ namespace SeeingSharp.Multimedia.Core
             //Calculates local transform matrix (transforms local space to world space)
             var doRecreateShaderParameters = false;
             TransformationChanged =
-                m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds;
+                m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren;
 
             // Update local transform matrix if transform values have changed
-            if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChilds)
+            if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren)
             {
                 m_transformParamsChanged = false;
                 m_forceTransformUpdateOnChildren = HasChildren;
@@ -379,8 +379,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="children">The full list of children that should be updated.</param>
         protected override void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
-            var prevForceState = updateState.ForceTransformUpdatesOnChilds;
-            updateState.ForceTransformUpdatesOnChilds = prevForceState || m_forceTransformUpdateOnChildren;
+            var prevForceState = updateState.ForceTransformUpdatesOnChildren;
+            updateState.ForceTransformUpdatesOnChildren = prevForceState || m_forceTransformUpdateOnChildren;
             m_forceTransformUpdateOnChildren = false;
             try
             {
@@ -404,7 +404,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                updateState.ForceTransformUpdatesOnChilds = prevForceState;
+                updateState.ForceTransformUpdatesOnChildren = prevForceState;
             }
         }
 
@@ -442,7 +442,7 @@ namespace SeeingSharp.Multimedia.Core
                     Opacity = m_opacity,
                     World = Matrix.Transpose(m_transform),
                     BorderPart = m_borderPart,
-                    BorderMultiplyer = m_borderMultiplier,
+                    BorderMultiplier = m_borderMultiplier,
                     ObjectScaling = m_scaling
                 };
 

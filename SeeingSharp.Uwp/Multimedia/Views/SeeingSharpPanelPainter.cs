@@ -372,7 +372,7 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when RenderLoop object checks wheter it is possible to render.
+        /// Called when RenderLoop object checks whether it is possible to render.
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice engineDevice)
         {
@@ -419,7 +419,7 @@ namespace SeeingSharp.Multimedia.Views
                 }
             }
 
-            // Handle thottled resizing of view resources
+            // Handle throttled resizing of view resources
             if (m_lastSizeChange != DateTime.MinValue &&
                 DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
             {
@@ -511,9 +511,9 @@ namespace SeeingSharp.Multimedia.Views
             get
             {
                 var clearColor = RenderLoop.ClearColor;
-                return SeeingSharpUwpTools.UIColorFromColor4(ref clearColor);
+                return SeeingSharpUwpUtil.UIColorFromColor4(ref clearColor);
             }
-            set => RenderLoop.ClearColor = SeeingSharpUwpTools.Color4FromUIColor(ref value);
+            set => RenderLoop.ClearColor = SeeingSharpUwpUtil.Color4FromUIColor(ref value);
         }
 
         public Panel TargetPanel => m_targetPanel?.Panel;
@@ -524,11 +524,11 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public bool IsOperational => RenderLoop.IsOperational;
 
-        public CoreDispatcher Disptacher => m_targetPanel?.Dispatcher;
+        public CoreDispatcher Dispatcher => m_targetPanel?.Dispatcher;
 
         /// <summary>
         /// Does the target control have focus?
-        /// (Return true here if rendering runs, because in winrt we are everytime at fullscreen)
+        /// (Return true here if rendering runs, because in WinRT we are every time at fullscreen)
         /// </summary>
         bool IInputEnabledView.Focused => RenderLoop.IsRegisteredOnMainLoop;
     }

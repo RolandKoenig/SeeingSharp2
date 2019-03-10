@@ -54,8 +54,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreateOrthoLH(float width, float height, float znear, float zfar)
         {
-            Matrix result;
-            CreateOrthoLH(width, height, znear, zfar, out result);
+            CreateOrthoLH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -85,8 +84,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreateOrthoRH(float width, float height, float znear, float zfar)
         {
-            Matrix result;
-            CreateOrthoRH(width, height, znear, zfar, out result);
+            CreateOrthoRH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -125,8 +123,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix result;
-            CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -158,8 +155,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix result;
-            CreateOrthoOffCenterRH(left, right, bottom, top, znear, zfar, out result);
+            CreateOrthoOffCenterRH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -205,8 +201,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveLH(float width, float height, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveLH(width, height, znear, zfar, out result);
+            CreatePerspectiveLH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -236,8 +231,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveRH(float width, float height, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveRH(width, height, znear, zfar, out result);
+            CreatePerspectiveRH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -270,8 +264,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveFovLH(fov, aspect, znear, zfar, out result);
+            CreatePerspectiveFovLH(fov, aspect, znear, zfar, out var result);
             return result;
         }
 
@@ -304,8 +297,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveFovRH(fov, aspect, znear, zfar, out result);
+            CreatePerspectiveFovRH(fov, aspect, znear, zfar, out var result);
             return result;
         }
 
@@ -347,8 +339,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -383,8 +374,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix result;
-            CreatePerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out result);
+            CreatePerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -397,10 +387,9 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
         public static void CreateLookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
         {
-            Vector3 xaxis, yaxis, zaxis;
-            zaxis = Vector3.Normalize(Vector3.Subtract(target, eye));
-            xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
-            yaxis = Vector3.Cross(zaxis, xaxis);
+            var zaxis = Vector3.Normalize(Vector3.Subtract(target, eye));
+            var xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
+            var yaxis = Vector3.Cross(zaxis, xaxis);
 
             result = Matrix.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
@@ -425,8 +414,7 @@ namespace SeeingSharp
         /// <returns>The created look-at matrix.</returns>
         public static Matrix CreateLookAtLH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix result;
-            CreateLookAtLH(ref eye, ref target, ref up, out result);
+            CreateLookAtLH(ref eye, ref target, ref up, out var result);
             return result;
         }
 
@@ -439,10 +427,9 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
         public static void CreateLookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
         {
-            Vector3 xaxis, yaxis, zaxis;
-            zaxis = Vector3.Normalize(Vector3.Subtract(eye, target));
-            xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
-            yaxis = Vector3.Cross(zaxis, xaxis);
+            var zaxis = Vector3.Normalize(Vector3.Subtract(eye, target));
+            var xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
+            var yaxis = Vector3.Cross(zaxis, xaxis);
 
             result = Matrix.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
@@ -467,8 +454,7 @@ namespace SeeingSharp
         /// <returns>The created look-at matrix.</returns>
         public static Matrix LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix result;
-            CreateLookAtRH(ref eye, ref target, ref up, out result);
+            CreateLookAtRH(ref eye, ref target, ref up, out var result);
             return result;
         }
 
@@ -498,7 +484,7 @@ namespace SeeingSharp
                 case 15: return matrix.M44;
             }
 
-            throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+            throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
         }
 
         /// <summary>
@@ -525,7 +511,7 @@ namespace SeeingSharp
                 case 13: matrix.M42 = value; break;
                 case 14: matrix.M43 = value; break;
                 case 15: matrix.M44 = value; break;
-                default: throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
             }
         }
 
@@ -542,11 +528,11 @@ namespace SeeingSharp
         {
             if (row < 0 || row > 3)
             {
-                throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
             if (column < 0 || column > 3)
             {
-                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
 
             return GetValue(matrix,row * 4 + column);
@@ -566,11 +552,11 @@ namespace SeeingSharp
         {
             if (row < 0 || row > 3)
             {
-                throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
             if (column < 0 || column > 3)
             {
-                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
 
             SetValue(matrix, row * 4 + column, value);

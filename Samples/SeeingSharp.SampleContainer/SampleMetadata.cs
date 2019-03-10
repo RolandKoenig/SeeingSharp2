@@ -30,11 +30,6 @@ namespace SeeingSharp.SampleContainer
         private SampleDescriptionAttribute m_description;
         private Type m_sampleType;
 
-        public SampleMetadata()
-        {
-
-        }
-
         public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
         {
             m_description = description;
@@ -92,7 +87,7 @@ namespace SeeingSharp.SampleContainer
         {
             get;
             set;
-        } = string.Empty;
+        }
 
         public int OrderId
         {
@@ -104,12 +99,12 @@ namespace SeeingSharp.SampleContainer
         {
             get;
             set;
-        } = string.Empty;
+        }
 
         public string SourceCodeUrl
         {
             get;
             set;
-        } = string.Empty;
+        }
     }
 }

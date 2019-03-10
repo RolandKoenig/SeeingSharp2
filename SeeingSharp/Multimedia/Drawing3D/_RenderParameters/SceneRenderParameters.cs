@@ -28,6 +28,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SceneRenderParameters : Resource
     {
+        // Resource keys
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
         // Resources
         private TypeSafeConstantBufferResource<CBPerFrame> m_cbPerFrame;
 
@@ -86,8 +89,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded => m_cbPerFrame != null;
-
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

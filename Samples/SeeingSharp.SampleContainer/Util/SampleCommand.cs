@@ -35,7 +35,6 @@ namespace SeeingSharp.SampleContainer.Util
         public string CommandText
         {
             get;
-            private set;
         }
     }
 }

@@ -110,12 +110,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
 
                 default:
-                    throw new SeeingSharpException($"Unhanbled {nameof(ShaderResourceKind)}: {resourceKind}");
+                    throw new SeeingSharpException($"Unhandled {nameof(ShaderResourceKind)}: {resourceKind}");
             }
         }
 
         /// <summary>
-        /// Gets the shader's raw bytecode.
+        /// Gets the shaders raw bytecode.
         /// </summary>
         public byte[] ShaderBytecode => m_shaderBytecode;
     }

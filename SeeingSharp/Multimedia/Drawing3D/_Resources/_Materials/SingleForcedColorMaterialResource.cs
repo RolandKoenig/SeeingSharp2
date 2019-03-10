@@ -32,6 +32,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
 
+        // Instance resource keys
+        private static NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
         // Resource members
         private VertexShaderResource m_vertexShader;
         private PixelShaderResource m_pixelShader;
@@ -126,14 +129,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_fadeIntensity;
             set
             {
-                if(m_fadeIntensity != value)
+                if(!EngineMath.EqualsWithTolerance(m_fadeIntensity, value))
                 {
                     m_fadeIntensity = value;
                     m_cbPerMaterialDataChanged = true;
                 }
             }
         }
-
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

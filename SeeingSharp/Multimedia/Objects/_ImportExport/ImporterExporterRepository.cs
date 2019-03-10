@@ -32,9 +32,6 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class ImporterExporterRepository
     {
-        private List<IModelExporter> m_exporters;
-        private Dictionary<string, IModelExporter> m_exportersByFileType;
-        private List<IModelImporter> m_importers;
         private Dictionary<string, IModelImporter> m_importersByFileType;
         private Dictionary<string, SupportedFileFormatAttribute> m_infoByFileType;
 
@@ -43,21 +40,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         internal ImporterExporterRepository(SeeingSharpLoader loader)
         {
-            m_importers =
-                (from actExtension in loader.Extensions
-                 from actImporter in actExtension.CreateModelImporters()
-                 select actImporter).ToList();
-            m_exporters =
-                (from actExtension in loader.Extensions
-                 from actExporter in actExtension.CreateModelExporters()
-                 select actExporter).ToList();
+            var importers = (from actExtension in loader.Extensions
+                from actImporter in actExtension.CreateModelImporters()
+                select actImporter).ToList();
+            var exporters = (from actExtension in loader.Extensions
+                from actExporter in actExtension.CreateModelExporters()
+                select actExporter).ToList();
 
             m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
 
             // Get format support on each importer
             m_importersByFileType = new Dictionary<string, IModelImporter>();
 
-            foreach(var actImporter in m_importers)
+            foreach(var actImporter in importers)
             {
                 foreach(var actSupportedFile in actImporter
                     .GetType().GetTypeInfo()
@@ -70,16 +65,16 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Get format support on each exporter
-            m_exportersByFileType = new Dictionary<string, IModelExporter>();
+            var exportersByFileType = new Dictionary<string, IModelExporter>();
 
-            foreach (var actExporter in m_exporters)
+            foreach (var actExporter in exporters)
             {
                 foreach (var actSupportedFile in actExporter
                     .GetType().GetTypeInfo()
                     .GetCustomAttributes<SupportedFileFormatAttribute>())
                 {
                     var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
-                    m_exportersByFileType[actFileFormat] = actExporter;
+                    exportersByFileType[actFileFormat] = actExporter;
                     m_infoByFileType[actFileFormat] = actSupportedFile;
                 }
             }
@@ -177,10 +172,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Start the loading task
-            return Task.Factory.StartNew(() =>
-            {
-                return importer.ImportModel(source, importOptions);
-            });
+            return Task.Factory.StartNew(() => importer.ImportModel(source, importOptions));
         }
 
         /// <summary>
@@ -207,8 +199,7 @@ namespace SeeingSharp.Multimedia.Objects
             fileExtension = fileExtension.ToLower().Replace(".", "");
 
             // Query for importer object
-            IModelImporter importer = null;
-            if (!m_importersByFileType.TryGetValue(fileExtension, out importer))
+            if (!m_importersByFileType.TryGetValue(fileExtension, out var importer))
             {
                 throw new SeeingSharpGraphicsException($"No importer found for file type {fileExtension}");
             }

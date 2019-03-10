@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Objects
                 case CoordinateSystem.LeftHanded_UpZ:
                     return
                         Matrix.Scaling(1f, -1f, 1f) *
-                        Matrix.RotationX(-EngineMath.RAD_90DEG); ;
+                        Matrix.RotationX(-EngineMath.RAD_90DEG);
 
                 case CoordinateSystem.RightHanded_UpY:
                     return Matrix.Scaling(new Vector3(1f, 1f, -1f));

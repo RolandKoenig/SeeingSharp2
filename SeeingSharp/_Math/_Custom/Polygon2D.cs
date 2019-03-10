@@ -40,7 +40,7 @@ namespace SeeingSharp
         /// <exception cref="SeeingSharpException"></exception>
         public Polygon2D(params Vector2[] vertices)
         {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+            if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
             //Apply given vertices (remove the last one if it is equal to the first one)
             m_vertices = vertices;
@@ -78,9 +78,9 @@ namespace SeeingSharp
         /// </summary>
          public Polygon2D MergeWithHole(Polygon2D actHole, Polygon2DMergeOptions mergeOptions, List<Vector2> cutPoints)
         {
-            //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
+            // This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
-            //Find the hole vertex with the highest x value
+            // Find the hole vertex with the highest x value
             var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
             var holeVertexIndexWithHighestX = -1;
 
@@ -93,15 +93,12 @@ namespace SeeingSharp
                 }
             }
 
-            if (cutPoints != null)
-            {
-                cutPoints.Add(holeVertexWithHighestX);
-            }
+            cutPoints?.Add(holeVertexWithHighestX);
 
-            //Define a ray from the found vertex pointing in x direction
+            // Define a ray from the found vertex pointing in x direction
             var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
-            //Find the line on current filling polygon with intersects first with the created ray
+            // Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
             var actLineIndex = 0;
 
@@ -126,38 +123,38 @@ namespace SeeingSharp
                         }
                         else if (lengthToIntersectionPoint < foundLine.Item2)
                         {
-                            //More intersections found.. take the one with smalles distance to intersection point
+                            //More intersections found.. take the one with smaller distance to intersection point
                             foundLine = Tuple.Create(actLineIndex, lengthToIntersectionPoint, actIntersection.Item2);
                         }
                     }
                 }
                 actLineIndex++;
             }
-            if (cutPoints != null) { cutPoints.Add(foundLine.Item3); }
+            cutPoints?.Add(foundLine.Item3);
 
-            //Check for found intersection
+            // Check for found intersection
             if (foundLine == null)
             {
-                throw new SeeingSharpException("No point found on which given polygons can be combinded!");
+                throw new SeeingSharpException("No point found on which given polygons can be combined!");
             }
 
-            //Now generate result polygon
+            // Now generate result polygon
             var resultBuilder = new List<Vector2>(m_vertices.Length + actHole.m_vertices.Length + 2);
             for (var loopFillVertex = 0; loopFillVertex < m_vertices.Length; loopFillVertex++)
             {
-                //Add current vertex from filling polygon first
+                // Add current vertex from filling polygon first
                 resultBuilder.Add(m_vertices[loopFillVertex]);
 
-                //Do special logic on cut point
+                // Do special logic on cut point
                 if (loopFillVertex == foundLine.Item1)
                 {
-                    //Cut point.. place here the hole polygon
+                    // Cut point.. place here the hole polygon
                     if (!m_vertices[loopFillVertex].Equals(foundLine.Item3))
                     {
                         resultBuilder.Add(foundLine.Item3);
                     }
 
-                    //Add all vertices from the hole polygon
+                    // Add all vertices from the hole polygon
                     resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
                     var loopHoleVertex = holeVertexIndexWithHighestX + 1;
                     while (loopHoleVertex != holeVertexIndexWithHighestX)
@@ -170,23 +167,23 @@ namespace SeeingSharp
                         if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
                     }
 
-                    //Add cutpoints again to continue with main polygon
+                    // Add cutpoints again to continue with main polygon
                     if (mergeOptions.MakeMergepointSpaceForTriangulation)
                     {
                         resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX] + new Vector2(0f, 0.001f));
 
-                        //Add the cutpoint again
+                        // Add the cutpoint again
                         resultBuilder.Add(foundLine.Item3 + new Vector2(0f, 0.001f));
                     }
                     else
                     {
                         resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
 
-                        //Add the cutpoint again
+                        // Add the cutpoint again
                         resultBuilder.Add(foundLine.Item3);
                     }
 
-                    //Handle the case in which next vertex would equal current cut point
+                    // Handle the case in which next vertex would equal current cut point
                     if (m_vertices.Length > loopFillVertex + 1 &&
                         m_vertices[loopFillVertex + 1].Equals(foundLine.Item3))
                     {
@@ -195,7 +192,7 @@ namespace SeeingSharp
                 }
             }
 
-            //Return new generate polygon
+            // Return new generate polygon
             return new Polygon2D(resultBuilder.ToArray());
         }
 
@@ -239,7 +236,7 @@ namespace SeeingSharp
             //Formula:
             // For each Edge: (x2-x1)(y2+y1)
             // Take sum from each result
-            // If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise
+            // If result is positive, vertices are aligned clockwise, otherwise counter-clockwise
 
             if (m_vertices.Length < 2) { return EdgeOrder.Unknown; }
 

@@ -439,7 +439,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Calculates normals for all triangles specifyed by the given parameters.
+        /// Calculates normals for all triangles specified by the given parameters.
         /// </summary>
         /// <param name="startVertex">The vertex index on which to start.</param>
         /// <param name="vertexCount">Total count of vertices to be updated.</param>
@@ -527,7 +527,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Generates a boundbox around this structure
+        /// Generates a <see cref="BoundingBox"/> around this structure
         /// </summary>
         public BoundingBox GenerateBoundingBox()
         {
@@ -585,12 +585,9 @@ namespace SeeingSharp.Multimedia.Objects
             var centerCoord = boundingBox.GetMiddleCenter();
 
             //Update each vertex coordinate
-            UpdateVerticesUsingRelocationFunc(givenVector =>
-            {
-                return new Vector3(
-                    givenVector.X, givenVector.Y,
-                    centerCoord.Z + (centerCoord.Z - givenVector.Z));
-            });
+            UpdateVerticesUsingRelocationFunc(givenVector => new Vector3(
+                givenVector.X, givenVector.Y,
+                centerCoord.Z + (centerCoord.Z - givenVector.Z)));
 
             // Now change index ordering
             foreach(var actSurface in m_surfaces)

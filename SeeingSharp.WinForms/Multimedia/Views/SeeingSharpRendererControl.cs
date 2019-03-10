@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!m_isMouseInside) { return null; }
 
             var objects = await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsTools.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsUtil.PointFromGdiPoint(PointToClient(Cursor.Position)),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
             return objects?.FirstOrDefault();
         }
@@ -147,12 +147,12 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             return await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsTools.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsUtil.PointFromGdiPoint(PointToClient(Cursor.Position)),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
         }
 
         /// <summary>
-        /// Saves a screenshot to harddisc.
+        /// Saves a screenshot to hard disc.
         /// </summary>
         /// <param name="targetFile">Target file path.</param>
         public async Task SaveScreenshotAsync(string targetFile)
@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Saves a screenshot to harddisc.
+        /// Saves a screenshot to hard disc.
         /// </summary>
         /// <param name="targetFile">Target file path.</param>
         /// <param name="imageFormat">Target file format.</param>
@@ -462,7 +462,7 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when RenderLoop object checks wheter it is possible to render.
+        /// Called when RenderLoop object checks whether it is possible to render.
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
         {
@@ -603,11 +603,7 @@ namespace SeeingSharp.Multimedia.Views
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public GraphicsViewConfiguration ViewConfiguration => m_renderLoop.ViewConfiguration;
 
-        /// <summary>
-        /// Ruft die Hintergrundfarbe für das Steuerelement ab oder legt diese fest.
-        /// </summary>
-        /// <returns>Eine <see cref="T:System.Drawing.Color" />, die die Hintergrundfarbe des Steuerelements darstellt. Der Standardwert ist der Wert der <see cref="P:System.Windows.Forms.Control.DefaultBackColor" />-Eigenschaft.</returns>
-        public override GDI.Color BackColor
+        public sealed override GDI.Color BackColor
         {
             get => base.BackColor;
             set

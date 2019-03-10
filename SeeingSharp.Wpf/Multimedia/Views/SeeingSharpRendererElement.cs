@@ -300,7 +300,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
-            SeeingSharpWpfTools.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
+            SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
             // Calculate pixel with and high of this visual
             var pixelSize = new Size(
@@ -335,8 +335,7 @@ namespace SeeingSharp.Multimedia.Views
                     RenderCapability.Tier >> 16 >= 2)
                 {
                     var handlerD3D9 = engineDevice.TryGetAdditionalDeviceHandler<DeviceHandlerD3D9>();
-                    if (handlerD3D9 != null &&
-                        handlerD3D9.Device != null)
+                    if (handlerD3D9?.Device != null)
                     {
                         try
                         {
@@ -409,8 +408,6 @@ namespace SeeingSharp.Multimedia.Views
             }
             while (!initializedSuccessfully);
 
-            if (!initializedSuccessfully) { CompositionMode = WpfSeeingSharpCompositionMode.None; }
-
             m_lastRecreateWidth = width;
             m_lastRecreateHeight = height;
 
@@ -419,7 +416,7 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when RenderLoop object checks wheter it is possible to render.
+        /// Called when RenderLoop object checks whether it is possible to render.
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice engineDevice)
         {
@@ -435,8 +432,8 @@ namespace SeeingSharp.Multimedia.Views
 
             if (m_d3dImageSource != null)
             {
-                if (SeeingSharpWpfTools.ReadPrivateMember<bool, D3DImage>(m_d3dImageSource, "_isDirty") ||
-                    SeeingSharpWpfTools.ReadPrivateMember<IntPtr, D3DImage>(m_d3dImageSource, "_pUserSurfaceUnsafe") == IntPtr.Zero)
+                if (SeeingSharpWpfUtil.ReadPrivateMember<bool, D3DImage>(m_d3dImageSource, "_isDirty") ||
+                    SeeingSharpWpfUtil.ReadPrivateMember<IntPtr, D3DImage>(m_d3dImageSource, "_pUserSurfaceUnsafe") == IntPtr.Zero)
                 {
                     m_isDirtyCount++;
                     if (m_isDirtyCount > 20)
@@ -463,7 +460,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_lastSizeChange = DateTime.MinValue;
 
-                SeeingSharpWpfTools.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
+                SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
                 // Calculate pixel with and high of this visual
                 var pixelSize = new Size(
@@ -602,13 +599,13 @@ namespace SeeingSharp.Multimedia.Views
             {
                 var clearColor = RenderLoop.ClearColor;
                 var result = new Color();
-                SeeingSharpWpfTools.WpfColorFromColor4(ref clearColor, ref result);
+                SeeingSharpWpfUtil.WpfColorFromColor4(ref clearColor, ref result);
                 return result;
             }
             set
             {
                 var clearColor = new Color4();
-                SeeingSharpWpfTools.Color4FromWpfColor(ref value, ref clearColor);
+                SeeingSharpWpfUtil.Color4FromWpfColor(ref value, ref clearColor);
                 RenderLoop.ClearColor = clearColor;
             }
         }

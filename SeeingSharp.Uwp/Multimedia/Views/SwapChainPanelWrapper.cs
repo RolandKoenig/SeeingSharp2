@@ -88,9 +88,6 @@ namespace SeeingSharp.Multimedia.Views
             m_panel.CompositionScaleChanged += OnPanelCompositionScaleChanged;
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben durch, die mit der Freigabe, der Zurückgabe oder dem Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_bgPanelNative);

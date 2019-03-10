@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public ConstantBufferResource(int bufferSize)
         {
-            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", "bufferSize"); }
+            if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", nameof(bufferSize)); }
             BufferSize = bufferSize;
         }
 

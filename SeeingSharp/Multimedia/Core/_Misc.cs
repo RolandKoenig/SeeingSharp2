@@ -62,9 +62,17 @@ namespace SeeingSharp.Multimedia.Core
 
         DisposeGraphicsObject,
 
-        ManipulateFilterList,
+        LoadingTexture,
 
-        PrepareRendering
+        CreateTextGeometry,
+
+        RenderLoop_ManipulateFilterList,
+
+        RenderLoop_PrepareRendering,
+
+        RenderLoop_Unload,
+
+        RenderLoop_RenderEvent
     }
 
     public class ManipulateFilterListArgs : EventArgs

@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Original objects are hold to be able to check whether parents are also exported.
         /// </summary>
         /// <param name="sceneObject">The scene object.</param>
-        public bool ContainsOrignalObject(SceneObject sceneObject)
+        public bool ContainsOriginalObject(SceneObject sceneObject)
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 

@@ -41,7 +41,6 @@ namespace SeeingSharp
         // All values needed location calculation
         private double m_accelerationLength;
         private double m_accelerationSeconds;
-        private double m_decelerationLength;
         private double m_decelerationSeconds;
         private double m_fullSpeedLength;
         private double m_fullSpeedSeconds;
@@ -79,27 +78,27 @@ namespace SeeingSharp
             }
 
             // Calculate deceleration values
-            m_decelerationLength = 0f;
+            double decelerationLength = 0f;
             m_decelerationSeconds = 0f;
-            if (m_speed.Decelration < EngineMath.TOLERANCE_DOUBLE_NEGATIVE)
+            if (m_speed.Deceleration < EngineMath.TOLERANCE_DOUBLE_NEGATIVE)
             {
-                m_decelerationSeconds = m_speed.MaximumSpeed / -m_speed.Decelration;
-                m_decelerationLength = 0.5f * -m_speed.Decelration * Math.Pow(m_decelerationSeconds, 2.0);
+                m_decelerationSeconds = m_speed.MaximumSpeed / -m_speed.Deceleration;
+                decelerationLength = 0.5f * -m_speed.Deceleration * Math.Pow(m_decelerationSeconds, 2.0);
             }
 
             // Handle the case where we don't reach full speed
             // => Change length values depending on percentage of these phases on whole movement
-            var fullAccDecLength = m_accelerationLength + m_decelerationLength;
+            var fullAccDecLength = m_accelerationLength + decelerationLength;
             m_fullSpeedLength = length;
             if (length < fullAccDecLength)
             {
                 var accWeight = m_accelerationLength / fullAccDecLength;
-                var decWeight = m_decelerationLength / fullAccDecLength;
+                var decWeight = decelerationLength / fullAccDecLength;
                 m_accelerationLength = length * accWeight;
-                m_decelerationLength = length * decWeight;
+                decelerationLength = length * decWeight;
                 m_fullSpeedLength = 0.0;
                 m_accelerationSeconds = m_speed.Acceleration > EngineMath.TOLERANCE_DOUBLE_POSITIVE ? Math.Pow(m_accelerationLength / (0.5 * speed.Acceleration), 0.5) : 0.0;
-                m_decelerationSeconds = m_speed.Decelration < EngineMath.TOLERANCE_DOUBLE_NEGATIVE ? Math.Pow(m_decelerationLength / (0.5 * -speed.Decelration), 0.5) : 0.0;
+                m_decelerationSeconds = m_speed.Deceleration < EngineMath.TOLERANCE_DOUBLE_NEGATIVE ? Math.Pow(decelerationLength / (0.5 * -speed.Deceleration), 0.5) : 0.0;
                 m_reachedMaxSpeed = m_speed.Acceleration * m_accelerationSeconds;
             }
             else
@@ -136,7 +135,7 @@ namespace SeeingSharp
                 var elapsedSecondsDeceleration = elapsedSeconds - (m_accelerationSeconds + m_fullSpeedSeconds);
                 movedLength =
                     m_accelerationLength + m_fullSpeedLength +
-                    0.5 * m_speed.Decelration * Math.Pow(elapsedSecondsDeceleration, 2.0) + m_reachedMaxSpeed * elapsedSecondsDeceleration;
+                    0.5 * m_speed.Deceleration * Math.Pow(elapsedSecondsDeceleration, 2.0) + m_reachedMaxSpeed * elapsedSecondsDeceleration;
             }
             else
             {

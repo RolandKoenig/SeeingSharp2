@@ -80,7 +80,7 @@
     <Compile Include="SeeingSharpConstantsWpf.cs" />
     <Compile Include="SeeingSharpWpfExtensions.cs" />
     <Compile Include="_Extensions.cs" />
-    <Compile Include="_Util\SeeingSharpWpfTools.cs" />
+    <Compile Include="_Util\SeeingSharpWpfUtil.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -30,10 +30,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class EdgeDetectPostprocessEffectResource : PostprocessEffectResource
     {
-        // Resource keys
+        // Static resource keys
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
+        // Instance resource keys
+        private readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
         private Color4 m_borderColor;

@@ -51,7 +51,6 @@ namespace SeeingSharp.Multimedia.Core
         private static GraphicsCore s_current;
 
         // Hardware 
-        private EngineFactory m_engineFactory;
         private List<EngineDevice> m_devices;
         private EngineDevice m_defaultDevice;
 
@@ -96,15 +95,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             try
             {
-                // Upate RK.Common members
+                this.IsDebugEnabled = loadSettings.DebugEnabled;
+
                 m_devices = new List<EngineDevice>();
 
+                // Start performance value measuring
                 PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
                 {
                     SyncContext = SynchronizationContext.Current
                 };
-
-                // <-- TODO
                 PerformanceCalculator.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
@@ -118,6 +117,7 @@ namespace SeeingSharp.Multimedia.Core
                 ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
+                EngineFactory engineFactory = null;
                 try
                 {
                     if(s_throwDeviceInitError)
@@ -125,10 +125,10 @@ namespace SeeingSharp.Multimedia.Core
                         throw new SeeingSharpException("Simulated device load exception");
                     }
 
-                    m_engineFactory = new EngineFactory(loadSettings);
-                    m_factoryHandlerWIC = m_engineFactory.WindowsImagingComponent;
-                    m_factoryHandlerD2D = m_engineFactory.Direct2D;
-                    m_factoryHandlerDWrite = m_engineFactory.DirectWrite;
+                    engineFactory = new EngineFactory(loadSettings);
+                    m_factoryHandlerWIC = engineFactory.WindowsImagingComponent;
+                    m_factoryHandlerD2D = engineFactory.Direct2D;
+                    m_factoryHandlerDWrite = engineFactory.DirectWrite;
                 }
                 catch (Exception ex)
                 {
@@ -154,7 +154,7 @@ namespace SeeingSharp.Multimedia.Core
                     var actEngineDevice = new EngineDevice(
                         loadSettings,
                         loader,
-                        m_engineFactory,
+                        engineFactory,
                         Configuration,
                         actAdapterInfo.Adapter,
                         actAdapterInfo.IsSoftwareAdapter);
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Core
         /// This method is implemented for automated tests only!
         /// Is sets <see cref="GraphicsCore.Current"/> to null to enable a separate instance inside a using block.
         /// </summary>
-        public static IDisposable AutomatedTest_NewTestEnviornment()
+        public static IDisposable AutomatedTest_NewTestEnvironment()
         {
             var lastCurrent = s_current;
 
@@ -237,7 +237,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets a collection containing all available font familily names.
+        /// Gets a collection containing all available font family names.
         /// </summary>
         public IEnumerable<string> GetFontFamilyNames(string localeName = "en-us")
         {
@@ -257,9 +257,7 @@ namespace SeeingSharp.Multimedia.Core
                     using (var actFamily = fontCollection.GetFontFamily(loop))
                     using (var actLocalizedStrings = actFamily.FamilyNames)
                     {
-                        var localeIndex = -1;
-
-                        if (actLocalizedStrings.FindLocaleName(localeName, out localeIndex))
+                        if (actLocalizedStrings.FindLocaleName(localeName, out _))
                         {
                             var actName = actLocalizedStrings.GetString(0);
 
@@ -268,7 +266,7 @@ namespace SeeingSharp.Multimedia.Core
                                 result.Add(actName);
                             }
                         }
-                        else if(actLocalizedStrings.FindLocaleName("en-us", out localeIndex))
+                        else if(actLocalizedStrings.FindLocaleName("en-us", out _))
                         {
                             var actName = actLocalizedStrings.GetString(0);
 
@@ -288,7 +286,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Resumes rendering when in supendet state.
+        /// Resumes rendering when in suspend state.
         /// </summary>
         public void Resume()
         {
@@ -352,6 +350,7 @@ namespace SeeingSharp.Multimedia.Core
                         s_internalExListeners);
                 }
             }
+            if (handlers == null){ return; }
 
             foreach(var actEventHandler in handlers)
             {
@@ -360,7 +359,10 @@ namespace SeeingSharp.Multimedia.Core
                     actEventHandler(null, new InternalCatchedExceptionEventArgs(
                         ex, location));
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -483,7 +485,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_defaultDevice;
             set
             {
-                if (value == null) { throw new ArgumentNullException("DefaultDevice"); }
+                if (value == null) { throw new ArgumentNullException(nameof(DefaultDevice)); }
                 if (!m_devices.Contains(value)) { throw new ArgumentException("Device is not available on this GraphicsCore!"); }
 
                 m_defaultDevice = value;
@@ -519,8 +521,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_devices == null) { return null; }
-                return m_devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
+                return m_devices?.FirstOrDefault(actDevice => actDevice.IsSoftware);
             }
         }
 
@@ -550,8 +551,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the current performance calculator.
         /// </summary>
         public PerformanceAnalyzer PerformanceCalculator { get; }
-
-        internal bool Force2DFallbackMethod { get; }
 
         /// <summary>
         /// Gets the Direct2D factory object.

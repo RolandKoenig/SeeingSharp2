@@ -192,7 +192,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Render this object.</param>
         private void Render(RenderState renderState)
         {
-            renderState.ClearChachedAppliedMaterial();
+            renderState.ClearCachedAppliedMaterial();
 
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var localResources = m_localResources[renderState.DeviceIndex];

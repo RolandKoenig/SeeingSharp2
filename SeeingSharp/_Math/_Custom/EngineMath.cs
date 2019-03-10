@@ -65,8 +65,8 @@ namespace SeeingSharp
         /// <summary>
         /// Calculates the binomial coefficient out of the given two values.
         /// </summary>
-        /// <param name="n">The upper vlaue normally mentioned as 'n'.</param>
-        /// <param name="k">The lower vlaue normally mentioned as 'k'.</param>
+        /// <param name="n">The upper value normally mentioned as 'n'.</param>
+        /// <param name="k">The lower value normally mentioned as 'k'.</param>
         public static decimal BinomialCoefficient(decimal n, decimal k)
         {
             var upperValueInt = (int)n;
@@ -95,7 +95,7 @@ namespace SeeingSharp
         /// Converts the given angle value to an absolute value (e. g. -10° to 350°).
         /// </summary>
         /// <param name="angle">The angle to convert.</param>
-        public static float GetAboluteAngleDegree(float angle)
+        public static float GetAbsoluteAngleDegree(float angle)
         {
             var result = angle;
 
@@ -126,7 +126,7 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Converts the given radian vlaue to degree.
+        /// Converts the given radian value to degree.
         /// </summary>
         /// <param name="radianValue">A angle in radian.</param>
         /// <returns>The degree value of the angle.</returns>

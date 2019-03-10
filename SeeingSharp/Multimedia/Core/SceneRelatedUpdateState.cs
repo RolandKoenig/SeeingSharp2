@@ -115,8 +115,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (SceneLayer == null) { return null; }
-                return SceneLayer.Scene;
+                return SceneLayer?.Scene;
             }
         }
 
@@ -127,6 +126,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public IEnumerable<InputFrame> InputFrames => m_inputFrames;
 
-        internal bool ForceTransformUpdatesOnChilds;
+        internal bool ForceTransformUpdatesOnChildren;
     }
 }

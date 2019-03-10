@@ -50,7 +50,7 @@ namespace SeeingSharp.Tests
 
             GDI.Bitmap screenshot = null;
             using (TestUtilities.FailTestOnInternalExceptions())
-            using (GraphicsCore.AutomatedTest_NewTestEnviornment())
+            using (GraphicsCore.AutomatedTest_NewTestEnvironment())
             {
                 await GraphicsCore.Loader
                     .Configure(settings => settings.ThrowD2DInitDeviceError = true)
@@ -123,7 +123,7 @@ namespace SeeingSharp.Tests
             var isRenderTargetOperational = true;
             var isGraphicsCoreInitialized = true;
             var registeredRenderLoopCount = 1;
-            using (GraphicsCore.AutomatedTest_NewTestEnviornment())
+            using (GraphicsCore.AutomatedTest_NewTestEnvironment())
 
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
             {

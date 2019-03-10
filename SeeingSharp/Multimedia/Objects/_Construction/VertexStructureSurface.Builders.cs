@@ -64,12 +64,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var vertex2 = Owner.VerticesInternal[m_corners[loop + 1].Index].Position;
                 var vertex3 = Owner.VerticesInternal[m_corners[loop + 2].Index].Position;
 
-                var currentDistance = 0f;
-
-                if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out currentDistance))
+                if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out float currentDistance))
                 {
                     result = true;
-
                     if (currentDistance < distance)
                     {
                         distance = currentDistance;
@@ -163,16 +160,12 @@ namespace SeeingSharp.Multimedia.Objects
             var startVertex = Owner.CountVertices;
             if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
 
-            Matrix3x2 rotationMatrix;
-
             var halfWidth = width / 2f;
             var halfHeight = height / 2f;
             var nearVector = new Vector2(0f, radius - halfWidth);
             var farVector = new Vector2(0f, radius + halfWidth);
             var lastNearVector = nearVector;
             var lastFarVector = farVector;
-            Vector2 nextNearVector;
-            Vector2 nextFarVector;
 
             for (var loop = 1; loop <= countOfSegments; loop++)
             {
@@ -180,9 +173,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var actAngle = EngineMath.RAD_360DEG * actPercent;
 
                 // Calculate next points
-                Matrix3x2.Rotation(actAngle, out rotationMatrix);
-                Matrix3x2.TransformPoint(ref rotationMatrix, ref nearVector, out nextNearVector);
-                Matrix3x2.TransformPoint(ref rotationMatrix, ref farVector, out nextFarVector);
+                Matrix3x2.Rotation(actAngle, out var rotationMatrix);
+                Matrix3x2.TransformPoint(ref rotationMatrix, ref nearVector, out var nextNearVector);
+                Matrix3x2.TransformPoint(ref rotationMatrix, ref farVector, out var nextFarVector);
 
                 // Build current segment
                 BuildRect4V(
@@ -349,12 +342,12 @@ namespace SeeingSharp.Multimedia.Objects
 
                 //Generate all points
                 var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
-                var sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
+                var sideRightBottomCoord = bottomCoordinate + sideRightNormal * radius;
                 var sideMiddleBottomCoord = bottomCoordinate + sideNormal * radius;
 
                 //Add segment bottom triangle
                 var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord);
-                var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord);
+                var segmentBottomRight = bottomVertex.Copy(sideRightBottomCoord);
                 AddTriangle(
                     bottomVertexIndex,
                     Owner.AddVertex(segmentBottomLeft),
@@ -369,7 +362,7 @@ namespace SeeingSharp.Multimedia.Objects
                 //Add segment top triangle
                 var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), topSideNormal);
                 var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
-                var segmentTopRight = topVertex.Copy(sideRighBottomtCoord);
+                var segmentTopRight = topVertex.Copy(sideRightBottomCoord);
 
                 AddTriangle(
                     Owner.AddVertex(topVertex),
@@ -499,15 +492,15 @@ namespace SeeingSharp.Multimedia.Objects
 
                 //Generate all points
                 var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
-                var sideRighBottomtCoord = bottomCoordinate + sideRightNormal * radius;
+                var sideRightBottomCoord = bottomCoordinate + sideRightNormal * radius;
                 var sideLeftTopCoord = new Vector3(sideLeftBottomCoord.X, sideLeftBottomCoord.Y + height, sideLeftBottomCoord.Z);
-                var sideRightTopCoord = new Vector3(sideRighBottomtCoord.X, sideRighBottomtCoord.Y + height, sideRighBottomtCoord.Z);
+                var sideRightTopCoord = new Vector3(sideRightBottomCoord.X, sideRightBottomCoord.Y + height, sideRightBottomCoord.Z);
 
                 //Add segment bottom triangle
                 if (buildBottom)
                 {
                     var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
-                    var segmentBottomRight = bottomVertex.Copy(sideRighBottomtCoord, sideRightTexCoord);
+                    var segmentBottomRight = bottomVertex.Copy(sideRightBottomCoord, sideRightTexCoord);
                     AddTriangle(
                         bottomVertexIndex,
                         Owner.AddVertex(segmentBottomLeft),
@@ -532,7 +525,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var texCoordSegmentTarget = new Vector2(texSegmentX * ((loop + 1) / (float)countOfSegments), texSegmentY);
 
                     //Add segment side
-                    BuildRect4V(sideLeftBottomCoord, sideRighBottomtCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
+                    BuildRect4V(sideLeftBottomCoord, sideRightBottomCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
                 }
             }
 
@@ -638,17 +631,17 @@ namespace SeeingSharp.Multimedia.Objects
             var g = Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, dest.Z)));
             var h = Owner.AddVertex(vertex.Copy(new Vector3(start.X, dest.Y, dest.Z)));
 
-            AddTriangle(a, e, f);  //front side
+            AddTriangle(a, e, f);  // front side
             AddTriangle(f, b, a);
-            AddTriangle(b, f, g);  //right side
+            AddTriangle(b, f, g);  // right side
             AddTriangle(g, c, b);
-            AddTriangle(c, g, h);  //back side
+            AddTriangle(c, g, h);  // back side
             AddTriangle(h, d, c);
-            AddTriangle(d, h, e);  //left side
+            AddTriangle(d, h, e);  // left side
             AddTriangle(e, a, d);
-            AddTriangle(e, h, g);  //top side
+            AddTriangle(e, h, g);  // top side
             AddTriangle(g, f, e);
-            AddTriangle(a, b, c);  //botton side
+            AddTriangle(a, b, c);  // bottom side
             AddTriangle(c, d, a);
 
             return new BuiltVerticesRange(Owner, startVertex, Owner.CountVertices - startVertex);
@@ -682,7 +675,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube of 4 vertices and a defined hight.
+        /// Builds a cube of 4 vertices and a defined height.
         /// </summary>
         /// <param name="topA"></param>
         /// <param name="topB"></param>
@@ -837,7 +830,7 @@ namespace SeeingSharp.Multimedia.Objects
             var startVertex = Owner.CountVertices;
 
             //Define texture coordinate calculation functions
-            Func<Vector3, float> caluclateU = actPosition =>
+            float CalculateU(Vector3 actPosition)
             {
                 switch (uCoordAlignment)
                 {
@@ -851,8 +844,9 @@ namespace SeeingSharp.Multimedia.Objects
                         return actPosition.Z / coordRepeatUnit;
                 }
                 return 0f;
-            };
-            Func<Vector3, float> calculateV = actPosition =>
+            }
+
+            float CalculateV(Vector3 actPosition)
             {
                 switch (vCoordAlignment)
                 {
@@ -866,15 +860,15 @@ namespace SeeingSharp.Multimedia.Objects
                         return actPosition.Z / coordRepeatUnit;
                 }
                 return 0f;
-            };
+            }
 
-            var textureCoordinate = new Vector2(caluclateU(pointA), calculateV(pointA));
+            var textureCoordinate = new Vector2(CalculateU(pointA), CalculateV(pointA));
             var vertex = new Vertex(pointA, Color4.White, textureCoordinate, normal);
 
             var a = Owner.AddVertex(vertex);
-            var b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(caluclateU(pointB), calculateV(pointB))));
-            var c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(caluclateU(pointC), calculateV(pointC))));
-            var d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(caluclateU(pointD), calculateV(pointD))));
+            var b = Owner.AddVertex(vertex.Copy(pointB, new Vector2(CalculateU(pointB), CalculateV(pointB))));
+            var c = Owner.AddVertex(vertex.Copy(pointC, new Vector2(CalculateU(pointC), CalculateV(pointC))));
+            var d = Owner.AddVertex(vertex.Copy(pointD, new Vector2(CalculateU(pointD), CalculateV(pointD))));
 
             AddTriangle(a, c, b);
             AddTriangle(a, d, c);
@@ -917,7 +911,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds cube sides into this VertexStructure (these sides are built up of  16 vertices, so texture coordinates and normals are set)
         /// </summary>
-        /// <param name="start">Start poiint of the cube</param>
+        /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>
         /// <param name="color">Color of the cube</param>
         public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size, Color4 color)

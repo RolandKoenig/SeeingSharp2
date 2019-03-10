@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectResource"/> class.
         /// </summary>
-        public EffectResource(params IImage[] effectInputs)
+        protected EffectResource(params IImage[] effectInputs)
         {
             m_loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
 

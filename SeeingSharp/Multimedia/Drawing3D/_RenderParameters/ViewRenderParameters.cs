@@ -28,6 +28,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ViewRenderParameters : Resource
     {
+        // Resource keys
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
         // Resources
         private TypeSafeConstantBufferResource<CBPerView> m_cbPerView;
         private PostprocessEffectResource m_postprocessEffect;
@@ -60,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Gets the postrocess effect with the given key.
+        /// Gets the postprocess effect with the given key.
         /// </summary>
         /// <param name="namedOrGenericKey">The key of the effect.</param>
         /// <param name="resourceDictionary">The resource dictionary where to load the effect.</param>
@@ -120,8 +123,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets or sets the key of the postprocess effect.
         /// </summary>
         internal NamedOrGenericKey PostprocessEffectKey { get; set; }
-
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

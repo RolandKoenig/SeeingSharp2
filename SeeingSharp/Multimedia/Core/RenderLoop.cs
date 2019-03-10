@@ -537,8 +537,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 var worldMatrix = Matrix.Identity;
                 var viewWorld = m_camera.View * worldMatrix;
-                Matrix inversionViewWorld;
-                Matrix.Invert(ref viewWorld, out inversionViewWorld);
+                Matrix.Invert(ref viewWorld, out var inversionViewWorld);
 
                 var rayDirection = Vector3.Normalize(new Vector3(
                     pickingVector.X * inversionViewWorld.M11 + pickingVector.Y * inversionViewWorld.M21 + pickingVector.Z * inversionViewWorld.M31,
@@ -626,7 +625,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_currentViewSize.Height / m_currentDpiScaling.ScaleFactorY);
 
             // Update view size on camera
-            if (m_camera != null) { m_camera.SetScreenSize(m_currentViewSize.Width, m_currentViewSize.Height); }
+            m_camera?.SetScreenSize(m_currentViewSize.Width, m_currentViewSize.Height);
 
             m_viewConfiguration.ViewNeedsRefresh = false;
 
@@ -701,28 +700,6 @@ namespace SeeingSharp.Multimedia.Core
             VisibleObjectCountInternal = 0;
         }
 
-        ///// <summary>
-        ///// Queries for all view related input states (e. g. Mouse, Touch, Keyboard).
-        ///// </summary>
-        //internal async Task<List<InputStateBase>> QueryViewRelatedInputStateAsync()
-        //{
-        //    // Query all states
-        //    List<InputStateBase> result = new List<InputStateBase>(10);
-        //    await m_guiSyncContext.PostAsync(() =>
-        //    {
-        //        foreach(InputStateBase actInputState in m_renderLoopHost.OnRenderLoop_QueryInputStates())
-        //        {
-        //            if(actInputState == null) { continue; }
-
-        //            InputStateBase actQueriedObject = actInputState.CopyAndResetForUpdatePass();
-        //            actQueriedObject.RelatedView = m_viewInformation;
-        //            result.Add(actQueriedObject);
-        //        }
-        //    });
-
-        //    return result;
-        //}
-
         /// <summary>
         /// Prepares rendering (refreshes view resources, post last rendered image to the view, ...)
         /// </summary>
@@ -733,7 +710,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var writeVideoFrames = m_lastRenderSuccessfully;
 
-            // Call present from Threadpool (if configured)
+            // Call present from ThreadPool (if configured)
             if (!m_callPresentInUiThread)
             {
                 if (!DiscardPresent) { PresentFrameInternal(); }
@@ -771,7 +748,6 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         // Trigger deregister on scene if needed
                         var reregisterOnScene = m_targetDevice != null && m_targetDevice != m_currentDevice && m_currentScene != null;
-
                         if (reregisterOnScene)
                         {
                             var localScene = m_currentScene;
@@ -880,7 +856,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 try
                 {
-                    // Check here wether we can render or not
+                    // Check here whether we can render or not
                     if (!m_renderLoopHost.OnRenderLoop_CheckCanRender(m_currentDevice))
                     {
                         m_nextRenderAllowed = false;
@@ -903,7 +879,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.ManipulateFilterList);
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_ManipulateFilterList);
                 }
 
                 // Raise prepare render event
@@ -913,7 +889,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.PrepareRendering);
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_PrepareRendering);
                 }                
             });
 
@@ -1019,7 +995,7 @@ namespace SeeingSharp.Multimedia.Core
             if (!m_nextRenderAllowed) { return; }
             m_nextRenderAllowed = false;
 
-            var renderTimeMeasurenment = GraphicsCore.Current.BeginMeasureActivityDuration(
+            var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(
                 string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER, m_currentDevice.DeviceIndex, ViewInformation.ViewIndex + 1));
             try
             {
@@ -1069,7 +1045,7 @@ namespace SeeingSharp.Multimedia.Core
                         m_renderState.Graphics2D = m_d2dOverlay.Graphics;
 
                         // Render scene contents
-                        m_currentScene.Render2DOverlay(m_renderState);
+                        m_currentScene?.Render2DOverlay(m_renderState);
 
                         // Perform rendering of custom 2D drawing layers
                         foreach (var act2DLayer in m_2dDrawingLayers)
@@ -1107,14 +1083,14 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     Rendered.Raise(this, EventArgs.Empty);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    // TODO: Notify this exception somehow to the host application
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_RenderEvent);
                 }
             }
             finally
             {
-                renderTimeMeasurenment.Dispose();
+                renderTimeMeasurement.Dispose();
             }
         }
 
@@ -1130,9 +1106,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
 
-                var inputInterface = m_renderLoopHost as IInputEnabledView;
-
-                if (inputInterface != null)
+                if (m_renderLoopHost is IInputEnabledView inputInterface)
                 {
                     GraphicsCore.Current.InputGatherer.DeregisterView(inputInterface);
                 }
@@ -1151,9 +1125,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.RegisterRenderLoop(this);
 
-                var inputInterface = m_renderLoopHost as IInputEnabledView;
-
-                if (inputInterface != null)
+                if (m_renderLoopHost is IInputEnabledView inputInterface)
                 {
                     GraphicsCore.Current.InputGatherer.RegisterView(inputInterface);
                 }
@@ -1178,7 +1150,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Cleaing for currently registered components with equal group names.
+        /// Cleaning for currently registered components with equal group names.
         /// </summary>
         private void CleanSceneComponentList()
         {
@@ -1237,10 +1209,7 @@ namespace SeeingSharp.Multimedia.Core
                             }
 
                             // Attach this new component
-                            if (actScene != null)
-                            {
-                                actScene.AttachComponent(actComponent, ViewInformation);
-                            }
+                            actScene?.AttachComponent(actComponent, ViewInformation);
                         }
                     }
                     if (e.OldItems != null)
@@ -1270,7 +1239,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets an identifyer related to this render looop.
+        /// Gets an identifier related to this render loop.
         /// </summary>
         public ViewInformation ViewInformation { get; }
 
@@ -1412,7 +1381,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Internal properties and methods that sould be used with care.
+        /// Internal properties and methods that should be used with care.
         /// </summary>
         public RenderLoopInternals Internals { get; }
 
@@ -1426,7 +1395,7 @@ namespace SeeingSharp.Multimedia.Core
         //*********************************************************************
         /// <summary>
         /// Internal members of the <see cref="RenderLoop"/> class.
-        /// Be carefull when working with them.
+        /// Be careful when working with them.
         /// </summary>
         public class RenderLoopInternals
         {

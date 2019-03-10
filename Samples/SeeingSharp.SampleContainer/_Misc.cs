@@ -40,37 +40,31 @@ namespace SeeingSharp.SampleContainer
         public string SampleName
         {
             get;
-            private set;
         }
 
         public int OrderID
         {
             get;
-            private set;
         }
 
         public string SampleGroupName
         {
             get;
-            private set;
         }
 
         public string SampleImageFileName
         {
             get;
-            private set;
         }
 
         public string SourceCodeUrl
         {
             get;
-            private set;
         }
 
         public Type SettingsType
         {
             get;
-            private set;
         }
     }
 }

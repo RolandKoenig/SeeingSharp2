@@ -32,11 +32,11 @@ namespace SeeingSharp
             var minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-            var anyInteration = false;
+            var anyInteraction = false;
 
             foreach (var actContainedLocation in containedLocations)
             {
-                anyInteration = true;
+                anyInteraction = true;
 
                 if (minimum.X > actContainedLocation.X) { minimum.X = actContainedLocation.X; }
                 if (minimum.Y > actContainedLocation.Y) { minimum.Y = actContainedLocation.Y; }
@@ -47,7 +47,7 @@ namespace SeeingSharp
                 if (maximum.Z < actContainedLocation.Z) { maximum.Z = actContainedLocation.Z; }
             }
 
-            if (!anyInteration) { throw new SeeingSharpException("No vectors given!"); }
+            if (!anyInteraction) { throw new SeeingSharpException("No vectors given!"); }
 
             return new BoundingBox(minimum, maximum);
         }
@@ -66,7 +66,6 @@ namespace SeeingSharp
         /// <summary>
         /// Redefines this bounding box based on given points.
         /// </summary>
-        /// <param name="points">All points to apply.</param>
         public static void Redefine(this ref BoundingBox boundingBox, Vector3[] points)
         {
             var min = new Vector3(float.MaxValue);
@@ -85,7 +84,6 @@ namespace SeeingSharp
         /// <summary>
         /// Expands this AxisAlignedBox so that it contains the given location.
         /// </summary>
-        /// <param name="newLocation">New location to be merged to this AxisAlignedBox.</param>
         public static void MergeWith(this ref BoundingBox boundingBox, Vector3 newLocation)
         {
             //Handle x axis

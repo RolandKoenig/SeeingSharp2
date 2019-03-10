@@ -31,7 +31,7 @@ using D2D = SharpDX.Direct2D1;
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     /// <summary>
-    /// This object represents a inmemory chached bitmap which is
+    /// This object represents a in-memory cached bitmap which is
     /// loaded from a ResourceLink (e. g. a file).
     /// </summary>
     public class StandardBitmapResource : BitmapResource

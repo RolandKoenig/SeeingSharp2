@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Converts a System.Drawing.Bitmap to a DirectX 11 texture object.
         /// </summary>
-        /// <param name="device">Device on wich the resource should be created.</param>
+        /// <param name="device">Device on which the resource should be created.</param>
         /// <param name="bitmap">The source bitmap.</param>
         internal static D3D11.Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap)
         {
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Converts a System.Drawing.Bitmap to a DirectX 11 texture object.
         /// </summary>
-        /// <param name="device">Device on wich the resource should be created.</param>
+        /// <param name="device">Device on which the resource should be created.</param>
         /// <param name="bitmap">The source bitmap.</param>
         /// <param name="mipLevels">Total count of levels for mipmapping.</param>
         internal static D3D11.Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap, int mipLevels)
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Loads a bitmap from the given texture. Be careful: The texture musst have CPU read access and this only matches for staging textures.
+        /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
         /// </summary>
         /// <param name="device">The device on which the texture is created.</param>
         /// <param name="stagingTexture">The texture to be loaded into the bitmap.</param>
@@ -174,7 +174,7 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     //Copy data row by row
-                    // => Rows form datasource may have more pixels because driver changes the size of textures
+                    // => Rows form data source may have more pixels because driver changes the size of textures
                     var rowPitch = (ulong)(width * 4);
 
                     for (var loopRow = 0; loopRow < height; loopRow++)

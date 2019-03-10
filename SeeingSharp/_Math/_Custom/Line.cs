@@ -54,7 +54,7 @@ namespace SeeingSharp
         /// <param name="otherLine">The other line to check.</param>
         public bool EqualsWithTolerance(Line otherLine)
         {
-            //Check in both directions
+            // Check in both directions
             return
                 StartPosition.Equals(otherLine.StartPosition) && EndPosition.Equals(otherLine.EndPosition) ||
                 EndPosition.Equals(otherLine.StartPosition) && StartPosition.Equals(otherLine.EndPosition);

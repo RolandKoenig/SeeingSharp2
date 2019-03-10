@@ -31,7 +31,7 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    // Hirarchy in XGL file:
+    // Hierarchy in XGL file:
     //
     //  WORLD
     //   - Data
@@ -198,9 +198,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 // Get current line and column
                                 var currentLine = 0;
                                 var currentColumn = 0;
-                                var lineInfo = inStreamXml as IXmlLineInfo;
-
-                                if (lineInfo != null)
+                                if (inStreamXml is IXmlLineInfo lineInfo)
                                 {
                                     currentLine = lineInfo.LineNumber;
                                     currentColumn = lineInfo.LinePosition;
@@ -515,25 +513,21 @@ namespace SeeingSharp.Multimedia.Objects
                 switch (inStreamXml.Name)
                 {
                     case NODE_NAME_MAT_DIFFUSE:
-                        if (result == null) { continue; }
                         inStreamXml.Read();
                         result.DiffuseColor = new Color4(inStreamXml.ReadContentAsVector3(), 1f);
                         break;
 
                     case NODE_NAME_MAT_AMB:
-                        if (result == null) { continue; }
                         inStreamXml.Read();
                         result.AmbientColor = new Color4(inStreamXml.ReadContentAsVector3(), 1f);
                         break;
 
                     case NODE_NAME_MAT_EMISS:
-                        if (result == null) { continue; }
                         inStreamXml.Read();
                         result.EmissiveColor = new Color4(inStreamXml.ReadContentAsVector3(), 1f);
                         break;
 
                     case NODE_NAME_MAT_SPEC:
-                        if (result == null) { continue; }
                         inStreamXml.Read();
                         result.SpecularColor = new Color4(inStreamXml.ReadContentAsVector3(), 1f);
                         break;
@@ -542,7 +536,6 @@ namespace SeeingSharp.Multimedia.Objects
                         break;
 
                     case NODE_NAME_MAT_SHINE:
-                        if (result == null) { continue; }
                         inStreamXml.Read();
                         result.Shininess = inStreamXml.ReadContentAsFloat();
                         break;
@@ -555,7 +548,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Imports the texture node where the xml reader is currently located.
         /// </summary>
-        private void ImportObject(XmlReader inStreamXml, ImportedModelContainer container, SceneObject parentObject, XglImportOptions xglImportOptions)
+        private static void ImportObject(XmlReader inStreamXml, ImportedModelContainer container, SceneObject parentObject, XglImportOptions xglImportOptions)
         {
             var upVector = Vector3.UnitY;
             var forwardVector = Vector3.UnitZ;
@@ -566,7 +559,7 @@ namespace SeeingSharp.Multimedia.Objects
             //  (may be called on two locations here.. so this action was defined
             SceneSpacialObject newObject = null;
 
-            Action actionFinalizeObject = () =>
+            void ActionFinalizeObject()
             {
                 if (newObject != null)
                 {
@@ -581,8 +574,7 @@ namespace SeeingSharp.Multimedia.Objects
                 else
                 {
                     // Generate an instance of a 3d mesh
-                    newObject = new GenericObject(
-                        container.GetResourceKey(RES_CLASS_MESH, meshID));
+                    newObject = new GenericObject(container.GetResourceKey(RES_CLASS_MESH, meshID));
                 }
 
                 newObject.Position = positionVector;
@@ -594,10 +586,9 @@ namespace SeeingSharp.Multimedia.Objects
                 // Add dependency (parent => child)
                 if (parentObject != null)
                 {
-                    container.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(
-                        parentObject, newObject));
+                    container.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(parentObject, newObject));
                 }
-            };
+            }
 
             // Read xml contents
             while (inStreamXml.Read())
@@ -615,7 +606,7 @@ namespace SeeingSharp.Multimedia.Objects
                 switch (inStreamXml.Name)
                 {
                     case NODE_NAME_OBJECT:
-                        actionFinalizeObject();
+                        ActionFinalizeObject();
                         ImportObject(inStreamXml, container, newObject, xglImportOptions);
                         break;
 
@@ -645,7 +636,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // finalize object here
-            actionFinalizeObject();
+            ActionFinalizeObject();
         }
     }
 }

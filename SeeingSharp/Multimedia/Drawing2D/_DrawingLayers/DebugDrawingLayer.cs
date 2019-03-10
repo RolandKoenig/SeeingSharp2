@@ -50,9 +50,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_solidBrushForeground = new SolidBrushResource(Color4Ex.RedColor);
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_textFormat);
@@ -62,7 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Performs custom 2D rendering.
-        /// Be carefull: This method is called from the rendering thread!
+        /// Be careful: This method is called from the rendering thread!
         /// </summary>
         /// <param name="graphics">The graphics object used for drawing.</param>
         protected override void Draw2D(Graphics2D graphics)

@@ -30,10 +30,8 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private int m_adapterIndex;
         private D3D9.DeviceEx m_deviceEx;
         private D3D9.Direct3DEx m_direct3DEx;
-        private Adapter1 m_dxgiAdapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
@@ -43,17 +41,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="debugEnabled">Is debug mode enabled?</param>
         internal DeviceHandlerD3D9(Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
         {
-            // Update member variables
-            m_dxgiAdapter = dxgiAdapter;
-
             try
             {
                 // Just needed when on true hardware
                 if (!isSoftwareAdapter)
                 {
                     //Prepare device creation
-                    var createFlags =
-                        D3D9.CreateFlags.HardwareVertexProcessing |
+                    const D3D9.CreateFlags CREATE_FLAGS = D3D9.CreateFlags.HardwareVertexProcessing |
                         D3D9.CreateFlags.PureDevice |
                         D3D9.CreateFlags.FpuPreserve |
                         D3D9.CreateFlags.Multithreaded;
@@ -70,23 +64,23 @@ namespace SeeingSharp.Multimedia.Core
                     //Create the device finally
                     m_direct3DEx = new D3D9.Direct3DEx();
 
-                    // Try to find the Direct3D9 adapter that maches given DXGI adapter
-                    m_adapterIndex = -1;
+                    // Try to find the Direct3D9 adapter that matches given DXGI adapter
+                    var adapterIndex = -1;
                     for (var loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
                     {
                         var d3d9AdapterInfo = m_direct3DEx.GetAdapterIdentifier(loop);
-                        if (d3d9AdapterInfo.DeviceId == m_dxgiAdapter.Description1.DeviceId)
+                        if (d3d9AdapterInfo.DeviceId == dxgiAdapter.Description1.DeviceId)
                         {
-                            m_adapterIndex = loop;
+                            adapterIndex = loop;
                             break;
                         }
                     }
 
                     // Direct3D 9 is only relevant on the primary device
-                    if(m_adapterIndex < 0) { return; }
+                    if(adapterIndex < 0) { return; }
 
                     // Try to create the device
-                    m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, m_adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, createFlags, presentparams);
+                    m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, CREATE_FLAGS, presentparams);
                 }
             }
             catch (Exception)

@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Querries all current input states.
+        /// Queries all current input states.
         /// </summary>
         public IEnumerable<InputStateBase> GetInputStates()
         {
@@ -221,9 +221,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseClick(object sender, WinForms.MouseEventArgs e)
         {
-            if (m_currentControl == null) { return; }
-
-            m_currentControl.Focus();
+            m_currentControl?.Focus();
         }
 
         private void OnMouseDown(object sender, WinForms.MouseEventArgs e)

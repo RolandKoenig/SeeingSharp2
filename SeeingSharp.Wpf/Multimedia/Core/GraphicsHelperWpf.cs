@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Loads a bitmap from the given texture. Be careful: The texture musst have CPU read access and this only matches for staging textures.
+        /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
         /// </summary>
         /// <param name="device">The device on which the texture is created.</param>
         /// <param name="stagingTexture">The texture to be loaded into the bitmap.</param>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     // Copy data row by row
-                    //  => Rows from datasource may have more pixels because driver changes the size of textures
+                    //  => Rows from data source may have more pixels because driver changes the size of textures
                     var rowPitch = (ulong)(width * 4);
 
                     for (var loopRow = 0; loopRow < height; loopRow++)

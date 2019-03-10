@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
         public Scene Scene => Owner.Scene;
 
         /// <summary>
-        /// Gets the bounding frustum defining the area the camera sees in the 3D wordl.
+        /// Gets the bounding frustum defining the area the camera sees in the 3D world.
         /// </summary>
         public BoundingFrustum CameraBoundingFrustum => m_cameraFrustum;
 

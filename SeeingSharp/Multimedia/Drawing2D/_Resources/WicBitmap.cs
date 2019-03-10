@@ -87,9 +87,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result;
         }
 
-        /// <summary>
-        /// Führt anwendungsspezifische Aufgaben aus, die mit dem Freigeben, Zurückgeben oder Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
-        /// </summary>
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_wicBitmap);

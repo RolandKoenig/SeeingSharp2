@@ -37,9 +37,7 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            var acImportOptions = importOptions as ACImportOptions;
-
-            if (acImportOptions == null)
+            if (!(importOptions is ACImportOptions acImportOptions))
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }

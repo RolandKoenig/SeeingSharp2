@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Configuration
         private RenderTargetCreationMode m_creationMode;
         private int m_width;
-        private int m_heigth;
+        private int m_height;
         private bool m_antialiasingEnabled;
         private AntialiasingQualityLevel m_antialiasingQuality;
         private RawViewportF m_viewportF;
@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_creationMode = creationMode;
             m_width = -1;
-            m_heigth = -1;
+            m_height = -1;
             m_viewportF = new RawViewportF();
             m_shaderResourceCreated = false;
         }
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
             if (m_width != currentViewSize.Width ||
-                m_heigth != currentViewSize.Height ||
+                m_height != currentViewSize.Height ||
                 m_antialiasingEnabled != currentAntialiasingEnabled ||
                 m_antialiasingQuality != currentAntialiasingQuality)
             {
@@ -164,7 +164,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // Remember values
                 m_width = currentViewSize.Width;
-                m_heigth = currentViewSize.Height;
+                m_height = currentViewSize.Height;
                 m_antialiasingEnabled = currentAntialiasingEnabled;
                 m_antialiasingQuality = currentAntialiasingQuality;
                 m_viewportF = renderState.Viewport;
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResourceView);
             SeeingSharpUtil.SafeDispose(ref m_normalDepthBuffer);
 
-            // Unload shader resource if it was created explecitely
+            // Unload shader resource if it was created explicitly
             if (m_shaderResourceCreated)
             {
                 SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResource);

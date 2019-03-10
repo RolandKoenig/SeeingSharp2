@@ -24,16 +24,15 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
 using SharpDX;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class TexturePainterHelper
     {
-        // Resource keys
-        private NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+        // Instance resource keys
+        private readonly NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
         private NamedOrGenericKey m_texture;
@@ -119,7 +118,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderParameters.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = AccentuationFactor,
-                BorderMultiplyer = 0f,
+                BorderMultiplier = 0f,
                 BorderPart = 0f,
                 Color = Vector4.Zero,
                 Opacity = Opacity,
@@ -172,7 +171,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Are resources loaded?
         /// </summary>
-        public bool IsLoaded => m_geometryResource != null && m_texture != null;
+        public bool IsLoaded => m_geometryResource != null;
 
         /// <summary>
         /// Gets or sets the alpha blend mode.

@@ -328,7 +328,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 //Fill in all child object data
-                foreach (var actObjInfo in objInfo.Childs)
+                foreach (var actObjInfo in objInfo.Children)
                 {
                     FillVertexStructure(structure, acMaterials, actObjInfo, transformStack);
                 }
@@ -353,7 +353,11 @@ namespace SeeingSharp.Multimedia.Objects
 
                 //Check for correct header
                 var header = reader.ReadLine();
-                if (!header.StartsWith("AC3D")) { throw new SeeingSharpGraphicsException("Header of AC3D file not found!"); }
+                if ((header == null) ||
+                    (!header.StartsWith("AC3D")))
+                {
+                    throw new SeeingSharpGraphicsException("Header of AC3D file not found!");
+                }
 
                 //Create file information object
                 result = new ACFileInfo();
@@ -475,9 +479,9 @@ namespace SeeingSharp.Multimedia.Objects
                                     {
                                         var currentParent = parentObjects.Peek();
 
-                                        if (currentParent.Childs.Count < currentParent.KidCount)
+                                        if (currentParent.Children.Count < currentParent.KidCount)
                                         {
-                                            currentParent.Childs.Add(currentObject);
+                                            currentParent.Children.Add(currentObject);
                                             addedToParent = true;
                                         }
                                         else
@@ -491,13 +495,13 @@ namespace SeeingSharp.Multimedia.Objects
                                                 currentParent = parentObjects.Peek();
 
                                                 if (currentParent == null) { break; }
-                                                if (currentParent.Childs.Count < currentParent.KidCount) { break; }
+                                                if (currentParent.Children.Count < currentParent.KidCount) { break; }
                                             }
 
                                             if (currentParent != null &&
-                                                currentParent.Childs.Count < currentParent.KidCount)
+                                                currentParent.Children.Count < currentParent.KidCount)
                                             {
-                                                currentParent.Childs.Add(currentObject);
+                                                currentParent.Children.Add(currentObject);
                                                 addedToParent = true;
                                             }
                                         }
@@ -519,7 +523,7 @@ namespace SeeingSharp.Multimedia.Objects
                                         }
                                         else
                                         {
-                                            loadedObjects.Peek().Childs.Add(currentObject);
+                                            loadedObjects.Peek().Children.Add(currentObject);
                                         }
                                     }
                                     currentObject = null;
@@ -736,10 +740,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 var currentObject = loadedObjects.Peek();
 
-                                if (currentObject != null)
-                                {
-                                    currentObject.Surfaces.Add(currentSurface);
-                                }
+                                currentObject?.Surfaces.Add(currentSurface);
 
                                 currentSurface = null;
                             }
@@ -749,7 +750,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
             finally
             {
-                if (reader != null) { reader.Dispose(); }
+                reader?.Dispose();
             }
 
             return result;
@@ -838,7 +839,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public ACObjectInfo()
             {
-                Childs = new List<ACObjectInfo>();
+                Children = new List<ACObjectInfo>();
                 Surfaces = new List<ACSurface>();
                 Vertices = new List<ACVertex>();
                 Rotation = Matrix.Identity;
@@ -856,13 +857,13 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             /// <summary>
-            /// Gets total count of all child ojects
+            /// Gets total count of all child objects
             /// </summary>
             public int CountAllChildObjects()
             {
                 var result = 0;
 
-                foreach (var actObj in Childs)
+                foreach (var actObj in Children)
                 {
                     result += actObj.CountAllChildObjects();
                 }
@@ -870,7 +871,7 @@ namespace SeeingSharp.Multimedia.Objects
                 return result;
             }
 
-            public List<ACObjectInfo> Childs;
+            public List<ACObjectInfo> Children;
             public int KidCount;
             public string Name;
             public Matrix Rotation;

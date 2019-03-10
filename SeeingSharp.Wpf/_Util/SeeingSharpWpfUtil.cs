@@ -29,7 +29,7 @@ using WpfMedia = System.Windows.Media;
 namespace SeeingSharp.Util
 {
 
-    public static class SeeingSharpWpfTools
+    public static class SeeingSharpWpfUtil
     {
         public static void Color4FromWpfColor(ref WpfMedia.Color source, ref Color4 target)
         {

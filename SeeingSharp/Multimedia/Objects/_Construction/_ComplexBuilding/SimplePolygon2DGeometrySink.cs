@@ -116,13 +116,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Creates a sequence of lines using the specified points and adds them to the geometry sink.
         /// </summary>
-        /// <param name="ointsRef">A pointer to an array of one or more points that describe the lines to draw. A line is drawn from the geometry sink's current point (the end point of the last segment drawn or the location specified by {{BeginFigure}}) to the first point in the array. if the array contains additional points, a line is drawn from the first point to the second point in the array, from the second point to the third point, and so on.</param>
+        /// <param name="pointsRef">A pointer to an array of one or more points that describe the lines to draw. A line is drawn from the geometry sink's current point (the end point of the last segment drawn or the location specified by {{BeginFigure}}) to the first point in the array. if the array contains additional points, a line is drawn from the first point to the second point in the array, from the second point to the third point, and so on.</param>
         /// <unmanaged>void AddLines([In, Buffer] const D2D1_POINT_2F* points,[None] UINT pointsCount)</unmanaged>
-        public void AddLines(RawVector2[] ointsRef)
+        public void AddLines(RawVector2[] pointsRef)
         {
-            for (var loop = 0; loop < ointsRef.Length; loop++)
+            for (var loop = 0; loop < pointsRef.Length; loop++)
             {
-                m_currentPolygonBuilder.Add(new Vector2(ointsRef[loop].X, ointsRef[loop].Y) - m_origin);
+                m_currentPolygonBuilder.Add(new Vector2(pointsRef[loop].X, pointsRef[loop].Y) - m_origin);
             }
         }
 

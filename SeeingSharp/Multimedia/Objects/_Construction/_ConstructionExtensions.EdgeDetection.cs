@@ -61,14 +61,14 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Searchs all edges seen from the given direction.
+        /// Search all edges seen from the given direction.
         /// </summary>
         /// <param name="structures">The structures to search edges for.</param>
         /// <param name="viewDirection">The view direction.</param>
         public static List<Line> GenerateEdgesSeenFromViewpoint(this IEnumerable<VertexStructure> structures, Vector3 viewDirection)
         {
             //Find all shadow volume edges
-            var foundEndges = new List<Line>(2048);
+            var foundEdges = new List<Line>(2048);
             var edgesToRemove = new List<Line>(2048);
 
             foreach (var actStructure in structures)
@@ -105,13 +105,13 @@ namespace SeeingSharp.Multimedia.Objects
                                 //Was this edge already added?
                                 var alreadyAdded = false;
 
-                                for (var loopShadowEdge = 0; loopShadowEdge < foundEndges.Count; loopShadowEdge++)
+                                for (var loopShadowEdge = 0; loopShadowEdge < foundEdges.Count; loopShadowEdge++)
                                 {
-                                    if (foundEndges[loopShadowEdge].EqualsWithTolerance(actEdge))
+                                    if (foundEdges[loopShadowEdge].EqualsWithTolerance(actEdge))
                                     {
                                         //Remove the edge because it can't be member of the contour when it is found twice
                                         alreadyAdded = true;
-                                        foundEndges.RemoveAt(loopShadowEdge);
+                                        foundEdges.RemoveAt(loopShadowEdge);
                                         edgesToRemove.Add(actEdge);
                                         break;
                                     }
@@ -119,14 +119,14 @@ namespace SeeingSharp.Multimedia.Objects
                                 if (alreadyAdded) { continue; }
 
                                 //Add the edge to the result list finally
-                                foundEndges.Add(actEdge);
+                                foundEdges.Add(actEdge);
                             }
                         }
                     }
                 }
             }
 
-            return foundEndges;
+            return foundEdges;
         }
     }
 }

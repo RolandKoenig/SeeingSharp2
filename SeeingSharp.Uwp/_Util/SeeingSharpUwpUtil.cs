@@ -25,7 +25,7 @@ using SDX = SharpDX;
 
 namespace SeeingSharp.Util
 {
-    public static class SeeingSharpUwpTools
+    public static class SeeingSharpUwpUtil
     {
         public static SDX.Color4 Color4FromUIColor(ref Color uiColor)
         {

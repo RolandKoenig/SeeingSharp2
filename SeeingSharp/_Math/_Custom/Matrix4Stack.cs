@@ -33,7 +33,7 @@ namespace SeeingSharp
         private Matrix m_top;
 
         /// <summary>
-        /// Cretaes a new matrix stack using 4x4 matrices
+        /// Creates a new matrix stack using 4x4 matrices
         /// </summary>
         public Matrix4Stack()
         {
@@ -44,7 +44,7 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Creates a new matrix stack usin 4x4 matrices
+        /// Creates a new matrix stack using 4x4 matrices
         /// </summary>
         public Matrix4Stack(Matrix top)
             : this()

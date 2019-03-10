@@ -778,66 +778,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         internal int CountIndices => m_corners.Count;
 
-        //*****************************************************************
-        //*****************************************************************
-        //*****************************************************************
-        /// <summary>
-        /// Enumerator of TriangleCollection
-        /// </summary>
-        private class Enumerator : IEnumerator<Triangle>
-        {
-            private List<int> m_indices;
-            private int m_maxIndex;
-            private int m_startIndex;
-
-            /// <summary>
-            ///
-            /// </summary>
-            public Enumerator(List<int> indices)
-            {
-                m_startIndex = -3;
-                m_maxIndex = indices.Count - 3;
-                m_indices = indices;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
-            public void Dispose()
-            {
-                m_startIndex = -3;
-                m_indices = null;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
-            public bool MoveNext()
-            {
-                m_startIndex += 3;
-                return m_startIndex <= m_maxIndex;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
-            public void Reset()
-            {
-                m_startIndex = -3;
-                m_maxIndex = m_indices.Count - 3;
-            }
-
-            /// <summary>
-            ///
-            /// </summary>
-            public Triangle Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
-
-            /// <summary>
-            ///
-            /// </summary>
-            object IEnumerator.Current => new Triangle(m_indices[m_startIndex], m_indices[m_startIndex + 1], m_indices[m_startIndex + 2]);
-        }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************

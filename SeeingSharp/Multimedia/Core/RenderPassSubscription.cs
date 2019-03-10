@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderPass">The render pass on which to register.</param>
         /// <param name="sceneObject">The scene object which should be registered.</param>
         /// <param name="renderMethod">The render method which is to be registered.</param>
-        /// <param name="zOrder">The z-order for sorting if the subsciptions of this pass get sorted by it.</param>
+        /// <param name="zOrder">The z-order for sorting if the subscriptions of this pass get sorted by it.</param>
         internal RenderPassSubscription(
             ViewRelatedSceneLayerSubset layerViewSubset, RenderPassInfo renderPass,
             SceneObject sceneObject, Action<RenderState> renderMethod,

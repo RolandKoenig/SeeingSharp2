@@ -33,7 +33,7 @@ namespace SeeingSharp
         private Matrix3x2 m_top;
 
         /// <summary>
-        /// Cretaes a new matrix stack using 3x2 matrices
+        /// Creates a new matrix stack using 3x2 matrices
         /// </summary>
         public Matrix3x2Stack()
         {
@@ -44,7 +44,7 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Creates a new matrix stack usin 3x2 matrices
+        /// Creates a new matrix stack using 3x2 matrices
         /// </summary>
         public Matrix3x2Stack(Matrix3x2 top)
             : this()

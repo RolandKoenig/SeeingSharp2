@@ -47,15 +47,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         /// <summary>
         /// Performs custom 2D rendering.
-        /// Be carefull: This method is called from the rendering thread!
+        /// Be careful: This method is called from the rendering thread!
         /// </summary>
         /// <param name="graphics">The graphics object used for drawing.</param>
         protected virtual void Draw2D(Graphics2D graphics)
         {
-            if(m_draw2DAction != null)
-            {
-                m_draw2DAction(graphics);
-            }
+            m_draw2DAction?.Invoke(graphics);
         }
 
         /// <summary>

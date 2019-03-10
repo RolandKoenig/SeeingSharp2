@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         private TaskCompletionSource<object> m_suspendWaiterSource;
         private TaskCompletionSource<object> m_suspendCallWaiterSource;
         private Task m_runningTask;
-        private ConcurrentQueue<Action> m_globalLoopAwaiters;
+        private ConcurrentQueue<Action> m_globalLoopAwaitors;
 
         // RenderLoop collections
         private List<RenderLoop> m_registeredRenderLoops;
@@ -63,8 +63,8 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
-        /// input states (like Gampepad).
-        /// Be carefull with subscribing/unsubscribing because this event is raised
+        /// input states (like Gamepad).
+        /// Be careful with subscribing/unsubscribing because this event is raised
         /// by ThreadPoolThreads.
         /// See http://www.codeproject.com/Articles/37474/Threadsafe-Events
         /// </summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_host = graphicsCore;
 
-            m_globalLoopAwaiters = new ConcurrentQueue<Action>();
+            m_globalLoopAwaitors = new ConcurrentQueue<Action>();
             m_registeredRenderLoops = new List<RenderLoop>();
             m_unregisteredRenderLoops = new List<RenderLoop>();
             m_registeredRenderLoopsLock = new object();
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Resumes rendering when in supendet state.
+        /// Resumes rendering when in suspend state.
         /// </summary>
         public void Resume()
         {
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Core
         public Task WaitForNextPassedLoop()
         {
             var result = new TaskCompletionSource<object>();
-            m_globalLoopAwaiters.Enqueue(() =>
+            m_globalLoopAwaitors.Enqueue(() =>
             {
                 result.SetResult(null);
             });
@@ -261,10 +261,7 @@ namespace SeeingSharp.Multimedia.Core
                             RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
 
                             // Raise generic input event (if registered)
-                            if (GenericInput != null)
-                            {
-                                GenericInput.Raise(this, new GenericInputEventArgs(inputFrames));
-                            }
+                            GenericInput?.Raise(this, new GenericInputEventArgs(inputFrames));
 
                             // Clear unreferenced Scenes finally
                             lock(m_scenesForUnloadLock)
@@ -279,9 +276,7 @@ namespace SeeingSharp.Multimedia.Core
                             }
 
                             // Unload all Direct2D resources which are not needed anymore
-                            Drawing2DResourceBase act2DResourceToUnload = null;
-
-                            while (m_drawing2DResourcesToUnload.TryDequeue(out act2DResourceToUnload))
+                            while (m_drawing2DResourcesToUnload.TryDequeue(out var act2DResourceToUnload))
                             {
                                 foreach (var actDevice in m_host.Devices)
                                 {
@@ -295,11 +290,10 @@ namespace SeeingSharp.Multimedia.Core
                         exceptionOccurred = true;
                     }
 
-                    // Execute global awaiters
-                    while(m_globalLoopAwaiters.Count > 0)
+                    // Execute global awaitors
+                    while(m_globalLoopAwaitors.Count > 0)
                     {
-                        Action currentAction = null;
-                        if(m_globalLoopAwaiters.TryDequeue(out currentAction))
+                        if(m_globalLoopAwaitors.TryDequeue(out var currentAction))
                         {
                             currentAction();
                         }
@@ -358,7 +352,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="devicesInUse">The rendering devices that are in use.</param>
         /// <param name="inputFrames">All InputFrames gathered during last render.</param>
         /// <param name="updateState">Current global update state.</param>
-        private async Task UpdateAndPrepareRendering(List<RenderLoop> renderingRenderLoops, List<Scene> scenesToRender, List<EngineDevice> devicesInUse, IEnumerable<InputFrame> inputFrames, UpdateState updateState)
+        private async Task UpdateAndPrepareRendering(List<RenderLoop> renderingRenderLoops, IReadOnlyList<Scene> scenesToRender, IReadOnlyList<EngineDevice> devicesInUse, IEnumerable<InputFrame> inputFrames, UpdateState updateState)
         {
             using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_UPDATE_AND_PREPARE))
             {
@@ -497,7 +491,7 @@ namespace SeeingSharp.Multimedia.Core
                     actRenderLoop.ResetFlagsBeforeRendering();
                 }
 
-                // Unload all derigistered RenderLoops
+                // Unload all deregistered RenderLoops
                 await UpdateRenderLoopRegistrationsAsync(renderingRenderLoops);
             }
         }
@@ -510,7 +504,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="devicesInUse">The rendering devices that are in use.</param>
         /// <param name="updateState">Current global update state.</param>
         private void RenderAndUpdateBeside(
-            List<RenderLoop> registeredRenderLoops, List<Scene> scenesToRender, List<EngineDevice> devicesInUse, UpdateState updateState)
+            IReadOnlyList<RenderLoop> registeredRenderLoops, IReadOnlyList<Scene> scenesToRender, IReadOnlyList<EngineDevice> devicesInUse, UpdateState updateState)
         {
             using (var perfToken = m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
             {
@@ -582,9 +576,9 @@ namespace SeeingSharp.Multimedia.Core
         /// Updates current RenderLoop registrations.
         /// </summary>
         /// <param name="renderingRenderLoops">The list of currently working RenderLoops.</param>
-        private async Task UpdateRenderLoopRegistrationsAsync(List<RenderLoop> renderingRenderLoops)
+        private async Task UpdateRenderLoopRegistrationsAsync(ICollection<RenderLoop> renderingRenderLoops)
         {
-            // Unload all derigistered RenderLoops
+            // Unload all deregistered RenderLoops
             if (m_unregisteredRenderLoops.Count > 0)
             {
                 // Handle global and local RenderLoop collections
@@ -618,9 +612,9 @@ namespace SeeingSharp.Multimedia.Core
                             actRenderLoop.Scene.DeregisterView(actRenderLoop.ViewInformation);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // TODO: Perform exception handling here
+                        GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_Unload);
                     }
                 }
             }
@@ -630,9 +624,9 @@ namespace SeeingSharp.Multimedia.Core
         /// Queries for all scenes to be rendered for all given RenderLoop objects.
         /// </summary>
         /// <param name="registeredRenderLoops">The render loops from which to get the scenes.</param>
-        /// <param name="scenesToRender">The collection to be modiefied.</param>
+        /// <param name="scenesToRender">The collection to be modified.</param>
         /// <param name="camerasToUpdate">A list containing all cameras which are defined in currently bound scenes.</param>
-        private static void QueryForScenesAndCameras(List<RenderLoop> registeredRenderLoops, List<Scene> scenesToRender, List<Camera3DBase> camerasToUpdate)
+        private static void QueryForScenesAndCameras(IReadOnlyList<RenderLoop> registeredRenderLoops, ICollection<Scene> scenesToRender, ICollection<Camera3DBase> camerasToUpdate)
         {
             scenesToRender.Clear();
             camerasToUpdate.Clear();
@@ -659,8 +653,8 @@ namespace SeeingSharp.Multimedia.Core
         /// Queries for all devices in use by given RenderLoop objects.
         /// </summary>
         /// <param name="registeredRenderLoops">The render loops from which to get the devices.</param>
-        /// <param name="devicesInUse">The collection to be modiefied.</param>
-        private static void QueryForDevicesInUse(List<RenderLoop> registeredRenderLoops, List<EngineDevice> devicesInUse)
+        /// <param name="devicesInUse">The collection to be modified.</param>
+        private static void QueryForDevicesInUse(IReadOnlyList<RenderLoop> registeredRenderLoops, ICollection<EngineDevice> devicesInUse)
         {
             devicesInUse.Clear();
 

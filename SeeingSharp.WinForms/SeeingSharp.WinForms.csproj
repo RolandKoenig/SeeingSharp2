@@ -71,7 +71,7 @@
     <Compile Include="SeeingSharpConstantsWinForms.cs" />
     <Compile Include="SeeingSharpWinFormsExtensions.cs" />
     <Compile Include="_Extensions.cs" />
-    <Compile Include="_Util\SeeingSharpWinFormsTools.cs" />
+    <Compile Include="_Util\SeeingSharpWinFormsUtil.cs" />
     <Compile Include="Multimedia\Core\RenderLoopEx.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpRendererControl.cs">
       <SubType>Component</SubType>

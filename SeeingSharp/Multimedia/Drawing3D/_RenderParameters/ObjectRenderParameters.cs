@@ -28,6 +28,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ObjectRenderParameters : Resource
     {
+        // Resource keys
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
         // Resources
         private TypeSafeConstantBufferResource<CBPerObject> m_cbPerObject;
 
@@ -64,10 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void MarkForUnloading()
         {
-            if(Dictionary != null)
-            {
-                Dictionary.MarkForUnloading(this);
-            }
+            Dictionary?.MarkForUnloading(this);
         }
 
         /// <summary>
@@ -97,9 +97,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded => m_cbPerObject != null;
-
-        // Resource keys
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         /// <summary>
         /// Does this object needs refreshing?

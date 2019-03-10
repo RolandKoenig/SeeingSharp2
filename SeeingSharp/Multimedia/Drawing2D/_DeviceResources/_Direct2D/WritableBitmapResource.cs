@@ -29,7 +29,7 @@ using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    public class WriteableBitmapResource : BitmapResource
+    public class WritableBitmapResource : BitmapResource
     {
         // Configuration
         private Size2 m_bitmapSize;
@@ -41,9 +41,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private D2D.Bitmap[] m_loadedBitmaps;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WriteableBitmapResource"/> class.
+        /// Initializes a new instance of the <see cref="WritableBitmapResource"/> class.
         /// </summary>
-        public WriteableBitmapResource(
+        public WritableBitmapResource(
             Size2 bitmapSize,
             BitmapFormat format = BitmapFormat.Bgra,
             AlphaMode alphaMode = AlphaMode.Straight,
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Sets the bitmap's contents.
+        /// Sets the bitmaps contents.
         /// </summary>
         /// <param name="graphics">The graphics object.</param>
         /// <param name="pointer">The pointer to the source data.</param>

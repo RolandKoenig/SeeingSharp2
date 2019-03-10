@@ -25,7 +25,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.DrawingVideo
 {

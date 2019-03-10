@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Matrix World;
         public Vector4 Color;
         public float BorderPart;
-        public float BorderMultiplyer;
+        public float BorderMultiplier;
         public float Opacity;
         public float AccentuationFactor;
 
@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Vector4 MaterialDiffuseColor;
 
         /// <summary>
-        /// The reciprocal as described in FXAA Whitepaper (see NVidia SDK 11, FXAA sample).
+        /// The reciprocal as described in FXAA white paper (see NVidia SDK 11, FXAA sample).
         /// Defined by { 1.0f/inputTextureWidth, 1.0f/inputTextureHeight, 0.0f, 0.0f }
         /// </summary>
         public Vector4 TextureReciprocal;

@@ -30,6 +30,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Util
 {
@@ -319,9 +320,9 @@ namespace SeeingSharp.Util
             if (objectToDispose == null) { return null; }
 
             try { objectToDispose.Dispose(); }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ignored
+                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.DisposeObject);
             }
             return null;
         }

@@ -34,22 +34,19 @@ namespace SeeingSharp.Multimedia.Core
         public static readonly RenderPassInfo PASS_SPRITE_BATCH = new RenderPassInfo("SpriteBatchRender");
         public static readonly RenderPassInfo PASS_2D_OVERLAY = new RenderPassInfo("2D-Overlay", true);
 
-        // Static collection which holds all render passes
-        private static List<RenderPassInfo> s_renderPasses;
-
         /// <summary>
         /// Initializes the <see cref="RenderPassInfo" /> class.
         /// </summary>
         static RenderPassInfo()
         {
-            s_renderPasses = new List<RenderPassInfo>();
-            AllRenderPasses = new ReadOnlyCollection<RenderPassInfo>(s_renderPasses);
+            var renderPasses = new List<RenderPassInfo>();
+            AllRenderPasses = new ReadOnlyCollection<RenderPassInfo>(renderPasses);
 
-            s_renderPasses.Add(PASS_PLAIN_RENDER);
-            s_renderPasses.Add(PASS_LINE_RENDER);
-            s_renderPasses.Add(PASS_TRANSPARENT_RENDER);
-            s_renderPasses.Add(PASS_SPRITE_BATCH);
-            s_renderPasses.Add(PASS_2D_OVERLAY);
+            renderPasses.Add(PASS_PLAIN_RENDER);
+            renderPasses.Add(PASS_LINE_RENDER);
+            renderPasses.Add(PASS_TRANSPARENT_RENDER);
+            renderPasses.Add(PASS_SPRITE_BATCH);
+            renderPasses.Add(PASS_2D_OVERLAY);
         }
 
         /// <summary>

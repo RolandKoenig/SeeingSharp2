@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_camera.Position = m_viewPointSource.Position + moveVector * actFrameFactor;
             m_camera.TargetRotation = m_viewPointSource.Rotation + rotationVector * actFrameFactor;
 
-            // Special handling for orthographics cameras
+            // Special handling for orthographic cameras
             if (m_cameraOrthographic != null)
             {
                 var zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;

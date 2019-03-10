@@ -47,13 +47,11 @@ namespace SeeingSharp.Multimedia.Objects
         public NamedOrGenericKey ResourceKey
         {
             get;
-            private set;
         }
 
         public Func<Resource> ResourceFactory
         {
             get;
-            private set;
         }
     }
 }

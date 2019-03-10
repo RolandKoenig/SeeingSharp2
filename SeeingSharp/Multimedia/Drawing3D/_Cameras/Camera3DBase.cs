@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
         /// </summary>
-        public Camera3DBase()
+        protected Camera3DBase()
             : this(100, 100)
         {
 
@@ -60,9 +60,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
         /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
-        public Camera3DBase(int width, int height)
+        /// <param name="width">Width of the render window.</param>
+        /// <param name="height">Height of the render window.</param>
+        protected Camera3DBase(int width, int height)
         {
             ScreenWidth = width;
             ScreenHeight = height;
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var newTarget = m_relativeTarget;
             newTarget = Vector3.Add(newTarget, m_position);
 
-            if (ScreenHeight == 0f)
+            if (EngineMath.EqualsWithTolerance(ScreenHeight, 0f))
             {
                 ScreenHeight = 1;
             }
@@ -132,8 +132,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Sets the size of the screen.
         /// </summary>
-        /// <param name="width">Width of the renderwindow.</param>
-        /// <param name="height">Height of the renderwindow.</param>
+        /// <param name="width">Width of the render window.</param>
+        /// <param name="height">Height of the render window.</param>
         public void SetScreenSize(int width, int height)
         {
             ScreenWidth = width;
@@ -256,7 +256,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Streaves the camera.
+        /// Straves the camera.
         /// </summary>
         public void StraveAtPlane(float points)
         {
@@ -273,7 +273,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="target">The target point of the camera.</param>
         /// <param name="upVector">The current up vector.</param>
         /// <param name="zNear">Distance to the nearest rendered pixel.</param>
-        /// <param name="zFar">Distance to the farest rendered pixel.</param>
+        /// <param name="zFar">Distance to the most far rendered pixel.</param>
         /// <param name="screenWidth">The current width of the screen in pixel.</param>
         /// <param name="screenHeight">The current height of the screen in pixel.</param>
         /// <param name="viewMatrix">The calculated view matrix.</param>
@@ -305,12 +305,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Vector3 Direction => m_look;
 
         /// <summary>
-        /// Retrieves a vector, wich is targeting right.
+        /// Retrieves a vector, which is targeting right.
         /// </summary>
         public Vector3 Right => m_right;
 
         /// <summary>
-        /// Retrieves a vector, wich is targiting upwards.
+        /// Retrieves a vector, which is targeting upwards.
         /// </summary>
         public Vector3 Up => m_up;
 
@@ -376,7 +376,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 m_relativeTarget = Vector3.Normalize(value);
 
-                //Update horizontal and vertical rotation
+                // Update horizontal and vertical rotation
                 Vector3Ex.ToHVRotation(m_relativeTarget, out m_hRotation, out m_vRotation);
 
                 UpdateCamera();

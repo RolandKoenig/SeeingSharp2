@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Objects
                         glyphRun.Indices,
                         glyphRun.Advances,
                         glyphRun.Offsets,
-                        glyphRun.Offsets != null ? glyphRun.Offsets.Length : 0,
+                        glyphRun.Offsets?.Length ?? 0,
                         glyphRun.IsSideways,
                         glyphRun.BidiLevel % 2 == 1,
                         geoSink);
@@ -115,8 +115,6 @@ namespace SeeingSharp.Multimedia.Objects
                     .ToList();
 
                 // Build geometry for all polygons
-                var loopPolygon = 0;
-
                 foreach (var actFillingPolygon in fillingPolygons)
                 {
                     // Find all corresponding holes
@@ -139,9 +137,7 @@ namespace SeeingSharp.Multimedia.Objects
                         polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions { MakeMergepointSpaceForTriangulation = true });
                     }
 
-                    loopPolygon++;
                     var actBaseIndex = tempStructure.CountVertices;
-
                     var edgeOrder = polygonForRendering.EdgeOrder;
                     var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
@@ -200,9 +196,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                     // Triangulate the polygon
                     var triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
-
                     if (triangleIndices == null) { continue; }
-                    if (triangleIndices == null) { throw new SeeingSharpGraphicsException("Unable to triangulate given PathGeometry object!"); }
 
                     // Append all triangles to the temporary structure
                     using (var indexEnumerator = triangleIndices.GetEnumerator())

@@ -36,13 +36,11 @@ namespace SeeingSharp.SampleContainer
         public string GroupName
         {
             get;
-            private set;
         }
 
         public List<SampleMetadata> Samples
         {
             get;
-            private set;
         }
     }
 }

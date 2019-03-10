@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SpriteMaterialResource : MaterialResource
     {
-        // Resource keys
+        // Static Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShader;
 
         // Resource members
         private TextureResource m_textureResource;
+        private DefaultResources m_defaultResources;
+        private PixelShaderResource m_pixelShader;
         private VertexShaderResource m_vertexShader;
 
         /// <summary>

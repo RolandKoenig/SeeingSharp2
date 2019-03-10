@@ -29,6 +29,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SimpleColoredMaterialResource : MaterialResource
     {
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+
         // Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
@@ -84,7 +86,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             //Load the texture if any configured.
             if (!TextureKey.IsEmpty)
             {
-                //Get texture resource
+                // Get texture resource
                 m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(TextureKey);
             }
         }
@@ -195,7 +197,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_clipFactor;
             set
             {
-                if (m_clipFactor != value)
+                if (!EngineMath.EqualsWithTolerance(m_clipFactor, value))
                 {
                     m_clipFactor = value;
                     m_cbPerMaterialDataChanged = true;
@@ -211,7 +213,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_maxClipDistance;
             set
             {
-                if(m_maxClipDistance != value)
+                if(!EngineMath.EqualsWithTolerance(m_maxClipDistance, value))
                 {
                     m_maxClipDistance = value;
                     m_cbPerMaterialDataChanged = true;
@@ -243,7 +245,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_addToAlpha;
             set
             {
-                if(m_addToAlpha != value)
+                if(!EngineMath.EqualsWithTolerance(m_addToAlpha, value))
                 {
                     m_addToAlpha = value;
                     m_cbPerMaterialDataChanged = true;
@@ -263,7 +265,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
-
-        internal NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
     }
 }

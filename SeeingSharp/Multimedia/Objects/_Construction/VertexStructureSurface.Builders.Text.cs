@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using SeeingSharp.Multimedia.Core;
 using SharpDX;
 using DWrite = SharpDX.DirectWrite;
@@ -48,7 +49,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             //TODO: Cache font objects
 
-            //Get DirectWrite font weight
+            // Get DirectWrite font weight
             var fontWeight = DWrite.FontWeight.Normal;
 
             switch (geometryOptions.FontWeight)
@@ -62,7 +63,7 @@ namespace SeeingSharp.Multimedia.Objects
                     break;
             }
 
-            //Get DirectWrite font style
+            // Get DirectWrite font style
             var fontStyle = DWrite.FontStyle.Normal;
 
             switch (geometryOptions.FontStyle)
@@ -80,7 +81,7 @@ namespace SeeingSharp.Multimedia.Objects
                     break;
             }
 
-            //Create the text layout object
+            // Create the text layout object
             try
             {
                 var textLayout = new DWrite.TextLayout(
@@ -89,15 +90,15 @@ namespace SeeingSharp.Multimedia.Objects
                         writeFactory, geometryOptions.FontFamily, fontWeight, fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
-                //Render the text using the vertex structure text renderer
+                // Render the text using the vertex structure text renderer
                 using (var textRenderer = new VertexStructureTextRenderer(this, geometryOptions))
                 {
                     textLayout.Draw(textRenderer, 0f, 0f);
                 }
             }
-            catch (SharpDXException)
+            catch (Exception ex)
             {
-                //TODO: Display some error
+                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.CreateTextGeometry);
             }
         }
 
@@ -107,10 +108,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="coordinates">The coordinates to build the polygon from.</param>
         public void BuildPlainPolygon(Vector3[] coordinates)
         {
-            //Build the polygon
+            // Build the polygon
             var polygon = new Polygon(coordinates);
 
-            //Try to triangulate it
+            // Try to triangulate it
             var indices = polygon.TriangulateUsingCuttingEars();
 
             if (indices == null)
@@ -118,7 +119,7 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
             }
 
-            //Append all vertices
+            // Append all vertices
             var baseIndex = Owner.CountVertices;
 
             for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
@@ -126,7 +127,7 @@ namespace SeeingSharp.Multimedia.Objects
                 Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
             }
 
-            //Append all indices
+            // Append all indices
             using (var indexEnumerator = indices.GetEnumerator())
             {
                 while (indexEnumerator.MoveNext())
