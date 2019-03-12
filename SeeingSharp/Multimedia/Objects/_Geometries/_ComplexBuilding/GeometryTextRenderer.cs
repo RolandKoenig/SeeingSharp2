@@ -97,9 +97,9 @@ namespace SeeingSharp.Multimedia.Objects
                 pathGeometry.Simplify(GeometrySimplificationOption.Lines, m_geometryOptions.SimplificationFlatternTolerance, geometryExtruder);
             }
 
-            // Structure for caching the result
-            var tempStructure = new Geometry();
-            var tempSurface = tempStructure.CreateSurface();
+            // Geometry for caching the result
+            var tempGeometry = new Geometry();
+            var tempSurface = tempGeometry.CreateSurface();
 
             // Create the text surface
             if (m_geometryOptions.MakeSurface)
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Objects
                         polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions { MakeMergepointSpaceForTriangulation = true });
                     }
 
-                    var actBaseIndex = tempStructure.CountVertices;
+                    var actBaseIndex = tempGeometry.CountVertices;
                     var edgeOrder = polygonForRendering.EdgeOrder;
                     var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
@@ -164,7 +164,7 @@ namespace SeeingSharp.Multimedia.Objects
                         }
 
                         // Append the vertex to the result
-                        tempStructure.AddVertex(
+                        tempGeometry.AddVertex(
                             new Vertex(
                                 actVertexLocation,
                                 m_geometryOptions.SurfaceVertexColor,
@@ -198,7 +198,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var triangleIndices = polygonForTriangulation.TriangulateUsingCuttingEars();
                     if (triangleIndices == null) { continue; }
 
-                    // Append all triangles to the temporary structure
+                    // Append all triangles to the temporary geometry
                     using (var indexEnumerator = triangleIndices.GetEnumerator())
                     {
                         while (indexEnumerator.MoveNext())
@@ -252,9 +252,9 @@ namespace SeeingSharp.Multimedia.Objects
                 for (var loop = 0; loop < triangleCountWithoutSide; loop++)
                 {
                     var triangle = tempSurface.Triangles[loop];
-                    var vertex0 = tempStructure.Vertices[triangle.Index1];
-                    var vertex1 = tempStructure.Vertices[triangle.Index2];
-                    var vertex2 = tempStructure.Vertices[triangle.Index3];
+                    var vertex0 = tempGeometry.Vertices[triangle.Index1];
+                    var vertex1 = tempGeometry.Vertices[triangle.Index2];
+                    var vertex2 = tempGeometry.Vertices[triangle.Index3];
                     var changeVector = new SDX.Vector3(0f, -m_geometryOptions.VolumetricTextDepth, 0f);
 
                     tempSurface.AddTriangle(
@@ -265,7 +265,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // TODO: Make this configurable
-            tempStructure.ToggleCoordinateSystem();
+            tempGeometry.ToggleCoordinateSystem();
 
             // Scale the text using given scale factor
             if (m_geometryOptions.VerticesScaleFactor > 0f)
@@ -278,17 +278,17 @@ namespace SeeingSharp.Multimedia.Objects
                 var transformMatrix = new Matrix4Stack(scaleMatrix);
                 transformMatrix.TransformLocal(m_geometryOptions.VertexTransform);
 
-                tempStructure.UpdateVerticesUsingRelocationFunc(actVector => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
+                tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
             }
 
             // Calculate all normals before adding to target structure
             if (m_geometryOptions.CalculateNormals)
             {
-                tempStructure.CalculateNormalsFlat();
+                tempGeometry.CalculateNormalsFlat();
             }
 
             // Merge temporary structure to target structure
-            m_targetSurface.AddStructure(tempStructure);
+            m_targetSurface.AddStructure(tempGeometry);
 
             return SDX.Result.Ok;
         }

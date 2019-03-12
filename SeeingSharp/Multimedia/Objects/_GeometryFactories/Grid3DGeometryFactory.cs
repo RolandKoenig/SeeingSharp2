@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds the geometry
         /// </summary>
-        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
 
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Objects
             var tileMiddleX = TilesX % 2 == 0 && HighlightXZLines ? TilesX / 2 : 1;
             var tileMiddleZ = TilesZ % 2 == 0 && HighlightXZLines ? TilesZ / 2 : 1;
 
-            // Define lower ground structure
+            // Define lower ground geometry
             if (GenerateGround)
             {
                 var lowerGround = result.CreateSurface();
@@ -104,8 +104,8 @@ namespace SeeingSharp.Multimedia.Objects
                     divider = LineSmallDivider;
                 }
 
-                var targetStructure = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
-                targetStructure.BuildRect4V(
+                var targetGeometry = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                targetGeometry.BuildRect4V(
                     localStart - new Vector3(tileWidthX / divider, 0f, 0f),
                     localStart + new Vector3(tileWidthX / divider, 0f, 0f),
                     localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if(BuildBackFaces)
                 {
-                    targetStructure.BuildRect4V(
+                    targetGeometry.BuildRect4V(
                         localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
                         localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
                         localStart + new Vector3(tileWidthX / divider, 0f, 0f),
@@ -137,8 +137,8 @@ namespace SeeingSharp.Multimedia.Objects
                     divider = LineSmallDivider;
                 }
 
-                var targetStructure = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
-                targetStructure.BuildRect4V(
+                var targetGeometry = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                targetGeometry.BuildRect4V(
                     localStart + new Vector3(0f, 0f, tileWidthZ / divider),
                     localStart - new Vector3(0f, 0f, tileWidthZ / divider),
                     localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if(BuildBackFaces)
                 {
-                    targetStructure.BuildRect4V(
+                    targetGeometry.BuildRect4V(
                         localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
                         localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
                         localStart - new Vector3(0f, 0f, tileWidthZ / divider),

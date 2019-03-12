@@ -147,17 +147,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, Geometry structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, Geometry geometry)
         {
-            return resourceDictionary.AddResource(new GeometryResource(structure));
+            return resourceDictionary.AddResource(new GeometryResource(geometry));
         }
 
         /// <summary>
         /// Adds a new geometry resource.
         /// </summary>
-        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, Geometry structure)
+        internal static GeometryResource AddGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, Geometry geometry)
         {
-            return resourceDictionary.AddResource(resourceKey, new GeometryResource(structure));
+            return resourceDictionary.AddResource(resourceKey, new GeometryResource(geometry));
         }
 
         /// <summary>
@@ -197,10 +197,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            var newStructure = new Geometry();
-            newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
-            newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
-            return resourceDictionary.AddGeometry(newStructure);
+            var newGeometry = new Geometry();
+            newGeometry.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
+            newGeometry.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
+            return resourceDictionary.AddGeometry(newGeometry);
         }
 
         /// <summary>
@@ -208,10 +208,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal static GeometryResource AddTextGeometry(this ResourceDictionary resourceDictionary, NamedOrGenericKey resourceKey, string textToAdd, TextGeometryOptions textGeometryOptions)
         {
-            var newStructure = new Geometry();
-            newStructure.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
-            newStructure.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
-            return resourceDictionary.AddGeometry(resourceKey, newStructure);
+            var newGeometry = new Geometry();
+            newGeometry.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
+            newGeometry.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
+            return resourceDictionary.AddGeometry(resourceKey, newGeometry);
         }
 
         /// <summary>

@@ -44,9 +44,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// Builds the geometry for the given detail level.
         /// </summary>
         /// <param name="buildOptions">Some generic options for structure building</param>
-        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var structureFromChild = m_geometryToStack.BuildStructure(buildOptions);
+            var structureFromChild = m_geometryToStack.BuildGeometry(buildOptions);
             structureFromChild.EnsureNotNull(nameof(structureFromChild));
 
             var childStructBox = structureFromChild.GenerateBoundingBox();

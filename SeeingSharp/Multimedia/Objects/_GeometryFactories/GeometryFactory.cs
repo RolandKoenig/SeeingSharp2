@@ -27,6 +27,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// Builds a <see cref="Geometry"/> using given parameters (like DetailLevel).
         /// </summary>
         /// <param name="buildOptions">Some generic options for geometry building</param>
-        public abstract Geometry BuildStructure(GeometryBuildOptions buildOptions);
+        public abstract Geometry BuildGeometry(GeometryBuildOptions buildOptions);
     }
 }

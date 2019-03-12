@@ -225,7 +225,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Build geometries
             Geometry[] geometries = {
-                m_geometry.BuildStructure(new GeometryBuildOptions(device.SupportedDetailLevel))
+                m_geometry.BuildGeometry(new GeometryBuildOptions(device.SupportedDetailLevel))
             };
 
             // Build BoundingBox around all vertices
@@ -373,11 +373,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     actIndexCount += indexArray.Length;
 
                     // Get or create the material
-                    var lastStructureInfo = result.Count > 0 ? result[result.Count - 1] : null;
+                    var lastGeometryInfo = result.Count > 0 ? result[result.Count - 1] : null;
 
-                    if (lastStructureInfo != null &&
-                        lastStructureInfo.IndexBuffer == null &&
-                        actSurface.MaterialProperties.Equals(lastStructureInfo.MaterialProperties))
+                    if (lastGeometryInfo != null &&
+                        lastGeometryInfo.IndexBuffer == null &&
+                        actSurface.MaterialProperties.Equals(lastGeometryInfo.MaterialProperties))
                     {
                         var actGeometryInfo = result[result.Count - 1];
                         actGeometryInfo.IndexCount = actGeometryInfo.IndexCount + indexArray.Length;

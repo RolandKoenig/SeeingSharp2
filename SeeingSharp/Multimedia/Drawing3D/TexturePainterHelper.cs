@@ -72,15 +72,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 KEY_GEOMETRY,
                 () =>
                 {
-                    var structure = new Geometry();
-                    structure.FirstSurface.BuildRect4V(
+                    var geometry = new Geometry();
+                    geometry.FirstSurface.BuildRect4V(
                         new Vector3(-1f, -1f, 0f),
                         new Vector3(1f, -1f, 0f),
                         new Vector3(1f, 1f, 0f),
                         new Vector3(-1f, 1f, 0f),
                         Color4Ex.Transparent);
-                    structure.FirstSurface.Material = KEY_MATERIAL;
-                    return new GeometryResource(structure);
+                    geometry.FirstSurface.Material = KEY_MATERIAL;
+                    return new GeometryResource(geometry);
                 });
 
             // Load the texture resource

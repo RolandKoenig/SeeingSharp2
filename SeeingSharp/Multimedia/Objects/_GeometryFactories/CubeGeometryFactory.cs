@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class CubeGeometryFactory : GeometryFactory
     {
-        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var matProperties = new MaterialProperties
             {

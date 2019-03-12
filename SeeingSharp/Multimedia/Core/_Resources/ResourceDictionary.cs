@@ -151,12 +151,12 @@ namespace SeeingSharp.Multimedia.Core
             }
             else if(resourceType == typeof(GeometryResource))
             {
-                var dummyStructure = new Geometry();
-                dummyStructure.FirstSurface.BuildCube24V(
+                var dummyGeometry = new Geometry();
+                dummyGeometry.FirstSurface.BuildCube24V(
                     Vector3.Zero,
                     new Vector3(1f, 1f, 1f),
                     Color4.White);
-                result = new GeometryResource(dummyStructure) as T;
+                result = new GeometryResource(dummyGeometry) as T;
             }
 
             //Try to create the resource using the standard constructor

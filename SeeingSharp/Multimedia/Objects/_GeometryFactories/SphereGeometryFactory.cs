@@ -23,7 +23,7 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public class SphereGeometryFactory : GeometryFactory
     {
-        public override Geometry BuildStructure(GeometryBuildOptions buildOptions)
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
 
