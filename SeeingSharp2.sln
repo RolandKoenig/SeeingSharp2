@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{4B6075B0
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
+		Resharper.DotSettings = Resharper.DotSettings
 		_Misc\SolutionInfo.cs = _Misc\SolutionInfo.cs
 	EndProjectSection
 EndProject

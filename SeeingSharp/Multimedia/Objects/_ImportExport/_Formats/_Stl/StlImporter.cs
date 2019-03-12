@@ -229,7 +229,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Reads a facet.
         /// </summary>
-        private void ReadFacet(StreamReader reader, string normalString, Geometry newStructure, StlImportOptions importOptions)
+        private void ReadFacet(StreamReader reader, string normalString, Geometry newGeometry, StlImportOptions importOptions)
         {
             m_cachedPoints.Clear();
 
@@ -259,7 +259,7 @@ namespace SeeingSharp.Multimedia.Objects
             ReadLine(reader, "endfacet");
 
             // Overtake geometry data
-            var targetSurface = newStructure.FirstSurface;
+            var targetSurface = newGeometry.FirstSurface;
             var pointCount = m_cachedPoints.Count;
 
             switch (m_cachedPoints.Count)
@@ -292,7 +292,7 @@ namespace SeeingSharp.Multimedia.Objects
                     {
                         for (var loop = pointCount - 1; loop > -1; loop--)
                         {
-                            indices[loop] = newStructure.AddVertex(
+                            indices[loop] = newGeometry.AddVertex(
                                 new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
                         }
                     }
@@ -300,7 +300,7 @@ namespace SeeingSharp.Multimedia.Objects
                     {
                         for (var loop = 0; loop < pointCount; loop++)
                         {
-                            indices[loop] = newStructure.AddVertex(
+                            indices[loop] = newGeometry.AddVertex(
                                 new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
                         }
                     }
@@ -391,7 +391,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             using (var reader = new StreamReader(stream, ENCODING, false, 128, true))
             {
-                var newStructure = new Geometry();
+                var newGeometry = new Geometry();
 
                 while (!reader.EndOfStream)
                 {
@@ -419,7 +419,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                             // Geometry data
                         case "facet":
-                            ReadFacet(reader, values, newStructure, importOptions);
+                            ReadFacet(reader, values, newGeometry, importOptions);
                             break;
 
                             // End of file
@@ -434,7 +434,7 @@ namespace SeeingSharp.Multimedia.Objects
                     RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     geoResourceKey,
-                    () => new GeometryResource(newStructure)));
+                    () => new GeometryResource(newGeometry)));
                 var geoObject = new GenericObject(geoResourceKey);
                 result.Objects.Add(geoObject);
 
@@ -475,12 +475,12 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Read geometry data
-                var newStructure = new Geometry((int)numberTriangles * 3);
-                newStructure.CreateSurface((int)numberTriangles);
+                var newGeometry = new Geometry((int)numberTriangles * 3);
+                newGeometry.CreateSurface((int)numberTriangles);
 
                 for (var loop = 0; loop < numberTriangles; loop++)
                 {
-                    ReadTriangle(reader, newStructure, importOptions);
+                    ReadTriangle(reader, newGeometry, importOptions);
                 }
 
                 // Generate result container
@@ -489,7 +489,7 @@ namespace SeeingSharp.Multimedia.Objects
                     RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     geoResourceKey,
-                    () => new GeometryResource(newStructure)));
+                    () => new GeometryResource(newGeometry)));
                 var geoObject = new GenericObject(geoResourceKey);
                 result.Objects.Add(geoObject);
 

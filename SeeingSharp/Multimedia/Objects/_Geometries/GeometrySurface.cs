@@ -83,19 +83,19 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Adds all vertices and surfaces of the given structure to this one.
-        /// All surfaces of the given structure are merged to this single surface.
+        /// Adds all vertices and surfaces of the given geometry to this one.
+        /// All surfaces of the given geometry are merged to this single surface.
         /// </summary>
-        /// <param name="structure">The structure.</param>
-        public void AddStructure(Geometry structure)
+        /// <param name="geometry">The geometry.</param>
+        public void AddGeometry(Geometry geometry)
         {
             var baseIndex = Owner.VerticesInternal.Count;
 
-            // Add all vertices to local structure
-            Owner.VerticesInternal.AddRange(structure.VerticesInternal);
+            // Add all vertices to local geometry
+            Owner.VerticesInternal.AddRange(geometry.VerticesInternal);
 
             // Add all corners to local surface
-            foreach(var actSurface in structure.Surfaces)
+            foreach(var actSurface in geometry.Surfaces)
             {
                 var corners = actSurface.m_corners;
                 var cornerCount = corners.Count;
@@ -715,7 +715,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets or sets the name of the texture (used for the NamedOrGenericKey structure behind).
+        /// Gets or sets the name of the texture (used for the NamedOrGenericKey geometry behind).
         /// </summary>
         public string TextureName
         {
@@ -757,7 +757,7 @@ namespace SeeingSharp.Multimedia.Objects
         public CornerCollection Corners { get; }
 
         /// <summary>
-        /// Retrieves total count of all triangles within this structure
+        /// Retrieves total count of all triangles within this geometry
         /// </summary>
         public int CountTriangles => m_corners.Count / 3;
 
@@ -774,7 +774,7 @@ namespace SeeingSharp.Multimedia.Objects
         public Geometry Owner { get; }
 
         /// <summary>
-        /// Retrieves total count of all indexes within this structure
+        /// Retrieves total count of all indexes within this geometry
         /// </summary>
         internal int CountIndices => m_corners.Count;
 

@@ -43,17 +43,17 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds the geometry for the given detail level.
         /// </summary>
-        /// <param name="buildOptions">Some generic options for structure building</param>
+        /// <param name="buildOptions">Some generic options for geometry building</param>
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var structureFromChild = m_geometryToStack.BuildGeometry(buildOptions);
-            structureFromChild.EnsureNotNull(nameof(structureFromChild));
+            var geometryFromChild = m_geometryToStack.BuildGeometry(buildOptions);
+            geometryFromChild.EnsureNotNull(nameof(geometryFromChild));
 
-            var childStructBox = structureFromChild.GenerateBoundingBox();
+            var childStructBox = geometryFromChild.GenerateBoundingBox();
             var correctionVector = -childStructBox.GetBottomCenter();
 
             // Copy metadata information of the Geometry
-            var result = structureFromChild.Clone(
+            var result = geometryFromChild.Clone(
                 false,
                 m_stackSize);
 
@@ -63,9 +63,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var actYCorrection = childStructBox.Height * loop;
                 var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);
 
-                var baseVertex = loop * structureFromChild.CountVertices;
+                var baseVertex = loop * geometryFromChild.CountVertices;
 
-                foreach (var actVertex in structureFromChild.Vertices)
+                foreach (var actVertex in geometryFromChild.Vertices)
                 {
                     // Change vertex properties based on stack position
                     var changedVertex = actVertex;
@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
 
                 // Clone all surfaces
-                foreach (var actSurfaceFromChild in structureFromChild.Surfaces)
+                foreach (var actSurfaceFromChild in geometryFromChild.Surfaces)
                 {
                     var newSurface = result.CreateSurface(actSurfaceFromChild.CountTriangles);
 

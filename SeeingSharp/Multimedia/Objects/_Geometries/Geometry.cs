@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
         private Func<Vertex, Vertex> m_buildTimeTransformFunc;
 
         /// <summary>
-        /// Creates a new Vertex structure object
+        /// Creates a new <see cref="Geometry"/> object
         /// </summary>
         public Geometry()
             : this(512)
@@ -244,7 +244,7 @@ namespace SeeingSharp.Multimedia.Objects
                     break;
             }
 
-            //Bring the structure to origin based location and then scale it
+            // Bring the geometry to origin based location and then scale it
             UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.GetCornerA()));
             UpdateVerticesUsingRelocationFunc(actPosition => new Vector3(
                 actPosition.X * resizeFactorX,
@@ -353,9 +353,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a vector to the middle center of given geometries.
         /// </summary>
-        public static Vector3 GetMiddleCenter(Geometry[] structures)
+        public static Vector3 GetMiddleCenter(Geometry[] geometries)
         {
-            var box = GetBoundingBox(structures);
+            var box = GetBoundingBox(geometries);
             return box.GetMiddleCenter();
         }
 
@@ -363,7 +363,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Adds all triangles of the given Geometry to this one.
         /// </summary>
         /// <param name="otherGeometry">The geometry to add to this one.</param>
-        public void AddStructure(Geometry otherGeometry)
+        public void AddGeometry(Geometry otherGeometry)
         {
             var baseIndex = VerticesInternal.Count;
 
@@ -387,9 +387,8 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Adds a vertex to the structure
+        /// Adds a vertex to the geometry.
         /// </summary>
-        /// <param name="vertex"></param>
         public int AddVertex(Vertex vertex)
         {
             //Transform vertex on build-time
@@ -431,7 +430,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Calculates normals for all triangles of this structure.
+        /// Calculates normals for all triangles of this geometry.
         /// </summary>
         public void CalculateNormals()
         {
@@ -527,7 +526,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Generates a <see cref="BoundingBox"/> around this structure
+        /// Generates a <see cref="BoundingBox"/> around this geometry
         /// </summary>
         public BoundingBox GenerateBoundingBox()
         {
@@ -580,11 +579,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void ToggleCoordinateSystem()
         {
-            //Calculate the center coordinate of this structure
+            // Calculate the center coordinate of this geometry
             var boundingBox = GenerateBoundingBox();
             var centerCoord = boundingBox.GetMiddleCenter();
 
-            //Update each vertex coordinate
+            // Update each vertex coordinate
             UpdateVerticesUsingRelocationFunc(givenVector => new Vector3(
                 givenVector.X, givenVector.Y,
                 centerCoord.Z + (centerCoord.Z - givenVector.Z)));
@@ -645,7 +644,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets the first surface of  this structure.
+        /// Gets the first surface of this geometry.
         /// It there is no surface, then one gets created automatically.
         /// </summary>
         public GeometrySurface FirstSurface
@@ -658,22 +657,22 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Retrieves total count of all vertices within this structure
+        /// Retrieves total count of all vertices within this geometry
         /// </summary>
         public int CountVertices => VerticesInternal.Count;
 
         /// <summary>
-        /// A short description for the use of this structure
+        /// A short description for the use of this geometry
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Is this structure empty?
+        /// Is this geometry empty?
         /// </summary>
         public bool IsEmpty => VerticesInternal.Count == 0 && m_surfaces.Count == 0;
 
         /// <summary>
-        /// The name of this structure
+        /// The name of this geometry
         /// </summary>
         public string Name
         {
@@ -751,7 +750,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             /// <summary>
-            /// Adds a vertex to the structure
+            /// Adds a vertex to the geometry
             /// </summary>
             public void Add(Vertex vertex)
             {

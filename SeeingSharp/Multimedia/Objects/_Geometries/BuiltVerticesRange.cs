@@ -26,17 +26,17 @@ namespace SeeingSharp.Multimedia.Objects
 {
     public struct BuiltVerticesRange
     {
-        public Geometry Structure;
+        public Geometry Geometry;
         public int StartVertex;
         public int VertexCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BuiltVerticesRange" /> struct.
         /// </summary>
-        /// <param name="structure">The structure.</param>
-        public BuiltVerticesRange(Geometry structure)
+        /// <param name="geometry">The geometry.</param>
+        public BuiltVerticesRange(Geometry geometry)
         {
-            Structure = structure;
+            Geometry = geometry;
             StartVertex = 0;
             VertexCount = 0;
         }
@@ -44,19 +44,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="BuiltVerticesRange" /> struct.
         /// </summary>
-        /// <param name="structure">The structure.</param>
+        /// <param name="geometry">The geometry.</param>
         /// <param name="startVertex">The start vertex.</param>
         /// <param name="vertexCount">The vertex count.</param>
-        public BuiltVerticesRange(Geometry structure, int startVertex, int vertexCount)
+        public BuiltVerticesRange(Geometry geometry, int startVertex, int vertexCount)
         {
-            Structure = structure;
+            Geometry = geometry;
             StartVertex = startVertex;
             VertexCount = vertexCount;
         }
 
         /// <summary>
-        /// Merges this structure with the given one.
-        /// This method does only work if the given structure does begin after the end of the current one.
+        /// Merges this geometry with the given one.
+        /// This method does only work if the given geometry does begin after the end of the current one.
         /// </summary>
         /// <param name="otherRange">The other range to merge with.</param>
         public void Merge(BuiltVerticesRange otherRange)
@@ -82,9 +82,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Structure.Vertices[loop];
+                var actVertex = Geometry.Vertices[loop];
                 actVertex.TextureFactor = -100;
-                Structure.Vertices[loop] = actVertex;
+                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -96,11 +96,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Structure.Vertices[loop];
+                var actVertex = Geometry.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     actVertex.TexCoord.Y);
-                Structure.Vertices[loop] = actVertex;
+                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -112,11 +112,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Structure.Vertices[loop];
+                var actVertex = Geometry.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                Structure.Vertices[loop] = actVertex;
+                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -128,11 +128,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Structure.Vertices[loop];
+                var actVertex = Geometry.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                Structure.Vertices[loop] = actVertex;
+                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -144,11 +144,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Structure.Vertices[loop];
+                var actVertex = Geometry.Vertices[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.Y,
                     actVertex.TexCoord.X);
-                Structure.Vertices[loop] = actVertex;
+                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;

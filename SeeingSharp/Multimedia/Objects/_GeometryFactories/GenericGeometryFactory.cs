@@ -48,9 +48,9 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds the structure.
+        /// Builds the geometry.
         /// </summary>
-        /// <param name="buildOptions">Some generic options for structure building</param>
+        /// <param name="buildOptions">Some generic options for geometry building</param>
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             if (buildOptions.IsHighDetail) { return Geometry; }

@@ -87,8 +87,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Define line geometry
-            var genStructureDefaultLine = result.CreateSurface();
-            var genStructureGroupLine = result.CreateSurface();
+            var genSurfaceDefaultLine = result.CreateSurface();
+            var genSurfaceGroupLine = result.CreateSurface();
 
             for (var actTileX = 0; actTileX < TilesX + 1; actTileX++)
             {
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Objects
                     divider = LineSmallDivider;
                 }
 
-                var targetGeometry = actTileX % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                var targetGeometry = actTileX % GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
                 targetGeometry.BuildRect4V(
                     localStart - new Vector3(tileWidthX / divider, 0f, 0f),
                     localStart + new Vector3(tileWidthX / divider, 0f, 0f),
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Objects
                     divider = LineSmallDivider;
                 }
 
-                var targetGeometry = actTileZ % GroupTileCount == 0 ? genStructureGroupLine : genStructureDefaultLine;
+                var targetGeometry = actTileZ % GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
                 targetGeometry.BuildRect4V(
                     localStart + new Vector3(0f, 0f, tileWidthZ / divider),
                     localStart - new Vector3(0f, 0f, tileWidthZ / divider),
@@ -155,10 +155,10 @@ namespace SeeingSharp.Multimedia.Objects
                         actLineColor);
                 }
             }
-            genStructureDefaultLine.Material = LineMaterial;
-            genStructureGroupLine.Material = LineMaterial;
-            if (genStructureDefaultLine.CountTriangles == 0) { result.RemoveSurface(genStructureDefaultLine); }
-            if (genStructureGroupLine.CountTriangles == 0) { result.RemoveSurface(genStructureGroupLine); }
+            genSurfaceDefaultLine.Material = LineMaterial;
+            genSurfaceGroupLine.Material = LineMaterial;
+            if (genSurfaceDefaultLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceDefaultLine); }
+            if (genSurfaceGroupLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceGroupLine); }
 
             // Return the generated geometry
             return result;

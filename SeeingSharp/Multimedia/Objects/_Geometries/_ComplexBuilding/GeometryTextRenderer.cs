@@ -281,14 +281,14 @@ namespace SeeingSharp.Multimedia.Objects
                 tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
             }
 
-            // Calculate all normals before adding to target structure
+            // Calculate all normals before adding to target geometry
             if (m_geometryOptions.CalculateNormals)
             {
                 tempGeometry.CalculateNormalsFlat();
             }
 
-            // Merge temporary structure to target structure
-            m_targetSurface.AddStructure(tempGeometry);
+            // Merge temporary geometry to target geometry
+            m_targetSurface.AddGeometry(tempGeometry);
 
             return SDX.Result.Ok;
         }

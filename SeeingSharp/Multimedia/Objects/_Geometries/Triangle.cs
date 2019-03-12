@@ -46,20 +46,20 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets all edges defined by this triangle.
         /// </summary>
-        /// <param name="sourceStructure">The source structure.</param>
-        public Line[] GetEdges(Geometry sourceStructure)
+        /// <param name="sourceGeometry">The source geometry.</param>
+        public Line[] GetEdges(Geometry sourceGeometry)
         {
             return new[]
             {
                 new Line(
-                    sourceStructure.Vertices[Index1].Position,
-                    sourceStructure.Vertices[Index2].Position),
+                    sourceGeometry.Vertices[Index1].Position,
+                    sourceGeometry.Vertices[Index2].Position),
                 new Line(
-                    sourceStructure.Vertices[Index2].Position,
-                    sourceStructure.Vertices[Index3].Position),
+                    sourceGeometry.Vertices[Index2].Position,
+                    sourceGeometry.Vertices[Index3].Position),
                 new Line(
-                    sourceStructure.Vertices[Index3].Position,
-                    sourceStructure.Vertices[Index1].Position)
+                    sourceGeometry.Vertices[Index3].Position,
+                    sourceGeometry.Vertices[Index1].Position)
             };
         }
     }

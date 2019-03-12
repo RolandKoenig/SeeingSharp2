@@ -282,7 +282,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cone into the structure with correct texture coordinates and normals.
+        /// Builds a cone into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cone.</param>
@@ -300,7 +300,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             var diameter = radius * 2f;
 
-            //Get texture offsets
+            // Get texture offsets
             var texX = 1f;
             var texY = 1f;
 
@@ -310,28 +310,28 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = diameter / m_tileSize.Y;
             }
 
-            //Specify bottom and top middle coordinates
+            // Specify bottom and top middle coordinates
             var bottomCoordinate = bottomMiddle;
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
-            //Create bottom and top vertices
+            // Create bottom and top vertices
             var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
-            //Add bottom and top vertices to the structure
+            // Add bottom and top vertices to the geometry
             var bottomVertexIndex = Owner.AddVertex(bottomVertex);
 
-            //Generate all segments
+            // Generate all segments
             var fullRadian = EngineMath.RAD_360DEG;
             var countOfSegmentsF = (float)countOfSegments;
 
             for (var loop = 0; loop < countOfSegments; loop++)
             {
-                //Calculate rotation values for each segment border
+                // Calculate rotation values for each segment border
                 var startRadian = fullRadian * (loop / countOfSegmentsF);
                 var targetRadian = fullRadian * ((loop + 1) / countOfSegmentsF);
                 var normalRadian = startRadian + (targetRadian - startRadian) / 2f;
 
-                //Generate all normals
+                // Generate all normals
                 var sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
                 var sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
                 var sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
@@ -374,7 +374,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cylinder into the structure with correct texture coordinates and normals.
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
@@ -387,7 +387,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cylinder into the structure with correct texture coordinates and normals.
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
@@ -400,7 +400,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cylinder into the structure with correct texture coordinates and normals.
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
@@ -413,7 +413,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cylinder into the structure with correct texture coordinates and normals.
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
@@ -426,7 +426,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cylinder into the structure with correct texture coordinates and normals.
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
@@ -445,7 +445,7 @@ namespace SeeingSharp.Multimedia.Objects
             if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
             var diameter = radius * 2f;
 
-            //Get texture offsets
+            // Get texture offsets
             var texX = 1f;
             var texY = 1f;
             var texSegmentY = 1f;
@@ -458,30 +458,30 @@ namespace SeeingSharp.Multimedia.Objects
                 texSegmentX = EngineMath.RAD_180DEG * diameter / m_tileSize.X;
             }
 
-            //Specify bottom and top middle coordinates
+            // Specify bottom and top middle coordinates
             var bottomCoordinate = bottomMiddle;
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
-            //Create bottom and top vertices
+            // Create bottom and top vertices
             var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
             var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
-            //Add bottom and top vertices to the structure
+            // Add bottom and top vertices to the geometry
             var bottomVertexIndex = Owner.AddVertex(bottomVertex);
             var topVertexIndex = Owner.AddVertex(topVertex);
 
-            //Generate all segments
+            // Generate all segments
             var fullRadian = EngineMath.RAD_360DEG;
             var countOfSegmentsF = (float)countOfSegments;
 
             for (var loop = 0; loop < countOfSegments; loop++)
             {
-                //Calculate rotation values for each segment border
+                // Calculate rotation values for each segment border
                 var startRadian = fullRadian * (loop / countOfSegmentsF);
                 var targetRadian = fullRadian * ((loop + 1) / countOfSegmentsF);
                 var normalRadian = startRadian + (targetRadian - startRadian) / 2f;
 
-                //Generate all normals
+                // Generate all normals
                 var sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
                 var sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
                 var sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
@@ -490,13 +490,13 @@ namespace SeeingSharp.Multimedia.Objects
                 var sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
                 var sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
 
-                //Generate all points
+                // Generate all points
                 var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
                 var sideRightBottomCoord = bottomCoordinate + sideRightNormal * radius;
                 var sideLeftTopCoord = new Vector3(sideLeftBottomCoord.X, sideLeftBottomCoord.Y + height, sideLeftBottomCoord.Z);
                 var sideRightTopCoord = new Vector3(sideRightBottomCoord.X, sideRightBottomCoord.Y + height, sideRightBottomCoord.Z);
 
-                //Add segment bottom triangle
+                // Add segment bottom triangle
                 if (buildBottom)
                 {
                     var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
@@ -507,7 +507,7 @@ namespace SeeingSharp.Multimedia.Objects
                         Owner.AddVertex(segmentBottomRight));
                 }
 
-                //Add segment top triangle
+                // Add segment top triangle
                 if (buildTop)
                 {
                     var segmentTopLeft = topVertex.Copy(sideLeftTopCoord, sideLeftTexCoord);
@@ -520,11 +520,11 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if (buildSides)
                 {
-                    //Calculate texture coords for side segment
+                    // Calculate texture coords for side segment
                     var texCoordSegmentStart = new Vector2(texSegmentX * (loop / (float)countOfSegments), 0f);
                     var texCoordSegmentTarget = new Vector2(texSegmentX * ((loop + 1) / (float)countOfSegments), texSegmentY);
 
-                    //Add segment side
+                    // Add segment side
                     BuildRect4V(sideLeftBottomCoord, sideRightBottomCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
                 }
             }

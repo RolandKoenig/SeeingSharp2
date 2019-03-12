@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds the structure.
+        /// Builds the geometry.
         /// </summary>
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
@@ -182,7 +182,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Hold dictionary containing materials and corresponding geometry
             var materialRelated = new Dictionary<NamedOrGenericKey, GeometrySurface>();
 
-            // Build bottom structure
+            // Build bottom geometry
             var bottomSurface = result.CreateSurface();
             bottomSurface.Material = BottomMaterial;
             materialRelated[BottomMaterial] = bottomSurface;
