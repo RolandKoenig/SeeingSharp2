@@ -122,6 +122,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GraphicsCore.Current.FactoryDWrite,
                     m_fontFamilyName,
                     m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
+                result.TextAlignment = m_textAlignment;
                 m_loadedTextFormats[engineDevice.DeviceIndex] = result;
             }
 

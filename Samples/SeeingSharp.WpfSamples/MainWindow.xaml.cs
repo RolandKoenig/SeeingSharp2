@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -75,6 +77,9 @@ namespace SeeingSharp.WpfSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
+
+                    await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
+                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 120f));
                 }
 
                 // Wait for next finished rendering

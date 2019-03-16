@@ -82,7 +82,7 @@ namespace SeeingSharp
 
         public static Color4 White => new Color4(1f, 1f, 1f, 1f);
 
-        public static Color4 Black => new Color4(1f, 0f, 0f, 0f);
+        public static Color4 Black => new Color4(0f, 0f, 0f, 1f);
 
         /// <summary>
         /// AliceBlue color

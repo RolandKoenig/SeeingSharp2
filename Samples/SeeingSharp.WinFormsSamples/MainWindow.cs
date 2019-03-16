@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 using SharpDX;
 using Color = System.Drawing.Color;
 
@@ -213,6 +214,9 @@ namespace SeeingSharp.WinFormsSamples
 
                     m_propertyGrid.SelectedObject = sampleSettings;
                     UpdateSampleCommands(sampleSettings);
+
+                    await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
+                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 0f));
                 }
                 else
                 {

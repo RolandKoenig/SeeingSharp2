@@ -1,7 +1,9 @@
 ﻿using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -54,6 +56,9 @@ namespace SeeingSharp.UwpSamples
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
+
+                    await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
+                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 130f));
                 }
 
                 // Wait for next finished rendering
