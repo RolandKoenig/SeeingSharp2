@@ -49,37 +49,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             //TODO: Cache font objects
 
-            // Get DirectWrite font weight
-            var fontWeight = DWrite.FontWeight.Normal;
-
-            switch (geometryOptions.FontWeight)
-            {
-                case FontGeometryWeight.Bold:
-                    fontWeight = DWrite.FontWeight.Bold;
-                    break;
-
-                default:
-                    fontWeight = DWrite.FontWeight.Normal;
-                    break;
-            }
-
-            // Get DirectWrite font style
-            var fontStyle = DWrite.FontStyle.Normal;
-
-            switch (geometryOptions.FontStyle)
-            {
-                case FontGeometryStyle.Italic:
-                    fontStyle = DWrite.FontStyle.Italic;
-                    break;
-
-                case FontGeometryStyle.Oblique:
-                    fontStyle = DWrite.FontStyle.Oblique;
-                    break;
-
-                default:
-                    fontStyle = DWrite.FontStyle.Normal;
-                    break;
-            }
+            // Get font properties
+            var fontWeight = geometryOptions.FontWeight;
+            var fontStyle = geometryOptions.FontStyle;
 
             // Create the text layout object
             try

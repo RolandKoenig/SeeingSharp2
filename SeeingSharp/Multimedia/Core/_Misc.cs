@@ -117,13 +117,6 @@ namespace SeeingSharp.Multimedia.Core
         public float ScaleFactorY => DpiY / 96.0f;
     }
 
-    public enum PixelConvertMode
-    {
-        GdiToDirect3D,
-
-        Direct3DToGdi
-    }
-
     /// <summary>
     /// Enumeration containing supported target hardware
     /// </summary>
@@ -197,7 +190,7 @@ namespace SeeingSharp.Multimedia.Core
         Medium,
 
         /// <summary>
-        /// High texture filtering quality (anisotrophic, 16x)
+        /// High texture filtering quality (anisotropic, 16x)
         /// </summary>
         High
     }
@@ -227,7 +220,7 @@ namespace SeeingSharp.Multimedia.Core
     }
 
     /// <summary>
-    /// Enumaration containing all texture quality levels
+    /// Enumeration containing all texture quality levels
     /// </summary>
     public enum TextureQuality
     {
@@ -239,7 +232,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// High res textures
         /// </summary>
-        Hight
+        High
     }
 
     /// <summary>
@@ -255,7 +248,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// High quality.
         /// </summary>
-        Hight
+        High
     }
 
     /// <summary>

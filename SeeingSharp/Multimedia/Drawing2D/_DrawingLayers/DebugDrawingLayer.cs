@@ -23,6 +23,7 @@
 using System;
 using SeeingSharp.Util;
 using SharpDX;
+using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
@@ -40,8 +41,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             m_textFormat = new TextFormatResource("Arial", 30f)
             {
-                TextAlignment = TextAlignment.Center,
-                ParagraphAlignment = ParagraphAlignment.Center
+                TextAlignment = DWrite.TextAlignment.Center,
+                ParagraphAlignment = DWrite.ParagraphAlignment.Center
             };
 
             var grayColor = Color4Ex.LightGray;

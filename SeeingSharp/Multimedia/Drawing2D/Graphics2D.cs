@@ -354,8 +354,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="measuringMode">Sets the measuring mode to be passed to Direct2D.</param>
         public void DrawText(
             string textToDraw, TextFormatResource textFormat, RectangleF targetRectangle, BrushResource brush,
-            DrawTextOptions drawOptions = DrawTextOptions.None,
-            MeasuringMode measuringMode = MeasuringMode.Natural)
+            D2D.DrawTextOptions drawOptions = D2D.DrawTextOptions.None,
+            D2D.MeasuringMode measuringMode = D2D.MeasuringMode.Natural)
         {
             if (m_renderTarget == null) { return; }
 
@@ -363,15 +363,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             targetRectangle.EnsureNotEmpty(nameof(targetRectangle));
             brush.EnsureNotNull(nameof(brush));
 
-            var drawOptionsD2D = (D2D.DrawTextOptions)drawOptions;
-            var measuringModeD2D = (D2D.MeasuringMode)measuringMode;
-
             m_renderTarget.DrawText(
                 textToDraw,
                 textFormat.GetTextFormat(Device),
                 targetRectangle,
                 brush.GetBrush(Device),
-                drawOptionsD2D);
+                drawOptions, measuringMode);
         }
 
         /// <summary>
@@ -386,7 +383,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             BitmapResource bitmap,
             RectangleF destinationRectangle,
             float opacity = 1f,
-            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor,
+            D2D.BitmapInterpolationMode interpolationMode = D2D.BitmapInterpolationMode.NearestNeighbor,
             int frameIndex = 0)
         {
             if (m_renderTarget == null) { return; }
@@ -422,7 +419,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     nativeBitmap,
                     destinationRectangle,
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode,
+                    interpolationMode,
                     sourceRectangle);
             }
             else
@@ -432,7 +429,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     bitmap.GetBitmap(Device),
                     destinationRectangle,
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode);
+                    interpolationMode);
             }
         }
 
@@ -448,7 +445,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             BitmapResource bitmap,
             Vector2 destinationOrigin,
             float opacity = 1f,
-            BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor,
+            D2D.BitmapInterpolationMode interpolationMode = D2D.BitmapInterpolationMode.NearestNeighbor,
             int frameIndex = 0)
         {
             if (m_renderTarget == null) { return; }
@@ -488,7 +485,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     nativeBitmap,
                     destinationRectangle,
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode,
+                    interpolationMode,
                     sourceRectangle);
             }
             else
@@ -502,7 +499,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     bitmap.GetBitmap(Device),
                     destinationRectangle,
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode);
+                    interpolationMode);
             }
         }
 

@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class LinearGradientBrushResource : BrushResource
     {
         // Configuration
-        private GradientStop[] m_gradientStops;
+        private D2D.GradientStop[] m_gradientStops;
         private float m_opacity;
 
         // Resources
@@ -50,9 +50,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="opacity">The opacity value of the brush.</param>
         public LinearGradientBrushResource(
             Vector2 startPoint, Vector2 endPoint,
-            GradientStop[] gradientStops,
-            ExtendMode extendMode = ExtendMode.Clamp,
-            Gamma gamma = Gamma.StandardRgb,
+            D2D.GradientStop[] gradientStops,
+            D2D.ExtendMode extendMode = D2D.ExtendMode.Clamp,
+            D2D.Gamma gamma = D2D.Gamma.StandardRgb,
             float opacity = 1f)
         {
             startPoint.EnsureNotEqual(endPoint, nameof(startPoint), nameof(endPoint));
@@ -121,7 +121,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
                         (D2D.Gamma) Gamma,
-                        (D2D.ExtendMode) ExtendMode)
+                        ExtendMode)
                 };
 
                 unsafe
@@ -148,9 +148,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result.Brush;
         }
 
-        public Gamma Gamma { get; }
+        public D2D.Gamma Gamma { get; }
 
-        public ExtendMode ExtendMode { get; }
+        public D2D.ExtendMode ExtendMode { get; }
 
         public Vector2 StartPoint { get; }
 

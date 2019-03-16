@@ -7,6 +7,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
 using SharpDX;
+using SharpDX.DirectWrite;
 
 namespace SeeingSharp.SampleContainer.Util
 {

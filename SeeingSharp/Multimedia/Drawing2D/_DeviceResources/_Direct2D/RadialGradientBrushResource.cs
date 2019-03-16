@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private LoadedBrushResources[] m_loadedBrushes;
 
         // Configuration
-        private GradientStop[] m_gradientStops;
+        private D2D.GradientStop[] m_gradientStops;
         private float m_opacity;
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public RadialGradientBrushResource(
             Vector2 center, Vector2 gradientOriginOffset, float radiusX, float radiusY,
-            GradientStop[] gradientStops,
-            ExtendMode extendMode = ExtendMode.Clamp,
-            Gamma gamma = Gamma.StandardRgb,
+            D2D.GradientStop[] gradientStops,
+            D2D.ExtendMode extendMode = D2D.ExtendMode.Clamp,
+            D2D.Gamma gamma = D2D.Gamma.StandardRgb,
             float opacity = 1f)
         {;
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
@@ -63,7 +63,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
-
         }
 
         /// <summary>
@@ -143,9 +142,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result.Brush;
         }
 
-        public Gamma Gamma { get; }
+        public D2D.Gamma Gamma { get; }
 
-        public ExtendMode ExtendMode { get; }
+        public D2D.ExtendMode ExtendMode { get; }
 
         public Vector2 Center { get; }
 

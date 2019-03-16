@@ -55,17 +55,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="fontStyle">The style parameter for the font.</param>
         public TextFormatResource(
             string fontFamilyName, float fontSize,
-            FontWeight fontWeight = FontWeight.Normal,
-            FontStyle fontStyle = FontStyle.Normal,
-            FontStretch fontStretch = FontStretch.Normal)
+            DWrite.FontWeight fontWeight = DWrite.FontWeight.Normal,
+            DWrite.FontStyle fontStyle = DWrite.FontStyle.Normal,
+            DWrite.FontStretch fontStretch = DWrite.FontStretch.Normal)
         {
             m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
             m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
             m_fontFamilyName = fontFamilyName;
             m_fontSize = fontSize;
-            m_fontWeight = (DWrite.FontWeight)fontWeight;
-            m_fontStyle = (DWrite.FontStyle)fontStyle;
-            m_fontStretch = (DWrite.FontStretch)fontStretch;
+            m_fontWeight = fontWeight;
+            m_fontStyle = fontStyle;
+            m_fontStretch = fontStretch;
 
             m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
             m_textAlignment = DWrite.TextAlignment.Leading;
@@ -132,9 +132,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the alignment of the paragraph.
         /// </summary>
-        public ParagraphAlignment ParagraphAlignment
+        public DWrite.ParagraphAlignment ParagraphAlignment
         {
-            get => (ParagraphAlignment)m_paragraphAlignment;
+            get => (DWrite.ParagraphAlignment)m_paragraphAlignment;
             set
             {
                 var castedValue = (DWrite.ParagraphAlignment)value;
@@ -150,9 +150,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the alignment of the paragraph.
         /// </summary>
-        public TextAlignment TextAlignment
+        public DWrite.TextAlignment TextAlignment
         {
-            get => (TextAlignment)m_textAlignment;
+            get => (DWrite.TextAlignment)m_textAlignment;
             set
             {
                 var castedValue = (DWrite.TextAlignment)value;
@@ -168,9 +168,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the WordWrapping mode.
         /// </summary>
-        public WordWrapping WordWrapping
+        public DWrite.WordWrapping WordWrapping
         {
-            get => (WordWrapping)m_wordWrapping;
+            get => (DWrite.WordWrapping)m_wordWrapping;
             set
             {
                 var castedValue = (DWrite.WordWrapping)value;
@@ -186,9 +186,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the reading direction.
         /// </summary>
-        public ReadingDirection ReadingDirection
+        public DWrite.ReadingDirection ReadingDirection
         {
-            get => (ReadingDirection)m_readingDirection;
+            get => (DWrite.ReadingDirection)m_readingDirection;
             set
             {
                 var castedValue = (DWrite.ReadingDirection)value;

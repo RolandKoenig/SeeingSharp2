@@ -22,6 +22,7 @@
 
 using SeeingSharp.Util;
 using SharpDX;
+using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -76,19 +77,6 @@ namespace SeeingSharp.Multimedia.Objects
         LowerCenter
     }
 
-    public enum FontGeometryWeight
-    {
-        Bold,
-        Normal
-    }
-
-    public enum FontGeometryStyle
-    {
-        Normal,
-        Oblique,
-        Italic
-    }
-
     /// <summary>
     /// Some options for text geometry creation.
     /// </summary>
@@ -98,8 +86,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             FontSize = 20,
             FontFamily = "Sergoe UI",
-            FontWeight = FontGeometryWeight.Normal,
-            FontStyle = FontGeometryStyle.Normal,
+            FontWeight = DWrite.FontWeight.Normal,
+            FontStyle = DWrite.FontStyle.Normal,
             SimplificationFlatternTolerance = 0.1f,
             SurfaceMaterial = NamedOrGenericKey.Empty,
             VerticesScaleFactor = 0.05f,
@@ -115,8 +103,8 @@ namespace SeeingSharp.Multimedia.Objects
 
         public string FontFamily;
         public int FontSize;
-        public FontGeometryWeight FontWeight;
-        public FontGeometryStyle FontStyle;
+        public DWrite.FontWeight FontWeight;
+        public DWrite.FontStyle FontStyle;
         public float VerticesScaleFactor;
         public float SimplificationFlatternTolerance;
         public NamedOrGenericKey SurfaceMaterial;

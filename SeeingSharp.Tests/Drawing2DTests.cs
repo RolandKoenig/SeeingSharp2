@@ -31,6 +31,7 @@ using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
 using SharpDX;
+using SharpDX.Direct2D1;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -237,9 +238,9 @@ namespace SeeingSharp.Tests
                 new Vector2(512f, 0f),
                 new[]
                 {
-                    new GradientStop(Color4Ex.Gray, 0f),
-                    new GradientStop(Color4Ex.White, 0.6f),
-                    new GradientStop(Color4Ex.Black, 1f)
+                    new GradientStop(){ Color = Color4Ex.Gray, Position = 0f },
+                    new GradientStop(){ Color = Color4Ex.White, Position = 0.6f },
+                    new GradientStop(){ Color = Color4Ex.Black, Position = 1f }
                 },
                 ExtendMode.Mirror))
 
@@ -281,9 +282,9 @@ namespace SeeingSharp.Tests
                 200f, 400f,
                 new[]
                 {
-                    new GradientStop(Color4Ex.Gray, 0f),
-                    new GradientStop(Color4Ex.White, 0.6f),
-                    new GradientStop(Color4Ex.BlueColor, 1f)
+                    new GradientStop(){ Color = Color4Ex.Gray, Position = 0f },
+                    new GradientStop(){ Color = Color4Ex.White, Position = 0.6f },
+                    new GradientStop(){ Color = Color4Ex.BlueColor, Position = 1f }
                 },
                 ExtendMode.Clamp))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
