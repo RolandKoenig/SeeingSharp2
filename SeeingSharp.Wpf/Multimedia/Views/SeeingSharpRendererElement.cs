@@ -76,6 +76,7 @@ namespace SeeingSharp.Multimedia.Views
         private int m_viewportWidth;
         private DateTime m_lastSizeChange;
         private WpfSeeingSharpCompositionMode m_compositionMode;
+        private bool m_forceCompositionOverSoftware;
 
         // State members for handling rendering problems
         private int m_isDirtyCount;
@@ -315,7 +316,7 @@ namespace SeeingSharp.Multimedia.Views
             var viewPort = default(RawViewportF);
 
             var initializedSuccessfully = false;
-            var forceFallbackSolution = false;
+            var forceFallbackSolution = m_forceCompositionOverSoftware;
             var tryCount = 0;
 
             do
@@ -655,12 +656,27 @@ namespace SeeingSharp.Multimedia.Views
         public WpfSeeingSharpCompositionMode CompositionMode
         {
             get => m_compositionMode;
-            set
+            private set
             {
                 if(m_compositionMode != value)
                 {
                     m_compositionMode = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompositionMode)));
+                }
+            }
+        }
+
+        public bool ForceCompositionOverSoftware
+        {
+            get => m_forceCompositionOverSoftware;
+            set
+            {
+                if (m_forceCompositionOverSoftware != value)
+                {
+                    m_forceCompositionOverSoftware = value;
+                    this.RenderLoop.ForceViewReload();
+
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForceCompositionOverSoftware)));
                 }
             }
         }
