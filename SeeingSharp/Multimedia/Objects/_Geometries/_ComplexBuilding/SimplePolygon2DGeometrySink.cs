@@ -22,13 +22,14 @@
 
 using System;
 using System.Collections.Generic;
+using SeeingSharp.Util;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    internal class SimplePolygon2DGeometrySink : GeometrySink
+    internal class SimplePolygon2DGeometrySink : DummyComObject, GeometrySink
     {
         private FigureBegin m_currentFigureBegin;
         private FillMode m_currentFillMode;
@@ -36,7 +37,6 @@ namespace SeeingSharp.Multimedia.Objects
         private List<Vector2> m_currentPolygonBuilder;
         private Vector2 m_origin;
         private List<Polygon2D> m_polygons2D;
-        private int m_referenceCounter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePolygon2DGeometrySink" /> class.
@@ -195,46 +195,6 @@ namespace SeeingSharp.Multimedia.Objects
         public void SetSegmentFlags(PathSegment vertexFlags)
         {
             m_currentPathSegment = vertexFlags;
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-        }
-
-        public Result QueryInterface(ref Guid guid, out IntPtr comObject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int AddReference()
-        {
-            m_referenceCounter++;
-            return m_referenceCounter;
-        }
-
-        public int Release()
-        {
-            m_referenceCounter--;
-            return m_referenceCounter;
-        }
-
-        /// <summary>
-        /// Gets or sets the unmanaged shadow callback.
-        /// </summary>
-        /// <value>
-        /// The unmanaged shadow callback.
-        /// </value>
-        /// <remarks>
-        /// This property is set whenever this instance has an unmanaged shadow callback
-        /// registered. This callback must be disposed when disposing this instance.
-        /// </remarks>
-        public IDisposable Shadow
-        {
-            get;
-            set;
         }
 
         /// <summary>

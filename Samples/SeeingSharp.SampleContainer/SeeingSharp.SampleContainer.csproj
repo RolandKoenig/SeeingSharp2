@@ -33,6 +33,7 @@
     <None Remove="Basics3D\_07_Direct2DTextureAnimated\PreviewImage.png" />
     <None Remove="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
     <None Remove="Basics3D\_08_GeneratedBorder\PreviewImage.png" />
+    <None Remove="Basics3D\_09_ExtrudeGeometry\PreviewImage.png" />
     <None Remove="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
     <None Remove="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <None Remove="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
@@ -57,6 +58,7 @@
     <EmbeddedResource Include="Basics3D\_07_Direct2DTextureAnimated\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_06_Direct2DTexture\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_08_GeneratedBorder\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_09_ExtrudeGeometry\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_03_ColoredSphere\PreviewImage.png" />

@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// A very simple collision check between this geometry and the given one.
         /// </summary>
         /// <param name="other">The other geometry.</param>
-        /// <param name="otherTransform">The matrix which is used to transform the given geometry bevore checking.</param>
+        /// <param name="otherTransform">The matrix which is used to transform the given geometry before checking.</param>
         public bool IntersectsWith(Geometry2DResourceBase other, Matrix3x2 otherTransform)
         {
             this.EnsureNotNullOrDisposed("this");

@@ -52,7 +52,7 @@ namespace SeeingSharp.SampleContainer.Util
             if (m_lastRender != DateTime.MinValue)
             {
                 m_lastTimeSpans.Add(DateTime.UtcNow - m_lastRender);
-                while(m_lastTimeSpans.Count > 30) { m_lastTimeSpans.RemoveAt(0); }
+                while (m_lastTimeSpans.Count > 30) { m_lastTimeSpans.RemoveAt(0); }
 
                 var averageTime = m_lastTimeSpans
                     .Select(actTimeSpan => actTimeSpan.TotalMilliseconds)

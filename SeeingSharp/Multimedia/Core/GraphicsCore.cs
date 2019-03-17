@@ -141,7 +141,6 @@ namespace SeeingSharp.Multimedia.Core
                     return;
                 }
                 FactoryD2D = m_factoryHandlerD2D.Factory2;
-                FactoryD2D_2 = m_factoryHandlerD2D.Factory2;
                 FactoryDWrite = m_factoryHandlerDWrite.Factory;
                 FactoryWIC = m_factoryHandlerWIC.Factory;
 
@@ -555,17 +554,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the Direct2D factory object.
         /// </summary>
-        internal D2D.Factory FactoryD2D;
-
-        /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        internal D2D.Factory2 FactoryD2D_2;
+        public D2D.Factory2 FactoryD2D;
 
         /// <summary>
         /// Gets the DirectWrite factory object.
         /// </summary>
-        internal DWrite.Factory FactoryDWrite;
+        public DWrite.Factory FactoryDWrite { get; }
 
         /// <summary>
         /// Gets the WIC factory object.
