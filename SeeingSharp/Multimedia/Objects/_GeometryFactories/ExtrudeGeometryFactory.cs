@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using SeeingSharp.Util;
 using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Objects._GeometryFactories
@@ -16,9 +15,12 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
         /// </summary>
         /// <param name="geometry">The new geometry to be set.</param>
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
-        public ExtrudeGeometryFactory(D2D.Geometry geometry, float flatteningTolerance)
+        /// <param name="extrudeOptions">Additional options for extruding.</param>
+        public ExtrudeGeometryFactory(
+            D2D.Geometry geometry, float flatteningTolerance, 
+            ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
         {
-            this.UpdateGeometry(geometry, flatteningTolerance);
+            this.UpdateGeometry(geometry, flatteningTolerance, extrudeOptions);
         }
 
         /// <summary>
@@ -26,7 +28,10 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
         /// </summary>
         /// <param name="geometry">The new geometry to be set.</param>
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
-        public void UpdateGeometry(D2D.Geometry geometry, float flatteningTolerance)
+        /// <param name="extrudeOptions">Additional options for extruding.</param>
+        public void UpdateGeometry(
+            D2D.Geometry geometry, float flatteningTolerance,
+            ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
         {
             // Get triangles out of given geometry
             List<D2D.Triangle[]> generatedTriangles = null;
@@ -44,6 +49,7 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
             var maxX = float.MinValue;
             var minY = float.MaxValue;
             var maxY = float.MinValue;
+            var minPoint = Vector2.Zero;
             void UpdateMinWidthHeight(Vector2 actCorner)
             {
                 if (actCorner.X < minX) { minX = actCorner.X; }
@@ -69,6 +75,60 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
             if (triangleCount > 0)
             {
                 bounds = new Size2F(maxX - minX, maxY - minY);
+                minPoint = new Vector2(minX, minY);
+            }
+
+            // Change with / height of the geometry depending on ExtrudeGeometryOptions
+            if (extrudeOptions.HasFlag(ExtrudeGeometryOptions.RescaleToUnitSize))
+            {
+                var scaleFactorX = !EngineMath.EqualsWithTolerance(bounds.Width, 0f) ? 1f / bounds.Width : 1f;
+                var scaleFactorY = !EngineMath.EqualsWithTolerance(bounds.Height, 0f) ? 1f / bounds.Height : 1f;
+                if (scaleFactorX < scaleFactorY)
+                {
+                    scaleFactorY = scaleFactorX;
+                }
+                else
+                {
+                    scaleFactorX = scaleFactorY;
+                }
+
+                foreach (var actTriangleArray in generatedTriangles)
+                {
+                    for (var loop = 0; loop < actTriangleArray.Length; loop++)
+                    {
+                        var actTriangle = actTriangleArray[loop];
+                        actTriangle.Point1 = new RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
+                        actTriangle.Point2 = new RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
+                        actTriangle.Point3 = new RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
+
+                        actTriangleArray[loop] = actTriangle;
+                    }
+                }
+                bounds = new Size2F(
+                    bounds.Width * scaleFactorX, 
+                    bounds.Height * scaleFactorY);
+                minPoint = new Vector2(minPoint.X * scaleFactorX, minPoint.Y * scaleFactorY);
+            }
+
+            // Change the origin depending on ExtrudeGeometryOptions
+            if (extrudeOptions.HasFlag(ExtrudeGeometryOptions.ChangeOriginToCenter))
+            {
+                var newOrigin = new Vector2(
+                    minPoint.X + (bounds.Width / 2f),
+                    minPoint.Y + (bounds.Height / 2f));
+                foreach (var actTriangleArray in generatedTriangles)
+                {
+                    for (var loop = 0; loop < actTriangleArray.Length; loop++)
+                    {
+                        var actTriangle = actTriangleArray[loop];
+                        actTriangle.Point1 = actTriangle.Point1 - newOrigin;
+                        actTriangle.Point2 = actTriangle.Point2 - newOrigin;
+                        actTriangle.Point3 = actTriangle.Point3 - newOrigin;
+
+                        actTriangleArray[loop] = actTriangle;
+                    }
+                }
+                minPoint = new Vector2(0f, 0f);
             }
 
             // Apply values
@@ -80,8 +140,8 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
         /// <inheritdoc />
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var result = new Geometry(this.TriangleCount * 3);
-            var surface = result.CreateSurface(this.TriangleCount);
+            var result = new Geometry(TriangleCount * 3);
+            var surface = result.CreateSurface(TriangleCount);
 
             var generatedTriangles = m_generatedTriangles;
             foreach (var actTriangleArray in generatedTriangles)
@@ -92,7 +152,7 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
                         new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
                         new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
                         new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y),
-                        this.Color);
+                        Color);
                 }
             }
 
@@ -127,7 +187,7 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
                     return;
                 }
 
-                this.Triangles.Add(triangles);
+                Triangles.Add(triangles);
             }
 
             public void Close()

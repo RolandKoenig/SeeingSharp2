@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -41,5 +42,21 @@ namespace SeeingSharp.Multimedia.Objects
         Clockwise,
 
         Counterclockwise
+    }
+
+    [Flags]
+    public enum ExtrudeGeometryOptions : int
+    {
+        None = 0,
+
+        /// <summary>
+        /// Changes the origin of the geometry so that it is in the center.
+        /// </summary>
+        ChangeOriginToCenter = 1,
+
+        /// <summary>
+        /// Scales the geometry so that it has the size 1 x 1.
+        /// </summary>
+        RescaleToUnitSize = 2
     }
 }

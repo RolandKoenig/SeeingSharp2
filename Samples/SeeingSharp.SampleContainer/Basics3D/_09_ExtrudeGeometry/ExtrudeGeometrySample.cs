@@ -78,15 +78,17 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     // Create the GeometryFactory
                     // We can dispose the PathGeometry after that, because the ExtrudeGeometryFactory
                     // extracts all information needed within the constructor
-                    geometryFactory = new ExtrudeGeometryFactory(pathGeo, 0.1f);
+                    geometryFactory = new ExtrudeGeometryFactory(
+                        pathGeo, 0.1f, 
+                        ExtrudeGeometryOptions.RescaleToUnitSize | ExtrudeGeometryOptions.ChangeOriginToCenter);
                 }
                 var resGeometry = manipulator.AddGeometry(geometryFactory);
 
-                // Create cube object
+                // Create the 3D object
                 var extrudedObject = manipulator.AddGeneric(resGeometry);
                 extrudedObject.Color = Color4Ex.GreenColor;
                 extrudedObject.Position = new Vector3(0f, 0.5f, 0f);
-                extrudedObject.Scaling = new Vector3(0.01f, 1f, 0.01f);
+                extrudedObject.Scaling = new Vector3(2f, 1f, 2f);
             });
 
             // Configure camera
