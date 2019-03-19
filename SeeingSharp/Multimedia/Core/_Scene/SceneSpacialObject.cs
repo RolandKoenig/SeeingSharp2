@@ -275,7 +275,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateState">Current update state.</param>
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
-            //Calculates local transform matrix (transforms local space to world space)
+            // Calculates local transform matrix (transforms local space to world space)
             var doRecreateShaderParameters = false;
             TransformationChanged =
                 m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren;
@@ -551,11 +551,6 @@ namespace SeeingSharp.Multimedia.Core
                 m_transformParamsChanged = true;
             }
         }
-
-        /// <summary>
-        /// Gets current AnimationHandler object.
-        /// </summary>
-        public override AnimationHandler AnimationHandler => base.AnimationHandler;
 
         /// <summary>
         /// Gets or sets the x coordinate of this object.

@@ -21,12 +21,14 @@
 */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
 using SharpDX;
 

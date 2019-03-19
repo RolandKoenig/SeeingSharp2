@@ -963,7 +963,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Get current resource dictionary
             var resources = m_registeredResourceDicts[renderState.DeviceIndex];
-
             if (resources == null)
             {
                 throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");

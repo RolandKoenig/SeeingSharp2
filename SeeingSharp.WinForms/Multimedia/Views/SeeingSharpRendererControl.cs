@@ -186,8 +186,9 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnPaint(e);
 
-            if (!m_renderLoop.ViewResourcesLoaded ||
-                !m_renderLoop.IsRegisteredOnMainLoop)
+            if ((!m_renderLoop.ViewResourcesLoaded) ||
+                (!m_renderLoop.IsRegisteredOnMainLoop) ||
+                (m_renderLoop.IsDeviceLost))
             {
                 // Paint using System.Drawing
                 e.Graphics.FillRectangle(m_backBrush, e.ClipRectangle);

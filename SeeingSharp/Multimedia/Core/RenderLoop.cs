@@ -609,6 +609,9 @@ namespace SeeingSharp.Multimedia.Core
             // Unload current view resources first
             UnloadViewResources();
 
+            // Return here if the current device is marked as lost
+            if (m_currentDevice.IsLost) { return; }
+
             // Recreate view resources
             var generatedViewResources = m_renderLoopHost.OnRenderLoop_CreateViewResources(m_currentDevice);
             if (generatedViewResources == null) { return; }
@@ -970,7 +973,8 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Presents all contents on the screen
                     GraphicsCore.Current.ExecuteAndMeasureActivityDuration(
-                        string.Format(SeeingSharpConstants.PERF_RENDERLOOP_PRESENT, m_currentDevice.DeviceIndex, ViewInformation.ViewIndex + 1),
+                        string.Format(SeeingSharpConstants.PERF_RENDERLOOP_PRESENT, m_currentDevice.DeviceIndex,
+                            ViewInformation.ViewIndex + 1),
                         () => m_renderLoopHost.OnRenderLoop_Present(m_currentDevice));
 
                     // Execute all deferred actions to be called after present
@@ -978,6 +982,19 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Finish rendering now
                     m_renderLoopHost.OnRenderLoop_AfterRendering(m_currentDevice);
+                }
+                catch (SharpDXException dxException)
+                {
+                    if ((dxException.ResultCode == SharpDX.DXGI.ResultCode.DeviceRemoved) ||
+                        (dxException.ResultCode == SharpDX.DXGI.ResultCode.DeviceReset))
+                    {
+                        // Mark the device as lost
+                        m_currentDevice.IsLost = true;
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -993,6 +1010,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (DiscardRendering) { return; }
             if (!m_nextRenderAllowed) { return; }
+            if (m_currentDevice.IsLost){ return; }
             m_nextRenderAllowed = false;
 
             var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(
@@ -1068,8 +1086,24 @@ namespace SeeingSharp.Multimedia.Core
                         m_renderState.RenderTarget2D = null;
                         m_renderState.Graphics2D = null;
 
-                        m_d2dOverlay.EndDraw();
                         d2dOverlayTime.Dispose();
+
+                        try
+                        {
+                            m_d2dOverlay.EndDraw();
+                        }
+                        catch (SharpDXException dxException)
+                        {
+                            if (dxException.ResultCode == SharpDX.Direct2D1.ResultCode.RecreateTarget)
+                            {
+                                // Mark the device as lost
+                                m_currentDevice.IsLost = true;
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
                     }
                 }
 
@@ -1379,6 +1413,11 @@ namespace SeeingSharp.Multimedia.Core
             get;
             internal set;
         }
+
+        /// <summary>
+        /// Is the current device in DeviceLost state?
+        /// </summary>
+        public bool IsDeviceLost => m_currentDevice?.IsLost == true;
 
         /// <summary>
         /// Internal properties and methods that should be used with care.

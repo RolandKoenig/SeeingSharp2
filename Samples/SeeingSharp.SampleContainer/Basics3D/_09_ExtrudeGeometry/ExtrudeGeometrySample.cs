@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
@@ -30,7 +29,6 @@ using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Objects._GeometryFactories;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
 {

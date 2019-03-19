@@ -414,6 +414,15 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// This property is set to true if the device got lost.
+        /// </summary>
+        public bool IsLost
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// Is debug mode enabled?
         /// </summary>
         public bool DebugEnabled => m_deviceLoadSettings.DebugEnabled;
