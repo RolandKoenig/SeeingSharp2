@@ -70,9 +70,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public ExportGeometryInfo PrepareForExport()
         {
-            return new ExportGeometryInfo(
-                Key,
-                Geometry);
+            return new ExportGeometryInfo(this.Key, this.Geometry);
         }
 
         /// <summary>
@@ -123,10 +121,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public void Redefine(ResourceDictionary resources, GeometryFactory objectType)
         {
             // Unload resource first if it was loaded
-            var wasLoaded = IsLoaded;
+            var wasLoaded = this.IsLoaded;
             if (wasLoaded)
             {
-                UnloadResource();
+                this.UnloadResource();
             }
 
             // Update members
@@ -136,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Reload resources again if they where loaded before
             if (wasLoaded)
             {
-                LoadResource();
+                this.LoadResource();
             }
         }
 
@@ -145,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, Geometry geometry)
         {
-            Redefine(resources, new GenericGeometryFactory(geometry));
+            this.Redefine(resources, new GenericGeometryFactory(geometry));
         }
 
         /// <summary>
@@ -241,7 +239,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_boundingBox = BoundingBoxEx.Create(vertexLocations);
 
             // Build geometry
-            m_loadedGeometries = BuildBuffers(device, geometries, resources);
+            m_loadedGeometries = this.BuildBuffers(device, geometries, resources);
         }
 
         /// <inheritdoc />

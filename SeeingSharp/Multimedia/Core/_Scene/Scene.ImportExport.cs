@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Fill export container beside rendering
             //  (there it is ensured that no one changes the scene)
-            await PerformBeforeUpdateAsync(() =>
+            await this.PerformBeforeUpdateAsync(() =>
             {
                 // First step: Register all objects which we want to export
                 foreach (var actObject in objectsToExport)
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="objSource">The source to load from.</param>
         public Task<IEnumerable<SceneObject>> ImportAsync(ResourceLink objSource)
         {
-            return ImportAsync(objSource, null);
+            return this.ImportAsync(objSource, null);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Core
                 .ImportAsync(objSource, importOptions);
 
             // Append all data to the scene
-            await ManipulateSceneAsync(manipulator =>
+            await this.ManipulateSceneAsync(manipulator =>
             {
                 // Add all resources first
                 foreach(var actResourceInfo in modelContainer.ImportedResources)

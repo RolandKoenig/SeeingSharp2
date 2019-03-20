@@ -35,10 +35,10 @@ namespace SeeingSharp.SampleContainer
             m_description = description;
             m_sampleType = sampleType;
 
-            Name = m_description.SampleName;
-            OrderId = m_description.OrderID;
-            Group = m_description.SampleGroupName;
-            SourceCodeUrl = m_description.SourceCodeUrl;
+            this.Name = m_description.SampleName;
+            this.OrderId = m_description.OrderID;
+            this.Group = m_description.SampleGroupName;
+            this.SourceCodeUrl = m_description.SourceCodeUrl;
         }
 
         public SampleBase CreateSampleObject()

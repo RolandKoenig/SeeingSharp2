@@ -47,9 +47,9 @@ namespace SeeingSharp
         {
             //Intersection method taken from http://stackoverflow.com/questions/4543506/algorithm-for-intersection-of-2-lines
 
-            var a1 = A;
-            var b1 = B;
-            var c1 = C;
+            var a1 = this.A;
+            var b1 = this.B;
+            var c1 = this.C;
             var a2 = other.A;
             var b2 = other.B;
             var c2 = other.C;
@@ -102,7 +102,7 @@ namespace SeeingSharp
             {
                 var start = Origin;
                 var end = Origin + Direction;
-                return A * start.X + B * start.Y;
+                return this.A * start.X + this.B * start.Y;
             }
         }
     }

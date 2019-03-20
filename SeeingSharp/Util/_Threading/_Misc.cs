@@ -59,8 +59,8 @@ namespace SeeingSharp.Util
         /// <param name="innerException">The inner exception.</param>
         public ObjectThreadExceptionEventArgs(ObjectThreadState threadState, Exception innerException)
         {
-            Exception = innerException;
-            State = threadState;
+            this.Exception = innerException;
+            this.State = threadState;
         }
 
         /// <summary>

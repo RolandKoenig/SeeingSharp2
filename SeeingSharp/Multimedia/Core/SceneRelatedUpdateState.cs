@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneRelatedUpdateState(Scene owner)
         {
             m_owner = owner;
-            World = new Matrix4Stack(Matrix.Identity);
+            this.World = new Matrix4Stack(Matrix.Identity);
             m_inputFrames = null;
         }
 
@@ -66,12 +66,12 @@ namespace SeeingSharp.Multimedia.Core
             updateState.EnsureNotNull(nameof(updateState));
 
             m_isPaused = targetScene.IsPaused;
-            IgnorePauseState = updateState.IgnorePauseState;
+            this.IgnorePauseState = updateState.IgnorePauseState;
 
-            World.ResetStackToIdentity();
+            this.World.ResetStackToIdentity();
 
             m_updateState = updateState;
-            SceneLayer = null;
+            this.SceneLayer = null;
 
             m_inputFrames = inputFrames;
             if(m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && !IgnorePauseState) { return TimeSpan.Zero; }
+                if (m_isPaused && !this.IgnorePauseState) { return TimeSpan.Zero; }
                 return m_updateState.UpdateTime;
             }
         }
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_updateState.EnsureNotNull(nameof(m_updateState));
 
-                if (m_isPaused && !IgnorePauseState) { return 0; }
+                if (m_isPaused && !this.IgnorePauseState) { return 0; }
                 return m_updateState.UpdateTimeMilliseconds;
             }
         }
@@ -111,13 +111,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public SceneLayer SceneLayer { get; internal set; }
 
-        public Scene Scene
-        {
-            get
-            {
-                return SceneLayer?.Scene;
-            }
-        }
+        public Scene Scene => this.SceneLayer?.Scene;
 
         public bool IsPaused => m_isPaused;
 

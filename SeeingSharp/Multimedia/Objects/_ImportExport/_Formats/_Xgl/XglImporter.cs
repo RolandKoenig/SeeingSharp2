@@ -181,11 +181,11 @@ namespace SeeingSharp.Multimedia.Objects
                                         break;
 
                                     case NODE_NAME_TEXTURE:
-                                        ImportTexture(inStreamXml, result);
+                                        this.ImportTexture(inStreamXml, result);
                                         break;
 
                                     case NODE_NAME_MESH:
-                                        ImportMesh(inStreamXml, result, xglImportOptions);
+                                        this.ImportMesh(inStreamXml, result, xglImportOptions);
                                         break;
 
                                     case NODE_NAME_OBJECT:
@@ -372,7 +372,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                     case NODE_NAME_MAT:
                         // Read the next material
-                        var materialAndID = ImportMaterial(inStreamXml, container, xglImportOptions);
+                        var materialAndID = this.ImportMaterial(inStreamXml, container, xglImportOptions);
                         localMaterialInfos[materialAndID.Item1] = materialAndID.Item2;
                         break;
 

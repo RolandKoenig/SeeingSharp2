@@ -32,9 +32,9 @@ namespace SeeingSharp.Util
         /// </summary>
         internal AssemblyResourceInfo(Assembly targetAssembly, string resourcePath, string key)
         {
-            TargetAssembly = targetAssembly;
-            ResourcePath = resourcePath;
-            Key = key;
+            this.TargetAssembly = targetAssembly;
+            this.ResourcePath = resourcePath;
+            this.Key = key;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead()
         {
-            return TargetAssembly.GetManifestResourceStream(ResourcePath);
+            return this.TargetAssembly.GetManifestResourceStream(this.ResourcePath);
         }
 
         /// <summary>

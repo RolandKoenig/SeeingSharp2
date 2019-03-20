@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Objects
             filterBuilder.Append("All supported files|");
             var isFirst = true;
 
-            foreach (var actSupportedFormat in GetSupportedImportFormats())
+            foreach (var actSupportedFormat in this.GetSupportedImportFormats())
             {
                 if (!isFirst)
                 {
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Write next items (each format separated)
-            foreach (var actSupportedFormat in GetSupportedImportFormats())
+            foreach (var actSupportedFormat in this.GetSupportedImportFormats())
             {
                 filterBuilder.Append('|');
                 filterBuilder.Append("." + actSupportedFormat.ShortFormatName);
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="source">The source of the resource.</param>
         public ImportOptions CreateImportOptions(ResourceLink source)
         {
-            var importer = GetImporterBySource(source);
+            var importer = this.GetImporterBySource(source);
             return importer.CreateDefaultImportOptions();
         }
 
@@ -144,7 +144,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="fileExtension">The extension of the file to be imported.</param>
         public ImportOptions CreateImportOptionsByFileType(string fileExtension)
         {
-            var importer = GetImporterByFileType(fileExtension);
+            var importer = this.GetImporterByFileType(fileExtension);
             return importer.CreateDefaultImportOptions();
         }
 
@@ -154,7 +154,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="source">The source where to load all objects from..</param>
         public Task<ImportedModelContainer> ImportAsync(ResourceLink source)
         {
-            return ImportAsync(source, null);
+            return this.ImportAsync(source, null);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="importOptions">The import options.</param>
         public Task<ImportedModelContainer> ImportAsync(ResourceLink source, ImportOptions importOptions)
         {
-            var importer = GetImporterBySource(source);
+            var importer = this.GetImporterBySource(source);
 
             if (importOptions == null)
             {
@@ -187,7 +187,7 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 throw new SeeingSharpGraphicsException($"Unable to query for file extension from source {source}");
             }
-            return GetImporterByFileType(fileExtension);
+            return this.GetImporterByFileType(fileExtension);
         }
 
         /// <summary>

@@ -36,8 +36,8 @@ namespace SeeingSharp.Multimedia.Objects
 
         public MaterialProperties()
         {
-            DiffuseColor = Color4.White;
-            Name = string.Empty;
+            this.DiffuseColor = Color4.White;
+            this.Name = string.Empty;
         }
 
         /// <summary>
@@ -48,19 +48,19 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var resultBuilder = new StringBuilder(100);
             resultBuilder.Append("DyamicMaterial|");
-            resultBuilder.Append(AmbientColor.GetHashCode().ToString());
-            resultBuilder.Append(DiffuseColor.GetHashCode().ToString());
-            resultBuilder.Append(EmissiveColor.GetHashCode().ToString());
-            resultBuilder.Append(Key.GetHashCode().ToString());
-            resultBuilder.Append(Shininess.GetHashCode().ToString());
-            resultBuilder.Append(SpecularColor.GetHashCode().ToString());
-            resultBuilder.Append(TextureKey.GetHashCode().ToString());
+            resultBuilder.Append(this.AmbientColor.GetHashCode().ToString());
+            resultBuilder.Append(this.DiffuseColor.GetHashCode().ToString());
+            resultBuilder.Append(this.EmissiveColor.GetHashCode().ToString());
+            resultBuilder.Append(this.Key.GetHashCode().ToString());
+            resultBuilder.Append(this.Shininess.GetHashCode().ToString());
+            resultBuilder.Append(this.SpecularColor.GetHashCode().ToString());
+            resultBuilder.Append(this.TextureKey.GetHashCode().ToString());
             return resultBuilder.ToString();
         }
 
         public MaterialProperties Clone()
         {
-            return MemberwiseClone() as MaterialProperties;
+            return this.MemberwiseClone() as MaterialProperties;
         }
 
         public override bool Equals(object obj)
@@ -72,19 +72,12 @@ namespace SeeingSharp.Multimedia.Objects
                 return false;
             }
 
-            return Equals(other);
+            return this.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return
-                Key.GetHashCode() ^
-                TextureKey.GetHashCode() ^
-                DiffuseColor.GetHashCode() ^
-                AmbientColor.GetHashCode() ^
-                EmissiveColor.GetHashCode() ^
-                SpecularColor.GetHashCode() ^
-                Shininess.GetHashCode();
+            return this.Key.GetHashCode() ^ this.TextureKey.GetHashCode() ^ this.DiffuseColor.GetHashCode() ^ this.AmbientColor.GetHashCode() ^ this.EmissiveColor.GetHashCode() ^ this.SpecularColor.GetHashCode() ^ this.Shininess.GetHashCode();
         }
 
         public static bool operator ==(MaterialProperties left, MaterialProperties right)
@@ -110,14 +103,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             if(other == null) { return false; }
 
-            return
-                Key == other.Key &&
-                TextureKey == other.TextureKey &&
-                DiffuseColor == other.DiffuseColor &&
-                AmbientColor == other.AmbientColor &&
-                EmissiveColor == other.EmissiveColor &&
-                SpecularColor == other.SpecularColor &&
-                Shininess == other.Shininess;
+            return this.Key == other.Key && this.TextureKey == other.TextureKey && this.DiffuseColor == other.DiffuseColor && this.AmbientColor == other.AmbientColor && this.EmissiveColor == other.EmissiveColor && this.SpecularColor == other.SpecularColor && this.Shininess == other.Shininess;
         }
 
         /// <summary>

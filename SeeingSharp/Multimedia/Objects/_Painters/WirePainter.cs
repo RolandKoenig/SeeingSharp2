@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public void DrawLine(Vector3 start, Vector3 destination)
         {
-            DrawLine(start, destination, Color4.Black);
+            this.DrawLine(start, destination, Color4.Black);
         }
 
         public void DrawLine(Vector3 start, Vector3 destination, Color4 lineColor)
@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         public void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            DrawTriangle(point1, point2, point3, Color4.Black);
+            this.DrawTriangle(point1, point2, point3, Color4.Black);
         }
 
         public void DrawTriangle(Vector3 point1, Vector3 point2, Vector3 point3, Color4 lineColor)

@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Core
         protected void RaiseFilterConfigurationChanged()
         {
             ConfigurationChangedUI = true;
-            FilterConfigurationChanged.Raise(this, EventArgs.Empty);
+            this.FilterConfigurationChanged.Raise(this, EventArgs.Empty);
         }
 
         /// <summary>

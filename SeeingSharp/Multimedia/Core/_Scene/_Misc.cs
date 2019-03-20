@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">Current render state.</param>
         public Rendering3DArgs(RenderState renderState)
         {
-            RenderState = renderState;
+            this.RenderState = renderState;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Updating3DArgs(UpdateState updateState)
         {
-            UpdateState = updateState;
+            this.UpdateState = updateState;
         }
 
         /// <summary>

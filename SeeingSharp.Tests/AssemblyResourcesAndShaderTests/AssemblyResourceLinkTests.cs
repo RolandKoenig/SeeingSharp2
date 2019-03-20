@@ -35,8 +35,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_RelativeNamespace()
         {
-            var resLink = new AssemblyResourceLink(
-                GetType(),
+            var resLink = new AssemblyResourceLink(this.GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
 
@@ -62,8 +61,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_AnotherFile()
         {
-            var resLink = new AssemblyResourceLink(
-                GetType(),
+            var resLink = new AssemblyResourceLink(this.GetType(),
                 "Dummy",
                 "CommonPixelShader.hlsl");
             resLink = resLink.GetForAnotherFile("CommonPixelShader.hlsl", "..", "Dummy2");
@@ -90,8 +88,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_FullNamespace()
         {
-            var resLink = new AssemblyResourceLink(
-                GetType().Assembly,
+            var resLink = new AssemblyResourceLink(this.GetType().Assembly,
                 "SeeingSharp.Tests.AssemblyResourcesAndShaderTests.Dummy",
                 "CommonPixelShader.hlsl");
 

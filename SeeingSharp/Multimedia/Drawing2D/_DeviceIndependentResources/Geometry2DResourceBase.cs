@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            var geometryThis = GetGeometry();
+            var geometryThis = this.GetGeometry();
             var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther) != D2D.GeometryRelation.Disjoint;
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             other.EnsureNotNullOrDisposed(nameof(other));
 
-            var geometryThis = GetGeometry();
+            var geometryThis = this.GetGeometry();
             var geometryOther = other.GetGeometry();
 
             return geometryThis.Compare(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;

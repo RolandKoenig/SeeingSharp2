@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
                 moveVector);
 
             // Switch animation to fixed-time type
-            ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(m_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Core
             m_moveHelper = new MovementAnimationHelper(moveSpeed, moveVector);
 
             // Switch animation to fixed-time type
-            ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(m_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(CurrentTime);
+            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(this.CurrentTime);
         }
 
         /// <summary>

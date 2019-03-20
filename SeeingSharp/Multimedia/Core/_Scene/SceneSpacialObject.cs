@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected SceneSpacialObject()
         {
-            RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
+            this.RenderParameters = new IndexBasedDynamicCollection<ObjectRenderParameters>();
 
             m_rotationUp = Vector3.UnitY;
             m_rotationForward = Vector3.UnitZ;
@@ -87,8 +87,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void EnableShaderGeneratedBorder(float borderThickness = 1f)
         {
-            BorderMultiplier = 50f;
-            BorderPart = 0.01f * borderThickness;
+            this.BorderMultiplier = 50f;
+            this.BorderPart = 0.01f * borderThickness;
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void DisableShaderGeneratedBorder()
         {
-            BorderMultiplier = 0f;
-            BorderPart = 0f;
+            this.BorderMultiplier = 0f;
+            this.BorderPart = 0f;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderLoop">The RenderLoop object.</param>
         public BoundingBox TryGetBoundingBox(RenderLoop renderLoop)
         {
-            return TryGetBoundingBox(renderLoop.ViewInformation);
+            return this.TryGetBoundingBox(renderLoop.ViewInformation);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="dist">The Distance you want to zoom.</param>
         public void MoveForward(float dist)
         {
-            var look = Look;
+            var look = this.Look;
 
             m_position.X += dist * look.X;
             m_position.Y += dist * look.Y;
@@ -157,7 +157,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDown(float points)
         {
-            var up = Up;
+            var up = this.Up;
 
             m_position.X = m_position.X + up.X * points;
             m_position.Y = m_position.Y + up.Y * points;
@@ -171,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UpDownWithoutMoving(float points)
         {
-            var up = Up;
+            var up = this.Up;
 
             m_position.Y = m_position.Y + up.Y * points;
 
@@ -183,7 +183,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Strave(float points)
         {
-            var right = Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Y = m_position.Y + right.Y * points;
@@ -197,7 +197,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void StraveAtPlane(float points)
         {
-            var right = Right;
+            var right = this.Right;
 
             m_position.X = m_position.X + right.X * points;
             m_position.Z = m_position.Z + right.Z * points;
@@ -262,11 +262,11 @@ namespace SeeingSharp.Multimedia.Core
             base.UnloadResources();
 
             // Mark all local resources for unloading
-            foreach (var actRenderParameters in RenderParameters)
+            foreach (var actRenderParameters in this.RenderParameters)
             {
                 actRenderParameters.MarkForUnloading();
             }
-            RenderParameters.Clear();
+            this.RenderParameters.Clear();
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren)
             {
                 m_transformParamsChanged = false;
-                m_forceTransformUpdateOnChildren = HasChildren;
+                m_forceTransformUpdateOnChildren = this.HasChildren;
                 doRecreateShaderParameters = true;
 
                 // Calculate new transformation matrix
@@ -368,7 +368,7 @@ namespace SeeingSharp.Multimedia.Core
             // Trigger recreation of shader parameters
             if (doRecreateShaderParameters)
             {
-                TriggerRecreateOfParameters();
+                this.TriggerRecreateOfParameters();
             }
         }
 
@@ -422,14 +422,14 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateAndApplyRenderParameters(RenderState renderState)
         {
             // Get or create RenderParameters object on object level
-            var renderParameters = RenderParameters[renderState.DeviceIndex];
+            var renderParameters = this.RenderParameters[renderState.DeviceIndex];
 
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded(
                     KEY_SCENE_RENDER_PARAMETERS,
                     () => new ObjectRenderParameters());
-                RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
+                this.RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
             }
 
             if (renderParameters.NeedsRefresh)
@@ -463,7 +463,7 @@ namespace SeeingSharp.Multimedia.Core
         private void TriggerRecreateOfParameters()
         {
             // Notify, that all render parameters need a refresh on next render
-            foreach (var actRenderParameters in RenderParameters)
+            foreach (var actRenderParameters in this.RenderParameters)
             {
                 actRenderParameters.NeedsRefresh = true;
             }
@@ -480,7 +480,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
                 {
                     m_accentuationFactor = value;
-                    TriggerRecreateOfParameters();
+                    this.TriggerRecreateOfParameters();
                 }
             }
         }
@@ -510,8 +510,8 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     m_opacity = value;
 
-                    TriggerRecreateOfParameters();
-                    OnOpacityChanged();
+                    this.TriggerRecreateOfParameters();
+                    this.OnOpacityChanged();
                 }
             }
         }
@@ -712,7 +712,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_color != value)
                 {
                     m_color = value;
-                    TriggerRecreateOfParameters();
+                    this.TriggerRecreateOfParameters();
                 }
             }
         }
@@ -725,7 +725,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(m_borderPart, value))
                 {
                     m_borderPart = value;
-                    TriggerRecreateOfParameters();
+                    this.TriggerRecreateOfParameters();
                 }
             }
         }
@@ -738,7 +738,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(m_borderMultiplier, value))
                 {
                     m_borderMultiplier = value;
-                    TriggerRecreateOfParameters();
+                    this.TriggerRecreateOfParameters();
                 }
             }
         }

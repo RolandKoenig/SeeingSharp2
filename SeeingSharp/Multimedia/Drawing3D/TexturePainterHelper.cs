@@ -51,9 +51,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal TexturePainterHelper(NamedOrGenericKey textureKey)
         {
             m_texture = textureKey;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
+            this.Scaling = 1f;
+            this.Opacity = 1f;
+            this.AccentuationFactor = 0f;
         }
 
         /// <summary>
@@ -117,17 +117,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Apply rendering parameters
             m_renderParameters.UpdateValues(renderState, new CBPerObject
             {
-                AccentuationFactor = AccentuationFactor,
+                AccentuationFactor = this.AccentuationFactor,
                 BorderMultiplier = 0f,
                 BorderPart = 0f,
                 Color = Vector4.Zero,
-                Opacity = Opacity,
-                SpriteScaling = Scaling,
+                Opacity = this.Opacity,
+                SpriteScaling = this.Scaling,
                 World = Matrix.Identity
             });
 
             // Render using current configuration
-            RenderInternal(renderState);
+            this.RenderInternal(renderState);
         }
 
         /// <summary>
@@ -144,14 +144,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Render the object
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
 
-            if (AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
+            if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
             }
 
             m_geometryResource.Render(renderState);
 
-            if (AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
+            if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             }

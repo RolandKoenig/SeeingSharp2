@@ -30,17 +30,17 @@ namespace SeeingSharp.Multimedia.Core
     {
         public WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
         {
-            Decoder = decoder;
-            Converter = converter;
+            this.Decoder = decoder;
+            this.Converter = converter;
         }
 
         public void Dispose()
         {
-            Converter = SeeingSharpUtil.DisposeObject(Converter);
-            Decoder = SeeingSharpUtil.DisposeObject(Decoder);
+            this.Converter = SeeingSharpUtil.DisposeObject(this.Converter);
+            this.Decoder = SeeingSharpUtil.DisposeObject(this.Decoder);
         }
 
-        public bool IsDisposed => Converter == null;
+        public bool IsDisposed => this.Converter == null;
 
         public BitmapDecoder Decoder
         {

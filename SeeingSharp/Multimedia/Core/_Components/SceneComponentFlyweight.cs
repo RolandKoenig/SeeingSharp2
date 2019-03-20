@@ -133,7 +133,7 @@ namespace SeeingSharp.Multimedia.Core
                             continue;
                         }
 
-                        if(TryGetAttachedComponent(
+                        if(this.TryGetAttachedComponent(
                             actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
                         {
@@ -145,7 +145,7 @@ namespace SeeingSharp.Multimedia.Core
                         //  (new components replace old components with same group name)
                         if(!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
                         {
-                            foreach(var actObsoleteComponent in GetExistingComponentsByGroup(
+                            foreach(var actObsoleteComponent in this.GetExistingComponentsByGroup(
                                 actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
@@ -182,7 +182,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     case SceneComponentRequestType.Detach:
                         if (actRequest.Component == null) { continue; }
-                        if (!TryGetAttachedComponent(
+                        if (!this.TryGetAttachedComponent(
                             actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
                         {

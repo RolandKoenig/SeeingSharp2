@@ -245,7 +245,7 @@ namespace SeeingSharp.Multimedia.Core
                             m_host.InputGatherer.QueryForCurrentFrames(inputFrames);
 
                             // First global pass: Update scene and prepare rendering
-                            await UpdateAndPrepareRendering(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState)
+                            await this.UpdateAndPrepareRendering(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState)
                                 .ConfigureAwait(false);
 
                             foreach (var actCamera in camerasToUpdate)
@@ -258,10 +258,10 @@ namespace SeeingSharp.Multimedia.Core
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
 
                             // Second global pass: Render scene(s) and update beside
-                            RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
+                            this.RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
 
                             // Raise generic input event (if registered)
-                            GenericInput?.Raise(this, new GenericInputEventArgs(inputFrames));
+                            this.GenericInput?.Raise(this, new GenericInputEventArgs(inputFrames));
 
                             // Clear unreferenced Scenes finally
                             lock(m_scenesForUnloadLock)
@@ -388,7 +388,7 @@ namespace SeeingSharp.Multimedia.Core
                                 {
                                     additionalContinuationActions.Add(() =>
                                     {
-                                        DeregisterRenderLoop(actRenderLoop);
+                                        this.DeregisterRenderLoop(actRenderLoop);
                                         renderingRenderLoops.Remove(actRenderLoop);
                                     });
                                 }
@@ -422,7 +422,7 @@ namespace SeeingSharp.Multimedia.Core
                             {
                                 additionalContinuationActions.Add(() =>
                                 {
-                                    DeregisterRenderLoop(actRenderLoop);
+                                    this.DeregisterRenderLoop(actRenderLoop);
                                     renderingRenderLoops.Remove(actRenderLoop);
                                 });
                             }
@@ -492,7 +492,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Unload all deregistered RenderLoops
-                await UpdateRenderLoopRegistrationsAsync(renderingRenderLoops);
+                await this.UpdateRenderLoopRegistrationsAsync(renderingRenderLoops);
             }
         }
 
@@ -560,7 +560,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     foreach(var actRenderLoop in invalidRenderLoops.DequeueAll())
                     {
-                        DeregisterRenderLoop(actRenderLoop);
+                        this.DeregisterRenderLoop(actRenderLoop);
                     }
                 }
 

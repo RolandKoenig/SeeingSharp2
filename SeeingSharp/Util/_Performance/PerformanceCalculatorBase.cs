@@ -32,7 +32,7 @@ namespace SeeingSharp.Util
         /// <param name="calculatorName">Name of the calculator.</param>
         internal PerformanceCalculatorBase(string calculatorName)
         {
-            CalculatorName = calculatorName;
+            this.CalculatorName = calculatorName;
         }
 
         /// <summary>

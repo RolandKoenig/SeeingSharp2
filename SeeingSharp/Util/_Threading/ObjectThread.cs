@@ -85,13 +85,13 @@ namespace SeeingSharp.Util
             m_taskQueue = new ConcurrentQueue<Action>();
             m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
 
-            Name = name;
-            HeartBeat = heartBeat;
+            this.Name = name;
+            this.HeartBeat = heartBeat;
 
             m_culture = Thread.CurrentThread.CurrentCulture;
             m_uiCulture = Thread.CurrentThread.CurrentUICulture;
 
-            Timer = new ObjectThreadTimer();
+            this.Timer = new ObjectThreadTimer();
         }
 
         /// <summary>
@@ -116,10 +116,10 @@ namespace SeeingSharp.Util
             //Go into starting state
             m_currentState = ObjectThreadState.Starting;
 
-            m_mainThread = new Thread(ObjectThreadMainMethod)
+            m_mainThread = new Thread(this.ObjectThreadMainMethod)
             {
                 IsBackground = true,
-                Name = Name
+                Name = this.Name
             };
 
             m_mainThread.Start();
@@ -139,7 +139,7 @@ namespace SeeingSharp.Util
                 case ObjectThreadState.Running:
                 case ObjectThreadState.Starting:
                     var taskSource = new TaskCompletionSource<object>();
-                    Stopping += (sender, eArgs) =>
+                    this.Stopping += (sender, eArgs) =>
                     {
                         taskSource.TrySetResult(null);
                     };
@@ -155,9 +155,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public Task StartAsync()
         {
-            Start();
+            this.Start();
 
-            return InvokeAsync(() => { });
+            return this.InvokeAsync(() => { });
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace SeeingSharp.Util
             }
 
             //Trigger next update
-            Trigger();
+            this.Trigger();
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task StopAsync(int timeout)
         {
-            Stop();
+            this.Stop();
 
             if (m_threadStopSynchronizeObject != null)
             {
@@ -230,7 +230,7 @@ namespace SeeingSharp.Util
             Task result = taskCompletionSource.Task;
 
             //Triggers the main loop
-            Trigger();
+            this.Trigger();
 
             //Returns the result
             return result;
@@ -241,7 +241,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnStarting(EventArgs eArgs)
         {
-            Starting?.Invoke(this, eArgs);
+            this.Starting?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnTick(EventArgs eArgs)
         {
-            Tick?.Invoke(this, eArgs);
+            this.Tick?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnThreadException(ObjectThreadExceptionEventArgs eArgs)
         {
-            ThreadException?.Invoke(this, eArgs);
+            this.ThreadException?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected virtual void OnStopping(EventArgs eArgs)
         {
-            Stopping?.Invoke(this, eArgs);
+            this.Stopping?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -288,11 +288,11 @@ namespace SeeingSharp.Util
                 //Notify start process
                 try
                 {
-                    OnStarting(EventArgs.Empty);
+                    this.OnStarting(EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                    this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
                     m_currentState = ObjectThreadState.None;
                     return;
                 }
@@ -306,11 +306,11 @@ namespace SeeingSharp.Util
                         try
                         {
                             //Wait for next action to perform
-                            m_mainLoopSynchronizeObject.Wait(HeartBeat);
+                            m_mainLoopSynchronizeObject.Wait(this.HeartBeat);
 
                             //Measure current time
                             stopWatch.Stop();
-                            Timer.Add(stopWatch.Elapsed);
+                            this.Timer.Add(stopWatch.Elapsed);
                             stopWatch.Reset();
                             stopWatch.Start();
 
@@ -331,24 +331,25 @@ namespace SeeingSharp.Util
                                 }
                                 catch (Exception ex)
                                 {
-                                    OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                                    this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
                                 }
                             }
 
                             //Perfoms a tick
-                            OnTick(EventArgs.Empty);
+                            this.OnTick(EventArgs.Empty);
                         }
                         catch (Exception ex)
                         {
-                            OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                            this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
                         }
                     }
 
                     //Notify stop process
-                    try { OnStopping(EventArgs.Empty); }
+                    try {
+                        this.OnStopping(EventArgs.Empty); }
                     catch (Exception ex)
                     {
-                        OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                        this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
                     }
                 }
 
@@ -360,7 +361,7 @@ namespace SeeingSharp.Util
             }
             catch (Exception ex)
             {
-                OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
                 m_currentState = ObjectThreadState.None;
             }
 
@@ -375,7 +376,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets current thread time.
         /// </summary>
-        public DateTime ThreadTime => Timer.Now;
+        public DateTime ThreadTime => this.Timer.Now;
 
         /// <summary>
         /// Gets current timer of the thread.

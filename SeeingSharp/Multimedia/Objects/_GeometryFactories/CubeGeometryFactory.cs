@@ -31,10 +31,10 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var matProperties = new MaterialProperties
             {
-                Key = Material
+                Key = this.Material
             };
 
-            var size = Size;
+            var size = this.Size;
             var halfSize = size / 2f;
 
             var result = new Geometry();

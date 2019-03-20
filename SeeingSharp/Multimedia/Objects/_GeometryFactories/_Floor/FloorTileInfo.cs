@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="material">The material to use for the tile (string.Empty or null to use default material).</param>
         public FloorTileInfo(NamedOrGenericKey material)
         {
-            Material = material;
+            this.Material = material;
         }
 
         /// <summary>

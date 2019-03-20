@@ -100,21 +100,21 @@ namespace SeeingSharp.Multimedia.Core
                 m_devices = new List<EngineDevice>();
 
                 // Start performance value measuring
-                PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                this.PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
                 {
                     SyncContext = SynchronizationContext.Current
                 };
-                PerformanceCalculator.RunAsync(CancellationToken.None)
+                this.PerformanceCalculator.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
-                Configuration = new GraphicsCoreConfiguration
+                this.Configuration = new GraphicsCoreConfiguration
                 {
                     DebugEnabled = loadSettings.DebugEnabled
                 };
 
                 // Create container object for all input handlers
-                InputHandlers = new InputHandlerFactory(loader);
-                ImportersAndExporters = new ImporterExporterRepository(loader);
+                this.InputHandlers = new InputHandlerFactory(loader);
+                this.ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
                 EngineFactory engineFactory = null;
@@ -141,20 +141,19 @@ namespace SeeingSharp.Multimedia.Core
                     return;
                 }
                 FactoryD2D = m_factoryHandlerD2D.Factory2;
-                FactoryDWrite = m_factoryHandlerDWrite.Factory;
+                this.FactoryDWrite = m_factoryHandlerDWrite.Factory;
                 FactoryWIC = m_factoryHandlerWIC.Factory;
 
                 // Create the object containing all hardware information
-                HardwareInfo = new EngineHardwareInfo();
+                this.HardwareInfo = new EngineHardwareInfo();
                 var actIndex = 0;
 
-                foreach(var actAdapterInfo in HardwareInfo.Adapters)
+                foreach(var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(
                         loadSettings,
                         loader,
-                        engineFactory,
-                        Configuration,
+                        engineFactory, this.Configuration,
                         actAdapterInfo.Adapter,
                         actAdapterInfo.IsSoftwareAdapter);
 
@@ -170,24 +169,24 @@ namespace SeeingSharp.Multimedia.Core
                 m_defaultDevice = m_devices.FirstOrDefault();
 
                 // Start input gathering
-                InputGatherer = new InputGathererThread();
-                InputGatherer.Start();
+                this.InputGatherer = new InputGathererThread();
+                this.InputGatherer.Start();
 
                 // Start main loop
-                MainLoop = new EngineMainLoop(this);
+                this.MainLoop = new EngineMainLoop(this);
                 if (m_devices.Count > 0)
                 {
                     m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = MainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                    m_mainLoopTask = this.MainLoop.Start(m_mainLoopCancelTokenSource.Token);
                 }
             }
             catch (Exception ex2)
             {
                 m_initException = ex2;
 
-                HardwareInfo = null;
+                this.HardwareInfo = null;
                 m_devices.Clear();
-                Configuration = null;
+                this.Configuration = null;
             }
         }
 
@@ -246,7 +245,7 @@ namespace SeeingSharp.Multimedia.Core
             // Query for all available FontFamilies installed on the system
             List<string> result = null;
 
-            using (var fontCollection = FactoryDWrite.GetSystemFontCollection(false))
+            using (var fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
             {
                 var fontFamilyCount = fontCollection.FontFamilyCount;
                 result = new List<string>(fontFamilyCount);
@@ -289,9 +288,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Resume()
         {
-            if (MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
+            if (this.MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
-            MainLoop.Resume();
+            this.MainLoop.Resume();
         }
 
         /// <summary>
@@ -299,9 +298,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task SuspendAsync()
         {
-            if (MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
+            if (this.MainLoop == null) { throw new SeeingSharpGraphicsException("GraphicsCore not loaded!"); }
 
-            return MainLoop.SuspendAsync();
+            return this.MainLoop.SuspendAsync();
         }
 
         /// <summary>
@@ -383,7 +382,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityName">The name of the activity.</param>
         internal IDisposable BeginMeasureActivityDuration(string activityName)
         {
-            return PerformanceCalculator.BeginMeasureActivityDuration(activityName);
+            return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
         }
 
         /// <summary>
@@ -393,7 +392,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityAction">The activity action.</param>
         internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
         {
-            PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
+            this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
         }
 
         /// <summary>
@@ -403,7 +402,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="durationTicks"></param>
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
-            PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
+            this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
         }
 
         /// <summary>
@@ -447,7 +446,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the first output monitor.
         /// </summary>
         public EngineOutputInfo DefaultOutput =>
-            HardwareInfo.Adapters
+            this.HardwareInfo.Adapters
                 .FirstOrDefault()?
                 .Outputs.FirstOrDefault();
 
@@ -484,7 +483,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_defaultDevice;
             set
             {
-                if (value == null) { throw new ArgumentNullException(nameof(DefaultDevice)); }
+                if (value == null) { throw new ArgumentNullException(nameof(this.DefaultDevice)); }
                 if (!m_devices.Contains(value)) { throw new ArgumentException("Device is not available on this GraphicsCore!"); }
 
                 m_defaultDevice = value;
@@ -508,8 +507,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (MainLoop == null) { return 0; }
-                return MainLoop.RegisteredRenderLoopCount;
+                if (this.MainLoop == null) { return 0; }
+                return this.MainLoop.RegisteredRenderLoopCount;
             }
         }
 
@@ -552,14 +551,14 @@ namespace SeeingSharp.Multimedia.Core
         public PerformanceAnalyzer PerformanceCalculator { get; }
 
         /// <summary>
-        /// Gets the Direct2D factory object.
-        /// </summary>
-        public D2D.Factory2 FactoryD2D;
-
-        /// <summary>
         /// Gets the DirectWrite factory object.
         /// </summary>
         public DWrite.Factory FactoryDWrite { get; }
+
+        /// <summary>
+        /// Gets the Direct2D factory object.
+        /// </summary>
+        public D2D.Factory2 FactoryD2D;
 
         /// <summary>
         /// Gets the WIC factory object.

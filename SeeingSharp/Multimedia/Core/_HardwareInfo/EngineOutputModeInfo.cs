@@ -31,24 +31,21 @@ namespace SeeingSharp.Multimedia.Core
 
         internal EngineOutputModeInfo(EngineOutputInfo hostOutput, ModeDescription modeDescription)
         {
-            HostOutput = hostOutput;
-            PixelWidth = modeDescription.Width;
-            PixelHeight = modeDescription.Height;
-            RefreshRateNumerator = modeDescription.RefreshRate.Numerator;
-            RefreshRateDenominator = modeDescription.RefreshRate.Denominator;
+            this.HostOutput = hostOutput;
+            this.PixelWidth = modeDescription.Width;
+            this.PixelHeight = modeDescription.Height;
+            this.RefreshRateNumerator = modeDescription.RefreshRate.Numerator;
+            this.RefreshRateDenominator = modeDescription.RefreshRate.Denominator;
         }
 
         public override string ToString()
         {
-            return $"{PixelWidth} x {PixelHeight}  {RefreshRateNumerator / RefreshRateDenominator} Hz";
+            return $"{this.PixelWidth} x {this.PixelHeight}  {this.RefreshRateNumerator / this.RefreshRateDenominator} Hz";
         }
 
         public override int GetHashCode()
         {
-            return PixelWidth.GetHashCode() +
-                PixelHeight.GetHashCode() +
-                RefreshRateNumerator.GetHashCode() +
-                RefreshRateDenominator.GetHashCode();
+            return this.PixelWidth.GetHashCode() + this.PixelHeight.GetHashCode() + this.RefreshRateNumerator.GetHashCode() + this.RefreshRateDenominator.GetHashCode();
         }
 
         /// <summary>
@@ -60,11 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public bool Equals(EngineOutputModeInfo other)
         {
-            return
-                PixelWidth == other.PixelWidth &&
-                PixelHeight == other.PixelHeight &&
-                RefreshRateNumerator == other.RefreshRateNumerator &&
-                RefreshRateDenominator == other.RefreshRateDenominator;
+            return this.PixelWidth == other.PixelWidth && this.PixelHeight == other.PixelHeight && this.RefreshRateNumerator == other.RefreshRateNumerator && this.RefreshRateDenominator == other.RefreshRateDenominator;
         }
 
         /// <summary>
@@ -87,11 +80,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             var other = (EngineOutputModeInfo)value;
-            return
-                PixelWidth == other.PixelWidth &&
-                PixelHeight == other.PixelHeight &&
-                RefreshRateNumerator == other.RefreshRateNumerator &&
-                RefreshRateDenominator == other.RefreshRateDenominator;
+            return this.PixelWidth == other.PixelWidth && this.PixelHeight == other.PixelHeight && this.RefreshRateNumerator == other.RefreshRateNumerator && this.RefreshRateDenominator == other.RefreshRateDenominator;
         }
 
         public EngineOutputInfo HostOutput { get; }
@@ -100,7 +89,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public int PixelHeight { get; }
 
-        public int PixelCount => PixelWidth * PixelHeight;
+        public int PixelCount => this.PixelWidth * this.PixelHeight;
 
         public int RefreshRateNumerator { get; }
 

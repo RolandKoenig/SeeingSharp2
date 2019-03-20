@@ -20,10 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -32,15 +30,15 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public bool EnableAntialiasing
         {
-            get => base.RenderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
+            get => this.RenderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
             set
             {
-                if (base.RenderLoop == null){ return; }
+                if (this.RenderLoop == null){ return; }
 
-                if(value != base.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
+                if(value != this.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
                 {
-                    base.RenderLoop.ViewConfiguration.AntialiasingEnabled = value;
-                    RaisePropertyChanged(nameof(EnableAntialiasing));
+                    this.RenderLoop.ViewConfiguration.AntialiasingEnabled = value;
+                    this.RaisePropertyChanged(nameof(this.EnableAntialiasing));
                 }
             }
         }
@@ -48,15 +46,15 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public bool EnableWireframe
         {
-            get => base.RenderLoop?.ViewConfiguration.WireframeEnabled ?? false;
+            get => this.RenderLoop?.ViewConfiguration.WireframeEnabled ?? false;
             set
             {
-                if (base.RenderLoop == null) { return; }
+                if (this.RenderLoop == null) { return; }
 
-                if (value != base.RenderLoop?.ViewConfiguration.WireframeEnabled)
+                if (value != this.RenderLoop?.ViewConfiguration.WireframeEnabled)
                 {
-                    base.RenderLoop.ViewConfiguration.WireframeEnabled = value;
-                    RaisePropertyChanged(nameof(EnableWireframe));
+                    this.RenderLoop.ViewConfiguration.WireframeEnabled = value;
+                    this.RaisePropertyChanged(nameof(this.EnableWireframe));
                 }
             }
         }
@@ -64,15 +62,15 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public AntialiasingQualityLevel AntialiasingQuality
         {
-            get => base.RenderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
+            get => this.RenderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
             set
             {
-                if (base.RenderLoop == null) { return; }
+                if (this.RenderLoop == null) { return; }
 
-                if (value != base.RenderLoop?.ViewConfiguration.AntialiasingQuality)
+                if (value != this.RenderLoop?.ViewConfiguration.AntialiasingQuality)
                 {
-                    base.RenderLoop.ViewConfiguration.AntialiasingQuality = value;
-                    RaisePropertyChanged(nameof(AntialiasingQuality));
+                    this.RenderLoop.ViewConfiguration.AntialiasingQuality = value;
+                    this.RaisePropertyChanged(nameof(this.AntialiasingQuality));
                 }
             }
         }

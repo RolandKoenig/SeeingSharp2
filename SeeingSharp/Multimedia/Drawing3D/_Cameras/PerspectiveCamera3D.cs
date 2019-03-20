@@ -85,7 +85,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             set
             {
                 m_fov = value;
-                UpdateCamera();
+                this.UpdateCamera();
             }
         }
 

@@ -32,9 +32,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public ImportOptions()
         {
-            ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            ResizeFactor = 1f;
-            TwoSidedSurfaces = false;
+            this.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
+            this.ResizeFactor = 1f;
+            this.TwoSidedSurfaces = false;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         public Matrix GetTransformMatrixForCoordinateSystem()
         {
-            switch (ResourceCoordinateSystem)
+            switch (this.ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                     return Matrix.Identity;
@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public bool IsChangeTriangleOrderNeeded()
         {
-            switch (ResourceCoordinateSystem)
+            switch (this.ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                 case CoordinateSystem.RightHanded_UpZ:
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Objects
                     return true;
 
                 default:
-                    throw new SeeingSharpGraphicsException($"Unknown coordinate system {ResourceCoordinateSystem}!");
+                    throw new SeeingSharpGraphicsException($"Unknown coordinate system {this.ResourceCoordinateSystem}!");
             }
         }
 

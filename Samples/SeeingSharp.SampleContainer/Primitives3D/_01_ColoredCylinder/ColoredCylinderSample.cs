@@ -49,13 +49,13 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cylinder geometry resource
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
-                        new CylinderGeometryFactory()
+                        new CylinderGeometryFactory
                         {
                             CountOfSegments = 50
                         }));

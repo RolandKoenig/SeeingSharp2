@@ -97,7 +97,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index on which this object should be added.</param>
         public T AddObject(T objectToAdd, int index)
         {
-            AddObject(objectToAdd, index, true);
+            this.AddObject(objectToAdd, index, true);
             return objectToAdd;
         }
 
@@ -118,7 +118,7 @@ namespace SeeingSharp.Util
                     throw new SeeingSharpException("There is already an object at the given index!");
                 }
 
-                RemoveObject(currentObject);
+                this.RemoveObject(currentObject);
             }
 
             // Perform all operations for adding this object
@@ -189,7 +189,7 @@ namespace SeeingSharp.Util
         public void RemoveObject(int index)
         {
             var objectToRemove = m_list[index];
-            RemoveObject(objectToRemove);
+            this.RemoveObject(objectToRemove);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace SeeingSharp.Util
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <summary>

@@ -137,17 +137,17 @@ namespace SeeingSharp.Multimedia.Input
                     return;
                 }
 
-                m_currentControl.MouseEnter += OnMouseEnter;
-                m_currentControl.MouseClick += OnMouseClick;
-                m_currentControl.MouseUp += OnMouseUp;
-                m_currentControl.MouseDown += OnMouseDown;
-                m_currentControl.MouseLeave += OnMouseLeave;
-                m_currentControl.MouseMove += OnMouseMove;
-                m_currentControl.MouseWheel += OnMouseWheel;
-                m_currentControl.KeyUp += OnKeyUp;
-                m_currentControl.KeyDown += OnKeyDown;
-                m_currentControl.LostFocus += OnLostFocus;
-                m_currentControl.GotFocus += OnGotFocus;
+                m_currentControl.MouseEnter += this.OnMouseEnter;
+                m_currentControl.MouseClick += this.OnMouseClick;
+                m_currentControl.MouseUp += this.OnMouseUp;
+                m_currentControl.MouseDown += this.OnMouseDown;
+                m_currentControl.MouseLeave += this.OnMouseLeave;
+                m_currentControl.MouseMove += this.OnMouseMove;
+                m_currentControl.MouseWheel += this.OnMouseWheel;
+                m_currentControl.KeyUp += this.OnKeyUp;
+                m_currentControl.KeyDown += this.OnKeyDown;
+                m_currentControl.LostFocus += this.OnLostFocus;
+                m_currentControl.GotFocus += this.OnGotFocus;
 
                 // Handle initial focus state
                 if (m_currentControl.Focused || m_currentControl.ContainsFocus)
@@ -171,17 +171,17 @@ namespace SeeingSharp.Multimedia.Input
                 {
                     if(currentControl == null) { return; }
 
-                    currentControl.MouseEnter -= OnMouseEnter;
-                    currentControl.MouseClick -= OnMouseClick;
-                    currentControl.MouseLeave -= OnMouseLeave;
-                    currentControl.MouseMove -= OnMouseMove;
-                    currentControl.MouseWheel -= OnMouseWheel;
-                    currentControl.MouseUp -= OnMouseUp;
-                    currentControl.MouseDown -= OnMouseDown;
-                    currentControl.KeyUp -= OnKeyUp;
-                    currentControl.KeyDown -= OnKeyDown;
-                    currentControl.LostFocus -= OnLostFocus;
-                    currentControl.GotFocus -= OnGotFocus;
+                    currentControl.MouseEnter -= this.OnMouseEnter;
+                    currentControl.MouseClick -= this.OnMouseClick;
+                    currentControl.MouseLeave -= this.OnMouseLeave;
+                    currentControl.MouseMove -= this.OnMouseMove;
+                    currentControl.MouseWheel -= this.OnMouseWheel;
+                    currentControl.MouseUp -= this.OnMouseUp;
+                    currentControl.MouseDown -= this.OnMouseDown;
+                    currentControl.KeyUp -= this.OnKeyUp;
+                    currentControl.KeyDown -= this.OnKeyDown;
+                    currentControl.LostFocus -= this.OnLostFocus;
+                    currentControl.GotFocus -= this.OnGotFocus;
                 });
 
                 if (m_currentControl.IsHandleCreated) { m_currentControl.BeginInvoke(removeEventRegistrationsAction); }

@@ -116,12 +116,12 @@ namespace SeeingSharp.Multimedia.Input
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Register all events
-                m_painter.TargetPanel.PointerExited += OnTargetPanel_PointerExited;
-                m_painter.TargetPanel.PointerEntered += OnTargetPanel_PointerEntered;
-                m_painter.TargetPanel.PointerWheelChanged += OnTargetPanel_PointerWheelChanged;
-                m_painter.TargetPanel.PointerPressed += OnTargetPanel_PointerPressed;
-                m_painter.TargetPanel.PointerReleased += OnTargetPanel_PointerReleased;
-                m_painter.TargetPanel.PointerMoved += OnTargetPanel_PointerMoved;
+                m_painter.TargetPanel.PointerExited += this.OnTargetPanel_PointerExited;
+                m_painter.TargetPanel.PointerEntered += this.OnTargetPanel_PointerEntered;
+                m_painter.TargetPanel.PointerWheelChanged += this.OnTargetPanel_PointerWheelChanged;
+                m_painter.TargetPanel.PointerPressed += this.OnTargetPanel_PointerPressed;
+                m_painter.TargetPanel.PointerReleased += this.OnTargetPanel_PointerReleased;
+                m_painter.TargetPanel.PointerMoved += this.OnTargetPanel_PointerMoved;
 
                 // Create the dummy button for focus management
                 //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
@@ -134,15 +134,15 @@ namespace SeeingSharp.Multimedia.Input
                     VerticalAlignment = VerticalAlignment.Top
                 };
 
-                m_dummyButtonForFocus.KeyDown += OnDummyButtonForFocus_KeyDown;
-                m_dummyButtonForFocus.KeyUp += OnDummyButtonForFocus_KeyUp;
-                m_dummyButtonForFocus.LostFocus += OnDummyButtonForFocus_LostFocus;
-                m_dummyButtonForFocus.GotFocus += OnDummyButtonForFocus_GotFocus;
+                m_dummyButtonForFocus.KeyDown += this.OnDummyButtonForFocus_KeyDown;
+                m_dummyButtonForFocus.KeyUp += this.OnDummyButtonForFocus_KeyUp;
+                m_dummyButtonForFocus.LostFocus += this.OnDummyButtonForFocus_LostFocus;
+                m_dummyButtonForFocus.GotFocus += this.OnDummyButtonForFocus_GotFocus;
                 m_painter.TargetPanel.Children.Add(m_dummyButtonForFocus);
 
                 m_coreWindow = CoreWindow.GetForCurrentThread();
-                m_coreWindow.KeyDown += OnCoreWindow_KeyDown;
-                m_coreWindow.KeyUp += OnCoreWindow_KeyUp;
+                m_coreWindow.KeyDown += this.OnCoreWindow_KeyDown;
+                m_coreWindow.KeyUp += this.OnCoreWindow_KeyUp;
 
                 // Set focus on the target
                 m_dummyButtonForFocus.Focus(FocusState.Programmatic);
@@ -168,25 +168,25 @@ namespace SeeingSharp.Multimedia.Input
                 // Remove the dummy button
                 if (dummyButtonForFocus != null)
                 {
-                    dummyButtonForFocus.KeyDown -= OnDummyButtonForFocus_KeyDown;
-                    dummyButtonForFocus.KeyUp -= OnDummyButtonForFocus_KeyUp;
-                    dummyButtonForFocus.LostFocus -= OnDummyButtonForFocus_LostFocus;
-                    dummyButtonForFocus.GotFocus -= OnDummyButtonForFocus_GotFocus;
+                    dummyButtonForFocus.KeyDown -= this.OnDummyButtonForFocus_KeyDown;
+                    dummyButtonForFocus.KeyUp -= this.OnDummyButtonForFocus_KeyUp;
+                    dummyButtonForFocus.LostFocus -= this.OnDummyButtonForFocus_LostFocus;
+                    dummyButtonForFocus.GotFocus -= this.OnDummyButtonForFocus_GotFocus;
 
                     painter.TargetPanel.Children.Remove(dummyButtonForFocus);
                 }
 
                 // Deregister all events
-                painter.TargetPanel.PointerExited -= OnTargetPanel_PointerExited;
-                painter.TargetPanel.PointerEntered -= OnTargetPanel_PointerEntered;
-                painter.TargetPanel.PointerWheelChanged -= OnTargetPanel_PointerWheelChanged;
-                painter.TargetPanel.PointerPressed -= OnTargetPanel_PointerPressed;
-                painter.TargetPanel.PointerReleased -= OnTargetPanel_PointerReleased;
-                painter.TargetPanel.PointerMoved -= OnTargetPanel_PointerMoved;
+                painter.TargetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
+                painter.TargetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
+                painter.TargetPanel.PointerWheelChanged -= this.OnTargetPanel_PointerWheelChanged;
+                painter.TargetPanel.PointerPressed -= this.OnTargetPanel_PointerPressed;
+                painter.TargetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
+                painter.TargetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
 
                 // Deregister events from CoreWindow
-                coreWindow.KeyDown -= OnCoreWindow_KeyDown;
-                coreWindow.KeyUp -= OnCoreWindow_KeyUp;
+                coreWindow.KeyDown -= this.OnCoreWindow_KeyDown;
+                coreWindow.KeyUp -= this.OnCoreWindow_KeyUp;
             });
 
             // set all references to zero

@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected AnimationBase(object targetObject)
         {
-            TargetObject = targetObject;
+            this.TargetObject = targetObject;
             m_fixedTime = TimeSpan.Zero;
             m_currentTime = TimeSpan.Zero;
             m_animationType = AnimationType.FinishedByEvent;
@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
             m_started = false;
             m_currentTime = TimeSpan.Zero;
 
-            OnReset();
+            this.OnReset();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SeeingSharp.Multimedia.Core
         public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
         {
             // Call start animation if m_currentTime is zero
-            HandleStartAnimation();
+            this.HandleStartAnimation();
 
             switch (m_animationType)
             {
@@ -124,8 +124,8 @@ namespace SeeingSharp.Multimedia.Core
                 case AnimationType.FixedTime:
                     if (m_fixedTime <= TimeSpan.Zero)
                     {
-                        OnStartAnimation();
-                        OnFixedTimeAnimationFinished();
+                        this.OnStartAnimation();
+                        this.OnFixedTimeAnimationFinished();
                         m_finished = true;
                     }
                     if (m_currentTime < m_fixedTime)
@@ -135,13 +135,13 @@ namespace SeeingSharp.Multimedia.Core
                         {
                             m_currentTime = m_fixedTime;
 
-                            OnCurrentTimeUpdated(updateState, animationState);
-                            OnFixedTimeAnimationFinished();
+                            this.OnCurrentTimeUpdated(updateState, animationState);
+                            this.OnFixedTimeAnimationFinished();
                             m_finished = true;
                         }
                         else
                         {
-                            OnCurrentTimeUpdated(updateState, animationState);
+                            this.OnCurrentTimeUpdated(updateState, animationState);
                         }
                     }
                     break;
@@ -151,7 +151,7 @@ namespace SeeingSharp.Multimedia.Core
                     m_currentTime += updateState.UpdateTime;
 
                     //Call update method
-                    OnCurrentTimeUpdated(updateState, animationState);
+                    this.OnCurrentTimeUpdated(updateState, animationState);
                     break;
 
                 // Update logic for async calls
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Core
                     m_currentTime += updateState.UpdateTime;
                     if (m_asyncTask == null)
                     {
-                        m_asyncTask = OnAsyncAnimationStart();
+                        m_asyncTask = this.OnAsyncAnimationStart();
                     }
                     else if (m_asyncTask.IsFaulted)
                     {
@@ -181,8 +181,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetObject">The object to check for.</param>
         public bool IsObjectAnimated(object targetObject)
         {
-            if (TargetObject == null) { return false; }
-            return TargetObject == targetObject;
+            if (this.TargetObject == null) { return false; }
+            return this.TargetObject == targetObject;
         }
 
         /// <summary>
@@ -196,10 +196,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Trigger start logic if not done so before
             // .. => This is needed because some animations calculate their fixed time within the start method
-            HandleStartAnimation();
+            this.HandleStartAnimation();
 
             // Handle the animation type
-            switch (AnimationType)
+            switch (this.AnimationType)
             {
                 case AnimationType.AsyncCall:
                     return defaultCycleTime;
@@ -212,7 +212,7 @@ namespace SeeingSharp.Multimedia.Core
                     else { return TimeSpan.Zero; }
 
                 default:
-                    throw new SeeingSharpGraphicsException("Unhandled animation type: " + AnimationType);
+                    throw new SeeingSharpGraphicsException("Unhandled animation type: " + this.AnimationType);
             }
         }
 
@@ -289,7 +289,7 @@ namespace SeeingSharp.Multimedia.Core
                 !m_finished &&
                 !m_started)
             {
-                OnStartAnimation();
+                this.OnStartAnimation();
                 m_started = true;
             }
         }
@@ -316,7 +316,8 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_canceled != value)
                 {
                     m_canceled = value;
-                    if (m_canceled) { OnCanceled(); }
+                    if (m_canceled) {
+                        this.OnCanceled(); }
                 }
             }
         }

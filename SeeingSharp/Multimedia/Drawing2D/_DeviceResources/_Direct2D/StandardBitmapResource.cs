@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The engine device.</param>
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
-            if (IsDisposed) { throw new ObjectDisposedException(GetType().Name); }
+            if (this.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];
 

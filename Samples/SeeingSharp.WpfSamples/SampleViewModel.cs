@@ -34,14 +34,14 @@ namespace SeeingSharp.WpfSamples
 
         public SampleViewModel(SampleMetadata sample)
         {
-            SampleMetadata = sample;
+            this.SampleMetadata = sample;
         }
 
         public SampleMetadata SampleMetadata { get; }
 
-        public string Name => SampleMetadata.Name;
+        public string Name => this.SampleMetadata.Name;
 
-        public string Group => SampleMetadata.Group;
+        public string Group => this.SampleMetadata.Group;
 
         public BitmapSource BitmapSource
         {
@@ -49,7 +49,7 @@ namespace SeeingSharp.WpfSamples
             {
                 if(m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
-                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
+                    var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
 
                     if (sourceLink == null)
                     {
@@ -66,7 +66,7 @@ namespace SeeingSharp.WpfSamples
 
                         m_bitmapSource = source;
                     }).ContinueWith(
-                        task => RaisePropertyChanged(nameof(BitmapSource)),
+                        task => this.RaisePropertyChanged(nameof(this.BitmapSource)),
                         TaskScheduler.FromCurrentSynchronizationContext());
                 }
 

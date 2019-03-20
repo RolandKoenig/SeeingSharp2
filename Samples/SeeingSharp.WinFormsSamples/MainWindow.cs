@@ -43,12 +43,12 @@ namespace SeeingSharp.WinFormsSamples
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             m_generatedListViews = new List<ListView>();
             m_sampleCommandToolbarItems = new List<ToolStripItem>();
 
-            UpdateWindowState();
+            this.UpdateWindowState();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -56,7 +56,7 @@ namespace SeeingSharp.WinFormsSamples
             base.OnLoad(e);
 
             if (this.DesignMode) { return; }
-            this.m_ctrlRenderPanel.RenderLoop.PrepareRender += OnRenderLoop_PrepareRender;
+            m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
             foreach (var actDevice in GraphicsCore.Current.Devices)
             {
@@ -65,7 +65,7 @@ namespace SeeingSharp.WinFormsSamples
                     Tag = actDevice
                 };
 
-                newButton.Click += OnCmdChangeDevice_Click;
+                newButton.Click += this.OnCmdChangeDevice_Click;
                 m_mnuChangeDevice.DropDownItems.Add(newButton);
             }
 
@@ -93,7 +93,7 @@ namespace SeeingSharp.WinFormsSamples
                     Activation = ItemActivation.OneClick
                 };
 
-                actListView.ItemSelectionChanged += OnListView_ItemSelectionChanged;
+                actListView.ItemSelectionChanged += this.OnListView_ItemSelectionChanged;
                 actListView.MultiSelect = false;
                 actListView.LargeImageList = m_images;
                 actListView.SmallImageList = m_images;
@@ -144,7 +144,7 @@ namespace SeeingSharp.WinFormsSamples
                 firstListView.SelectedIndices.Add(0);
             }
 
-            UpdateWindowState();
+            this.UpdateWindowState();
         }
 
         /// <summary>
@@ -162,15 +162,15 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            var currentWindowSize = new Size2(Width, Height);
+            var currentWindowSize = new Size2(this.Width, this.Height);
             var difference = new Size2(
                 currentWindowSize.Width - currentViewSize.Width,
                 currentWindowSize.Height - currentViewSize.Height);
             var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
 
-            WindowState = FormWindowState.Normal;
-            Width = newWindowSize.Width;
-            Height = newWindowSize.Height;
+            this.WindowState = FormWindowState.Normal;
+            this.Width = newWindowSize.Width;
+            this.Height = newWindowSize.Height;
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace SeeingSharp.WinFormsSamples
             m_isChangingSample = true;
             try
             {
-                UpdateWindowState();
+                this.UpdateWindowState();
 
                 if (m_actSampleInfo == sampleInfo) { return; }
 
@@ -197,7 +197,7 @@ namespace SeeingSharp.WinFormsSamples
                     await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
-                if (IsDisposed || !IsHandleCreated) { return; }
+                if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 // Reset members
                 m_actSample = null;
@@ -213,7 +213,7 @@ namespace SeeingSharp.WinFormsSamples
                     m_actSampleInfo = sampleInfo;
 
                     m_propertyGrid.SelectedObject = sampleSettings;
-                    UpdateSampleCommands(sampleSettings);
+                    this.UpdateSampleCommands(sampleSettings);
 
                     await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
                         new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 0f));
@@ -221,16 +221,16 @@ namespace SeeingSharp.WinFormsSamples
                 else
                 {
                     m_propertyGrid.SelectedObject = null;
-                    UpdateSampleCommands(null);
+                    this.UpdateSampleCommands(null);
                 }
-                if (IsDisposed || !IsHandleCreated) { return; }
+                if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 // Wait for next finished rendering
                 await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
-                if (IsDisposed || !IsHandleCreated) { return; }
+                if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
-                if (IsDisposed || !IsHandleCreated) { return; }
+                if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 //// Apply new camera on child windows
                 //foreach (ChildRenderWindow actChildWindow in m_openedChildRenderers)
@@ -243,7 +243,7 @@ namespace SeeingSharp.WinFormsSamples
                 m_isChangingSample = false;
             }
 
-            UpdateWindowState();
+            this.UpdateWindowState();
         }
 
         private void UpdateSampleCommands(SampleSettings settings)
@@ -318,12 +318,12 @@ namespace SeeingSharp.WinFormsSamples
             sampleSettings.SetEnvironment(m_ctrlRenderPanel.RenderLoop, sampleInfo);
 
             // Now apply the sample
-            ApplySample(sampleInfo, sampleSettings);
+            this.ApplySample(sampleInfo, sampleSettings);
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            UpdateWindowState();
+            this.UpdateWindowState();
         }
 
         private void OnCmdChangeResolution_Click(object sender, EventArgs e)
@@ -338,7 +338,7 @@ namespace SeeingSharp.WinFormsSamples
             if (!int.TryParse(splittedResolution[0], out var width)) { return; }
             if (!int.TryParse(splittedResolution[1], out var height)) { return; }
 
-            ChangeRenderResolution(width, height);
+            this.ChangeRenderResolution(width, height);
         }
 
         private async void OnCmdCopyScreenshot_Click(object sender, EventArgs e)

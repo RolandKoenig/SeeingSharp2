@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 

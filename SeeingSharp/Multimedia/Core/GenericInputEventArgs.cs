@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Core
         internal GenericInputEventArgs(IEnumerable<InputFrame> inputFrames)
         {
             // Reset input states
-            InputFrames = new List<InputFrame>(inputFrames);
+            this.InputFrames = new List<InputFrame>(inputFrames);
         }
 
         /// <summary>

@@ -47,8 +47,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
 
-            Opacity = opacity;
-            Color = singleColor;
+            this.Opacity = opacity;
+            this.Color = singleColor;
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (IsDisposed)
+            if (this.IsDisposed)
             {
-                throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException(this.GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
@@ -83,11 +83,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 // Load the brush
                 result = new D2D.SolidColorBrush(
-                    engineDevice.FakeRenderTarget2D,
-                    Color,
+                    engineDevice.FakeRenderTarget2D, this.Color,
                     new D2D.BrushProperties
                     {
-                        Opacity = Opacity,
+                        Opacity = this.Opacity,
                         Transform = Matrix3x2.Identity
                     });
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;

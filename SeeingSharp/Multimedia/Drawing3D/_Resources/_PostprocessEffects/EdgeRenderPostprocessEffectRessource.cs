@@ -52,9 +52,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public EdgeDetectPostprocessEffectResource()
         {
-            Thickness = 2f;
+            this.Thickness = 2f;
             m_borderColor = Color4Ex.BlueColor;
-            DrawOriginalObject = true;
+            this.DrawOriginalObject = true;
         }
 
         /// <summary>
@@ -153,16 +153,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
             m_constantBufferData.Opacity = 0.9f;
             m_constantBufferData.Threshold = 0.2f;
-            m_constantBufferData.Thickness = Thickness;
+            m_constantBufferData.Thickness = this.Thickness;
             m_constantBufferData.BorderColor = m_borderColor.ToVector3();
-            m_constantBufferData.OriginalColorAlpha = DrawOriginalObject ? 1f : 0f;
+            m_constantBufferData.OriginalColorAlpha = this.DrawOriginalObject ? 1f : 0f;
             m_constantBuffer.SetData(deviceContext, m_constantBufferData);
 
             // Render result of current pass to the main render target
             switch (passID)
             {
                 case 0:
-                    ApplyAlphaBasedSpriteRendering(deviceContext);
+                    this.ApplyAlphaBasedSpriteRendering(deviceContext);
                     try
                     {
                         deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     }
                     finally
                     {
-                        DiscardAlphaBasedSpriteRendering(deviceContext);
+                        this.DiscardAlphaBasedSpriteRendering(deviceContext);
                     }
                     return false;
             }

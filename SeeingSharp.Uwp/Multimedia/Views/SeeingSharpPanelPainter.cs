@@ -69,13 +69,13 @@ namespace SeeingSharp.Multimedia.Views
             m_lastSizeChange = DateTime.MinValue;
 
             // Create the RenderLoop object
-            RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
+            this.RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
             {
                 ClearColor = Color4Ex.White
             };
 
-            RenderLoop.Internals.CallPresentInUIThread = false;
-            DetachOnUnload = true;
+            this.RenderLoop.Internals.CallPresentInUIThread = false;
+            this.DetachOnUnload = true;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpPanelPainter(SwapChainBackgroundPanel targetPanel)
             : this()
         {
-            Attach(targetPanel);
+            this.Attach(targetPanel);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpPanelPainter(SwapChainPanel targetPanel)
             : this()
         {
-            Attach(targetPanel);
+            this.Attach(targetPanel);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="targetPanel">The target panel to attach to.</param>
         public void Attach(SwapChainPanel targetPanel)
         {
-            AttachInternal(new SwapChainPanelWrapper(targetPanel));
+            this.AttachInternal(new SwapChainPanelWrapper(targetPanel));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="targetPanel">The target panel to attach to.</param>
         public void Attach(SwapChainBackgroundPanel targetPanel)
         {
-            AttachInternal(new SwapChainPanelWrapper(targetPanel));
+            this.AttachInternal(new SwapChainPanelWrapper(targetPanel));
         }
 
         /// <summary>
@@ -126,14 +126,14 @@ namespace SeeingSharp.Multimedia.Views
                 if (m_targetPanel == null) { return; }
 
                 // Clear view resources
-                RenderLoop.Internals.UnloadViewResources();
-                RenderLoop.DeregisterRenderLoop();
+                this.RenderLoop.Internals.UnloadViewResources();
+                this.RenderLoop.DeregisterRenderLoop();
 
                 // Clear event registrations
-                m_targetPanel.SizeChanged -= OnTargetPanel_SizeChanged;
-                m_targetPanel.Loaded -= OnTargetPanel_Loaded;
-                m_targetPanel.Unloaded -= OnTargetPanel_Unloaded;
-                m_targetPanel.CompositionScaleChanged -= OnTargetPanel_CompositionScaleChanged;
+                m_targetPanel.SizeChanged -= this.OnTargetPanel_SizeChanged;
+                m_targetPanel.Loaded -= this.OnTargetPanel_Loaded;
+                m_targetPanel.Unloaded -= this.OnTargetPanel_Unloaded;
+                m_targetPanel.CompositionScaleChanged -= this.OnTargetPanel_CompositionScaleChanged;
 
                 //Clear created references
                 m_observerSizeChanged.Dispose();
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void Dispose()
         {
-            Detach();
+            this.Detach();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Ignore event, if nothing has changed..
-                var actSize = GetTargetRenderPixelSize();
+                var actSize = this.GetTargetRenderPixelSize();
 
                 if ((int)m_lastRefreshTargetSize.Width == actSize.Width &&
                     (int)m_lastRefreshTargetSize.Height == actSize.Height)
@@ -178,7 +178,7 @@ namespace SeeingSharp.Multimedia.Views
                     return;
                 }
 
-                UpdateRenderLoopViewSize();
+                this.UpdateRenderLoopViewSize();
             }
             catch (Exception ex)
             {
@@ -203,17 +203,17 @@ namespace SeeingSharp.Multimedia.Views
             //    .ObserveOn(SynchronizationContext.Current)
             //    .Subscribe((eArgs) => OnTargetPanelThrottled_SizeChanged(eArgs.Sender, eArgs.EventArgs));
 
-            m_targetPanel.SizeChanged += OnTargetPanel_SizeChanged;
-            m_targetPanel.Loaded += OnTargetPanel_Loaded;
-            m_targetPanel.Unloaded += OnTargetPanel_Unloaded;
-            m_targetPanel.CompositionScaleChanged += OnTargetPanel_CompositionScaleChanged;
+            m_targetPanel.SizeChanged += this.OnTargetPanel_SizeChanged;
+            m_targetPanel.Loaded += this.OnTargetPanel_Loaded;
+            m_targetPanel.Unloaded += this.OnTargetPanel_Unloaded;
+            m_targetPanel.CompositionScaleChanged += this.OnTargetPanel_CompositionScaleChanged;
 
-            UpdateRenderLoopViewSize();
+            this.UpdateRenderLoopViewSize();
 
             // Define unloading behavior
             if (VisualTreeHelper.GetParent(m_targetPanel.Panel) != null)
             {
-                RenderLoop.RegisterRenderLoop();
+                this.RenderLoop.RegisterRenderLoop();
             }
         }
 
@@ -237,9 +237,9 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void UpdateRenderLoopViewSize()
         {
-            var viewSize = GetTargetRenderPixelSize();
-            RenderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
-            RenderLoop.SetCurrentViewSize(
+            var viewSize = this.GetTargetRenderPixelSize();
+            this.RenderLoop.Camera.SetScreenSize(viewSize.Width, viewSize.Height);
+            this.RenderLoop.SetCurrentViewSize(
                 viewSize.Width,
                 viewSize.Height);
         }
@@ -251,12 +251,12 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnTargetPanel_Unloaded(object sender, RoutedEventArgs e)
         {
-            RenderLoop.DeregisterRenderLoop();
+            this.RenderLoop.DeregisterRenderLoop();
 
             // Trigger detach if requested
-            if(DetachOnUnload)
+            if(this.DetachOnUnload)
             {
-                Detach();
+                this.Detach();
             }
         }
 
@@ -267,9 +267,9 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnTargetPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!RenderLoop.IsRegisteredOnMainLoop)
+            if (!this.RenderLoop.IsRegisteredOnMainLoop)
             {
-                RenderLoop.RegisterRenderLoop();
+                this.RenderLoop.RegisterRenderLoop();
             }
         }
 
@@ -286,13 +286,13 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             //Resize render target only on greater size changes
-            var viewSize = GetTargetRenderPixelSize();
+            var viewSize = this.GetTargetRenderPixelSize();
             var resizeFactorWidth = (double)viewSize.Width > m_lastRefreshTargetSize.Width ? viewSize.Width / m_lastRefreshTargetSize.Width : m_lastRefreshTargetSize.Width / viewSize.Width;
             var resizeFactorHeight = (double)viewSize.Height > m_lastRefreshTargetSize.Height ? viewSize.Height / m_lastRefreshTargetSize.Height : m_lastRefreshTargetSize.Height / viewSize.Height;
 
             if (resizeFactorWidth > 1.3 || resizeFactorHeight > 1.3)
             {
-                UpdateRenderLoopViewSize();
+                this.UpdateRenderLoopViewSize();
             }
 
             m_lastSizeChange = DateTime.UtcNow;
@@ -305,7 +305,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e"></param>
         private void OnTargetPanel_CompositionScaleChanged(object sender, EventArgs e)
         {
-            UpdateRenderLoopViewSize();
+            this.UpdateRenderLoopViewSize();
 
             m_compositionScaleChanged = true;
         }
@@ -330,10 +330,10 @@ namespace SeeingSharp.Multimedia.Views
         {
             m_backBufferMultisampled = null;
 
-            var viewSize = GetTargetRenderPixelSize();
+            var viewSize = this.GetTargetRenderPixelSize();
 
             // Create the SwapChain and associate it with the SwapChainBackgroundPanel
-            m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, RenderLoop.ViewConfiguration);
+            m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
             m_targetPanel.SwapChain = m_swapChain;
             m_compositionScaleChanged = true;
 
@@ -342,9 +342,9 @@ namespace SeeingSharp.Multimedia.Views
 
             // Define the render target (in case of multisample an own render target)
             D3D11.Texture2D backBufferForRenderloop = null;
-            if (RenderLoop.ViewConfiguration.AntialiasingEnabled)
+            if (this.RenderLoop.ViewConfiguration.AntialiasingEnabled)
             {
-                m_backBufferMultisampled = GraphicsHelper.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, RenderLoop.ViewConfiguration);
+                m_backBufferMultisampled = GraphicsHelper.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
                 m_renderTargetView = new D3D11.RenderTargetView(engineDevice.DeviceD3D11_1, m_backBufferMultisampled);
                 backBufferForRenderloop = m_backBufferMultisampled;
             }
@@ -355,7 +355,7 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, RenderLoop.ViewConfiguration);
+            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
             m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.DeviceD3D11_1, m_depthBuffer);
 
             //Define the viewport for rendering
@@ -386,11 +386,11 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
             if (m_targetPanel == null){ return; }
-            if (RenderLoop == null){ return; }
+            if (this.RenderLoop == null){ return; }
 
             // Update swap chain scaling (only relevant for SwapChainPanel targets)
             //  see https://www.packtpub.com/books/content/integrating-direct3d-xaml-and-windows-81
-            if (RenderLoop.Camera != null &&
+            if (this.RenderLoop.Camera != null &&
                 m_swapChain != null)
             {
                 if (m_compositionScaleChanged &&
@@ -424,7 +424,7 @@ namespace SeeingSharp.Multimedia.Views
                 DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsUwp.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
             {
                 m_lastSizeChange = DateTime.MinValue;
-                UpdateRenderLoopViewSize();
+                this.UpdateRenderLoopViewSize();
             }
         }
 
@@ -459,8 +459,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => RenderLoop.Scene;
-            set => RenderLoop.SetScene(value);
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
         }
 
         /// <summary>
@@ -468,8 +468,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get => RenderLoop.Camera;
-            set => RenderLoop.Camera = value;
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
         }
 
         /// <summary>
@@ -482,8 +482,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public bool DiscardRendering
         {
-            get => RenderLoop.DiscardRendering;
-            set => RenderLoop.DiscardRendering = value;
+            get => this.RenderLoop.DiscardRendering;
+            set => this.RenderLoop.DiscardRendering = value;
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Gets the current pixel size of the target panel.
         /// </summary>
-        public Size2 PixelSize => GetTargetRenderPixelSize();
+        public Size2 PixelSize => this.GetTargetRenderPixelSize();
 
         public Size2 ActualSize => new Size2((int)m_targetPanel.ActualWidth, (int)m_targetPanel.ActualHeight);
 
@@ -510,10 +510,10 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                var clearColor = RenderLoop.ClearColor;
+                var clearColor = this.RenderLoop.ClearColor;
                 return SeeingSharpUwpUtil.UIColorFromColor4(ref clearColor);
             }
-            set => RenderLoop.ClearColor = SeeingSharpUwpUtil.Color4FromUIColor(ref value);
+            set => this.RenderLoop.ClearColor = SeeingSharpUwpUtil.Color4FromUIColor(ref value);
         }
 
         public Panel TargetPanel => m_targetPanel?.Panel;
@@ -522,7 +522,7 @@ namespace SeeingSharp.Multimedia.Views
         /// True if the control is connected with the main rendering loop.
         /// False if something went wrong.
         /// </summary>
-        public bool IsOperational => RenderLoop.IsOperational;
+        public bool IsOperational => this.RenderLoop.IsOperational;
 
         public CoreDispatcher Dispatcher => m_targetPanel?.Dispatcher;
 
@@ -530,6 +530,6 @@ namespace SeeingSharp.Multimedia.Views
         /// Does the target control have focus?
         /// (Return true here if rendering runs, because in WinRT we are every time at fullscreen)
         /// </summary>
-        bool IInputEnabledView.Focused => RenderLoop.IsRegisteredOnMainLoop;
+        bool IInputEnabledView.Focused => this.RenderLoop.IsRegisteredOnMainLoop;
     }
 }

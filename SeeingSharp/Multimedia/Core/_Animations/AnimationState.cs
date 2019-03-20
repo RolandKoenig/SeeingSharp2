@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public AnimationState()
         {
-            RunningAnimationsIndex = 0;
+            this.RunningAnimationsIndex = 0;
         }
 
         /// <summary>

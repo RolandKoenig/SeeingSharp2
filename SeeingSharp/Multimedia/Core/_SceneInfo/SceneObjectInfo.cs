@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
             obj.EnsureNotNull(nameof(obj));
             obj.Scene.EnsureNotNull($"{nameof(obj)}.{nameof(obj.Scene)}");
 
-            OriginalObject = obj;
+            this.OriginalObject = obj;
 
             // Build child list
             m_children = new List<SceneObjectInfo>(obj.CountChildren);
@@ -54,22 +54,22 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Set the type of this object
-            Type = SceneObjectInfoType.Other;
+            this.Type = SceneObjectInfoType.Other;
             var clrType = obj.GetType();
 
             if (clrType == typeof(GenericObject))
             {
-                Type = SceneObjectInfoType.GenericObject;
+                this.Type = SceneObjectInfoType.GenericObject;
             }
             else if (clrType == typeof(ScenePivotObject))
             {
-                Type = SceneObjectInfoType.Pivot;
+                this.Type = SceneObjectInfoType.Pivot;
             }
         }
 
         public override string ToString()
         {
-            return $"Type:{Type}, #Children:{Children.Count}";
+            return $"Type:{this.Type}, #Children:{this.Children.Count}";
         }
 
         public SceneObject OriginalObject { get; }

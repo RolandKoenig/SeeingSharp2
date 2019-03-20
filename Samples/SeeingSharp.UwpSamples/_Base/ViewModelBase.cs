@@ -31,7 +31,7 @@ namespace SeeingSharp.UwpSamples
 
         protected void RaisePropertyChanged([CallerMemberName] string propName = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }

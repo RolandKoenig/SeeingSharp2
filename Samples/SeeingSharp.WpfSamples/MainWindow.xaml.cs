@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using SeeingSharp.Multimedia.Core;
@@ -15,9 +16,9 @@ namespace SeeingSharp.WpfSamples
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Loaded += OnLoaded;
+            this.Loaded += this.OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -26,20 +27,20 @@ namespace SeeingSharp.WpfSamples
             {
                 var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
-                DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
+                this.DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
 
-                this.CtrlRenderer.RenderLoop.PrepareRender += OnRenderLoop_PrepareRender;
+                CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
             }
         }
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(!(DataContext is MainWindowViewModel viewModel)) { return; }
+            if(!(this.DataContext is MainWindowViewModel viewModel)) { return; }
 
             var selectedSample = viewModel.SelectedSample;
             if(selectedSample == null) { return; }
 
-            ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        private void OnRenderLoop_PrepareRender(object sender, System.EventArgs e)
+        private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
         {
             var actSample = m_actSample;
             actSample?.Update();

@@ -51,7 +51,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Configure text geometry

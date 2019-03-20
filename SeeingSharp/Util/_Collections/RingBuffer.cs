@@ -47,7 +47,7 @@ namespace SeeingSharp.Util
             maxItemCount.EnsureInRange(2, int.MaxValue, nameof(maxItemCount));
 
             m_buffer = new T[maxItemCount];
-            Count = maxItemCount;
+            this.Count = maxItemCount;
             m_itemStart = 0;
             m_itemLength = 0;
         }
@@ -59,17 +59,17 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void AddWithOverride(T newItem)
         {
-            if(m_itemLength < Count)
+            if(m_itemLength < this.Count)
             {
-                m_buffer[(m_itemStart + m_itemLength) % Count] = newItem;
+                m_buffer[(m_itemStart + m_itemLength) % this.Count] = newItem;
                 m_itemLength++;
             }
             else
             {
-                m_itemStart = (m_itemStart + 1) % Count;
+                m_itemStart = (m_itemStart + 1) % this.Count;
 
                 var nextIndex = m_itemStart - 1;
-                if(nextIndex < 0) { nextIndex = Count - 1; }
+                if(nextIndex < 0) { nextIndex = this.Count - 1; }
                 m_buffer[nextIndex] = newItem;
             }
         }
@@ -81,14 +81,14 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void AddWithException(T newItem)
         {
-            if (m_itemLength < Count)
+            if (m_itemLength < this.Count)
             {
-                m_buffer[(m_itemStart + m_itemLength) % Count] = newItem;
+                m_buffer[(m_itemStart + m_itemLength) % this.Count] = newItem;
                 m_itemLength++;
             }
             else
             {
-                throw new SeeingSharpException("The RingBuffer reached the maximum count of items (" + Count + ")!");
+                throw new SeeingSharpException("The RingBuffer reached the maximum count of items (" + this.Count + ")!");
             }
         }
 
@@ -103,7 +103,7 @@ namespace SeeingSharp.Util
                 targetObservable.PushNext(m_buffer[m_itemStart]);
                 m_buffer[m_itemStart] = default;
 
-                m_itemStart = (m_itemStart + 1) % Count;
+                m_itemStart = (m_itemStart + 1) % this.Count;
                 m_itemLength--;
             }
             m_itemLength--;
@@ -114,7 +114,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for(var loop=0; loop<Count; loop++)
+            for(var loop=0; loop< this.Count; loop++)
             {
                 m_buffer[loop] = default;
             }
@@ -131,7 +131,7 @@ namespace SeeingSharp.Util
             get
             {
                 if (index >= m_itemLength) { throw new IndexOutOfRangeException(); }
-                return m_buffer[(m_itemStart + index) % Count];
+                return m_buffer[(m_itemStart + index) % this.Count];
             }
         }
 

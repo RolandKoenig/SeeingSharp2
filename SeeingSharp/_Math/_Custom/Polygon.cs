@@ -40,7 +40,7 @@ namespace SeeingSharp
             if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
             m_vertices = vertices;
-            Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
+            this.Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
 
             //Define normal calculation method
             m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
@@ -85,7 +85,7 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            var surface2D = Flattern();
+            var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 

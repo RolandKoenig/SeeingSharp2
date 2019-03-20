@@ -69,16 +69,16 @@ namespace SeeingSharp.Util
             m_generateHistoricalCollection = true;
             m_generateCurrentValueCollection = true;
 
-            SyncContext = SynchronizationContext.Current;
+            this.SyncContext = SynchronizationContext.Current;
             m_delayTimeMS = 1000;
 
             m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
-            UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
+            this.UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
+            this.UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
+            this.UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
+            this.UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SeeingSharp.Util
         /// <param name="calculatorName">The name of the calculator this occurrence belongs to.</param>
         public void NotifyFlowRateOccurrence(string calculatorName)
         {
-            var kpiCalculator = GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
+            var kpiCalculator = this.GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
             kpiCalculator.NotifyOccurrence();
         }
 
@@ -98,7 +98,7 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
         public void NotifyActivityDuration(string activity, long durationTicks)
         {
-            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
             kpiCalculator.NotifyActivityDuration(durationTicks);
         }
 
@@ -109,7 +109,7 @@ namespace SeeingSharp.Util
         /// <param name="actionToExecute">The action to be executed and measured.</param>
         public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
-            var kpiCalculator = GetKpiCalculator<DurationPerformanceCalculator>(activity);
+            var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -134,7 +134,7 @@ namespace SeeingSharp.Util
 
             return new DummyDisposable(() =>
             {
-                NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
+                this.NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
             });
         }
 
@@ -168,10 +168,10 @@ namespace SeeingSharp.Util
                         }
 
                         // Calculate values now
-                        CalculateValuesAsync(utcNow);
+                        this.CalculateValuesAsync(utcNow);
 
                         // Trigger refresh of ui collections
-                        await RefreshUICollectionsAsync();
+                        await this.RefreshUICollectionsAsync();
                     }
                     catch(Exception)
                     {
@@ -189,10 +189,10 @@ namespace SeeingSharp.Util
         public async Task RefreshUICollectionsAsync()
         {
             // Trigger UI synchronization
-            await SyncContext.PostAlsoIfNullAsync(
+            await this.SyncContext.PostAlsoIfNullAsync(
                 () =>
                 {
-                    RefreshUICollections();
+                    this.RefreshUICollections();
                 },
                 ActionIfSyncContextIsNull.InvokeSynchronous);
         }
@@ -202,7 +202,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void RefreshUICollections()
         {
-            UIDurationKpisCurrents.Clear();
+            this.UIDurationKpisCurrents.Clear();
 
             foreach (var actCalculatorInfo in m_calculatorsBag)
             {
@@ -210,7 +210,7 @@ namespace SeeingSharp.Util
 
                 while (actCalculatorInfo.Results.TryTake(out actResult))
                 {
-                    HandleResultForUI(actResult);
+                    this.HandleResultForUI(actResult);
                 }
             }
         }
@@ -293,7 +293,7 @@ namespace SeeingSharp.Util
         /// </summary>
         private void EnsureNotRunning()
         {
-            if (IsRunning)
+            if (this.IsRunning)
             {
                 throw new InvalidOperationException("Unable to perform this operation when OnlineKpiContainer is running!");
             }
@@ -340,7 +340,7 @@ namespace SeeingSharp.Util
             get => m_valueInterval;
             set
             {
-                EnsureNotRunning();
+                this.EnsureNotRunning();
                 m_valueInterval = value;
             }
         }
@@ -354,7 +354,7 @@ namespace SeeingSharp.Util
             get => m_calculationInterval;
             set
             {
-                EnsureNotRunning();
+                this.EnsureNotRunning();
                 m_calculationInterval = value;
             }
         }
@@ -367,7 +367,7 @@ namespace SeeingSharp.Util
             get => m_maxCountHistoricalEntries;
             set
             {
-                EnsureNotRunning();
+                this.EnsureNotRunning();
                 m_maxCountHistoricalEntries = value;
             }
         }
@@ -380,7 +380,7 @@ namespace SeeingSharp.Util
             get => m_generateHistoricalCollection;
             set
             {
-                EnsureNotRunning();
+                this.EnsureNotRunning();
                 m_generateHistoricalCollection = value;
             }
         }
@@ -393,7 +393,7 @@ namespace SeeingSharp.Util
             get => m_generateCurrentValueCollection;
             set
             {
-                EnsureNotRunning();
+                this.EnsureNotRunning();
                 m_generateCurrentValueCollection = value;
             }
         }

@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (m_d3dRenderTarget != null)
             {
-                AddDirtyRect(new Int32Rect(0, 0, PixelWidth, PixelHeight));
+                this.AddDirtyRect(new Int32Rect(0, 0, this.PixelWidth, this.PixelHeight));
             }
         }
 
@@ -81,9 +81,9 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_d3dRenderTarget = null;
 
-                Lock();
-                SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
-                Unlock();
+                this.Lock();
+                this.SetBackBuffer(D3DResourceType.IDirect3DSurface9, IntPtr.Zero);
+                this.Unlock();
             }
 
             if (renderTarget == null) { return; }
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Views
                 throw new ArgumentException("texture format is not compatible with OpenSharedResource");
             }
 
-            var handle = GetSharedHandle(renderTarget);
+            var handle = this.GetSharedHandle(renderTarget);
 
             if (handle == IntPtr.Zero)
             {
@@ -118,9 +118,9 @@ namespace SeeingSharp.Multimedia.Views
 
             using (var surface = m_d3dRenderTarget.GetSurfaceLevel(0))
             {
-                Lock();
-                SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
-                Unlock();
+                this.Lock();
+                this.SetBackBuffer(D3DResourceType.IDirect3DSurface9, surface.NativePointer);
+                this.Unlock();
             }
         }
 
@@ -129,7 +129,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public void Dispose()
         {
-            SetRenderTarget(null);
+            this.SetRenderTarget(null);
 
             m_d3dRenderTarget = SeeingSharpUtil.DisposeObject(m_d3dRenderTarget);
             s_activeClients--;

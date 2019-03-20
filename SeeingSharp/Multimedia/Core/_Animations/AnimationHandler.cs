@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="owner">The owner object of this AnimationHandler.</param>
         public AnimationHandler(object owner)
         {
-            Owner = owner;
+            this.Owner = owner;
         }
 
         /// <summary>

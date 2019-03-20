@@ -59,18 +59,18 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            Attach(manipulator, correspondingView);
+            this.Attach(manipulator, correspondingView);
             return null;
         }
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
         {
-            Detach(manipulator, correspondingView);
+            this.Detach(manipulator, correspondingView);
         }
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
         {
-            Update(updateState, correspondingView);
+            this.Update(updateState, correspondingView);
         }
     }
 
@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal override object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView)
         {
-            return Attach(manipulator, correspondingView);
+            return this.Attach(manipulator, correspondingView);
         }
 
         internal override void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext)
@@ -121,7 +121,7 @@ namespace SeeingSharp.Multimedia.Core
             var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
-            Detach(manipulator, correspondingView, componentContextCasted);
+            this.Detach(manipulator, correspondingView, componentContextCasted);
         }
 
         internal override void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext)
@@ -129,7 +129,7 @@ namespace SeeingSharp.Multimedia.Core
             var componentContextCasted = componentContext as TContextType;
             componentContextCasted.EnsureNotNull(nameof(componentContext));
 
-            Update(updateState, correspondingView, componentContextCasted);
+            this.Update(updateState, correspondingView, componentContextCasted);
         }
     }
 }

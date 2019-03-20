@@ -64,11 +64,11 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 return true;
             }
-            if (obj.GetType() != GetType())
+            if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-            return Equals((MipMapDescription)obj);
+            return this.Equals((MipMapDescription)obj);
         }
 
         public override int GetHashCode()

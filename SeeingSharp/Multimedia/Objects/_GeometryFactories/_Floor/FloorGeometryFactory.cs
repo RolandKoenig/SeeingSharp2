@@ -90,8 +90,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Generate all borders
-            var boolTileMap = CreateBooleanMap(tileMap);
-            GenerateBorders(boolTileMap, tilesX, tilesY);
+            var boolTileMap = this.CreateBooleanMap(tileMap);
+            this.GenerateBorders(boolTileMap, tilesX, tilesY);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Objects
                     tilemap[loopX, loopY] = true;
                 }
             }
-            SetTilemap(tilemap);
+            this.SetTilemap(tilemap);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Generate all borders
-            GenerateBorders(tileMap, tilesX, tilesY);
+            this.GenerateBorders(tileMap, tilesX, tilesY);
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Build bottom geometry
             var bottomSurface = result.CreateSurface();
-            bottomSurface.Material = BottomMaterial;
-            materialRelated[BottomMaterial] = bottomSurface;
+            bottomSurface.Material = this.BottomMaterial;
+            materialRelated[this.BottomMaterial] = bottomSurface;
 
             // Calculate half vector of total ground size.
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -199,7 +199,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if (actMaterial.IsEmpty)
                 {
-                    actMaterial = DefaultFloorMaterial;
+                    actMaterial = this.DefaultFloorMaterial;
                 }
 
                 // Get surface object
@@ -235,12 +235,12 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Build all borders
             GeometrySurface borderSurface = null;
-            if (materialRelated.ContainsKey(BorderMaterial)) { borderSurface = materialRelated[BorderMaterial]; }
+            if (materialRelated.ContainsKey(this.BorderMaterial)) { borderSurface = materialRelated[this.BorderMaterial]; }
             else
             {
                 borderSurface = result.CreateSurface();
-                borderSurface.Material = BorderMaterial;
-                materialRelated[BorderMaterial] = borderSurface;
+                borderSurface.Material = this.BorderMaterial;
+                materialRelated[this.BorderMaterial] = borderSurface;
             }
             foreach (var actBorder in m_borders)
             {

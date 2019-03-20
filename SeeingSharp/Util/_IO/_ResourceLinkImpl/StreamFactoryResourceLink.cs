@@ -99,7 +99,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Task<Stream> OpenInputStreamAsync()
         {
-            return Task.FromResult(OpenInputStream());
+            return Task.FromResult(this.OpenInputStream());
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension => GetExtensionFromFileName(m_fileName);
+        public override string FileExtension => this.GetExtensionFromFileName(m_fileName);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?

@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureKey">The name of the texture to be rendered.</param>
         public SpriteMaterialResource(NamedOrGenericKey textureKey)
         {
-            TextureKey = textureKey;
+            this.TextureKey = textureKey;
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
             //Load the texture if any configured.
-            if (!TextureKey.IsEmpty)
+            if (!this.TextureKey.IsEmpty)
             {
                 //Get texture resource
-                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(TextureKey);
+                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(this.TextureKey);
             }
         }
 
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -112,7 +112,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var isResourceSameType =
                 previousMaterial != null &&
-                previousMaterial.ResourceType == ResourceType;
+                previousMaterial.ResourceType == this.ResourceType;
 
             if (!isResourceSameType)
             {

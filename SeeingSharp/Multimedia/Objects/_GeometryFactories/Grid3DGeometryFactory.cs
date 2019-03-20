@@ -32,21 +32,21 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Grid3DGeometryFactory()
         {
-            GenerateGround = true;
-            LineSmallDivider = 25f;
-            LineBigDivider = 100f;
-            TileWidth = 1f;
-            TilesX = 10;
-            TilesZ = 10;
-            GroupTileCount = 5;
-            BuildBackFaces = true;
+            this.GenerateGround = true;
+            this.LineSmallDivider = 25f;
+            this.LineBigDivider = 100f;
+            this.TileWidth = 1f;
+            this.TilesX = 10;
+            this.TilesZ = 10;
+            this.GroupTileCount = 5;
+            this.BuildBackFaces = true;
 
-            HighlightXZLines = false;
-            ZLineHighlightColor = Color4Ex.BlueColor;
-            XLineHighlightColor = Color4Ex.GreenColor;
+            this.HighlightXZLines = false;
+            this.ZLineHighlightColor = Color4Ex.BlueColor;
+            this.XLineHighlightColor = Color4Ex.GreenColor;
 
-            GroundColor = Color4Ex.LightSteelBlue;
-            LineColor = Color4Ex.LightGray;
+            this.GroundColor = Color4Ex.LightSteelBlue;
+            this.LineColor = Color4Ex.LightGray;
         }
 
         /// <summary>
@@ -58,53 +58,52 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Calculate parameters
             var firstCoordinate = new Vector3(
-                -(TilesX * TileWidth / 2f),
+                -(this.TilesX * this.TileWidth / 2f),
                 0f,
-                -(TilesZ * TileWidth / 2f));
-            var tileWidthX = TileWidth;
-            var tileWidthZ = TileWidth;
-            var fieldWidth = tileWidthX * TilesX;
-            var fieldDepth = tileWidthZ * TilesZ;
+                -(this.TilesZ * this.TileWidth / 2f));
+            var tileWidthX = this.TileWidth;
+            var tileWidthZ = this.TileWidth;
+            var fieldWidth = tileWidthX * this.TilesX;
+            var fieldDepth = tileWidthZ * this.TilesZ;
             var fieldWidthHalf = fieldWidth / 2f;
             var fieldDepthHalf = fieldDepth / 2f;
 
-            var tileMiddleX = TilesX % 2 == 0 && HighlightXZLines ? TilesX / 2 : 1;
-            var tileMiddleZ = TilesZ % 2 == 0 && HighlightXZLines ? TilesZ / 2 : 1;
+            var tileMiddleX = this.TilesX % 2 == 0 && this.HighlightXZLines ? this.TilesX / 2 : 1;
+            var tileMiddleZ = this.TilesZ % 2 == 0 && this.HighlightXZLines ? this.TilesZ / 2 : 1;
 
             // Define lower ground geometry
-            if (GenerateGround)
+            if (this.GenerateGround)
             {
                 var lowerGround = result.CreateSurface();
-                lowerGround.EnableTextureTileMode(new Vector2(TileWidth, TileWidth));
+                lowerGround.EnableTextureTileMode(new Vector2(this.TileWidth, this.TileWidth));
                 lowerGround.BuildRect4V(
                     new Vector3(-fieldWidthHalf, -0.01f, -fieldDepthHalf),
                     new Vector3(fieldWidthHalf, -0.01f, -fieldDepthHalf),
                     new Vector3(fieldWidthHalf, -0.01f, fieldDepthHalf),
                     new Vector3(-fieldWidthHalf, -0.01f, fieldDepthHalf),
-                    new Vector3(0f, 1f, 0f),
-                    GroundColor);
-                lowerGround.Material = GroundMaterial;
+                    new Vector3(0f, 1f, 0f), this.GroundColor);
+                lowerGround.Material = this.GroundMaterial;
             }
 
             // Define line geometry
             var genSurfaceDefaultLine = result.CreateSurface();
             var genSurfaceGroupLine = result.CreateSurface();
 
-            for (var actTileX = 0; actTileX < TilesX + 1; actTileX++)
+            for (var actTileX = 0; actTileX < this.TilesX + 1; actTileX++)
             {
                 var localStart = firstCoordinate + new Vector3(actTileX * tileWidthX, 0f, 0f);
-                var localEnd = localStart + new Vector3(0f, 0f, tileWidthZ * TilesZ);
+                var localEnd = localStart + new Vector3(0f, 0f, tileWidthZ * this.TilesZ);
 
-                var actLineColor = LineColor;
-                var divider = actTileX % GroupTileCount == 0 ? LineSmallDivider : LineBigDivider;
+                var actLineColor = this.LineColor;
+                var divider = actTileX % this.GroupTileCount == 0 ? this.LineSmallDivider : this.LineBigDivider;
 
-                if (HighlightXZLines && actTileX == tileMiddleX)
+                if (this.HighlightXZLines && actTileX == tileMiddleX)
                 {
-                    actLineColor = ZLineHighlightColor;
-                    divider = LineSmallDivider;
+                    actLineColor = this.ZLineHighlightColor;
+                    divider = this.LineSmallDivider;
                 }
 
-                var targetGeometry = actTileX % GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
+                var targetGeometry = actTileX % this.GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
                 targetGeometry.BuildRect4V(
                     localStart - new Vector3(tileWidthX / divider, 0f, 0f),
                     localStart + new Vector3(tileWidthX / divider, 0f, 0f),
@@ -112,7 +111,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
                     actLineColor);
 
-                if(BuildBackFaces)
+                if(this.BuildBackFaces)
                 {
                     targetGeometry.BuildRect4V(
                         localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
@@ -123,21 +122,21 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            for (var actTileZ = 0; actTileZ < TilesZ + 1; actTileZ++)
+            for (var actTileZ = 0; actTileZ < this.TilesZ + 1; actTileZ++)
             {
                 var localStart = firstCoordinate + new Vector3(0f, 0f, actTileZ * tileWidthZ);
-                var localEnd = localStart + new Vector3(tileWidthX * TilesX, 0f, 0f);
+                var localEnd = localStart + new Vector3(tileWidthX * this.TilesX, 0f, 0f);
 
-                var actLineColor = LineColor;
-                var divider = actTileZ % GroupTileCount == 0 ? LineSmallDivider : LineBigDivider;
+                var actLineColor = this.LineColor;
+                var divider = actTileZ % this.GroupTileCount == 0 ? this.LineSmallDivider : this.LineBigDivider;
 
-                if (HighlightXZLines && actTileZ == tileMiddleZ)
+                if (this.HighlightXZLines && actTileZ == tileMiddleZ)
                 {
-                    actLineColor = XLineHighlightColor;
-                    divider = LineSmallDivider;
+                    actLineColor = this.XLineHighlightColor;
+                    divider = this.LineSmallDivider;
                 }
 
-                var targetGeometry = actTileZ % GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
+                var targetGeometry = actTileZ % this.GroupTileCount == 0 ? genSurfaceGroupLine : genSurfaceDefaultLine;
                 targetGeometry.BuildRect4V(
                     localStart + new Vector3(0f, 0f, tileWidthZ / divider),
                     localStart - new Vector3(0f, 0f, tileWidthZ / divider),
@@ -145,7 +144,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
                     actLineColor);
 
-                if(BuildBackFaces)
+                if(this.BuildBackFaces)
                 {
                     targetGeometry.BuildRect4V(
                         localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
@@ -155,8 +154,8 @@ namespace SeeingSharp.Multimedia.Objects
                         actLineColor);
                 }
             }
-            genSurfaceDefaultLine.Material = LineMaterial;
-            genSurfaceGroupLine.Material = LineMaterial;
+            genSurfaceDefaultLine.Material = this.LineMaterial;
+            genSurfaceGroupLine.Material = this.LineMaterial;
             if (genSurfaceDefaultLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceDefaultLine); }
             if (genSurfaceGroupLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceGroupLine); }
 

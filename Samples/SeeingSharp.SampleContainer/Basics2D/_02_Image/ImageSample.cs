@@ -35,7 +35,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
         "Image", 2, nameof(Basics2D),
         "PreviewImage.png",
         "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_02_Image",
-        settingsType: typeof(ImageSampleSettings))]
+        typeof(ImageSampleSettings))]
     public class ImageSample : SampleBase
     {
         private const float IMAGE_WIDTH = 64;
@@ -62,9 +62,9 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
                 var width = IMAGE_WIDTH * EngineMath.Clamp(castedSettings.Scaling, 0f, 100f);
                 var height = IMAGE_HEIGHT * EngineMath.Clamp(castedSettings.Scaling, 0f, 100f);
                 var bitmapRect = new RectangleF(
-                    (graphics.ScreenWidth / 2f) - (width / 2f),
-                    (graphics.ScreenHeight / 2f) - (height / 2f),
-                    (float)width, (float)height);
+                    graphics.ScreenWidth / 2f - width / 2f,
+                    graphics.ScreenHeight / 2f - height / 2f,
+                    width, height);
 
                 graphics.Clear(Color4Ex.WhiteSmoke);
                 graphics.DrawBitmap(

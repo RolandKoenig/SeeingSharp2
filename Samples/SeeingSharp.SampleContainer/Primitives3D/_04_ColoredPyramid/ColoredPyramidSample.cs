@@ -49,10 +49,10 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
             var scene = targetRenderLoop.Scene;
             var camera = targetRenderLoop.Camera;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync((manipulator) =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create Pyramid geometry resource

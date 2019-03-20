@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Objects
         public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
             : this(geometryResource)
         {
-            Position = position;
+            this.Position = position;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Objects
                 geometryResource.IsLoaded)
             {
                 var result = geometryResource.BoundingBox;
-                result.Transform(Transform);
+                result.Transform(this.Transform);
                 return result;
             }
             return default;
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Calculate bounding sphere
                 BoundingSphere.FromBox(ref boundingBox, out var result);
 
-                result.Transform(Transform);
+                result.Transform(this.Transform);
 
                 return result;
             }
@@ -217,24 +217,23 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
-            if (m_passRelevantValuesChanged ||
-                CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (m_passRelevantValuesChanged || this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
                 //Unsubscribe from all passes first
-                UnsubsribeFromAllPasses(layerViewSubset);
+                this.UnsubsribeFromAllPasses(layerViewSubset);
 
                 //Now subscribe to needed pass
-                if (Opacity < 1f)
+                if (this.Opacity < 1f)
                 {
-                    SubscribeToPass(
+                    this.SubscribeToPass(
                         RenderPassInfo.PASS_TRANSPARENT_RENDER,
-                        layerViewSubset, OnRenderTransparent);
+                        layerViewSubset, this.OnRenderTransparent);
                 }
                 else
                 {
-                    SubscribeToPass(
+                    this.SubscribeToPass(
                         RenderPassInfo.PASS_PLAIN_RENDER,
-                        layerViewSubset, OnRenderPlain);
+                        layerViewSubset, this.OnRenderPlain);
                 }
 
                 //Update local flag
@@ -275,7 +274,7 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     // Transform picking ray to local space
                     var pickingRay = new Ray(rayStart, rayDirection);
-                    var localTransform = Transform;
+                    var localTransform = this.Transform;
                     Matrix.Invert(ref localTransform, out var temp);
                     pickingRay.Transform(temp);
 
@@ -307,7 +306,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <returns></returns>
         internal override bool IsInBoundingFrustum(ViewInformation viewInfo, ref BoundingFrustum boundingFrustum)
         {
-            var boundingSphere = TryGetBoundingSphere(viewInfo);
+            var boundingSphere = this.TryGetBoundingSphere(viewInfo);
 
             if (boundingSphere != default)
             {
@@ -327,7 +326,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (geometryResource != null)
             {
-                UpdateAndApplyRenderParameters(renderState);
+                this.UpdateAndApplyRenderParameters(renderState);
                 geometryResource.Render(renderState);
             }
         }
@@ -342,7 +341,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (geometryResource != null)
             {
-                UpdateAndApplyRenderParameters(renderState);
+                this.UpdateAndApplyRenderParameters(renderState);
                 geometryResource.Render(renderState);
             }
         }

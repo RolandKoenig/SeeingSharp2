@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="pitch"></param>
         public void SetBitmapContent(Graphics2D graphics, IntPtr pointer, int pitch)
         {
-            var bitmap = GetBitmap(graphics.Device);
+            var bitmap = this.GetBitmap(graphics.Device);
             bitmap.CopyFromMemory(pointer, pitch);
         }
 
@@ -77,9 +77,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (IsDisposed)
+            if (this.IsDisposed)
             {
-                throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException(this.GetType().Name);
             }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];

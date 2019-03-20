@@ -65,8 +65,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.OnCurrentTimeUpdated(updateState, animationState);
 
             // Calculate factor by what to transform all coordinates
-            var maxMilliseconds = FixedTime.TotalMilliseconds;
-            var currentMillis = CurrentTime.TotalMilliseconds;
+            var maxMilliseconds = this.FixedTime.TotalMilliseconds;
+            var currentMillis = this.CurrentTime.TotalMilliseconds;
             var actFrameFactor = (float)(currentMillis / maxMilliseconds);
 
             // Transform position and rotation

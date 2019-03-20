@@ -36,7 +36,7 @@ namespace SeeingSharp.Util
         {
             filePath.EnsureNotNullOrEmptyOrWhiteSpace(nameof(filePath));
 
-            FilePath = filePath;
+            this.FilePath = filePath;
         }
 
         /// <summary>
@@ -52,12 +52,12 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "File-Resource: " + FilePath;
+            return "File-Resource: " + this.FilePath;
         }
 
         public override bool Exists()
         {
-            return File.Exists(FilePath);
+            return File.Exists(this.FilePath);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Util
             }
 
             // Return new ResourceLink pointing to the other file
-            var directoryName = Path.GetDirectoryName(FilePath);
+            var directoryName = Path.GetDirectoryName(this.FilePath);
             if (!string.IsNullOrEmpty(directoryName))
             {
                 return new FileSystemResourceLink(Path.Combine(directoryName, subdirectoryPath + newFileName));
@@ -90,7 +90,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            return new FileStream(FilePath, FileMode.Create, FileAccess.Write);
+            return new FileStream(this.FilePath, FileMode.Create, FileAccess.Write);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Task<Stream> OpenInputStreamAsync()
         {
-            return Task.FromResult<Stream>(File.OpenRead(FilePath));
+            return Task.FromResult<Stream>(File.OpenRead(this.FilePath));
         }
 
         /// <summary>
@@ -106,20 +106,20 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            return File.OpenRead(FilePath);
+            return File.OpenRead(this.FilePath);
         }
 
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension => GetExtensionFromFileName(FilePath);
+        public override string FileExtension => this.GetExtensionFromFileName(this.FilePath);
 
         /// <summary>
         /// Gets the path to the file.
         /// </summary>
         public string FilePath { get; }
 
-        public string FileName => Path.GetFileName(FilePath);
+        public string FileName => Path.GetFileName(this.FilePath);
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?

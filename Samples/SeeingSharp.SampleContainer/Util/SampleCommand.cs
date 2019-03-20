@@ -29,7 +29,7 @@ namespace SeeingSharp.SampleContainer.Util
         public SampleCommand(string commandText, Action execute, Func<bool> canExecute)
             : base(execute, canExecute)
         {
-            CommandText = commandText;
+            this.CommandText = commandText;
         }
 
         public string CommandText

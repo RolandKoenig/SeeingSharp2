@@ -45,10 +45,7 @@ namespace SeeingSharp.Util
             {
                 return (T)fInfo.GetValue(sourceObject);
             }
-            else
-            {
-                throw new SeeingSharpException($"Private member {memberName} not found in object of type {sourceObject.GetType().FullName}!");
-            }
+            throw new SeeingSharpException($"Private member {memberName} not found in object of type {sourceObject.GetType().FullName}!");
         }
 
         /// <summary>
@@ -62,10 +59,7 @@ namespace SeeingSharp.Util
             {
                 return fInfo.GetValue(lst) as T[];
             }
-            else
-            {
-                throw new SeeingSharpException($"Unable to get backing array from List<T>!");
-            }
+            throw new SeeingSharpException("Unable to get backing array from List<T>!");
         }
 
         /// <summary>
@@ -79,10 +73,7 @@ namespace SeeingSharp.Util
             {
                 return fInfo.GetValue(queue) as T[];
             }
-            else
-            {
-                throw new SeeingSharpException($"Unable to get backing array from Queue<T>!");
-            }
+            throw new SeeingSharpException("Unable to get backing array from Queue<T>!");
         }
 
         public static T TryExecute<T>(Func<T> funcToExec)

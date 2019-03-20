@@ -36,7 +36,7 @@ namespace SeeingSharp.UwpSamples
     {
         public App()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             PlatformDependentMethods.SetOpenUrlInBrowser(async url =>
             {
@@ -44,8 +44,8 @@ namespace SeeingSharp.UwpSamples
                 await Launcher.LaunchUriAsync(targetUrl);
             });
 
-            Suspending += OnSuspending;
-            Resuming += OnResuming;
+            this.Suspending += this.OnSuspending;
+            this.Resuming += this.OnResuming;
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -59,7 +59,7 @@ namespace SeeingSharp.UwpSamples
             if (rootFrame == null)
             {
                 rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.NavigationFailed += this.OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

@@ -95,9 +95,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal DWrite.TextFormat GetTextFormat(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (IsDisposed)
+            if (this.IsDisposed)
             {
-                throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException(this.GetType().Name);
             }
 
             var result = m_loadedTextFormats[engineDevice.DeviceIndex];
@@ -134,10 +134,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DWrite.ParagraphAlignment ParagraphAlignment
         {
-            get => (DWrite.ParagraphAlignment)m_paragraphAlignment;
+            get => m_paragraphAlignment;
             set
             {
-                var castedValue = (DWrite.ParagraphAlignment)value;
+                var castedValue = value;
 
                 if(castedValue != m_paragraphAlignment)
                 {
@@ -152,10 +152,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DWrite.TextAlignment TextAlignment
         {
-            get => (DWrite.TextAlignment)m_textAlignment;
+            get => m_textAlignment;
             set
             {
-                var castedValue = (DWrite.TextAlignment)value;
+                var castedValue = value;
 
                 if(castedValue != m_textAlignment)
                 {
@@ -170,10 +170,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DWrite.WordWrapping WordWrapping
         {
-            get => (DWrite.WordWrapping)m_wordWrapping;
+            get => m_wordWrapping;
             set
             {
-                var castedValue = (DWrite.WordWrapping)value;
+                var castedValue = value;
 
                 if(castedValue != m_wordWrapping)
                 {
@@ -188,10 +188,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public DWrite.ReadingDirection ReadingDirection
         {
-            get => (DWrite.ReadingDirection)m_readingDirection;
+            get => m_readingDirection;
             set
             {
-                var castedValue = (DWrite.ReadingDirection)value;
+                var castedValue = value;
 
                 if(castedValue != m_readingDirection)
                 {

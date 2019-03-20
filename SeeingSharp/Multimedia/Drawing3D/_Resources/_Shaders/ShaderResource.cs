@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 m_shaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
             }
 
-            LoadShader(device, m_shaderBytecode);
+            this.LoadShader(device, m_shaderBytecode);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            UnloadShader();
+            this.UnloadShader();
         }
 
         private static byte[] GetShaderBytecode(EngineDevice device, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel)

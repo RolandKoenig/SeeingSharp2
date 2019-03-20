@@ -138,13 +138,13 @@ namespace SeeingSharp.Util
             Func<T, bool> checkPeekItem)
         {
             // Execute dequeuing first
-            foreach(var actItem in DequeueWhile(checkDequeueItem))
+            foreach(var actItem in this.DequeueWhile(checkDequeueItem))
             {
                 yield return actItem;
             }
 
             // Execute peeking at last
-            foreach(var actItem in PeekWhile(checkPeekItem))
+            foreach(var actItem in this.PeekWhile(checkPeekItem))
             {
                 yield return actItem;
             }
@@ -157,7 +157,7 @@ namespace SeeingSharp.Util
         {
             var result = new List<T>(m_backingQueue.Count);
 
-            while (Dequeue(out var actItem))
+            while (this.Dequeue(out var actItem))
             {
                 result.Add(actItem);
             }
@@ -172,7 +172,7 @@ namespace SeeingSharp.Util
         {
             var actItem = default(T);
 
-            while (Dequeue(out actItem))
+            while (this.Dequeue(out actItem))
             {
                 targetList.Add(actItem);
             }
@@ -183,7 +183,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            while (Dequeue(out _)) { }
+            while (this.Dequeue(out _)) { }
         }
 
         /// <summary>

@@ -37,8 +37,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineOutputInfo(int adapterIndex, int outputIndex, Output output)
         {
-            AdapterIndex = adapterIndex;
-            OutputIndex = outputIndex;
+            this.AdapterIndex = adapterIndex;
+            this.OutputIndex = outputIndex;
             m_outputDescription = output.Description;
 
             // Get all supported modes
@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Store mode list
-            SupportedModes = strippedModeList.ToArray();
+            this.SupportedModes = strippedModeList.ToArray();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public string Rotation => m_outputDescription.Rotation.ToString();
 
-        public EngineOutputModeInfo DefaultMode => SupportedModes[0];
+        public EngineOutputModeInfo DefaultMode => this.SupportedModes[0];
 
         public EngineOutputModeInfo[] SupportedModes { get; }
     }

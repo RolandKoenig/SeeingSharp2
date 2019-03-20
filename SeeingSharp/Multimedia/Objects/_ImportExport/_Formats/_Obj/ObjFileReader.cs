@@ -79,14 +79,14 @@ namespace SeeingSharp.Multimedia.Objects
             m_rawVertices = new List<Vector3>(1024);
             m_rawNormals = new List<Vector3>(1014);
             m_rawTextureCoordinates = new List<Vector2>(1024);
-            TargetGeometry = new Geometry();
+            this.TargetGeometry = new Geometry();
 
             // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
             var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
 
             if(coordSpaceTransformMatrix != Matrix.Identity)
             {
-                TargetGeometry.EnableBuildTimeTransform(coordSpaceTransformMatrix);
+                this.TargetGeometry.EnableBuildTimeTransform(coordSpaceTransformMatrix);
             }
         }
 
@@ -102,11 +102,11 @@ namespace SeeingSharp.Multimedia.Objects
             // Toggle triangle order, when configured
             if(m_importOptions.ToggleTriangleIndexOrder)
             {
-                TargetGeometry.ToggleTriangleIndexOrder();
+                this.TargetGeometry.ToggleTriangleIndexOrder();
             }
 
             // Define all material resources which where defined in the material file
-            foreach (var actSurface in TargetGeometry.Surfaces)
+            foreach (var actSurface in this.TargetGeometry.Surfaces)
             {
                 // Handle texture
                 var textureKey = NamedOrGenericKey.Empty;
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Define geometry resource
             var resGeometry = m_targetContainer.GetResourceKey("Geometry", "1");
-            var newObjType = new GenericGeometryFactory(TargetGeometry);
+            var newObjType = new GenericGeometryFactory(this.TargetGeometry);
             m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(newObjType)));
@@ -200,26 +200,26 @@ namespace SeeingSharp.Multimedia.Objects
                         switch (actKeyword.ToLower())
                         {
                             case "mtllib":
-                                HandleKeyword_Obj_Mtllib(actArguments);
+                                this.HandleKeyword_Obj_Mtllib(actArguments);
                                 break;
 
                             case "usemtl":
-                                HandleKeyword_Obj_UseMtl(actArguments);
+                                this.HandleKeyword_Obj_UseMtl(actArguments);
                                 break;
 
                             case "o":
                                 break;
 
                             case "v":
-                                HandleKeyword_Obj_V(actArguments);
+                                this.HandleKeyword_Obj_V(actArguments);
                                 break;
 
                             case "vn":
-                                HandleKeyword_Obj_VN(actArguments);
+                                this.HandleKeyword_Obj_VN(actArguments);
                                 break;
 
                             case "vt":
-                                HandleKeyword_Obj_VT(actArguments);
+                                this.HandleKeyword_Obj_VT(actArguments);
                                 break;
 
                             case "vp":
@@ -227,7 +227,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 break;
 
                             case "f":
-                                HandleKeyword_Obj_F(actArguments);
+                                this.HandleKeyword_Obj_F(actArguments);
                                 break;
 
                             case "p":
@@ -247,7 +247,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Reorders all triangle indices when necessary
             if(m_importOptions.IsChangeTriangleOrderNeeded())
             {
-                TargetGeometry.ToggleTriangleIndexOrder();
+                this.TargetGeometry.ToggleTriangleIndexOrder();
             }
         }
 
@@ -307,26 +307,26 @@ namespace SeeingSharp.Multimedia.Objects
                         switch(actKeyword.ToLower())
                         {
                             case "newmtl":
-                                HandleKeyword_Mtl_NewMtl(actArguments);
+                                this.HandleKeyword_Mtl_NewMtl(actArguments);
                                 break;
 
                             case "ka":
-                                HandleKeyword_Mtl_Ka(actArguments);
+                                this.HandleKeyword_Mtl_Ka(actArguments);
                                 break;
 
                             case "kd":
-                                HandleKeyword_Mtl_Kd(actArguments);
+                                this.HandleKeyword_Mtl_Kd(actArguments);
                                 break;
 
                             case "ks":
-                                HandleKeyword_Mtl_Ks(actArguments);
+                                this.HandleKeyword_Mtl_Ks(actArguments);
                                 break;
 
                             case "ke":
                                 break;
 
                             case "map_kd":
-                                HandleKeyword_Mtl_Map_Kd(actArguments);
+                                this.HandleKeyword_Mtl_Map_Kd(actArguments);
                                 break;
 
                             case "ni":       // Optical density
@@ -360,7 +360,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 if (mtlLibResource.Exists())
                 {
-                    ReadMaterialLibrary(mtlLibResource);
+                    this.ReadMaterialLibrary(mtlLibResource);
                 }
             }
         }
@@ -377,7 +377,7 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'newmtl', (expected=1, got={names.Length})!");
             }
 
-            m_currentMaterialDefinition = TargetGeometry.CreateSurface(name: names[0]);
+            m_currentMaterialDefinition = this.TargetGeometry.CreateSurface(name: names[0]);
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Ka(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.AmbientColor = ParseColor("Ka", arguments);
+            m_currentMaterialDefinition.MaterialProperties.AmbientColor = this.ParseColor("Ka", arguments);
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Kd(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.DiffuseColor = ParseColor("Kd", arguments);
+            m_currentMaterialDefinition.MaterialProperties.DiffuseColor = this.ParseColor("Kd", arguments);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Ks(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.SpecularColor = ParseColor("Ks", arguments);
+            m_currentMaterialDefinition.MaterialProperties.SpecularColor = this.ParseColor("Ks", arguments);
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'usemtl', (expected=1, got={names.Length})!");
             }
 
-            m_currentSurface = TargetGeometry.CreateOrGetExistingSurfaceByName(names[0]);
+            m_currentSurface = this.TargetGeometry.CreateOrGetExistingSurfaceByName(names[0]);
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace SeeingSharp.Multimedia.Objects
             // This is needed, when no mtlib is defined
             if(m_currentSurface == null)
             {
-                m_currentSurface = TargetGeometry.CreateSurface();
+                m_currentSurface = this.TargetGeometry.CreateSurface();
             }
 
             // Split arguments
@@ -603,8 +603,8 @@ namespace SeeingSharp.Multimedia.Objects
             // Generate vertices and triangles on current Geometry
             if(faceIndices.Length == 3)
             {
-                GenerateFaceVertices(faceIndices).ForEachInEnumeration(actIndex => { });
-                var highestVertexIndex = TargetGeometry.CountVertices - 1;
+                this.GenerateFaceVertices(faceIndices).ForEachInEnumeration(actIndex => { });
+                var highestVertexIndex = this.TargetGeometry.CountVertices - 1;
                 m_currentSurface.AddTriangle(
                     highestVertexIndex - 2,
                     highestVertexIndex - 1,
@@ -619,8 +619,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
             else
             {
-                m_currentSurface.AddPolygonByCuttingEars(
-                    GenerateFaceVertices(faceIndices),
+                m_currentSurface.AddPolygonByCuttingEars(this.GenerateFaceVertices(faceIndices),
                     m_importOptions.TwoSidedSurfaces);
             }
         }
@@ -651,7 +650,7 @@ namespace SeeingSharp.Multimedia.Objects
                     actVertex.Normal = m_rawNormals[actFaceIndices.NormalIndex];
                 }
 
-                yield return TargetGeometry.AddVertex(actVertex);
+                yield return this.TargetGeometry.AddVertex(actVertex);
             }
         }
 

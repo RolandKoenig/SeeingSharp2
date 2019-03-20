@@ -29,7 +29,7 @@ namespace SeeingSharp.SampleContainer
     {
         public SampleRepository()
         {
-            SampleGroups = new List<SampleGroupMetadata>();
+            this.SampleGroups = new List<SampleGroupMetadata>();
         }
 
         public void LoadSampleData()
@@ -49,7 +49,7 @@ namespace SeeingSharp.SampleContainer
                 {
                     sampleGroup = new SampleGroupMetadata(sampleDesc.SampleGroupName);
                     sampleGroups.Add(sampleGroup.GroupName, sampleGroup);
-                    SampleGroups.Add(sampleGroup);
+                    this.SampleGroups.Add(sampleGroup);
                 }
 
                 sampleGroup.Samples.Add(new SampleMetadata(sampleDesc, actType));
@@ -67,10 +67,11 @@ namespace SeeingSharp.SampleContainer
                 groupOrder.TryGetValue(groupName, out var orderID);
                 return orderID;
             }
-            SampleGroups.Sort((left, right) => TryGetGroupOrderId(left.GroupName).CompareTo(TryGetGroupOrderId(right.GroupName)));
+
+            this.SampleGroups.Sort((left, right) => TryGetGroupOrderId(left.GroupName).CompareTo(TryGetGroupOrderId(right.GroupName)));
 
             // Sort samples
-            foreach (var actSampleGroup in SampleGroups)
+            foreach (var actSampleGroup in this.SampleGroups)
             {
                 actSampleGroup.Samples.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
             }

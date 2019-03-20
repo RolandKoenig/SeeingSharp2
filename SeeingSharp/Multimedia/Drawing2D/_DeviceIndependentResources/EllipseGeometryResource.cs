@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="radiusY">The radius in y direction.</param>
         public EllipseGeometryResource(Vector2 center, float radiusX, float radiusY)
         {
-            SetContent(center, radiusX, radiusY);
+            this.SetContent(center, radiusX, radiusY);
         }
 
         /// <summary>

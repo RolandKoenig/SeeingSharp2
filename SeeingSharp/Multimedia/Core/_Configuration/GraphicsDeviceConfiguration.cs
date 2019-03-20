@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="coreConfig">The core configuration object.</param>
         public GraphicsDeviceConfiguration(GraphicsCoreConfiguration coreConfig)
         {
-            CoreConfiguration = coreConfig;
+            this.CoreConfiguration = coreConfig;
         }
 
         /// <summary>

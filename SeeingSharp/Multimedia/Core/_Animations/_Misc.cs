@@ -114,8 +114,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="exception">The exception.</param>
         internal AnimationFailedEventArgs(IAnimation animation, Exception exception)
         {
-            Animation = animation;
-            Exception = exception;
+            this.Animation = animation;
+            this.Exception = exception;
         }
 
         /// <summary>

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
 using SharpDX;

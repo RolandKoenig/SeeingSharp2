@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
         internal InputFrame(int expectedStateCount, TimeSpan frameDuration)
         {
-            Reset(expectedStateCount, frameDuration);
+            this.Reset(expectedStateCount, frameDuration);
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace SeeingSharp.Multimedia.Input
 
             m_frameDuration = frameDuration;
 
-            DefaultMouseOrPointer = MouseOrPointerState.Dummy;
-            DefaultGamepad = GamepadState.Dummy;
-            DefaultKeyboard = KeyboardState.Dummy;
+            this.DefaultMouseOrPointer = MouseOrPointerState.Dummy;
+            this.DefaultGamepad = GamepadState.Dummy;
+            this.DefaultKeyboard = KeyboardState.Dummy;
         }
 
         internal void AddCopyOfState(InputStateBase inputState, ViewInformation viewInfo)
@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Input
             inputState.CopyAndResetForUpdatePass(targetState);
             targetState.RelatedView = viewInfo;
 
-            AddState(targetState);
+            this.AddState(targetState);
         }
 
         private void AddState(InputStateBase inputState)
@@ -116,29 +116,29 @@ namespace SeeingSharp.Multimedia.Input
             m_inputStates.Add(inputState);
 
             // Register first MouseOrPointer state as default
-            if (DefaultMouseOrPointer == MouseOrPointerState.Dummy)
+            if (this.DefaultMouseOrPointer == MouseOrPointerState.Dummy)
             {
                 if (inputState is MouseOrPointerState mouseOrPointer)
                 {
-                    DefaultMouseOrPointer = mouseOrPointer;
+                    this.DefaultMouseOrPointer = mouseOrPointer;
                 }
             }
 
             // Register first Gamepad state as default
-            if (DefaultGamepad == GamepadState.Dummy)
+            if (this.DefaultGamepad == GamepadState.Dummy)
             {
                 if (inputState is GamepadState gamepadState)
                 {
-                    DefaultGamepad = gamepadState;
+                    this.DefaultGamepad = gamepadState;
                 }
             }
 
             // Register first keyboard state as default
-            if (DefaultKeyboard == KeyboardState.Dummy)
+            if (this.DefaultKeyboard == KeyboardState.Dummy)
             {
                 if (inputState is KeyboardState keyboardState)
                 {
-                    DefaultKeyboard = keyboardState;
+                    this.DefaultKeyboard = keyboardState;
                 }
             }
         }

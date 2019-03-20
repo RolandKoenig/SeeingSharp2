@@ -114,8 +114,8 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
             if (extrudeOptions.HasFlag(ExtrudeGeometryOptions.ChangeOriginToCenter))
             {
                 var newOrigin = new Vector2(
-                    minPoint.X + (bounds.Width / 2f),
-                    minPoint.Y + (bounds.Height / 2f));
+                    minPoint.X + bounds.Width / 2f,
+                    minPoint.Y + bounds.Height / 2f);
                 foreach (var actTriangleArray in generatedTriangles)
                 {
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
@@ -132,16 +132,16 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
             }
 
             // Apply values
-            TriangleCount = triangleCount;
-            Bounds = bounds;
+            this.TriangleCount = triangleCount;
+            this.Bounds = bounds;
             m_generatedTriangles = generatedTriangles;
         }
 
         /// <inheritdoc />
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var result = new Geometry(TriangleCount * 3);
-            var surface = result.CreateSurface(TriangleCount);
+            var result = new Geometry(this.TriangleCount * 3);
+            var surface = result.CreateSurface(this.TriangleCount);
 
             var generatedTriangles = m_generatedTriangles;
             foreach (var actTriangleArray in generatedTriangles)
@@ -151,8 +151,7 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
                     surface.BuildTriangleV(
                         new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
                         new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
-                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y),
-                        Color);
+                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y), this.Color);
                 }
             }
 
@@ -181,13 +180,13 @@ namespace SeeingSharp.Multimedia.Objects._GeometryFactories
         {
             public void AddTriangles(D2D.Triangle[] triangles)
             {
-                if ((triangles == null) ||
-                    (triangles.Length == 0))
+                if (triangles == null ||
+                    triangles.Length == 0)
                 {
                     return;
                 }
 
-                Triangles.Add(triangles);
+                this.Triangles.Add(triangles);
             }
 
             public void Close()

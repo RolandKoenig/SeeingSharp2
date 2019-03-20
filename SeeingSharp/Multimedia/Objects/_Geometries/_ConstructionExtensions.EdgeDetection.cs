@@ -25,7 +25,7 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public static partial class ConstructionExtensions
+    public static class ConstructionExtensions
     {
         /// <summary>
         /// Generates a shadow volume structure out of the given geometry.

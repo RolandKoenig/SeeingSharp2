@@ -64,12 +64,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <exception cref="System.NotImplementedException"></exception>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if(this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                SubscribeToPass(
+                this.SubscribeToPass(
                     RenderPassInfo.PASS_2D_OVERLAY,
-                    layerViewSubset,
-                    OnRenderOverlay2D);
+                    layerViewSubset, this.OnRenderOverlay2D);
             }
         }
 

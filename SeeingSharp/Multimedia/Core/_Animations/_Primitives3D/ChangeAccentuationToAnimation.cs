@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
+            var changeFactor = this.CurrentTime.Ticks / (float) this.FixedTime.Ticks;
             m_targetObject.AccentuationFactor = m_startAccentuation + m_moveAccentuation * changeFactor;
         }
 

@@ -33,8 +33,8 @@ namespace SeeingSharp.Util
         /// <param name="keyTimestamp">The key of this result object..</param>
         internal PerformanceAnalyzeResultBase(PerformanceCalculatorBase calculator, DateTime keyTimestamp)
         {
-            Calculator = calculator;
-            KeyTimestamp = keyTimestamp;
+            this.Calculator = calculator;
+            this.KeyTimestamp = keyTimestamp;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the name of the calculator.
         /// </summary>
-        public string CalculatorName => Calculator.CalculatorName;
+        public string CalculatorName => this.Calculator.CalculatorName;
 
         /// <summary>
         /// Gets the key of this kpi.

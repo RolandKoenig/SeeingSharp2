@@ -78,9 +78,9 @@ namespace SeeingSharp.Multimedia.Core
 
             // Handle Y-Filter
             if (m_enableYFilter &&
-                (!EngineMath.EqualsWithTolerance(m_yFilterMin, m_yFilterMax)) &&
-                (m_yFilterMax > m_yFilterMin) &&
-                (m_yFilterMax - m_yFilterMin > 0.1f))
+                !EngineMath.EqualsWithTolerance(m_yFilterMin, m_yFilterMax) &&
+                m_yFilterMax > m_yFilterMin &&
+                m_yFilterMax - m_yFilterMin > 0.1f)
             {
                 if (input is SceneSpacialObject spacialObject)
                 {
@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_enableYFilter != value)
                 {
                     m_enableYFilter = value;
-                    RaiseFilterConfigurationChanged();
+                    this.RaiseFilterConfigurationChanged();
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(m_yFilterMin, value))
                 {
                     m_yFilterMin = value;
-                    RaiseFilterConfigurationChanged();
+                    this.RaiseFilterConfigurationChanged();
                 }
             }
         }
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(m_yFilterMax, value))
                 {
                     m_yFilterMax = value;
-                    RaiseFilterConfigurationChanged();
+                    this.RaiseFilterConfigurationChanged();
                 }
             }
         }

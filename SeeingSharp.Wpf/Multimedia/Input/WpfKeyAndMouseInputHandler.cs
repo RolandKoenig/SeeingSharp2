@@ -77,17 +77,17 @@ namespace SeeingSharp.Multimedia.Input
             // Register all events needed for mouse camera dragging
             m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
             {
-                m_rendererElement.MouseWheel += OnRendererElement_MouseWheel;
-                m_rendererElement.MouseDown += OnRendererElement_MouseDown;
-                m_rendererElement.MouseUp += OnRendererElement_MouseUp;
-                m_rendererElement.MouseMove += OnRendererElement_MouseMove;
-                m_rendererElement.MouseLeave += OnRendererElement_MouseLeave;
-                m_rendererElement.GotFocus += OnRenderElement_GotFocus;
-                m_rendererElement.LostFocus += OnRendererElement_LostFocus;
-                m_rendererElement.LostKeyboardFocus += OnRendererElement_LostKeyboardFocus;
-                m_rendererElement.PreviewMouseUp += OnRendererElement_PreviewMouseUp;
-                m_rendererElement.KeyUp += OnRendererElement_KeyUp;
-                m_rendererElement.KeyDown += OnRendererElement_KeyDown;
+                m_rendererElement.MouseWheel += this.OnRendererElement_MouseWheel;
+                m_rendererElement.MouseDown += this.OnRendererElement_MouseDown;
+                m_rendererElement.MouseUp += this.OnRendererElement_MouseUp;
+                m_rendererElement.MouseMove += this.OnRendererElement_MouseMove;
+                m_rendererElement.MouseLeave += this.OnRendererElement_MouseLeave;
+                m_rendererElement.GotFocus += this.OnRenderElement_GotFocus;
+                m_rendererElement.LostFocus += this.OnRendererElement_LostFocus;
+                m_rendererElement.LostKeyboardFocus += this.OnRendererElement_LostKeyboardFocus;
+                m_rendererElement.PreviewMouseUp += this.OnRendererElement_PreviewMouseUp;
+                m_rendererElement.KeyUp += this.OnRendererElement_KeyUp;
+                m_rendererElement.KeyDown += this.OnRendererElement_KeyDown;
             }));
         }
 
@@ -103,15 +103,15 @@ namespace SeeingSharp.Multimedia.Input
 
                 m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    rendererElement.MouseWheel -= OnRendererElement_MouseWheel;
-                    rendererElement.MouseDown -= OnRendererElement_MouseDown;
-                    rendererElement.MouseUp -= OnRendererElement_MouseUp;
-                    rendererElement.MouseMove -= OnRendererElement_MouseMove;
-                    rendererElement.MouseLeave -= OnRendererElement_MouseLeave;
-                    rendererElement.LostFocus -= OnRendererElement_LostFocus;
-                    rendererElement.LostKeyboardFocus -= OnRendererElement_LostKeyboardFocus;
-                    rendererElement.GotFocus -= OnRenderElement_GotFocus;
-                    rendererElement.PreviewMouseUp -= OnRendererElement_PreviewMouseUp;
+                    rendererElement.MouseWheel -= this.OnRendererElement_MouseWheel;
+                    rendererElement.MouseDown -= this.OnRendererElement_MouseDown;
+                    rendererElement.MouseUp -= this.OnRendererElement_MouseUp;
+                    rendererElement.MouseMove -= this.OnRendererElement_MouseMove;
+                    rendererElement.MouseLeave -= this.OnRendererElement_MouseLeave;
+                    rendererElement.LostFocus -= this.OnRendererElement_LostFocus;
+                    rendererElement.LostKeyboardFocus -= this.OnRendererElement_LostKeyboardFocus;
+                    rendererElement.GotFocus -= this.OnRenderElement_GotFocus;
+                    rendererElement.PreviewMouseUp -= this.OnRendererElement_PreviewMouseUp;
                 }));
             }
 

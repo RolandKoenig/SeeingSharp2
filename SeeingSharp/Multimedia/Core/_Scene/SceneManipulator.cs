@@ -43,8 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="owner">The scene which will be manipulated.</param>
         internal SceneManipulator(Scene owner)
         {
-            Owner = owner;
-            IsValid = false;
+            this.Owner = owner;
+            this.IsValid = false;
 
             m_createdObjects = new List<SceneObject>();
             m_createdResources = new List<NamedOrGenericKey>();
@@ -65,9 +65,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Clear()
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.Clear(true);
+            this.Owner.Clear(true);
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="clearResource">Do also clear all resources.</param>
         public void Clear(bool clearResource)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.Clear(clearResource);
+            this.Owner.Clear(clearResource);
         }
 
         /// <summary>
@@ -90,9 +90,9 @@ namespace SeeingSharp.Multimedia.Core
         public NamedOrGenericKey AddResource<ResourceType>(Func<ResourceType> resourceFactory)
             where ResourceType : Resource
         {
-            CheckValid();
+            this.CheckValid();
 
-            var result = Owner.AddResource(resourceFactory, NamedOrGenericKey.Empty);
+            var result = this.Owner.AddResource(resourceFactory, NamedOrGenericKey.Empty);
             m_createdResources.Add(result);
             return result;
         }
@@ -107,9 +107,9 @@ namespace SeeingSharp.Multimedia.Core
         public NamedOrGenericKey AddResource<ResourceType>(Func<ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
-            CheckValid();
+            this.CheckValid();
 
-            var result = Owner.AddResource(resourceFactory, resourceKey);
+            var result = this.Owner.AddResource(resourceFactory, resourceKey);
             m_createdResources.Add(result);
             return result;
         }
@@ -120,9 +120,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceKey">The resource key to check for.</param>
         public bool ContainsResource(NamedOrGenericKey resourceKey)
         {
-            CheckValid();
+            this.CheckValid();
 
-            return Owner.ContainsResource(resourceKey);
+            return this.Owner.ContainsResource(resourceKey);
         }
 
         /// <summary>
@@ -134,11 +134,11 @@ namespace SeeingSharp.Multimedia.Core
         public NamedOrGenericKey AddResourceIfNotCreated<ResourceType>(Func<ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
-            CheckValid();
+            this.CheckValid();
 
-            if (!Owner.ContainsResource(resourceKey))
+            if (!this.Owner.ContainsResource(resourceKey))
             {
-                var result = Owner.AddResource(resourceFactory, resourceKey);
+                var result = this.Owner.AddResource(resourceFactory, resourceKey);
                 m_createdResources.Add(result);
                 return result;
             }
@@ -154,9 +154,9 @@ namespace SeeingSharp.Multimedia.Core
         public void ManipulateResource<ResourceType>(Action<ResourceType> manipulateAction, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.ManipulateResource(manipulateAction, resourceKey);
+            this.Owner.ManipulateResource(manipulateAction, resourceKey);
         }
 
         /// <summary>
@@ -165,9 +165,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceKey">The key of the resource to be deleted.</param>
         public void RemoveResource(NamedOrGenericKey resourceKey)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveResource(resourceKey);
+            this.Owner.RemoveResource(resourceKey);
         }
 
         /// <summary>
@@ -176,9 +176,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjectLocal">The object to trigger filter logic for.</param>
         public void TriggerNewFilter(SceneObject sceneObjectLocal)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.TriggerNewFilter(sceneObjectLocal);
+            this.Owner.TriggerNewFilter(sceneObjectLocal);
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawingLayer">The drawing layer.</param>
         public void AddDrawingLayer(Custom2DDrawingLayer drawingLayer)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.AddDrawingLayer(drawingLayer);
+            this.Owner.AddDrawingLayer(drawingLayer);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawingAction">The action that draws the scene.</param>
         public void AddDrawingLayer(Action<Graphics2D> drawingAction)
         {
-            AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
+            this.AddDrawingLayer(new Custom2DDrawingLayer(drawingAction));
         }
 
         /// <summary>
@@ -207,9 +207,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawingLayer">The drawing layer.</param>
         public void RemoveDrawingLayer(Custom2DDrawingLayer drawingLayer)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveDrawingLayer(drawingLayer);
+            this.Owner.RemoveDrawingLayer(drawingLayer);
         }
 
         /// <summary>
@@ -219,9 +219,9 @@ namespace SeeingSharp.Multimedia.Core
         public T Add<T>(T sceneObject)
             where T : SceneObject
         {
-            CheckValid();
+            this.CheckValid();
 
-            var result = Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
+            var result = this.Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
             m_createdObjects.Add(result);
             return result;
         }
@@ -234,9 +234,9 @@ namespace SeeingSharp.Multimedia.Core
         public T Add<T>(T sceneObject, string layer)
             where T : SceneObject
         {
-            CheckValid();
+            this.CheckValid();
 
-            var result = Owner.Add(sceneObject, layer);
+            var result = this.Owner.Add(sceneObject, layer);
             m_createdObjects.Add(result);
             return result;
         }
@@ -273,8 +273,8 @@ namespace SeeingSharp.Multimedia.Core
                 newGeometry.RealignToCenter();
             }
 
-            var resTextGeometry = AddResource(() => new GeometryResource(newGeometry));
-            return AddGeneric(resTextGeometry, layer);
+            var resTextGeometry = this.AddResource(() => new GeometryResource(newGeometry));
+            return this.AddGeneric(resTextGeometry, layer);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="geometryResource">The geometry to be used.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource)
         {
-            return Add(new GenericObject(geometryResource));
+            return this.Add(new GenericObject(geometryResource));
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer on which to add the object.</param>
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, string layer)
         {
-            return Add(new GenericObject(geometryResource), layer);
+            return this.Add(new GenericObject(geometryResource), layer);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return Add(newGenericObject);
+            return this.Add(newGenericObject);
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace SeeingSharp.Multimedia.Core
                 Position = position
             };
 
-            return Add(newGenericObject, layer);
+            return this.Add(newGenericObject, layer);
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                Add(actObject);
+                this.Add(actObject);
             }
 
             return sceneObjects;
@@ -350,7 +350,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             foreach (var actObject in sceneObjects)
             {
-                Add(actObject, layer);
+                this.Add(actObject, layer);
             }
 
             return sceneObjects;
@@ -362,9 +362,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">Object to remove.</param>
         public void Remove(SceneObject sceneObject)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.Remove(sceneObject);
+            this.Owner.Remove(sceneObject);
         }
 
         /// <summary>
@@ -374,23 +374,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">Layer on which the scene object was added.</param>
         public void Remove(SceneObject sceneObject, string layerName)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.Remove(sceneObject, layerName);
+            this.Owner.Remove(sceneObject, layerName);
         }
 
         public void RemoveRange(IEnumerable<SceneObject> sceneObjects)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveRange(sceneObjects);
+            this.Owner.RemoveRange(sceneObjects);
         }
 
         public void RemoveRange(IEnumerable<SceneObject> sceneObjects, string layerName)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveRange(sceneObjects, layerName);
+            this.Owner.RemoveRange(sceneObjects, layerName);
         }
 
         /// <summary>
@@ -399,9 +399,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="name">Name of the layer.</param>
         public SceneLayer AddLayer(string name)
         {
-            CheckValid();
+            this.CheckValid();
 
-            return Owner.AddLayer(name);
+            return this.Owner.AddLayer(name);
         }
 
         /// <summary>
@@ -410,9 +410,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">Name of the layer.</param>
         public void RemoveLayer(string layerName)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveLayer(layerName);
+            this.Owner.RemoveLayer(layerName);
         }
 
         /// <summary>
@@ -421,9 +421,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">Layer to remove.</param>
         public void RemoveLayer(SceneLayer layer)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.RemoveLayer(layer);
+            this.Owner.RemoveLayer(layer);
         }
 
         /// <summary>
@@ -433,10 +433,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="oderID">The order id to set.</param>
         public void SetLayerOrderID(string layer, int oderID)
         {
-            CheckValid();
+            this.CheckValid();
 
-            var layerObject = Owner.GetLayer(layer);
-            Owner.SetLayerOrderID(layerObject, oderID);
+            var layerObject = this.Owner.GetLayer(layer);
+            this.Owner.SetLayerOrderID(layerObject, oderID);
         }
 
         /// <summary>
@@ -446,9 +446,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="oderID">The order id to set.</param>
         public void SetLayerOrderID(SceneLayer layerObject, int oderID)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.SetLayerOrderID(layerObject, oderID);
+            this.Owner.SetLayerOrderID(layerObject, oderID);
         }
 
         /// <summary>
@@ -457,9 +457,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">The name of the layer.</param>
         public void ClearLayer(string layerName)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.ClearLayer(layerName);
+            this.Owner.ClearLayer(layerName);
         }
 
         /// <summary>
@@ -468,9 +468,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layer">The layer to be cleared.</param>
         public void ClearLayer(SceneLayer layer)
         {
-            CheckValid();
+            this.CheckValid();
 
-            Owner.ClearLayer(layer);
+            this.Owner.ClearLayer(layer);
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">The name of the layer.</param>
         public IEnumerable<SceneObject> GetSceneObjects(string layerName)
         {
-            return Owner.GetLayer(layerName).Objects;
+            return this.Owner.GetLayer(layerName).Objects;
         }
 
         /// <summary>
@@ -488,20 +488,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerName">Name of the layer.</param>
         public SceneLayer GetLayer(string layerName)
         {
-            CheckValid();
-            return Owner.GetLayer(layerName);
+            this.CheckValid();
+            return this.Owner.GetLayer(layerName);
         }
 
         public bool ContainsLayer(string layerName)
         {
-            CheckValid();
-            return Owner.TryGetLayer(layerName) != null;
+            this.CheckValid();
+            return this.Owner.TryGetLayer(layerName) != null;
         }
 
         public SceneLayer TryGetLayer(string layerName)
         {
-            CheckValid();
-            return Owner.TryGetLayer(layerName);
+            this.CheckValid();
+            return this.Owner.TryGetLayer(layerName);
         }
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void CheckValid()
         {
-            if (!IsValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
+            if (!this.IsValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
         }
 
         /// <summary>

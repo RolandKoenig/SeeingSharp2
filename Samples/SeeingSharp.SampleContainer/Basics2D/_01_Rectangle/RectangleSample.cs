@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
@@ -34,7 +33,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         "Rectangle", 1, nameof(Basics2D),
         "PreviewImage.png",
         "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_01_Rectangle",
-        settingsType: typeof(RectangleSampleSettings))]
+        typeof(RectangleSampleSettings))]
     public class RectangleSample : SampleBase
     {
         private SolidBrushResource m_fillBrush;
@@ -61,9 +60,9 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
                 var width = castedSettings.Width;
                 var height = castedSettings.Height;
                 var rectToDraw = new RectangleF(
-                    (graphics.ScreenWidth / 2f) - (width / 2f),
-                    (graphics.ScreenHeight / 2f) - (height / 2f),
-                    (float)width, (float)height);
+                    graphics.ScreenWidth / 2f - width / 2f,
+                    graphics.ScreenHeight / 2f - height / 2f,
+                    width, height);
                 
                 // Draw the rectangle
                 if (castedSettings.Rounded)

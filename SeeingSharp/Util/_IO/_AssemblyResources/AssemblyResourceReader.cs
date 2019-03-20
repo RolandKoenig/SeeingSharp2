@@ -48,21 +48,21 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceReader(Type targetType)
         {
-            TargetType = targetType;
+            this.TargetType = targetType;
 
-            var targetTypeInfo = TargetType.GetTypeInfo();
-            TargetAssembly = targetTypeInfo.Assembly;
+            var targetTypeInfo = this.TargetType.GetTypeInfo();
+            this.TargetAssembly = targetTypeInfo.Assembly;
 
             m_resources = new List<AssemblyResourceInfo>();
             m_resourcesDict = new Dictionary<string, AssemblyResourceInfo>();
 
             foreach (var actAttribute in targetTypeInfo.GetCustomAttributes<AssemblyResourceFileAttribute>())
             {
-                var resInfo = TargetAssembly.GetManifestResourceInfo(actAttribute.ResourcePath);
+                var resInfo = this.TargetAssembly.GetManifestResourceInfo(actAttribute.ResourcePath);
 
                 if (resInfo != null)
                 {
-                    var fileInfo = new AssemblyResourceInfo(TargetAssembly, actAttribute.ResourcePath, actAttribute.Key);
+                    var fileInfo = new AssemblyResourceInfo(this.TargetAssembly, actAttribute.ResourcePath, actAttribute.Key);
                     m_resources.Add(fileInfo);
 
                     if (actAttribute.Key != null && !m_resourcesDict.ContainsKey(actAttribute.Key))
@@ -76,7 +76,7 @@ namespace SeeingSharp.Util
                 }
             }
 
-            ResourceFiles = new ResourceInfoCollection(this);
+            this.ResourceFiles = new ResourceInfoCollection(this);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public string GetText(string key)
         {
-            using (var inStream = OpenRead(key))
+            using (var inStream = this.OpenRead(key))
             using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
@@ -116,7 +116,7 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public string GetText(int index)
         {
-            using (var inStream = OpenRead(index))
+            using (var inStream = this.OpenRead(index))
             using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
@@ -129,7 +129,7 @@ namespace SeeingSharp.Util
         /// <param name="key">Key of the resource.</param>
         public byte[] GetBytes(string key)
         {
-            using (var inStream = OpenRead(key))
+            using (var inStream = this.OpenRead(key))
             {
                 var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);
@@ -143,7 +143,7 @@ namespace SeeingSharp.Util
         /// <param name="index">Index of the resource.</param>
         public byte[] GetBytes(int index)
         {
-            using (var inStream = OpenRead(index))
+            using (var inStream = this.OpenRead(index))
             {
                 var result = new byte[(int)inStream.Length];
                 inStream.Read(result, 0, (int)inStream.Length);

@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="graphics">The graphics object used for drawing.</param>
         internal void Draw2DInternal(Graphics2D graphics)
         {
-            Draw2D(graphics);
+            this.Draw2D(graphics);
         }
     }
 }

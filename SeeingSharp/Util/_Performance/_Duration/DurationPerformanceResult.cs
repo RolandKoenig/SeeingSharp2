@@ -32,9 +32,9 @@ namespace SeeingSharp.Util
         public DurationPerformanceResult(DurationPerformanceCalculator calculator, DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
             : base(calculator, timestampKey)
         {
-            SumAverageTicks = sumAvgTicks;
-            SumMaxTicks = sumMaxTicks;
-            SumMinTicks = sumMinTicks;
+            this.SumAverageTicks = sumAvgTicks;
+            this.SumMaxTicks = sumMaxTicks;
+            this.SumMinTicks = sumMinTicks;
         }
 
         public long SumMaxTicks { get; set; }
@@ -50,27 +50,27 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (SumAverageTicks == 0) { return 0; }
-                return (int)(10000000L / SumAverageTicks);
+                if (this.SumAverageTicks == 0) { return 0; }
+                return (int)(10000000L / this.SumAverageTicks);
             }
         }
 
-        public TimeSpan SumMax => TimeSpan.FromTicks(SumMaxTicks);
+        public TimeSpan SumMax => TimeSpan.FromTicks(this.SumMaxTicks);
 
-        public long SumMaxMS => (long)Math.Round(SumMax.TotalMilliseconds);
+        public long SumMaxMS => (long)Math.Round(this.SumMax.TotalMilliseconds);
 
-        public TimeSpan SumMin => TimeSpan.FromTicks(SumMinTicks);
+        public TimeSpan SumMin => TimeSpan.FromTicks(this.SumMinTicks);
 
-        public long SumMinMS => (long)Math.Round(SumMin.TotalMilliseconds);
+        public long SumMinMS => (long)Math.Round(this.SumMin.TotalMilliseconds);
 
-        public TimeSpan SumAverage => TimeSpan.FromTicks(SumAverageTicks);
+        public TimeSpan SumAverage => TimeSpan.FromTicks(this.SumAverageTicks);
 
-        public long SumAverageMS => (long)Math.Round(SumAverage.TotalMilliseconds);
+        public long SumAverageMS => (long)Math.Round(this.SumAverage.TotalMilliseconds);
 
         /// <summary>
         /// Gets the average millisecond value as a double.
         /// </summary>
 
-        public double SumAverageMSDouble => SumAverage.TotalMilliseconds;
+        public double SumAverageMSDouble => this.SumAverage.TotalMilliseconds;
     }
 }

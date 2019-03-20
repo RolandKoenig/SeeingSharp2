@@ -352,8 +352,8 @@ namespace SeeingSharp.Multimedia.Objects
 
                 //Check for correct header
                 var header = reader.ReadLine();
-                if ((header == null) ||
-                    (!header.StartsWith("AC3D")))
+                if (header == null ||
+                    !header.StartsWith("AC3D"))
                 {
                     throw new SeeingSharpGraphicsException("Header of AC3D file not found!");
                 }

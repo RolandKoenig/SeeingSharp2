@@ -36,8 +36,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="steps">All steps performed in this calculation.</param>
         internal EventDrivenPassInfo(List<EventDrivenStepInfo> steps)
         {
-            CountSteps = steps.Count;
-            Steps = steps;
+            this.CountSteps = steps.Count;
+            this.Steps = steps;
         }
 
         public List<EventDrivenStepInfo> Steps
@@ -53,14 +53,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (Steps == null)
+                if (this.Steps == null)
                 {
                     return TimeSpan.Zero;
                 }
 
                 var totalTime = TimeSpan.Zero;
 
-                foreach(var actAnimStep in Steps)
+                foreach(var actAnimStep in this.Steps)
                 {
                     totalTime = totalTime + actAnimStep.UpdateTime;
                 }

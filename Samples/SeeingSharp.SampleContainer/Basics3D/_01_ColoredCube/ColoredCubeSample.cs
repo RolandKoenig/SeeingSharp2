@@ -52,7 +52,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create geometry resource

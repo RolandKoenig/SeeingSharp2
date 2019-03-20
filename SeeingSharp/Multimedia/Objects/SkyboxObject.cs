@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Objects
         public SkyboxObject(NamedOrGenericKey cubeTextureKey)
         {
             m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
-            CubeTextureKey = cubeTextureKey;
+            this.CubeTextureKey = cubeTextureKey;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Objects
             var localResources = new SkyboxLocalResources
             {
                 DefaultResources = resourceDictionary.DefaultResources,
-                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(CubeTextureKey),
+                CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(this.CubeTextureKey),
                 VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices),
                 IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices),
                 VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
@@ -156,7 +156,7 @@ namespace SeeingSharp.Multimedia.Objects
                 return false;
             }
 
-            if (geoResource.CubeTexture.Key != CubeTextureKey)
+            if (geoResource.CubeTexture.Key != this.CubeTextureKey)
             {
                 return false;
             }
@@ -180,9 +180,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(CountRenderPassSubscriptions(layerViewSubset) <= 0)
+            if(this.CountRenderPassSubscriptions(layerViewSubset) <= 0)
             {
-                SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, Render);
+                this.SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, this.Render);
             }
         }
 

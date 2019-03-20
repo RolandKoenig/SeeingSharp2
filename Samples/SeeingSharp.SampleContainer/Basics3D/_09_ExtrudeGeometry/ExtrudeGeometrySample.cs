@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create geometry resource

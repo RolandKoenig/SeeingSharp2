@@ -36,7 +36,7 @@ namespace SeeingSharp.UwpSamples
 
         public SampleViewModel(SampleMetadata sample)
         {
-            SampleMetadata = sample;
+            this.SampleMetadata = sample;
         }
 
         private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
@@ -50,14 +50,14 @@ namespace SeeingSharp.UwpSamples
 
             m_bitmapSource = source;
 
-            RaisePropertyChanged(nameof(BitmapSource));
+            this.RaisePropertyChanged(nameof(this.BitmapSource));
         }
 
         public SampleMetadata SampleMetadata { get; }
 
-        public string Name => SampleMetadata.Name;
+        public string Name => this.SampleMetadata.Name;
 
-        public string Group => SampleMetadata.Group;
+        public string Group => this.SampleMetadata.Group;
 
         public BitmapSource BitmapSource
         {
@@ -65,10 +65,10 @@ namespace SeeingSharp.UwpSamples
             {
                 if(m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
-                    var sourceLink = SampleMetadata.TryGetSampleImageLink();
+                    var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
                     if(sourceLink == null) { return null; }
 
-                    m_bitmapSourceTask = LoadSampleImageAsync(sourceLink);
+                    m_bitmapSourceTask = this.LoadSampleImageAsync(sourceLink);
                 }
                 return m_bitmapSource;
             }

@@ -31,8 +31,8 @@ namespace SeeingSharp.Multimedia.Core
             Exception ex,
             InternalExceptionLocation location)
         {
-            Exception = ex;
-            Location = location;
+            this.Exception = ex;
+            this.Location = location;
         }
 
         public Exception Exception
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
         {
-            FilterList = filterList;
+            this.FilterList = filterList;
         }
 
         public List<SceneObjectFilter> FilterList

@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
                     // Device successfully created, save all parameters and break this loop
                     m_featureLevel = actFeatureLevel;
                     m_creationFlags = actCreateFlags;
-                    DriverLevel = actDriverLevel;
+                    this.DriverLevel = actDriverLevel;
                     break;
                 }
                 catch (Exception)
@@ -181,7 +181,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (m_device1 == null) { return "None"; }
 
-                return m_dxgiAdapter + " - " + m_featureLevel + (IsDirect2DTextureEnabled ? " - Bgra" : " - No Bgra");
+                return m_dxgiAdapter + " - " + m_featureLevel + (this.IsDirect2DTextureEnabled ? " - Bgra" : " - No Bgra");
             }
         }
 

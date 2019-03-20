@@ -42,10 +42,10 @@ namespace SeeingSharp.Multimedia.Objects
         public FullscreenTextureObject(NamedOrGenericKey texture)
         {
             m_resTexture = texture;
-            Scaling = 1f;
-            Opacity = 1f;
-            AccentuationFactor = 0f;
-            AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
+            this.Scaling = 1f;
+            this.Opacity = 1f;
+            this.AccentuationFactor = 0f;
+            this.AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
 
             m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
         }
@@ -104,14 +104,14 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             //Subscribe to render passes
-            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                SubscribeToPass(
+                this.SubscribeToPass(
                     RenderPassInfo.PASS_PLAIN_RENDER,
-                    layerViewSubset, OnRenderPlain);
-                SubscribeToPass(
+                    layerViewSubset, this.OnRenderPlain);
+                this.SubscribeToPass(
                     RenderPassInfo.PASS_TRANSPARENT_RENDER,
-                    layerViewSubset, OnRenderTransparent);
+                    layerViewSubset, this.OnRenderTransparent);
             }
         }
 
@@ -121,14 +121,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderPlain(RenderState renderState)
         {
-            if (Opacity >= 1f)
+            if (this.Opacity >= 1f)
             {
                 // Get and configure helper object
                 var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
-                actHelper.Scaling = Scaling;
-                actHelper.Opacity = Opacity;
-                actHelper.AccentuationFactor = AccentuationFactor;
-                actHelper.AlphaBlendMode = AlphaBlendMode;
+                actHelper.Scaling = this.Scaling;
+                actHelper.Opacity = this.Opacity;
+                actHelper.AccentuationFactor = this.AccentuationFactor;
+                actHelper.AlphaBlendMode = this.AlphaBlendMode;
 
                 // Render the object
                 actHelper.RenderPlain(renderState);
@@ -141,14 +141,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="renderState">Current render state.</param>
         private void OnRenderTransparent(RenderState renderState)
         {
-            if (Opacity < 1f)
+            if (this.Opacity < 1f)
             {
                 // Get and configure helper object
                 var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
-                actHelper.Scaling = Scaling;
-                actHelper.Opacity = Opacity;
-                actHelper.AccentuationFactor = AccentuationFactor;
-                actHelper.AlphaBlendMode = AlphaBlendMode;
+                actHelper.Scaling = this.Scaling;
+                actHelper.Opacity = this.Opacity;
+                actHelper.AccentuationFactor = this.AccentuationFactor;
+                actHelper.AlphaBlendMode = this.AlphaBlendMode;
 
                 // Render the object
                 actHelper.RenderPlain(renderState);

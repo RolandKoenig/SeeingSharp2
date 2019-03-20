@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="key">The key.</param>
         public ExportMaterialInfo(NamedOrGenericKey key)
         {
-            Key = key;
+            this.Key = key;
         }
 
         public NamedOrGenericKey Key { get; }

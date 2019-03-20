@@ -32,8 +32,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceFileAttribute(string resourcePath)
         {
-            ResourcePath = resourcePath;
-            Key = null;
+            this.ResourcePath = resourcePath;
+            this.Key = null;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public AssemblyResourceFileAttribute(string resourcePath, string key)
         {
-            ResourcePath = resourcePath;
-            Key = key;
+            this.ResourcePath = resourcePath;
+            this.Key = key;
         }
 
         /// <summary>

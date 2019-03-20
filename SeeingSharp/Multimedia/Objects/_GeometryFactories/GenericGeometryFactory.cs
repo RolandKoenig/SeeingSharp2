@@ -32,8 +32,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="geometry">The geometry.</param>
         public GenericGeometryFactory(Geometry geometry)
         {
-            Geometry = geometry;
-            GeometryLowDetail = geometry;
+            this.Geometry = geometry;
+            this.GeometryLowDetail = geometry;
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="geometryLowDetail">The geometry for low detail level.</param>
         public GenericGeometryFactory(Geometry geometry, Geometry geometryLowDetail)
         {
-            Geometry = geometry;
-            GeometryLowDetail = geometryLowDetail;
+            this.Geometry = geometry;
+            this.GeometryLowDetail = geometryLowDetail;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="buildOptions">Some generic options for geometry building</param>
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            if (buildOptions.IsHighDetail) { return Geometry; }
-            return GeometryLowDetail;
+            if (buildOptions.IsHighDetail) { return this.Geometry; }
+            return this.GeometryLowDetail;
         }
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialToApply">The materials to apply.</param>
         public void ApplyMaterialForAll(NamedOrGenericKey materialToApply)
         {
-            foreach (var actSurface in Geometry.Surfaces)
+            foreach (var actSurface in this.Geometry.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
 
-            foreach (var actSurface in GeometryLowDetail.Surfaces)
+            foreach (var actSurface in this.GeometryLowDetail.Surfaces)
             {
                 actSurface.Material = materialToApply;
             }
@@ -81,7 +81,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="materialNameNew">The new material to be converted to.</param>
         public void ConvertMaterial(NamedOrGenericKey materialNameOld, NamedOrGenericKey materialNameNew)
         {
-            foreach (var actSurface in Geometry.Surfaces)
+            foreach (var actSurface in this.Geometry.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            foreach (var actSurface in GeometryLowDetail.Surfaces)
+            foreach (var actSurface in this.GeometryLowDetail.Surfaces)
             {
                 if (actSurface.Material == materialNameOld)
                 {

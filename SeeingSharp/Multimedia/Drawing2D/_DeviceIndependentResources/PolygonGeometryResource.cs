@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public PolygonGeometryResource(Polygon2D polygon)
             : this()
         {
-            SetContent(polygon);
+            this.SetContent(polygon);
         }
 
         /// <summary>

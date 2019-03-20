@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SeeingSharp.Util;
+﻿using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -12,7 +9,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var matProperties = new MaterialProperties
             {
-                Key = Material
+                Key = this.Material
             };
 
             var result = new Geometry();

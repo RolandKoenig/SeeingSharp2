@@ -66,11 +66,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal GraphicsViewConfiguration()
         {
-            ShowTextures = DEFAULT_SHOW_TEXTURES;
+            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
             ShowTexturesInternal = DEFAULT_SHOW_TEXTURES;
-            WireframeEnabled = DEFAULT_WIREFRAME;
-            AntialiasingEnabled = DEFAULT_ANTIALIASING;
-            AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
+            this.WireframeEnabled = DEFAULT_WIREFRAME;
+            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
+            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
             m_generatedBorderFactor = DEFAULT_BORDER_FACTOR;
             m_generatedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
             m_accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
@@ -104,9 +104,9 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_antialiasingEnabled != value)
                 {
                     m_antialiasingEnabled = value;
-                    ViewNeedsRefresh = true;
+                    this.ViewNeedsRefresh = true;
 
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -123,9 +123,9 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_antialiasingQuality != value)
                 {
                     m_antialiasingQuality = value;
-                    ViewNeedsRefresh = true;
+                    this.ViewNeedsRefresh = true;
 
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_generatedColorGradientFactor, value))
                 {
                     m_generatedColorGradientFactor = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_generatedBorderFactor, value))
                 {
                     m_generatedBorderFactor = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
                 {
                     m_accentuationFactor = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -181,7 +181,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_ambientFactor, value))
                 {
                     m_ambientFactor = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_lightPower, value))
                 {
                     m_lightPower = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -209,7 +209,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (EngineMath.EqualsWithTolerance(m_strongLightFactor, value))
                 {
                     m_strongLightFactor = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -224,7 +224,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (ShowTexturesInternal != value)
                 {
                     ShowTexturesInternal = value;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -244,8 +244,8 @@ namespace SeeingSharp.Multimedia.Core
                 if(m_alphaEnabledSwapChain != value)
                 {
                     m_alphaEnabledSwapChain = value;
-                    ViewNeedsRefresh = true;
-                    ConfigurationChanged.Raise(this, EventArgs.Empty);
+                    this.ViewNeedsRefresh = true;
+                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -260,7 +260,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets current core configuration.
         /// </summary>
         [Browsable(false)]
-        public GraphicsCoreConfiguration CoreConfiguration => DeviceConfiguration?.CoreConfiguration;
+        public GraphicsCoreConfiguration CoreConfiguration => this.DeviceConfiguration?.CoreConfiguration;
 
         /// <summary>
         /// Internal accessor for ShowTextures variable.

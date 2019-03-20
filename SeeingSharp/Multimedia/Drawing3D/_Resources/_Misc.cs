@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">Current render state.</param>
         internal TextureChangedEventArgs(RenderState renderState)
         {
-            RenderState = renderState;
+            this.RenderState = renderState;
         }
 
         /// <summary>

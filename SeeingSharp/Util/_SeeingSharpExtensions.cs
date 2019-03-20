@@ -45,6 +45,15 @@ namespace SeeingSharp.Util
         private static object s_timerDictLock;
 
         /// <summary>
+        /// Initializes the <see cref="CommonExtensions" /> class.
+        /// </summary>
+        static CommonExtensions()
+        {
+            s_timerDict = new Dictionary<Timer, object>();
+            s_timerDictLock = new object();
+        }
+
+        /// <summary>
         /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
         /// can see them.
         /// </summary>
@@ -52,15 +61,6 @@ namespace SeeingSharp.Util
         public static async void FireAndForget(this Task asyncAction)
         {
             await asyncAction;
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="CommonExtensions" /> class.
-        /// </summary>
-        static CommonExtensions()
-        {
-            s_timerDict = new Dictionary<Timer, object>();
-            s_timerDictLock = new object();
         }
 
         public static void CreateDummyObjectUntilCapacityReached<T>(this List<T> list, int targetCapacity)

@@ -120,7 +120,7 @@ namespace SeeingSharp
                 return false;
             }
 
-            return Equals((MovementSpeed)value);
+            return this.Equals((MovementSpeed)value);
         }
 
         /// <summary>

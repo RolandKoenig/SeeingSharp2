@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ConstantBufferResource(int bufferSize)
         {
             if (bufferSize < 1) { throw new ArgumentException("Invalid value for buffer size!", nameof(bufferSize)); }
-            BufferSize = bufferSize;
+            this.BufferSize = bufferSize;
         }
 
         /// <summary>
@@ -47,8 +47,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected internal virtual D3D11.Buffer CreateConstantBuffer(EngineDevice device)
         {
             return new D3D11.Buffer(
-                device.DeviceD3D11_1,
-                BufferSize,
+                device.DeviceD3D11_1, this.BufferSize,
                 D3D11.ResourceUsage.Dynamic,
                 D3D11.BindFlags.ConstantBuffer,
                 D3D11.CpuAccessFlags.Write,
@@ -61,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = CreateConstantBuffer(device);
+            m_constantBuffer = this.CreateConstantBuffer(device);
         }
 
         /// <summary>

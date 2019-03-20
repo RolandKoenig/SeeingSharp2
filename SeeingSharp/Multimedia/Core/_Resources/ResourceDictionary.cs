@@ -46,13 +46,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal ResourceDictionary(EngineDevice device)
         {
-            Device = device;
-            DeviceIndex = Device.DeviceIndex;
+            this.Device = device;
+            DeviceIndex = this.Device.DeviceIndex;
 
             m_lastRenderBlockID = -1;
 
             m_renderableResources = new List<IRenderableResource>();
-            RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
+            this.RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
 
             m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
             m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
@@ -200,7 +200,7 @@ namespace SeeingSharp.Multimedia.Core
         internal ResourceType AddResource<ResourceType>(ResourceType resource)
             where ResourceType : Resource
         {
-            return AddResource(NamedOrGenericKey.Empty, resource);
+            return this.AddResource(NamedOrGenericKey.Empty, resource);
         }
 
         /// <summary>
@@ -229,11 +229,11 @@ namespace SeeingSharp.Multimedia.Core
             //Remove another resource with the same name
             if (!resource.IsKeyEmpty)
             {
-                RemoveResource(resource.Key);
+                this.RemoveResource(resource.Key);
             }
             if (!resourceKey.IsEmpty)
             {
-                RemoveResource(resourceKey);
+                this.RemoveResource(resourceKey);
             }
 
             //Apply a valid key on the given resource object
@@ -273,7 +273,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (!actResource.IsKeyEmpty)
                 {
-                    RemoveResource(actResource.Key);
+                    this.RemoveResource(actResource.Key);
                 }
             }
         }
@@ -295,7 +295,7 @@ namespace SeeingSharp.Multimedia.Core
         internal ResourceType AddAndLoadResource<ResourceType>(NamedOrGenericKey resourceKey, ResourceType resource)
             where ResourceType : Resource
         {
-            AddResource(resourceKey, resource);
+            this.AddResource(resourceKey, resource);
             if (!resource.IsLoaded) { resource.LoadResource(); }
 
             return resource;
@@ -347,7 +347,7 @@ namespace SeeingSharp.Multimedia.Core
                 return null;
             }
 
-            AddResource(resourceKey, newResource);
+            this.AddResource(resourceKey, newResource);
             return newResource;
         }
 
@@ -360,20 +360,20 @@ namespace SeeingSharp.Multimedia.Core
             where T : Resource
         {
             T result = null;
-            if (!ContainsResource(resourceKey))
+            if (!this.ContainsResource(resourceKey))
             {
                 // Try to query for existing default resources if given key is empty
                 if(resourceKey.IsEmpty)
                 {
                     resourceKey = new NamedOrGenericKey(typeof(T).FullName);
-                    if (ContainsResource(resourceKey)) { result = GetResource<T>(resourceKey); }
+                    if (this.ContainsResource(resourceKey)) { result = this.GetResource<T>(resourceKey); }
                 }
 
                 // Create a default resource if still nothing found
                 if (result == null)
                 {
                     result = CreateDefaultResource<T>();
-                    AddResource(resourceKey, result);
+                    this.AddResource(resourceKey, result);
                 }
             }
             else
@@ -399,7 +399,7 @@ namespace SeeingSharp.Multimedia.Core
         internal T GetResourceAndEnsureLoaded<T>(NamedOrGenericKey resourceKey, Func<T> createMethod)
             where T : Resource
         {
-            var resource = GetResource(resourceKey, createMethod);
+            var resource = this.GetResource(resourceKey, createMethod);
 
             if (!resource.IsLoaded)
             {
@@ -417,7 +417,7 @@ namespace SeeingSharp.Multimedia.Core
         internal T GetResourceAndEnsureLoaded<T>(NamedOrGenericKey resourceKey)
             where T : Resource
         {
-            var resource = GetResource<T>(resourceKey);
+            var resource = this.GetResource<T>(resourceKey);
 
             if (!resource.IsLoaded)
             {
@@ -457,7 +457,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a reference to default resources object.
         /// </summary>
-        public DefaultResources DefaultResources => GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
+        public DefaultResources DefaultResources => this.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
         /// <summary>
         /// Gets total count of resource.
@@ -553,7 +553,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current => this.Current;
         }
     }
 }

@@ -28,9 +28,9 @@ namespace SeeingSharp.SampleContainer
     {
         public SampleGroupMetadata(string groupName)
         {
-            Samples = new List<SampleMetadata>();
+            this.Samples = new List<SampleMetadata>();
 
-            GroupName = groupName;
+            this.GroupName = groupName;
         }
 
         public string GroupName

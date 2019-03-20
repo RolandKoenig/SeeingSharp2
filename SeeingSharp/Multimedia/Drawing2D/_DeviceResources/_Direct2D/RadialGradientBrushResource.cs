@@ -54,12 +54,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusY.EnsurePositive(nameof(radiusY));
 
             m_gradientStops = gradientStops;
-            Center = center;
-            GradientOriginOffset = gradientOriginOffset;
-            RadiusX = radiusX;
-            RadiusY = radiusY;
-            ExtendMode = extendMode;
-            Gamma = gamma;
+            this.Center = center;
+            this.GradientOriginOffset = gradientOriginOffset;
+            this.RadiusX = radiusX;
+            this.RadiusY = radiusY;
+            this.ExtendMode = extendMode;
+            this.Gamma = gamma;
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
@@ -89,9 +89,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (IsDisposed)
+            if (this.IsDisposed)
             {
-                throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException(this.GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
@@ -116,18 +116,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GradientStops = new D2D.GradientStopCollection(
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
-                        (D2D.Gamma) Gamma,
-                        (D2D.ExtendMode) ExtendMode)
+                        this.Gamma,
+                        this.ExtendMode)
                 };
 
                 result.Brush = new D2D.RadialGradientBrush(
                     engineDevice.FakeRenderTarget2D,
                     new D2D.RadialGradientBrushProperties
                     {
-                        Center = Center,
-                        GradientOriginOffset = GradientOriginOffset,
-                        RadiusX = RadiusX,
-                        RadiusY = RadiusY
+                        Center = this.Center,
+                        GradientOriginOffset = this.GradientOriginOffset,
+                        RadiusX = this.RadiusX,
+                        RadiusY = this.RadiusY
                     },
                     new D2D.BrushProperties
                     {

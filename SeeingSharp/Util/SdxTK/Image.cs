@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
         internal Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
-            Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
+            this.Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 }
 
                 // For 3D textures
-                return GetPixelBufferUnsafe(0, arrayOrZSliceIndex, mipmap);
+                return this.GetPixelBufferUnsafe(0, arrayOrZSliceIndex, mipmap);
             }
 
             if (arrayOrZSliceIndex > Description.ArraySize)
@@ -148,7 +148,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             }
 
             // For 1D, 2D textures
-            return GetPixelBufferUnsafe(arrayOrZSliceIndex, 0, mipmap);
+            return this.GetPixelBufferUnsafe(arrayOrZSliceIndex, 0, mipmap);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 throw new ArgumentException("Invalid z slice index", "zIndex");
             }
 
-            return GetPixelBufferUnsafe(arrayIndex, zIndex, mipmap);
+            return this.GetPixelBufferUnsafe(arrayIndex, zIndex, mipmap);
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     throw new ArgumentException("Filename must have a supported image extension: dds, bmp, jpg, png, gif, tiff, wmp, tga");
             }
 
-            Save(fileName, fileType);
+            this.Save(fileName, fileType);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         {
             using (var imageStream = new SDXIO.NativeFileStream(fileName, SDXIO.NativeFileMode.Create, SDXIO.NativeFileAccess.Write))
             {
-                Save(imageStream, fileType);
+                this.Save(imageStream, fileType);
             }
         }
 
@@ -666,7 +666,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             Description = description;
 
             // PreCompute databoxes
-            dataBoxArray = ComputeDataBox();
+            dataBoxArray = this.ComputeDataBox();
         }
 
         internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
@@ -799,7 +799,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 for (var mipIndex = 0; mipIndex < Description.MipLevels; mipIndex++)
                 {
                     // Get the first z-slice (A DataBox for a Texture3D is pointing to the whole texture).
-                    var pixelBuffer = GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
+                    var pixelBuffer = this.GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
 
                     dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
                     dataBoxArray[i].RowPitch = pixelBuffer.RowStride;

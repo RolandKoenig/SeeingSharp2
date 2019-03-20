@@ -52,7 +52,7 @@ namespace SeeingSharp.Util
             {
                 throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
             }
-            MaximumConcurrencyLevel = maxDegreeOfParallelism;
+            this.MaximumConcurrencyLevel = maxDegreeOfParallelism;
         }
 
         /// <summary>
@@ -65,10 +65,10 @@ namespace SeeingSharp.Util
             lock (m_tasks)
             {
                 m_tasks.AddLast(task);
-                if (m_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
+                if (m_delegatesQueuedOrRunning < this.MaximumConcurrencyLevel)
                 {
                     ++m_delegatesQueuedOrRunning;
-                    NotifyThreadPoolOfPendingWork();
+                    this.NotifyThreadPoolOfPendingWork();
                 }
             }
         }
@@ -88,13 +88,13 @@ namespace SeeingSharp.Util
             if (taskWasPreviouslyQueued)
                 // Try to run the task.
             {
-                if (TryDequeue(task))
+                if (this.TryDequeue(task))
                 {
-                    return TryExecuteTask(task);
+                    return this.TryExecuteTask(task);
                 }
                 return false;
             }
-            return TryExecuteTask(task);
+            return this.TryExecuteTask(task);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace SeeingSharp.Util
                             }
 
                             // Execute the task we pulled out of the queue
-                            TryExecuteTask(item);
+                            this.TryExecuteTask(item);
                         }
                     }
                     // We're done processing items on the current thread

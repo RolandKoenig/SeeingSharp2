@@ -54,7 +54,7 @@ namespace SeeingSharp
         public MovementAnimationHelper(MovementSpeed speed, Vector3 movementDistance)
         {
             // Store main parameters
-            MovementVector = movementDistance;
+            this.MovementVector = movementDistance;
             m_speed = speed;
             m_speed.ValidateWithException();
 
@@ -140,7 +140,7 @@ namespace SeeingSharp
             else
             {
                 // Movement is finished
-                return MovementVector;
+                return this.MovementVector;
             }
 
             // Generate the full movement vector

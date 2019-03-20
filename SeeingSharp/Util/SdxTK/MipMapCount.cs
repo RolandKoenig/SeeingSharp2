@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 return false;
             }
-            return obj is MipMapCount && Equals((MipMapCount)obj);
+            return obj is MipMapCount && this.Equals((MipMapCount)obj);
         }
 
         public override int GetHashCode()

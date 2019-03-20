@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
             m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
             m_pointerNative = (int*)m_pointer.ToPointer();
             m_size = size;
-            CountInts = m_size.Width * m_size.Height;
+            this.CountInts = m_size.Width * m_size.Height;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public byte[] ToArray()
         {
-            var result = new byte[SizeInBytes];
-            Marshal.Copy(m_pointer, result, 0, (int)SizeInBytes);
+            var result = new byte[this.SizeInBytes];
+            Marshal.Copy(m_pointer, result, 0, (int) this.SizeInBytes);
             return result;
         }
 
@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Core
             const uint ALPHA_BYTE_VALUE = 0xFF000000;
 
             var pointerUInt = (uint*)m_pointerNative;
-            for (var loopIndex = 0; loopIndex < CountInts; loopIndex++)
+            for (var loopIndex = 0; loopIndex < this.CountInts; loopIndex++)
             {
                 pointerUInt[loopIndex] |= ALPHA_BYTE_VALUE;
             }

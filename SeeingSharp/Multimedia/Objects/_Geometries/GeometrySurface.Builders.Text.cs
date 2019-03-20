@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="stringToBuild">The string to build within the geometry.</param>
         public void BuildTextGeometry(string stringToBuild)
         {
-            BuildTextGeometry(stringToBuild, TextGeometryOptions.Default);
+            this.BuildTextGeometry(stringToBuild, TextGeometryOptions.Default);
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Append all vertices
-            var baseIndex = Owner.CountVertices;
+            var baseIndex = this.Owner.CountVertices;
 
             for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
-                Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
+                this.Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
             }
 
             // Append all indices
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Objects
                     if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
                     if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
 
-                    AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
+                    this.AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
                 }
             }
         }

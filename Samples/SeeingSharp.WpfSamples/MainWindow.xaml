@@ -31,7 +31,7 @@
 
         <Grid>
             <!-- The 3D renderer control-->
-            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer"/>
+            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
 
             <!-- List of samples of the currently selected group -->
             <StackPanel Orientation="Vertical"
@@ -132,10 +132,10 @@
                            Fill="Gray" />
 
                 <TextBlock Text="Force composition over software: " />
-                <CheckBox x:Name="CtrlForceCompositionSoftware" 
-                          IsChecked="{Binding ElementName=CtrlRenderer, Path=ForceCompositionOverSoftware}" 
+                <CheckBox x:Name="CtrlForceCompositionSoftware"
+                          IsChecked="{Binding ElementName=CtrlRenderer, Path=ForceCompositionOverSoftware}"
                           VerticalAlignment="Center"
-                          Margin="5,0,0,0"/>
+                          Margin="5,0,0,0" />
                 <Rectangle Width="1"
                            Fill="Gray" />
 

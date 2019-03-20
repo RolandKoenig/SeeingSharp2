@@ -67,9 +67,9 @@ namespace SeeingSharp.Multimedia.Views
             m_bgPanel = bgPanel;
             m_bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(m_bgPanel);
 
-            m_bgPanel.SizeChanged += OnAnyPanel_SizeChanged;
-            m_bgPanel.Loaded += OnAnyPanel_Loaded;
-            m_bgPanel.Unloaded += OnAnyPanel_Unloaded;
+            m_bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            m_bgPanel.Loaded += this.OnAnyPanel_Loaded;
+            m_bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
         }
 
         /// <summary>
@@ -82,10 +82,10 @@ namespace SeeingSharp.Multimedia.Views
             m_panel = panel;
             m_panelNative = ComObject.As<ISwapChainPanelNative>(m_panel);
 
-            m_panel.SizeChanged += OnAnyPanel_SizeChanged;
-            m_panel.Loaded += OnAnyPanel_Loaded;
-            m_panel.Unloaded += OnAnyPanel_Unloaded;
-            m_panel.CompositionScaleChanged += OnPanelCompositionScaleChanged;
+            m_panel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            m_panel.Loaded += this.OnAnyPanel_Loaded;
+            m_panel.Unloaded += this.OnAnyPanel_Unloaded;
+            m_panel.CompositionScaleChanged += this.OnPanelCompositionScaleChanged;
         }
 
         public void Dispose()
@@ -96,31 +96,31 @@ namespace SeeingSharp.Multimedia.Views
 
         private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
         {
-            Unloaded?.Invoke(sender, e);
+            this.Unloaded?.Invoke(sender, e);
         }
 
         private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            Loaded?.Invoke(sender, e);
+            this.Loaded?.Invoke(sender, e);
         }
 
         private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SizeChanged?.Invoke(sender, e);
+            this.SizeChanged?.Invoke(sender, e);
         }
 
         private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
+            this.CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public Size RenderSize => Panel.RenderSize;
+        public Size RenderSize => this.Panel.RenderSize;
 
-        public Size ActualSize => new Size(Panel.ActualWidth, Panel.ActualHeight);
+        public Size ActualSize => new Size(this.Panel.ActualWidth, this.Panel.ActualHeight);
 
-        public double ActualWidth => Panel.ActualWidth;
+        public double ActualWidth => this.Panel.ActualWidth;
 
-        public double ActualHeight => Panel.ActualHeight;
+        public double ActualHeight => this.Panel.ActualHeight;
 
         public Panel Panel
         {

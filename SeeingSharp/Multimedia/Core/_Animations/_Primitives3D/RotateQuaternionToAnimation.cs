@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             //how does Slerp work: --> http://en.wikipedia.org/wiki/Slerp
-            var changeFactor = CurrentTime.Ticks / (float)FixedTime.Ticks;
+            var changeFactor = this.CurrentTime.Ticks / (float) this.FixedTime.Ticks;
 
             var slerpQuaternion = Quaternion.Slerp(m_startQuaternion, m_targetQuaternion, changeFactor);
             m_targetObject.RotationQuaternion = slerpQuaternion;

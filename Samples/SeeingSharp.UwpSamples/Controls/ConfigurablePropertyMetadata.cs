@@ -38,30 +38,30 @@ namespace SeeingSharp.UwpSamples.Controls
             m_hostType = hostObject.GetType();
             m_hostObject = hostObject;
 
-            CategoryName = propertyInfo.GetCustomAttribute<CategoryAttribute>()?.Category ?? string.Empty;
+            this.CategoryName = propertyInfo.GetCustomAttribute<CategoryAttribute>()?.Category ?? string.Empty;
 
-            PropertyName = propertyInfo.Name;
-            PropertyDisplayName = propertyInfo.Name;
+            this.PropertyName = propertyInfo.Name;
+            this.PropertyDisplayName = propertyInfo.Name;
             var attribDisplayName = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
             if(attribDisplayName != null)
             {
-                PropertyDisplayName = attribDisplayName.DisplayName;
+                this.PropertyDisplayName = attribDisplayName.DisplayName;
             }
 
             var propertyType = m_propertyInfo.PropertyType;
             if(propertyType == typeof(bool))
             {
-                ValueType = PropertyValueType.Bool;
+                this.ValueType = PropertyValueType.Bool;
             }
-            else if((propertyType == typeof(string)) ||
-                    (propertyType == typeof(float)) ||
-                    (propertyType == typeof(double)))
+            else if(propertyType == typeof(string) ||
+                    propertyType == typeof(float) ||
+                    propertyType == typeof(double))
             {
-                ValueType = PropertyValueType.String;
+                this.ValueType = PropertyValueType.String;
             }
             else if(propertyType.IsSubclassOf(typeof(Enum)))
             {
-                ValueType = PropertyValueType.Enum;
+                this.ValueType = PropertyValueType.Enum;
             }
             else
             {
@@ -71,12 +71,12 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public override string ToString()
         {
-            return $"{CategoryName} - {PropertyDisplayName} (type {ValueType})";
+            return $"{this.CategoryName} - {this.PropertyDisplayName} (type {this.ValueType})";
         }
 
         public Array GetEnumMembers()
         {
-            if(ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(GetEnumMembers)} not supported on value type {ValueType}!"); }
+            if(this.ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(this.GetEnumMembers)} not supported on value type {this.ValueType}!"); }
             return Enum.GetValues(m_propertyInfo.PropertyType);
         }
 
@@ -87,8 +87,8 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public void SetValue(object value)
         {
-            Type givenType = value.GetType();
-            Type targetType = m_propertyInfo.PropertyType;
+            var givenType = value.GetType();
+            var targetType = m_propertyInfo.PropertyType;
             if (givenType == targetType)
             {
                 m_propertyInfo.SetValue(m_hostObject, value);
@@ -101,8 +101,8 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public object ValueAccessor
         {
-            get => GetValue();
-            set => SetValue(value);
+            get => this.GetValue();
+            set => this.SetValue(value);
         }
 
         public string CategoryName

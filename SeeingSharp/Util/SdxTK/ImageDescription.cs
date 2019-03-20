@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 return false;
             }
-            return obj is ImageDescription && Equals((ImageDescription)obj);
+            return obj is ImageDescription && this.Equals((ImageDescription)obj);
         }
 
         public override int GetHashCode()

@@ -52,9 +52,9 @@ namespace SeeingSharp
                 m_vertices = newArray;
             }
 
-            Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
-            m_boundingBox2D = new Lazy<BoundingBox2D>(CalculateBoundingBox);
-            m_edgeOrder = new Lazy<EdgeOrder>(CalculateEdgeOrder);
+            this.Vertices = new ReadOnlyCollection<Vector2>(m_vertices);
+            m_boundingBox2D = new Lazy<BoundingBox2D>(this.CalculateBoundingBox);
+            m_edgeOrder = new Lazy<EdgeOrder>(this.CalculateEdgeOrder);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SeeingSharp
         /// </summary>
         public Polygon2D MergeWithHole(Polygon2D actHole, Polygon2DMergeOptions mergeOptions)
         {
-            return MergeWithHole(actHole, mergeOptions, null);
+            return this.MergeWithHole(actHole, mergeOptions, null);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SeeingSharp
             Tuple<int, float, Vector2> foundLine = null;
             var actLineIndex = 0;
 
-            foreach (var actLine in Lines)
+            foreach (var actLine in this.Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
 

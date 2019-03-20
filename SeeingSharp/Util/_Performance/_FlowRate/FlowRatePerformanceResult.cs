@@ -35,7 +35,7 @@ namespace SeeingSharp.Util
         public FlowRatePerformanceResult(FlowRatePerformanceCalculator calculator, DateTime keyTimestamp, double value)
             : base(calculator, keyTimestamp)
         {
-            Value = value;
+            this.Value = value;
         }
 
         /// <summary>

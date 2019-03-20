@@ -87,23 +87,23 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpRendererControl()
         {
             // Set style parameters for this control
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
-            SetStyle(ControlStyles.Opaque, true);
-            SetStyle(ControlStyles.Selectable, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
+            this.SetStyle(ControlStyles.Opaque, true);
+            this.SetStyle(ControlStyles.Selectable, true);
             base.DoubleBuffered = false;
 
             m_lastSizeChange = DateTime.MinValue;
             m_mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
 
             // Create the render loop
-            var backColor = BackColor;
-            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, DesignMode);
-            m_renderLoop.ManipulateFilterList += OnRenderLoopManipulateFilterList;
+            var backColor = this.BackColor;
+            m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
+            m_renderLoop.ManipulateFilterList += this.OnRenderLoopManipulateFilterList;
             m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
             m_renderLoop.DiscardRendering = true;
-            Disposed += (sender, eArgs) =>
+            this.Disposed += (sender, eArgs) =>
             {
                 m_renderLoop.Dispose();
             };
@@ -115,12 +115,12 @@ namespace SeeingSharp.Multimedia.Views
                 m_renderLoop.Camera = new PerspectiveCamera3D();
 
                 //Initialize background brush
-                UpdateDrawingResourcesForFailoverRendering();
+                this.UpdateDrawingResourcesForFailoverRendering();
             }
 
-            Disposed += OnDisposed;
+            this.Disposed += this.OnDisposed;
 
-            UpdateDrawingResourcesForFailoverRendering();
+            this.UpdateDrawingResourcesForFailoverRendering();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.Views
             if (!m_isMouseInside) { return null; }
 
             var objects = await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsUtil.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsUtil.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
             return objects?.FirstOrDefault();
         }
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             return await m_renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsUtil.PointFromGdiPoint(PointToClient(Cursor.Position)),
+                SeeingSharpWinFormsUtil.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
         }
 
@@ -186,9 +186,9 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnPaint(e);
 
-            if ((!m_renderLoop.ViewResourcesLoaded) ||
-                (!m_renderLoop.IsRegisteredOnMainLoop) ||
-                (m_renderLoop.IsDeviceLost))
+            if (!m_renderLoop.ViewResourcesLoaded ||
+                !m_renderLoop.IsRegisteredOnMainLoop ||
+                m_renderLoop.IsDeviceLost)
             {
                 // Paint using System.Drawing
                 e.Graphics.FillRectangle(m_backBrush, e.ClipRectangle);
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a simple grid on the background to have something for the Designer
                 if (!GraphicsCore.IsLoaded)
                 {
-                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, Font);
+                    var targetSize = e.Graphics.MeasureString(TEXT_GRAPHICS_NOT_INITIALIZED, this.Font);
                     var targetRect = new GDI.RectangleF(
                         10f, 10f, targetSize.Width, targetSize.Height);
                     if (targetRect.Width > 10 &&
@@ -204,7 +204,7 @@ namespace SeeingSharp.Multimedia.Views
                     {
                         e.Graphics.FillRectangle(m_backBrushText, targetRect);
                         e.Graphics.DrawString(
-                            TEXT_GRAPHICS_NOT_INITIALIZED, Font,
+                            TEXT_GRAPHICS_NOT_INITIALIZED, this.Font,
                             m_foreBrushText, targetRect.X, targetRect.Y);
                     }
                 }
@@ -212,7 +212,7 @@ namespace SeeingSharp.Multimedia.Views
                 // Paint a border rectangle
                 e.Graphics.DrawRectangle(
                     m_borderPen,
-                    new GDI.Rectangle(0, 0, Width - 1, Height - 1));
+                    new GDI.Rectangle(0, 0, this.Width - 1, this.Height - 1));
             }
         }
 
@@ -225,7 +225,7 @@ namespace SeeingSharp.Multimedia.Views
             base.OnBackColorChanged(e);
 
             //Update background brush
-            UpdateDrawingResourcesForFailoverRendering();
+            this.UpdateDrawingResourcesForFailoverRendering();
         }
 
         /// <summary>
@@ -235,12 +235,12 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnSizeChanged(e);
 
-            if (DesignMode) { return; }
+            if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
-            if (Width > 0 && Height > 0)
+            if (this.Width > 0 && this.Height > 0)
             {
-                m_renderLoop.Camera.SetScreenSize(Width, Height);
+                m_renderLoop.Camera.SetScreenSize(this.Width, this.Height);
                 m_lastSizeChange = DateTime.UtcNow;
             }
         }
@@ -253,7 +253,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnHandleCreated(e);
 
-            StartRendering();
+            this.StartRendering();
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnHandleDestroyed(e);
 
-            StopRendering();
+            this.StopRendering();
         }
 
         /// <summary>
@@ -274,8 +274,10 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnVisibleChanged(e);
 
-            if (Visible) { StartRendering(); }
-            else if (!Visible) { StopRendering(); }
+            if (this.Visible) {
+                this.StartRendering(); }
+            else if (!this.Visible) {
+                this.StopRendering(); }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -305,7 +307,7 @@ namespace SeeingSharp.Multimedia.Views
 
                 if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)
                 {
-                    MouseClickEx?.Invoke(this, e);
+                    this.MouseClickEx?.Invoke(this, e);
                 }
             }
         }
@@ -336,12 +338,12 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void StartRendering()
         {
-            if (DesignMode) { return; }
+            if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
             if (!m_renderLoop.IsRegisteredOnMainLoop)
             {
-                m_renderLoop.SetCurrentViewSize(Width, Height);
+                m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
                 m_renderLoop.DiscardRendering = false;
                 m_renderLoop.RegisterRenderLoop();
             }
@@ -352,7 +354,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         private void StopRendering()
         {
-            if (DesignMode) { return; }
+            if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
             if (m_renderLoop.IsRegisteredOnMainLoop)
@@ -374,7 +376,7 @@ namespace SeeingSharp.Multimedia.Views
 
             m_backBrush = new HatchBrush(
                 HatchStyle.DottedGrid,
-                GDI.Color.Gray, BackColor);
+                GDI.Color.Gray, this.BackColor);
             m_backBrushText = new GDI.SolidBrush(GDI.Color.White);
             m_foreBrushText = new GDI.SolidBrush(GDI.Color.Black);
             m_borderPen = new GDI.Pen(GDI.Color.DarkGray);
@@ -387,7 +389,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            if (!DesignMode)
+            if (!this.DesignMode)
             {
                 m_renderLoop.Dispose();
                 m_renderLoop = null;
@@ -401,7 +403,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="e">The decimal.</param>
         private void OnRenderLoopManipulateFilterList(object sender, ManipulateFilterListArgs e)
         {
-            ManipulateFilterList?.Invoke(this, e);
+            this.ManipulateFilterList?.Invoke(this, e);
         }
 
         /// <summary>
@@ -409,8 +411,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
-            var width = Width;
-            var height = Height;
+            var width = this.Width;
+            var height = this.Height;
             if (width <= SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
             if (height <= SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
@@ -436,7 +438,7 @@ namespace SeeingSharp.Multimedia.Views
             // Query for current dpi value
             var dpiScaling = DpiScaling.Default;
 
-            using (var graphics = CreateGraphics())
+            using (var graphics = this.CreateGraphics())
             {
                 dpiScaling.DpiX = graphics.DpiX;
                 dpiScaling.DpiY = graphics.DpiY;
@@ -468,14 +470,14 @@ namespace SeeingSharp.Multimedia.Views
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice device)
         {
             // Check properties on self
-            if (IsDisposed) { return false; }
-            if (Parent == null) { return false; }
-            if (!Visible) { return false; }
-            if (Width <= 0) { return false; }
-            if (Height <= 0) { return false; }
+            if (this.IsDisposed) { return false; }
+            if (this.Parent == null) { return false; }
+            if (!this.Visible) { return false; }
+            if (this.Width <= 0) { return false; }
+            if (this.Height <= 0) { return false; }
 
             Form parentForm = null;
-            var actParent = Parent;
+            var actParent = this.Parent;
 
             while(parentForm == null && actParent != null)
             {
@@ -509,11 +511,11 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_lastSizeChange = DateTime.MinValue;
 
-                var width = Width;
-                var height = Height;
+                var width = this.Width;
+                var height = this.Height;
                 if (width > 0 && height > 0)
                 {
-                    m_renderLoop.SetCurrentViewSize(Width, Height);
+                    m_renderLoop.SetCurrentViewSize(this.Width, this.Height);
                 }
             }
         }
@@ -544,9 +546,9 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_AfterRendering(EngineDevice device)
         {
             //m_isOnRendering = false;
-            if (!Visible)
+            if (!this.Visible)
             {
-                StopRendering();
+                this.StopRendering();
             }
         }
 

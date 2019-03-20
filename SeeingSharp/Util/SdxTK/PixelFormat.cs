@@ -291,7 +291,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
             {
                 return false;
             }
-            return obj is PixelFormat && Equals((PixelFormat)obj);
+            return obj is PixelFormat && this.Equals((PixelFormat)obj);
         }
 
         public override int GetHashCode()

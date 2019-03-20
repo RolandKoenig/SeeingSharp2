@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
             await scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
+                this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
@@ -74,8 +74,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                     .ApplyAndRewind();
 
                 var resSkyboxTexture = manipulator.AddTexture(
-                    new AssemblyResourceLink(
-                        GetType(),
+                    new AssemblyResourceLink(this.GetType(),
                         "SkyBox.dds"));
 
                 // Create the skybox on a new layer

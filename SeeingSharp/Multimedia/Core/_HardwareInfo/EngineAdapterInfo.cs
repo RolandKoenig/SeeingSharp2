@@ -42,12 +42,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineAdapterInfo(int adapterIndex, Adapter1 adapter)
         {
-            Outputs = new List<EngineOutputInfo>();
+            this.Outputs = new List<EngineOutputInfo>();
             m_adapter = adapter;
-            AdapterIndex = adapterIndex;
+            this.AdapterIndex = adapterIndex;
 
             m_adapterDescription = adapter.Description;
-            IsSoftwareAdapter =
+            this.IsSoftwareAdapter =
                 m_adapterDescription.Description == "Microsoft Basic Render Driver" ||
                 !string.IsNullOrEmpty(m_adapterDescription.Description) && m_adapterDescription.Description.Contains("Software") ||
                 !string.IsNullOrEmpty(m_adapterDescription.Description) && m_adapterDescription.Description.Contains("Microsoft Basic Render Driver");
@@ -64,7 +64,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     try
                     {
-                        Outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
+                        this.Outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
                     }
                     finally
                     {
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_adapter);
-            Outputs.Clear();
+            this.Outputs.Clear();
         }
 
         public bool IsDisposed => m_adapter == null;

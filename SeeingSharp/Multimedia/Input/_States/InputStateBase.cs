@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected InputStateBase()
         {
-            CurrentType = GetType();
+            this.CurrentType = this.GetType();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         internal void CopyAndResetForUpdatePass(InputStateBase targetState)
         {
-            CopyAndResetForUpdatePassInternal(targetState);
+            this.CopyAndResetForUpdatePassInternal(targetState);
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(RelatedView == null) { return -1; }
-                return RelatedView.ViewIndex;
+                if(this.RelatedView == null) { return -1; }
+                return this.RelatedView.ViewIndex;
             }
         }
 

@@ -72,15 +72,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_perFrameData = new CBPerFrame();
 
-            TransformMode2D = Graphics2DTransformMode.Custom;
-            CustomTransform2D = Matrix3x2.Identity;
-            VirtualScreenSize2D = new Size2F();
+            this.TransformMode2D = Graphics2DTransformMode.Custom;
+            this.CustomTransform2D = Matrix3x2.Identity;
+            this.VirtualScreenSize2D = new Size2F();
 
             m_sceneComponents = new SceneComponentFlyweight(this);
 
             m_sceneLayers = new List<SceneLayer>();
             m_sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
-            Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
+            this.Layers = new ReadOnlyCollection<SceneLayer>(m_sceneLayers);
 
             m_drawing2DLayers = new List<Custom2DDrawingLayer>();
 
@@ -91,10 +91,10 @@ namespace SeeingSharp.Multimedia.Core
             m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
             m_renderParameters = new IndexBasedDynamicCollection<SceneRenderParameters>();
 
-            CachedUpdateState = new SceneRelatedUpdateState(this);
+            this.CachedUpdateState = new SceneRelatedUpdateState(this);
 
             // Try to initialize this scene object
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureNotNull(nameof(sceneObject));
             sceneObject.EnsureNotNull(nameof(viewInfo));
 
-            return WaitUntilVisibleAsync(
+            return this.WaitUntilVisibleAsync(
                 new[] { sceneObject },
                 viewInfo, cancelToken);
         }
@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Core
         public async Task<List<SceneObjectInfo>> GetSceneObjectInfoAsync(string layer = "")
         {
             var result = new List<SceneObjectInfo>(16);
-            await PerformBesideRenderingAsync(() =>
+            await this.PerformBesideRenderingAsync(() =>
             {
                 foreach(var actLayer in m_sceneLayers)
                 {
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureObjectOfScene(this, nameof(sceneObject));
 
             SceneObjectInfo result = null;
-            await PerformBesideRenderingAsync(() =>
+            await this.PerformBesideRenderingAsync(() =>
             {
                 result = new SceneObjectInfo(sceneObject, true);
             });
@@ -176,7 +176,7 @@ namespace SeeingSharp.Multimedia.Core
             // Define the poll action (polling is done inside scene update
             void PollAction()
             {
-                if (AreAllObjectsVisible(sceneObjects, viewInfo))
+                if (this.AreAllObjectsVisible(sceneObjects, viewInfo))
                 {
                     taskComplSource.SetResult(null);
                 }
@@ -186,12 +186,12 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 else
                 {
-                    m_asyncInvokesBeforeUpdate.Enqueue((Action) PollAction);
+                    m_asyncInvokesBeforeUpdate.Enqueue(PollAction);
                 }
             }
 
             // Register first call of the polling action
-            m_asyncInvokesBeforeUpdate.Enqueue((Action) PollAction);
+            m_asyncInvokesBeforeUpdate.Enqueue(PollAction);
 
             return taskComplSource.Task;
         }
@@ -255,7 +255,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var manipulator = new SceneManipulator(this);
 
-            return PerformBeforeUpdateAsync(() =>
+            return this.PerformBeforeUpdateAsync(() =>
             {
                 try
                 {
@@ -337,7 +337,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             resourceFactory.EnsureNotNull(nameof(resourceFactory));
 
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
 
             if (resourceKey == NamedOrGenericKey.Empty)
             {
@@ -385,7 +385,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             manipulateAction.EnsureNotNull(nameof(manipulateAction));
 
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
 
             foreach (var actResourceDict in m_registeredResourceDicts)
             {
@@ -406,7 +406,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceKey">The key of the resource to be deleted.</param>
         internal void RemoveResource(NamedOrGenericKey resourceKey)
         {
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
 
             foreach (var actResourceDict in m_registeredResourceDicts)
             {
@@ -496,9 +496,9 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureNotNull(nameof(sceneObject));
             layer.EnsureNotNullOrEmpty(nameof(layer));
 
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
 
-            var layerObject = GetLayer(layer);
+            var layerObject = this.GetLayer(layer);
 
             if (!layerObject.AddObject(sceneObject))
             {
@@ -519,7 +519,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var isFirstView = m_registeredViews.Count == 0;
 
-            InitializeResourceDictionaries();
+            this.InitializeResourceDictionaries();
 
             // Register device on this scene if not done before
             //  -> This registration is forever, no deregister is made!
@@ -595,7 +595,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Mark this scene for deletion if we don't have any other view registered
             if (m_registeredViews.Count <= 0 &&
-                !DiscardAutomaticUnload)
+                !this.DiscardAutomaticUnload)
             {
                 GraphicsCore.Current.MainLoop.RegisterSceneForUnload(this);
             }
@@ -609,7 +609,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             name.EnsureNotNullOrEmpty(nameof(name));
 
-            var currentLayer = TryGetLayer(name);
+            var currentLayer = this.TryGetLayer(name);
 
             if (currentLayer != null)
             {
@@ -625,7 +625,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayers.Add(newLayer);
 
             // Sort local layer list
-            SortLayers();
+            this.SortLayers();
 
             // Register all views on the newly generated layer
             foreach (var actViewInfo in m_registeredViews)
@@ -647,11 +647,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            var layerToRemove = TryGetLayer(layerName);
+            var layerToRemove = this.TryGetLayer(layerName);
 
             if (layerToRemove != null)
             {
-                RemoveLayer(layerToRemove);
+                this.RemoveLayer(layerToRemove);
             }
         }
 
@@ -670,7 +670,7 @@ namespace SeeingSharp.Multimedia.Core
             layer.OrderID = newOrderID;
 
             // Sort local layer list
-            SortLayers();
+            this.SortLayers();
         }
 
         /// <summary>
@@ -689,7 +689,7 @@ namespace SeeingSharp.Multimedia.Core
             m_sceneLayers.Remove(layer);
 
             // Sort local layer list
-            SortLayers();
+            this.SortLayers();
         }
 
         /// <summary>
@@ -700,8 +700,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            var layerToClear = GetLayer(layerName);
-            ClearLayer(layerToClear);
+            var layerToClear = this.GetLayer(layerName);
+            this.ClearLayer(layerToClear);
         }
 
         /// <summary>
@@ -750,7 +750,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            var result = TryGetLayer(layerName);
+            var result = this.TryGetLayer(layerName);
 
             if (result == null)
             {
@@ -806,7 +806,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach(var actObject in sceneObjects)
             {
-                Remove(actObject);
+                this.Remove(actObject);
             }
         }
 
@@ -816,7 +816,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach (var actObject in sceneObjects)
             {
-                Remove(actObject, layerName);
+                this.Remove(actObject, layerName);
             }
         }
 
@@ -844,7 +844,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObject.EnsureNotNull(nameof(sceneObject));
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 
-            var layerObject = GetLayer(layerName);
+            var layerObject = this.GetLayer(layerName);
             layerObject.RemoveObject(sceneObject);
         }
 
@@ -1032,9 +1032,9 @@ namespace SeeingSharp.Multimedia.Core
 
             graphics.PushTransformSettings(new Graphics2DTransformSettings
             {
-                CustomTransform = CustomTransform2D,
-                TransformMode = TransformMode2D,
-                VirtualScreenSize = VirtualScreenSize2D
+                CustomTransform = this.CustomTransform2D,
+                TransformMode = this.TransformMode2D,
+                VirtualScreenSize = this.VirtualScreenSize2D
             });
 
             try

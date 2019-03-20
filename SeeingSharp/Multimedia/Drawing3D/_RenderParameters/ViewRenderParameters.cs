@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resourceDictionary">The resource dictionary where to load the effect.</param>
         internal PostprocessEffectResource GetPostprocessEffect(NamedOrGenericKey namedOrGenericKey, ResourceDictionary resourceDictionary)
         {
-            PostprocessEffectKey = namedOrGenericKey;
+            this.PostprocessEffectKey = namedOrGenericKey;
 
             // Handle empty key
             if (namedOrGenericKey.IsEmpty)
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             m_postprocessEffect = resourceDictionary.GetResourceAndEnsureLoaded<PostprocessEffectResource>(namedOrGenericKey);
-            PostprocessEffectKey = namedOrGenericKey;
+            this.PostprocessEffectKey = namedOrGenericKey;
             return m_postprocessEffect;
         }
 

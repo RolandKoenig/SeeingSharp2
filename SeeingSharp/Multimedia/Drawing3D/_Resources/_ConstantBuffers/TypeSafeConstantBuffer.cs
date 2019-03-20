@@ -83,9 +83,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="dataToSet">The data to set.</param>
         internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
         {
-            var dataBox = deviceContext.MapSubresource(ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
+            var dataBox = deviceContext.MapSubresource(this.ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
             Utilities.Write(dataBox.DataPointer, ref dataToSet);
-            deviceContext.UnmapSubresource(ConstantBuffer, 0);
+            deviceContext.UnmapSubresource(this.ConstantBuffer, 0);
         }
     }
 }

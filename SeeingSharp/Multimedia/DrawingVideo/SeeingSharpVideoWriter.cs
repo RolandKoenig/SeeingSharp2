@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <param name="targetFile">The target file to write to.</param>
         protected SeeingSharpVideoWriter(ResourceLink targetFile)
         {
-            TargetFile = targetFile;
+            this.TargetFile = targetFile;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
                     throw new SeeingSharpGraphicsException("Size has changed during recording!");
                 }
 
-                DrawFrameInternal(device, uploadedTexture);
+                this.DrawFrameInternal(device, uploadedTexture);
             }
             catch(Exception ex)
             {
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             // Ensure that the target directory exists
             try
             {
-                StartRenderingInternal(m_videoSize);
+                this.StartRenderingInternal(m_videoSize);
                 m_hasStarted = true;
             }
             catch(Exception ex)
@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
                 if (!m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
                 if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
 
-                FinishRenderingInternal();
+                this.FinishRenderingInternal();
             }
             catch(Exception ex)
             {
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             finally
             {
                 m_hasFinished = true;
-                RecordingFinished.Raise(this, EventArgs.Empty);
+                this.RecordingFinished.Raise(this, EventArgs.Empty);
             }
         }
 

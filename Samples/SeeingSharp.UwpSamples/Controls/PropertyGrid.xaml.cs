@@ -42,7 +42,7 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public PropertyGrid()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             m_propertyGridVM = new PropertyGridViewModel();
             GridMain.DataContext = m_propertyGridVM;
@@ -74,7 +74,7 @@ namespace SeeingSharp.UwpSamples.Controls
             {
                 GridMain.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45.0) });
             }
-            Height = rowCount * 45d;
+            this.Height = rowCount * 45d;
 
             // Create all controls
             var actRowIndex = 0;
@@ -186,8 +186,8 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public object SelectedObject
         {
-            get => GetValue(SelectedObjectProperty);
-            set => SetValue(SelectedObjectProperty, value);
+            get => this.GetValue(SelectedObjectProperty);
+            set => this.SetValue(SelectedObjectProperty, value);
         }
     }
 }

@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
 
-            UpdateCamera();
+            this.UpdateCamera();
         }
 
         /// <summary>
@@ -105,8 +105,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             if (m_zoomFactor <= ZOOM_FACTOR_MIN) { m_zoomFactor = ZOOM_FACTOR_MIN; }
 
-            MatrixEx.CreateOrthoLH(
-                ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
+            MatrixEx.CreateOrthoLH(this.ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
                 Math.Abs(Math.Max(zNear, zFar)),
                 out projMatrix);
@@ -126,7 +125,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 if (!EngineMath.EqualsWithTolerance(m_zoomFactor, value))
                 {
                     m_zoomFactor = value;
-                    UpdateCamera();
+                    this.UpdateCamera();
                 }
             }
         }

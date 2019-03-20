@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Input
             m_keysHit = new List<WinVirtualKey>(6);
             m_keysDown = new List<WinVirtualKey>(12);
 
-            Internals = new KeyboardStateInternals(this);
+            this.Internals = new KeyboardStateInternals(this);
         }
 
         public bool IsKeyHit(WinVirtualKey key)

@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
         public override void OnReset()
         {
             base.OnReset();
-            ChangeToEventBased();
+            this.ChangeToEventBased();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Change the type of this animation in the base class
-            ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(m_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            m_targetObject.Position = m_startVector + Vector3Ex.GetXY(m_moveHelper.GetPartialMoveDistance(CurrentTime));
+            m_targetObject.Position = m_startVector + Vector3Ex.GetXY(m_moveHelper.GetPartialMoveDistance(this.CurrentTime));
         }
 
         /// <summary>

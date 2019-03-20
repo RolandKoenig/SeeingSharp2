@@ -29,12 +29,12 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public GeometryBuildOptions(DetailLevel detailLevel)
         {
-            TargetDetailLevel = detailLevel;
+            this.TargetDetailLevel = detailLevel;
         }
 
         public DetailLevel TargetDetailLevel { get; }
 
-        public bool IsHighDetail => (TargetDetailLevel & DetailLevel.High) == DetailLevel.High;
+        public bool IsHighDetail => (this.TargetDetailLevel & DetailLevel.High) == DetailLevel.High;
     }
 
     public enum SpiralChuteRotationDirection
@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Objects
     }
 
     [Flags]
-    public enum ExtrudeGeometryOptions : int
+    public enum ExtrudeGeometryOptions
     {
         None = 0,
 

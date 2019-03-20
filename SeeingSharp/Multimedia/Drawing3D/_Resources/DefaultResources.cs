@@ -203,92 +203,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public override bool IsLoaded => m_defaultBlendState != null;
 
-        internal D3D11.BlendState DefaultBlendState
-        {
-            get
-            {
-                return m_defaultBlendState?.Value;
-            }
-        }
+        internal D3D11.BlendState DefaultBlendState => m_defaultBlendState?.Value;
 
-        internal D3D11.BlendState AlphaBlendingBlendState
-        {
-            get
-            {
-                return m_alphaBlendingBlendState?.Value;
-            }
-        }
+        internal D3D11.BlendState AlphaBlendingBlendState => m_alphaBlendingBlendState?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateDefault
-        {
-            get
-            {
-                return m_depthStencilStateDefault?.Value;
-            }
-        }
+        internal D3D11.DepthStencilState DepthStencilStateDefault => m_depthStencilStateDefault?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateDisableZWrites
-        {
-            get
-            {
-                return m_depthStencilStateDisableZWrites?.Value;
-            }
-        }
+        internal D3D11.DepthStencilState DepthStencilStateDisableZWrites => m_depthStencilStateDisableZWrites?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth
-        {
-            get
-            {
-                return m_depthStencilStateAlwaysPass?.Value;
-            }
-        }
+        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth => m_depthStencilStateAlwaysPass?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateInvertedZTest
-        {
-            get
-            {
-                return m_depthStencilStateInvertedZTest?.Value;
-            }
-        }
+        internal D3D11.DepthStencilState DepthStencilStateInvertedZTest => m_depthStencilStateInvertedZTest?.Value;
 
-        internal D3D11.RasterizerState RasterStateDefault
-        {
-            get
-            {
-                return m_rasterStateDefault?.Value;
-            }
-        }
+        internal D3D11.RasterizerState RasterStateDefault => m_rasterStateDefault?.Value;
 
-        internal D3D11.RasterizerState RasterStateBiased
-        {
-            get
-            {
-                return m_rasterStateBiased?.Value;
-            }
-        }
+        internal D3D11.RasterizerState RasterStateBiased => m_rasterStateBiased?.Value;
 
-        internal D3D11.RasterizerState RasterStateWireframe
-        {
-            get
-            {
-                return m_rasterStateWireframe?.Value;
-            }
-        }
+        internal D3D11.RasterizerState RasterStateWireframe => m_rasterStateWireframe?.Value;
 
-        internal D3D11.RasterizerState RasterStateLines
-        {
-            get
-            {
-                return m_rasterStateLines?.Value;
-            }
-        }
+        internal D3D11.RasterizerState RasterStateLines => m_rasterStateLines?.Value;
 
-        internal D3D11.SamplerState SamplerStateDefault
-        {
-            get
-            {
-                return m_samplerStateMedium?.Value;
-            }
-        }
+        internal D3D11.SamplerState SamplerStateDefault => m_samplerStateMedium?.Value;
     }
 }

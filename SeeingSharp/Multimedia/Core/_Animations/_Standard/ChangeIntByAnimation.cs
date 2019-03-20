@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            var currentLocationPercent = (float)(CurrentTime.TotalMilliseconds / FixedTime.TotalMilliseconds);
+            var currentLocationPercent = (float)(this.CurrentTime.TotalMilliseconds / this.FixedTime.TotalMilliseconds);
             var toIncreaseTotal = (int)(m_increaseTotal * currentLocationPercent);
             var toIncrease = toIncreaseTotal - m_alreadyIncreased;
 

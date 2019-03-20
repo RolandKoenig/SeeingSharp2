@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void MarkForUnloading()
         {
-            Dictionary?.MarkForUnloading(this);
+            this.Dictionary?.MarkForUnloading(this);
         }
 
         /// <summary>

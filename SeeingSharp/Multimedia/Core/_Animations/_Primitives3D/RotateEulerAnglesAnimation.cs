@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            var percentagePassed = CurrentTime.Ticks / (float)m_duration.Ticks;
+            var percentagePassed = this.CurrentTime.Ticks / (float)m_duration.Ticks;
             m_targetObject.RotationEuler = m_startRotation + m_changeRotation * percentagePassed;
         }
 

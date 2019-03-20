@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new Geometry();
 
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildShpere(TDiv, PDiv, Radius, Color4Ex.Transparent);
+            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius, Color4Ex.Transparent);
 
             return result;
         }

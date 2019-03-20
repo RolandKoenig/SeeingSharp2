@@ -213,7 +213,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 switch (passID)
                 {
                     case 0:
-                        ApplyAlphaBasedSpriteRendering(deviceContext);
+                        this.ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -224,12 +224,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            DiscardAlphaBasedSpriteRendering(deviceContext);
+                            this.DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
                         return true;
 
                     case 1:
-                        ApplyAlphaBasedSpriteRendering(deviceContext);
+                        this.ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
                             deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
@@ -240,7 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         }
                         finally
                         {
-                            DiscardAlphaBasedSpriteRendering(deviceContext);
+                            this.DiscardAlphaBasedSpriteRendering(deviceContext);
                         }
                         return false;
                 }

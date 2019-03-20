@@ -35,8 +35,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Camera3DViewPoint()
         {
-            OrthographicZoomFactor = 10f;
-            CameraType = Camera3DType.Perspective;
+            this.OrthographicZoomFactor = 10f;
+            this.CameraType = Camera3DType.Perspective;
         }
 
         public Camera3DType CameraType
@@ -50,12 +50,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public string CameraTypeString
         {
-            get => CameraType.ToString();
+            get => this.CameraType.ToString();
             set
             {
                 if (Enum.TryParse(value, out Camera3DType valueParsed))
                 {
-                    CameraType = valueParsed;
+                    this.CameraType = valueParsed;
                 }
             }
         }

@@ -22,7 +22,6 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
@@ -49,9 +48,9 @@ namespace SeeingSharp.WpfSamples
             foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select(actGroup => actGroup.GroupName))
             {
-                SampleGroups.Add(actSampleGroupName);
+                this.SampleGroups.Add(actSampleGroupName);
             }
-            SelectedGroup = SampleGroups.FirstOrDefault();
+            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
         }
 
         private void UpdateSampleCollection()
@@ -60,12 +59,12 @@ namespace SeeingSharp.WpfSamples
                 .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
             if (sampleGroup == null) { return; }
 
-            Samples.Clear();
+            this.Samples.Clear();
             foreach(var actSampleMetadata in sampleGroup.Samples)
             {
-                Samples.Add(new SampleViewModel(actSampleMetadata));
+                this.Samples.Add(new SampleViewModel(actSampleMetadata));
             }
-            SelectedSample = Samples.FirstOrDefault();
+            this.SelectedSample = this.Samples.FirstOrDefault();
         }
 
         public ObservableCollection<string> SampleGroups
@@ -82,9 +81,9 @@ namespace SeeingSharp.WpfSamples
                 if(m_selectedGroup != value)
                 {
                     m_selectedGroup = value;
-                    RaisePropertyChanged(nameof(SelectedGroup));
+                    this.RaisePropertyChanged(nameof(this.SelectedGroup));
 
-                    UpdateSampleCollection();
+                    this.UpdateSampleCollection();
                 }
             }
         }
@@ -111,15 +110,15 @@ namespace SeeingSharp.WpfSamples
                         m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
                     }
 
-                    RaisePropertyChanged(nameof(SelectedSample));
-                    RaisePropertyChanged(nameof(SampleSettings));
+                    this.RaisePropertyChanged(nameof(this.SelectedSample));
+                    this.RaisePropertyChanged(nameof(this.SampleSettings));
 
-                    SampleCommands.Clear();
+                    this.SampleCommands.Clear();
                     if (m_sampleSettings != null)
                     {
                         foreach (var actSampleCommand in m_sampleSettings.GetCommands())
                         {
-                            SampleCommands.Add(actSampleCommand);
+                            this.SampleCommands.Add(actSampleCommand);
                         }
                     }
                 }

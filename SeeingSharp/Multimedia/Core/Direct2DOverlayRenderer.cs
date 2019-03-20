@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
             m_device = device;
             m_renderTarget3D = renderTarget3D;
 
-            CreateResources(viewWidth, viewHeight, dpiScaling, forceInit);
+            this.CreateResources(viewWidth, viewHeight, dpiScaling, forceInit);
         }
 
         /// <summary>

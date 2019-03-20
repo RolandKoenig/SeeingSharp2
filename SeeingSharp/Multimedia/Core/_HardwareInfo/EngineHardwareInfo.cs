@@ -39,8 +39,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public EngineHardwareInfo()
         {
-            CreateFactory();
-            LoadAdapterInformation();
+            this.CreateFactory();
+            this.LoadAdapterInformation();
         }
 
         public void Dispose()

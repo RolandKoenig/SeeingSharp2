@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Upload the texture
-            CopyTextureToStagingResource();
+            this.CopyTextureToStagingResource();
 
             // Read the data into the .Net data block
             var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var result = new MemoryMappedTextureFloat(
                 new Size2(m_width, m_height));
-            UploadToFloatBuffer(result);
+            this.UploadToFloatBuffer(result);
             return result;
         }
 
@@ -142,7 +142,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Upload the texture
-            CopyTextureToStagingResource();
+            this.CopyTextureToStagingResource();
 
             // Read the data into the .Net data block
             var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
@@ -171,6 +171,12 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
+            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
+        }
+
         /// <summary>
         /// Loads the target texture int a staging texture.
         /// </summary>
@@ -197,12 +203,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_device.DeviceImmediateContextD3D11.CopyResource(m_texture, m_copyHelperTextureStaging);
             }
-        }
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
         }
     }
 }

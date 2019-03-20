@@ -90,9 +90,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                this.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, this.RenderLines);
             }
         }
 
@@ -104,13 +104,13 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var resourceData = m_localResources[renderState.DeviceIndex];
 
-            if (PaintAction != null)
+            if (this.PaintAction != null)
             {
                 var wirePainter = new WirePainter(renderState, resourceData);
 
                 try
                 {
-                    PaintAction(wirePainter);
+                    this.PaintAction(wirePainter);
                 }
                 finally
                 {

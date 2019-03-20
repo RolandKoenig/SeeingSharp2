@@ -39,6 +39,8 @@ namespace SeeingSharp.Tests
                 Assert.IsTrue(hardwareInfo.Adapters.Count > 0);
                 Assert.IsNotNull(hardwareInfo.SoftwareAdapter);
             }
+
+            new EngineDevice()
         }
     }
 }

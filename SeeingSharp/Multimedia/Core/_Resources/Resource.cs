@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected Resource()
         {
-            ResourceType = GetType();
+            this.ResourceType = this.GetType();
             m_key = new NamedOrGenericKey();
         }
 
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            UnloadResource();
+            this.UnloadResource();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Core
 
             try
             {
-                LoadResourceInternal(m_device, m_resourceDictionary);
+                this.LoadResourceInternal(m_device, m_resourceDictionary);
             }
             finally
             {
@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_resourceDictionary == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + m_key + " hos no registered ResourceDictionary!"); }
             if (m_device == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + m_key + " hos no registered Device!"); }
 
-            UnloadResourceInternal(m_device, m_resourceDictionary);
+            this.UnloadResourceInternal(m_device, m_resourceDictionary);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (!IsLoaded) { return false; }
+                if (!this.IsLoaded) { return false; }
                 return m_markedForReloading;
             }
         }

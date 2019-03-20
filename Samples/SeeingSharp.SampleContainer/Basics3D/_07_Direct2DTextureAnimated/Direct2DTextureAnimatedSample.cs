@@ -73,7 +73,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
                 // Recalculate current location of the red rectangle on each frame
                 var currentLocation = (float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis / animationMillis;
-                var rectPos = GetAnimationLocation(currentLocation, 165f, 165f);
+                var rectPos = this.GetAnimationLocation(currentLocation, 165f, 165f);
                 graphics.FillRectangle(
                     new RectangleF(
                         20f + rectPos.x,
@@ -86,7 +86,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define Direct2D texture resource

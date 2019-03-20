@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
         private RenderState(EngineDevice device, PerformanceAnalyzer performanceCalculator)
         {
             //Set device members
-            Device = device;
+            this.Device = device;
             DeviceIndex = device.DeviceIndex;
 
             //Initialize world matrix
@@ -81,7 +81,7 @@ namespace SeeingSharp.Multimedia.Core
             Camera3DBase camera, ViewInformation viewInformation)
             : this(device, performanceCalculator)
         {
-            Reset(renderTargets, viewport, camera, viewInformation);
+            this.Reset(renderTargets, viewport, camera, viewInformation);
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace SeeingSharp.Multimedia.Core
             m_forcedMaterial = null;
             m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
 
-            Device.DeviceImmediateContextD3D11.ClearState();
-            m_currentRenderSettings?.Apply(Device.DeviceImmediateContextD3D11);
+            this.Device.DeviceImmediateContextD3D11.ClearState();
+            m_currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ClearCurrentDepthBuffer()
         {
-            ClearCurrentDepthBuffer(1f, 0);
+            this.ClearCurrentDepthBuffer(1f, 0);
         }
 
         /// <summary>
@@ -120,11 +120,11 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
 
             if (currentTargets.DepthStencilBuffer != null)
             {
-                Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
+                this.Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
                     currentTargets.DepthStencilBuffer,
                     D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil,
                     depth, stencil);
@@ -142,11 +142,11 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
 
             if (currentTargets.ColorBuffer != null)
             {
-                Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.ColorBuffer,
                     color);
             }
@@ -162,11 +162,11 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ObjectDisposedException("RenderState");
             }
 
-            var currentTargets = CurrentRenderTargets;
+            var currentTargets = this.CurrentRenderTargets;
 
             if (currentTargets.NormalDepthBuffer != null)
             {
-                Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.NormalDepthBuffer,
                     Color4Ex.Transparent);
             }
@@ -186,7 +186,7 @@ namespace SeeingSharp.Multimedia.Core
             m_currentScene = scene;
             m_currentResourceDictionary = resourceDictionary;
 
-            return new DummyDisposable(PopScene);
+            return new DummyDisposable(this.PopScene);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace SeeingSharp.Multimedia.Core
             m_currentRenderSettings = m_renderSettingsStack.Pop();
 
             //Apply old configuration
-            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
+            m_currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
 
-            m_currentRenderSettings?.Apply(Device.DeviceImmediateContextD3D11);
+            m_currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceToApply">The material to apply.</param>
         internal void ApplyMaterial(MaterialResource resourceToApply)
         {
-            ApplyMaterial(resourceToApply, MaterialApplyInstancingMode.SingleObject);
+            this.ApplyMaterial(resourceToApply, MaterialApplyInstancingMode.SingleObject);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             // Apply initial render properties
-            m_currentRenderSettings.Apply(Device.DeviceImmediateContextD3D11);
+            m_currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             // Overtake device settings
-            newEntry.Apply(Device.DeviceImmediateContextD3D11);
+            newEntry.Apply(this.Device.DeviceImmediateContextD3D11);
 
             // Push new entry onto the stack
             m_renderSettingsStack.Push(m_currentRenderSettings);
@@ -406,24 +406,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current camera.
         /// </summary>
-        public Camera3DBase Camera
-        {
-            get
-            {
-                return m_currentRenderSettings?.Camera;
-            }
-        }
+        public Camera3DBase Camera => m_currentRenderSettings?.Camera;
 
         /// <summary>
         /// Gets current common information about the view.
         /// </summary>
-        public ViewInformation ViewInformation
-        {
-            get
-            {
-                return m_currentRenderSettings?.ViewInformation;
-            }
-        }
+        public ViewInformation ViewInformation => m_currentRenderSettings?.ViewInformation;
 
         /// <summary>
         /// Is this object disposed?

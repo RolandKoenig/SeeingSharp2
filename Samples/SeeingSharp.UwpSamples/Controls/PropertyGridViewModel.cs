@@ -35,11 +35,11 @@ namespace SeeingSharp.UwpSamples.Controls
         {
             var newPropertyMetadata = new List<ConfigurablePropertyMetadata>();
 
-            var selectedObject = SelectedObject;
+            var selectedObject = this.SelectedObject;
 
             if(selectedObject == null)
             {
-                PropertyMetadata = newPropertyMetadata;
+                this.PropertyMetadata = newPropertyMetadata;
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 newPropertyMetadata.Add(new ConfigurablePropertyMetadata(actProperty, selectedObject));
             }
 
-            PropertyMetadata = newPropertyMetadata;
+            this.PropertyMetadata = newPropertyMetadata;
         }
 
         public object SelectedObject
@@ -68,9 +68,9 @@ namespace SeeingSharp.UwpSamples.Controls
                 if(m_selectedObject != value)
                 {
                     m_selectedObject = value;
-                    RaisePropertyChanged();
+                    this.RaisePropertyChanged();
 
-                    UpdatePropertyCollection();
+                    this.UpdatePropertyCollection();
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 if(m_propertyMetadata != value)
                 {
                     m_propertyMetadata = value;
-                    RaisePropertyChanged();
+                    this.RaisePropertyChanged();
                 }
             }
         }

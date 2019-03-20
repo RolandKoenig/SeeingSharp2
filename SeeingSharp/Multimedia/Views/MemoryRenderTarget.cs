@@ -70,9 +70,9 @@ namespace SeeingSharp.Multimedia.Views
             if (syncContext == null) { syncContext = new SynchronizationContext(); }
 
             // Create the RenderLoop object
-            RenderLoop = new RenderLoop(syncContext, this);
-            RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
-            RenderLoop.RegisterRenderLoop();
+            this.RenderLoop = new RenderLoop(syncContext, this);
+            this.RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
+            this.RenderLoop.RegisterRenderLoop();
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Task AwaitRenderAsync()
         {
-            if (!IsOperational) { return Task.Delay(100); }
+            if (!this.IsOperational) { return Task.Delay(100); }
 
             var result = new TaskCompletionSource<object>();
-            RenderLoop.EnqueueAfterPresentAction(() =>
+            this.RenderLoop.EnqueueAfterPresentAction(() =>
             {
                 result.TrySetResult(null);
             });
@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Views
 
         public void Dispose()
         {
-            RenderLoop.Dispose();
+            this.RenderLoop.Dispose();
         }
 
         /// <summary>
@@ -124,11 +124,11 @@ namespace SeeingSharp.Multimedia.Views
             m_deviceContext = m_device.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_renderTarget = GraphicsHelper.CreateRenderTargetTexture(device, width, height, RenderLoop.ViewConfiguration);
+            m_renderTarget = GraphicsHelper.CreateRenderTargetTexture(device, width, height, this.RenderLoop.ViewConfiguration);
             m_renderTargetView = new D3D11.RenderTargetView(m_device, m_renderTarget);
 
             //Create the depth buffer
-            m_renderTargetDepth = GraphicsHelper.CreateDepthBufferTexture(device, width, height, RenderLoop.ViewConfiguration);
+            m_renderTargetDepth = GraphicsHelper.CreateDepthBufferTexture(device, width, height, this.RenderLoop.ViewConfiguration);
             m_renderTargetDepthView = new D3D11.DepthStencilView(m_device, m_renderTargetDepth);
 
             //Define the viewport for rendering
@@ -145,7 +145,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             var eventArgs = new CancelEventArgs(false);
 
-            BeforeRender?.Invoke(this, eventArgs);
+            this.BeforeRender?.Invoke(this, eventArgs);
 
             return !eventArgs.Cancel;
         }
@@ -177,14 +177,14 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => RenderLoop.Scene;
-            set => RenderLoop.SetScene(value);
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
         }
 
         public Camera3DBase Camera
         {
-            get => RenderLoop.Camera;
-            set => RenderLoop.Camera = value;
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
         }
 
         /// <summary>
@@ -194,12 +194,12 @@ namespace SeeingSharp.Multimedia.Views
 
         public Color4 ClearColor
         {
-            get => RenderLoop.ClearColor;
-            set => RenderLoop.ClearColor = value;
+            get => this.RenderLoop.ClearColor;
+            set => this.RenderLoop.ClearColor = value;
         }
 
-        public SynchronizationContext UISynchronizationContext => RenderLoop.UISynchronizationContext;
+        public SynchronizationContext UISynchronizationContext => this.RenderLoop.UISynchronizationContext;
 
-        public bool IsOperational => RenderLoop.IsOperational;
+        public bool IsOperational => this.RenderLoop.IsOperational;
     }
 }

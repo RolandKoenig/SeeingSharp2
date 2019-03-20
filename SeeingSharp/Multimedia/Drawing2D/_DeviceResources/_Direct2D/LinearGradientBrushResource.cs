@@ -59,10 +59,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
 
             m_gradientStops = gradientStops;
-            StartPoint = startPoint;
-            EndPoint = endPoint;
-            ExtendMode = extendMode;
-            Gamma = gamma;
+            this.StartPoint = startPoint;
+            this.EndPoint = endPoint;
+            this.ExtendMode = extendMode;
+            this.Gamma = gamma;
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
@@ -93,9 +93,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override D2D.Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
-            if (IsDisposed)
+            if (this.IsDisposed)
             {
-                throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException(this.GetType().Name);
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
@@ -120,8 +120,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GradientStops = new D2D.GradientStopCollection(
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
-                        (D2D.Gamma) Gamma,
-                        ExtendMode)
+                        this.Gamma, this.ExtendMode)
                 };
 
                 unsafe
@@ -131,8 +130,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         engineDevice.FakeRenderTarget2D,
                         new D2D.LinearGradientBrushProperties
                         {
-                            StartPoint = StartPoint,
-                            EndPoint = EndPoint
+                            StartPoint = this.StartPoint,
+                            EndPoint = this.EndPoint
                         },
                         new D2D.BrushProperties
                         {

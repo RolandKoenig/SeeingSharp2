@@ -40,8 +40,8 @@ namespace SeeingSharp.Multimedia.Core
         internal AnimationSequenceBuilder(AnimationHandler owner)
             : this()
         {
-            AnimationHandler = owner;
-            TargetObject = owner.Owner as TargetType;
+            this.AnimationHandler = owner;
+            this.TargetObject = owner.Owner as TargetType;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SeeingSharp.Multimedia.Core
         internal AnimationSequenceBuilder(AnimationHandler owner, TargetType animatedObject)
             : this()
         {
-            AnimationHandler = owner;
-            TargetObject = animatedObject;
+            this.AnimationHandler = owner;
+            this.TargetObject = animatedObject;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null)
         {
-            if (AnimationHandler == null)
+            if (this.AnimationHandler == null)
             {
                 throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!");
             }
@@ -105,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            AnimationHandler.BeginAnimation(m_sequenceList);
+            this.AnimationHandler.BeginAnimation(m_sequenceList);
             m_applied = true;
         }
 
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void ApplyAsSecondary(Action actionToCall, Action cancelAction, bool? ignorePause = null)
         {
-            if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
+            if (this.AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 
             // Append 'CallAction' on demand
             if (actionToCall != null || cancelAction != null)
@@ -135,7 +135,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
+            this.AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
             m_applied = true;
         }
 
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var taskComplSource = new TaskCompletionSource<bool>();
 
-            Apply(
+            this.Apply(
                 () => taskComplSource.TrySetResult(true),
                 () => taskComplSource.TrySetCanceled());
 
@@ -162,7 +162,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var taskComplSource = new TaskCompletionSource<bool>();
 
-            ApplyAsSecondary(
+            this.ApplyAsSecondary(
                 () => taskComplSource.TrySetResult(true),
                 () => taskComplSource.TrySetCanceled());
 
@@ -175,7 +175,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="ignorePause">Should this animation ignore pause state</param>
         public void ApplyAndRewind(bool? ignorePause = null)
         {
-            if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
+            if (this.AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 
             // Define rewind action
             //  a bit complicated because there a problems with the finished flag
@@ -188,7 +188,7 @@ namespace SeeingSharp.Multimedia.Core
                     newAnimationList.Add(actAnimationStep);
                 }
                 newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(RewindAction);
-                AnimationHandler.BeginAnimation(newAnimationList);
+                this.AnimationHandler.BeginAnimation(newAnimationList);
             }
 
             // Append rewind action to the sequence
@@ -205,7 +205,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Start the animation
-            AnimationHandler.BeginAnimation(m_sequenceList);
+            this.AnimationHandler.BeginAnimation(m_sequenceList);
             m_applied = true;
         }
 
@@ -214,7 +214,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ApplyAsSecondaryAndRewind()
         {
-            if (AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
+            if (this.AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 
             // Define rewind action
             //  a bit complicated because there a problems with the finished flag
@@ -227,7 +227,7 @@ namespace SeeingSharp.Multimedia.Core
                     newAnimationList.Add(actAnimationStep);
                 }
                 newAnimationList[newAnimationList.Count - 1] = new CallActionAnimation(RewindAction);
-                AnimationHandler.BeginSecondaryAnimation(newAnimationList);
+                this.AnimationHandler.BeginSecondaryAnimation(newAnimationList);
             }
 
             // Append rewind action to the sequence
@@ -235,7 +235,7 @@ namespace SeeingSharp.Multimedia.Core
                 .CallAction(RewindAction);
 
             // Start the animation
-            AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
+            this.AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
             m_applied = true;
         }
 

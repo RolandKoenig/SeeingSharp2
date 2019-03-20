@@ -37,9 +37,8 @@ namespace SeeingSharp.Util
 
             if (actDurationResult != null)
             {
-                HandleResultForUIForFlowRateKpi(
-                    actDurationResult,
-                    UIDurationKpisHistorical, UIDurationKpisCurrents);
+                this.HandleResultForUIForFlowRateKpi(
+                    actDurationResult, this.UIDurationKpisHistorical, this.UIDurationKpisCurrents);
                 return;
             }
 
@@ -48,9 +47,8 @@ namespace SeeingSharp.Util
 
             if (actFlowRateResult != null)
             {
-                HandleResultForUIForFlowRateKpi(
-                    actFlowRateResult,
-                    UIFlowRateKpisHistorical, UIFlowRateKpisCurrents);
+                this.HandleResultForUIForFlowRateKpi(
+                    actFlowRateResult, this.UIFlowRateKpisHistorical, this.UIFlowRateKpisCurrents);
             }
         }
 

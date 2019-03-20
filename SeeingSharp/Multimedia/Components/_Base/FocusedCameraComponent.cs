@@ -43,9 +43,9 @@ namespace SeeingSharp.Multimedia.Components
         /// </summary>
         protected FocusedCameraComponent()
         {
-            CameraDistanceInitial = 4f;
-            CameraDistanceMin = 3f;
-            CameraDistanceMax = 10f;
+            this.CameraDistanceInitial = 4f;
+            this.CameraDistanceMin = 3f;
+            this.CameraDistanceMax = 10f;
             m_hvRotation = new Vector2(
                 EngineMath.RAD_45DEG,
                 EngineMath.RAD_45DEG);
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Components
         {
             var result = new PerSceneContext
             {
-                CameraDistance = CameraDistanceInitial,
+                CameraDistance = this.CameraDistanceInitial,
                 CameraHVRotation = m_hvRotation
             };
 
@@ -116,8 +116,8 @@ namespace SeeingSharp.Multimedia.Components
             const float MIN_RAD = EngineMath.RAD_90DEG * -0.99f;
             componentContext.CameraHVRotation.X = componentContext.CameraHVRotation.X % EngineMath.RAD_360DEG;
 
-            if (componentContext.CameraDistance < CameraDistanceMin) { componentContext.CameraDistance = CameraDistanceMin; }
-            if (componentContext.CameraDistance > CameraDistanceMax) { componentContext.CameraDistance = CameraDistanceMax; }
+            if (componentContext.CameraDistance < this.CameraDistanceMin) { componentContext.CameraDistance = this.CameraDistanceMin; }
+            if (componentContext.CameraDistance > this.CameraDistanceMax) { componentContext.CameraDistance = this.CameraDistanceMax; }
             if (componentContext.CameraHVRotation.Y <= MIN_RAD) { componentContext.CameraHVRotation.Y = MIN_RAD; }
             if (componentContext.CameraHVRotation.Y >= MAX_RAD) { componentContext.CameraHVRotation.Y = MAX_RAD; }
 
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Components
                 cameraOffset,
                 Matrix.RotationAxis(Vector3.Cross(cameraOffset, Vector3.UnitY), componentContext.CameraHVRotation.Y));
 
-            var focusedLocation = GetFocusedLocation();
+            var focusedLocation = this.GetFocusedLocation();
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;
             actCamera.Target = focusedLocation;
         }

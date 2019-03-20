@@ -55,8 +55,8 @@ namespace SeeingSharp.Multimedia.Views
         public SeeingSharpRenderPanel()
         {
             m_painter = new SeeingSharpPanelPainter(this);
-            m_painter.RenderLoop.CurrentViewSizeChanged += OnRenderLoop_CurrentViewSizeChanged;
-            m_painter.RenderLoop.DeviceChanged += OnRenderLoop_DeviceChanged;
+            m_painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
+            m_painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
         }
 
         /// <summary>
@@ -81,12 +81,12 @@ namespace SeeingSharp.Multimedia.Views
 
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDevice)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
         }
 
         private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentViewSize)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => (Scene)GetValue(SceneProperty);
-            set => SetValue(SceneProperty, value);
+            get => (Scene) this.GetValue(SceneProperty);
+            set => this.SetValue(SceneProperty, value);
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get => (Camera3DBase)GetValue(CameraProperty);
-            set => SetValue(CameraProperty, value);
+            get => (Camera3DBase) this.GetValue(CameraProperty);
+            set => this.SetValue(CameraProperty, value);
         }
 
         /// <summary>
@@ -166,8 +166,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Custom2DDrawingLayer DrawingLayer2D
         {
-            get => (Custom2DDrawingLayer)GetValue(DrawingLayer2DProperty);
-            set => SetValue(DrawingLayer2DProperty, value);
+            get => (Custom2DDrawingLayer) this.GetValue(DrawingLayer2DProperty);
+            set => this.SetValue(DrawingLayer2DProperty, value);
         }
     }
 }

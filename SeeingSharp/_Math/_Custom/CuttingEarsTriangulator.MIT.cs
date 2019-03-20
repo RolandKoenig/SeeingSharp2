@@ -203,7 +203,7 @@ namespace SeeingSharp
             var ax = Cx - Bx;
             var ay = Cy - By;
             var bx = Ax - Cx;
-            var @by = Ay - Cy;
+            var by = Ay - Cy;
             var cx = Bx - Ax;
             var cy = By - Ay;
             var apx = Px - Ax;
@@ -215,7 +215,7 @@ namespace SeeingSharp
 
             var aCROSSbp = ax * bpy - ay * bpx;
             var cCROSSap = cx * apy - cy * apx;
-            var bCROSScp = bx * cpy - @by * cpx;
+            var bCROSScp = bx * cpy - by * cpx;
 
             return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
         }

@@ -47,9 +47,9 @@ namespace SeeingSharp.Multimedia.Objects
         public ImportedModelContainer(ImportOptions importOptions)
         {
             m_importOptions = importOptions;
-            Objects = new List<SceneObject>();
-            ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            ImportedResources = new List<ImportedResourceInfo>();
+            this.Objects = new List<SceneObject>();
+            this.ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
+            this.ImportedResources = new List<ImportedResourceInfo>();
 
             m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Add the object finally
-            Objects.Add(rootObject);
+            this.Objects.Add(rootObject);
 
             return rootObject;
         }

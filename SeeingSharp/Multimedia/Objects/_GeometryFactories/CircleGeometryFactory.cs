@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using SeeingSharp.Multimedia.Core;
 using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -29,17 +28,17 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public CircleGeometryFactory()
         {
-            Radius = 2f;
-            Width = 0.5f;
-            Height = 0.1f;
-            CountOfSegments = 10;
+            this.Radius = 2f;
+            this.Width = 0.5f;
+            this.Height = 0.1f;
+            this.CountOfSegments = 10;
         }
 
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCircleFullV(Vector3.Zero, Radius, Width, Height, CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }

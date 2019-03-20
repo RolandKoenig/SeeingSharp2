@@ -21,14 +21,12 @@
 */
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
 using SharpDX;
 
@@ -55,13 +53,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define texture and material resource
                 var resTexture = manipulator.AddTexture(
-                    new AssemblyResourceLink(
-                        GetType(),
+                    new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
                 var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 

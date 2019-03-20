@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public WireObject()
         {
-            LineColor = Color4.Black;
+            this.LineColor = Color4.Black;
             m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
 
@@ -108,9 +108,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (CountRenderPassSubscriptions(layerViewSubset) == 0)
+            if (this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, RenderLines);
+                this.SubscribeToPass(RenderPassInfo.PASS_LINE_RENDER, layerViewSubset, this.RenderLines);
             }
         }
 
@@ -142,7 +142,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Render all lines finally
             resourceData.LineRenderResources.RenderLines(
-                renderState, viewProj, LineColor,
+                renderState, viewProj, this.LineColor,
                 resourceData.LineVertexBuffer, m_lineData.Length * 2);
         }
 

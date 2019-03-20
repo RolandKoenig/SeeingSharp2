@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Input
             m_prevState = new GamepadReportedState();
             m_currentState = new GamepadReportedState();
 
-            Internals = new GamepadStateInternals(this);
+            this.Internals = new GamepadStateInternals(this);
         }
 
         /// <summary>

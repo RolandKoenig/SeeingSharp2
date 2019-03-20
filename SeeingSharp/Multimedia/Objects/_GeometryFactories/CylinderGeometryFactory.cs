@@ -28,16 +28,16 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public CylinderGeometryFactory()
         {
-            Radius = 0.5f;
-            Height = 1f;
-            CountOfSegments = 10;
+            this.Radius = 0.5f;
+            this.Height = 1f;
+            this.CountOfSegments = 10;
         }
 
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, Radius, Height, CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4Ex.Transparent);
 
             return result;
         }

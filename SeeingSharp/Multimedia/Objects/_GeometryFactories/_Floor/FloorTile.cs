@@ -35,8 +35,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="yPos">The y pos.</param>
         internal FloorTile(int xPos, int yPos)
         {
-            XPos = xPos;
-            YPos = yPos;
+            this.XPos = xPos;
+            this.YPos = yPos;
             m_tileInfo = new FloorTileInfo(NamedOrGenericKey.Empty);
         }
 
@@ -48,8 +48,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="tileInfo">Gets some generic information about the tile.</param>
         internal FloorTile(int xPos, int yPos, FloorTileInfo tileInfo)
         {
-            XPos = xPos;
-            YPos = yPos;
+            this.XPos = xPos;
+            this.YPos = yPos;
             m_tileInfo = tileInfo;
         }
 

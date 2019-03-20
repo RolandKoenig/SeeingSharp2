@@ -20,9 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -58,7 +58,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create pallet geometry resource

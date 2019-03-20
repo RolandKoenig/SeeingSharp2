@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if(effect == null)
             {
                 // Create the effect
-                effect = BuildEffect(device);
+                effect = this.BuildEffect(device);
 
                 // Set input values
                 for(var loop =0; loop<m_effectInputs.Length; loop++)

@@ -49,14 +49,14 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                BuildStandardFloor(
+                this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cone geometry resource
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
-                        new ConeGeometryFactory()
-                    {
+                        new ConeGeometryFactory
+                        {
                         CountOfSegments = 50
                     }));
 

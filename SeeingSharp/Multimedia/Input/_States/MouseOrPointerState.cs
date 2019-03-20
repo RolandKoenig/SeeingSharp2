@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Input
                 buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
             }
 
-            Internals = new MouseOrPointerStateInternals(this);
+            this.Internals = new MouseOrPointerStateInternals(this);
 
             m_buttonsHit = new bool[buttonCount];
             m_buttonsDown = new bool[buttonCount];
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Input
             targetStateCasted.m_positionPixel = m_positionPixel;
             targetStateCasted.m_wheelDelta = m_wheelDelta;
             targetStateCasted.m_isInside = m_isInside;
-            targetStateCasted.Type = Type;
+            targetStateCasted.Type = this.Type;
             for (var loop = 0; loop < BUTTON_COUNT; loop++)
             {
                 targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
@@ -135,13 +135,13 @@ namespace SeeingSharp.Multimedia.Input
         internal void NotifyButtonDown(MouseButton button)
         {
             var index = (int)button;
-            UpdateMouseButtonState(index, true);
+            this.UpdateMouseButtonState(index, true);
         }
 
         internal void NotifyButtonUp(MouseButton button)
         {
             var index = (int)button;
-            UpdateMouseButtonState(index, false);
+            this.UpdateMouseButtonState(index, false);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace SeeingSharp.Multimedia.Input
             // Update mouse states
             for(var loop=0; loop<buttonStates.Length; loop++)
             {
-                UpdateMouseButtonState(loop, buttonStates[loop]);
+                this.UpdateMouseButtonState(loop, buttonStates[loop]);
             }
         }
 

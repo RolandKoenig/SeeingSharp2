@@ -31,10 +31,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal FactoryHandlerWIC(DeviceLoadSettings deviceLoadSettings)
         {
-            Factory = new ImagingFactory();
+            this.Factory = new ImagingFactory();
         }
 
-        public bool IsInitialized => Factory != null;
+        public bool IsInitialized => this.Factory != null;
 
         /// <summary>
         /// Gets the WIC factory object.

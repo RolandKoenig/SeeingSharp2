@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <returns></returns>
         public override TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
-            return FixedTime;
+            return this.FixedTime;
         }
 
         /// <summary>

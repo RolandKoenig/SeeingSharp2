@@ -29,11 +29,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SimpleColoredMaterialResource : MaterialResource
     {
-        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
-
         // Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         // Some configuration
         private Color4 m_materialDiffuseColor;
@@ -56,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureKey">The name of the texture to be rendered.</param>
         public SimpleColoredMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey())
         {
-            TextureKey = textureKey;
+            this.TextureKey = textureKey;
             m_maxClipDistance = 1000f;
             m_adjustTextureCoordinates = false;
             m_addToAlpha = 0f;
@@ -84,10 +83,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
             //Load the texture if any configured.
-            if (!TextureKey.IsEmpty)
+            if (!this.TextureKey.IsEmpty)
             {
                 // Get texture resource
-                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(TextureKey);
+                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(this.TextureKey);
             }
         }
 
@@ -117,7 +116,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
 
                 default:
-                    throw new SeeingSharpGraphicsException(GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
+                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
             }
         }
 
@@ -132,7 +131,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var isResourceSameType =
                 previousMaterial != null &&
-                previousMaterial.ResourceType == ResourceType;
+                previousMaterial.ResourceType == this.ResourceType;
 
             // Apply local shader configuration
             if (m_cbPerMaterialDataChanged)

@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Core
                m_taskToWaitFor.IsCompleted ||
                m_taskToWaitFor.IsFaulted)
             {
-                NotifyAnimationFinished();
+                this.NotifyAnimationFinished();
             }
         }
 

@@ -42,13 +42,13 @@ namespace SeeingSharp.Multimedia.Objects
 
         internal GeometrySurface(Geometry owner, int triangleCapacity)
         {
-            Owner = owner;
+            this.Owner = owner;
             m_corners = new List<TriangleCorner>(triangleCapacity * 3);
 
-            Indices = new IndexCollection(m_corners);
-            Corners = new CornerCollection(m_corners);
-            Triangles = new TriangleCollection(m_corners);
-            MaterialProperties = new MaterialProperties();
+            this.Indices = new IndexCollection(m_corners);
+            this.Corners = new CornerCollection(m_corners);
+            this.Triangles = new TriangleCollection(m_corners);
+            this.MaterialProperties = new MaterialProperties();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Copy metadata
-            result.MaterialProperties = MaterialProperties.Clone();
+            result.MaterialProperties = this.MaterialProperties.Clone();
 
             return result;
         }
@@ -89,10 +89,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="geometry">The geometry.</param>
         public void AddGeometry(Geometry geometry)
         {
-            var baseIndex = Owner.VerticesInternal.Count;
+            var baseIndex = this.Owner.VerticesInternal.Count;
 
             // Add all vertices to local geometry
-            Owner.VerticesInternal.AddRange(geometry.VerticesInternal);
+            this.Owner.VerticesInternal.AddRange(geometry.VerticesInternal);
 
             // Add all corners to local surface
             foreach(var actSurface in geometry.Surfaces)
@@ -130,9 +130,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="v3">Third vertex</param>
         public void AddTriangle(Vertex v1, Vertex v2, Vertex v3)
         {
-            m_corners.Add(new TriangleCorner(Owner.AddVertex(v1)));
-            m_corners.Add(new TriangleCorner(Owner.AddVertex(v2)));
-            m_corners.Add(new TriangleCorner(Owner.AddVertex(v3)));
+            m_corners.Add(new TriangleCorner(this.Owner.AddVertex(v1)));
+            m_corners.Add(new TriangleCorner(this.Owner.AddVertex(v2)));
+            m_corners.Add(new TriangleCorner(this.Owner.AddVertex(v3)));
         }
 
         /// <summary>
@@ -143,8 +143,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="index3">Index of the third vertex</param>
         public void AddTriangleAndCalculateNormalsFlat(int index1, int index2, int index3)
         {
-            AddTriangle(index1, index2, index3);
-            CalculateNormalsFlat(new Triangle(index1, index2, index3));
+            this.AddTriangle(index1, index2, index3);
+            this.CalculateNormalsFlat(new Triangle(index1, index2, index3));
         }
 
         /// <summary>
@@ -155,11 +155,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="v3">Third vertex</param>
         public void AddTriangleAndCalculateNormalsFlat(Vertex v1, Vertex v2, Vertex v3)
         {
-            var index1 = Owner.AddVertex(v1);
-            var index2 = Owner.AddVertex(v2);
-            var index3 = Owner.AddVertex(v3);
+            var index1 = this.Owner.AddVertex(v1);
+            var index2 = this.Owner.AddVertex(v2);
+            var index3 = this.Owner.AddVertex(v3);
 
-            AddTriangleAndCalculateNormalsFlat(index1, index2, index3);
+            this.AddTriangleAndCalculateNormalsFlat(index1, index2, index3);
         }
 
         /// <summary>
@@ -173,11 +173,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             foreach (var actVertex in vertices)
             {
-                indices.Add(Owner.AddVertex(actVertex));
+                indices.Add(this.Owner.AddVertex(actVertex));
             }
 
             //Calculate cutting ears
-            AddPolygonByCuttingEars(indices);
+            this.AddPolygonByCuttingEars(indices);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEars(IEnumerable<int> indices, bool twoSided = false)
         {
-            AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
+            this.AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
         }
 
         /// <summary>
@@ -202,11 +202,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             foreach (var actVertex in vertices)
             {
-                indices.Add(Owner.AddVertex(actVertex));
+                indices.Add(this.Owner.AddVertex(actVertex));
             }
 
             //Calculate cutting ears and normals
-            AddPolygonByCuttingEarsAndCalculateNormals(indices, twoSided);
+            this.AddPolygonByCuttingEarsAndCalculateNormals(indices, twoSided);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Objects
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<int> indices, bool twoSided)
         {
             //Add the triangles using cutting ears algorithm
-            var addedIndices = AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
+            var addedIndices = this.AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
 
             //Calculate all normals
             var indexEnumerator = addedIndices.GetEnumerator();
@@ -247,7 +247,7 @@ namespace SeeingSharp.Multimedia.Objects
                         break;
                     }
 
-                    CalculateNormalsFlat(new Triangle(index1, index2, index3));
+                    this.CalculateNormalsFlat(new Triangle(index1, index2, index3));
                 }
             }
             finally
@@ -264,12 +264,12 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actTriangle in Triangles)
+            foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = Owner.VerticesInternal[actTriangle.Index1];
-                var vertex2 = Owner.VerticesInternal[actTriangle.Index2];
-                var vertex3 = Owner.VerticesInternal[actTriangle.Index3];
+                var vertex1 = this.Owner.VerticesInternal[actTriangle.Index1];
+                var vertex2 = this.Owner.VerticesInternal[actTriangle.Index2];
+                var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 //Get average values for current face
                 var averageBinormal = Vector3.Normalize(Vector3Ex.Average(vertex1.Binormal, vertex2.Binormal, vertex3.Binormal));
@@ -295,12 +295,12 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actTriangle in Triangles)
+            foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = Owner.VerticesInternal[actTriangle.Index1];
-                var vertex2 = Owner.VerticesInternal[actTriangle.Index2];
-                var vertex3 = Owner.VerticesInternal[actTriangle.Index3];
+                var vertex1 = this.Owner.VerticesInternal[actTriangle.Index1];
+                var vertex2 = this.Owner.VerticesInternal[actTriangle.Index2];
+                var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 //Get average values for current face
                 var averageNormal = Vector3.Normalize(Vector3Ex.Average(vertex1.Normal, vertex2.Normal, vertex3.Normal));
@@ -326,12 +326,12 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actTriangle in Triangles)
+            foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = Owner.VerticesInternal[actTriangle.Index1];
-                var vertex2 = Owner.VerticesInternal[actTriangle.Index2];
-                var vertex3 = Owner.VerticesInternal[actTriangle.Index3];
+                var vertex1 = this.Owner.VerticesInternal[actTriangle.Index1];
+                var vertex2 = this.Owner.VerticesInternal[actTriangle.Index2];
+                var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 //Get average values for current face
                 var averageTangent = Vector3.Normalize(Vector3Ex.Average(vertex1.Tangent, vertex2.Tangent, vertex3.Tangent));
@@ -357,7 +357,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actVertex in Owner.VerticesInternal)
+            foreach (var actVertex in this.Owner.VerticesInternal)
             {
                 if (actVertex.Binormal.Length() > 0.1f)
                 {
@@ -377,7 +377,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actVertex in Owner.VerticesInternal)
+            foreach (var actVertex in this.Owner.VerticesInternal)
             {
                 if (actVertex.Normal.Length() > 0.1f)
                 {
@@ -397,7 +397,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actVertex in Owner.VerticesInternal)
+            foreach (var actVertex in this.Owner.VerticesInternal)
             {
                 if (actVertex.Tangent.Length() > 0.1f)
                 {
@@ -417,12 +417,12 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new List<Vector3>();
 
             //Generate all lines
-            foreach (var actTriangle in Triangles)
+            foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = Owner.VerticesInternal[actTriangle.Index1];
-                var vertex2 = Owner.VerticesInternal[actTriangle.Index2];
-                var vertex3 = Owner.VerticesInternal[actTriangle.Index3];
+                var vertex1 = this.Owner.VerticesInternal[actTriangle.Index1];
+                var vertex2 = this.Owner.VerticesInternal[actTriangle.Index2];
+                var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 //first line (c)
                 result.Add(vertex1.Position);
@@ -513,9 +513,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void CalculateNormalsFlat()
         {
-            foreach (var actTriangle in Triangles)
+            foreach (var actTriangle in this.Triangles)
             {
-                CalculateNormalsFlat(actTriangle);
+                this.CalculateNormalsFlat(actTriangle);
             }
         }
 
@@ -525,9 +525,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="actTriangle">The triangle for which to calculate the normal (flat).</param>
         public void CalculateNormalsFlat(Triangle actTriangle)
         {
-            var v1 = Owner.VerticesInternal[actTriangle.Index1];
-            var v2 = Owner.VerticesInternal[actTriangle.Index2];
-            var v3 = Owner.VerticesInternal[actTriangle.Index3];
+            var v1 = this.Owner.VerticesInternal[actTriangle.Index1];
+            var v2 = this.Owner.VerticesInternal[actTriangle.Index2];
+            var v3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
             var normal = Vector3Ex.CalculateTriangleNormal(v1.Geometry.Position, v2.Geometry.Position, v3.Geometry.Position);
 
@@ -535,9 +535,9 @@ namespace SeeingSharp.Multimedia.Objects
             v2 = v2.Copy(v2.Geometry.Position, normal);
             v3 = v3.Copy(v3.Geometry.Position, normal);
 
-            Owner.VerticesInternal[actTriangle.Index1] = v1;
-            Owner.VerticesInternal[actTriangle.Index2] = v2;
-            Owner.VerticesInternal[actTriangle.Index3] = v3;
+            this.Owner.VerticesInternal[actTriangle.Index1] = v1;
+            this.Owner.VerticesInternal[actTriangle.Index2] = v2;
+            this.Owner.VerticesInternal[actTriangle.Index3] = v3;
         }
 
         /// <summary>
@@ -556,7 +556,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < indexCount; loop += 3)
             {
-                CalculateNormalsFlat(new Triangle(
+                this.CalculateNormalsFlat(new Triangle(
                     m_corners[startIndex + loop].Index,
                     m_corners[startIndex + loop + 1].Index,
                     m_corners[startIndex + loop + 2].Index));
@@ -568,14 +568,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void CalculateTangentsAndBinormals()
         {
-            for (var loop = 0; loop < CountTriangles; loop += 1)
+            for (var loop = 0; loop < this.CountTriangles; loop += 1)
             {
-                var actTriangle = Triangles[loop];
+                var actTriangle = this.Triangles[loop];
 
                 //Get all vertices of current face
-                var vertex1 = Owner.VerticesInternal[actTriangle.Index1];
-                var vertex2 = Owner.VerticesInternal[actTriangle.Index2];
-                var vertex3 = Owner.VerticesInternal[actTriangle.Index3];
+                var vertex1 = this.Owner.VerticesInternal[actTriangle.Index1];
+                var vertex2 = this.Owner.VerticesInternal[actTriangle.Index2];
+                var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 // Perform some precalculations
                 var w1 = vertex1.TexCoord;
@@ -611,9 +611,9 @@ namespace SeeingSharp.Multimedia.Objects
                 vertex3.Binormal = binormal;
 
                 // Overtake changes made in geometry
-                Owner.VerticesInternal[actTriangle.Index1] = vertex1;
-                Owner.VerticesInternal[actTriangle.Index2] = vertex2;
-                Owner.VerticesInternal[actTriangle.Index3] = vertex3;
+                this.Owner.VerticesInternal[actTriangle.Index1] = vertex1;
+                this.Owner.VerticesInternal[actTriangle.Index2] = vertex2;
+                this.Owner.VerticesInternal[actTriangle.Index3] = vertex3;
             }
         }
 
@@ -640,7 +640,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < vertexIndices.Count; loop++)
             {
-                coordinates[loop] = Owner.VerticesInternal[vertexIndices[loop]].Position;
+                coordinates[loop] = this.Owner.VerticesInternal[vertexIndices[loop]].Position;
             }
 
             //Triangulate all data
@@ -679,10 +679,10 @@ namespace SeeingSharp.Multimedia.Objects
                         break;
                     }
 
-                    AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
+                    this.AddTriangle(vertexIndices[index3], vertexIndices[index2], vertexIndices[index1]);
                     if (twoSided)
                     {
-                        AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
+                        this.AddTriangle(vertexIndices[index1], vertexIndices[index2], vertexIndices[index3]);
                     }
 
                 }
@@ -701,8 +701,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey Material
         {
-            get => MaterialProperties.Key;
-            set => MaterialProperties.Key = value;
+            get => this.MaterialProperties.Key;
+            set => this.MaterialProperties.Key = value;
         }
 
         /// <summary>
@@ -710,8 +710,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Color4 DiffuseColor
         {
-            get => MaterialProperties.DiffuseColor;
-            set => MaterialProperties.DiffuseColor = value;
+            get => this.MaterialProperties.DiffuseColor;
+            set => this.MaterialProperties.DiffuseColor = value;
         }
 
         /// <summary>
@@ -719,11 +719,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public string TextureName
         {
-            get => MaterialProperties.TextureKey.NameKey;
+            get => this.MaterialProperties.TextureKey.NameKey;
             set
             {
-                if (string.IsNullOrEmpty(value)) { MaterialProperties.TextureKey = NamedOrGenericKey.Empty; }
-                else { MaterialProperties.TextureKey = new NamedOrGenericKey(value); }
+                if (string.IsNullOrEmpty(value)) {
+                    this.MaterialProperties.TextureKey = NamedOrGenericKey.Empty; }
+                else {
+                    this.MaterialProperties.TextureKey = new NamedOrGenericKey(value); }
             }
         }
 
@@ -732,8 +734,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey TextureKey
         {
-            get => MaterialProperties.TextureKey;
-            set => MaterialProperties.TextureKey = value;
+            get => this.MaterialProperties.TextureKey;
+            set => this.MaterialProperties.TextureKey = value;
         }
 
         /// <summary>
@@ -764,12 +766,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets or sets the resource source assembly.
         /// </summary>
-        public Assembly ResourceSourceAssembly => Owner.ResourceSourceAssembly;
+        public Assembly ResourceSourceAssembly => this.Owner.ResourceSourceAssembly;
 
         /// <summary>
         /// Gets or sets the original source of this geometry.
         /// </summary>
-        public ResourceLink ResourceLink => Owner.ResourceLink;
+        public ResourceLink ResourceLink => this.Owner.ResourceLink;
 
         public Geometry Owner { get; }
 
@@ -816,7 +818,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// <param name="triangle"></param>
             public int Add(Triangle triangle)
             {
-                return Add(triangle.Index1, triangle.Index2, triangle.Index3);
+                return this.Add(triangle.Index1, triangle.Index2, triangle.Index3);
             }
 
             public IEnumerator<Triangle> GetEnumerator()

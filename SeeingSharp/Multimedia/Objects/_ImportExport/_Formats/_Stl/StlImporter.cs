@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Try to read in BINARY format first
                 using (var inStream = sourceFile.OpenInputStream())
                 {
-                    result = TryReadBinary(inStream, stlImportOptions);
+                    result = this.TryReadBinary(inStream, stlImportOptions);
                 }
 
                 // Read in ASCII format (if binary did not work)
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     using (var inStream = sourceFile.OpenInputStream())
                     {
-                        result = TryReadAscii(inStream, stlImportOptions);
+                        result = this.TryReadAscii(inStream, stlImportOptions);
                     }
                 }
             }
@@ -419,7 +419,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                             // Geometry data
                         case "facet":
-                            ReadFacet(reader, values, newGeometry, importOptions);
+                            this.ReadFacet(reader, values, newGeometry, importOptions);
                             break;
 
                             // End of file

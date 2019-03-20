@@ -35,7 +35,7 @@ namespace SeeingSharp.Util
         /// <param name="fileName">Name of the dummy file.</param>
         public void WriteAllBytesToDummyFile(string fileName)
         {
-            using (var inStream = OpenInputStream())
+            using (var inStream = this.OpenInputStream())
 
             using (Stream outStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
@@ -54,7 +54,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public string ReadCompleteToString()
         {
-            using (var inStream = OpenInputStream())
+            using (var inStream = this.OpenInputStream())
 
             using (var inStreamReader = new StreamReader(inStream))
             {
@@ -67,7 +67,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public async Task<string> ReadCompleteToStringAsync()
         {
-            using (var inStream = await OpenInputStreamAsync())
+            using (var inStream = await this.OpenInputStreamAsync())
 
             using (var inStreamReader = new StreamReader(inStream))
             {

@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             var givenViewType = typeof(ViewType);
 
-            return GetInputHandler(givenViewType);
+            return this.GetInputHandler(givenViewType);
         }
 
         /// <summary>

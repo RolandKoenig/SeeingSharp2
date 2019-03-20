@@ -42,10 +42,10 @@ namespace SeeingSharp.Util
 
         public IDisposable UseMemoryStream(out MemoryStream memoryStream, int requiredCapacity = 128)
         {
-            memoryStream = TakeMemoryStream(requiredCapacity);
+            memoryStream = this.TakeMemoryStream(requiredCapacity);
 
             var cachedMemoryStream = memoryStream;
-            return new DummyDisposable(() => ReRegisterMemoryStream(cachedMemoryStream));
+            return new DummyDisposable(() => this.ReRegisterMemoryStream(cachedMemoryStream));
         }
 
         public MemoryStream TakeMemoryStream(int requiredCapacity = 128)

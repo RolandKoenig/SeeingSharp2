@@ -54,8 +54,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal RenderPassInfo(string name, bool isSorted = false)
         {
-            Name = name;
-            IsSorted = isSorted;
+            this.Name = name;
+            this.IsSorted = isSorted;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
 
         /// <summary>

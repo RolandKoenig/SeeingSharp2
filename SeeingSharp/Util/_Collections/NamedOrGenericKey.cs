@@ -39,8 +39,8 @@ namespace SeeingSharp.Util
         {
             if (keyValue == 0) { throw new ArgumentException("Key value can not be 0!"); }
 
-            GenericKey = keyValue;
-            NameKey = null;
+            this.GenericKey = keyValue;
+            this.NameKey = null;
             m_hashCode = keyValue.GetHashCode();
             m_hint = null;
         }
@@ -53,8 +53,8 @@ namespace SeeingSharp.Util
         {
             if (string.IsNullOrEmpty(nameKey)) { throw new ArgumentException("Path key can not be null!"); }
 
-            GenericKey = 0;
-            NameKey = nameKey;
+            this.GenericKey = 0;
+            this.NameKey = nameKey;
             m_hashCode = nameKey.GetHashCode();
             m_hint = null;
         }
@@ -76,7 +76,7 @@ namespace SeeingSharp.Util
         /// </returns>
         public override string ToString()
         {
-            return Description;
+            return this.Description;
         }
 
         /// <summary>
@@ -88,12 +88,12 @@ namespace SeeingSharp.Util
         /// </returns>
         public bool Equals(NamedOrGenericKey other)
         {
-            if (NameKey != null)
+            if (this.NameKey != null)
             {
                 if (other.NameKey == null) { return false; }
-                return NameKey == other.NameKey;
+                return this.NameKey == other.NameKey;
             }
-            return GenericKey == other.GenericKey;
+            return this.GenericKey == other.GenericKey;
         }
 
         /// <summary>
@@ -105,15 +105,15 @@ namespace SeeingSharp.Util
             var result = m_hashCode.CompareTo(other.m_hashCode);
             if(result == 0)
             {
-                if (NameKey != null)
+                if (this.NameKey != null)
                 {
                     if (other.NameKey == null) { result = -1; }
-                    else { result = string.Compare(NameKey, other.NameKey, StringComparison.Ordinal); }
+                    else { result = string.Compare(this.NameKey, other.NameKey, StringComparison.Ordinal); }
                 }
                 else
                 {
                     if (other.NameKey != null) { result = 1; }
-                    else { result = GenericKey.CompareTo(other.GenericKey); }
+                    else { result = this.GenericKey.CompareTo(other.GenericKey); }
                 }
             }
             return result;
@@ -130,7 +130,7 @@ namespace SeeingSharp.Util
         {
             if (obj is NamedOrGenericKey other)
             {
-                return Equals(other);
+                return this.Equals(other);
             }
             return false;
         }
@@ -171,7 +171,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Is this key empty?
         /// </summary>
-        public bool IsEmpty => GenericKey == 0 && NameKey == null;
+        public bool IsEmpty => this.GenericKey == 0 && this.NameKey == null;
 
         /// <summary>
         /// Gets or sets a hint for this resource key (a custom description which helps identifying what is behind this key).
@@ -184,7 +184,7 @@ namespace SeeingSharp.Util
 
                 if (string.IsNullOrEmpty(result))
                 {
-                    result = NameKey;
+                    result = this.NameKey;
                 }
 
                 if (string.IsNullOrEmpty(result))
@@ -204,8 +204,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (NameKey != null) { return "Name: " + NameKey; }
-                return "Generic ID: " + GenericKey;
+                if (this.NameKey != null) { return "Name: " + this.NameKey; }
+                return "Generic ID: " + this.GenericKey;
             }
         }
 

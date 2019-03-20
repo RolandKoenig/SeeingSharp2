@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
             var oldHostObject = m_host;
             m_host = hostObject;
 
-            OnHostObjectChanged(oldHostObject, m_host);
+            this.OnHostObjectChanged(oldHostObject, m_host);
         }
 
         /// <summary>

@@ -42,10 +42,10 @@ namespace SeeingSharp.Util
 
         public IDisposable UseStringBuilder(out StringBuilder stringBuilder, int requiredCapacity = 128)
         {
-            stringBuilder = TakeStringBuilder(requiredCapacity);
+            stringBuilder = this.TakeStringBuilder(requiredCapacity);
 
             var cachedStringBuilder = stringBuilder;
-            return new DummyDisposable(() => ReRegisterStringBuilder(cachedStringBuilder));
+            return new DummyDisposable(() => this.ReRegisterStringBuilder(cachedStringBuilder));
         }
 
         public StringBuilder TakeStringBuilder(int requiredCapacity = 128)

@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position);
             m_textureData = new TextureData();
-            Animation = new AnimationData();
+            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData();
-            Animation = new AnimationData();
+            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData(texCoord1);
-            Animation = new AnimationData();
+            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, normal, color);
             m_textureData = new TextureData(texCoord1);
-            Animation = new AnimationData();
+            this.Animation = new AnimationData();
         }
 
         /// <summary>

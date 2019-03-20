@@ -21,7 +21,6 @@
 */
 
 using System.Collections.Generic;
-using System.ComponentModel;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer.Util;
 
@@ -43,7 +42,7 @@ namespace SeeingSharp.SampleContainer
             this.SampleMetadata = sampleMetadata;
 
             // Trigger refresh of all properties
-            RaisePropertyChanged();
+            this.RaisePropertyChanged();
         }
 
         protected RenderLoop RenderLoop

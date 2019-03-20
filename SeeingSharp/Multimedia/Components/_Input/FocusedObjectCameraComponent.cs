@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Components
     {
         protected override Vector3 GetFocusedLocation()
         {
-            var focusedObject = FocusedObject;
+            var focusedObject = this.FocusedObject;
 
             if (focusedObject != null)
             {

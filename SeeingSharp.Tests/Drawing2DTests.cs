@@ -238,9 +238,9 @@ namespace SeeingSharp.Tests
                 new Vector2(512f, 0f),
                 new[]
                 {
-                    new GradientStop(){ Color = Color4Ex.Gray, Position = 0f },
-                    new GradientStop(){ Color = Color4Ex.White, Position = 0.6f },
-                    new GradientStop(){ Color = Color4Ex.Black, Position = 1f }
+                    new GradientStop { Color = Color4Ex.Gray, Position = 0f },
+                    new GradientStop { Color = Color4Ex.White, Position = 0.6f },
+                    new GradientStop { Color = Color4Ex.Black, Position = 1f }
                 },
                 ExtendMode.Mirror))
 
@@ -282,9 +282,9 @@ namespace SeeingSharp.Tests
                 200f, 400f,
                 new[]
                 {
-                    new GradientStop(){ Color = Color4Ex.Gray, Position = 0f },
-                    new GradientStop(){ Color = Color4Ex.White, Position = 0.6f },
-                    new GradientStop(){ Color = Color4Ex.BlueColor, Position = 1f }
+                    new GradientStop { Color = Color4Ex.Gray, Position = 0f },
+                    new GradientStop { Color = Color4Ex.White, Position = 0.6f },
+                    new GradientStop { Color = Color4Ex.BlueColor, Position = 1f }
                 },
                 ExtendMode.Clamp))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
@@ -463,7 +463,7 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGrahicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4Ex.LightGray))
-            using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(GetType(), "Resources.Bitmaps.Logo.png")))
+            using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Logo.png")))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
@@ -497,7 +497,7 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGrahicsAsync();
 
             using (var bitmap = new StandardBitmapResource(
-                new AssemblyResourceLink(GetType(), "Resources.Bitmaps.Boom.png"),
+                new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Boom.png"),
                 8, 8))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {

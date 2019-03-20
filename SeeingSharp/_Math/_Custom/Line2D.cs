@@ -82,7 +82,7 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Line2D other)
         {
             //Perform simple ray to ray intersection first
-            var ray1 = ToRay();
+            var ray1 = this.ToRay();
             var ray2 = other.ToRay();
             var intersectionResult = ray1.Intersect(ray2);
 
@@ -94,7 +94,7 @@ namespace SeeingSharp
             //Is intersection point within line 1?
             var distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
 
-            if (distanceTo1 > Length)
+            if (distanceTo1 > this.Length)
             {
                 return Tuple.Create(false, Vector2.Zero);
             }
@@ -117,13 +117,13 @@ namespace SeeingSharp
         public Tuple<bool, Vector2> Intersect(Ray2D other)
         {
             //Perform simple ray to ray intersection first
-            var ray1 = ToRay();
+            var ray1 = this.ToRay();
             var intersectionResult = ray1.Intersect(other);
             if (!intersectionResult.Item1) { return intersectionResult; }
 
             //Is intersection point within line 1?
             var distanceTo1 = Vector2.Distance(ray1.Origin, intersectionResult.Item2);
-            if (distanceTo1 > Length) { return Tuple.Create(false, Vector2.Zero); }
+            if (distanceTo1 > this.Length) { return Tuple.Create(false, Vector2.Zero); }
 
             return intersectionResult;
         }

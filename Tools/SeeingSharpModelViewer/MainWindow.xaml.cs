@@ -6,7 +6,7 @@ namespace SeeingSharpModelViewer
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

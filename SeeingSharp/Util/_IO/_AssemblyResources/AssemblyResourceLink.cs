@@ -47,9 +47,9 @@ namespace SeeingSharp.Util
             resourceNamespace.EnsureNotNullOrEmpty(nameof(resourceNamespace));
             resourceFile.EnsureNotNullOrEmpty(nameof(resourceFile));
 
-            TargetAssembly = targetAssembly;
-            ResourceNamespace = resourceNamespace;
-            ResourceFile = resourceFile;
+            this.TargetAssembly = targetAssembly;
+            this.ResourceNamespace = resourceNamespace;
+            this.ResourceFile = resourceFile;
         }
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace SeeingSharp.Util
         {
             var resultBuilder = new StringBuilder();
 
-            if (TargetAssembly != null)
+            if (this.TargetAssembly != null)
             {
-                resultBuilder.Append(TargetAssembly.GetName().Name + ": ");
+                resultBuilder.Append(this.TargetAssembly.GetName().Name + ": ");
             }
 
-            resultBuilder.Append(ResourceNamespace);
+            resultBuilder.Append(this.ResourceNamespace);
             resultBuilder.Append(".");
-            resultBuilder.Append(ResourceFile);
+            resultBuilder.Append(this.ResourceFile);
             return resultBuilder.ToString();
         }
 
@@ -102,11 +102,11 @@ namespace SeeingSharp.Util
         public AssemblyResourceLink GetForAnotherFile(string fileName, params string[] subdirectories)
         {
             // Build new namespace
-            var newTargetNamespace = ResourceNamespace;
+            var newTargetNamespace = this.ResourceNamespace;
             if (subdirectories.Length > 0)
             {
                 // Build a stack representing the current namespace path
-                var currentDirectoryParts = ResourceNamespace.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var currentDirectoryParts = this.ResourceNamespace.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 var currentDirectoryPathStack = new Stack<string>(currentDirectoryParts.Length);
                 for(var loop=0; loop<currentDirectoryParts.Length; loop++)
                 {
@@ -127,7 +127,7 @@ namespace SeeingSharp.Util
                             if (currentDirectoryPathStack.Count <= 0)
                             {
                                 var requestedSubDirectoryPath = subdirectories.ToCommaSeparatedString("/");
-                                throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {ResourceNamespace}, Requested path: {requestedSubDirectoryPath}");
+                                throw new SeeingSharpException($"Unable to go one level down in directory path. Initial namespace: {this.ResourceNamespace}, Requested path: {requestedSubDirectoryPath}");
                             }
                             currentDirectoryPathStack.Pop();
                             break;
@@ -146,8 +146,7 @@ namespace SeeingSharp.Util
             }
 
             // Build new resource link
-            return new AssemblyResourceLink(
-                TargetAssembly,
+            return new AssemblyResourceLink(this.TargetAssembly,
                 newTargetNamespace,
                 fileName);
         }
@@ -157,8 +156,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public Stream OpenRead()
         {
-            var result = TargetAssembly.GetManifestResourceStream(ResourcePath);
-            if(result == null) { throw new SeeingSharpException($"Resource {ResourcePath} not found in assembly {TargetAssembly.FullName}!"); }
+            var result = this.TargetAssembly.GetManifestResourceStream(this.ResourcePath);
+            if(result == null) { throw new SeeingSharpException($"Resource {this.ResourcePath} not found in assembly {this.TargetAssembly.FullName}!"); }
             return result;
         }
 
@@ -167,7 +166,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool IsValid()
         {
-            var resourceInfo = TargetAssembly.GetManifestResourceInfo(ResourcePath);
+            var resourceInfo = this.TargetAssembly.GetManifestResourceInfo(this.ResourcePath);
             return resourceInfo != null;
         }
 
@@ -176,7 +175,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public string GetText()
         {
-            using(var inStream = OpenRead())
+            using(var inStream = this.OpenRead())
             using(var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
@@ -206,9 +205,9 @@ namespace SeeingSharp.Util
             get
             {
                 var resultBuilder = new StringBuilder();
-                resultBuilder.Append(ResourceNamespace);
+                resultBuilder.Append(this.ResourceNamespace);
                 resultBuilder.Append(".");
-                resultBuilder.Append(ResourceFile);
+                resultBuilder.Append(this.ResourceFile);
                 return resultBuilder.ToString();
             }
         }

@@ -78,8 +78,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_scene = sceneLayer.Scene;
             m_sceneLayer = sceneLayer;
-            ViewInformation = viewInformation;
-            m_device = ViewInformation.Device;
+            this.ViewInformation = viewInformation;
+            m_device = this.ViewInformation.Device;
             m_resources = resources;
             ViewIndex = viewIndex;
 
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Core
             m_anythingUnsubscribed = false;
 
             // Create and load all render pass relevant resources
-            RefreshDeviceDependentResources();
+            this.RefreshDeviceDependentResources();
         }
 
         public void Dispose()
@@ -223,7 +223,7 @@ namespace SeeingSharp.Multimedia.Core
             // TODO: Trigger some other logic to update transparent object order
             // TODO: Performance improvement!!!
             var anyOrderChanges = false;
-            var camera = ViewInformation.Camera;
+            var camera = this.ViewInformation.Camera;
 
             m_objectsPassTransparentRender.Subscriptions.Sort((left, right) =>
             {
@@ -284,7 +284,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Update subscriptions based on object state
                 var allObjects = m_sceneLayer.ObjectsInternal;
                 var allObjectsLength = allObjects.Count;
-                var visibleObjectCount = ViewInformation.Owner.VisibleObjectCountInternal;
+                var visibleObjectCount = this.ViewInformation.Owner.VisibleObjectCountInternal;
 
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
@@ -293,13 +293,13 @@ namespace SeeingSharp.Multimedia.Core
                     if (m_invalidObjects.ContainsKey(actSceneObject)) { continue; }
 
                     if (actSceneObject.IsLayerViewSubsetRegistered(ViewIndex) &&
-                        actSceneObject.IsVisible(ViewInformation))
+                        actSceneObject.IsVisible(this.ViewInformation))
                     {
                         actSceneObject.UpdateForView(updateState, this);
                         visibleObjectCount++;
                     }
                 }
-                ViewInformation.Owner.VisibleObjectCountInternal = visibleObjectCount;
+                this.ViewInformation.Owner.VisibleObjectCountInternal = visibleObjectCount;
             }
             finally
             {
@@ -359,7 +359,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjectsForSingleUpdateCall">A collection of scene objects for a single update call. These are normally a list of newly inserted static objects.</param>
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState, Queue<SceneObject> sceneObjectsForSingleUpdateCall)
         {
-            var filters = ViewInformation.Filters;
+            var filters = this.ViewInformation.Filters;
             m_tmpChangedVisibilities.Clear();
 
             // Perform some pre-logic on filters
@@ -367,7 +367,7 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach (var actFilter in filters)
             {
-                actFilter.SetEnvironmentData(m_sceneLayer, ViewInformation);
+                actFilter.SetEnvironmentData(m_sceneLayer, this.ViewInformation);
 
                 if (actFilter.ConfigurationChanged)
                 {
@@ -376,8 +376,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check whether we have to update all objects
-            var refreshAllObjects =
-                ViewInformation.Camera.StateChanged ||
+            var refreshAllObjects = this.ViewInformation.Camera.StateChanged ||
                 anyFilterChanged;
 
             // Perform viewbox culling for all standard objects
@@ -400,7 +399,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Perform culling
-                    PerformViewboxCulling(
+                    this.PerformViewboxCulling(
                         actObject,
                         filters,
                         refreshAllObjects);
@@ -417,7 +416,7 @@ namespace SeeingSharp.Multimedia.Core
                 for(var loop =0 ; loop<singleUpdateCallCount; loop++)
                 {
                     // Perform culling
-                    PerformViewboxCulling(
+                    this.PerformViewboxCulling(
                         singleUpdateArray[loop],
                         filters,
                         false);
@@ -441,7 +440,7 @@ namespace SeeingSharp.Multimedia.Core
                         if (actChangedVisibility.Item1.SceneLayer != m_sceneLayer) { continue; }
 
                         // Handle changed visibility
-                        HandleObjectVisibilityChanged(
+                        this.HandleObjectVisibilityChanged(
                             actChangedVisibility.Item1,
                             actChangedVisibility.Item2,
                             actChangedVisibility.Item3);
@@ -474,10 +473,10 @@ namespace SeeingSharp.Multimedia.Core
             if (renderState.CurrentResources != m_resources) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong ResourceDictionary object!"); }
 
             // Get current view configuration
-            var viewConfiguration = ViewInformation.ViewConfiguration;
+            var viewConfiguration = this.ViewInformation.ViewConfiguration;
 
             // Update device dependent resources here
-            RefreshDeviceDependentResources();
+            this.RefreshDeviceDependentResources();
 
             // Update render parameters
             var cbPerView = new CBPerView
@@ -486,11 +485,11 @@ namespace SeeingSharp.Multimedia.Core
                 GradientFactor = viewConfiguration.GeneratedColorGradientFactor,
                 BorderFactor = viewConfiguration.GeneratedBorderFactor,
                 Ambient = viewConfiguration.AmbientFactor,
-                CameraPosition = ViewInformation.Camera.Position,
-                ScreenPixelSize = ViewInformation.Camera.GetScreenSize(),
+                CameraPosition = this.ViewInformation.Camera.Position,
+                ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize(),
                 LightPower = viewConfiguration.LightPower,
                 StrongLightFactor = viewConfiguration.StrongLightFactor,
-                ViewProj = Matrix.Transpose(ViewInformation.Camera.ViewProjection)
+                ViewProj = Matrix.Transpose(this.ViewInformation.Camera.ViewProjection)
             };
 
             m_renderParameters.UpdateValues(renderState, cbPerView);
@@ -523,19 +522,19 @@ namespace SeeingSharp.Multimedia.Core
                     m_device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;
 
                     // Perform all plain renderings
-                    RenderPass(null, m_objectsPassPlainRender, renderState, ref invalidObjects);
+                    this.RenderPass(null, m_objectsPassPlainRender, renderState, ref invalidObjects);
 
                     // Notify state after plain rendering
                     postprocessEffect?.NotifyAfterRenderPlain(renderState, passID);
 
                     // Render all lines
-                    RenderPass(
+                    this.RenderPass(
                         m_renderPassLineRender, m_objectsPassLineRender,
                         renderState, ref invalidObjects);
                     renderState.ApplyMaterial(null);
 
                     // Perform all transparent renderings
-                    RenderPass(
+                    this.RenderPass(
                         m_renderPassTransparent, m_objectsPassTransparentRender,
                         renderState, ref invalidObjects);
                 }
@@ -559,7 +558,7 @@ namespace SeeingSharp.Multimedia.Core
             //Remove all invalid objects
             if (invalidObjects != null)
             {
-                HandleInvalidObjects(invalidObjects);
+                this.HandleInvalidObjects(invalidObjects);
             }
         }
 
@@ -650,14 +649,14 @@ namespace SeeingSharp.Multimedia.Core
 
             // Render all 2D objects
             List<SceneObject> invalidObjects = null;
-            RenderPass(
+            this.RenderPass(
                 m_renderPass2DOverlay, m_objectsPass2DOverlay,
                 renderState, ref invalidObjects);
 
             // Remove all invalid objects
             if (invalidObjects != null)
             {
-                HandleInvalidObjects(invalidObjects);
+                this.HandleInvalidObjects(invalidObjects);
             }
         }
 
@@ -673,7 +672,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_invalidObjects.ContainsKey(actObject)) { return; }
 
             // Get visibility check data about current object
-            var checkData = actObject.GetVisibilityCheckData(ViewInformation);
+            var checkData = actObject.GetVisibilityCheckData(this.ViewInformation);
 
             if (checkData == null) { return; }
 
@@ -710,7 +709,7 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         // Re-Filter this object because any above condition has passed and
                         // this object successfully past the previous filter
-                        var isObjectVisible = actFilter.IsObjectVisible(actObject, ViewInformation);
+                        var isObjectVisible = actFilter.IsObjectVisible(actObject, this.ViewInformation);
 
                         filterStageData.HasExecuted = true;
                         filterStageData.HasPassed = isObjectVisible;
