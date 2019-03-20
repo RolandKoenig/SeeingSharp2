@@ -28,9 +28,9 @@ namespace SeeingSharp.Multimedia.Core
     {
         public EngineFactory(DeviceLoadSettings loadSettings)
         {
-            WindowsImagingComponent = new FactoryHandlerWIC(loadSettings);
-            Direct2D = new FactoryHandlerD2D(loadSettings);
-            DirectWrite = new FactoryHandlerDWrite(loadSettings);
+            this.WindowsImagingComponent = new FactoryHandlerWIC(loadSettings);
+            this.Direct2D = new FactoryHandlerD2D(loadSettings);
+            this.DirectWrite = new FactoryHandlerDWrite(loadSettings);
         }
 
         public FactoryHandlerD2D Direct2D { get; }
@@ -39,6 +39,6 @@ namespace SeeingSharp.Multimedia.Core
 
         public FactoryHandlerWIC WindowsImagingComponent { get; }
 
-        internal D2D.Factory2 FactoryD2D_2 => Direct2D.Factory2;
+        internal D2D.Factory2 FactoryD2D_2 => this.Direct2D.Factory2;
     }
 }

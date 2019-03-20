@@ -65,6 +65,13 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        public void UnloadResources()
+        {
+            SeeingSharpUtil.SafeDispose(ref m_deviceContextD2D);
+            SeeingSharpUtil.SafeDispose(ref m_deviceD2D);
+            SeeingSharpUtil.SafeDispose(ref m_renderTarget);
+        }
+
         public bool IsLoaded => m_renderTarget != null;
 
         /// <summary>

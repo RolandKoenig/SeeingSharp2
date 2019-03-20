@@ -34,13 +34,12 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class EngineDevice
     {
-        // Constants
-        private const string CATEGORY_ADAPTER = "Adapter";
-
         // Members for antialiasing
         private SampleDescription m_sampleDescWithAntialiasing;
 
         // Main members
+        private SeeingSharpLoader m_initializer;
+        private EngineFactory m_engineFactory;
         private Adapter1 m_adapter1;
         private AdapterDescription1 m_adapterDesc1;
         private DeviceLoadSettings m_deviceLoadSettings;
@@ -73,59 +72,23 @@ namespace SeeingSharp.Multimedia.Core
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
             adapter.EnsureNotNull(nameof(adapter));
 
-            Internals = new EngineDeviceInternals(this);
+            this.Internals = new EngineDeviceInternals(this);
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
             m_deviceLoadSettings = loadSettings;
+            m_initializer = initializer;
+            m_engineFactory = engineFactory;
             m_adapter1 = adapter;
             m_adapterDesc1 = m_adapter1.Description1;
-            IsSoftware = isSoftwareAdapter;
-            Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
+            this.IsSoftware = isSoftwareAdapter;
+            this.Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
 
             // Set default antialiasing configurations
             m_sampleDescWithAntialiasing = new SampleDescription(1, 0);
 
-            // Initialize all direct3D APIs
-            try
-            {
-                m_handlerD3D11 = new DeviceHandlerD3D11(m_deviceLoadSettings, adapter);
-                m_handlerDXGI = new DeviceHandlerDXGI(adapter, m_handlerD3D11.Device1);
-            }
-            catch (Exception ex)
-            {
-                InitializationException = ex;
-                m_handlerD3D11 = null;
-                m_handlerDXGI = null;
-                return;
-            }
-
-            // Set default configuration
-            Configuration.TextureQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? TextureQuality.High : TextureQuality.Low;
-            Configuration.GeometryQuality = !isSoftwareAdapter && m_handlerD3D11.IsDirect3D10OrUpperHardware ? GeometryQuality.High : GeometryQuality.Low;
-
-            // Initialize handlers for feature support information
-            if (InitializationException == null)
-            {
-                IsStandardAntialiasingPossible = CheckIsStandardAntialiasingPossible();
-            }
-
-            // Initialize direct2D handler finally
-            if (m_handlerD3D11 != null)
-            {
-                m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, engineFactory, this);
-                FakeRenderTarget2D = m_handlerD2D.RenderTarget;
-            }
-
-            // Create additional device handlers
-            foreach(var actExtension in initializer.Extensions)
-            {
-                foreach(var actAdditionalDeviceHandler in actExtension.CreateAdditionalDeviceHandlers(this))
-                {
-                    if(actAdditionalDeviceHandler == null) { continue; }
-                    m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
-                }
-            }
+            // Load all resources
+            this.LoadResources();
         }
 
         public T TryGetAdditionalDeviceHandler<T>()
@@ -177,7 +140,36 @@ namespace SeeingSharp.Multimedia.Core
         /// </returns>
         public override string ToString()
         {
-            return AdapterDescription;
+            return this.AdapterDescription;
+        }
+
+        /// <summary>
+        /// Recreates this device after a device lost event.
+        /// </summary>
+        internal void RecreateAfterDeviceLost()
+        {
+            this.IsLost.EnsureTrue(nameof(this.IsLost));
+
+            // Unload all resources first
+            this.UnloadResources();
+
+            // Try to restore the device
+            var successfullyLoaded = false;
+            try
+            {
+                successfullyLoaded = this.LoadResources();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            // Reset is lost flag
+            if (successfullyLoaded)
+            {
+                this.LoadDeviceIndex++;
+                this.IsLost = false;
+            }
         }
 
         /// <summary>
@@ -187,6 +179,84 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
             return new SampleDescription(1, 0);
+        }
+
+        /// <summary>
+        /// Loads all device resources.
+        /// </summary>
+        private bool LoadResources()
+        {
+            // Initialize all direct3D APIs
+            this.LoadDeviceIndex++;
+            try
+            {
+                m_handlerD3D11 = new DeviceHandlerD3D11(m_deviceLoadSettings, m_adapter1);
+                m_handlerDXGI = new DeviceHandlerDXGI(m_adapter1, m_handlerD3D11.Device1);
+            }
+            catch (Exception ex)
+            {
+                this.InitializationException = ex;
+                this.UnloadResources();
+                return false;
+            }
+
+            // Set default configuration
+            this.Configuration.TextureQuality = !this.IsSoftware && m_handlerD3D11.IsDirect3D10OrUpperHardware
+                ? TextureQuality.High
+                : TextureQuality.Low;
+            this.Configuration.GeometryQuality = !this.IsSoftware && m_handlerD3D11.IsDirect3D10OrUpperHardware
+                ? GeometryQuality.High
+                : GeometryQuality.Low;
+
+            // Initialize handlers for feature support information
+            if (this.InitializationException == null)
+            {
+                this.IsStandardAntialiasingPossible = this.CheckIsStandardAntialiasingPossible();
+            }
+
+            // Initialize direct2D handler finally
+            if (m_handlerD3D11 != null)
+            {
+                m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
+                this.FakeRenderTarget2D = m_handlerD2D.RenderTarget;
+            }
+
+            // Create additional device handlers
+            foreach (var actExtension in m_initializer.Extensions)
+            {
+                foreach (var actAdditionalDeviceHandler in actExtension.CreateAdditionalDeviceHandlers(this))
+                {
+                    if (actAdditionalDeviceHandler == null)
+                    {
+                        continue;
+                    }
+                    m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Unloads all device resources.
+        /// </summary>
+        private void UnloadResources()
+        {
+            foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
+            {
+                SeeingSharpUtil.DisposeObject(actAdditionalDeviceHandler);
+            }
+            m_additionalDeviceHandlers.Clear();
+
+            m_handlerD2D?.UnloadResources();
+            m_handlerD2D = null;
+            this.FakeRenderTarget2D = null;
+
+            m_handlerD3D11?.UnloadResources();
+            m_handlerD3D11 = null;
+
+            m_handlerDXGI?.UnloadResources();
+            m_handlerDXGI = null;
         }
 
         /// <summary>
@@ -253,12 +323,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Checks for standard antialiasing support.
         /// </summary>
-        public bool IsStandardAntialiasingPossible { get; }
+        public bool IsStandardAntialiasingPossible { get; private set; }
 
         /// <summary>
         /// Gets the exception occurred during initialization of the driver (if any).
         /// </summary>
-        public Exception InitializationException { get; }
+        public Exception InitializationException { get; private set; }
 
         /// <summary>
         /// Gets the description of this adapter.
@@ -268,7 +338,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is this device loaded successfully.
         /// </summary>
-        public bool IsLoadedSuccessfully => InitializationException == null;
+        public bool IsLoadedSuccessfully => this.InitializationException == null;
 
         public bool IsSoftware { get; }
 
@@ -281,7 +351,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (m_isDetailLevelForced) { return m_forcedDetailLevel; }
 
-                if (IsSoftware) { return DetailLevel.Low; }
+                if (this.IsSoftware) { return DetailLevel.Low; }
                 return DetailLevel.High;
             }
         }
@@ -289,7 +359,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is high detail supported with this card?
         /// </summary>
-        public bool IsHighDetailSupported => (SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
+        public bool IsHighDetailSupported => (this.SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
 
         /// <summary>
         /// Gets the level of the graphics driver.
@@ -310,7 +380,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch(DriverLevel)
+                switch(this.DriverLevel)
                 {
                     case HardwareDriverLevel.Direct3D9_1:
                     case HardwareDriverLevel.Direct3D9_2:
@@ -331,7 +401,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Some older hardware only support 16-bit index buffers.
         /// </summary>
-        public bool SupportsOnly16BitIndexBuffer => DriverLevel == HardwareDriverLevel.Direct3D9_1;
+        public bool SupportsOnly16BitIndexBuffer => this.DriverLevel == HardwareDriverLevel.Direct3D9_1;
 
         /// <summary>
         /// Gets the name of the default shader model.
@@ -340,7 +410,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch (DriverLevel)
+                switch (this.DriverLevel)
                 {
                     case HardwareDriverLevel.Direct3D9_1:
                     case HardwareDriverLevel.Direct3D9_2:
@@ -412,6 +482,12 @@ namespace SeeingSharp.Multimedia.Core
             get;
             internal set;
         }
+
+        /// <summary>
+        /// Internal property for device lost handling.
+        /// This value gets incremented each time when a device is recreated after a device lost event.
+        /// </summary>
+        public int LoadDeviceIndex { get; private set; }
 
         /// <summary>
         /// This property is set to true if the device got lost.
