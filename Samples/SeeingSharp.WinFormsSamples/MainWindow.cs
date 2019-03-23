@@ -215,8 +215,8 @@ namespace SeeingSharp.WinFormsSamples
                     m_propertyGrid.SelectedObject = sampleSettings;
                     this.UpdateSampleCommands(sampleSettings);
 
-                    await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 0f));
+                    //await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
+                    //    new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 0f));
                 }
                 else
                 {

@@ -683,7 +683,7 @@ namespace SeeingSharp.Multimedia.Core
 
             if (layer == null) { throw new ArgumentNullException(nameof(layer)); }
             if (layer.Scene != this) { throw new ArgumentException("Given layer does not belong to this scene!", nameof(layer)); }
-            if (layer.Name == DEFAULT_LAYER_NAME) { throw new ArgumentNullException("Unable to remove the default layer!", nameof(layer)); }
+            if (layer.Name == DEFAULT_LAYER_NAME) { throw new ArgumentNullException(nameof(layer), "Unable to remove the default layer!"); }
 
             layer.UnloadResources();
             m_sceneLayers.Remove(layer);
@@ -967,6 +967,9 @@ namespace SeeingSharp.Multimedia.Core
             {
                 throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");
             }
+
+            // Handle after device lost
+            resources.ReloadAfterReloadedDevice();
 
             // Apply default states on the device
             var defaultResource = resources.DefaultResources;

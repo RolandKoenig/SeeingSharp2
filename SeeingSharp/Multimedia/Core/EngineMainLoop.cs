@@ -228,6 +228,15 @@ namespace SeeingSharp.Multimedia.Core
                             QueryForScenesAndCameras(renderingRenderLoops, scenesToRender, camerasToUpdate);
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
 
+                            // Handle device lost events
+                            foreach (var actDevice in devicesInUse)
+                            {
+                                if (actDevice.IsLost)
+                                {
+                                    actDevice.RecreateAfterDeviceLost();
+                                }
+                            }
+
                             // Build new UpdateState object
                             var updateTime = renderStopWatch.Elapsed;
 

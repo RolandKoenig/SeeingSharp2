@@ -719,8 +719,10 @@ namespace SeeingSharp.Multimedia.Core
             // Call present from ThreadPool (if configured)
             if (!m_callPresentInUiThread)
             {
-                if (!this.DiscardPresent) {
-                    this.PresentFrameInternal(); }
+                if (!this.DiscardPresent)
+                {
+                    this.PresentFrameInternal();
+                }
                 m_lastRenderSuccessfully = false;
             }
 

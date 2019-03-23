@@ -154,8 +154,7 @@ namespace SeeingSharp.Multimedia.Core
                         loadSettings,
                         loader,
                         engineFactory, this.Configuration,
-                        actAdapterInfo.Adapter,
-                        actAdapterInfo.IsSoftwareAdapter);
+                        this.HardwareInfo, actAdapterInfo);
 
                     if(actEngineDevice.IsLoadedSuccessfully)
                     {

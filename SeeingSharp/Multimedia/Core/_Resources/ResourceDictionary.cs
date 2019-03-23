@@ -37,6 +37,7 @@ namespace SeeingSharp.Multimedia.Core
     public class ResourceDictionary : IEnumerable<Resource>
     {
         private int m_lastRenderBlockID;
+        private int m_lastDeviceLoadIndex;
         private List<IRenderableResource> m_renderableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
         private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
@@ -49,6 +50,8 @@ namespace SeeingSharp.Multimedia.Core
             this.Device = device;
             DeviceIndex = this.Device.DeviceIndex;
 
+            m_lastDeviceLoadIndex = this.Device.LoadDeviceIndex;
+
             m_lastRenderBlockID = -1;
 
             m_renderableResources = new List<IRenderableResource>();
@@ -59,13 +62,32 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        internal void ReloadAfterReloadedDevice()
+        {
+            if (m_lastDeviceLoadIndex == this.Device.LoadDeviceIndex){ return; }
+
+            // Reload all resources
+            foreach (var actResourceInfo in m_resources.Values)
+            {
+                if (actResourceInfo.Resource.IsLoaded)
+                {
+                    actResourceInfo.Resource.UnloadResource();
+                    actResourceInfo.Resource.LoadResource();
+                }
+            }
+
+            // Reset device load index
+            m_lastDeviceLoadIndex = this.Device.LoadDeviceIndex;
+        }
+
+        /// <summary>
         /// Loads all resources.
         /// </summary>
         public void LoadResources()
         {
-            var allResources = new List<ResourceInfo>(m_resources.Values);
-
-            foreach (var actResourceInfo in allResources)
+            foreach (var actResourceInfo in m_resources.Values)
             {
                 //Load the resource
                 if (!actResourceInfo.Resource.IsLoaded)

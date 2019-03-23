@@ -40,9 +40,9 @@ namespace SeeingSharp.Multimedia.Core
         // Main members
         private SeeingSharpLoader m_initializer;
         private EngineFactory m_engineFactory;
-        private Adapter1 m_adapter1;
-        private AdapterDescription1 m_adapterDesc1;
         private DeviceLoadSettings m_deviceLoadSettings;
+        private EngineHardwareInfo m_hardwareInfo;
+        private EngineAdapterInfo m_adapterInfo;
 
         // Some configuration
         private bool m_isDetailLevelForced;
@@ -65,23 +65,25 @@ namespace SeeingSharp.Multimedia.Core
         internal EngineDevice(
             DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
-            Adapter1 adapter, bool isSoftwareAdapter)
+            EngineHardwareInfo hardwareInfo, EngineAdapterInfo adapterInfo)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
             engineFactory.EnsureNotNull(nameof(engineFactory));
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
-            adapter.EnsureNotNull(nameof(adapter));
+            hardwareInfo.EnsureNotNull(nameof(hardwareInfo));
+            adapterInfo.EnsureNotNull(nameof(adapterInfo));
 
             this.Internals = new EngineDeviceInternals(this);
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
+            m_hardwareInfo = hardwareInfo;
+            m_adapterInfo = adapterInfo;
+
             m_deviceLoadSettings = loadSettings;
             m_initializer = initializer;
             m_engineFactory = engineFactory;
-            m_adapter1 = adapter;
-            m_adapterDesc1 = m_adapter1.Description1;
-            this.IsSoftware = isSoftwareAdapter;
+            this.IsSoftware = adapterInfo.IsSoftwareAdapter;
             this.Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
 
             // Set default antialiasing configurations
@@ -190,8 +192,8 @@ namespace SeeingSharp.Multimedia.Core
             this.LoadDeviceIndex++;
             try
             {
-                m_handlerD3D11 = new DeviceHandlerD3D11(m_deviceLoadSettings, m_adapter1);
-                m_handlerDXGI = new DeviceHandlerDXGI(m_adapter1, m_handlerD3D11.Device1);
+                m_handlerDXGI = new DeviceHandlerDXGI(m_hardwareInfo, m_adapterInfo);
+                m_handlerD3D11 = new DeviceHandlerD3D11(m_deviceLoadSettings, m_handlerDXGI.Adapter);
             }
             catch (Exception ex)
             {
@@ -333,7 +335,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the description of this adapter.
         /// </summary>
-        public string AdapterDescription => m_adapter1?.Description1.Description.Replace("\0", "") ?? nameof(EngineDevice);
+        public string AdapterDescription => m_adapterInfo.AdapterDescription;
 
         /// <summary>
         /// Is this device loaded successfully.
@@ -439,12 +441,10 @@ namespace SeeingSharp.Multimedia.Core
 
         public D2D.DeviceContext DeviceContextD2D => m_handlerD2D.DeviceContext;
 
-        public Device3 DeviceDxgi => m_handlerDXGI.Device;
-
         /// <summary>
         /// A unique value that identifies the adapter.
         /// </summary>
-        public long Luid => m_adapterDesc1.Luid;
+        public long Luid => m_adapterInfo.Luid;
 
         public bool Supports2D =>
             m_handlerD2D != null &&
@@ -520,9 +520,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_host = host;
             }
 
-            public Adapter1 Adapter => m_host.m_adapter1;
-
-            public AdapterDescription1 AdapterDescription => m_host.m_adapterDesc1;
+            public Adapter1 Adapter => m_host.m_handlerDXGI?.Adapter;
         }
     }
 }

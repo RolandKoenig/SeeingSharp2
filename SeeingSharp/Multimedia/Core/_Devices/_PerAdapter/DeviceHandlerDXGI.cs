@@ -29,17 +29,14 @@ namespace SeeingSharp.Multimedia.Core
     public class DeviceHandlerDXGI
     {
         private Adapter1 m_adapter;
-        private Device3 m_device;
         private Factory2 m_factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
         /// </summary>
-        internal DeviceHandlerDXGI(Adapter1 adapter, D3D11.Device device)
+        internal DeviceHandlerDXGI(EngineHardwareInfo hardwareInfo, EngineAdapterInfo adapterInfo)
         {
-            m_device = device.QueryInterface<Device3>();
-            m_adapter = adapter;
-
+            m_adapter = hardwareInfo.DXGIFactory.GetAdapter1(adapterInfo.AdapterIndex);
             m_factory = m_adapter.GetParent<Factory2>();
         }
 
@@ -50,12 +47,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             m_factory = SeeingSharpUtil.DisposeObject(m_factory);
             m_adapter = SeeingSharpUtil.DisposeObject(m_adapter);
-            m_device = SeeingSharpUtil.DisposeObject(m_device);
         }
 
         public bool IsInitialized =>
             m_factory != null &&
-            m_device != null &&
             m_adapter != null;
 
         /// <summary>
@@ -63,11 +58,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <value>The factory.</value>
         internal Factory2 Factory => m_factory;
-
-        /// <summary>
-        /// Gets the DXGI device.
-        /// </summary>
-        internal Device3 Device => m_device;
 
         /// <summary>
         /// Gets current adapter used for drawing.

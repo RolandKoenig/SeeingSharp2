@@ -46,12 +46,6 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
-
-            foreach(var actAdapter in m_adapters)
-            {
-                SeeingSharpUtil.DisposeObject(actAdapter);
-            }
-
             m_adapters.Clear();
         }
 
@@ -113,6 +107,8 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         public bool IsDisposed => m_dxgiFactory == null;
+
+        internal Factory1 DXGIFactory => m_dxgiFactory;
 
         /// <summary>
         /// Gets a collection containing all adapters.

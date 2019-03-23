@@ -29,11 +29,8 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineAdapterInfo : IDisposable, ICheckDisposed
+    public class EngineAdapterInfo
     {
-        private const string TRANSLATABLE_GROUP_COMMON_HARDWARE_INFO = "Common hardware information";
-
-        private Adapter1 m_adapter;
         private AdapterDescription m_adapterDescription;
         private D3D.FeatureLevel m_d3d11FeatureLevel;
 
@@ -43,7 +40,6 @@ namespace SeeingSharp.Multimedia.Core
         internal EngineAdapterInfo(int adapterIndex, Adapter1 adapter)
         {
             this.Outputs = new List<EngineOutputInfo>();
-            m_adapter = adapter;
             this.AdapterIndex = adapterIndex;
 
             m_adapterDescription = adapter.Description;
@@ -79,14 +75,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_adapter);
-            this.Outputs.Clear();
-        }
-
-        public bool IsDisposed => m_adapter == null;
-
         /// <summary>
         /// Gets all outputs supported by this adapter.
         /// </summary>
@@ -104,7 +92,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the description of the adapter.
         /// </summary>
-        public string AdapterDescription => m_adapterDescription.Description;
+        public string AdapterDescription => m_adapterDescription.Description.Replace("\0", "") ?? nameof(EngineAdapterInfo);
 
         public string DedicatedSystemMemory => m_adapterDescription.DedicatedSystemMemory.ToString();
 
@@ -112,9 +100,6 @@ namespace SeeingSharp.Multimedia.Core
 
         public string SharedSystemMemory => m_adapterDescription.SharedSystemMemory.ToString();
 
-        /// <summary>
-        /// Gets the corresponding adapter.
-        /// </summary>
-        internal Adapter1 Adapter => m_adapter;
+        public long Luid => m_adapterDescription.Luid;
     }
 }
