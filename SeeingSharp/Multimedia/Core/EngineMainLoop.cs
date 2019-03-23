@@ -206,7 +206,6 @@ namespace SeeingSharp.Multimedia.Core
                             // Wait some time before doing anything..
                             var lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
                             var delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
-
                             if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS)
                             {
                                 delayTime = SeeingSharpConstants.MINIMUM_DELAY_TIME_MS;
@@ -239,7 +238,6 @@ namespace SeeingSharp.Multimedia.Core
 
                             // Build new UpdateState object
                             var updateTime = renderStopWatch.Elapsed;
-
                             if (updateTime.TotalMilliseconds > 100.0)
                             {
                                 updateTime = TimeSpan.FromMilliseconds(100.0);

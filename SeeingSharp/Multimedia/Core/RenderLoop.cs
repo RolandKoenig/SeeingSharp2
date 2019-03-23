@@ -85,6 +85,7 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.RenderTargetView m_renderTargetView;
         private D3D11.DepthStencilView m_renderTargetDepthView;
         private RawViewportF m_viewport;
+        private int m_loadDeviceIndex;
 
         // Direct3D resources for rendertarget capturing
         // ----
@@ -170,6 +171,7 @@ namespace SeeingSharp.Multimedia.Core
             m_lastTargetParametersChanged = DateTime.MinValue;
             m_targetDevice = null;
             m_targetSize = new Size2(0, 0);
+            m_loadDeviceIndex = -1;
 
             // Create default scene and camera
             this.Camera = new PerspectiveCamera3D();
@@ -717,7 +719,9 @@ namespace SeeingSharp.Multimedia.Core
             var writeVideoFrames = m_lastRenderSuccessfully;
 
             // Call present from ThreadPool (if configured)
-            if (!m_callPresentInUiThread)
+            if ((!m_callPresentInUiThread) &&
+                (m_currentDevice != null) &&
+                (m_loadDeviceIndex == m_currentDevice.LoadDeviceIndex))
             {
                 if (!this.DiscardPresent)
                 {
@@ -731,8 +735,12 @@ namespace SeeingSharp.Multimedia.Core
                 // Call present from UI thread (if configured)
                 if (m_callPresentInUiThread)
                 {
-                    if (!this.DiscardPresent) {
-                        this.PresentFrameInternal(); }
+                    if ((!this.DiscardPresent) &&
+                        (m_currentDevice != null) &&
+                        (m_loadDeviceIndex == m_currentDevice.LoadDeviceIndex))
+                    {
+                        this.PresentFrameInternal();
+                    }
                     m_lastRenderSuccessfully = false;
                 }
 
@@ -750,6 +758,7 @@ namespace SeeingSharp.Multimedia.Core
                     viewSizeChanged ||
                     m_targetDevice != null && m_targetDevice != m_currentDevice ||
                     m_viewConfiguration.ViewNeedsRefresh ||
+                    (m_loadDeviceIndex != m_currentDevice.LoadDeviceIndex) ||
                     m_viewRefreshForced)
                 {
                     m_viewRefreshForced = false;
@@ -1103,6 +1112,8 @@ namespace SeeingSharp.Multimedia.Core
 
             // Return here if the current device is marked as lost
             if (m_currentDevice.IsLost) { return; }
+
+            m_loadDeviceIndex = m_currentDevice.LoadDeviceIndex;
 
             // Recreate view resources
             var generatedViewResources = m_renderLoopHost.OnRenderLoop_CreateViewResources(m_currentDevice);
