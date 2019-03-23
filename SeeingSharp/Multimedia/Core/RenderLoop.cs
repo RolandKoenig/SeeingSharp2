@@ -192,8 +192,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="height">Current height in pixels.</param>
         public void SetCurrentViewSize(int width, int height)
         {
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             if (width < SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
             if (height < SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }

@@ -58,8 +58,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="radiusY">The radius in y direction.</param>
         public unsafe void SetContent(Vector2 center, float radiusX, float radiusY)
         {
-            radiusX.EnsurePositive(nameof(radiusX));
-            radiusY.EnsurePositive(nameof(radiusY));
+            radiusX.EnsurePositiveOrZero(nameof(radiusX));
+            radiusY.EnsurePositiveOrZero(nameof(radiusY));
 
             m_center = center;
             m_radiusX = radiusX;

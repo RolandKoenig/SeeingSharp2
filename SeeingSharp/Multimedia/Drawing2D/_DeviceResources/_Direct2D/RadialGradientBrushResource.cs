@@ -50,8 +50,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {;
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
-            radiusX.EnsurePositive(nameof(radiusX));
-            radiusY.EnsurePositive(nameof(radiusY));
+            radiusX.EnsurePositiveOrZero(nameof(radiusX));
+            radiusY.EnsurePositiveOrZero(nameof(radiusY));
 
             m_gradientStops = gradientStops;
             this.Center = center;

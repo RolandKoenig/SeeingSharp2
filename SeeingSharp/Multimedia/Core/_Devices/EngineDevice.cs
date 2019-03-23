@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core._Devices;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
@@ -54,6 +55,9 @@ namespace SeeingSharp.Multimedia.Core
         private DeviceHandlerD2D m_handlerD2D;
         private List<IDisposable> m_additionalDeviceHandlers;
 
+        // Device resources
+        private DeviceResourceManager m_deviceResources;
+
         // Possible antialiasing modes
         private SampleDescription m_antialiasingConfigLow;
         private SampleDescription m_antialiasingConfigMedium;
@@ -74,6 +78,8 @@ namespace SeeingSharp.Multimedia.Core
             adapterInfo.EnsureNotNull(nameof(adapterInfo));
 
             this.Internals = new EngineDeviceInternals(this);
+
+            m_deviceResources = new DeviceResourceManager(this);
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
@@ -145,6 +151,24 @@ namespace SeeingSharp.Multimedia.Core
             return this.AdapterDescription;
         }
 
+        internal void RegisterDeviceResource(IEngineDeviceResource resource)
+        {
+            m_deviceResources.RegisterDeviceResource(resource);
+        }
+
+        internal void DeregisterDeviceResource(IEngineDeviceResource resource)
+        {
+            m_deviceResources.DeregisterDeviceResource(resource);
+        }
+
+        internal void CleanupDeviceResourceCollection()
+        {
+            if (m_deviceResources.CleanupNeeded)
+            {
+                m_deviceResources.Cleanup();
+            }
+        }
+
         /// <summary>
         /// Recreates this device after a device lost event.
         /// </summary>
@@ -153,6 +177,7 @@ namespace SeeingSharp.Multimedia.Core
             this.IsLost.EnsureTrue(nameof(this.IsLost));
 
             // Unload all resources first
+            m_deviceResources.UnloadResources();
             this.UnloadResources();
 
             // Try to restore the device
@@ -468,10 +493,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
         /// </summary>
-        public D2D.RenderTarget FakeRenderTarget2D
+        internal D2D.RenderTarget FakeRenderTarget2D
         {
             get;
-            internal set;
+            set;
         }
 
         /// <summary>
@@ -487,7 +512,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Internal property for device lost handling.
         /// This value gets incremented each time when a device is recreated after a device lost event.
         /// </summary>
-        public int LoadDeviceIndex { get; private set; }
+        internal int LoadDeviceIndex { get; private set; }
 
         /// <summary>
         /// This property is set to true if the device got lost.
@@ -520,7 +545,19 @@ namespace SeeingSharp.Multimedia.Core
                 m_host = host;
             }
 
+            public void RegisterDeviceResource(IEngineDeviceResource resource)
+            {
+                m_host.RegisterDeviceResource(resource);
+            }
+
+            public void DeregisterDeviceResource(IEngineDeviceResource resource)
+            {
+                m_host.DeregisterDeviceResource(resource);
+            }
+
             public Adapter1 Adapter => m_host.m_handlerDXGI?.Adapter;
+
+            public D2D.RenderTarget FakeRenderTarget2D => m_host.FakeRenderTarget2D;
         }
     }
 }

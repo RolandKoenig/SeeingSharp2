@@ -56,8 +56,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
         {
             drawingLayer.EnsureNotNull(nameof(drawingLayer));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             m_drawingLayer = drawingLayer;
             m_width = width;
@@ -73,8 +73,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
         {
             fillBrush.EnsureNotNull(nameof(fillBrush));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             m_fillBrush = fillBrush;
             m_width = width;

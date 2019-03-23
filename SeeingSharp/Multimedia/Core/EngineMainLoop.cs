@@ -236,6 +236,12 @@ namespace SeeingSharp.Multimedia.Core
                                 }
                             }
 
+                            // Cleanup device resources
+                            foreach (var actDevice in devicesInUse)
+                            {
+                                actDevice.CleanupDeviceResourceCollection();
+                            }
+
                             // Build new UpdateState object
                             var updateTime = renderStopWatch.Elapsed;
                             if (updateTime.TotalMilliseconds > 100.0)

@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             geometry.EnsureNotNullOrDisposed(nameof(geometry));
             brush.EnsureNotNull(nameof(brush));
-            strokeWidth.EnsurePositive(nameof(strokeWidth));
+            strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
             m_renderTarget.DrawGeometry(
                 geometry.GetGeometry(),
@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             brush.EnsureNotNull(nameof(brush));
             rectangle.EnsureNotEmpty(nameof(rectangle));
-            strokeWidth.EnsurePositive(nameof(strokeWidth));
+            strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
             m_renderTarget.DrawRectangle(
                 rectangle,
@@ -161,9 +161,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             rectangle.EnsureNotEmpty(nameof(rectangle));
             brush.EnsureNotNull(nameof(brush));
-            radiusX.EnsurePositive(nameof(radiusX));
-            radiusY.EnsurePositive(nameof(radiusY));
-            strokeWidth.EnsurePositive(nameof(strokeWidth));
+            radiusX.EnsurePositiveOrZero(nameof(radiusX));
+            radiusY.EnsurePositiveOrZero(nameof(radiusY));
+            strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
             var roundedRect = new D2D.RoundedRectangle
             {
@@ -299,8 +299,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             rectangle.EnsureNotEmpty(nameof(rectangle));
             brush.EnsureNotNull(nameof(brush));
-            radiusX.EnsurePositive(nameof(radiusX));
-            radiusY.EnsurePositive(nameof(radiusY));
+            radiusX.EnsurePositiveOrZero(nameof(radiusX));
+            radiusY.EnsurePositiveOrZero(nameof(radiusY));
 
             var roundedRect = new D2D.RoundedRectangle
             {

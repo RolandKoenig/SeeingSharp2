@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             device.EnsureNotNull(nameof(device));
             bitmap.EnsureNotNull(nameof(bitmap));
-            mipLevels.EnsurePositive(nameof(mipLevels));
+            mipLevels.EnsurePositiveOrZero(nameof(mipLevels));
 
             D3D11.Texture2D result = null;
 
@@ -157,8 +157,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             device.EnsureNotNull(nameof(device));
             stagingTexture.EnsureNotNull(nameof(stagingTexture));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             //Prepare target bitmap
             var resultBitmap = new GDI.Bitmap(width, height);

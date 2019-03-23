@@ -60,8 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateSharedTexture(EngineDevice device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -299,8 +299,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static RawViewportF CreateDefaultViewport(int width, int height)
         {
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             var result = new RawViewportF
             {
@@ -325,8 +325,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -355,8 +355,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -385,8 +385,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DataBox[] rawData)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             rawData.EnsureNotNull(nameof(rawData));
 
             var textureDescription = new D3D11.Texture2DDescription
@@ -416,8 +416,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             //For handling of staging resource see
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
@@ -448,8 +448,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             //For handling of staging resource see
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
@@ -483,8 +483,8 @@ namespace SeeingSharp.Multimedia.Core
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var textureDescription = new D3D11.Texture2DDescription();
@@ -532,8 +532,8 @@ namespace SeeingSharp.Multimedia.Core
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var textureDescription = new D3D11.Texture2DDescription();
@@ -580,8 +580,8 @@ namespace SeeingSharp.Multimedia.Core
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var textureDescription = new D3D11.Texture2DDescription();
@@ -627,8 +627,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateDepthBufferTexture(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var textureDescription = new D3D11.Texture2DDescription();
@@ -734,7 +734,7 @@ namespace SeeingSharp.Multimedia.Core
             where T : struct
         {
             device.EnsureNotNull(nameof(device));
-            vertexCount.EnsurePositive(nameof(vertexCount));
+            vertexCount.EnsurePositiveOrZero(nameof(vertexCount));
 
             var vertexType = typeof(T);
             var vertexSize = Marshal.SizeOf<T>();
@@ -904,8 +904,8 @@ namespace SeeingSharp.Multimedia.Core
         public static D3D11.Texture2D CreateRenderTargetTextureDummy(D3D11.Device device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
 
             var textureDescription = new D3D11.Texture2DDescription
             {

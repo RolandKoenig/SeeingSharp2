@@ -176,22 +176,7 @@ namespace SeeingSharp.Checking
         }
 
         //---------------------------------------------------------------------
-        // Method 'EnsurePositive' for all common numeric variables
-
-        [Conditional("DEBUG")]
-        public static void EnsurePositive(
-            this int numValue, string checkedVariableName,
-            [CallerMemberName]
-            string callerMethod = "")
-        {
-            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
-
-            if (numValue < 0)
-            {
-                throw new SeeingSharpCheckException(
-                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
-            }
-        }
+        // Method 'EnsurePowerOfTwo' 
 
         [Conditional("DEBUG")]
         public static void EnsurePowerOfTwo(
@@ -208,8 +193,119 @@ namespace SeeingSharp.Checking
             }
         }
 
+        //---------------------------------------------------------------------
+        // Method 'EnsureNegativeAndNotZero' for all common numeric variables
+
         [Conditional("DEBUG")]
-        public static void EnsurePositive(
+        public static void EnsureNegativeAndNotZero(
+            this int numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureNegativeAndNotZero(
+            this short numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureNegativeAndNotZero(
+            this long numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureNegativeAndNotZero(
+            this float numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0f)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureNegativeAndNotZero(
+            this double numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsureNegativeAndNotZero(
+            this decimal numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue >= 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be a negative value and not zero (value: {numValue})!");
+            }
+        }
+
+        //---------------------------------------------------------------------
+        // Method 'EnsurePositiveOrZero' for all common numeric variables
+
+        [Conditional("DEBUG")]
+        public static void EnsurePositiveOrZero(
+            this int numValue, string checkedVariableName,
+            [CallerMemberName]
+            string callerMethod = "")
+        {
+            if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
+
+            if (numValue < 0)
+            {
+                throw new SeeingSharpCheckException(
+                    $"Value {checkedVariableName} within method {callerMethod} must be positive (value: {numValue})!");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        public static void EnsurePositiveOrZero(
             this short numValue, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
@@ -224,7 +320,7 @@ namespace SeeingSharp.Checking
         }
 
         [Conditional("DEBUG")]
-        public static void EnsurePositive(
+        public static void EnsurePositiveOrZero(
             this long numValue, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
@@ -239,7 +335,7 @@ namespace SeeingSharp.Checking
         }
 
         [Conditional("DEBUG")]
-        public static void EnsurePositive(
+        public static void EnsurePositiveOrZero(
             this float numValue, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
@@ -254,7 +350,7 @@ namespace SeeingSharp.Checking
         }
 
         [Conditional("DEBUG")]
-        public static void EnsurePositive(
+        public static void EnsurePositiveOrZero(
             this double numValue, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
@@ -269,7 +365,7 @@ namespace SeeingSharp.Checking
         }
 
         [Conditional("DEBUG")]
-        public static void EnsurePositive(
+        public static void EnsurePositiveOrZero(
             this decimal numValue, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")

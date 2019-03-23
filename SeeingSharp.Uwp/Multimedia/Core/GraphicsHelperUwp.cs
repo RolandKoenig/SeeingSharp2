@@ -41,8 +41,8 @@ namespace SeeingSharp.Multimedia.Core
         internal static SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var desc = new SwapChainDescription1
@@ -73,8 +73,8 @@ namespace SeeingSharp.Multimedia.Core
         internal static SwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
-            width.EnsurePositive(nameof(width));
-            height.EnsurePositive(nameof(height));
+            width.EnsurePositiveOrZero(nameof(width));
+            height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             var desc = new SwapChainDescription1
