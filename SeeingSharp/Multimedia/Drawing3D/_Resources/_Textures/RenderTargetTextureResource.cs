@@ -39,6 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private bool m_antialiasingEnabled;
         private AntialiasingQualityLevel m_antialiasingQuality;
         private RawViewportF m_viewportF;
+        private bool m_forceRecreateResources;
 
         // Resources for depth buffer
         private D3D11.Texture2D m_depthBuffer;
@@ -87,11 +88,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
             var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
-            if (m_width != currentViewSize.Width ||
-                m_height != currentViewSize.Height ||
-                m_antialiasingEnabled != currentAntialiasingEnabled ||
-                m_antialiasingQuality != currentAntialiasingQuality)
+            if ((m_width != currentViewSize.Width) ||
+                (m_height != currentViewSize.Height) ||
+                (m_antialiasingEnabled != currentAntialiasingEnabled) ||
+                (m_antialiasingQuality != currentAntialiasingQuality) ||
+                (m_forceRecreateResources))
             {
+                m_forceRecreateResources = false;
+
                 // Dispose color-buffer resources
                 SeeingSharpUtil.SafeDispose(ref m_colorBuffer);
                 SeeingSharpUtil.SafeDispose(ref m_colorBufferRenderTargetView);
@@ -178,6 +182,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
+            m_forceRecreateResources = true;
         }
 
         /// <summary>

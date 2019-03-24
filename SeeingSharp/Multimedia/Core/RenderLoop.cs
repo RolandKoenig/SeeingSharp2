@@ -60,6 +60,7 @@ namespace SeeingSharp.Multimedia.Core
         private DpiScaling m_currentDpiScaling;
         private Scene m_targetScene;
         private bool m_viewRefreshForced;
+        private bool m_reregisterViewOnSceneForced;
 
         // Callback methods for current host object
         private IRenderLoopHost m_renderLoopHost;
@@ -758,19 +759,23 @@ namespace SeeingSharp.Multimedia.Core
                     viewSizeChanged ||
                     m_targetDevice != null && m_targetDevice != m_currentDevice ||
                     m_viewConfiguration.ViewNeedsRefresh ||
-                    (m_loadDeviceIndex != m_currentDevice.LoadDeviceIndex) ||
-                    m_viewRefreshForced)
+                    (m_loadDeviceIndex != m_currentDevice?.LoadDeviceIndex) ||
+                    m_viewRefreshForced || m_reregisterViewOnSceneForced)
                 {
                     m_viewRefreshForced = false;
 
+                    var refreshViewContinuationActions = new List<Action>(2);
                     try
                     {
                         // Trigger deregister on scene if needed
-                        var reregisterOnScene = m_targetDevice != null && m_targetDevice != m_currentDevice && m_currentScene != null;
+                        var reregisterOnScene = (m_targetDevice != null) && 
+                                                (m_targetDevice != m_currentDevice) && 
+                                                (m_currentScene != null) ||
+                                                m_reregisterViewOnSceneForced;
                         if (reregisterOnScene)
                         {
                             var localScene = m_currentScene;
-                            continuationActions.Add(() => localScene.DeregisterView(this.ViewInformation));
+                            refreshViewContinuationActions.Add(() => localScene.DeregisterView(this.ViewInformation));
                         }
 
                         // Unload view resources first
@@ -786,13 +791,35 @@ namespace SeeingSharp.Multimedia.Core
                         }
 
                         // Load view resources again
-                        this.RefreshViewResources();
+                        try
+                        {
+                            this.RefreshViewResources();
+                        }
+                        catch (SharpDXException dxException)
+                        {
+                            if (dxException.ResultCode == ResultCode.DeviceRemoved ||
+                                dxException.ResultCode == ResultCode.DeviceReset)
+                            {
+                                // Mark the device as lost
+                                m_currentDevice.IsLost = true;
+                                m_viewRefreshForced = true;
+                                m_nextRenderAllowed = false;
+                                m_reregisterViewOnSceneForced = true;
+                                return;
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
 
                         // Trigger reregister on scene if needed
                         if (reregisterOnScene)
                         {
+                            m_reregisterViewOnSceneForced = false;
+
                             var localScene = m_currentScene;
-                            continuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
+                            refreshViewContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
                         }
 
                         if (viewSizeChanged)
@@ -806,6 +833,8 @@ namespace SeeingSharp.Multimedia.Core
 
                         throw new SeeingSharpGraphicsException("Unable to refresh view on device " + m_currentDevice + "!", ex);
                     }
+
+                    continuationActions.AddRange(refreshViewContinuationActions);
                 }
 
                 // Check needed resources
@@ -1119,8 +1148,6 @@ namespace SeeingSharp.Multimedia.Core
             // Return here if the current device is marked as lost
             if (m_currentDevice.IsLost) { return; }
 
-            m_loadDeviceIndex = m_currentDevice.LoadDeviceIndex;
-
             // Recreate view resources
             var generatedViewResources = m_renderLoopHost.OnRenderLoop_CreateViewResources(m_currentDevice);
             if (generatedViewResources == null) { return; }
@@ -1135,6 +1162,8 @@ namespace SeeingSharp.Multimedia.Core
             m_currentViewSizeDpiScaled = new Size2F(
                 m_currentViewSize.Width / m_currentDpiScaling.ScaleFactorX,
                 m_currentViewSize.Height / m_currentDpiScaling.ScaleFactorY);
+
+            m_loadDeviceIndex = m_currentDevice.LoadDeviceIndex;
 
             // Update view size on camera
             m_camera?.SetScreenSize(m_currentViewSize.Width, m_currentViewSize.Height);
