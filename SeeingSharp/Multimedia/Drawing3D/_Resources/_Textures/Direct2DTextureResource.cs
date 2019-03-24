@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -76,6 +77,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">Current render state.</param>
         public void Render(RenderState renderState)
         {
+            if (renderState.Device.IsLost){ return; }
+            if (m_overlayRenderer.IsRenderTargetDisposed){ return; }
+
             m_overlayRenderer.BeginDraw();
             try
             {
@@ -86,7 +90,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             finally
             {
-                m_overlayRenderer.EndDraw();
+                try
+                {
+                    m_overlayRenderer.EndDraw();
+                }
+                catch (SharpDXException dxException)
+                {
+                    if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
+                    {
+                        // Mark the device as lost
+                        renderState.Device.IsLost = true;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
         }
 

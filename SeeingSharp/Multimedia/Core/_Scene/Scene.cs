@@ -946,9 +946,11 @@ namespace SeeingSharp.Multimedia.Core
 
             // Render all renderable resources first
             // (ensure here that we don't corrupt device state)
+            var currentDevice = renderState.Device;
             foreach (var actRenderableResource in resources.RenderableResources)
             {
-                if (actRenderableResource.IsLoaded)
+                if ((actRenderableResource.IsLoaded) &&
+                    (!currentDevice.IsLost))
                 {
                     actRenderableResource.Render(renderState);
                 }

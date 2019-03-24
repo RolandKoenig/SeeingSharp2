@@ -74,6 +74,7 @@ namespace SeeingSharp.Multimedia.Core
         public void BeginDraw()
         {
             if (m_renderTarget2D == null) { return; }
+            if (m_renderTarget2D.IsDisposed){ return; }
 
             m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
             m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
@@ -88,11 +89,17 @@ namespace SeeingSharp.Multimedia.Core
         public void EndDraw()
         {
             if (m_renderTarget2D == null) { return; }
+            if (m_renderTarget2D.IsDisposed) { return; }
 
-            m_renderTarget2D.EndDraw();
-
-            // Finish Direct2D drawing
-            m_device.DeviceContextD2D.Target = null;
+            try
+            {
+                m_renderTarget2D.EndDraw();
+            }
+            finally
+            {
+                // Finish Direct2D drawing
+                m_device.DeviceContextD2D.Target = null;
+            }
         }
 
         /// <summary>
@@ -151,6 +158,8 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this resource loaded correctly?
         /// </summary>
         public bool IsLoaded => m_renderTarget2D != null;
+
+        internal bool IsRenderTargetDisposed => m_renderTarget2D?.IsDisposed == true;
 
         /// <summary>
         /// Gets the Direct2D render target.

@@ -990,12 +990,18 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Handle all resources within the scene
-                if (m_currentScene != null &&
-                    m_camera != null &&
-                    m_currentScene.IsViewRegistered(this.ViewInformation))
+                if ((m_currentScene != null) &&
+                    (m_camera != null) &&
+                    (m_currentScene.IsViewRegistered(this.ViewInformation)))
                 {
                     // Renders current scene on this view
                     m_currentScene.HandleRenderResources(m_renderState);
+                }
+
+                // Cancel here if a device lost occurred
+                if (m_currentDevice.IsLost)
+                {
+                    return;
                 }
 
                 // Update render state
