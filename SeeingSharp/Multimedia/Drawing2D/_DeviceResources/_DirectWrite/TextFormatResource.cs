@@ -83,6 +83,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (textFormat != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 SeeingSharpUtil.DisposeObject(textFormat);
                 m_loadedTextFormats[engineDevice.DeviceIndex] = null;
             }
@@ -101,7 +103,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             var result = m_loadedTextFormats[engineDevice.DeviceIndex];
-
             if (result == null)
             {
                 // Load the TextFormat object
@@ -110,6 +111,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     m_fontFamilyName,
                     m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
                 m_loadedTextFormats[engineDevice.DeviceIndex] = result;
+                engineDevice.RegisterDeviceResource(this);
             }
 
             // Update runtime values on demand

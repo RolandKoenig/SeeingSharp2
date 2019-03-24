@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             // Draw the debug message on the upper right corner
             var targetRect = new RectangleF(
-                screenSize.Width - 300f, 10f,
+                10f, 10f,
                 280f, 80f);
             graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);
             graphics.DrawText("! Debug-Mode !", m_textFormat, targetRect, m_solidBrushForeground);

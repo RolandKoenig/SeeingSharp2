@@ -323,7 +323,6 @@ namespace SeeingSharp.Multimedia.Objects
         private void OnRenderPlain(RenderState renderState)
         {
             var geometryResource = m_localResources[renderState.DeviceIndex];
-
             if (geometryResource != null)
             {
                 this.UpdateAndApplyRenderParameters(renderState);

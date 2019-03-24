@@ -60,6 +60,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             D2D.Brush brush = m_loadedBrushes[engineDevice.DeviceIndex];
             if(brush != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 SeeingSharpUtil.DisposeObject(brush);
                 m_loadedBrushes[engineDevice.DeviceIndex] = null;
             }
@@ -90,6 +92,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         Transform = Matrix3x2.Identity
                     });
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                engineDevice.RegisterDeviceResource(this);
             }
 
             return result;

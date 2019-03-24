@@ -101,7 +101,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if (this.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];
-
             if (result == null)
             {
                 using (var inputStream = m_resourceLink.OpenInputStream())
@@ -137,6 +136,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                     // Register loaded bitmap
                     m_loadedBitmaps[engineDevice.DeviceIndex] = result;
+                    engineDevice.RegisterDeviceResource(this);
                 }
             }
 
@@ -153,6 +153,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (brush != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 SeeingSharpUtil.DisposeObject(brush);
                 m_loadedBitmaps[engineDevice.DeviceIndex] = null;
             }

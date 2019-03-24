@@ -50,6 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_cbPerObject = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerObject>());
+            this.NeedsRefresh = true;
         }
 
         /// <summary>
@@ -58,8 +59,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             m_cbPerObject = null;
-
-            //resources.RemoveResource(KEY_CONSTANT_BUFFER);
         }
 
         /// <summary>

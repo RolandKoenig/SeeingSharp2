@@ -66,7 +66,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_opacity = opacity;
 
             m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
-
         }
 
         /// <summary>
@@ -79,6 +78,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (loadedBrush.Brush != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 loadedBrush.Brush = SeeingSharpUtil.DisposeObject(loadedBrush.Brush);
                 loadedBrush.GradientStops = SeeingSharpUtil.DisposeObject(loadedBrush.GradientStops);
 
@@ -99,7 +100,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
-
             if (result.Brush == null)
             {
                 // Convert gradient stops to structure from SharpDX
@@ -142,6 +142,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 }
 
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                engineDevice.RegisterDeviceResource(this);
             }
 
             return result.Brush;

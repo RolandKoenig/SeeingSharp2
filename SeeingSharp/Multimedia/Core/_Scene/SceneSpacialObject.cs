@@ -423,7 +423,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Get or create RenderParameters object on object level
             var renderParameters = this.RenderParameters[renderState.DeviceIndex];
-
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded(
@@ -445,8 +444,6 @@ namespace SeeingSharp.Multimedia.Core
                     BorderMultiplier = m_borderMultiplier,
                     ObjectScaling = m_scaling
                 };
-
-                //Vector3.TransformCoordinate(m_scaling, Matrix.RotationY(-m_rotation.Y));
 
                 // Update constant buffer
                 renderParameters.UpdateValues(renderState, cbPerObject);

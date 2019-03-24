@@ -71,6 +71,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             if (actEffect != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 SeeingSharpUtil.DisposeObject(actEffect);
                 m_loadedEffects[engineDevice.DeviceIndex] = null;
             }
@@ -113,6 +115,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                 // Store loaded effect
                 m_loadedEffects[device.DeviceIndex] = effect;
+                device.RegisterDeviceResource(this);
             }
 
             return effect.Output;

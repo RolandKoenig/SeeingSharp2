@@ -78,6 +78,7 @@ namespace SeeingSharp.SampleContainer
             // Add floor to scene
             var resFloorGeometry = manipulator.AddResource(() => new GeometryResource(floorType));
             var floorObject = manipulator.AddGeneric(resFloorGeometry, sceneLayer);
+            floorObject.Tag1 = "Floor";
         }
     }
 }

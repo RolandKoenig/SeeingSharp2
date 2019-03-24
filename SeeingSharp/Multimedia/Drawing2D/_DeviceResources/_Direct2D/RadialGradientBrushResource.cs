@@ -72,9 +72,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         internal override void UnloadResources(EngineDevice engineDevice)
         {
             var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
-
             if (loadedBrush.Brush != null)
             {
+                engineDevice.DeregisterDeviceResource(this);
+
                 loadedBrush.Brush = SeeingSharpUtil.DisposeObject(loadedBrush.Brush);
                 loadedBrush.GradientStops = SeeingSharpUtil.DisposeObject(loadedBrush.GradientStops);
 
@@ -95,7 +96,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             var result = m_loadedBrushes[engineDevice.DeviceIndex];
-
             if (result.Brush == null)
             {
                 // Convert gradient stops to structure from SharpDX
@@ -137,6 +137,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     result.GradientStops);
 
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                engineDevice.RegisterDeviceResource(this);
             }
 
             return result.Brush;

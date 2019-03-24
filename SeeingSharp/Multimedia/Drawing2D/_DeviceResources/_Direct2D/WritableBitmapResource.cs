@@ -83,7 +83,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             var result = m_loadedBitmaps[engineDevice.DeviceIndex];
-
             if (result == null)
             {
                 // Load the bitmap initially
@@ -92,6 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     m_bitmapSize,
                     new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
                 m_loadedBitmaps[engineDevice.DeviceIndex] = result;
+                engineDevice.RegisterDeviceResource(this);
             }
 
             return result;
@@ -103,11 +103,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
-
-            if (brush != null)
+            var bitmap = m_loadedBitmaps[engineDevice.DeviceIndex];
+            if (bitmap != null)
             {
-                SeeingSharpUtil.DisposeObject(brush);
+                engineDevice.DeregisterDeviceResource(this);
+
+                SeeingSharpUtil.DisposeObject(bitmap);
                 m_loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }

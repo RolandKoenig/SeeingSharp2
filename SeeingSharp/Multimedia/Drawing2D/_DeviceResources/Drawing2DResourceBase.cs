@@ -26,10 +26,22 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
-    public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed
+    public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed, IEngineDeviceResource
     {
         // Helper flags
         private bool m_isDisposed;
+
+        // Device resource handling
+        private int[] m_deviceResourceIndices;
+
+        protected Drawing2DResourceBase()
+        {
+            m_deviceResourceIndices = new int[GraphicsCore.Current.DeviceCount];
+            for (var loop = 0; loop < m_deviceResourceIndices.Length; loop++)
+            {
+                m_deviceResourceIndices[loop] = -1;
+            }
+        }
 
         /// <summary>
         /// Disposes this object.
@@ -39,7 +51,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if (!m_isDisposed)
             {
                 m_isDisposed = true;
-
                 GraphicsCore.Current.MainLoop.RegisterForUnload(this);
             }
         }
@@ -50,9 +61,26 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal abstract void UnloadResources(EngineDevice engineDevice);
 
+        public int GetDeviceResourceIndex(EngineDevice device)
+        {
+            return m_deviceResourceIndices[device.DeviceIndex];
+        }
+
+        public void SetDeviceResourceIndex(EngineDevice device, int resourceIndex)
+        {
+            m_deviceResourceIndices[device.DeviceIndex] = resourceIndex;
+        }
+
+        void IEngineDeviceResource.UnloadResources(EngineDevice device)
+        {
+            this.UnloadResources(device);
+        }
+
         /// <summary>
         /// Is this object disposed?
         /// </summary>
         public bool IsDisposed => m_isDisposed;
+
+
     }
 }
