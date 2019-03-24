@@ -51,66 +51,77 @@ namespace SeeingSharp.Multimedia.Objects
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             // Define all vertices
-            StandardVertex[] vertices = {
-                // Front side
-                new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(0f, 1f)),
-                new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(1f, 0f)),
+            StandardVertex[] CreateVertices()
+            {
+                return new StandardVertex[] {
+                    // Front side
+                    new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(0f, 1f)),
+                    new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(1f, 0f)),
 
-                // Right side
-                new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 1f)),
-                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(1f, 0f)),
+                    // Right side
+                    new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 1f)),
+                    new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(1f, 0f)),
 
-                // Back side
-                new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f)),
-                new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(1f, 0f)),
+                    // Back side
+                    new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f)),
+                    new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(1f, 0f)),
 
-                // Left side
-                new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(0f, 1f)),
-                new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(1f, 0f)),
+                    // Left side
+                    new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(0f, 1f)),
+                    new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(1f, 0f)),
 
-                // Top side
-                new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 1f)),
-                new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(1f, 0f)),
+                    // Top side
+                    new StandardVertex(new Vector3(-1f, +1f, +1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 1f)),
+                    new StandardVertex(new Vector3(+1f, +1f, -1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(+1f, +1f, +1f), new Vector2(1f, 0f)),
 
-                // Down side
-                new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 0f)),
-                new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 0f)),
-                new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
-                new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f))
-            };
+                    // Down side
+                    new StandardVertex(new Vector3(+1f, -1f, -1f), new Vector2(0f, 0f)),
+                    new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(1f, 0f)),
+                    new StandardVertex(new Vector3(-1f, -1f, +1f), new Vector2(1f, 1f)),
+                    new StandardVertex(new Vector3(+1f, -1f, +1f), new Vector2(0f, 1f))
+                };
+            }
 
             // Define all indices
-            int[] indices = {
-                0, 1, 2, 2, 3, 0,        // Font side
-                4, 5, 6, 6, 7, 4,        // Right side
-                8, 9, 10, 10, 11, 8,     // Back side
-                12, 13, 14, 14, 15, 12,  // Left side
-                16, 17, 18, 18, 19, 16,  // Top side
-                20, 21, 22, 22, 23, 20   // Down side
-            };
+            int[] CreateIndices()
+            {
+                return new int[]
+                {
+                    0, 1, 2, 2, 3, 0, // Font side
+                    4, 5, 6, 6, 7, 4, // Right side
+                    8, 9, 10, 10, 11, 8, // Back side
+                    12, 13, 14, 14, 15, 12, // Left side
+                    16, 17, 18, 18, 19, 16, // Top side
+                    20, 21, 22, 22, 23, 20 // Down side
+                };
+            }
 
             // Create and fill resource container object
             var localResources = new SkyboxLocalResources
             {
                 DefaultResources = resourceDictionary.DefaultResources,
                 CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(this.CubeTextureKey),
-                VertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, vertices),
-                IndexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, indices),
+                VertexBuffer = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_SKYBOX_VERTICES,
+                    () => new ImmutableVertexBufferResource<StandardVertex>(CreateVertices)),
+                IndexBuffer = resourceDictionary.GetResourceAndEnsureLoaded(
+                    ResourceKeys.RES_SKYBOX_INDICES,
+                    () => new ImmutableIndexBufferResource(CreateIndices)),
                 VertexShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                    ResourceKeys.RES_VERTEX_SHADER_SKYBOX,
+                    ResourceKeys.RES_SKYBOX_VERTEX_SHADER,
                     () => GraphicsHelper.GetVertexShaderResource(device, "SkyBox", "CommonVertexShader")),
                 PixelShader = resourceDictionary.GetResourceAndEnsureLoaded(
-                    ResourceKeys.RES_PIXEL_SHADER_SKYBOX,
+                    ResourceKeys.RES_SKYBOX_PIXEL_SHADER,
                     () => GraphicsHelper.GetPixelShaderResource(device, "SkyBox", "CommonPixelShader"))
             };
 
@@ -150,7 +161,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             var geoResource = m_localResources[device.DeviceIndex];
-
             if (geoResource.CubeTexture == null)
             {
                 return false;
@@ -203,9 +213,9 @@ namespace SeeingSharp.Multimedia.Objects
             deviceContext.PixelShader.SetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer, Format.R32_UInt, 0);
+            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer.Buffer, Format.R32_UInt, 0);
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
-                localResources.VertexBuffer,
+                localResources.VertexBuffer.Buffer,
                 StandardVertex.Size, 0));
 
             // Draw the skybox
@@ -227,9 +237,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             public TextureResource CubeTexture;
             public DefaultResources DefaultResources;
-            public D3D11.Buffer IndexBuffer;
+            public ImmutableIndexBufferResource IndexBuffer;
             public PixelShaderResource PixelShader;
-            public D3D11.Buffer VertexBuffer;
+            public ImmutableVertexBufferResource<StandardVertex> VertexBuffer;
             public VertexShaderResource VertexShader;
         }
     }
