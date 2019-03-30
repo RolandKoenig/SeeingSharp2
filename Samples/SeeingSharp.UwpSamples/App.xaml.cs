@@ -50,10 +50,10 @@ namespace SeeingSharp.UwpSamples
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            // Initialize graphics
-            GraphicsCore.Loader
-                .SupportUwp()
-                .Load();
+            //// Initialize graphics
+            //GraphicsCore.Loader
+            //    .SupportUwp()
+            //    .Load();
 
             var rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
@@ -88,7 +88,10 @@ namespace SeeingSharp.UwpSamples
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            await GraphicsCore.Current.SuspendAsync();
+            if (GraphicsCore.IsLoaded)
+            {
+                await GraphicsCore.Current.SuspendAsync();
+            }
 
             deferral.Complete();
         }

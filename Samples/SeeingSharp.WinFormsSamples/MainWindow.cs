@@ -56,6 +56,8 @@ namespace SeeingSharp.WinFormsSamples
             base.OnLoad(e);
 
             if (this.DesignMode) { return; }
+            if (!GraphicsCore.IsLoaded) { return; }
+
             m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
             foreach (var actDevice in GraphicsCore.Current.Devices)
