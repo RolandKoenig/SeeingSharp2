@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private GeometryFactory m_geometry;
 
         // Loaded resources
-        private LoadedGeometryInfo[] m_loadedGeometries;
+        private GeometryRenderChunk[] m_geometrys;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_geometry = geometry;
 
-            m_loadedGeometries = new LoadedGeometryInfo[0];
+            m_geometrys = new GeometryRenderChunk[0];
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public IEnumerable<MaterialResource> GetReferencedMaterials()
         {
-            var loadedGeometries = m_loadedGeometries;
+            var loadedGeometries = m_geometrys;
             for(var loop=0; loop<loadedGeometries.Length; loop++)
             {
                 var actLoadedGeometry = loadedGeometries[loop];
@@ -98,9 +98,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < m_loadedGeometries.Length; loop++)
+            for (var loop = 0; loop < m_geometrys.Length; loop++)
             {
-                var actLoadedGeometry = m_loadedGeometries[loop].Geometry;
+                var actLoadedGeometry = m_geometrys[loop].Geometry;
                 if (actLoadedGeometry.Intersects(pickingRay, pickingOptions, out var currentDistance))
                 {
                     result = true;
@@ -147,19 +147,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Performs a simple picking-test.
-        /// </summary>
-        /// <param name="pickInformation">The that gathers picking information.</param>
-        /// <param name="pickingRay">The picking ray.</param>
-        public void Pick(PickingInformation pickInformation, Ray pickingRay)
-        {
-            if (pickingRay.Intersects(m_boundingBox))
-            {
-
-            }
-        }
-
-        /// <summary>
         /// Renders this GeometryResource.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
@@ -170,9 +157,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             var lastVertexBufferID = -1;
             var lastIndexBufferID = -1;
-            for (var loop = 0; loop < m_loadedGeometries.Length; loop++)
+            for (var loop = 0; loop < m_geometrys.Length; loop++)
             {
-                var geometryToDraw = m_loadedGeometries[loop];
+                var geometryToDraw = m_geometrys[loop];
 
                 // Apply VertexBuffer
                 if (lastVertexBufferID != geometryToDraw.VertexBufferID)
@@ -239,7 +226,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_boundingBox = BoundingBoxEx.Create(vertexLocations);
 
             // Build geometry
-            m_loadedGeometries = this.BuildBuffers(device, geometries, resources);
+            m_geometrys = this.BuildBuffers(device, geometries, resources);
         }
 
         /// <inheritdoc />
@@ -247,13 +234,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             device.EnsureNotNull(nameof(device));
 
-            for (var loop = 0; loop < m_loadedGeometries.Length; loop++)
+            for (var loop = 0; loop < m_geometrys.Length; loop++)
             {
-                m_loadedGeometries[loop].InputLayout = SeeingSharpUtil.DisposeObject(m_loadedGeometries[loop].InputLayout);
-                m_loadedGeometries[loop].VertexBuffer = SeeingSharpUtil.DisposeObject(m_loadedGeometries[loop].VertexBuffer);
-                m_loadedGeometries[loop].IndexBuffer = SeeingSharpUtil.DisposeObject(m_loadedGeometries[loop].IndexBuffer);
+                m_geometrys[loop].InputLayout = SeeingSharpUtil.DisposeObject(m_geometrys[loop].InputLayout);
+                m_geometrys[loop].VertexBuffer = SeeingSharpUtil.DisposeObject(m_geometrys[loop].VertexBuffer);
+                m_geometrys[loop].IndexBuffer = SeeingSharpUtil.DisposeObject(m_geometrys[loop].IndexBuffer);
             }
-            m_loadedGeometries = new LoadedGeometryInfo[0];
+            m_geometrys = new GeometryRenderChunk[0];
 
             device = null;
         }
@@ -264,9 +251,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device on which to build all buffers.</param>
         /// <param name="geometries">All geometries to be loaded.</param>
         /// <param name="resources">The current resource dictionary</param>
-        protected virtual LoadedGeometryInfo[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
+        protected virtual GeometryRenderChunk[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
         {
-            var result = new List<LoadedGeometryInfo>(geometries.Length * 2);
+            var result = new List<GeometryRenderChunk>(geometries.Length * 2);
             var cachedVertices = new List<StandardVertex[]>(2);
             var cachedIndices = new List<int[]>(6);
 
@@ -341,11 +328,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 surfaceList.Sort((left, right) => left.MaterialProperties.GetHashCode().CompareTo(right.MaterialProperties.GetHashCode()));
 
                 var surfaceCount = surfaceList.Count;
-
-                for(var loopSurface =0; loopSurface<surfaceCount; loopSurface++)
+                for (var loopSurface = 0; loopSurface < surfaceCount; loopSurface++)
                 {
                     var actSurface = surfaceList[loopSurface];
-
                     if (actSurface.CountTriangles == 0)
                     {
                         continue;
@@ -353,16 +338,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                     // Handle index data
                     var indexArray = actSurface.GetIndexArray();
-
-                    if(actBaseVertex > 0)
+                    if (actBaseVertex > 0)
                     {
-                        for(var loopIndex =0; loopIndex<indexArray.Length; loopIndex++)
+                        for (var loopIndex = 0; loopIndex < indexArray.Length; loopIndex++)
                         {
                             indexArray[loopIndex] = indexArray[loopIndex] + actBaseVertex;
                         }
                     }
-
-                    if(actIndexCount + indexArray.Length > MAX_INDEX_COUNT_PER_BUFFER)
+                    if (actIndexCount + indexArray.Length > MAX_INDEX_COUNT_PER_BUFFER)
                     {
                         FinishIndexBuffer();
                     }
@@ -370,39 +353,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     cachedIndices.Add(indexArray);
                     actIndexCount += indexArray.Length;
 
-                    // Get or create the material
-                    var lastGeometryInfo = result.Count > 0 ? result[result.Count - 1] : null;
+                    // Get the material resource for the given surface
+                    var actMaterialResource = resources.GetOrCreateMaterialResourceAndEnsureLoaded(actSurface);
 
-                    if (lastGeometryInfo != null &&
-                        lastGeometryInfo.IndexBuffer == null &&
-                        actSurface.MaterialProperties.Equals(lastGeometryInfo.MaterialProperties))
+                    // Create the rendering chunk
+                    var newGeometryInfo = new GeometryRenderChunk
                     {
-                        var actGeometryInfo = result[result.Count - 1];
-                        actGeometryInfo.IndexCount = actGeometryInfo.IndexCount + indexArray.Length;
-                    }
-                    else
-                    {
-                        var actMaterialResource = resources.GetOrCreateMaterialResourceAndEnsureLoaded(actSurface);
+                        VertexBufferID = vertexBufferID,
+                        IndexBufferID = indexBufferID,
+                        SizePerVertex = StandardVertex.Size,
+                        Geometry = actGeometry,
+                        IndexCount = indexArray.Length,
+                        StartIndex = actIndexCount - indexArray.Length,
+                        Material = actMaterialResource,
+                        MaterialProperties = actSurface.MaterialProperties,
+                        VertexBuffer = null,
+                        IndexBuffer = null
+                    };
 
-                        // Create some information about the loaded geometries
-                        var newGeometryInfo = new LoadedGeometryInfo
-                        {
-                            VertexBufferID = vertexBufferID,
-                            IndexBufferID = indexBufferID,
-                            SizePerVertex = StandardVertex.Size,
-                            Geometry = actGeometry,
-                            IndexCount = indexArray.Length,
-                            StartIndex = actIndexCount - indexArray.Length,
-                            Material = actMaterialResource,
-                            MaterialProperties = actSurface.MaterialProperties,
-                            VertexBuffer = null,
-                            IndexBuffer = null
-                        };
-
-                        newGeometryInfo.InputLayout = newGeometryInfo.Material.GenerateInputLayout(
-                            device, StandardVertex.InputElements, MaterialApplyInstancingMode.SingleObject);
-                        result.Add(newGeometryInfo);
-                    }
+                    newGeometryInfo.InputLayout = newGeometryInfo.Material.GenerateInputLayout(
+                        device, StandardVertex.InputElements, MaterialApplyInstancingMode.SingleObject);
+                    result.Add(newGeometryInfo);
                 }
             }
 
@@ -414,7 +385,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <inheritdoc />
-        public override bool IsLoaded => m_loadedGeometries.Length > 0;
+        public override bool IsLoaded => m_geometrys.Length > 0;
 
         /// <summary>
         /// Gets the source of geometry data.
@@ -429,7 +400,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        protected class LoadedGeometryInfo
+        /// <summary>
+        /// Describes one chunk during rendering.
+        /// </summary>
+        protected class GeometryRenderChunk
         {
             public D3D11.Buffer IndexBuffer;
             public int IndexBufferID;

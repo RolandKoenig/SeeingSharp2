@@ -152,7 +152,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             var geoResource = m_localResources[device.DeviceIndex];
-
             if (geoResource.Key != m_resGeometryKey)
             {
                 return false;
