@@ -29,15 +29,15 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class SkyboxObject : SceneObject
+    public class Skybox : SceneObject
     {
         // Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SkyboxObject"/> class.
+        /// Initializes a new instance of the <see cref="Skybox"/> class.
         /// </summary>
-        public SkyboxObject(NamedOrGenericKey cubeTextureKey)
+        public Skybox(NamedOrGenericKey cubeTextureKey)
         {
             m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
             this.CubeTextureKey = cubeTextureKey;

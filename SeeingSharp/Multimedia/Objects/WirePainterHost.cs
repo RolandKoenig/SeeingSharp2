@@ -28,7 +28,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class WirePainterHostObject : SceneObject
+    public class WirePainterHost : SceneObject
     {
         // Direct3D resources
         private IndexBasedDynamicCollection<LineRenderResources> m_localResources;
@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="WireObject" /> class.
         /// </summary>
-        public WirePainterHostObject()
+        public WirePainterHost()
         {
             m_localResources = new IndexBasedDynamicCollection<LineRenderResources>();
         }

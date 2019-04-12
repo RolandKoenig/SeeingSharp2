@@ -79,7 +79,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
 
                 // Create the skybox on a new layer
                 manipulator.AddLayer("Skybox");
-                var skyboxObject = new SkyboxObject(resSkyboxTexture);
+                var skyboxObject = new Skybox(resSkyboxTexture);
                 manipulator.Add(skyboxObject, "Skybox");
             });
 

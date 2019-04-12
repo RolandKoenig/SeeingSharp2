@@ -27,7 +27,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class FullscreenTextureObject : SceneObject, IAnimatableObjectAccentuation, IAnimatableObjectOpacity
+    public class FullscreenTexture : SceneObject, IAnimatableObjectAccentuation, IAnimatableObjectOpacity
     {
         // Configuration
         private NamedOrGenericKey m_resTexture;
@@ -36,10 +36,10 @@ namespace SeeingSharp.Multimedia.Objects
         private IndexBasedDynamicCollection<TexturePainterHelper> m_texturePainterHelpers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FullscreenTextureObject"/> class.
+        /// Initializes a new instance of the <see cref="FullscreenTexture"/> class.
         /// </summary>
         /// <param name="texture">The texture.</param>
-        public FullscreenTextureObject(NamedOrGenericKey texture)
+        public FullscreenTexture(NamedOrGenericKey texture)
         {
             m_resTexture = texture;
             this.Scaling = 1f;

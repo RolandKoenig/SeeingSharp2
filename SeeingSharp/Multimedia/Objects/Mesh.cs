@@ -29,7 +29,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class GenericObject : SceneSpacialObject
+    public class Mesh : SceneSpacialObject
     {
         // Resources
         private IndexBasedDynamicCollection<GeometryResource> m_localResources;
@@ -37,30 +37,20 @@ namespace SeeingSharp.Multimedia.Objects
 
         // Configuration members
         private NamedOrGenericKey m_resGeometryKey;
+        private NamedOrGenericKey[] m_resMaterials;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericObject"/> class.
         /// </summary>
         /// <param name="geometryResource">The geometry resource.</param>
-        public GenericObject(NamedOrGenericKey geometryResource)
+        public Mesh(NamedOrGenericKey geometryResource, params NamedOrGenericKey[] materials)
         {
             m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
 
             m_resGeometryKey = geometryResource;
+            m_resMaterials = materials;
 
-            //m_opacity = 1f;
             m_passRelevantValuesChanged = true;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject" /> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        /// <param name="position">The initial position.</param>
-        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
-            : this(geometryResource)
-        {
-            this.Position = position;
         }
 
         /// <summary>
@@ -202,9 +192,6 @@ namespace SeeingSharp.Multimedia.Objects
         //                }
         //            }
         //        }
-
-        //        //base.UpdateAndApplyRenderParameters(renderState);
-        //        //geometryResource.Render(renderState);
         //    }
         //}
 

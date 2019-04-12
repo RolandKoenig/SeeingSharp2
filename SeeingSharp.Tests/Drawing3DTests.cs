@@ -345,7 +345,7 @@ namespace SeeingSharp.Tests
 
                     // Create the skybox on a new layer
                     manipulator.AddLayer("Skybox");
-                    var skyboxObject = new SkyboxObject(resSkyboxTexture);
+                    var skyboxObject = new Skybox(resSkyboxTexture);
                     manipulator.Add(skyboxObject, "Skybox");
                 });
                 await memRenderTarget.AwaitRenderAsync();
