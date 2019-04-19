@@ -89,22 +89,6 @@ namespace SeeingSharp.Multimedia.Core
     }
 
     /// <summary>
-    /// The instancing mode implemented by a material.
-    /// </summary>
-    internal enum MaterialApplyInstancingMode
-    {
-        /// <summary>
-        /// Shaders for rendering a single object.
-        /// </summary>
-        SingleObject,
-
-        /// <summary>
-        /// Shaders for rendering multi objects using standard instancing technique.
-        /// </summary>
-        StandardInstancing
-    }
-
-    /// <summary>
     /// Defines the host-mode remote object hosting.
     /// </summary>
     public enum ObjectHostMode

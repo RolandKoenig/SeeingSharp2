@@ -25,6 +25,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -32,23 +33,27 @@ namespace SeeingSharp.Multimedia.Objects
     public class Mesh : SceneSpacialObject
     {
         // Resources
-        private IndexBasedDynamicCollection<GeometryResource> m_localResources;
+        private IndexBasedDynamicCollection<GeometryResource> m_localResGeometry;
+        private IndexBasedDynamicCollection<MaterialResource[]> m_localResMaterials;
+        private IndexBasedDynamicCollection<RenderingChunk[]> m_localChunks;
         private bool m_passRelevantValuesChanged;
 
         // Configuration members
         private NamedOrGenericKey m_resGeometryKey;
-        private NamedOrGenericKey[] m_resMaterials;
+        private NamedOrGenericKey[] m_resMaterialResourceKeys;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericObject"/> class.
         /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        public Mesh(NamedOrGenericKey geometryResource, params NamedOrGenericKey[] materials)
+        /// <param name="geometryResourceKey">The geometry resource.</param>
+        public Mesh(NamedOrGenericKey geometryResourceKey, params NamedOrGenericKey[] materialResourceKeys)
         {
-            m_localResources = new IndexBasedDynamicCollection<GeometryResource>();
+            m_localResGeometry = new IndexBasedDynamicCollection<GeometryResource>();
+            m_localResMaterials = new IndexBasedDynamicCollection<MaterialResource[]>();
+            m_localChunks = new IndexBasedDynamicCollection<RenderingChunk[]>();
 
-            m_resGeometryKey = geometryResource;
-            m_resMaterials = materials;
+            m_resGeometryKey = geometryResourceKey;
+            m_resMaterialResourceKeys = materialResourceKeys;
 
             m_passRelevantValuesChanged = true;
         }
@@ -60,7 +65,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -79,7 +84,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -109,23 +114,27 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Changes the geometry to the given one.
-        /// </summary>
-        /// <param name="newGeometry">The new geometry to set.</param>
-        public void ChangeGeometry(NamedOrGenericKey newGeometry)
-        {
-            m_resGeometryKey = newGeometry;
-        }
-
-        /// <summary>
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
         /// <param name="resourceDictionary">Current resource dictionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
-            m_localResources.AddObject(
-                resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey),
+            // Load geometry
+            var geoResource = resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey);
+            m_localResGeometry.AddObject(geoResource, device.DeviceIndex, false);
+
+            // Load materials
+            var matResources = new MaterialResource[m_resMaterialResourceKeys.Length];
+            for(var loop=0; loop<matResources.Length; loop++)
+            {
+                matResources[loop] = resourceDictionary.GetResourceAndEnsureLoaded<MaterialResource>(m_resMaterialResourceKeys[loop]);
+            }
+            m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
+
+            // Load chunks
+            m_localChunks.AddObject(
+                geoResource.BuildRenderingChunks(device, matResources),
                 device.DeviceIndex,
                 false);
         }
@@ -136,13 +145,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="device">The device to check for.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            // Handle geometry
+            if (!m_localResGeometry.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }
-
-            var geoResource = m_localResources[device.DeviceIndex];
-            if (geoResource.Key != m_resGeometryKey)
+            if(!m_localResMaterials.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }
@@ -157,43 +165,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             base.UnloadResources();
 
-            m_localResources.Clear();
+            m_localResGeometry.Clear();
+            m_localResMaterials.Clear();
         }
-
-        ///// <summary>
-        ///// This method stores all data related to this object into the given <see cref="ExportModelContainer" />.
-        ///// </summary>
-        ///// <param name="modelContainer">The target container.</param>
-        ///// <param name="exportOptions">Options for export.</param>
-        //protected override void PrepareForExportInternal(
-        //    ExportModelContainer modelContainer, ExportOptions exportOptions)
-        //{
-        //    modelContainer.EnsureNotNull(nameof(modelContainer));
-        //    exportOptions.EnsureNotNull(nameof(exportOptions));
-
-        //    // Get the device and ensure that we've an instance
-        //    var exportDevice = exportOptions.ExportDevice;
-        //    exportOptions.EnsureNotNull(nameof(exportDevice));
-
-        //    var geometryResource = m_localResources[exportDevice.DeviceIndex];
-
-        //    if (geometryResource != null)
-        //    {
-        //        // Ensure that we have geometry infos for the exporter
-        //        if(!modelContainer.ContainsExportGeometry(geometryResource.Key))
-        //        {
-        //            modelContainer.AddExportGeometry(geometryResource.PrepareForExport());
-
-        //            foreach(var actMaterial in geometryResource.GetReferencedMaterials())
-        //            {
-        //                if(!modelContainer.ContainsExportMaterial(actMaterial.Key))
-        //                {
-
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Updates this object for the given view.
@@ -202,27 +176,27 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            //Subscribe to render passes
+            // Subscribe to render passes
             if (m_passRelevantValuesChanged || this.CountRenderPassSubscriptions(layerViewSubset) == 0)
             {
-                //Unsubscribe from all passes first
+                // Unsubscribe from all passes first
                 this.UnsubsribeFromAllPasses(layerViewSubset);
 
-                //Now subscribe to needed pass
+                // Now subscribe to needed pass
                 if (this.Opacity < 1f)
                 {
                     this.SubscribeToPass(
                         RenderPassInfo.PASS_TRANSPARENT_RENDER,
-                        layerViewSubset, this.OnRenderTransparent);
+                        layerViewSubset, this.OnRender);
                 }
                 else
                 {
                     this.SubscribeToPass(
                         RenderPassInfo.PASS_PLAIN_RENDER,
-                        layerViewSubset, this.OnRenderPlain);
+                        layerViewSubset, this.OnRender);
                 }
 
-                //Update local flag
+                // Update local flag
                 m_passRelevantValuesChanged = false;
             }
         }
@@ -249,7 +223,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </returns>
         internal override float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
         {
-            var geometryResource = m_localResources[viewInfo.Device.DeviceIndex];
+            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -306,28 +280,62 @@ namespace SeeingSharp.Multimedia.Objects
         /// Renders the object.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
-        private void OnRenderPlain(RenderState renderState)
+        private void OnRender(RenderState renderState)
         {
-            var geometryResource = m_localResources[renderState.DeviceIndex];
-            if (geometryResource != null)
-            {
-                this.UpdateAndApplyRenderParameters(renderState);
-                geometryResource.Render(renderState);
-            }
-        }
+            this.UpdateAndApplyRenderParameters(renderState);
 
-        /// <summary>
-        /// Renders the object.
-        /// </summary>
-        /// <param name="renderState">Current render state.</param>
-        private void OnRenderTransparent(RenderState renderState)
-        {
-            var geometryResource = m_localResources[renderState.DeviceIndex];
+            var device = renderState.Device;
+            var chunks = m_localChunks[device.DeviceIndex];
 
-            if (geometryResource != null)
+            var deviceContext = device.DeviceImmediateContextD3D11;
+            var indexBufferFormat = device.SupportsOnly16BitIndexBuffer ? Format.R16_UInt : Format.R32_UInt;
+
+            var lastVertexBufferID = -1;
+            var lastIndexBufferID = -1;
+            for (var loop = 0; loop < chunks.Length; loop++)
             {
-                this.UpdateAndApplyRenderParameters(renderState);
-                geometryResource.Render(renderState);
+                var actChunk = chunks[loop];
+
+                // Apply VertexBuffer
+                if (lastVertexBufferID != actChunk.VertexBufferID)
+                {
+                    lastVertexBufferID = actChunk.VertexBufferID;
+                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
+                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.VertexBuffer, actChunk.SizePerVertex, 0));
+                }
+
+                // Apply IndexBuffer
+                if (lastIndexBufferID != actChunk.IndexBufferID)
+                {
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.IndexBuffer, indexBufferFormat, 0);
+                }
+
+                // Apply material
+                renderState.ApplyMaterial(actChunk.Material);
+                D3D11.InputLayout newInputLayout = null;
+                if (renderState.ForcedMaterial != null)
+                {
+                    newInputLayout = renderState.ForcedMaterial.GenerateInputLayout(
+                        renderState.Device,
+                        StandardVertex.InputElements);
+                    deviceContext.InputAssembler.InputLayout = newInputLayout;
+                }
+                try
+                {
+                    // Draw current rener block
+                    deviceContext.DrawIndexed(
+                        actChunk.IndexCount,
+                        actChunk.StartIndex,
+                        0);
+                }
+                finally
+                {
+                    if (newInputLayout != null)
+                    {
+                        deviceContext.InputAssembler.InputLayout = null;
+                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
+                    }
+                }
             }
         }
 
@@ -336,6 +344,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
 
-        public override bool IsExportable => true;
+        public override bool IsExportable => false;
     }
 }

@@ -349,6 +349,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
 
-        public override bool IsExportable => true;
+        public override bool IsExportable => false;
     }
 }

@@ -47,7 +47,6 @@ namespace SeeingSharp.Multimedia.Core
         // Current state
         private MaterialResource m_forcedMaterial;
         private MaterialResource m_lastAppliedMaterial;
-        private MaterialApplyInstancingMode m_lastMaterialInstancingMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderState"/> class.
@@ -94,7 +93,6 @@ namespace SeeingSharp.Multimedia.Core
             // Clear material properties
             m_lastAppliedMaterial = null;
             m_forcedMaterial = null;
-            m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
 
             this.Device.DeviceImmediateContextD3D11.ClearState();
             m_currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
@@ -264,16 +262,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceToApply">The material to apply.</param>
         internal void ApplyMaterial(MaterialResource resourceToApply)
         {
-            this.ApplyMaterial(resourceToApply, MaterialApplyInstancingMode.SingleObject);
-        }
-
-        /// <summary>
-        /// Applies the given material to the renderer.
-        /// </summary>
-        /// <param name="resourceToApply">The material to apply.</param>
-        /// <param name="instancingMode">The instancing mode for which to apply the material.</param>
-        internal void ApplyMaterial(MaterialResource resourceToApply, MaterialApplyInstancingMode instancingMode)
-        {
             // Use forced material if any set
             if (m_forcedMaterial != null &&
                 resourceToApply != m_forcedMaterial)
@@ -288,13 +276,12 @@ namespace SeeingSharp.Multimedia.Core
                 return;
             }
 
-            if (m_lastAppliedMaterial != resourceToApply || m_lastMaterialInstancingMode != instancingMode)
+            if (m_lastAppliedMaterial != resourceToApply)
             {
                 // Apply material (material or instancing mode has changed)
-                resourceToApply.Apply(this, instancingMode, m_lastAppliedMaterial);
+                resourceToApply.Apply(this, m_lastAppliedMaterial);
 
                 m_lastAppliedMaterial = resourceToApply;
-                m_lastMaterialInstancingMode = instancingMode;
             }
         }
 
@@ -307,7 +294,6 @@ namespace SeeingSharp.Multimedia.Core
         internal void ClearCachedAppliedMaterial()
         {
             m_lastAppliedMaterial = null;
-            m_lastMaterialInstancingMode = MaterialApplyInstancingMode.SingleObject;
         }
 
         /// <summary>

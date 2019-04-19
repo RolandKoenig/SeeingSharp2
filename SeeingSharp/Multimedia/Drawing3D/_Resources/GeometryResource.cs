@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private GeometryFactory m_geometry;
 
         // Loaded resources
-        private GeometryRenderChunk[] m_geometrys;
+        private RenderingChunk[] m_chunks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_geometry = geometry;
 
-            m_geometrys = new GeometryRenderChunk[0];
+            m_chunks = new RenderingChunk[0];
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public IEnumerable<MaterialResource> GetReferencedMaterials()
         {
-            var loadedGeometries = m_geometrys;
+            var loadedGeometries = m_chunks;
             for(var loop=0; loop<loadedGeometries.Length; loop++)
             {
                 var actLoadedGeometry = loadedGeometries[loop];
@@ -98,9 +98,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < m_geometrys.Length; loop++)
+            for (var loop = 0; loop < m_chunks.Length; loop++)
             {
-                var actLoadedGeometry = m_geometrys[loop].Geometry;
+                var actLoadedGeometry = m_chunks[loop].Geometry;
                 if (actLoadedGeometry.Intersects(pickingRay, pickingOptions, out var currentDistance))
                 {
                     result = true;
@@ -146,6 +146,29 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this.Redefine(resources, new GenericGeometryFactory(geometry));
         }
 
+        internal RenderingChunk[] BuildRenderingChunks(EngineDevice device, MaterialResource[] materials)
+        {
+            RenderingChunk[] result = new RenderingChunk[m_chunks.Length];
+            if (materials.Length == 0)
+            {
+                for (var loop = 0; loop < result.Length; loop++)
+                {
+                    result[loop] = m_chunks[loop];
+                }
+            }
+            else
+            {
+                for (var loop = 0; loop < result.Length; loop++)
+                {
+                    result[loop] = m_chunks[loop].CopyForMaterial(
+                        device, 
+                        materials[loop % materials.Length]);
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Renders this GeometryResource.
         /// </summary>
@@ -157,41 +180,40 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             var lastVertexBufferID = -1;
             var lastIndexBufferID = -1;
-            for (var loop = 0; loop < m_geometrys.Length; loop++)
+            for (var loop = 0; loop < m_chunks.Length; loop++)
             {
-                var geometryToDraw = m_geometrys[loop];
+                var actChunk = m_chunks[loop];
 
                 // Apply VertexBuffer
-                if (lastVertexBufferID != geometryToDraw.VertexBufferID)
+                if (lastVertexBufferID != actChunk.VertexBufferID)
                 {
-                    lastVertexBufferID = geometryToDraw.VertexBufferID;
-                    deviceContext.InputAssembler.InputLayout = geometryToDraw.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(geometryToDraw.VertexBuffer, geometryToDraw.SizePerVertex, 0));
+                    lastVertexBufferID = actChunk.VertexBufferID;
+                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
+                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.VertexBuffer, actChunk.SizePerVertex, 0));
                 }
 
                 // Apply IndexBuffer
-                if (lastIndexBufferID != geometryToDraw.IndexBufferID)
+                if (lastIndexBufferID != actChunk.IndexBufferID)
                 {
-                    deviceContext.InputAssembler.SetIndexBuffer(geometryToDraw.IndexBuffer, indexBufferFormat, 0);
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.IndexBuffer, indexBufferFormat, 0);
                 }
 
                 // Apply material
-                renderState.ApplyMaterial(geometryToDraw.Material);
+                renderState.ApplyMaterial(actChunk.Material);
                 D3D11.InputLayout newInputLayout = null;
                 if(renderState.ForcedMaterial != null)
                 {
                     newInputLayout = renderState.ForcedMaterial.GenerateInputLayout(
                         renderState.Device,
-                        StandardVertex.InputElements,
-                        MaterialApplyInstancingMode.SingleObject);
+                        StandardVertex.InputElements);
                     deviceContext.InputAssembler.InputLayout = newInputLayout;
                 }
                 try
                 {
                     // Draw current rener block
                     deviceContext.DrawIndexed(
-                        geometryToDraw.IndexCount,
-                        geometryToDraw.StartIndex,
+                        actChunk.IndexCount,
+                        actChunk.StartIndex,
                         0);
                 }
                 finally
@@ -226,7 +248,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_boundingBox = BoundingBoxEx.Create(vertexLocations);
 
             // Build geometry
-            m_geometrys = this.BuildBuffers(device, geometries, resources);
+            m_chunks = this.BuildBuffers(device, geometries, resources);
         }
 
         /// <inheritdoc />
@@ -234,13 +256,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             device.EnsureNotNull(nameof(device));
 
-            for (var loop = 0; loop < m_geometrys.Length; loop++)
+            for (var loop = 0; loop < m_chunks.Length; loop++)
             {
-                m_geometrys[loop].InputLayout = SeeingSharpUtil.DisposeObject(m_geometrys[loop].InputLayout);
-                m_geometrys[loop].VertexBuffer = SeeingSharpUtil.DisposeObject(m_geometrys[loop].VertexBuffer);
-                m_geometrys[loop].IndexBuffer = SeeingSharpUtil.DisposeObject(m_geometrys[loop].IndexBuffer);
+                m_chunks[loop].InputLayout = SeeingSharpUtil.DisposeObject(m_chunks[loop].InputLayout);
+                m_chunks[loop].VertexBuffer = SeeingSharpUtil.DisposeObject(m_chunks[loop].VertexBuffer);
+                m_chunks[loop].IndexBuffer = SeeingSharpUtil.DisposeObject(m_chunks[loop].IndexBuffer);
             }
-            m_geometrys = new GeometryRenderChunk[0];
+            m_chunks = new RenderingChunk[0];
 
             device = null;
         }
@@ -251,9 +273,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device on which to build all buffers.</param>
         /// <param name="geometries">All geometries to be loaded.</param>
         /// <param name="resources">The current resource dictionary</param>
-        protected virtual GeometryRenderChunk[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
+        protected virtual RenderingChunk[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
         {
-            var result = new List<GeometryRenderChunk>(geometries.Length * 2);
+            var result = new List<RenderingChunk>(geometries.Length * 2);
             var cachedVertices = new List<StandardVertex[]>(2);
             var cachedIndices = new List<int[]>(6);
 
@@ -357,7 +379,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     var actMaterialResource = resources.GetOrCreateMaterialResourceAndEnsureLoaded(actSurface);
 
                     // Create the rendering chunk
-                    var newGeometryInfo = new GeometryRenderChunk
+                    var newChunk = new RenderingChunk()
                     {
                         VertexBufferID = vertexBufferID,
                         IndexBufferID = indexBufferID,
@@ -366,14 +388,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         IndexCount = indexArray.Length,
                         StartIndex = actIndexCount - indexArray.Length,
                         Material = actMaterialResource,
-                        MaterialProperties = actSurface.MaterialProperties,
                         VertexBuffer = null,
-                        IndexBuffer = null
+                        IndexBuffer = null,
+                        InputElements = StandardVertex.InputElements
                     };
 
-                    newGeometryInfo.InputLayout = newGeometryInfo.Material.GenerateInputLayout(
-                        device, StandardVertex.InputElements, MaterialApplyInstancingMode.SingleObject);
-                    result.Add(newGeometryInfo);
+                    newChunk.InputLayout = newChunk.Material.GenerateInputLayout(
+                        device, StandardVertex.InputElements);
+                    result.Add(newChunk);
                 }
             }
 
@@ -385,7 +407,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <inheritdoc />
-        public override bool IsLoaded => m_geometrys.Length > 0;
+        public override bool IsLoaded => m_chunks.Length > 0;
 
         /// <summary>
         /// Gets the source of geometry data.
@@ -396,26 +418,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the bounding box surrounding this object.
         /// </summary>
         public BoundingBox BoundingBox => m_boundingBox;
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        /// <summary>
-        /// Describes one chunk during rendering.
-        /// </summary>
-        protected class GeometryRenderChunk
-        {
-            public D3D11.Buffer IndexBuffer;
-            public int IndexBufferID;
-            public int IndexCount;
-            public D3D11.InputLayout InputLayout;
-            public MaterialResource Material;
-            public MaterialProperties MaterialProperties;
-            public int SizePerVertex;
-            public int StartIndex;
-            public D3D11.Buffer VertexBuffer;
-            public int VertexBufferID;
-            public Geometry Geometry;
-        }
     }
 }

@@ -55,22 +55,23 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddGeometry(
                     new CubeGeometryFactory());
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                // Create cube object
-                var cubeObject = manipulator.AddGeneric(resGeometry);
-                cubeObject.Color = Color4Ex.GreenColor;
-                cubeObject.Position = new Vector3(0f, 0.5f, 0f);
-                cubeObject.EnableShaderGeneratedBorder();
-                cubeObject.BuildAnimationSequence()
+                var cubeMesh = new Mesh(resGeometry, resMaterial);
+                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
+                cubeMesh.EnableShaderGeneratedBorder();
+                cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(cubeMesh);
             });
 
             // Configure camera

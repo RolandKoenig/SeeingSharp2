@@ -40,9 +40,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Applies the material to the given render state.
         /// </summary>
         /// <param name="renderState">Current render state</param>
-        /// <param name="instancingMode">The instancing mode for which to apply the material.</param>
         /// <param name="previousMaterial">The previously applied material.</param>
-        internal virtual void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial) { }
+        internal virtual void Apply(RenderState renderState, MaterialResource previousMaterial) { }
 
         /// <summary>
         /// Discards the material in current render state.
@@ -55,8 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        /// <param name="instancingMode">Instancing mode for which to generate the input layout for.</param>
-        internal abstract D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements, MaterialApplyInstancingMode instancingMode);
+        internal abstract D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements);
 
         public virtual bool IsExportable => false;
     }

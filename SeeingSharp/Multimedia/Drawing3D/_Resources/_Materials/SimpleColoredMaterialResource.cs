@@ -106,27 +106,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        /// <param name="instancingMode">Instancing mode for which to generate the input layout for.</param>
-        /// <returns></returns>
-        internal override D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements, MaterialApplyInstancingMode instancingMode)
+        internal override D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
         {
-            switch (instancingMode)
-            {
-                case MaterialApplyInstancingMode.SingleObject:
-                    return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
-
-                default:
-                    throw new SeeingSharpGraphicsException(this.GetType() + " does not support " + typeof(MaterialApplyInstancingMode) + "." + instancingMode + "!");
-            }
+            return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
         }
 
         /// <summary>
         /// Applies the material to the given render state.
         /// </summary>
         /// <param name="renderState">Current render state</param>
-        /// <param name="instancingMode">The instancing mode for which to apply the material.</param>
         /// <param name="previousMaterial">The previously applied material.</param>
-        internal override void Apply(RenderState renderState, MaterialApplyInstancingMode instancingMode, MaterialResource previousMaterial)
+        internal override void Apply(RenderState renderState, MaterialResource previousMaterial)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var isResourceSameType =
