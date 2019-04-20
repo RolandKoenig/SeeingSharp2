@@ -103,17 +103,18 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                         }));
 
                 // Create cube object
-                var cubeObject = manipulator.AddGeneric(resGeometry);
-                cubeObject.Color = Color4Ex.GreenColor;
-                cubeObject.YPos = 0.5f;
-                cubeObject.EnableShaderGeneratedBorder();
-                cubeObject.BuildAnimationSequence()
+                var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
+                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.YPos = 0.5f;
+                cubeMesh.EnableShaderGeneratedBorder();
+                cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(cubeMesh);
             });
 
             // Configure camera

@@ -26,9 +26,8 @@ using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Multimedia.Objects._GeometryFactories;
 using SharpDX;
-using SharpDX.Direct2D1;
+using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
 {
@@ -56,21 +55,24 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
+                // Create material
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
+
                 // Create geometry resource
                 ExtrudeGeometryFactory geometryFactory = null;
-                using (var pathGeo = new PathGeometry1(GraphicsCore.Current.FactoryD2D))
+                using (var pathGeo = new D2D.PathGeometry1(GraphicsCore.Current.FactoryD2D))
                 {
                     // We are building the left mountain from this sample:
                     //  https://docs.microsoft.com/en-us/windows/desktop/direct2d/path-geometries-overview
                     var geoSink = pathGeo.Open();
                     geoSink.BeginFigure(
                         new Vector2(346f, 255f), 
-                        FigureBegin.Filled);
+                        D2D.FigureBegin.Filled);
                     geoSink.AddLine(new Vector2(267f, 177f));
                     geoSink.AddLine(new Vector2(236f, 192f));
                     geoSink.AddLine(new Vector2(212f, 160f));
                     geoSink.AddLine(new Vector2(156f, 255f));
-                    geoSink.EndFigure(FigureEnd.Closed);
+                    geoSink.EndFigure(D2D.FigureEnd.Closed);
                     geoSink.Close();
 
                     // Create the GeometryFactory
@@ -83,10 +85,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                 var resGeometry = manipulator.AddGeometry(geometryFactory);
 
                 // Create the 3D object
-                var extrudedObject = manipulator.AddGeneric(resGeometry);
-                extrudedObject.Color = Color4Ex.GreenColor;
-                extrudedObject.Position = new Vector3(0f, 0.5f, 0f);
-                extrudedObject.Scaling = new Vector3(2f, 1f, 2f);
+                var extrudedMesh = new Mesh(resGeometry, resMaterial);
+                extrudedMesh.Color = Color4Ex.GreenColor;
+                extrudedMesh.Position = new Vector3(0f, 0.5f, 0f);
+                extrudedMesh.Scaling = new Vector3(2f, 1f, 2f);
+                manipulator.Add(extrudedMesh);
             });
 
             // Configure camera

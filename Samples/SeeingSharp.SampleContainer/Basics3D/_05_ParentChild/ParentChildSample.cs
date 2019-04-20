@@ -58,36 +58,40 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 // Create cube geometry resource
                 var resCubeGeometry = manipulator.AddGeometry(
                     new CubeGeometryFactory());
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 //********************************
                 // Create parent object
-                var cubeObject = manipulator.AddGeneric(resCubeGeometry);
-                cubeObject.Color = Color4Ex.GreenColor;
-                cubeObject.Position = new Vector3(0f, 0.5f, 0f);
-                cubeObject.EnableShaderGeneratedBorder();
-                cubeObject.BuildAnimationSequence()
+                var cubeMesh = new Mesh(resCubeGeometry, resMaterial);
+                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
+                cubeMesh.EnableShaderGeneratedBorder();
+                cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(cubeMesh);
 
                 //********************************
                 // Create first level child
-                var actChild = manipulator.AddGeneric(resCubeGeometry);
+                var actChild = new Mesh(resCubeGeometry, resMaterial);
                 actChild.Position = new Vector3(-2f, 0f, 0f);
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
-                manipulator.AddChild(cubeObject, actChild);
+                manipulator.Add(actChild);
+                manipulator.AddChild(cubeMesh, actChild);
 
-                actChild = manipulator.AddGeneric(resCubeGeometry);
+                actChild = new Mesh(resCubeGeometry, resMaterial);
                 actChild.Position = new Vector3(0f, 0f, 2f);
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
-                manipulator.AddChild(cubeObject, actChild);
+                manipulator.Add(actChild);
+                manipulator.AddChild(cubeMesh, actChild);
 
                 //********************************
                 // Create second level parent/child relationships
-                var actSecondLevelParent = manipulator.AddGeneric(resCubeGeometry);
+                var actSecondLevelParent = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelParent.Position = new Vector3(3f, 0f, 0f);
                 actSecondLevelParent.Scaling = new Vector3(0.8f, 0.8f, 0.8f);
                 actSecondLevelParent.Color = Color4Ex.BlueColor;
@@ -98,21 +102,25 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     .WaitFinished()
                     .CallAction(() => actSecondLevelParent.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.AddChild(cubeObject, actSecondLevelParent);
+                manipulator.Add(actSecondLevelParent);
+                manipulator.AddChild(cubeMesh, actSecondLevelParent);
 
-                var actSecondLevelChild = manipulator.AddGeneric(resCubeGeometry);
+                var actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(1f, 0f, 0f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
+                manipulator.Add(actSecondLevelChild);
                 manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
 
-                actSecondLevelChild = manipulator.AddGeneric(resCubeGeometry);
+                actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(-1f, 0f, 0f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
+                manipulator.Add(actSecondLevelChild);
                 manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
 
-                actSecondLevelChild = manipulator.AddGeneric(resCubeGeometry);
+                actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(0f, 0f, 1f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
+                manipulator.Add(actSecondLevelChild);
                 manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
             });
 

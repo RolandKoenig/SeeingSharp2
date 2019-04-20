@@ -65,23 +65,25 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 var edgeLayer = manipulator.AddLayer("EdgeDetectLayer");
                 edgeLayer.PostprocessEffectKey = resEdgeDetect;
 
-                // Create pallet geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
                         new CubeGeometryFactory()));
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                // Create pallet object
-                var cubeObject = manipulator.AddGeneric(resGeometry, "EdgeDetectLayer");
-                cubeObject.Color = Color4Ex.GreenColor;
-                cubeObject.Position = new Vector3(0f, 0.5f, 0f);
-                cubeObject.EnableShaderGeneratedBorder();
-                cubeObject.BuildAnimationSequence()
+                // Create object and put it on the EdgeDetectLayer
+                var cubeMesh = new Mesh(resGeometry, resMaterial);
+                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
+                cubeMesh.EnableShaderGeneratedBorder();
+                cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cubeObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(cubeMesh, "EdgeDetectLayer");
             });
 
             // Configure camera

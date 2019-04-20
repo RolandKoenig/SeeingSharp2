@@ -4,7 +4,7 @@ using SharpDX;
 using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
-namespace SeeingSharp.Multimedia.Objects._GeometryFactories
+namespace SeeingSharp.Multimedia.Objects
 {
     public class ExtrudeGeometryFactory : GeometryFactory
     {

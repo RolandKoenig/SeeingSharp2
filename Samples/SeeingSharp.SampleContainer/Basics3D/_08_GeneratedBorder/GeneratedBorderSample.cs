@@ -40,7 +40,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
     public class GeneratedBorderSample : SampleBase
     {
         private GeneratedBorderSettings m_settings;
-        private List<GenericObject> m_cubes = new List<GenericObject>();
+        private List<Mesh> m_cubes = new List<Mesh>();
 
         /// <summary>
         /// Called when the sample has to startup.
@@ -61,38 +61,43 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create pallet geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
                         new CubeGeometryFactory()));
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create cubes with border
                 const float SPACE = 1.05f;
                 for (var loop = 0; loop < 10; loop++)
                 {
-                    var cubeObject = manipulator.AddGeneric(resGeometry);
-                    cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(0f, 0.5f, loop * SPACE);
-                    cubeObject.EnableShaderGeneratedBorder(m_settings.BorderThickness);
-                    m_cubes.Add(cubeObject);
+                    var cubeMesh = new Mesh(resGeometry, resMaterial);
+                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.Position = new Vector3(0f, 0.5f, loop * SPACE);
+                    cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
+                    manipulator.Add(cubeMesh);
+                    m_cubes.Add(cubeMesh);
 
-                    cubeObject = manipulator.AddGeneric(resGeometry);
-                    cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(-SPACE, 0.5f, loop * SPACE);
-                    cubeObject.EnableShaderGeneratedBorder(m_settings.BorderThickness);
-                    m_cubes.Add(cubeObject);
+                    cubeMesh = new Mesh(resGeometry, resMaterial);
+                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.Position = new Vector3(-SPACE, 0.5f, loop * SPACE);
+                    cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
+                    manipulator.Add(cubeMesh);
+                    m_cubes.Add(cubeMesh);
                 }
 
                 // Create cubes without border
                 for (var loop = 0; loop < 10; loop++)
                 {
-                    var cubeObject = manipulator.AddGeneric(resGeometry);
-                    cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(SPACE, 0.5f, loop * SPACE);
+                    var cubeMesh = new Mesh(resGeometry, resMaterial);
+                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.Position = new Vector3(SPACE, 0.5f, loop * SPACE);
+                    manipulator.Add(cubeMesh);
 
-                    cubeObject = manipulator.AddGeneric(resGeometry);
-                    cubeObject.Color = Color4Ex.GreenColor;
-                    cubeObject.Position = new Vector3(2* SPACE, 0.5f, loop * SPACE);
+                    cubeMesh = new Mesh(resGeometry, resMaterial);
+                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.Position = new Vector3(2* SPACE, 0.5f, loop * SPACE);
+                    manipulator.Add(cubeMesh);
                 }
             });
 

@@ -52,25 +52,27 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create cylinder geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
                         new CylinderGeometryFactory
                         {
                             CountOfSegments = 50
                         }));
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create cylinder object
-                var cylinderObject = manipulator.AddGeneric(resGeometry);
-                cylinderObject.Color = Color4Ex.GreenColor;
-                cylinderObject.EnableShaderGeneratedBorder();
-                cylinderObject.BuildAnimationSequence()
+                var cylinderMesh = new Mesh(resGeometry, resMaterial);
+                cylinderMesh.Color = Color4Ex.GreenColor;
+                cylinderMesh.EnableShaderGeneratedBorder();
+                cylinderMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => cylinderObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => cylinderMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(cylinderMesh);
             });
 
             // Configure camera

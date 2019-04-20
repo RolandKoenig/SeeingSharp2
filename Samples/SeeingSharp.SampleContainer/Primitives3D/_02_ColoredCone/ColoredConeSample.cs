@@ -52,25 +52,27 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create cone geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
                         new ConeGeometryFactory
                         {
                         CountOfSegments = 50
                     }));
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create cone object
-                var coneObject = manipulator.AddGeneric(resGeometry);
-                coneObject.Color = Color4Ex.GreenColor;
-                coneObject.EnableShaderGeneratedBorder();
-                coneObject.BuildAnimationSequence()
+                var coneMesh = new Mesh(resGeometry, resMaterial);
+                coneMesh.Color = Color4Ex.GreenColor;
+                coneMesh.EnableShaderGeneratedBorder();
+                coneMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => coneObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => coneMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(coneMesh);
             });
 
             // Configure camera

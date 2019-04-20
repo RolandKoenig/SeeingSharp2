@@ -52,7 +52,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create Sphere geometry resource
+                // Create resources
                 var resGeometry = manipulator.AddResource(
                     () => new GeometryResource(
                         new SphereGeometryFactory
@@ -61,19 +61,21 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                             PDiv = 30,
                             Radius = 0.5f
                         }));
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create Sphere object
-                var sphereObject = manipulator.AddGeneric(resGeometry);
-                sphereObject.Color = Color4Ex.GreenColor;
-                sphereObject.Position = new Vector3(0f, 0.5f, 0f);
-                sphereObject.EnableShaderGeneratedBorder();
-                sphereObject.BuildAnimationSequence()
+                var sphereMesh = new Mesh(resGeometry, resMaterial);
+                sphereMesh.Color = Color4Ex.GreenColor;
+                sphereMesh.Position = new Vector3(0f, 0.5f, 0f);
+                sphereMesh.EnableShaderGeneratedBorder();
+                sphereMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => sphereObject.RotationEuler = Vector3.Zero)
+                    .CallAction(() => sphereMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
+                manipulator.Add(sphereMesh);
             });
 
             // Configure camera

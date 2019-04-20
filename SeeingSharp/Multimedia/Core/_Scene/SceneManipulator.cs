@@ -297,37 +297,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Adds a new generic object targeting to the given geometry resource.
-        /// </summary>
-        /// <param name="geometryResource">The geometry to be used.</param>
-        /// <param name="position">The position for the created object.</param>
-        public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position)
-        {
-            var newGenericObject = new GenericObject(geometryResource)
-            {
-                Position = position
-            };
-
-            return this.Add(newGenericObject);
-        }
-
-        /// <summary>
-        /// Adds a new generic object targeting to the given geometry resource.
-        /// </summary>
-        /// <param name="geometryResource">The geometry to be used.</param>
-        /// <param name="position">The position for the created object.</param>
-        /// <param name="layer">The layer on which to add the object.</param>
-        public GenericObject AddGeneric(NamedOrGenericKey geometryResource, Vector3 position, string layer)
-        {
-            var newGenericObject = new GenericObject(geometryResource)
-            {
-                Position = position
-            };
-
-            return this.Add(newGenericObject, layer);
-        }
-
-        /// <summary>
         /// Adds all given scene objects.
         /// </summary>
         /// <param name="sceneObjects">All objects to add.</param>
