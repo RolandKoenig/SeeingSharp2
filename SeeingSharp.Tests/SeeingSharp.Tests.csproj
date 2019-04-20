@@ -76,12 +76,11 @@
   <ItemGroup>
     <Compile Include="AssemblyResourcesAndShaderTests\ShaderCompileTests.cs" />
     <Compile Include="BitmapComparisonTests.cs" />
-    <Compile Include="DeviceHandlingTests.cs" />
     <Compile Include="Drawing2DTests.cs" />
     <Compile Include="Drawing3DTests.cs" />
     <Compile Include="ErrorHandlingTests.cs" />
     <Compile Include="MathTests.cs" />
-    <Compile Include="ModelLoadingAndRenderingTests.cs" />
+    <Compile Include="GeometryLoadingAndRenderingTests.cs" />
     <Compile Include="PostprocessingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyResourcesAndShaderTests\AssemblyResourceLinkTests.cs" />
@@ -154,11 +153,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
-    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\FlatShadedObject.png" />
-    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\ModelStl.png" />
-    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\ShadedObject.png" />
-    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\TwoSidedObject.png" />
-    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\SingleSidedObject.png" />
+    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\FlatShadedObject.png" />
+    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\ModelStl.png" />
+    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\ShadedObject.png" />
+    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\TwoSidedObject.png" />
+    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\SingleSidedObject.png" />
     <Content Include="Resources\Models\Fox.LicenseInfo.txt" />
     <EmbeddedResource Include="Resources\Drawing3D\Skybox.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Ortho.png" />

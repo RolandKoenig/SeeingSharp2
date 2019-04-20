@@ -91,12 +91,12 @@ namespace SeeingSharp.Tests
                         var resD2DTexture = manipulator.AddResource(
                             () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                         var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
-                        var geoResource = manipulator.AddResource(
+                        var resGeometry = manipulator.AddResource(
                             () => new GeometryResource(new CubeGeometryFactory { Material = resD2DMaterial }));
 
-                        var newObject = manipulator.AddGeneric(geoResource);
-                        newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                        newObject.Scaling = new Vector3(2f, 2f, 2f);
+                        var newMesh = manipulator.AddMesh(resGeometry, resD2DMaterial);
+                        newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                        newMesh.Scaling = new Vector3(2f, 2f, 2f);
                     });
 
                     // Take screenshot

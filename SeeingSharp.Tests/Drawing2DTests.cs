@@ -335,13 +335,15 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     // Define object
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.Color = Color4Ex.Goldenrod;
-                    newObject.EnableShaderGeneratedBorder();
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4Ex.Goldenrod;
+                    newMesh.EnableShaderGeneratedBorder();
                 });
 
                 // Define 2D overlay
@@ -435,9 +437,9 @@ namespace SeeingSharp.Tests
                     var geoResource = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory { Material = resD2DMaterial }));
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
+                    var newMesh = manipulator.AddMesh(geoResource, resD2DMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
                 });
 
                 await memRenderTarget.AwaitRenderAsync();

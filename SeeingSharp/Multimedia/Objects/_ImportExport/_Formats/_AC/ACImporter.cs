@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
             var resGeometry = GraphicsCore.GetNextGenericResourceKey();
 
             // Load and fill result object
-            var objType = ACFileLoader.ImportObjectType(sourceFile);
+            var objType = ACFileLoader.ImportGeometry(sourceFile);
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(objType)));

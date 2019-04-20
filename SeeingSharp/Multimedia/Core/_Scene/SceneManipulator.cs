@@ -278,12 +278,24 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Adds a new generic object targeting to the given geometry resource.
+        /// Adds a new mesh to the scene.
         /// </summary>
-        /// <param name="geometryResource">The geometry to be used.</param>
-        public GenericObject AddGeneric(NamedOrGenericKey geometryResource)
+        /// <param name="resGeometry">The geometry.</param>
+        /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
+        public Mesh AddMesh(NamedOrGenericKey resGeometry, params NamedOrGenericKey[] resMaterials)
         {
-            return this.Add(new GenericObject(geometryResource));
+            return this.Add(new Mesh(resGeometry, resMaterials));
+        }
+
+        /// <summary>
+        /// Adds a new mesh to the scene.
+        /// </summary>
+        /// <param name="resGeometry">The geometry.</param>
+        /// <param name="layer">The layer on which to add the object.</param>
+        /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
+        public Mesh AddMesh(NamedOrGenericKey resGeometry, string layer, params NamedOrGenericKey[] resMaterials)
+        {
+            return this.Add(new Mesh(resGeometry, resMaterials), layer);
         }
 
         /// <summary>
@@ -294,20 +306,6 @@ namespace SeeingSharp.Multimedia.Core
         public GenericObject AddGeneric(NamedOrGenericKey geometryResource, string layer)
         {
             return this.Add(new GenericObject(geometryResource), layer);
-        }
-
-        /// <summary>
-        /// Adds all given scene objects.
-        /// </summary>
-        /// <param name="sceneObjects">All objects to add.</param>
-        public IEnumerable<SceneObject> AddRange(IEnumerable<SceneObject> sceneObjects)
-        {
-            foreach (var actObject in sceneObjects)
-            {
-                this.Add(actObject);
-            }
-
-            return sceneObjects;
         }
 
         /// <summary>

@@ -139,14 +139,15 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.Color = Color4Ex.RedColor;
-                    newObject.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -187,16 +188,16 @@ namespace SeeingSharp.Tests
                     {
                         Size = 0.3f
                     };
-
                     var stackedType = new StackedGeometryFactory(cubeType, 10);
 
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(stackedType));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(5f, 1f, 5f);
-                    newObject.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(5f, 1f, 5f);
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -233,13 +234,14 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.Opacity = 0.5f;
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Opacity = 0.5f;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -281,13 +283,14 @@ namespace SeeingSharp.Tests
                 // Define scene
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -326,19 +329,20 @@ namespace SeeingSharp.Tests
                 {
                     // Create pallet geometry resource
                     var cubeType = new CubeGeometryFactory();
-                    var resPalletGeometry = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(cubeType));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     // Create pallet object
-                    var palletObject = manipulator.AddGeneric(resPalletGeometry);
-                    palletObject.Color = Color4Ex.GreenColor;
-                    palletObject.EnableShaderGeneratedBorder();
-                    palletObject.BuildAnimationSequence()
+                    var cubeMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.EnableShaderGeneratedBorder();
+                    cubeMesh.BuildAnimationSequence()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                         .WaitFinished()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                         .WaitFinished()
-                        .CallAction(() => palletObject.RotationEuler = Vector3.Zero)
+                        .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                         .ApplyAndRewind();
 
                     var resSkyboxTexture = manipulator.AddTexture(TestUtilities.CreateResourceLink("Textures", "SkyBox.dds"));

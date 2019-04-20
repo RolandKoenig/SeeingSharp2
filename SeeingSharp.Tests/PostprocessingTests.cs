@@ -64,13 +64,14 @@ namespace SeeingSharp.Tests
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.Color = Color4Ex.RedColor;
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4Ex.RedColor;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -117,13 +118,14 @@ namespace SeeingSharp.Tests
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
-                    var geoResource = manipulator.AddResource(
+                    var resGeometry = manipulator.AddResource(
                         () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddSimpleColoredMaterial();
 
-                    var newObject = manipulator.AddGeneric(geoResource);
-                    newObject.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newObject.Scaling = new Vector3(2f, 2f, 2f);
-                    newObject.Color = Color4Ex.RedColor;
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4Ex.RedColor;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 

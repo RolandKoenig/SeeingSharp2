@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Imports a ac file from the given stream.
         /// </summary>
         /// <param name="resourceLink">The link to the ac file.</param>
-        public static GeometryFactory ImportObjectType(ResourceLink resourceLink)
+        public static GeometryFactory ImportGeometry(ResourceLink resourceLink)
         {
             using (var inStream = resourceLink.OpenInputStream())
             {
