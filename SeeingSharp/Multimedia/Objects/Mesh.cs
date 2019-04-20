@@ -167,6 +167,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             m_localResGeometry.Clear();
             m_localResMaterials.Clear();
+
+            m_localChunks.ForEachInEnumeration(actChunk => SeeingSharpUtil.DisposeObjects(actChunk));
+            m_localChunks.Clear();
         }
 
         /// <summary>
@@ -297,17 +300,17 @@ namespace SeeingSharp.Multimedia.Objects
                 var actChunk = chunks[loop];
 
                 // Apply VertexBuffer
-                if (lastVertexBufferID != actChunk.VertexBufferID)
+                if (lastVertexBufferID != actChunk.Template.VertexBufferID)
                 {
-                    lastVertexBufferID = actChunk.VertexBufferID;
+                    lastVertexBufferID = actChunk.Template.VertexBufferID;
                     deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.VertexBuffer, actChunk.SizePerVertex, 0));
+                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
                 }
 
                 // Apply IndexBuffer
-                if (lastIndexBufferID != actChunk.IndexBufferID)
+                if (lastIndexBufferID != actChunk.Template.IndexBufferID)
                 {
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.IndexBuffer, indexBufferFormat, 0);
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
                 }
 
                 // Apply material
@@ -324,8 +327,8 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     // Draw current rener block
                     deviceContext.DrawIndexed(
-                        actChunk.IndexCount,
-                        actChunk.StartIndex,
+                        actChunk.Template.IndexCount,
+                        actChunk.Template.StartIndex,
                         0);
                 }
                 finally
