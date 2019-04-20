@@ -50,10 +50,10 @@ namespace SeeingSharp.UwpSamples
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            //// Initialize graphics
-            //GraphicsCore.Loader
-            //    .SupportUwp()
-            //    .Load();
+            // Initialize graphics
+            GraphicsCore.Loader
+                .SupportUwp()
+                .Load();
 
             var rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
