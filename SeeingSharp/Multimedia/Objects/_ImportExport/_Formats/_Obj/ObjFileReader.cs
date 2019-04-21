@@ -106,6 +106,8 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Define all material resources which where defined in the material file
+            var resMaterials = new NamedOrGenericKey[this.TargetGeometry.CountSurfaces];
+            var actSurfaceIndex = 0;
             foreach (var actSurface in this.TargetGeometry.Surfaces)
             {
                 // Handle texture
@@ -132,6 +134,9 @@ namespace SeeingSharp.Multimedia.Objects
                         ClipFactor = textureKey != NamedOrGenericKey.Empty ? 0.1f : 0f,
                         MaterialDiffuseColor = actSurface.DiffuseColor
                     }));
+
+                resMaterials[actSurfaceIndex] = actMaterialKey;
+                actSurfaceIndex++;
             }
 
             // Define geometry resource
@@ -140,7 +145,7 @@ namespace SeeingSharp.Multimedia.Objects
             m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(newObjType)));
-            m_targetContainer.Objects.Add(new GenericObject(resGeometry));
+            m_targetContainer.Objects.Add(new Mesh(resGeometry, resMaterials));
         }
 
         /// <summary>

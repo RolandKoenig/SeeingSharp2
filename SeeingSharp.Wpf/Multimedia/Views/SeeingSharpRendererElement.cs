@@ -143,6 +143,46 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Gets the pixel size of the given UIElement.
+        /// </summary>
+        /// <param name="minSize">The minimum size to be returned.</param>
+        public Size GetPixelSize(Size minSize)
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            double dpiScaleFactorX = 1.0;
+            double dpiScaleFactorY = 1.0;
+            if (source != null)
+            {
+                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
+                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+            }
+
+            return new Size(
+                Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
+                Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
+        }
+
+        /// <summary>
+        /// Transporms the given wpf point to pure pixel coordinates.
+        /// </summary>
+        /// <param name="wpfPoint">The wpf point to be transformed.</param>
+        public System.Windows.Point GetPixelLocation(System.Windows.Point wpfPoint)
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            double dpiScaleFactorX = 1.0;
+            double dpiScaleFactorY = 1.0;
+            if (source != null)
+            {
+                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
+                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
+            }
+
+            return new System.Windows.Point(
+                wpfPoint.X * dpiScaleFactorX,
+                wpfPoint.Y * dpiScaleFactorY);
+        }
+
+        /// <summary>
         /// Called when the render size has changed.
         /// </summary>
         /// <param name="sizeInfo">New size information.</param>

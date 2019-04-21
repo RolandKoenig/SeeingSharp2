@@ -79,6 +79,7 @@
     <Compile Include="Drawing2DTests.cs" />
     <Compile Include="Drawing3DTests.cs" />
     <Compile Include="ErrorHandlingTests.cs" />
+    <Compile Include="ModelLoadingAndRenderingTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="GeometryLoadingAndRenderingTests.cs" />
     <Compile Include="PostprocessingTests.cs" />
@@ -154,7 +155,7 @@
   <ItemGroup>
     <Content Include="Resources\Bitmaps\Boom.LicenseInfo.txt" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\FlatShadedObject.png" />
-    <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\ModelStl.png" />
+    <EmbeddedResource Include="Resources\ModelLoadingAndRendering\ModelStl.png" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\ShadedObject.png" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\TwoSidedObject.png" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\SingleSidedObject.png" />

@@ -255,26 +255,20 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Adds a text object displaying the given text.
+        /// Adds a text geometry resource.
         /// </summary>
         /// <param name="textToDisplay">The text to be displayed.</param>
         /// <param name="textOptions">All options regarding the text geometry generator.</param>
         /// <param name="realignToCenter">Moves all vertices so that the center is 0.</param>
-        /// <param name="layer">The layer on which to add the object.</param>
-        public GenericObject Add3DText(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false, string layer = Scene.DEFAULT_LAYER_NAME)
+        public NamedOrGenericKey Add3DTextGeometry(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false)
         {
             var newGeometry = new Geometry();
             newGeometry.FirstSurface.BuildTextGeometry(
                 textToDisplay,
                 textOptions);
+            if (realignToCenter){ newGeometry.RealignToCenter(); }
 
-            if (realignToCenter)
-            {
-                newGeometry.RealignToCenter();
-            }
-
-            var resTextGeometry = this.AddResource(() => new GeometryResource(newGeometry));
-            return this.AddGeneric(resTextGeometry, layer);
+            return this.AddResource(() => new GeometryResource(newGeometry));
         }
 
         /// <summary>
@@ -296,16 +290,6 @@ namespace SeeingSharp.Multimedia.Core
         public Mesh AddMesh(NamedOrGenericKey resGeometry, string layer, params NamedOrGenericKey[] resMaterials)
         {
             return this.Add(new Mesh(resGeometry, resMaterials), layer);
-        }
-
-        /// <summary>
-        /// Adds a new generic object targeting to the given geometry resource.
-        /// </summary>
-        /// <param name="geometryResource">The geometry to be used.</param>
-        /// <param name="layer">The layer on which to add the object.</param>
-        public GenericObject AddGeneric(NamedOrGenericKey geometryResource, string layer)
-        {
-            return this.Add(new GenericObject(geometryResource), layer);
         }
 
         /// <summary>

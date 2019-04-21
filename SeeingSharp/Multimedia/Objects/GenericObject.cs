@@ -53,17 +53,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject" /> class.
-        /// </summary>
-        /// <param name="geometryResource">The geometry resource.</param>
-        /// <param name="position">The initial position.</param>
-        public GenericObject(NamedOrGenericKey geometryResource, Vector3 position)
-            : this(geometryResource)
-        {
-            this.Position = position;
-        }
-
-        /// <summary>
         /// Tries to get the bounding box for the given render-loop.
         /// Returns BoundingBox.Empty if it is not available.
         /// </summary>

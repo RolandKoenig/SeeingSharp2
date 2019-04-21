@@ -26,6 +26,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
@@ -54,15 +55,21 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Configure text geometry
+                // Create text geometry
                 var textOptions = TextGeometryOptions.Default;
                 textOptions.FontSize = 50;
                 textOptions.MakeVolumetricText = true;
                 textOptions.SurfaceVertexColor = Color.Blue;
                 textOptions.VolumetricSideSurfaceVertexColor = Color4Ex.CornflowerBlue;
+                var resGeometry = manipulator.Add3DTextGeometry(
+                    $"Seeing# 2 {Environment.NewLine} Text3D Sample",
+                    textOptions);
+
+                // Create material
+                var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create text geometry and object
-                var textObject = manipulator.Add3DText($"Seeing# 2 {Environment.NewLine} Text3D Sample", textOptions);
+                var textObject = manipulator.AddMesh(resGeometry, resMaterial);
                 textObject.YPos = textOptions.VolumetricTextDepth;
             });
 

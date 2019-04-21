@@ -49,6 +49,8 @@ namespace SeeingSharp.Multimedia.Objects
         // Constants
         private const string RES_KEY_GEO_CLASS = "Geometry";
         private const string RES_KEY_GEO_NAME = "Main";
+        private const string RES_KEY_MAT_CLASS = "Material";
+        private const string RES_KEY_MAT_NAME = "Main";
 
         // Static regular expressions for parsing
         private static readonly Encoding ENCODING = Encoding.GetEncoding("us-ascii");
@@ -430,17 +432,20 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // Generate result container
                 var result = new ImportedModelContainer(importOptions);
-                var geoResourceKey = result.GetResourceKey(
-                    RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resGeometryKey = result.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
-                    geoResourceKey,
+                    resGeometryKey,
                     () => new GeometryResource(newGeometry)));
-                var geoObject = new GenericObject(geoResourceKey);
-                result.Objects.Add(geoObject);
+                result.ImportedResources.Add(new ImportedResourceInfo(
+                    resMaterialKey,
+                    () => new SimpleColoredMaterialResource()));
+                var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
+                result.Objects.Add(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
                 var rootObject = result.CreateAndAddRootObject();
-                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, geoObject));
+                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, loadedMesh));
 
                 return result;
             }
@@ -485,17 +490,20 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // Generate result container
                 var result = new ImportedModelContainer(importOptions);
-                var geoResourceKey = result.GetResourceKey(
-                    RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resGeometryKey = result.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
-                    geoResourceKey,
+                    resGeometryKey,
                     () => new GeometryResource(newGeometry)));
-                var geoObject = new GenericObject(geoResourceKey);
-                result.Objects.Add(geoObject);
+                result.ImportedResources.Add(new ImportedResourceInfo(
+                    resMaterialKey,
+                    () => new SimpleColoredMaterialResource()));
+                var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
+                result.Objects.Add(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
                 var rootObject = result.CreateAndAddRootObject();
-                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, geoObject));
+                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, loadedMesh));
 
                 return result;
             }
