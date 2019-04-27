@@ -159,6 +159,7 @@
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\ShadedObject.png" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\TwoSidedObject.png" />
     <EmbeddedResource Include="Resources\GeometryLoadingAndRendering\SingleSidedObject.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_DiffuseColorFromMaterial.png" />
     <Content Include="Resources\Models\Fox.LicenseInfo.txt" />
     <EmbeddedResource Include="Resources\Drawing3D\Skybox.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Ortho.png" />

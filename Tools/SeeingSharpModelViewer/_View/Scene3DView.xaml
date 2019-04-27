@@ -39,7 +39,7 @@
             <!--<sSharp:FreeMovingCameraComponent />-->
             <i:Interaction.Behaviors>
                 <local:Auto3DViewPointBehavior />
-                <local:ObjectSelectionBehavior />
+                <!--<local:ObjectSelectionBehavior />-->
             </i:Interaction.Behaviors>
         </sSharp:SeeingSharpRendererElement>
     </DockPanel>

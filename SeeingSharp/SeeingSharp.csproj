@@ -7,6 +7,15 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <Authors>Roland König</Authors>
+    <Company>Roland König</Company>
+    <PackageId>SeeingSharp2</PackageId>
+    <Description>Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</Description>
+    <Copyright>©2019 by Roland König</Copyright>
+    <PackageProjectUrl>https://github.com/RolandKoenig/SeeingSharp2</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/RolandKoenig/SeeingSharp2</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

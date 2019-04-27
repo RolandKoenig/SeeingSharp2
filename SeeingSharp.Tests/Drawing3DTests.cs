@@ -167,6 +167,56 @@ namespace SeeingSharp.Tests
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]
+        public async Task Render_SimpleObject_DiffuseColorFromMaterial()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+
+                // Get and configure the camera
+                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                camera.Position = new Vector3(0f, 5f, -7f);
+                camera.Target = new Vector3(0f, 0f, 0f);
+                camera.UpdateCamera();
+
+                // Define scene
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
+                {
+                    var resGeometry = manipulator.AddResource(
+                        () => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddResource(
+                        () => new SimpleColoredMaterialResource()
+                        {
+                            MaterialDiffuseColor = Color4Ex.BlueColor,
+                            UseVertexColors = false
+                        });
+
+                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                });
+                await memRenderTarget.AwaitRenderAsync();
+
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+
+                // Calculate and check difference
+                var isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_DiffuseColorFromMaterial.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
+
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_StackedGeometry()
         {
             await TestUtilities.InitializeWithGrahicsAsync();

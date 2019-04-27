@@ -31,7 +31,7 @@ PSInputStandard main(VSInputStandard input)
     vertexColor = ApplyColorGradient(vertexColor, output.tex.xy);
 
 	// Apply output color
-	output.col = vertexColor;
+	output.col = (MaterialDiffuseColor * DiffuseColorFactor) + (vertexColor * (1.0 - DiffuseColorFactor));
 
     // Calculate position vector in world space
     output.pos3D = mul(float4(input.pos.xyz, 1.0), World).xyz;

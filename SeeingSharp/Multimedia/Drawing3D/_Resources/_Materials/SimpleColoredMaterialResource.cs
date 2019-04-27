@@ -41,6 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private float m_addToAlpha;
         private bool m_adjustTextureCoordinates;
         private bool m_cbPerMaterialDataChanged;
+        private bool m_useVertexColors;
 
         // Resource members
         private TextureResource m_textureResource;
@@ -60,6 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_adjustTextureCoordinates = false;
             m_addToAlpha = 0f;
             m_materialDiffuseColor = Color4.White;
+            m_useVertexColors = true;
         }
 
         /// <summary>
@@ -135,7 +137,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         Texture0Factor = m_textureResource != null ? 1f : 0f,
                         AdjustTextureCoordinates = m_adjustTextureCoordinates ? 1f : 0f,
                         AddToAlpha = m_addToAlpha,
-                        MaterialDiffuseColor = m_materialDiffuseColor
+                        MaterialDiffuseColor = m_materialDiffuseColor,
+                        DiffuseColorFactor = m_useVertexColors ? 0f : 1f,
                     });
                 m_cbPerMaterialDataChanged = false;
             }
@@ -250,6 +253,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 if(m_materialDiffuseColor != value)
                 {
                     m_materialDiffuseColor = value;
+                    m_cbPerMaterialDataChanged = true;
+                }
+            }
+        }
+
+        public bool UseVertexColors
+        {
+            get => m_useVertexColors;
+            set
+            {
+                if (m_useVertexColors != value)
+                {
+                    m_useVertexColors = value;
                     m_cbPerMaterialDataChanged = true;
                 }
             }

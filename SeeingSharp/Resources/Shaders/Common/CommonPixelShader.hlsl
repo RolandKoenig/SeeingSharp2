@@ -21,7 +21,6 @@ PSOutput main(PSInputStandard input)
     
     // Calculate final pixel color using texture color
 	pixelColor = textureColor * textureColor.a + pixelColor * (1- textureColor.a);
-	pixelColor = pixelColor * MaterialDiffuseColor;
 
     // Clip current pixel based on alpha value
 	float clipFactorMultiplyer = clamp(MaxClipDistance - distanceToCamera, 0.0, 1.0);

@@ -124,6 +124,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public float FadeIntensity;
 
-        public Vector2 Dummy;
+        public float DiffuseColorFactor;
+
+        public float Dummy;
     }
 }

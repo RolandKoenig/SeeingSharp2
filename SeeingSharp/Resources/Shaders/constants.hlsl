@@ -55,7 +55,8 @@ cbuffer cbPerMaterial : register ( b3 )
 	float     AdjustTextureCoordinatesFactor;
 	float     AddToAlpha;    // Needed for video rendering (Frames from the MF SourceReader have alpha always to zero)
 	float     FadeIntensity;
-	float2    Dummy2;
+	float     DiffuseColorFactor;
+	float     Dummy2;
 }
 
 // Buffer with per line data
