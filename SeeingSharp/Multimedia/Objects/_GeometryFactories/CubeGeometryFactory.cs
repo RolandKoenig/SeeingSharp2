@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var matProperties = new MaterialProperties
+            var matProperties = new CommonMaterialProperties
             {
                 Key = this.Material
             };

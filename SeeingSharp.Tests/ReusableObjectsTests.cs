@@ -40,7 +40,6 @@ namespace SeeingSharp.Tests
 
             Assert.IsTrue(cache.Count == 0);
             StringBuilder rememberedStringBuilder = null;
-
             using (cache.UseStringBuilder(out var stringBuilderFirst, 256))
             {
                 stringBuilderFirst.AppendLine("Test01");
@@ -49,13 +48,14 @@ namespace SeeingSharp.Tests
             }
 
             Assert.IsTrue(cache.Count == 1);
-
             using(cache.UseStringBuilder(out var stringBuilderSecond))
             {
                 Assert.IsTrue(stringBuilderSecond.Length == 0);
                 Assert.IsTrue(stringBuilderSecond.Capacity == 256);
                 Assert.IsTrue(stringBuilderSecond == rememberedStringBuilder);
             }
+
+            Assert.IsTrue(cache.Count == 1);
         }
 
         [TestMethod]
@@ -67,7 +67,6 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(cache.Count == 0);
             MemoryStream rememberedMemoryStreamFirst = null;
             using (cache.UseMemoryStream(out var memoryStreamFirst, 256))
-
             using (var streamWriter = new StreamWriter(memoryStreamFirst))
             {
                 streamWriter.WriteLine("Test01");
@@ -77,7 +76,6 @@ namespace SeeingSharp.Tests
 
             Assert.IsTrue(cache.Count == 1);
             MemoryStream rememberedMemoryStreamSecond = null;
-
             using (cache.UseMemoryStream(out var memoryStreamSecond))
             {
                 Assert.IsTrue(memoryStreamSecond.Length == 0);
@@ -87,6 +85,7 @@ namespace SeeingSharp.Tests
             }
 
             Assert.IsTrue(rememberedMemoryStreamFirst.GetBuffer() == rememberedMemoryStreamSecond.GetBuffer());
+            Assert.IsTrue(cache.Count == 1);
         }
     }
 }

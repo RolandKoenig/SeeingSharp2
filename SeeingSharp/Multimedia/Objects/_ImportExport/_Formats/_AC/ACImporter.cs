@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System.Linq;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
@@ -42,17 +43,37 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }
 
+            // Create result container
             var result = new ImportedModelContainer(acImportOptions);
 
-            // Get needed resource key
+            // Load Geometry
+            var importedGeometry = ACFileLoader.ImportGeometry(sourceFile);
             var resGeometry = GraphicsCore.GetNextGenericResourceKey();
-
-            // Load and fill result object
-            var objType = ACFileLoader.ImportGeometry(sourceFile);
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
-                () => new GeometryResource(objType)));
-            result.Objects.Add(new GenericObject(resGeometry));
+                () => new GeometryResource(importedGeometry)));
+
+            // Create all materials by material properties on the geometry
+            NamedOrGenericKey[] resMaterials = new NamedOrGenericKey[importedGeometry.CountSurfaces];
+            for(int loop=0; loop<importedGeometry.CountSurfaces; loop++)
+            {
+                var actSurface = importedGeometry.Surfaces[loop];
+                var actMaterialProperties = actSurface.CommonMaterialProperties;
+
+                var actMaterialKey = result.GetResourceKey("Material", actMaterialProperties.Name);
+                result.ImportedResources.Add(
+                    new ImportedResourceInfo(
+                        actMaterialKey,
+                        () => new SimpleColoredMaterialResource()
+                        {
+                            MaterialDiffuseColor = actMaterialProperties.DiffuseColor,
+                            UseVertexColors = false
+                        }));
+                resMaterials[loop] = actMaterialKey;
+            }
+
+            // Create the mesh
+            result.Objects.Add(new Mesh(resGeometry, resMaterials));
 
             return result;
         }

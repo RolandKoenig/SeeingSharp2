@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var newSurface = new GeometrySurface(this, triangleCapacity)
             {
-                MaterialProperties = {Name = name}
+                CommonMaterialProperties = {Name = name}
             };
 
             m_surfaces.Add(newSurface);
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             foreach (var actSurface in m_surfaces)
             {
-                if (actSurface.MaterialProperties.Name == name)
+                if (actSurface.CommonMaterialProperties.Name == name)
                 {
                     return actSurface;
                 }
@@ -106,28 +106,28 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Tries to get an existing surface using given MaterialProperties.
+        /// Tries to get an existing surface using given CommonMaterialProperties.
         /// If none exists, then a new surface is created.
         /// </summary>
         /// <param name="matProperties">The material properties.</param>
         /// <param name="triangleCapacity">The triangle capacity.</param>
-        public GeometrySurface CreateOrGetExistingSurface(MaterialProperties matProperties, int triangleCapacity = 512)
+        public GeometrySurface CreateOrGetExistingSurface(CommonMaterialProperties matProperties, int triangleCapacity = 512)
         {
             foreach(var actSurface in m_surfaces)
             {
-                if (actSurface.MaterialProperties == matProperties)
+                if (actSurface.CommonMaterialProperties == matProperties)
                 {
                     return actSurface;
                 }
             }
 
             var result = this.CreateSurface(triangleCapacity);
-            result.MaterialProperties = matProperties;
+            result.CommonMaterialProperties = matProperties;
             return result;
         }
 
         /// <summary>
-        /// Tries to get an existing surface using given MaterialProperties.
+        /// Tries to get an existing surface using given CommonMaterialProperties.
         /// If none exists, then a new surface is created.
         /// </summary>
         /// <param name="name">The internal name of the material.</param>
@@ -136,14 +136,14 @@ namespace SeeingSharp.Multimedia.Objects
         {
             foreach (var actSurface in m_surfaces)
             {
-                if (actSurface.MaterialProperties.Name == name)
+                if (actSurface.CommonMaterialProperties.Name == name)
                 {
                     return actSurface;
                 }
             }
 
             var result = this.CreateSurface(triangleCapacity);
-            result.MaterialProperties.Name = name;
+            result.CommonMaterialProperties.Name = name;
             return result;
         }
 

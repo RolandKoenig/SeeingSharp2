@@ -125,7 +125,7 @@ namespace SeeingSharp.Multimedia.Objects
                 actSurface.TextureKey = textureKey;
 
                 // Handle material itself
-                var actMaterialKey = m_targetContainer.GetResourceKey("Material", actSurface.MaterialProperties.Name);
+                var actMaterialKey = m_targetContainer.GetResourceKey("Material", actSurface.CommonMaterialProperties.Name);
                 actSurface.Material = actMaterialKey;
                 m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                     actMaterialKey,
@@ -390,7 +390,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Ka(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.AmbientColor = this.ParseColor("Ka", arguments);
+            m_currentMaterialDefinition.CommonMaterialProperties.AmbientColor = this.ParseColor("Ka", arguments);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Kd(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.DiffuseColor = this.ParseColor("Kd", arguments);
+            m_currentMaterialDefinition.CommonMaterialProperties.DiffuseColor = this.ParseColor("Kd", arguments);
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         private void HandleKeyword_Mtl_Ks(string arguments)
         {
-            m_currentMaterialDefinition.MaterialProperties.SpecularColor = this.ParseColor("Ks", arguments);
+            m_currentMaterialDefinition.CommonMaterialProperties.SpecularColor = this.ParseColor("Ks", arguments);
         }
 
         /// <summary>

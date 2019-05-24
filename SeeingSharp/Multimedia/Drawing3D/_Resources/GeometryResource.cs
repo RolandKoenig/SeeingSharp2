@@ -329,7 +329,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // Sort all surfaces by material
                 var surfaceList = new List<GeometrySurface>(actGeometry.Surfaces);
-                surfaceList.Sort((left, right) => left.MaterialProperties.GetHashCode().CompareTo(right.MaterialProperties.GetHashCode()));
+                surfaceList.Sort((left, right) => left.CommonMaterialProperties.GetHashCode().CompareTo(right.CommonMaterialProperties.GetHashCode()));
 
                 var surfaceCount = surfaceList.Count;
                 for (var loopSurface = 0; loopSurface < surfaceCount; loopSurface++)

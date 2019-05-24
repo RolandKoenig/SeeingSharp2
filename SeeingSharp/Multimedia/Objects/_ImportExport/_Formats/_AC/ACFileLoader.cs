@@ -35,18 +35,18 @@ namespace SeeingSharp.Multimedia.Objects
         /// Imports an object-type form given raw model file.
         /// </summary>
         /// <param name="rawBytes">Raw model file.</param>
-        public static GeometryFactory ImportObjectType(byte[] rawBytes)
+        public static GeometryFactory ImportGeometryFactory(byte[] rawBytes)
         {
             using (var inStream = new MemoryStream(rawBytes))
             {
-                return ImportObjectType(inStream);
+                return ImportGeometryFactory(inStream);
             }
         }
 
         /// <summary>
         /// Loads an object from the given uri
         /// </summary>
-        public static GeometryFactory ImportObjectType(Stream inStream)
+        public static GeometryFactory ImportGeometryFactory(Stream inStream)
         {
             var geometry = ImportGeometry(inStream);
             return new GenericGeometryFactory(geometry);
@@ -56,12 +56,24 @@ namespace SeeingSharp.Multimedia.Objects
         /// Imports a ac file from the given stream.
         /// </summary>
         /// <param name="resourceLink">The link to the ac file.</param>
-        public static GeometryFactory ImportGeometry(ResourceLink resourceLink)
+        public static GeometryFactory ImportGeometryFactory(ResourceLink resourceLink)
         {
             using (var inStream = resourceLink.OpenInputStream())
             {
                 var geometry = ImportGeometry(inStream, resourceLink);
                 return new GenericGeometryFactory(geometry);
+            }
+        }
+
+        /// <summary>
+        /// Imports a ac file from the given resource.
+        /// </summary>
+        /// <param name="resourceLink">The link to the ac file.</param>
+        public static Geometry ImportGeometry(ResourceLink resourceLink)
+        {
+            using (var inStream = resourceLink.OpenInputStream())
+            {
+                return ImportGeometry(inStream, resourceLink);
             }
         }
 
@@ -143,17 +155,17 @@ namespace SeeingSharp.Multimedia.Objects
                 {
                     var actMaterial = acMaterials[actMaterialIndex];
 
-                    var actGeometrySurface = geometry.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties());
+                    var actGeometrySurface = geometry.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties(actMaterialIndex));
                     var isNewSurface = actGeometrySurface.CountTriangles == 0;
 
                     // Create and configure vertex geometry
                     actGeometrySurface.Material = NamedOrGenericKey.Empty;
                     actGeometrySurface.TextureKey = !string.IsNullOrEmpty(objInfo.Texture) ? new NamedOrGenericKey(objInfo.Texture) : NamedOrGenericKey.Empty;
-                    actGeometrySurface.MaterialProperties.DiffuseColor = actMaterial.Diffuse;
-                    actGeometrySurface.MaterialProperties.AmbientColor = actMaterial.Ambient;
-                    actGeometrySurface.MaterialProperties.EmissiveColor = actMaterial.Emissive;
-                    actGeometrySurface.MaterialProperties.Shininess = actMaterial.Shininess;
-                    actGeometrySurface.MaterialProperties.SpecularColor = actMaterial.Specular;
+                    actGeometrySurface.CommonMaterialProperties.DiffuseColor = actMaterial.Diffuse;
+                    actGeometrySurface.CommonMaterialProperties.AmbientColor = actMaterial.Ambient;
+                    actGeometrySurface.CommonMaterialProperties.EmissiveColor = actMaterial.Emissive;
+                    actGeometrySurface.CommonMaterialProperties.Shininess = actMaterial.Shininess;
+                    actGeometrySurface.CommonMaterialProperties.SpecularColor = actMaterial.Specular;
 
                     // Initialize local index table (needed for vertex reuse)
                     var oneSideVertexCount = objInfo.Vertices.Count;
@@ -806,15 +818,16 @@ namespace SeeingSharp.Multimedia.Objects
         //*********************************************************************
         private class ACMaterialInfo
         {
-            public MaterialProperties CreateMaterialProperties()
+            public CommonMaterialProperties CreateMaterialProperties(int materialIndex)
             {
-                var result = new MaterialProperties
+                var result = new CommonMaterialProperties
                 {
                     DiffuseColor = Diffuse,
                     AmbientColor = Ambient,
                     EmissiveColor = Emissive,
                     SpecularColor = Specular,
-                    Shininess = Shininess
+                    Shininess = Shininess,
+                    Name = $"{materialIndex}-{this.Name}"
                 };
 
                 return result;

@@ -27,14 +27,14 @@ using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
-    public class MaterialProperties : IEquatable<MaterialProperties>
+    public class CommonMaterialProperties : IEquatable<CommonMaterialProperties>
     {
         /// <summary>
         /// Gets an empty material.
         /// </summary>
-        public static readonly MaterialProperties Empty = new MaterialProperties();
+        public static readonly CommonMaterialProperties Empty = new CommonMaterialProperties();
 
-        public MaterialProperties()
+        public CommonMaterialProperties()
         {
             this.DiffuseColor = Color4.White;
             this.Name = string.Empty;
@@ -58,14 +58,14 @@ namespace SeeingSharp.Multimedia.Objects
             return resultBuilder.ToString();
         }
 
-        public MaterialProperties Clone()
+        public CommonMaterialProperties Clone()
         {
-            return this.MemberwiseClone() as MaterialProperties;
+            return this.MemberwiseClone() as CommonMaterialProperties;
         }
 
         public override bool Equals(object obj)
         {
-            var other = obj as MaterialProperties;
+            var other = obj as CommonMaterialProperties;
 
             if (other == null)
             {
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Objects
             return this.Key.GetHashCode() ^ this.TextureKey.GetHashCode() ^ this.DiffuseColor.GetHashCode() ^ this.AmbientColor.GetHashCode() ^ this.EmissiveColor.GetHashCode() ^ this.SpecularColor.GetHashCode() ^ this.Shininess.GetHashCode();
         }
 
-        public static bool operator ==(MaterialProperties left, MaterialProperties right)
+        public static bool operator ==(CommonMaterialProperties left, CommonMaterialProperties right)
         {
             if(ReferenceEquals(left, right)) { return true; }
             if(ReferenceEquals(left, null)) { return false; }
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Objects
             return left.Equals(right);
         }
 
-        public static bool operator !=(MaterialProperties left, MaterialProperties right)
+        public static bool operator !=(CommonMaterialProperties left, CommonMaterialProperties right)
         {
             if (ReferenceEquals(left, right)) { return false; }
             if (ReferenceEquals(left, null)) { return true; }
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        public bool Equals(MaterialProperties other)
+        public bool Equals(CommonMaterialProperties other)
         {
             if(other == null) { return false; }
 

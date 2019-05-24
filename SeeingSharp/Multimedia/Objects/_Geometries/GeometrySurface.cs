@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.Indices = new IndexCollection(m_corners);
             this.Corners = new CornerCollection(m_corners);
             this.Triangles = new TriangleCollection(m_corners);
-            this.MaterialProperties = new MaterialProperties();
+            this.CommonMaterialProperties = new CommonMaterialProperties();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Copy metadata
-            result.MaterialProperties = this.MaterialProperties.Clone();
+            result.CommonMaterialProperties = this.CommonMaterialProperties.Clone();
 
             return result;
         }
@@ -701,8 +701,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey Material
         {
-            get => this.MaterialProperties.Key;
-            set => this.MaterialProperties.Key = value;
+            get => this.CommonMaterialProperties.Key;
+            set => this.CommonMaterialProperties.Key = value;
         }
 
         /// <summary>
@@ -710,8 +710,8 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Color4 DiffuseColor
         {
-            get => this.MaterialProperties.DiffuseColor;
-            set => this.MaterialProperties.DiffuseColor = value;
+            get => this.CommonMaterialProperties.DiffuseColor;
+            set => this.CommonMaterialProperties.DiffuseColor = value;
         }
 
         /// <summary>
@@ -719,13 +719,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public string TextureName
         {
-            get => this.MaterialProperties.TextureKey.NameKey;
+            get => this.CommonMaterialProperties.TextureKey.NameKey;
             set
             {
                 if (string.IsNullOrEmpty(value)) {
-                    this.MaterialProperties.TextureKey = NamedOrGenericKey.Empty; }
+                    this.CommonMaterialProperties.TextureKey = NamedOrGenericKey.Empty; }
                 else {
-                    this.MaterialProperties.TextureKey = new NamedOrGenericKey(value); }
+                    this.CommonMaterialProperties.TextureKey = new NamedOrGenericKey(value); }
             }
         }
 
@@ -734,14 +734,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public NamedOrGenericKey TextureKey
         {
-            get => this.MaterialProperties.TextureKey;
-            set => this.MaterialProperties.TextureKey = value;
+            get => this.CommonMaterialProperties.TextureKey;
+            set => this.CommonMaterialProperties.TextureKey = value;
         }
 
         /// <summary>
         /// Gets or sets the material properties object.
         /// </summary>
-        public MaterialProperties MaterialProperties { get; internal set; }
+        public CommonMaterialProperties CommonMaterialProperties { get; internal set; }
 
         /// <summary>
         /// Retrieves a collection of triangles

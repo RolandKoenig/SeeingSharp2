@@ -350,7 +350,7 @@ namespace SeeingSharp.Multimedia.Objects
             var actTextureIndex = -1;
             var actTempVertex = Vertex.Empty;
             var actFaceReferences = new int[3];
-            var localMaterialInfos = new Dictionary<int, MaterialProperties>();
+            var localMaterialInfos = new Dictionary<int, CommonMaterialProperties>();
 
             while (inStreamXml.Read())
             {
@@ -451,7 +451,7 @@ namespace SeeingSharp.Multimedia.Objects
                         }
 
                         // Get the correct material
-                        var referencedMatObject = MaterialProperties.Empty;
+                        var referencedMatObject = CommonMaterialProperties.Empty;
 
                         if(referencedMat > -1)
                         {
@@ -485,10 +485,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="inStreamXml">The xml reader object.</param>
         /// <param name="container">The container where to import to.</param>
         /// <param name="xglImportOptions">Current import options.</param>
-        private Tuple<int, MaterialProperties> ImportMaterial(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
+        private Tuple<int, CommonMaterialProperties> ImportMaterial(XmlReader inStreamXml, ImportedModelContainer container, XglImportOptions xglImportOptions)
         {
             var resultID = int.Parse(inStreamXml.GetAttribute("ID"));
-            var result = new MaterialProperties();
+            var result = new CommonMaterialProperties();
 
             while (inStreamXml.Read())
             {

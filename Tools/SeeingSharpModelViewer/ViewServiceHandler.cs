@@ -20,7 +20,7 @@ namespace SeeingSharpModelViewer
             m_viewServices = new Dictionary<Type, Type>();
             m_viewServices[typeof(ICommonDialogsViewService)] = typeof(CommonDialogsViewService);
 
-            Messenger.Default.Register<QueryForViewServiceMessage>(this, OnMessage_QueryForViewServiceMessage);
+            Messenger.Default.Register<QueryForViewServiceMessage>(this, OnMessage_QueryForViewServiceMessage, keepTargetAlive: true);
         }
 
         private void OnMessage_QueryForViewServiceMessage(QueryForViewServiceMessage message)
