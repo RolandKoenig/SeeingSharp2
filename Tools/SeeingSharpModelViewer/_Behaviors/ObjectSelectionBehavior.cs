@@ -2,7 +2,6 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,12 +35,12 @@ namespace SeeingSharpModelViewer
                 m_scene = this.AssociatedObject.Scene;
                 m_renderLoop = this.AssociatedObject.RenderLoop;
 
-                this.AssociatedObject.MouseMove += OnAssociatedObject_MouseMove;
-                this.AssociatedObject.MouseLeave += OnAssociatedObject_MouseLeave;
-                this.AssociatedObject.MouseEnter += OnAssociatedObject_MouseEnter;
+                this.AssociatedObject.MouseMove += this.OnAssociatedObject_MouseMove;
+                this.AssociatedObject.MouseLeave += this.OnAssociatedObject_MouseLeave;
+                this.AssociatedObject.MouseEnter += this.OnAssociatedObject_MouseEnter;
 
                 m_refreshTimer = new DispatcherTimer(DispatcherPriority.Input);
-                m_refreshTimer.Tick += OnRefeshTimer_Tick;
+                m_refreshTimer.Tick += this.OnRefeshTimer_Tick;
                 m_refreshTimer.Interval = TimeSpan.FromMilliseconds(50.0);
                 m_refreshTimer.Start();
             }
@@ -53,12 +52,12 @@ namespace SeeingSharpModelViewer
 
             if (m_refreshTimer != null)
             {
-                this.AssociatedObject.MouseMove -= OnAssociatedObject_MouseMove;
-                this.AssociatedObject.MouseLeave -= OnAssociatedObject_MouseLeave;
-                this.AssociatedObject.MouseEnter -= OnAssociatedObject_MouseEnter;
+                this.AssociatedObject.MouseMove -= this.OnAssociatedObject_MouseMove;
+                this.AssociatedObject.MouseLeave -= this.OnAssociatedObject_MouseLeave;
+                this.AssociatedObject.MouseEnter -= this.OnAssociatedObject_MouseEnter;
 
                 m_refreshTimer.Stop();
-                m_refreshTimer.Tick -= OnRefeshTimer_Tick;
+                m_refreshTimer.Tick -= this.OnRefeshTimer_Tick;
                 m_refreshTimer = null;
             }
         }

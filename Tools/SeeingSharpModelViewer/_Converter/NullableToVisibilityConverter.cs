@@ -17,7 +17,7 @@ namespace SeeingSharpModelViewer
             if (targetType != typeof(Visibility)) { throw new InvalidOperationException("Invalid target Type!"); }
 
             if (value != null) { return Visibility.Visible; }
-            else { return ResultOnNull; }
+            else { return this.ResultOnNull; }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

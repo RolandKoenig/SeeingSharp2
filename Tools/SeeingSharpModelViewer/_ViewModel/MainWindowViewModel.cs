@@ -31,9 +31,9 @@ namespace SeeingSharpModelViewer
             m_loadedFileVM = new LoadedFileViewModel(m_scene);
             m_miscObjectsVM = new MiscGraphicsObjectsViewModel(m_scene);
 
-            this.CommandOpen = new RelayCommand(OnCommandOpen_Execute);
-            this.CommandClose = new RelayCommand(OnCommandClose_Execute, OnCommandClose_CanExecute);
-            this.CommandReload = new RelayCommand(OnCommandReload_Execute, OnCommandReload_CanExecute);
+            this.CommandOpen = new RelayCommand(this.OnCommandOpen_Execute);
+            this.CommandClose = new RelayCommand(this.OnCommandClose_Execute, this.OnCommandClose_CanExecute);
+            this.CommandReload = new RelayCommand(this.OnCommandReload_Execute, this.OnCommandReload_CanExecute);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SeeingSharpModelViewer
         private async void OnCommandOpen_Execute()
         {
             var msgQueryViewService = new QueryForViewServiceMessage(typeof(ICommonDialogsViewService));
-            MessengerInstance.Send(msgQueryViewService);
+            this.MessengerInstance.Send(msgQueryViewService);
 
             var dialogService = (ICommonDialogsViewService)msgQueryViewService.ViewService;
             dialogService.EnsureNotNull(nameof(dialogService));

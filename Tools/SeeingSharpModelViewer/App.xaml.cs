@@ -23,7 +23,7 @@ namespace SeeingSharpModelViewer
             await ModelViewerBootstrapper.ExecuteAsync();
 
             // Load the main window
-            MainWindow mainWindow = new SeeingSharpModelViewer.MainWindow();
+            MainWindow mainWindow = new MainWindow();
             ViewServiceHandler viewServiceHandler = new ViewServiceHandler();
             viewServiceHandler.Initialize(mainWindow);
             mainWindow.Show();

@@ -15,16 +15,16 @@ namespace SeeingSharpModelViewer
         {
             base.OnAttached();
 
-            Messenger.Default.Register<NewModelLoadedMessage>(this, OnMessage_NewModelLoadedMessage);
+            Messenger.Default.Register<NewModelLoadedMessage>(this, this.OnMessage_NewModelLoadedMessage);
 
-            this.AssociatedObject.Loaded += OnAssociatedObject_Loaded;
+            this.AssociatedObject.Loaded += this.OnAssociatedObject_Loaded;
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            this.AssociatedObject.Loaded -= OnAssociatedObject_Loaded;
+            this.AssociatedObject.Loaded -= this.OnAssociatedObject_Loaded;
             SeeingSharpUtil.SafeDispose(ref m_subscription);
         }
 

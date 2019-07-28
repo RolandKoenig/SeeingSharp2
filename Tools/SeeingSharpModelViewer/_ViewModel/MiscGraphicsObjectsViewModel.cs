@@ -128,7 +128,7 @@ namespace SeeingSharpModelViewer
                 });
             }
 
-            await InitializeAsync();
+            await this.InitializeAsync();
         }
 
         public int TilesPerSide
@@ -142,10 +142,10 @@ namespace SeeingSharpModelViewer
                     if (m_tilesPerSide < Constants.COUNT_TILES_MIN) { m_tilesPerSide = Constants.COUNT_TILES_MIN; }
                     if (m_tilesPerSide > Constants.COUNT_TILES_MAX) { m_tilesPerSide = Constants.COUNT_TILES_MAX; }
 
-                    ReloadBackgroundAsync()
+                    this.ReloadBackgroundAsync()
                         .FireAndForget();
 
-                    RaisePropertyChanged(nameof(TilesPerSide));
+                    this.RaisePropertyChanged(nameof(this.TilesPerSide));
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace SeeingSharpModelViewer
                 if (m_bgLayer.IsRenderingEnabled != value)
                 {
                     m_bgLayer.IsRenderingEnabled = value;
-                    RaisePropertyChanged(nameof(BackgroundVisible));
+                    this.RaisePropertyChanged(nameof(this.BackgroundVisible));
                 }
             }
         }

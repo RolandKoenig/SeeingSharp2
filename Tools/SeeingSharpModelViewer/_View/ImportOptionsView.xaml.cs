@@ -9,7 +9,7 @@ namespace SeeingSharpModelViewer
     {
         public ImportOptionsView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

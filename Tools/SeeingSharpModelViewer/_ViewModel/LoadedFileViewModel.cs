@@ -38,9 +38,9 @@ namespace SeeingSharpModelViewer
             {
                 m_currentFile = null;
                 m_currentImportOptions = null;
-                RaisePropertyChanged(nameof(CurrentFile));
-                RaisePropertyChanged(nameof(CurrentFileForStatusBar));
-                RaisePropertyChanged(nameof(CurrentImportOptions));
+                this.RaisePropertyChanged(nameof(this.CurrentFile));
+                this.RaisePropertyChanged(nameof(this.CurrentFileForStatusBar));
+                this.RaisePropertyChanged(nameof(this.CurrentImportOptions));
             }
         }
 
@@ -57,9 +57,9 @@ namespace SeeingSharpModelViewer
             {
                 m_currentFile = resourceLink;
                 m_currentImportOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(m_currentFile);
-                base.RaisePropertyChanged(nameof(CurrentFile));
-                base.RaisePropertyChanged(nameof(CurrentFileForStatusBar));
-                base.RaisePropertyChanged(nameof(CurrentImportOptions));
+                base.RaisePropertyChanged(nameof(this.CurrentFile));
+                base.RaisePropertyChanged(nameof(this.CurrentFileForStatusBar));
+                base.RaisePropertyChanged(nameof(this.CurrentImportOptions));
 
                 await m_scene.ImportAsync(m_currentFile, m_currentImportOptions);
             }
@@ -68,7 +68,7 @@ namespace SeeingSharpModelViewer
                 this.IsLoading = false;
             }
 
-            MessengerInstance.Send(new NewModelLoadedMessage());
+            this.MessengerInstance.Send(new NewModelLoadedMessage());
         }
 
         public async Task ReloadCurrentFileAsync()
@@ -81,7 +81,7 @@ namespace SeeingSharpModelViewer
                 m_currentFile.EnsureNotNull(nameof(m_currentFile));
                 m_currentImportOptions.EnsureNotNull(nameof(m_currentImportOptions));
 
-                await CloseAsync(
+                await this.CloseAsync(
                     clearCurrentFileInfo: false);
 
                 await m_scene.ImportAsync(m_currentFile, m_currentImportOptions);
@@ -91,7 +91,7 @@ namespace SeeingSharpModelViewer
                 this.IsLoading = false;
             }
 
-            MessengerInstance.Send(new NewModelLoadedMessage());
+            this.MessengerInstance.Send(new NewModelLoadedMessage());
         }
 
         public ResourceLink CurrentFile
@@ -126,7 +126,7 @@ namespace SeeingSharpModelViewer
                 if (m_isLoading != value)
                 {
                     m_isLoading = value;
-                    RaisePropertyChanged(nameof(IsLoading));
+                    this.RaisePropertyChanged(nameof(this.IsLoading));
                 }
             }
         }

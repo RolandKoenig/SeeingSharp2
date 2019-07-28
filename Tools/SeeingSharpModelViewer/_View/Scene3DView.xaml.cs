@@ -11,14 +11,14 @@ namespace SeeingSharpModelViewer
     {
         public Scene3DView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            this.Loaded += OnLoaded;
+            this.Loaded += this.OnLoaded;
         }
 
         private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.CtrlRenderer.RenderLoop.SceneComponents.Add(
+            CtrlRenderer.RenderLoop.SceneComponents.Add(
                 new FreeMovingCameraComponent());
         }
     }

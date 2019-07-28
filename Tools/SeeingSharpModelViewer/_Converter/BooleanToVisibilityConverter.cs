@@ -18,7 +18,7 @@ namespace SeeingSharpModelViewer
             if (value.GetType() != typeof(bool)) { throw new InvalidOperationException("Invalid source Type!"); }
 
             if ((bool)value) { return Visibility.Visible; }
-            else { return ResultOnFalse; }
+            else { return this.ResultOnFalse; }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -33,9 +33,8 @@
             </ToolBar>
         </ToolBarTray>
 
-        <sSharp:SeeingSharpRendererElement
-            x:Name="CtrlRenderer"
-            Scene="{Binding Path=Scene}" Camera="{Binding Path=Camera}">
+        <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer"
+                                           Scene="{Binding Path=Scene}" Camera="{Binding Path=Camera}">
             <!--<sSharp:FreeMovingCameraComponent />-->
             <i:Interaction.Behaviors>
                 <local:Auto3DViewPointBehavior />
