@@ -28,11 +28,11 @@ namespace SeeingSharpModelViewer
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            string uriPath = $"pack://application:,,,/SeeingSharpModelViewer;component/Assets/Icons/{this.Icon}_16x16.png";
+            var uriPath = $"pack://application:,,,/SeeingSharpModelViewer;component/Assets/Icons/{this.Icon}_16x16.png";
 
             // Load the ImageSource (me may have cached it before
             BitmapImage result = null;
-            Action actionCreateBitmapSource = () =>
+            void ActionCreateBitmapSource()
             {
                 if (!s_images.TryGetValue(uriPath, out result))
                 {
@@ -40,21 +40,21 @@ namespace SeeingSharpModelViewer
                     result.Freeze();
                     s_images.Add(uriPath, result);
                 }
-            };
+            }
 
             // Create the result object
             switch (this.ResultType)
             {
                 case IconResultType.Image:
-                    actionCreateBitmapSource();
-                    Image imgControl = new Image();
+                    ActionCreateBitmapSource();
+                    var imgControl = new Image();
                     imgControl.Source = result;
                     imgControl.Width = 16.0;
                     imgControl.Height = 16.0;
                     return imgControl;
 
                 case IconResultType.BitmapImage:
-                    actionCreateBitmapSource();
+                    ActionCreateBitmapSource();
                     return result;
             }
 

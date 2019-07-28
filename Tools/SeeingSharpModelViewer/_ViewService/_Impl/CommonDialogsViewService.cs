@@ -16,7 +16,7 @@ namespace SeeingSharpModelViewer
         public ResourceLink PickFileByDialog(string fileFilter)
         {
             // Prepare the dialog
-            OpenFileDialog dlgOpenFile = new OpenFileDialog();
+            var dlgOpenFile = new OpenFileDialog();
             dlgOpenFile.Filter = fileFilter;
             dlgOpenFile.CheckFileExists = true;
             dlgOpenFile.CheckPathExists = true;

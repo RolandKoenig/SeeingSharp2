@@ -13,7 +13,7 @@ namespace SeeingSharpModelViewer
         public static async Task ExecuteAsync()
         {
             MainWindowViewModel modelVM = null;
-            using (MemoryRenderTarget dummyRenderTarget = new MemoryRenderTarget(128, 128))
+            using (var dummyRenderTarget = new MemoryRenderTarget(128, 128))
             {
                 modelVM = new MainWindowViewModel();
 

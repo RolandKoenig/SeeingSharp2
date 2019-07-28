@@ -26,6 +26,9 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
+        <TextBox DockPanel.Dock="Top"
+                 IsReadOnly="True"
+                 Text="{Binding Path=LoadedFile.CurrentFile, Mode=OneWay}"/>
 
         <prop:PropertyGrid SelectedObject="{Binding Path=LoadedFile.CurrentImportOptions}"
                            TabVisibility="Collapsed"

@@ -104,7 +104,7 @@ namespace SeeingSharpModelViewer
             get
             {
 
-                FileSystemResourceLink fileResource = this.CurrentFile as FileSystemResourceLink;
+                var fileResource = this.CurrentFile as FileSystemResourceLink;
                 if (fileResource == null) { return "-"; }
                 else
                 {

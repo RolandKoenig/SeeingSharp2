@@ -40,7 +40,7 @@ namespace SeeingSharpModelViewer
                 this.AssociatedObject.MouseEnter += this.OnAssociatedObject_MouseEnter;
 
                 m_refreshTimer = new DispatcherTimer(DispatcherPriority.Input);
-                m_refreshTimer.Tick += this.OnRefeshTimer_Tick;
+                m_refreshTimer.Tick += this.OnRefreshTimer_Tick;
                 m_refreshTimer.Interval = TimeSpan.FromMilliseconds(50.0);
                 m_refreshTimer.Start();
             }
@@ -57,12 +57,12 @@ namespace SeeingSharpModelViewer
                 this.AssociatedObject.MouseEnter -= this.OnAssociatedObject_MouseEnter;
 
                 m_refreshTimer.Stop();
-                m_refreshTimer.Tick -= this.OnRefeshTimer_Tick;
+                m_refreshTimer.Tick -= this.OnRefreshTimer_Tick;
                 m_refreshTimer = null;
             }
         }
 
-        private async void OnRefeshTimer_Tick(object sender, EventArgs e)
+        private async void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
             if (sender != m_refreshTimer) { return; }
             if (this.AssociatedObject == null) { return; }
@@ -75,10 +75,10 @@ namespace SeeingSharpModelViewer
                 if (m_mouseLocation == new Point()) { return; }
 
                 // Pick objects
-                List<SceneObject> pickedObjects = await m_renderLoop.PickObjectAsync(
+                var pickedObjects = await m_renderLoop.PickObjectAsync(
                     new SharpDX.Point((int)m_mouseLocation.X, (int)m_mouseLocation.Y),
                     new PickingOptions());
-                GenericObject topUnderCursor = pickedObjects
+                var topUnderCursor = pickedObjects
                     .Where((actPicked) => actPicked is GenericObject)
                     .FirstOrDefault() as GenericObject;
 
@@ -99,7 +99,7 @@ namespace SeeingSharpModelViewer
                         m_hoveredObject = newHovered;
                         if (m_hoveredObject != null)
                         {
-                            GenericObject newHovering = new GenericObject(m_hoveredObject.GeometryResourceKey);
+                            var newHovering = new GenericObject(m_hoveredObject.GeometryResourceKey);
                             newHovering.TransformationType = SpacialTransformationType.TakeFromOtherObject;
                             newHovering.TransformSourceObject = newHovered;
                             newHovering.Color = Color4Ex.BlueColor;

@@ -35,7 +35,7 @@ namespace SeeingSharpModelViewer
             await m_scene.ManipulateSceneAsync((manipulator) =>
             {
                 SceneLayer bgImageLayer = null;
-                bool isBgImageCreated = false;
+                var isBgImageCreated = false;
                 if (manipulator.ContainsLayer(Constants.LAYER_BACKGROUND_FLAT))
                 {
                     bgImageLayer = manipulator.GetLayer(Constants.LAYER_BACKGROUND_FLAT);
@@ -46,7 +46,7 @@ namespace SeeingSharpModelViewer
                     bgImageLayer = manipulator.AddLayer(Constants.LAYER_BACKGROUND_FLAT);
                 }
 
-                SceneLayer bgLayer = manipulator.AddLayer(Constants.LAYER_BACKGROUND);
+                var bgLayer = manipulator.AddLayer(Constants.LAYER_BACKGROUND);
                 manipulator.SetLayerOrderID(bgImageLayer, 0);
                 manipulator.SetLayerOrderID(bgLayer, 1);
                 manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 2);
@@ -55,7 +55,7 @@ namespace SeeingSharpModelViewer
                     () => new FocusPostprocessEffectResource(false));
                 if (!manipulator.ContainsLayer(Constants.LAYER_HOVER))
                 {
-                    SceneLayer layerHover = manipulator.AddLayer(Constants.LAYER_HOVER);
+                    var layerHover = manipulator.AddLayer(Constants.LAYER_HOVER);
                     layerHover.PostprocessEffectKey = keyPostprocess;
                     layerHover.ClearDepthBufferBeforeRendering = true;
                     manipulator.SetLayerOrderID(layerHover, 3);
@@ -70,7 +70,7 @@ namespace SeeingSharpModelViewer
                     ResourceLink linkBackgroundTexture = new AssemblyResourceLink(
                         typeof(App),
                         "Assets.Textures.Background.dds");
-                    NamedOrGenericKey resBackgroundTexture = manipulator.AddTexture(linkBackgroundTexture);
+                    var resBackgroundTexture = manipulator.AddTexture(linkBackgroundTexture);
                     manipulator.Add(new FullscreenTexture(resBackgroundTexture), bgImageLayer.Name);
                 }
 
@@ -85,12 +85,12 @@ namespace SeeingSharpModelViewer
                 objTypeGrid.XLineHighlightColor = Color4Ex.GreenColor;
                 objTypeGrid.ZLineHighlightColor = Color4Ex.BlueColor;
 
-                NamedOrGenericKey resGridGeometry = manipulator.AddGeometry(objTypeGrid);
+                var resGridGeometry = manipulator.AddGeometry(objTypeGrid);
                 manipulator.Add(new GenericObject(resGridGeometry), Constants.LAYER_BACKGROUND);
 
                 var resSimpleMaterial = manipulator.AddSimpleColoredMaterial();
 
-                TextGeometryOptions textXOptions = TextGeometryOptions.Default;
+                var textXOptions = TextGeometryOptions.Default;
                 textXOptions.SurfaceVertexColor = Color4Ex.GreenColor;
                 textXOptions.MakeVolumetricText = false;
                 textXOptions.FontSize = 30;
@@ -101,7 +101,7 @@ namespace SeeingSharpModelViewer
                 textXMesh.Position = new SharpDX.Vector3((m_tilesPerSide / 2f) + 1f, 0, 0);
                 manipulator.Add(textXMesh, Constants.LAYER_BACKGROUND);
 
-                TextGeometryOptions textZOptions = TextGeometryOptions.Default;
+                var textZOptions = TextGeometryOptions.Default;
                 textZOptions.SurfaceVertexColor = Color4Ex.BlueColor;
                 textZOptions.MakeVolumetricText = false;
                 textZOptions.FontSize = 30;

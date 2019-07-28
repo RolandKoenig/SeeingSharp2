@@ -14,7 +14,7 @@ namespace SeeingSharpModelViewer
         private Camera3DBase m_camera;
         private Scene m_scene;
 
-        // Child viewmodels
+        // Child view models
         private LoadedFileViewModel m_loadedFileVM;
         private MiscGraphicsObjectsViewModel m_miscObjectsVM;
 
@@ -67,7 +67,7 @@ namespace SeeingSharpModelViewer
             var dialogService = (ICommonDialogsViewService)msgQueryViewService.ViewService;
             dialogService.EnsureNotNull(nameof(dialogService));
 
-            ResourceLink fileToOpen = dialogService.PickFileByDialog(
+            var fileToOpen = dialogService.PickFileByDialog(
                 GraphicsCore.Current.ImportersAndExporters.GetOpenFileDialogFilter());
             if (fileToOpen == null) { return; }
 
