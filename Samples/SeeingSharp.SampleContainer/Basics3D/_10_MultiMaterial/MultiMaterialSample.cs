@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
@@ -71,24 +72,39 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 var resGeometry = manipulator.AddGeometry(
                     new CustomGeometryFactory(BuildCustomGeometry));
 
-                // Create cube object
-                var cubeMesh = new Mesh(resGeometry, resMaterials);
-                cubeMesh.Color = Color4Ex.GreenColor;
-                cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
-                cubeMesh.EnableShaderGeneratedBorder();
-                cubeMesh.BuildAnimationSequence()
-                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
-                    .WaitFinished()
-                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
-                    .WaitFinished()
-                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
-                    .ApplyAndRewind();
-                manipulator.Add(cubeMesh);
+                // Create cube meshes
+                var meshes = new List<Mesh>(3);
+                meshes.Add(new Mesh(resGeometry, resMaterials[1])
+                {
+                    Position = new Vector3(-3f, 0.5f, 0f)
+                });
+                meshes.Add(new Mesh(resGeometry, resMaterials)
+                {
+                    Position = new Vector3(0, 0.5f, 0f)
+                });
+                meshes.Add(new Mesh(resGeometry, resMaterials[0], resMaterials[1])
+                {
+                    Position = new Vector3(3f, 0.5f, 0f)
+                });
+                foreach (var actCubeMesh in meshes)
+                {
+                    var actCubeMeshInner = actCubeMesh;
+                    actCubeMeshInner.EnableShaderGeneratedBorder();
+                    actCubeMeshInner.BuildAnimationSequence()
+                        .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
+                        .WaitFinished()
+                        .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
+                        .WaitFinished()
+                        .CallAction(() => actCubeMeshInner.RotationEuler = Vector3.Zero)
+                        .ApplyAndRewind();
+                    manipulator.Add(actCubeMeshInner);
+                }
+
             });
 
             // Configure camera
-            camera.Position = new Vector3(3f, 3f, 3f);
-            camera.Target = new Vector3(0f, 0.5f, 0f);
+            camera.Position = new Vector3(-7f, 10f, -10f);
+            camera.Target = new Vector3(0f, 1.5f, 0f);
             camera.UpdateCamera();
 
             // Append camera behavior

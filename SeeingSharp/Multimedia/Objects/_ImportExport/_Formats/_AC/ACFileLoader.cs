@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -121,11 +121,21 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
 
-            // Fill the geometry
+            // Create a surface for each material first
+            var materialList = fileInfo.Materials;
+            for(var actMaterialIndex = 0; actMaterialIndex < materialList.Count; actMaterialIndex++)
+            {
+                var actMaterial = materialList[actMaterialIndex];
+
+                var newSurface = result.CreateSurface();
+                newSurface.CommonMaterialProperties = actMaterial.CreateMaterialProperties(actMaterialIndex);
+            }
+
+            // Now load the geometry itself
             var transformStack = new Matrix4Stack();
             foreach (var actObject in fileInfo.Objects)
             {
-                FillGeometry(result, fileInfo.Materials, actObject, transformStack);
+                FillGeometry(result, materialList, actObject, transformStack);
             }
 
             return result;
@@ -152,24 +162,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Build geometry material by material
                 for (var actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
                 {
-                    var actMaterial = acMaterials[actMaterialIndex];
-
-                    var actGeometrySurface = geometry.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties(actMaterialIndex));
-                    //var isNewSurface = actGeometrySurface.CountTriangles == 0;
-
-                    //// Create and configure vertex geometry
-                    //if (isNewSurface)
-                    //{
-                    //    actGeometrySurface.Material = NamedOrGenericKey.Empty;
-                    //    actGeometrySurface.TextureKey = !string.IsNullOrEmpty(objInfo.Texture)
-                    //        ? new NamedOrGenericKey(objInfo.Texture)
-                    //        : NamedOrGenericKey.Empty;
-                    //    actGeometrySurface.CommonMaterialProperties.DiffuseColor = actMaterial.Diffuse;
-                    //    actGeometrySurface.CommonMaterialProperties.AmbientColor = actMaterial.Ambient;
-                    //    actGeometrySurface.CommonMaterialProperties.EmissiveColor = actMaterial.Emissive;
-                    //    actGeometrySurface.CommonMaterialProperties.Shininess = actMaterial.Shininess;
-                    //    actGeometrySurface.CommonMaterialProperties.SpecularColor = actMaterial.Specular;
-                    //}
+                    var actGeometrySurface = geometry.Surfaces[actMaterialIndex];
 
                     // Initialize local index table (needed for vertex reuse)
                     var oneSideVertexCount = objInfo.Vertices.Count;
@@ -333,16 +326,9 @@ namespace SeeingSharp.Multimedia.Objects
                             actStandardShadedPair.Item2);
                     }
                     standardShadedVertices.Clear();
-
-                    //// Append generated Geometry to the output collection
-                    //if (actGeometrySurface.CountTriangles <= 0 &&
-                    //    isNewSurface)
-                    //{
-                    //    geometry.RemoveSurface(actGeometrySurface);
-                    //}
                 }
 
-                //Fill in all child object data
+                // Fill in all child object data
                 foreach (var actObjInfo in objInfo.Children)
                 {
                     FillGeometry(geometry, acMaterials, actObjInfo, transformStack);

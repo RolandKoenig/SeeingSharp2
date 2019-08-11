@@ -64,7 +64,6 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
                 // Create Sphere object
                 var pyramidMesh = new Mesh(resGeometry, resMaterial);
                 pyramidMesh.Color = Color4Ex.GreenColor;
-                pyramidMesh.EnableShaderGeneratedBorder();
                 pyramidMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

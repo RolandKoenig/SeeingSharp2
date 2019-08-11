@@ -64,7 +64,6 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                 // Create cone object
                 var coneMesh = new Mesh(resGeometry, resMaterial);
                 coneMesh.Color = Color4Ex.GreenColor;
-                coneMesh.EnableShaderGeneratedBorder();
                 coneMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

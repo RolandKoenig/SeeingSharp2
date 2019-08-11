@@ -67,7 +67,6 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                 var sphereMesh = new Mesh(resGeometry, resMaterial);
                 sphereMesh.Color = Color4Ex.GreenColor;
                 sphereMesh.Position = new Vector3(0f, 0.5f, 0f);
-                sphereMesh.EnableShaderGeneratedBorder();
                 sphereMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

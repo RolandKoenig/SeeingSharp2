@@ -45,6 +45,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Initializes a new instance of the <see cref="GenericObject"/> class.
         /// </summary>
         /// <param name="geometryResourceKey">The geometry resource.</param>
+        /// <param name="materialResourceKeys">The material resources to apply on this Mesh.</param>
         public Mesh(NamedOrGenericKey geometryResourceKey, params NamedOrGenericKey[] materialResourceKeys)
         {
             m_localResGeometry = new IndexBasedDynamicCollection<GeometryResource>();
