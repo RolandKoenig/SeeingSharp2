@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Linq;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -54,8 +53,8 @@ namespace SeeingSharp.Multimedia.Objects
                 () => new GeometryResource(importedGeometry)));
 
             // Create all materials by material properties on the geometry
-            NamedOrGenericKey[] resMaterials = new NamedOrGenericKey[importedGeometry.CountSurfaces];
-            for(int loop=0; loop<importedGeometry.CountSurfaces; loop++)
+            var resMaterials = new NamedOrGenericKey[importedGeometry.CountSurfaces];
+            for(var loop=0; loop<importedGeometry.CountSurfaces; loop++)
             {
                 var actSurface = importedGeometry.Surfaces[loop];
                 var actMaterialProperties = actSurface.CommonMaterialProperties;

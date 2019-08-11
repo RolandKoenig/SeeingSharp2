@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -138,7 +137,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             materials.EnsureNotNullOrEmpty(nameof(materials));
 
-            RenderingChunk[] result = new RenderingChunk[m_chunkTemplates.Length];
+            var result = new RenderingChunk[m_chunkTemplates.Length];
             for (var loop = 0; loop < result.Length; loop++)
             {
                 result[loop] = m_chunkTemplates[loop].CreateChunk(

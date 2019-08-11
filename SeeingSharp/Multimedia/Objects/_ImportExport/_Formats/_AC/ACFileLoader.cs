@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -156,16 +155,21 @@ namespace SeeingSharp.Multimedia.Objects
                     var actMaterial = acMaterials[actMaterialIndex];
 
                     var actGeometrySurface = geometry.CreateOrGetExistingSurface(actMaterial.CreateMaterialProperties(actMaterialIndex));
-                    var isNewSurface = actGeometrySurface.CountTriangles == 0;
+                    //var isNewSurface = actGeometrySurface.CountTriangles == 0;
 
-                    // Create and configure vertex geometry
-                    actGeometrySurface.Material = NamedOrGenericKey.Empty;
-                    actGeometrySurface.TextureKey = !string.IsNullOrEmpty(objInfo.Texture) ? new NamedOrGenericKey(objInfo.Texture) : NamedOrGenericKey.Empty;
-                    actGeometrySurface.CommonMaterialProperties.DiffuseColor = actMaterial.Diffuse;
-                    actGeometrySurface.CommonMaterialProperties.AmbientColor = actMaterial.Ambient;
-                    actGeometrySurface.CommonMaterialProperties.EmissiveColor = actMaterial.Emissive;
-                    actGeometrySurface.CommonMaterialProperties.Shininess = actMaterial.Shininess;
-                    actGeometrySurface.CommonMaterialProperties.SpecularColor = actMaterial.Specular;
+                    //// Create and configure vertex geometry
+                    //if (isNewSurface)
+                    //{
+                    //    actGeometrySurface.Material = NamedOrGenericKey.Empty;
+                    //    actGeometrySurface.TextureKey = !string.IsNullOrEmpty(objInfo.Texture)
+                    //        ? new NamedOrGenericKey(objInfo.Texture)
+                    //        : NamedOrGenericKey.Empty;
+                    //    actGeometrySurface.CommonMaterialProperties.DiffuseColor = actMaterial.Diffuse;
+                    //    actGeometrySurface.CommonMaterialProperties.AmbientColor = actMaterial.Ambient;
+                    //    actGeometrySurface.CommonMaterialProperties.EmissiveColor = actMaterial.Emissive;
+                    //    actGeometrySurface.CommonMaterialProperties.Shininess = actMaterial.Shininess;
+                    //    actGeometrySurface.CommonMaterialProperties.SpecularColor = actMaterial.Specular;
+                    //}
 
                     // Initialize local index table (needed for vertex reuse)
                     var oneSideVertexCount = objInfo.Vertices.Count;
@@ -330,12 +334,12 @@ namespace SeeingSharp.Multimedia.Objects
                     }
                     standardShadedVertices.Clear();
 
-                    // Append generated Geometry to the output collection
-                    if (actGeometrySurface.CountTriangles <= 0 &&
-                        isNewSurface)
-                    {
-                        geometry.RemoveSurface(actGeometrySurface);
-                    }
+                    //// Append generated Geometry to the output collection
+                    //if (actGeometrySurface.CountTriangles <= 0 &&
+                    //    isNewSurface)
+                    //{
+                    //    geometry.RemoveSurface(actGeometrySurface);
+                    //}
                 }
 
                 //Fill in all child object data
