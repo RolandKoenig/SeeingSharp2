@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
         public static GeometryFactory ImportGeometryFactory(Stream inStream)
         {
             var geometry = ImportGeometry(inStream);
-            return new GenericGeometryFactory(geometry);
+            return new CustomGeometryFactory(geometry);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Objects
             using (var inStream = resourceLink.OpenInputStream())
             {
                 var geometry = ImportGeometry(inStream, resourceLink);
-                return new GenericGeometryFactory(geometry);
+                return new CustomGeometryFactory(geometry);
             }
         }
 

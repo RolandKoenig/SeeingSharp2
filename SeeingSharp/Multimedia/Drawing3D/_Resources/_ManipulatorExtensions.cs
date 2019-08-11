@@ -22,6 +22,7 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -69,12 +70,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="maxClipDistance">The maximum distance on which to apply pixel clipping (defined by ClipFactor property).</param>
         /// <param name="adjustTextureCoordinates">Interpolate texture coordinate based on xy-scaling.</param>
         /// <param name="addToAlpha">Needed for video rendering (Frames from the MF SourceReader have alpha always to zero).</param>
+        /// <param name="materialDiffuseColor">The fixed diffuse color for this material.</param>
+        /// <param name="useVertexColors">Set this to false to use the material's diffuse color.</param>
         public static NamedOrGenericKey AddSimpleColoredMaterial(
-            this SceneManipulator sceneManipulator, NamedOrGenericKey textureKey,
+            this SceneManipulator sceneManipulator, 
+            NamedOrGenericKey textureKey = default(NamedOrGenericKey),
             float clipFactor = 0f,
             float maxClipDistance = 1000f,
             bool adjustTextureCoordinates = false,
-            float addToAlpha = 0f)
+            float addToAlpha = 0f,
+            Color4 materialDiffuseColor = default(Color4),  
+            bool useVertexColors = true)
         {
             return sceneManipulator.AddResource(
                 () => new SimpleColoredMaterialResource(textureKey)
@@ -82,7 +88,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     AdjustTextureCoordinates = adjustTextureCoordinates,
                     MaxClipDistance = maxClipDistance,
                     ClipFactor = clipFactor,
-                    AddToAlpha = addToAlpha
+                    AddToAlpha = addToAlpha,
+                    MaterialDiffuseColor = materialDiffuseColor,
+                    UseVertexColors = useVertexColors
                 });
         }
 

@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
         /// </summary>
         public GeometryResource(Geometry geometry)
-            : this(new GenericGeometryFactory(geometry))
+            : this(new CustomGeometryFactory(geometry))
         {
 
         }
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void Redefine(ResourceDictionary resources, Geometry geometry)
         {
-            this.Redefine(resources, new GenericGeometryFactory(geometry));
+            this.Redefine(resources, new CustomGeometryFactory(geometry));
         }
 
         internal RenderingChunk[] BuildRenderingChunks(EngineDevice device, MaterialResource[] materials)

@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Define geometry resource
             var resGeometry = m_targetContainer.GetResourceKey("Geometry", "1");
-            var newObjType = new GenericGeometryFactory(this.TargetGeometry);
+            var newObjType = new CustomGeometryFactory(this.TargetGeometry);
             m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 () => new GeometryResource(newObjType)));
