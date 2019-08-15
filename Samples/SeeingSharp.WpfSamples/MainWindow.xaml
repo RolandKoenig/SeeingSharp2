@@ -11,6 +11,11 @@
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
     <DockPanel LastChildFill="True">
 
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Performance"
+                      Click="OnMnuCmdPerformance_ItemClick" />
+        </Menu>
+
         <!-- List of sample groups -->
         <ListBox DockPanel.Dock="Top"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"

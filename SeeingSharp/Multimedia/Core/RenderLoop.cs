@@ -1060,7 +1060,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_d2dOverlay != null &&
                     m_d2dOverlay.IsLoaded)
                 {
-                    var d2dOverlayTime = GraphicsCore.Current.PerformanceCalculator.BeginMeasureActivityDuration(
+                    var d2dOverlayTime = GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(
                         string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER_2D, m_currentDevice.DeviceIndex, this.ViewInformation.ViewIndex + 1));
                     m_d2dOverlay.BeginDraw();
                     try
@@ -1182,7 +1182,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_renderState = new RenderState(
                     m_currentDevice,
-                    GraphicsCore.Current.PerformanceCalculator,
+                    GraphicsCore.Current.PerformanceAnalyzer,
                     new RenderTargets(m_renderTargetView, m_renderTargetDepthView),
                     m_viewport, m_camera, this.ViewInformation);
             }

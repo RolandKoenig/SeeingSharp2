@@ -99,11 +99,11 @@ namespace SeeingSharp.Multimedia.Core
                 m_devices = new List<EngineDevice>();
 
                 // Start performance value measuring
-                this.PerformanceCalculator = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
+                this.PerformanceAnalyzer = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
                 {
                     SyncContext = SynchronizationContext.Current
                 };
-                this.PerformanceCalculator.RunAsync(CancellationToken.None)
+                this.PerformanceAnalyzer.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
                 this.Configuration = new GraphicsCoreConfiguration
@@ -380,7 +380,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityName">The name of the activity.</param>
         internal IDisposable BeginMeasureActivityDuration(string activityName)
         {
-            return this.PerformanceCalculator.BeginMeasureActivityDuration(activityName);
+            return this.PerformanceAnalyzer.BeginMeasureActivityDuration(activityName);
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="activityAction">The activity action.</param>
         internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
         {
-            this.PerformanceCalculator.ExecuteAndMeasureActivityDuration(activityName, activityAction);
+            this.PerformanceAnalyzer.ExecuteAndMeasureActivityDuration(activityName, activityAction);
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="durationTicks"></param>
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
-            this.PerformanceCalculator.NotifyActivityDuration(activityName, durationTicks);
+            this.PerformanceAnalyzer.NotifyActivityDuration(activityName, durationTicks);
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current performance calculator.
         /// </summary>
-        public PerformanceAnalyzer PerformanceCalculator { get; }
+        public PerformanceAnalyzer PerformanceAnalyzer { get; }
 
         /// <summary>
         /// Gets the DirectWrite factory object.

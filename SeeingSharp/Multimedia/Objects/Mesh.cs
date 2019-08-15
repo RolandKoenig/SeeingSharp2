@@ -310,6 +310,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // Apply IndexBuffer
                 if (lastIndexBufferID != actChunk.Template.IndexBufferID)
                 {
+                    lastIndexBufferID = actChunk.Template.IndexBufferID;
                     deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
                 }
 
@@ -325,7 +326,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
                 try
                 {
-                    // Draw current rener block
+                    // Draw current render block
                     deviceContext.DrawIndexed(
                         actChunk.Template.IndexCount,
                         actChunk.Template.StartIndex,

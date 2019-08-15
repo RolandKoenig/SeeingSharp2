@@ -527,7 +527,7 @@ namespace SeeingSharp.Multimedia.Views
             if (m_d3dImageSource != null)
             {
                 var isLocked = false;
-                GraphicsCore.Current.PerformanceCalculator.ExecuteAndMeasureActivityDuration(
+                GraphicsCore.Current.PerformanceAnalyzer.ExecuteAndMeasureActivityDuration(
                     "Render.Lock",
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
 

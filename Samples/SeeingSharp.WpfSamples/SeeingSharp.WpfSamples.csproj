@@ -87,6 +87,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="_Dialogs\PerformanceOverviewDialog.xaml.cs">
+      <DependentUpon>PerformanceOverviewDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="_Dialogs\PerformanceOverviewViewModel.cs" />
     <Compile Include="PropertyGridControlFactory.cs" />
     <Compile Include="SampleViewModel.cs" />
     <Compile Include="_DesignData.cs" />
@@ -102,6 +106,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="_Dialogs\PerformanceOverviewDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowViewModel.cs" />

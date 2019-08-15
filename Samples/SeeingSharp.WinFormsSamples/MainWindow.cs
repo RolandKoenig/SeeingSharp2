@@ -218,7 +218,7 @@ namespace SeeingSharp.WinFormsSamples
                     this.UpdateSampleCommands(sampleSettings);
 
                     await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 0f));
+                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 0f));
                 }
                 else
                 {

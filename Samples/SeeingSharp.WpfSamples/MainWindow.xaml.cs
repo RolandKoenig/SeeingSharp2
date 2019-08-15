@@ -80,7 +80,7 @@ namespace SeeingSharp.WpfSamples
                     m_actSampleInfo = sampleInfo;
 
                     await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceCalculator, 120f));
+                        new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 120f));
                 }
 
                 // Wait for next finished rendering
@@ -98,6 +98,16 @@ namespace SeeingSharp.WpfSamples
         {
             var actSample = m_actSample;
             actSample?.Update();
+        }
+
+        private void OnMnuCmdPerformance_ItemClick(object sender, RoutedEventArgs e)
+        {
+            var perfVM = new PerformanceOverviewViewModel(
+                GraphicsCore.Current.PerformanceAnalyzer);
+            var dlgPerformance = new PerformanceOverviewDialog();
+            dlgPerformance.DataContext = perfVM;
+            dlgPerformance.Owner = this;
+            dlgPerformance.Show();
         }
     }
 }
