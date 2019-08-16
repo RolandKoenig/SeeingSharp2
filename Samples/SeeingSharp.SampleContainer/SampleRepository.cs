@@ -59,8 +59,9 @@ namespace SeeingSharp.SampleContainer
             var groupOrder = new Dictionary<string, int>();
             groupOrder[nameof(Basics3D)] = 1;
             groupOrder[nameof(Primitives3D)] = 2;
-            groupOrder[nameof(Basics2D)] = 3;
-            groupOrder[nameof(Postprocessing)] = 4;
+            groupOrder[nameof(MassScenes)] = 3;
+            groupOrder[nameof(Basics2D)] = 4;
+            groupOrder[nameof(Postprocessing)] = 5;
 
             int TryGetGroupOrderId(string groupName)
             {

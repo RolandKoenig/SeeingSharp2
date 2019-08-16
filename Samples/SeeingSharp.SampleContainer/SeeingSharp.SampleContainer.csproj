@@ -36,6 +36,8 @@
     <None Remove="Basics3D\_09_ExtrudeGeometry\PreviewImage.png" />
     <None Remove="Basics3D\_10_MultiMaterial\PreviewImage.png" />
     <None Remove="Basics3D\_10_MultiMaterial\SimpleTexture.png" />
+    <None Remove="MassScenes\_01_StaticCubes\PreviewImage.png" />
+    <None Remove="MassScenes\_02_RotatingCubes\PreviewImage.png" />
     <None Remove="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
     <None Remove="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <None Remove="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
@@ -63,6 +65,8 @@
     <EmbeddedResource Include="Basics3D\_09_ExtrudeGeometry\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_10_MultiMaterial\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_10_MultiMaterial\SimpleTexture.png" />
+    <EmbeddedResource Include="MassScenes\_01_StaticCubes\PreviewImage.png" />
+    <EmbeddedResource Include="MassScenes\_02_RotatingCubes\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_03_ColoredSphere\PreviewImage.png" />

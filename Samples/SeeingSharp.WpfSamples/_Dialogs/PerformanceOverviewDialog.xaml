@@ -15,8 +15,15 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=CalculatorName}" 
                                     Width="350"/>
-                <DataGridTextColumn Header="Time (ms)" Binding="{Binding Path=SumAverageMSDouble}"
-                                    Width="100" SortDirection="Descending" />
+                <DataGridTextColumn Header="Time (ms)"
+                                    Binding="{Binding Path=SumAverageMSDouble, StringFormat=F3}"  
+                                    Width="100" SortDirection="Descending">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>
