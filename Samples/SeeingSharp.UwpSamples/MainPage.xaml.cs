@@ -10,6 +10,7 @@ namespace SeeingSharp.UwpSamples
     public sealed partial class MainPage : Page
     {
         private SampleBase m_actSample;
+        private SampleSettings m_actSampleSettings;
         private SampleMetadata m_actSampleInfo;
         private bool m_isChangingSample;
 
@@ -43,9 +44,14 @@ namespace SeeingSharp.UwpSamples
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
+                if (m_actSampleSettings != null)
+                {
+                    m_actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                }
 
                 // Reset members
                 m_actSample = null;
+                m_actSampleSettings = null;
                 m_actSampleInfo = null;
 
                 // Apply new sample
@@ -53,9 +59,16 @@ namespace SeeingSharp.UwpSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
+                    await sampleObject.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
+                    m_actSampleSettings = sampleSettings;
                     m_actSampleInfo = sampleInfo;
+
+                    if (m_actSampleSettings != null)
+                    {
+                        m_actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
+                    }
 
                     await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
                         new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 130f));
@@ -70,6 +83,22 @@ namespace SeeingSharp.UwpSamples
             {
                 m_isChangingSample = false;
             }
+        }
+
+        private async void OnSampleSettings_RecreateRequest(object sender, System.EventArgs e)
+        {
+            var sample = m_actSample;
+            var sampleSettings = m_actSampleSettings;
+            if (sample == null)
+            {
+                return;
+            }
+            if (sampleSettings == null)
+            {
+                return;
+            }
+
+            await sample.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

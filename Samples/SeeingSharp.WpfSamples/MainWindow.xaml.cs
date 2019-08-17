@@ -27,9 +27,25 @@ namespace SeeingSharp.WpfSamples
             {
                 var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
-                this.DataContext = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
+
+                var viewModel = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
+                viewModel.ReloadRequest += OnViewModel_ReloadRequest;
+                this.DataContext = viewModel;
 
                 CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
+            }
+        }
+
+        private async void OnViewModel_ReloadRequest(object sender, EventArgs e)
+        {
+            if (!(this.DataContext is MainWindowViewModel viewModel))
+            {
+                return;
+            }
+
+            if (m_actSample != null)
+            {
+                await m_actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings);
             }
         }
 
@@ -75,6 +91,7 @@ namespace SeeingSharp.WpfSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
+                    await sampleObject.OnReloadAsync(CtrlRenderer.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;

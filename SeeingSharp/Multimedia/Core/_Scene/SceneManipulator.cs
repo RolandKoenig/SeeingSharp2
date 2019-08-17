@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Clears the scene.
+        /// Clears the scene together with all its resources.
         /// </summary>
         public void Clear()
         {

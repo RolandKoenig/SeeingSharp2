@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer.Util;
@@ -28,6 +29,8 @@ namespace SeeingSharp.SampleContainer
 {
     public class SampleSettings : PropertyChangedBase
     {
+        public event EventHandler RecreateRequest;
+
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
             yield return new SampleCommand(
@@ -43,6 +46,11 @@ namespace SeeingSharp.SampleContainer
 
             // Trigger refresh of all properties
             this.RaisePropertyChanged();
+        }
+
+        protected void RaiseRecreateRequest()
+        {
+            this.RecreateRequest?.Invoke(this, EventArgs.Empty);
         }
 
         protected RenderLoop RenderLoop

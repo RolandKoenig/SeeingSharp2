@@ -54,9 +54,12 @@ namespace SeeingSharp.UwpSamples.Controls
                 this.ValueType = PropertyValueType.Bool;
             }
             else if(propertyType == typeof(string) ||
-                    propertyType == typeof(float) ||
-                    propertyType == typeof(double))
-            {
+                    propertyType == typeof(double) || propertyType == typeof(float) || propertyType == typeof(decimal) ||
+                    propertyType == typeof(int) || propertyType == typeof(uint) ||
+                    propertyType == typeof(byte) ||
+                    propertyType == typeof(short) || propertyType == typeof(ushort) ||
+                    propertyType == typeof(long) || propertyType == typeof(ulong))
+            { 
                 this.ValueType = PropertyValueType.String;
             }
             else if(propertyType.IsSubclassOf(typeof(Enum)))

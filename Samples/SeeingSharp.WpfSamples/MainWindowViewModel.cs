@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using SeeingSharp.Multimedia.Core;
@@ -35,6 +36,8 @@ namespace SeeingSharp.WpfSamples
         private SampleSettings m_sampleSettings;
         private string m_selectedGroup;
         private SampleViewModel m_selectedSample;
+
+        public EventHandler ReloadRequest;
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -65,6 +68,11 @@ namespace SeeingSharp.WpfSamples
                 this.Samples.Add(new SampleViewModel(actSampleMetadata));
             }
             this.SelectedSample = this.Samples.FirstOrDefault();
+        }
+
+        private void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        {
+            this.ReloadRequest?.Invoke(this, EventArgs.Empty);
         }
 
         public ObservableCollection<string> SampleGroups
@@ -101,6 +109,11 @@ namespace SeeingSharp.WpfSamples
             {
                 if(m_selectedSample != value)
                 {
+                    if (m_sampleSettings != null)
+                    {
+                        m_sampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                    }
+
                     m_selectedSample = value;
 
                     if(m_selectedSample == null) { m_sampleSettings = null; }
@@ -108,6 +121,7 @@ namespace SeeingSharp.WpfSamples
                     {
                         m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
                         m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
+                        m_sampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
                     }
 
                     this.RaisePropertyChanged(nameof(this.SelectedSample));

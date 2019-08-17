@@ -21,12 +21,14 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
@@ -35,19 +37,34 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         "Static Cubes", 1, nameof(MassScenes),
         "PreviewImage.png",
         "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/MassScences/_01_StaticCubes",
-        typeof(SampleSettingsWith3D))]
+        typeof(StaticCubesSampleSettings))]
     public class StaticCubesSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Get scene and camera
-            var scene = targetRenderLoop.Scene;
+            // Configure camera
             var camera = targetRenderLoop.Camera;
+            camera.Position = new Vector3(40f, 30f, 40f);
+            camera.Target = new Vector3(0f, 5f, 0f);
+            camera.UpdateCamera();
+
+            // Append camera behavior
+            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
+        }
+
+        public override async Task OnReloadAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        {
+            var castedSettings = (StaticCubesSampleSettings) settings;
 
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
+                // Clear previous scene
+                manipulator.Clear();
+
                 // Create floor
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
@@ -55,32 +72,101 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                 // Create resources
                 var resGeometry = manipulator.AddGeometry(
                     new CubeGeometryFactory());
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resColoredMaterial = manipulator.AddSimpleColoredMaterial();
+                var resTexture = manipulator.AddTexture(
+                    new AssemblyResourceLink(this.GetType(),
+                        "SimpleTexture.png"));
+                var resTexturedMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
 
                 // Create cubes
-                for (var loopX = 0; loopX < 15; loopX++)
+                var sideLength = castedSettings.CubeCountPerSide;
+                var randomizer = new Random();
+                for (var loopX = 0; loopX < sideLength; loopX++)
                 {
-                    for (var loopY = 0; loopY < 15; loopY++)
+                    for (var loopY = 0; loopY < sideLength; loopY++)
                     {
-                        for (var loopZ = 0; loopZ < 15; loopZ++)
+                        for (var loopZ = 0; loopZ < sideLength; loopZ++)
                         {
-                            var cubeMesh = new Mesh(resGeometry, resMaterial);
+                            // Choose material
+                            var material = resColoredMaterial;
+                            if (castedSettings.HalfTextured)
+                            {
+                                if ((loopX + loopY + loopZ) % 2 == 1)
+                                {
+                                    material = resTexturedMaterial;
+                                }
+                            }
+
+                            var cubeMesh = new Mesh(resGeometry, material);
                             cubeMesh.Color = Color4Ex.GreenColor;
                             cubeMesh.Position = new Vector3(loopX * 1.5f, loopY * 1.5f, loopZ * 1.5f);
                             cubeMesh.EnableShaderGeneratedBorder();
+
+                            if (castedSettings.Animated)
+                            {
+                                cubeMesh.BuildAnimationSequence()
+                                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f),
+                                        TimeSpan.FromSeconds(1.0 + randomizer.NextDouble() * 2.0))
+                                    .WaitFinished()
+                                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f),
+                                        TimeSpan.FromSeconds(1.0 + randomizer.NextDouble() * 2.0))
+                                    .WaitFinished()
+                                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
+                                    .ApplyAndRewind();
+                            }
+
                             manipulator.Add(cubeMesh);
                         }
                     }
                 }
             });
+        }
 
-            // Configure camera
-            camera.Position = new Vector3(40f, 30f, 40f);
-            camera.Target = new Vector3(0f, 5f, 0f);
-            camera.UpdateCamera();
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        private class StaticCubesSampleSettings : SampleSettingsWith3D
+        {
+            private int m_cubeCountPerSide = 15;
+            private bool m_animated;
+            private bool m_halfTextured;
 
-            // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            [Category("Static Cubes")]
+            public int CubeCountPerSide
+            {
+                get => m_cubeCountPerSide;
+                set
+                {
+                    var givenValue = value;
+                    if (givenValue < 1) { givenValue = 1; }
+                    if (givenValue > 50) { givenValue = 50; }
+
+                    m_cubeCountPerSide = givenValue;
+                    base.RaiseRecreateRequest();
+                }
+            }
+
+            [Category("Static Cubes")]
+            public bool Animated
+            {
+                get => m_animated;
+                set
+                {
+                    m_animated = value;
+                    base.RaiseRecreateRequest();
+                }
+            }
+
+            [Category("Static Cubes")]
+            public bool HalfTextured
+            {
+                get => m_halfTextured;
+                set
+                {
+                    m_halfTextured = value;
+                    base.RaiseRecreateRequest();
+                }
+            }
         }
     }
 }

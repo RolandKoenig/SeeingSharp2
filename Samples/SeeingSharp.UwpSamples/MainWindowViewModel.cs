@@ -75,8 +75,7 @@ namespace SeeingSharp.UwpSamples
             if (DesignMode.DesignModeEnabled) { return; }
 
             var sampleGroup = m_sampleRepo.SampleGroups
-                .Where(actGroup => actGroup.GroupName == m_selectedGroup)
-                .FirstOrDefault();
+                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();

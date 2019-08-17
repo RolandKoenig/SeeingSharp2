@@ -36,6 +36,7 @@ namespace SeeingSharp.WinFormsSamples
     public partial class MainWindow : Form
     {
         private SampleBase m_actSample;
+        private SampleSettings m_actSampleSettings;
         private SampleMetadata m_actSampleInfo;
         private List<ListView> m_generatedListViews;
         private bool m_isChangingSample;
@@ -199,6 +200,10 @@ namespace SeeingSharp.WinFormsSamples
                     await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
                     m_actSample.NotifyClosed();
                 }
+                if (m_actSampleSettings != null)
+                {
+                    m_actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                }
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 // Reset members
@@ -210,9 +215,16 @@ namespace SeeingSharp.WinFormsSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+                    await sampleObject.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;
+                    m_actSampleSettings = sampleSettings;
                     m_actSampleInfo = sampleInfo;
+
+                    if (m_actSampleSettings != null)
+                    {
+                        m_actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
+                    }
 
                     m_propertyGrid.SelectedObject = sampleSettings;
                     this.UpdateSampleCommands(sampleSettings);
@@ -361,6 +373,22 @@ namespace SeeingSharp.WinFormsSamples
         {
             var actSample = m_actSample;
             actSample?.Update();
+        }
+
+        private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        {
+            var sample = m_actSample;
+            var sampleSettings = m_actSampleSettings;
+            if (sample == null)
+            {
+                return;
+            }
+            if (sampleSettings == null)
+            {
+                return;
+            }
+
+            await sample.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
         }
     }
 }
