@@ -38,9 +38,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
         typeof(SampleSettingsWith3D))]
     public class Text3DSample : SampleBase
     {
-        /// <summary>
-        ///     Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

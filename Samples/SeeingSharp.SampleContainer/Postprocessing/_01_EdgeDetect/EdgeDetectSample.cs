@@ -38,9 +38,6 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
         typeof(SampleSettingsWith3D))]
     public class EdgeDetectSample : SampleBase
     {
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

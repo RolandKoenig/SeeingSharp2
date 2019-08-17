@@ -44,9 +44,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
         private SolidBrushResource m_solidBrush;
         private TextFormatResource m_textFormat;
 
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

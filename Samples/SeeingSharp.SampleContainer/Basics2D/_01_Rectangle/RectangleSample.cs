@@ -39,9 +39,6 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         private SolidBrushResource m_fillBrush;
         private SolidBrushResource m_fillBrushTransparent;
 
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

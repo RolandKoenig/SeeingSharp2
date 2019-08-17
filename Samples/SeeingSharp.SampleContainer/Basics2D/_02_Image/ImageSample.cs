@@ -43,9 +43,6 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
 
         private StandardBitmapResource m_bitmap;
 
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

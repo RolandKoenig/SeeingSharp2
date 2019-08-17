@@ -39,9 +39,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
         typeof(SampleSettingsWith3D))]
     public class SkyboxSample : SampleBase
     {
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

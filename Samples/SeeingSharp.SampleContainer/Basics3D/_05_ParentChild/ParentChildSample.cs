@@ -38,9 +38,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
         typeof(SampleSettingsWith3D))]
     public class ParentChildSample : SampleBase
     {
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

@@ -42,9 +42,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
         private GeneratedBorderSettings m_settings;
         private List<Mesh> m_cubes = new List<Mesh>();
 
-        /// <summary>
-        /// Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

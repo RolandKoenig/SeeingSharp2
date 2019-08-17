@@ -38,9 +38,6 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         typeof(SampleSettingsWith3D))]
     public class StaticCubesSample : SampleBase
     {
-        /// <summary>
-        ///     Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));

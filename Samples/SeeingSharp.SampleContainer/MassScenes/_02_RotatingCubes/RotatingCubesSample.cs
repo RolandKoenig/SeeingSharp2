@@ -38,9 +38,6 @@ namespace SeeingSharp.SampleContainer.MassScenes._02_RotatingCubes
         typeof(SampleSettingsWith3D))]
     public class RotatingCubesSample : SampleBase
     {
-        /// <summary>
-        ///     Called when the sample has to startup.
-        /// </summary>
         public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
