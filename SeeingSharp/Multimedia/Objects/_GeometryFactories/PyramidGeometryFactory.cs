@@ -28,13 +28,8 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var matProperties = new CommonMaterialProperties
-            {
-                Key = this.Material
-            };
-
             var result = new Geometry();
-            result.CreateOrGetExistingSurface(matProperties)
+            result.CreateSurface()
                 .BuildPyramidFullV(
                     new Vector3(0f, 0f, 0f),
                     this.Width,
@@ -42,12 +37,6 @@ namespace SeeingSharp.Multimedia.Objects
                     Color4Ex.Transparent);
 
             return result;
-        }
-
-        public NamedOrGenericKey Material
-        {
-            get;
-            set;
         }
 
         public float Width

@@ -92,7 +92,7 @@ namespace SeeingSharp.Tests
                             () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                         var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
                         var resGeometry = manipulator.AddResource(
-                            () => new GeometryResource(new CubeGeometryFactory { Material = resD2DMaterial }));
+                            () => new GeometryResource(new CubeGeometryFactory()));
 
                         var newMesh = manipulator.AddMesh(resGeometry, resD2DMaterial);
                         newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);

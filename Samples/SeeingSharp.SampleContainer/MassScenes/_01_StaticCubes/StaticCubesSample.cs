@@ -36,7 +36,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
     [SampleDescription(
         "Static Cubes", 1, nameof(MassScenes),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/MassScences/_01_StaticCubes",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/MassScenes/_01_StaticCubes",
         typeof(StaticCubesSampleSettings))]
     public class StaticCubesSample : SampleBase
     {

@@ -60,8 +60,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
-                        new CubeGeometryFactory()));
+                    () => new GeometryResource(new CubeGeometryFactory()));
                 var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create cubes with border

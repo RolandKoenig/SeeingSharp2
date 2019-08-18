@@ -93,11 +93,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
-                        new CubeGeometryFactory
-                        {
-                            Material = resD2DMaterial
-                        }));
+                    () => new GeometryResource(new CubeGeometryFactory()));
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);

@@ -28,28 +28,17 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var matProperties = new CommonMaterialProperties
-            {
-                Key = this.Material
-            };
-
             var size = this.Size;
             var halfSize = size / 2f;
 
             var result = new Geometry();
-            result.CreateOrGetExistingSurface(matProperties)
+            result.CreateSurface()
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),
                     new Vector3(size, size, size),
                     Color4Ex.Transparent);
 
             return result;
-        }
-
-        public NamedOrGenericKey Material
-        {
-            get;
-            set;
         }
 
         public float Size

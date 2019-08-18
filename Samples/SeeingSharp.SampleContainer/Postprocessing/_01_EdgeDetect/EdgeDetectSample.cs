@@ -64,8 +64,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
-                        new CubeGeometryFactory()));
+                    () => new GeometryResource(new CubeGeometryFactory()));
                 var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create object and put it on the EdgeDetectLayer

@@ -53,8 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create resources
-                var resGeometry = manipulator.AddGeometry(
-                    new CubeGeometryFactory());
+                var resGeometry = manipulator.AddGeometry(new CubeGeometryFactory());
                 var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create cube object
