@@ -25,6 +25,7 @@ using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX;
+using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
@@ -80,6 +81,66 @@ namespace SeeingSharp.Multimedia.Core
             : this(device, performanceCalculator)
         {
             this.Reset(renderTargets, viewport, camera, viewInformation);
+        }
+
+        /// <summary>
+        /// Renders all given chunks.
+        /// </summary>
+        /// <param name="chunks">The chunks to be rendered.</param>
+        internal void RenderChunks(RenderingChunk[] chunks)
+        {
+            var device = this.Device;
+            var deviceContext = device.DeviceImmediateContextD3D11;
+            var indexBufferFormat = device.SupportsOnly16BitIndexBuffer ? Format.R16_UInt : Format.R32_UInt;
+
+            var lastVertexBufferID = -1;
+            var lastIndexBufferID = -1;
+            for (var loop = 0; loop < chunks.Length; loop++)
+            {
+                var actChunk = chunks[loop];
+
+                // Apply VertexBuffer
+                if (lastVertexBufferID != actChunk.Template.VertexBufferID)
+                {
+                    lastVertexBufferID = actChunk.Template.VertexBufferID;
+                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
+                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
+                }
+
+                // Apply IndexBuffer
+                if (lastIndexBufferID != actChunk.Template.IndexBufferID)
+                {
+                    lastIndexBufferID = actChunk.Template.IndexBufferID;
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
+                }
+
+                // Apply material
+                this.ApplyMaterial(actChunk.Material);
+                D3D11.InputLayout newInputLayout = null;
+                if (this.ForcedMaterial != null)
+                {
+                    newInputLayout = this.ForcedMaterial.GenerateInputLayout(
+                        device,
+                        StandardVertex.InputElements);
+                    deviceContext.InputAssembler.InputLayout = newInputLayout;
+                }
+                try
+                {
+                    // Draw current render block
+                    deviceContext.DrawIndexed(
+                        actChunk.Template.IndexCount,
+                        actChunk.Template.StartIndex,
+                        0);
+                }
+                finally
+                {
+                    if (newInputLayout != null)
+                    {
+                        deviceContext.InputAssembler.InputLayout = null;
+                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
+                    }
+                }
+            }
         }
 
         /// <summary>

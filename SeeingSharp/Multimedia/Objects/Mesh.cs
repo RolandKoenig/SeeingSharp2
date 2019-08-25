@@ -300,60 +300,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             this.UpdateAndApplyRenderParameters(renderState);
 
-            var device = renderState.Device;
-            var chunks = m_localChunks[device.DeviceIndex];
-
-            var deviceContext = device.DeviceImmediateContextD3D11;
-            var indexBufferFormat = device.SupportsOnly16BitIndexBuffer ? Format.R16_UInt : Format.R32_UInt;
-
-            var lastVertexBufferID = -1;
-            var lastIndexBufferID = -1;
-            for (var loop = 0; loop < chunks.Length; loop++)
-            {
-                var actChunk = chunks[loop];
-
-                // Apply VertexBuffer
-                if (lastVertexBufferID != actChunk.Template.VertexBufferID)
-                {
-                    lastVertexBufferID = actChunk.Template.VertexBufferID;
-                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
-                }
-
-                // Apply IndexBuffer
-                if (lastIndexBufferID != actChunk.Template.IndexBufferID)
-                {
-                    lastIndexBufferID = actChunk.Template.IndexBufferID;
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
-                }
-
-                // Apply material
-                renderState.ApplyMaterial(actChunk.Material);
-                D3D11.InputLayout newInputLayout = null;
-                if (renderState.ForcedMaterial != null)
-                {
-                    newInputLayout = renderState.ForcedMaterial.GenerateInputLayout(
-                        renderState.Device,
-                        StandardVertex.InputElements);
-                    deviceContext.InputAssembler.InputLayout = newInputLayout;
-                }
-                try
-                {
-                    // Draw current render block
-                    deviceContext.DrawIndexed(
-                        actChunk.Template.IndexCount,
-                        actChunk.Template.StartIndex,
-                        0);
-                }
-                finally
-                {
-                    if (newInputLayout != null)
-                    {
-                        deviceContext.InputAssembler.InputLayout = null;
-                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
-                    }
-                }
-            }
+            renderState.RenderChunks(
+                m_localChunks[renderState.DeviceIndex]);
         }
 
         /// <summary>
