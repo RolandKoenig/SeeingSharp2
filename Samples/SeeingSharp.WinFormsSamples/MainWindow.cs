@@ -329,6 +329,7 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             var sampleSettings = sampleInfo.CreateSampleSettingsObject();
+            sampleSettings.ThrottleRecreateRequest = false;
             sampleSettings.SetEnvironment(m_ctrlRenderPanel.RenderLoop, sampleInfo);
 
             // Now apply the sample

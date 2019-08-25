@@ -22,6 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer.Util;
 
@@ -30,6 +33,8 @@ namespace SeeingSharp.SampleContainer
     public class SampleSettings : PropertyChangedBase
     {
         public event EventHandler RecreateRequest;
+
+        private int m_lastRecreateRequestID;
 
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
@@ -48,10 +53,27 @@ namespace SeeingSharp.SampleContainer
             this.RaisePropertyChanged();
         }
 
-        protected void RaiseRecreateRequest()
+        protected async void RaiseRecreateRequest()
         {
-            this.RecreateRequest?.Invoke(this, EventArgs.Empty);
+            if (this.ThrottleRecreateRequest)
+            {
+                var myID = Interlocked.Increment(ref m_lastRecreateRequestID);
+
+                await Task.Delay(2000);
+
+                if (m_lastRecreateRequestID == myID)
+                {
+                    this.RecreateRequest?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                this.RecreateRequest?.Invoke(this, EventArgs.Empty);
+            }
         }
+
+        [Browsable(false)]
+        public bool ThrottleRecreateRequest { get; set; } = true;
 
         protected RenderLoop RenderLoop
         {
