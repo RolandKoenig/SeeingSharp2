@@ -42,6 +42,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private SpriteMaterialResource m_materialResource;
         private DefaultResources m_defaultResources;
         private ObjectRenderParameters m_renderParameters;
+        private RenderingChunk[] m_renderingChunks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
@@ -85,6 +86,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Load the texture resource
             m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(m_texture);
 
+            // Generate rendering chunks
+            m_renderingChunks = m_geometryResource.BuildRenderingChunks(
+                resources.Device, new MaterialResource[] {m_materialResource});
+
             // Get default resources
             m_defaultResources = resources.GetResourceAndEnsureLoaded(
                 DefaultResources.RESOURCE_KEY,
@@ -100,6 +105,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void UnloadResources()
         {
+            SeeingSharpUtil.DisposeObjects(m_renderingChunks);
+            m_renderingChunks = null;
+
             m_geometryResource = null;
             m_textureResource = null;
             m_defaultResources = null;
@@ -148,7 +156,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
             }
 
-            m_geometryResource.Render(renderState);
+            renderState.RenderChunks(m_renderingChunks);
 
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {

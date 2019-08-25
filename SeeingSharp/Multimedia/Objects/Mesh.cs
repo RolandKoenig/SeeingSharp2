@@ -24,8 +24,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX;
-using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -303,11 +301,6 @@ namespace SeeingSharp.Multimedia.Objects
             renderState.RenderChunks(
                 m_localChunks[renderState.DeviceIndex]);
         }
-
-        /// <summary>
-        /// Gets the key of the geometry resources used by this object.
-        /// </summary>
-        public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
 
         public override bool IsExportable => false;
     }

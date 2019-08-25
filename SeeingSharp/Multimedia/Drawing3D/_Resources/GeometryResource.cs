@@ -19,15 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
 using SharpDX;
-using SharpDX.DXGI;
-using D3D = SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
+using System.Collections.Generic;
 using Resource = SeeingSharp.Multimedia.Core.Resource;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -69,7 +66,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Stores all required data into a new <see cref="ExportGeometryInfo"/>.
         /// </summary>
-        public ExportGeometryInfo PrepareForExport()
+        internal ExportGeometryInfo PrepareForExport()
         {
             return new ExportGeometryInfo(this.Key, this.Geometry);
         }
@@ -80,7 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="pickingRay">The given picking ray.</param>
         /// <param name="pickingOptions">The picking options.</param>
         /// <param name="distance">The distance from origin to the picking point.</param>
-        public bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
+        internal bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
         {
             distance = float.MaxValue;
             var result = false;
@@ -103,36 +100,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Redefines the content of this geometry resource.
+        /// Builds a collection of rendering chunks for given materials.
         /// </summary>
-        public void Redefine(ResourceDictionary resources, GeometryFactory objectType)
-        {
-            // Unload resource first if it was loaded
-            var wasLoaded = this.IsLoaded;
-            if (wasLoaded)
-            {
-                this.UnloadResource();
-            }
-
-            // Update members
-            m_geometry = objectType;
-            m_boundingBox = new BoundingBox();
-
-            // Reload resources again if they where loaded before
-            if (wasLoaded)
-            {
-                this.LoadResource();
-            }
-        }
-
-        /// <summary>
-        /// Redefines the content of this geometry resource.
-        /// </summary>
-        public void Redefine(ResourceDictionary resources, Geometry geometry)
-        {
-            this.Redefine(resources, new CustomGeometryFactory(geometry));
-        }
-
+        /// <param name="device">The device on which to load all resources.</param>
+        /// <param name="materials">The material's for later rendering.</param>
         internal RenderingChunk[] BuildRenderingChunks(EngineDevice device, MaterialResource[] materials)
         {
             materials.EnsureNotNullOrEmpty(nameof(materials));
@@ -146,64 +117,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Renders this GeometryResource.
-        /// </summary>
-        /// <param name="renderState">Current render state.</param>
-        public void Render(RenderState renderState)
-        {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            var indexBufferFormat = renderState.Device.SupportsOnly16BitIndexBuffer ? Format.R16_UInt : Format.R32_UInt;
-
-            var lastVertexBufferID = -1;
-            var lastIndexBufferID = -1;
-            for (var loop = 0; loop < m_chunks.Length; loop++)
-            {
-                var actChunk = m_chunks[loop];
-
-                // Apply VertexBuffer
-                if (lastVertexBufferID != actChunk.Template.VertexBufferID)
-                {
-                    lastVertexBufferID = actChunk.Template.VertexBufferID;
-                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
-                }
-
-                // Apply IndexBuffer
-                if (lastIndexBufferID != actChunk.Template.IndexBufferID)
-                {
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
-                }
-
-                // Apply material
-                renderState.ApplyMaterial(actChunk.Material);
-                D3D11.InputLayout newInputLayout = null;
-                if(renderState.ForcedMaterial != null)
-                {
-                    newInputLayout = renderState.ForcedMaterial.GenerateInputLayout(
-                        renderState.Device,
-                        StandardVertex.InputElements);
-                    deviceContext.InputAssembler.InputLayout = newInputLayout;
-                }
-                try
-                {
-                    // Draw current rener block
-                    deviceContext.DrawIndexed(
-                        actChunk.Template.IndexCount,
-                        actChunk.Template.StartIndex,
-                        0);
-                }
-                finally
-                {
-                    if (newInputLayout != null)
-                    {
-                        deviceContext.InputAssembler.InputLayout = null;
-                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
-                    }
-                }
-            }
         }
 
         /// <inheritdoc />
