@@ -56,9 +56,9 @@ namespace SeeingSharp.Multimedia.Core
             this.Type = SceneObjectInfoType.Other;
             var clrType = obj.GetType();
 
-            if (clrType == typeof(GenericObject))
+            if (clrType == typeof(Mesh))
             {
-                this.Type = SceneObjectInfoType.GenericObject;
+                this.Type = SceneObjectInfoType.Mesh;
             }
             else if (clrType == typeof(ScenePivotObject))
             {

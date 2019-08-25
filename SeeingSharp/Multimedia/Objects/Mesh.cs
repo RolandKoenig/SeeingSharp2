@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Objects
         private NamedOrGenericKey[] m_resMaterialResourceKeys;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericObject"/> class.
+        /// Initializes a new instance of the <see cref="Mesh"/> class.
         /// </summary>
         /// <param name="geometryResourceKey">The geometry resource.</param>
         /// <param name="materialResourceKeys">The material resources to apply on this Mesh.</param>
@@ -125,12 +125,25 @@ namespace SeeingSharp.Multimedia.Objects
             m_localResGeometry.AddObject(geoResource, device.DeviceIndex, false);
 
             // Load materials
-            var matResources = new MaterialResource[m_resMaterialResourceKeys.Length];
-            for(var loop=0; loop<matResources.Length; loop++)
+            MaterialResource[] matResources;
+            if (m_resMaterialResourceKeys.Length > 0)
             {
-                matResources[loop] = resourceDictionary.GetResourceAndEnsureLoaded<MaterialResource>(m_resMaterialResourceKeys[loop]);
+                matResources = new MaterialResource[m_resMaterialResourceKeys.Length];
+                for (var loop = 0; loop < matResources.Length; loop++)
+                {
+                    matResources[loop] =
+                        resourceDictionary
+                            .GetResourceAndEnsureLoaded<MaterialResource>(m_resMaterialResourceKeys[loop]);
+                }
+                m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
             }
-            m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
+            else
+            {
+                matResources = new MaterialResource[1];
+                matResources[0] = resourceDictionary.GetOrCreateDefaultMaterialResource();
+                m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
+
+            }
 
             // Load chunks
             m_localChunks.AddObject(
@@ -168,7 +181,7 @@ namespace SeeingSharp.Multimedia.Objects
             m_localResGeometry.Clear();
             m_localResMaterials.Clear();
 
-            m_localChunks.ForEachInEnumeration(actChunk => SeeingSharpUtil.DisposeObjects(actChunk));
+            m_localChunks.ForEachInEnumeration(SeeingSharpUtil.DisposeObjects);
             m_localChunks.Clear();
         }
 

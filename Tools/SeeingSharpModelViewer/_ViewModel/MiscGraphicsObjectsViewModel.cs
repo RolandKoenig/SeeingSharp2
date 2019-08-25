@@ -86,7 +86,7 @@ namespace SeeingSharpModelViewer
                 objTypeGrid.ZLineHighlightColor = Color4Ex.BlueColor;
 
                 var resGridGeometry = manipulator.AddGeometry(objTypeGrid);
-                manipulator.Add(new GenericObject(resGridGeometry), Constants.LAYER_BACKGROUND);
+                manipulator.Add(new Mesh(resGridGeometry), Constants.LAYER_BACKGROUND);
 
                 var resSimpleMaterial = manipulator.AddSimpleColoredMaterial();
 

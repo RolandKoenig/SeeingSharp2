@@ -23,7 +23,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public enum SceneObjectInfoType
     {
-        GenericObject,
+        Mesh,
 
         Pivot,
 

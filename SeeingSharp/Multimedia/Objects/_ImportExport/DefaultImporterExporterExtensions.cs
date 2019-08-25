@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
             yield return new ACImporter();
             yield return new ObjImporter();
             yield return new StLImporter();
-            yield return new XglImporter();
+            //yield return new XglImporter();
         }
     }
 }

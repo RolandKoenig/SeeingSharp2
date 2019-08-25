@@ -28,6 +28,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal static class ResourceDictionaryExtensions
     {
+        public static MaterialResource GetOrCreateDefaultMaterialResource(this ResourceDictionary resourceDict)
+        {
+            return resourceDict.GetResourceAndEnsureLoaded(
+                ResourceKeys.RES_MATERIAL_COLORED,
+                () => new SimpleColoredMaterialResource());
+        }
+
         /// <summary>
         /// Gets or creates the material resource for the given <see cref="GeometrySurface"/> object.
         /// </summary>
