@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SeeingSharp.WpfSamples\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\MainWindowViewModel.cs" Link="MainWindowViewModel.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\PropertyGridControlFactory.cs" Link="PropertyGridControlFactory.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\SampleViewModel.cs" Link="SampleViewModel.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\_DesignData.cs" Link="_DesignData.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewDialog.xaml.cs" Link="_Dialogs\PerformanceOverviewDialog.xaml.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewViewModel.cs" Link="_Dialogs\PerformanceOverviewViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
+    <Resource Include="..\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
+    <Resource Include="Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.WpfCore\SeeingSharp.WpfCore.csproj" />
+    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+    <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Icons\" />
+    <Folder Include="_Dialogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0-unstable0141" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="..\SeeingSharp.WpfSamples\MainWindow.xaml" Link="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewDialog.xaml" Link="_Dialogs\PerformanceOverviewDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+</Project>
