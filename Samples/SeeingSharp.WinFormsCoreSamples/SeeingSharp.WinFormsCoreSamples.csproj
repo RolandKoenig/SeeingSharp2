@@ -15,14 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Adapter16x16.png" Link="adapter16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="camera16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Copy16x16.png" Link="copy16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Help16x16.png" Link="help16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Output16x16.png" Link="output16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\OutputAdd16x16.png" Link="outputadd16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PageCSharp16x16.png" Link="pagecsharp16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PerformanceMeasure16x16.png" Link="performancemeasure16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="Assets\Icons\Camera16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Copy16x16.png" Link="Assets\Icons\Copy16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Help16x16.png" Link="Assets\Icons\Help16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\OutputAdd16x16.png" Link="Assets\Icons\OutputAdd16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PageCSharp16x16.png" Link="Assets\Icons\PageCSharp16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PerformanceMeasure16x16.png" Link="Assets\Icons\PerformanceMeasure16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Logo.ico" Link="Logo.ico" />
   </ItemGroup>
 
