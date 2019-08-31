@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RootNamespace>SeeingSharp.Wpf</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,10 @@
     <Folder Include="Multimedia\Input\" />
     <Folder Include="Multimedia\Views\" />
     <Folder Include="_Util\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
 
   <ItemGroup>

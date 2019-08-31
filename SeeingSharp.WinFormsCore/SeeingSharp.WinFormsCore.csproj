@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>SeeingSharp.WinForms</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SeeingSharp.WinForms\Multimedia\Core\GraphicsHelperWinForms.cs" Link="Multimedia\Core\GraphicsHelperWinForms.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\Multimedia\Core\RenderLoopEx.cs" Link="Multimedia\Core\RenderLoopEx.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\Multimedia\Input\IInputControlHost.cs" Link="Multimedia\Input\IInputControlHost.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\Multimedia\Input\WinFormsKeyAndMouseInputHandler.cs" Link="Multimedia\Input\WinFormsKeyAndMouseInputHandler.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\Multimedia\Views\SeeingSharpRendererControl.cs" Link="Multimedia\Views\SeeingSharpRendererControl.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\SeeingSharpConstantsWinForms.cs" Link="SeeingSharpConstantsWinForms.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\SeeingSharpWinFormsExtensions.cs" Link="SeeingSharpWinFormsExtensions.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\_Extensions.cs" Link="_Extensions.cs" />
+    <Compile Include="..\SeeingSharp.WinForms\_Util\SeeingSharpWinFormsUtil.cs" Link="Util\SeeingSharpWinFormsUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Multimedia\Core\" />
+    <Folder Include="Multimedia\Input\" />
+    <Folder Include="Multimedia\Views\" />
+    <Folder Include="Util\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+
+</Project>

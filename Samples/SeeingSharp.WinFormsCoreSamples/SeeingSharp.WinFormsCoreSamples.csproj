@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>SeeingSharp.WinFormsCoreSamples</AssemblyName>
+    <RootNamespace>SeeingSharp.WinFormsSamples</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SeeingSharp.WinFormsSamples\MainWindow.cs" Link="MainWindow.cs" />
+    <Compile Include="..\SeeingSharp.WinFormsSamples\MainWindow.Designer.cs" Link="MainWindow.Designer.cs" />
+    <Compile Include="..\SeeingSharp.WinFormsSamples\Program.cs" Link="Program.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Adapter16x16.png" Link="adapter16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="camera16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Copy16x16.png" Link="copy16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Help16x16.png" Link="help16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Output16x16.png" Link="output16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\OutputAdd16x16.png" Link="outputadd16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PageCSharp16x16.png" Link="pagecsharp16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PerformanceMeasure16x16.png" Link="performancemeasure16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Logo.ico" Link="Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\SeeingSharp.WinFormsSamples\MainWindow.resx" Link="MainWindow.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.WinFormsCore\SeeingSharp.WinFormsCore.csproj" />
+    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+    <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Icons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
