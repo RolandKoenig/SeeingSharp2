@@ -57,7 +57,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
 
                 // Create geometry resource
                 ExtrudeGeometryFactory geometryFactory = null;
-                using (var pathGeo = new D2D.PathGeometry1(GraphicsCore.Current.FactoryD2D))
+                using (var pathGeo = new D2D.PathGeometry1(GraphicsCore.Current.Internals.FactoryD2D))
                 {
                     // We are building the left mountain from this sample:
                     //  https://docs.microsoft.com/en-us/windows/desktop/direct2d/path-geometries-overview

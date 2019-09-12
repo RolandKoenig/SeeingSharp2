@@ -92,6 +92,8 @@ namespace SeeingSharp.Multimedia.Core
 
         private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
         {
+            this.Internals = new GraphicsCoreInternals(this);
+
             try
             {
                 this.IsDebugEnabled = loadSettings.DebugEnabled;
@@ -551,16 +553,37 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DirectWrite factory object.
         /// </summary>
-        public DWrite.Factory FactoryDWrite { get; }
+        internal DWrite.Factory FactoryDWrite { get; }
 
         /// <summary>
         /// Gets the Direct2D factory object.
         /// </summary>
-        public D2D.Factory2 FactoryD2D;
+        internal D2D.Factory2 FactoryD2D;
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
         internal ImagingFactory FactoryWIC;
+
+        public GraphicsCoreInternals Internals { get; }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class GraphicsCoreInternals
+        {
+            private GraphicsCore m_parent;
+
+            internal GraphicsCoreInternals(GraphicsCore parent)
+            {
+                m_parent = parent;
+            }
+
+            public D2D.Factory2 FactoryD2D => m_parent.FactoryD2D;
+
+            public DWrite.Factory FactoryDWrite => m_parent.FactoryDWrite;
+
+            public ImagingFactory FactoryWIC => m_parent.FactoryWIC;
+        }
     }
 }
