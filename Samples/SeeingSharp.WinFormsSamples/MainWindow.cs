@@ -38,7 +38,6 @@ namespace SeeingSharp.WinFormsSamples
         private SampleBase m_actSample;
         private SampleSettings m_actSampleSettings;
         private SampleMetadata m_actSampleInfo;
-        private List<ListView> m_generatedListViews;
         private bool m_isChangingSample;
         private List<ToolStripItem> m_sampleCommandToolbarItems;
 
@@ -46,7 +45,6 @@ namespace SeeingSharp.WinFormsSamples
         {
             this.InitializeComponent();
 
-            m_generatedListViews = new List<ListView>();
             m_sampleCommandToolbarItems = new List<ToolStripItem>();
 
             this.UpdateWindowState();
@@ -316,17 +314,6 @@ namespace SeeingSharp.WinFormsSamples
 
             var sampleInfo = e.Item.Tag as SampleMetadata;
             sampleInfo.EnsureNotNull(nameof(sampleInfo));
-
-            // Clear selection on other ListViews
-            foreach (var actOtherListView in m_generatedListViews)
-            {
-                if (actOtherListView == actListView)
-                {
-                    continue;
-                }
-
-                actOtherListView.SelectedItems.Clear();
-            }
 
             var sampleSettings = sampleInfo.CreateSampleSettingsObject();
             sampleSettings.ThrottleRecreateRequest = false;
