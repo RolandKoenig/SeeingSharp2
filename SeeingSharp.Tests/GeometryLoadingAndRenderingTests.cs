@@ -60,7 +60,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(ACFileLoader.ImportGeometry(
+                        device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
@@ -104,7 +104,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(ACFileLoader.ImportGeometry(
+                        device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
@@ -148,7 +148,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(ACFileLoader.ImportGeometry(
+                        device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
@@ -193,7 +193,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(ACFileLoader.ImportGeometry(
+                        device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 

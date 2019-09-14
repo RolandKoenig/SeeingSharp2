@@ -83,12 +83,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
-                    () => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
+                    device => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(new CubeGeometryFactory()));
+                    device => new GeometryResource(new CubeGeometryFactory()));
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);

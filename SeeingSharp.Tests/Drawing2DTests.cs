@@ -336,7 +336,7 @@ namespace SeeingSharp.Tests
                 {
                     // Define object
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -432,10 +432,10 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resD2DTexture = manipulator.AddResource(
-                        () => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
+                        device => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                     var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
                     var geoResource = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
 
                     var newMesh = manipulator.AddMesh(geoResource, resD2DMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);

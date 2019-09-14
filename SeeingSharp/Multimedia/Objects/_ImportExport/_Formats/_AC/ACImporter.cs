@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Objects
             var resGeometry = GraphicsCore.GetNextGenericResourceKey();
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
-                () => new GeometryResource(importedGeometry)));
+                device => new GeometryResource(importedGeometry)));
 
             // Create all materials by material properties on the geometry
             var resMaterials = new NamedOrGenericKey[importedGeometry.CountSurfaces];
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Objects
                 result.ImportedResources.Add(
                     new ImportedResourceInfo(
                         actMaterialKey,
-                        () => new SimpleColoredMaterialResource()
+                        device => new SimpleColoredMaterialResource()
                         {
                             MaterialDiffuseColor = actMaterialProperties.DiffuseColor,
                             UseVertexColors = false

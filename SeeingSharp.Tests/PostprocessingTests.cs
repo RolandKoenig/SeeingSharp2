@@ -59,13 +59,13 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var keyPostprocess = manipulator.AddResource(
-                        () => new FocusPostprocessEffectResource(false, 0f));
+                        device => new FocusPostprocessEffectResource(false, 0f));
 
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -110,7 +110,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var keyPostprocess = manipulator.AddResource(
-                        () => new EdgeDetectPostprocessEffectResource
+                        device => new EdgeDetectPostprocessEffectResource
                         {
                             Thickness = 10f
                         });
@@ -119,7 +119,7 @@ namespace SeeingSharp.Tests
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);

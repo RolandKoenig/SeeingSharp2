@@ -54,7 +54,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
+                    device => new GeometryResource(
                         new CylinderGeometryFactory
                         {
                             CountOfSegments = 50

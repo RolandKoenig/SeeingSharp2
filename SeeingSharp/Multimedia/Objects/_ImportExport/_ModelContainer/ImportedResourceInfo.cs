@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="resourceKey">The key which is used by added the resource to a scene.</param>
         /// <param name="resourceFactory">The resource factory.</param>
-        public ImportedResourceInfo(NamedOrGenericKey resourceKey, Func<Resource> resourceFactory)
+        public ImportedResourceInfo(NamedOrGenericKey resourceKey, Func<EngineDevice, Resource> resourceFactory)
         {
             this.ResourceKey = resourceKey;
             this.ResourceFactory = resourceFactory;
@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Objects
             get;
         }
 
-        public Func<Resource> ResourceFactory
+        public Func<EngineDevice, Resource> ResourceFactory
         {
             get;
         }

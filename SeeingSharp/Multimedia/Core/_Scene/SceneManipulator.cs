@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="ResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <returns></returns>
-        public NamedOrGenericKey AddResource<ResourceType>(Func<ResourceType> resourceFactory)
+        public NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory)
             where ResourceType : Resource
         {
             this.CheckValid();
@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <param name="resourceKey">The key for the newly generated resource.</param>
         /// <returns></returns>
-        public NamedOrGenericKey AddResource<ResourceType>(Func<ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+        public NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
             this.CheckValid();
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="ResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The resource factory.</param>
         /// <param name="resourceKey">The resource key.</param>
-        public NamedOrGenericKey AddResourceIfNotCreated<ResourceType>(Func<ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+        public NamedOrGenericKey AddResourceIfNotCreated<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
             this.CheckValid();
@@ -267,7 +267,7 @@ namespace SeeingSharp.Multimedia.Core
                 textOptions);
             if (realignToCenter){ newGeometry.RealignToCenter(); }
 
-            return this.AddResource(() => new GeometryResource(newGeometry));
+            return this.AddResource(device => new GeometryResource(newGeometry));
         }
 
         /// <summary>

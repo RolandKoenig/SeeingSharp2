@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create edge detect resource
-                var resEdgeDetect = manipulator.AddResource(() => new EdgeDetectPostprocessEffectResource
+                var resEdgeDetect = manipulator.AddResource(device => new EdgeDetectPostprocessEffectResource
                 {
                     BorderColor = Color4Ex.BlueColor,
                     Thickness = 5f
@@ -64,7 +64,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(new CubeGeometryFactory()));
+                    device => new GeometryResource(new CubeGeometryFactory()));
                 var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                 // Create object and put it on the EdgeDetectLayer

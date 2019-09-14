@@ -54,7 +54,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
+                    device => new GeometryResource(
                         new SphereGeometryFactory
                         {
                             TDiv = 30,

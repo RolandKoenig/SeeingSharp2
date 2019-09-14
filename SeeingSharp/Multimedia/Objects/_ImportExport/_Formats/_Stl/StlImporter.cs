@@ -435,10 +435,10 @@ namespace SeeingSharp.Multimedia.Objects
                 var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     resGeometryKey,
-                    () => new GeometryResource(newGeometry)));
+                    device => new GeometryResource(newGeometry)));
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     resMaterialKey,
-                    () => new SimpleColoredMaterialResource()));
+                    device => new SimpleColoredMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
                 result.Objects.Add(loadedMesh);
 
@@ -493,10 +493,10 @@ namespace SeeingSharp.Multimedia.Objects
                 var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     resGeometryKey,
-                    () => new GeometryResource(newGeometry)));
+                    device => new GeometryResource(newGeometry)));
                 result.ImportedResources.Add(new ImportedResourceInfo(
                     resMaterialKey,
-                    () => new SimpleColoredMaterialResource()));
+                    device => new SimpleColoredMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
                 result.Objects.Add(loadedMesh);
 

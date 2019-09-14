@@ -330,8 +330,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="ResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <param name="resourceKey">The key for the newly generated resource.</param>
-        /// <returns></returns>
-        internal NamedOrGenericKey AddResource<ResourceType>(Func<ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+        internal NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
             resourceFactory.EnsureNotNull(nameof(resourceFactory));
@@ -344,8 +343,8 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             foreach (var actResourceDict in m_registeredResourceDicts)
-            {
-                actResourceDict.AddResource(resourceKey, resourceFactory());
+            { 
+                actResourceDict.AddResource(resourceKey, resourceFactory(actResourceDict.Device));
             }
 
             return resourceKey;

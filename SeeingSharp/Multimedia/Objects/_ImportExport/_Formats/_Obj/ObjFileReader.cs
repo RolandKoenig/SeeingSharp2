@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Objects
                     m_targetContainer.ImportedResources.Add(
                         new ImportedResourceInfo(
                             textureKey,
-                            () => new StandardTextureResource(m_resource.GetForAnotherFile(actTextureName, textureSubfolderPath))));
+                            device => new StandardTextureResource(m_resource.GetForAnotherFile(actTextureName, textureSubfolderPath))));
                 }
                 actSurface.TextureKey = textureKey;
 
@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Objects
                 actSurface.Material = actMaterialKey;
                 m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                     actMaterialKey,
-                    () => new SimpleColoredMaterialResource(textureKey)
+                    device => new SimpleColoredMaterialResource(textureKey)
                     {
                         ClipFactor = textureKey != NamedOrGenericKey.Empty ? 0.1f : 0f,
                         MaterialDiffuseColor = actSurface.DiffuseColor
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Objects
             var newObjType = new CustomGeometryFactory(this.TargetGeometry);
             m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
-                () => new GeometryResource(newObjType)));
+                device => new GeometryResource(newObjType)));
             m_targetContainer.Objects.Add(new Mesh(resGeometry, resMaterials));
         }
 

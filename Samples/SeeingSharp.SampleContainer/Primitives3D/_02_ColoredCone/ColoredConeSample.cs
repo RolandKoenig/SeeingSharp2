@@ -54,7 +54,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    () => new GeometryResource(
+                    device => new GeometryResource(
                         new ConeGeometryFactory
                         {
                         CountOfSegments = 50

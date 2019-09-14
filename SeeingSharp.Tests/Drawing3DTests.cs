@@ -140,7 +140,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -185,9 +185,9 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddResource(
-                        () => new SimpleColoredMaterialResource()
+                        device => new SimpleColoredMaterialResource()
                         {
                             MaterialDiffuseColor = Color4Ex.BlueColor,
                             UseVertexColors = false
@@ -241,7 +241,7 @@ namespace SeeingSharp.Tests
                     var stackedType = new StackedGeometryFactory(cubeType, 10);
 
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(stackedType));
+                        device => new GeometryResource(stackedType));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -285,7 +285,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -334,7 +334,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(new CubeGeometryFactory()));
+                        device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
@@ -380,7 +380,7 @@ namespace SeeingSharp.Tests
                     // Create pallet geometry resource
                     var cubeType = new CubeGeometryFactory();
                     var resGeometry = manipulator.AddResource(
-                        () => new GeometryResource(cubeType));
+                        device => new GeometryResource(cubeType));
                     var resMaterial = manipulator.AddSimpleColoredMaterial();
 
                     // Create pallet object

@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureSource">The source of the texture.</param>
         public static NamedOrGenericKey AddTexture(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
-            return sceneManipulator.AddResource(() => new StandardTextureResource(textureSource));
+            return sceneManipulator.AddResource(device => new StandardTextureResource(textureSource));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             ResourceLink textureSourceHighQuality,
             ResourceLink textureSourceLowQuality)
         {
-            return sceneManipulator.AddResource(() => new StandardTextureResource(textureSourceHighQuality, textureSourceLowQuality));
+            return sceneManipulator.AddResource(device => new StandardTextureResource(textureSourceHighQuality, textureSourceLowQuality));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         public static NamedOrGenericKey AddSimpleColoredMaterial(this SceneManipulator sceneManipulator)
         {
-            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource());
+            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource());
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             bool useVertexColors = true)
         {
             return sceneManipulator.AddResource(
-                () => new SimpleColoredMaterialResource(textureKey)
+                device => new SimpleColoredMaterialResource(textureKey)
                 {
                     AdjustTextureCoordinates = adjustTextureCoordinates,
                     MaxClipDistance = maxClipDistance,
@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public static NamedOrGenericKey AddSimpleColoredMaterial(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
             var resTexture = sceneManipulator.AddTexture(textureSource);
-            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource(resTexture));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             ResourceLink textureSourceHighQuality, ResourceLink textureSourceLowQuality)
         {
             var resTexture = sceneManipulator.AddTexture(textureSourceHighQuality, textureSourceLowQuality);
-            return sceneManipulator.AddResource(() => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource(resTexture));
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="geometry">The geometry.</param>
         public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, Geometry geometry)
         {
-            return sceneManipulator.AddResource(() => new GeometryResource(geometry));
+            return sceneManipulator.AddResource(device => new GeometryResource(geometry));
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="objectType">The geometry to be loaded.</param>
         public static NamedOrGenericKey AddGeometry(this SceneManipulator sceneManipulator, GeometryFactory objectType)
         {
-            return sceneManipulator.AddResource(() => new GeometryResource(objectType));
+            return sceneManipulator.AddResource(device => new GeometryResource(objectType));
         }
     }
 }
