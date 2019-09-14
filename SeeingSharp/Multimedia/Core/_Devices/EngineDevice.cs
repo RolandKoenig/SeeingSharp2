@@ -457,13 +457,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
-        public D3D11.Device1 DeviceD3D11_1 => m_handlerD3D11.Device1;
+        internal D3D11.Device1 DeviceD3D11_1 => m_handlerD3D11.Device1;
 
-        public D3D11.Device3 Device3D11_3 => m_handlerD3D11.Device3;
+        internal D2D.Device DeviceD2D => m_handlerD2D.Device;
 
-        public D2D.Device DeviceD2D => m_handlerD2D.Device;
-
-        public D2D.DeviceContext DeviceContextD2D => m_handlerD2D.DeviceContext;
+        internal D2D.DeviceContext DeviceContextD2D => m_handlerD2D.DeviceContext;
 
         /// <summary>
         /// A unique value that identifies the adapter.
@@ -477,7 +475,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the main Direct3D 11 context object.
         /// </summary>
-        public D3D11.DeviceContext DeviceImmediateContextD3D11 => m_handlerD3D11.ImmediateContext;
+        internal D3D11.DeviceContext DeviceImmediateContextD3D11 => m_handlerD3D11.ImmediateContext;
 
         /// <summary>
         /// Gets the current device configuration.
@@ -487,7 +485,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        public Factory2 FactoryDxgi => m_handlerDXGI.Factory;
+        internal Factory2 FactoryDxgi => m_handlerDXGI.Factory;
 
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
@@ -557,6 +555,16 @@ namespace SeeingSharp.Multimedia.Core
             public Adapter1 Adapter => m_host.m_handlerDXGI?.Adapter;
 
             public D2D.RenderTarget FakeRenderTarget2D => m_host.FakeRenderTarget2D;
+
+            public Factory2 FactoryDxgi => m_host.FactoryDxgi;
+
+            public D3D11.DeviceContext DeviceImmediateContextD3D11 => m_host.DeviceImmediateContextD3D11;
+
+            public D2D.DeviceContext DeviceContextD2D => m_host.DeviceContextD2D;
+
+            public D2D.Device DeviceD2D => m_host.DeviceD2D;
+
+            public D3D11.Device1 DeviceD3D11_1 => m_host.DeviceD3D11_1;
         }
     }
 }

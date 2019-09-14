@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             //Creates the swap chain for the given CoreWindow object
-            return new SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, coreWindow, ref desc);
+            return new SwapChain1(device.Internals.FactoryDxgi, device.Internals.DeviceD3D11_1, coreWindow, ref desc);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             //Creates the swap chain for XAML composition
-            return new SwapChain1(device.FactoryDxgi, device.DeviceD3D11_1, ref desc);
+            return new SwapChain1(device.Internals.FactoryDxgi, device.Internals.DeviceD3D11_1, ref desc);
         }
     }
 }

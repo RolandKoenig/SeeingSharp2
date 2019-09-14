@@ -23,9 +23,9 @@ using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineFactory
+    internal class EngineFactory
     {
-        public EngineFactory(DeviceLoadSettings loadSettings)
+        internal EngineFactory(DeviceLoadSettings loadSettings)
         {
             this.WindowsImagingComponent = new FactoryHandlerWIC(loadSettings);
             this.Direct2D = new FactoryHandlerD2D(loadSettings);

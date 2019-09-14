@@ -351,7 +351,7 @@ namespace SeeingSharp.Multimedia.Views
             var height = (int)pixelSize.Height;
 
             // Get references to current render device
-            D3D11.Device renderDevice = engineDevice.DeviceD3D11_1;
+            D3D11.Device renderDevice = engineDevice.Internals.DeviceD3D11_1;
             var renderDeviceContext = renderDevice.ImmediateContext;
             var viewPort = default(RawViewportF);
 
@@ -539,7 +539,7 @@ namespace SeeingSharp.Multimedia.Views
                 try
                 {
                     // Draw current 3d scene to wpf
-                    var deviceContext = engineDevice.DeviceImmediateContextD3D11;
+                    var deviceContext = engineDevice.Internals.DeviceImmediateContextD3D11;
                     deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
@@ -568,9 +568,9 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Copy resources
-                engineDevice.DeviceImmediateContextD3D11.ResolveSubresource(this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
+                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
                     GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
-                engineDevice.DeviceImmediateContextD3D11.CopyResource(this.RenderLoop.Internals.CopyHelperTextureStandard, this.RenderLoop.Internals.CopyHelperTextureStaging);
+                engineDevice.Internals.DeviceImmediateContextD3D11.CopyResource(this.RenderLoop.Internals.CopyHelperTextureStandard, this.RenderLoop.Internals.CopyHelperTextureStaging);
 
                 // Copy texture into wpf bitmap
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(

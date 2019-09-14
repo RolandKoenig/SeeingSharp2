@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Create and return the swap chain and the render target
             return new SwapChain1(
-                device.FactoryDxgi, device.DeviceD3D11_1, targetControl.Handle,
+                device.Internals.FactoryDxgi, device.Internals.DeviceD3D11_1, targetControl.Handle,
                 ref swapChainDesc,
                 new SwapChainFullScreenDescription
                 {
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Core
                 var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
-                result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
+                result = new D3D11.Texture2D(device.Internals.DeviceD3D11_1, new D3D11.Texture2DDescription
                 {
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
@@ -132,9 +132,9 @@ namespace SeeingSharp.Multimedia.Core
                 }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
 
                 // Workaround for now... auto generate mip-levels
-                using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
+                using (var shaderResourceView = new D3D11.ShaderResourceView(device.Internals.DeviceD3D11_1, result))
                 {
-                    device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
+                    device.Internals.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
                 }
             }
             finally
@@ -162,7 +162,7 @@ namespace SeeingSharp.Multimedia.Core
 
             //Prepare target bitmap
             var resultBitmap = new GDI.Bitmap(width, height);
-            var dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
 
             try
             {
@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                device.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
+                device.Internals.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
             }
             return resultBitmap;
         }

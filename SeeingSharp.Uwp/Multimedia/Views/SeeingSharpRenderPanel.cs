@@ -34,7 +34,6 @@ using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    //[ContentProperty(Name = "SceneComponents")]
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
         // Dependency properties

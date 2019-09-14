@@ -213,7 +213,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        [XmlAttribute]
         [DefaultValue(DEFAULT_SHOW_TEXTURES)]
         public bool ShowTextures
         {
@@ -233,7 +232,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Only relevant in UWP-Apps!
         /// </summary>
         [Browsable(false)]
-        [XmlAttribute]
         [DefaultValue(DEFAULT_SWAP_CHAIN_WIDTH_ALPHA)]
         public bool AlphaEnabledSwapChain
         {

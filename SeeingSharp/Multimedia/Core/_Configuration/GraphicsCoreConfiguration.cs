@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         public bool DebugEnabled
         {
             get;
-            set;
+            internal set;
         }
     }
 }

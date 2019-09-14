@@ -345,18 +345,18 @@ namespace SeeingSharp.Multimedia.Views
             if (this.RenderLoop.ViewConfiguration.AntialiasingEnabled)
             {
                 m_backBufferMultisampled = GraphicsHelper.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
-                m_renderTargetView = new D3D11.RenderTargetView(engineDevice.DeviceD3D11_1, m_backBufferMultisampled);
+                m_renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, m_backBufferMultisampled);
                 backBufferForRenderloop = m_backBufferMultisampled;
             }
             else
             {
-                m_renderTargetView = new D3D11.RenderTargetView(engineDevice.DeviceD3D11_1, m_backBuffer);
+                m_renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, m_backBuffer);
                 backBufferForRenderloop = m_backBuffer;
             }
 
             //Create the depth buffer
             m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
-            m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.DeviceD3D11_1, m_depthBuffer);
+            m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.Internals.DeviceD3D11_1, m_depthBuffer);
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.CreateDefaultViewport(viewSize.Width, viewSize.Height);
@@ -436,7 +436,7 @@ namespace SeeingSharp.Multimedia.Views
             // Copy contents of the backbuffer if in multisampling mode
             if (m_backBufferMultisampled != null)
             {
-                engineDevice.DeviceImmediateContextD3D11.ResolveSubresource(m_backBufferMultisampled, 0, m_backBuffer, 0, GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(m_backBufferMultisampled, 0, m_backBuffer, 0, GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
             }
 
             // Present all rendered stuff on screen

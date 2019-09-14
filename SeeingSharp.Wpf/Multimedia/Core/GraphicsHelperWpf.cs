@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
             height.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
 
             // Prepare target bitmap
-            var dataBox = device.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
 
             try
             {
@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                device.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
+                device.Internals.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
             }
         }
     }

@@ -48,9 +48,6 @@ namespace SeeingSharp.Multimedia.Core
         // Members for animations
         private AnimationHandler m_animationHandler;
 
-        // Members for behaviors
-        private List<SceneObjectBehavior> m_behaviors;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObject"/> class.
         /// </summary>
@@ -61,7 +58,6 @@ namespace SeeingSharp.Multimedia.Core
             m_children = new List<SceneObject>();
             m_parent = null;
 
-            m_behaviors = new List<SceneObjectBehavior>();
             m_animationHandler = new AnimationHandler(this);
             m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
 
@@ -70,53 +66,6 @@ namespace SeeingSharp.Multimedia.Core
 
             TransformationChanged = true;
             this.IsPickingTestVisible = true;
-        }
-
-        /// <summary>
-        /// Registers the given behavior on this object.
-        /// </summary>
-        /// <param name="behavior">The behavior to be registered.</param>
-        public void RegisterBehavior(SceneObjectBehavior behavior)
-        {
-            behavior.SetHostObject(this);
-            m_behaviors.Add(behavior);
-        }
-
-        /// <summary>
-        /// Gets the behavior of the given type.
-        /// </summary>
-        /// <typeparam name="BehaviorType">The type of the behavior to get.</typeparam>
-        public BehaviorType GetBehavior<BehaviorType>()
-            where BehaviorType : SceneObjectBehavior
-        {
-            var typeToSearch = typeof(BehaviorType);
-
-            foreach (var actBehavior in m_behaviors)
-            {
-                if (actBehavior.GetType() == typeToSearch)
-                {
-                    return actBehavior as BehaviorType;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the behavior of the given type.
-        /// </summary>
-        /// <param name="behaviorType">The type of the behavior to get.</param>
-        public SceneObjectBehavior GetBehavior(Type behaviorType)
-        {
-            foreach (var actBehavior in m_behaviors)
-            {
-                if (actBehavior.GetType() == behaviorType)
-                {
-                    return actBehavior;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -505,12 +454,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateState">State of update process.</param>
         internal void Update(SceneRelatedUpdateState updateState)
         {
-            // Update all behaviors first
-            foreach (var actBehavior in m_behaviors)
-            {
-                actBehavior.Update(updateState);
-            }
-
             // Update current animation state
             m_animationHandler?.Update(updateState);
 
@@ -536,12 +479,6 @@ namespace SeeingSharp.Multimedia.Core
             if (m_children.Count > 0)
             {
                 this.UpdateChildrenOverallInternal(updateState, m_children);
-            }
-
-            // Update all behaviors first
-            foreach (var actBehavior in m_behaviors)
-            {
-                actBehavior.UpdateOverall(updateState);
             }
         }
 

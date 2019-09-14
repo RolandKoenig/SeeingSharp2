@@ -417,10 +417,10 @@ namespace SeeingSharp.Multimedia.Views
             if (height <= SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
             //Get all factories
-            m_factory = device.FactoryDxgi;
+            m_factory = device.Internals.FactoryDxgi;
 
             //Get all devices
-            m_renderDevice = device.DeviceD3D11_1;
+            m_renderDevice = device.Internals.DeviceD3D11_1;
             m_renderDeviceContext = m_renderDevice.ImmediateContext;
 
             //Create the swap chain and the render target
