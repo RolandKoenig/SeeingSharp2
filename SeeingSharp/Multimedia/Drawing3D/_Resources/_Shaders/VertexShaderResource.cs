@@ -68,6 +68,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        public D3D11.VertexShader VertexShader => m_vertexShader;
+        internal D3D11.VertexShader VertexShader => m_vertexShader;
     }
 }

@@ -53,8 +53,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create cube geometry resource
-                var resCubeGeometry = manipulator.AddGeometry(new CubeGeometryFactory());
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resCubeGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 //********************************
                 // Create parent object
@@ -69,21 +69,21 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     .WaitFinished()
                     .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cubeMesh);
+                manipulator.AddObject(cubeMesh);
 
                 //********************************
                 // Create first level child
                 var actChild = new Mesh(resCubeGeometry, resMaterial);
                 actChild.Position = new Vector3(-2f, 0f, 0f);
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
-                manipulator.Add(actChild);
-                manipulator.AddChild(cubeMesh, actChild);
+                manipulator.AddObject(actChild);
+                manipulator.AddChildObject(cubeMesh, actChild);
 
                 actChild = new Mesh(resCubeGeometry, resMaterial);
                 actChild.Position = new Vector3(0f, 0f, 2f);
                 actChild.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
-                manipulator.Add(actChild);
-                manipulator.AddChild(cubeMesh, actChild);
+                manipulator.AddObject(actChild);
+                manipulator.AddChildObject(cubeMesh, actChild);
 
                 //********************************
                 // Create second level parent/child relationships
@@ -98,26 +98,26 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                     .WaitFinished()
                     .CallAction(() => actSecondLevelParent.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(actSecondLevelParent);
-                manipulator.AddChild(cubeMesh, actSecondLevelParent);
+                manipulator.AddObject(actSecondLevelParent);
+                manipulator.AddChildObject(cubeMesh, actSecondLevelParent);
 
                 var actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(1f, 0f, 0f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
-                manipulator.Add(actSecondLevelChild);
-                manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
+                manipulator.AddObject(actSecondLevelChild);
+                manipulator.AddChildObject(actSecondLevelParent, actSecondLevelChild);
 
                 actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(-1f, 0f, 0f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
-                manipulator.Add(actSecondLevelChild);
-                manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
+                manipulator.AddObject(actSecondLevelChild);
+                manipulator.AddChildObject(actSecondLevelParent, actSecondLevelChild);
 
                 actSecondLevelChild = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelChild.Position = new Vector3(0f, 0f, 1f);
                 actSecondLevelChild.Scaling = new Vector3(0.4f, 0.4f, 0.4f);
-                manipulator.Add(actSecondLevelChild);
-                manipulator.AddChild(actSecondLevelParent, actSecondLevelChild);
+                manipulator.AddObject(actSecondLevelChild);
+                manipulator.AddChildObject(actSecondLevelParent, actSecondLevelChild);
             });
 
             // Configure camera

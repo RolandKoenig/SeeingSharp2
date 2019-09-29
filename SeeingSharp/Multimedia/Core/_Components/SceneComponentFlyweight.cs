@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Core
                             actComponent.Component.DetachInternal(
                                 actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                            // Remove the component
+                            // RemoveObject the component
                             m_attachedComponents.RemoveAt(actComponentIndex);
                         }
                         finally
@@ -219,7 +219,7 @@ namespace SeeingSharp.Multimedia.Core
                                 actComponent.Component.DetachInternal(
                                     actManipulator, actComponent.CorrespondingView, actComponent.Context);
 
-                                // Remove the component
+                                // RemoveObject the component
                                 m_attachedComponents.RemoveAt(0);
                             }
                             finally

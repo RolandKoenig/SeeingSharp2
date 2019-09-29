@@ -62,9 +62,9 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    newObject = manipulator.AddMesh(resGeometry, resMaterial);
+                    newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
@@ -106,9 +106,9 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newMesh, memRenderTarget.RenderLoop);
 
@@ -150,9 +150,9 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    newObject = manipulator.AddMesh(resGeometry, resMaterial);
+                    newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
@@ -195,9 +195,9 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    newObject = manipulator.AddMesh(resGeometry, resMaterial);
+                    newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);

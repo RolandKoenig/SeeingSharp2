@@ -66,9 +66,9 @@ namespace SeeingSharp.Tests
 
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
                     newMesh.Color = Color4Ex.RedColor;
@@ -120,9 +120,9 @@ namespace SeeingSharp.Tests
 
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
                     newMesh.Color = Color4Ex.RedColor;

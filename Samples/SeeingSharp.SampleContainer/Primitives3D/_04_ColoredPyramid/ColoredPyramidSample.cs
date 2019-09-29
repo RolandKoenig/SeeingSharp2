@@ -56,7 +56,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(
                         new PyramidGeometryFactory()));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create Sphere object
                 var pyramidMesh = new Mesh(resGeometry, resMaterial);
@@ -68,7 +68,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
                     .WaitFinished()
                     .CallAction(() => pyramidMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(pyramidMesh);
+                manipulator.AddObject(pyramidMesh);
             });
 
             // Configure camera

@@ -59,7 +59,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                         {
                         CountOfSegments = 50
                     }));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create cone object
                 var coneMesh = new Mesh(resGeometry, resMaterial);
@@ -71,7 +71,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                     .WaitFinished()
                     .CallAction(() => coneMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(coneMesh);
+                manipulator.AddObject(coneMesh);
             });
 
             // Configure camera

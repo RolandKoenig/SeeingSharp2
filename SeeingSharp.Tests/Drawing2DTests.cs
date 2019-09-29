@@ -337,9 +337,9 @@ namespace SeeingSharp.Tests
                     // Define object
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterial();
+                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
-                    var newMesh = manipulator.AddMesh(resGeometry, resMaterial);
+                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
                     newMesh.Color = Color4Ex.Goldenrod;
@@ -433,11 +433,11 @@ namespace SeeingSharp.Tests
                 {
                     var resD2DTexture = manipulator.AddResource(
                         device => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
-                    var resD2DMaterial = manipulator.AddSimpleColoredMaterial(resD2DTexture);
+                    var resD2DMaterial = manipulator.AddSimpleColoredMaterialResource(resD2DTexture);
                     var geoResource = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
 
-                    var newMesh = manipulator.AddMesh(geoResource, resD2DMaterial);
+                    var newMesh = manipulator.AddMeshObject(geoResource, resD2DMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
                 });

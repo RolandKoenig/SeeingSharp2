@@ -63,8 +63,8 @@ namespace SeeingSharp.SampleContainer
                 typeof(SampleBase),
                 "Assets.Floor.dds");
 
-            var resBackgroundTexture = manipulator.AddTexture(sourceBackgroundTexture);
-            manipulator.Add(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);
+            var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
+            manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);
 
             // Define textures and materials
             var resTileTexture = manipulator.AddResource(device => new StandardTextureResource(sourceTileTexture));
@@ -80,9 +80,9 @@ namespace SeeingSharp.SampleContainer
 
             floorType.SetTilemap(25, 25);
 
-            // Add floor to scene
+            // AddObject floor to scene
             var resFloorGeometry = manipulator.AddResource(device => new GeometryResource(floorType));
-            var floorObject = manipulator.AddMesh(resFloorGeometry, sceneLayer, resTileMaterial);
+            var floorObject = manipulator.AddMeshObject(resFloorGeometry, sceneLayer, resTileMaterial);
             floorObject.Tag1 = "Floor";
         }
     }

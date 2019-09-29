@@ -603,7 +603,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     foreach (var actRenderLoop in copiedUnregisteredRenderLoops)
                     {
-                        // Remove this RenderLoop for further rendering inside this pass
+                        // RemoveObject this RenderLoop for further rendering inside this pass
                         while (renderingRenderLoops.Contains(actRenderLoop)) { renderingRenderLoops.Remove(actRenderLoop); }
                     }
                 }

@@ -53,8 +53,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create resources
-                var resGeometry = manipulator.AddGeometry(new CubeGeometryFactory());
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
@@ -68,16 +68,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                     .WaitFinished()
                     .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cubeMesh);
+                manipulator.AddObject(cubeMesh);
 
-                var resSkyboxTexture = manipulator.AddTexture(
+                var resSkyboxTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SkyBox.dds"));
 
                 // Create the skybox on a new layer
                 manipulator.AddLayer("Skybox");
                 var skyboxObject = new Skybox(resSkyboxTexture);
-                manipulator.Add(skyboxObject, "Skybox");
+                manipulator.AddObject(skyboxObject, "Skybox");
             });
 
             // Configure camera

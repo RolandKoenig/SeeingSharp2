@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     if (foundEdges[loopShadowEdge].EqualsWithTolerance(actEdge))
                                     {
-                                        //Remove the edge because it can't be member of the contour when it is found twice
+                                        //RemoveObject the edge because it can't be member of the contour when it is found twice
                                         alreadyAdded = true;
                                         foundEdges.RemoveAt(loopShadowEdge);
                                         edgesToRemove.Add(actEdge);
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 }
                                 if (alreadyAdded) { continue; }
 
-                                //Add the edge to the result list finally
+                                //AddObject the edge to the result list finally
                                 foundEdges.Add(actEdge);
                             }
                         }

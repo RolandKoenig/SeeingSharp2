@@ -61,7 +61,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                             PDiv = 30,
                             Radius = 0.5f
                         }));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create Sphere object
                 var sphereMesh = new Mesh(resGeometry, resMaterial);
@@ -74,7 +74,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                     .WaitFinished()
                     .CallAction(() => sphereMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(sphereMesh);
+                manipulator.AddObject(sphereMesh);
             });
 
             // Configure camera

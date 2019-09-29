@@ -58,15 +58,15 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                 textOptions.MakeVolumetricText = true;
                 textOptions.SurfaceVertexColor = Color.Blue;
                 textOptions.VolumetricSideSurfaceVertexColor = Color4Ex.CornflowerBlue;
-                var resGeometry = manipulator.Add3DTextGeometry(
+                var resGeometry = manipulator.Add3DTextGeometryResource(
                     $"Seeing# 2 {Environment.NewLine} Text3D Sample",
                     textOptions);
 
                 // Create material
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create text geometry and object
-                var textObject = manipulator.AddMesh(resGeometry, resMaterial);
+                var textObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 textObject.YPos = textOptions.VolumetricTextDepth;
             });
 

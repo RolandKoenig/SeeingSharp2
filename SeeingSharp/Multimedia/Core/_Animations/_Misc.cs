@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Core
     public enum AnimationFailedReaction
     {
         /// <summary>
-        /// Remove the failed part from the animation and continue with remaining.
+        /// RemoveObject the failed part from the animation and continue with remaining.
         /// </summary>
         RemoveAndContinue,
 

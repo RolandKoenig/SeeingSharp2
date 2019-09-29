@@ -220,7 +220,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.ObjectsInternal.Remove(sceneObject);
                 sceneObject.ResetSceneAndLayer();
 
-                // Remove object from specialized collections
+                // RemoveObject object from specialized collections
                 if (sceneObject is SceneSpacialObject spacialObject)
                 {
                     this.SpacialObjects.Remove(spacialObject);
@@ -230,13 +230,13 @@ namespace SeeingSharp.Multimedia.Core
                     m_sceneObjectsNotSpacial.Remove(sceneObject);
                 }
 
-                // Remove object form non-static collection
+                // RemoveObject object form non-static collection
                 if(!sceneObject.IsStatic)
                 {
                     m_sceneObjectsNotStatic.Remove(sceneObject);
                 }
 
-                // Remove this object on all view subsets
+                // RemoveObject this object on all view subsets
                 foreach (var actViewSubset in m_viewSubsets)
                 {
                     actViewSubset.DeregisterObject(sceneObject);
@@ -295,7 +295,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            //Remove all invalid objects
+            //RemoveObject all invalid objects
             if (invalidObjects != null)
             {
                 this.HandleInvalidObjects(invalidObjects);
@@ -435,7 +435,7 @@ namespace SeeingSharp.Multimedia.Core
                         ex, InternalExceptionLocation.UnloadingInvalid3DObject);
                 }
 
-                //Remove this object from this layer
+                //RemoveObject this object from this layer
                 this.RemoveObject(actObject);
             }
         }

@@ -402,7 +402,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            //Add the vertex and return the index
+            //AddObject the vertex and return the index
             this.VerticesInternal.Add(vertex);
             return this.VerticesInternal.Count - 1;
         }

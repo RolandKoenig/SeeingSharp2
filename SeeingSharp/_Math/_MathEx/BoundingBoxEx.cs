@@ -337,7 +337,7 @@ namespace SeeingSharp
             var result = new List<Vector3>();
             var size = boundingBox.Size;
 
-            //Add front face
+            //AddObject front face
             result.Add(boundingBox.Minimum);
             result.Add(boundingBox.Minimum + new Vector3(size.X, 0f, 0f));
             result.Add(boundingBox.Minimum + new Vector3(size.X, 0f, 0f));
@@ -347,7 +347,7 @@ namespace SeeingSharp
             result.Add(boundingBox.Minimum + new Vector3(0f, size.Y, 0f));
             result.Add(boundingBox.Minimum);
 
-            //Add back face
+            //AddObject back face
             result.Add(boundingBox.Minimum + new Vector3(0f, 0f, size.Z));
             result.Add(boundingBox.Minimum + new Vector3(size.X, 0f, size.Z));
             result.Add(boundingBox.Minimum + new Vector3(size.X, 0f, size.Z));
@@ -357,7 +357,7 @@ namespace SeeingSharp
             result.Add(boundingBox.Minimum + new Vector3(0f, size.Y, size.Z));
             result.Add(boundingBox.Minimum + new Vector3(0f, 0f, size.Z));
 
-            //Add connections
+            //AddObject connections
             result.Add(boundingBox.Minimum);
             result.Add(boundingBox.Minimum + new Vector3(0f, 0f, size.Z));
             result.Add(boundingBox.Minimum + new Vector3(size.X, 0f, 0f));

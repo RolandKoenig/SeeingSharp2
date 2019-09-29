@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Objects
                     break;
             }
 
-            // Add the object finally
+            // AddObject the object finally
             this.Objects.Add(rootObject);
 
             return rootObject;

@@ -333,7 +333,7 @@ namespace SeeingSharp.Multimedia.Core
                             continue;
                         }
 
-                        // Add this item to new subscription list
+                        // AddObject this item to new subscription list
                         actSubscription.SubscriptionIndex = newSubscriptionList.Count;
                         newSubscriptionList.Add(actSubscription);
 
@@ -554,7 +554,7 @@ namespace SeeingSharp.Multimedia.Core
                 renderState.ClearCurrentDepthBuffer();
             }
 
-            //Remove all invalid objects
+            //RemoveObject all invalid objects
             if (invalidObjects != null)
             {
                 this.HandleInvalidObjects(invalidObjects);
@@ -652,7 +652,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_renderPass2DOverlay, m_objectsPass2DOverlay,
                 renderState, ref invalidObjects);
 
-            // Remove all invalid objects
+            // RemoveObject all invalid objects
             if (invalidObjects != null)
             {
                 this.HandleInvalidObjects(invalidObjects);

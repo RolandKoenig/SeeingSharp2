@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Objects
                         changedVertex.Color = color;
                     }
 
-                    // Add the vertex
+                    // AddObject the vertex
                     result.AddVertex(changedVertex);
                 }
 

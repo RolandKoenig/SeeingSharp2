@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create material
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create geometry resource
                 ExtrudeGeometryFactory geometryFactory = null;
@@ -79,14 +79,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                         pathGeo, 0.1f, 
                         ExtrudeGeometryOptions.RescaleToUnitSize | ExtrudeGeometryOptions.ChangeOriginToCenter);
                 }
-                var resGeometry = manipulator.AddGeometry(geometryFactory);
+                var resGeometry = manipulator.AddGeometryResource(geometryFactory);
 
                 // Create the 3D object
                 var extrudedMesh = new Mesh(resGeometry, resMaterial);
                 extrudedMesh.Color = Color4Ex.GreenColor;
                 extrudedMesh.Position = new Vector3(0f, 0.5f, 0f);
                 extrudedMesh.Scaling = new Vector3(2f, 1f, 2f);
-                manipulator.Add(extrudedMesh);
+                manipulator.AddObject(extrudedMesh);
             });
 
             // Configure camera

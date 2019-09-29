@@ -1309,7 +1309,7 @@ namespace SeeingSharp.Multimedia.Core
                     break;
             }
 
-            // Remove components which where replaced by new ones
+            // RemoveObject components which where replaced by new ones
             if (componentsToRemove.Count > 0)
             {
                 foreach (var actComponentToRemove in componentsToRemove)

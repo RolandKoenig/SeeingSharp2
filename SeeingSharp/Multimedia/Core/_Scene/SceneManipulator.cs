@@ -215,7 +215,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Adds the given object to the scene.
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
-        public T Add<T>(T sceneObject)
+        public T AddObject<T>(T sceneObject)
             where T : SceneObject
         {
             this.CheckValid();
@@ -230,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
         /// <param name="layer">Layer on which the object should be added.</param>
-        public T Add<T>(T sceneObject, string layer)
+        public T AddObject<T>(T sceneObject, string layer)
             where T : SceneObject
         {
             this.CheckValid();
@@ -245,7 +245,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="parent">The object to which to add the child.</param>
         /// <param name="childToAdd">The object which is be be located under this one within object hierarchy.</param>
-        public void AddChild(SceneObject parent, SceneObject childToAdd)
+        public void AddChildObject(SceneObject parent, SceneObject childToAdd)
         {
             parent.EnsureNotNull(nameof(parent));
             childToAdd.EnsureNotNull(nameof(childToAdd));
@@ -259,7 +259,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="textToDisplay">The text to be displayed.</param>
         /// <param name="textOptions">All options regarding the text geometry generator.</param>
         /// <param name="realignToCenter">Moves all vertices so that the center is 0.</param>
-        public NamedOrGenericKey Add3DTextGeometry(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false)
+        public NamedOrGenericKey Add3DTextGeometryResource(string textToDisplay, TextGeometryOptions textOptions, bool realignToCenter = false)
         {
             var newGeometry = new Geometry();
             newGeometry.FirstSurface.BuildTextGeometry(
@@ -275,9 +275,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="resGeometry">The geometry.</param>
         /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
-        public Mesh AddMesh(NamedOrGenericKey resGeometry, params NamedOrGenericKey[] resMaterials)
+        public Mesh AddMeshObject(NamedOrGenericKey resGeometry, params NamedOrGenericKey[] resMaterials)
         {
-            return this.Add(new Mesh(resGeometry, resMaterials));
+            return this.AddObject(new Mesh(resGeometry, resMaterials));
         }
 
         /// <summary>
@@ -286,9 +286,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resGeometry">The geometry.</param>
         /// <param name="layer">The layer on which to add the object.</param>
         /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
-        public Mesh AddMesh(NamedOrGenericKey resGeometry, string layer, params NamedOrGenericKey[] resMaterials)
+        public Mesh AddMeshObject(NamedOrGenericKey resGeometry, string layer, params NamedOrGenericKey[] resMaterials)
         {
-            return this.Add(new Mesh(resGeometry, resMaterials), layer);
+            return this.AddObject(new Mesh(resGeometry, resMaterials), layer);
         }
 
         /// <summary>
@@ -296,11 +296,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="sceneObjects">All objects to add.</param>
         /// <param name="layer">Layer on wich the objects should be added.</param>
-        public IEnumerable<SceneObject> AddRange(IEnumerable<SceneObject> sceneObjects, string layer)
+        public IEnumerable<SceneObject> AddObjectRange(IEnumerable<SceneObject> sceneObjects, string layer)
         {
             foreach (var actObject in sceneObjects)
             {
-                this.Add(actObject, layer);
+                this.AddObject(actObject, layer);
             }
 
             return sceneObjects;
@@ -310,7 +310,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Removes the given object from the scene.
         /// </summary>
         /// <param name="sceneObject">Object to remove.</param>
-        public void Remove(SceneObject sceneObject)
+        public void RemoveObject(SceneObject sceneObject)
         {
             this.CheckValid();
 
@@ -322,21 +322,21 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="sceneObject">Object to remove.</param>
         /// <param name="layerName">Layer on which the scene object was added.</param>
-        public void Remove(SceneObject sceneObject, string layerName)
+        public void RemoveObject(SceneObject sceneObject, string layerName)
         {
             this.CheckValid();
 
             this.Owner.Remove(sceneObject, layerName);
         }
 
-        public void RemoveRange(IEnumerable<SceneObject> sceneObjects)
+        public void RemoveObjectRange(IEnumerable<SceneObject> sceneObjects)
         {
             this.CheckValid();
 
             this.Owner.RemoveRange(sceneObjects);
         }
 
-        public void RemoveRange(IEnumerable<SceneObject> sceneObjects, string layerName)
+        public void RemoveObjectRange(IEnumerable<SceneObject> sceneObjects, string layerName)
         {
             this.CheckValid();
 
@@ -427,7 +427,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets all objects of the given layer.
         /// </summary>
         /// <param name="layerName">The name of the layer.</param>
-        public IEnumerable<SceneObject> GetSceneObjects(string layerName)
+        public IEnumerable<SceneObject> GetObjects(string layerName)
         {
             return this.Owner.GetLayer(layerName).Objects;
         }
@@ -459,7 +459,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="parent">The object from which to remove the child.</param>
         /// <param name="childToRemove">The object which is to be removed from the list of children.</param>
-        internal void RemoveChild(SceneObject parent, SceneObject childToRemove)
+        internal void RemoveChildObject(SceneObject parent, SceneObject childToRemove)
         {
             parent.EnsureNotNull(nameof(parent));
             childToRemove.EnsureNotNull(nameof(childToRemove));
@@ -470,7 +470,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Queries for all children (also lower level).
         /// </summary>
-        internal IEnumerable<SceneObject> GetAllChildren(SceneObject sceneObject)
+        internal IEnumerable<SceneObject> GetAllChildObjects(SceneObject sceneObject)
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 

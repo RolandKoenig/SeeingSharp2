@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Input
 
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                // Remove the dummy button
+                // RemoveObject the dummy button
                 if (dummyButtonForFocus != null)
                 {
                     dummyButtonForFocus.KeyDown -= this.OnDummyButtonForFocus_KeyDown;

@@ -149,7 +149,7 @@ namespace SeeingSharp.Multimedia.Core
                 return;
             }
 
-            // Remove the given entry from subscription list
+            // RemoveObject the given entry from subscription list
             var subscriptionCount = subscriptionList.Count;
             var entryCount = 0;
 

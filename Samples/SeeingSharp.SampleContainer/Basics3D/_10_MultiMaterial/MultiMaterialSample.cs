@@ -55,18 +55,18 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define texture and material resource
-                var resTexture = manipulator.AddTexture(
+                var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
                 var resMaterials = new NamedOrGenericKey[]
                 {
-                    manipulator.AddSimpleColoredMaterial(materialDiffuseColor: Color4.White, useVertexColors:false),
-                    manipulator.AddSimpleColoredMaterial(resTexture),
-                    manipulator.AddSimpleColoredMaterial(materialDiffuseColor:Color4Ex.CornflowerBlue, useVertexColors:false)
+                    manipulator.AddSimpleColoredMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
+                    manipulator.AddSimpleColoredMaterialResource(resTexture),
+                    manipulator.AddSimpleColoredMaterialResource(materialDiffuseColor:Color4Ex.CornflowerBlue, useVertexColors:false)
                 };
 
                 // Create cube geometry resource
-                var resGeometry = manipulator.AddGeometry(
+                var resGeometry = manipulator.AddGeometryResource(
                     new CustomGeometryFactory(BuildCustomGeometry));
 
                 // Create cube meshes
@@ -94,7 +94,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                         .WaitFinished()
                         .CallAction(() => actCubeMeshInner.RotationEuler = Vector3.Zero)
                         .ApplyAndRewind();
-                    manipulator.Add(actCubeMeshInner);
+                    manipulator.AddObject(actCubeMeshInner);
                 }
 
             });

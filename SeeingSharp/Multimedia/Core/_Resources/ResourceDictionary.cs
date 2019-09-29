@@ -247,7 +247,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new ArgumentException("Unable to override existing key on given resource!");
             }
 
-            //Remove another resource with the same name
+            //RemoveObject another resource with the same name
             if (!resource.IsKeyEmpty)
             {
                 this.RemoveResource(resource.Key);
@@ -270,7 +270,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            //Add the resource
+            //AddObject the resource
             var newResource = new ResourceInfo(resource);
             m_resources[resource.Key] = newResource;
 
@@ -336,7 +336,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (resourceInfo.Resource.IsLoaded) { resourceInfo.Resource.UnloadResource(); }
                 if (resourceInfo.RenderableResource != null) { m_renderableResources.Remove(resourceInfo.RenderableResource); }
 
-                //Remove the resource
+                //RemoveObject the resource
                 m_resources.Remove(key);
 
                 resourceInfo.Resource.Dictionary = null;

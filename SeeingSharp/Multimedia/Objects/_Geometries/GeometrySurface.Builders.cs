@@ -316,7 +316,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Create bottom and top vertices
             var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
-            // Add bottom and top vertices to the geometry
+            // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
 
             // Generate all segments
@@ -344,7 +344,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var sideRightBottomCoord = bottomCoordinate + sideRightNormal * radius;
                 var sideMiddleBottomCoord = bottomCoordinate + sideNormal * radius;
 
-                //Add segment bottom triangle
+                //AddObject segment bottom triangle
                 var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord);
                 var segmentBottomRight = bottomVertex.Copy(sideRightBottomCoord);
                 this.AddTriangle(
@@ -356,7 +356,7 @@ namespace SeeingSharp.Multimedia.Objects
                 vectorToTopRotation.Y = vectorToTopRotation.Y + EngineMath.RAD_90DEG;
                 var topSideNormal = Vector3Ex.NormalFromHVRotation(vectorToTopRotation);
 
-                //Add segment top triangle
+                //AddObject segment top triangle
                 var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), topSideNormal);
                 var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
                 var segmentTopRight = topVertex.Copy(sideRightBottomCoord);
@@ -460,7 +460,7 @@ namespace SeeingSharp.Multimedia.Objects
             var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
             var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
-            // Add bottom and top vertices to the geometry
+            // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
             var topVertexIndex = this.Owner.AddVertex(topVertex);
 
@@ -490,7 +490,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var sideLeftTopCoord = new Vector3(sideLeftBottomCoord.X, sideLeftBottomCoord.Y + height, sideLeftBottomCoord.Z);
                 var sideRightTopCoord = new Vector3(sideRightBottomCoord.X, sideRightBottomCoord.Y + height, sideRightBottomCoord.Z);
 
-                // Add segment bottom triangle
+                // AddObject segment bottom triangle
                 if (buildBottom)
                 {
                     var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
@@ -499,7 +499,7 @@ namespace SeeingSharp.Multimedia.Objects
                         bottomVertexIndex, this.Owner.AddVertex(segmentBottomLeft), this.Owner.AddVertex(segmentBottomRight));
                 }
 
-                // Add segment top triangle
+                // AddObject segment top triangle
                 if (buildTop)
                 {
                     var segmentTopLeft = topVertex.Copy(sideLeftTopCoord, sideLeftTexCoord);
@@ -514,7 +514,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var texCoordSegmentStart = new Vector2(texSegmentX * (loop / (float)countOfSegments), 0f);
                     var texCoordSegmentTarget = new Vector2(texSegmentX * ((loop + 1) / (float)countOfSegments), texSegmentY);
 
-                    // Add segment side
+                    // AddObject segment side
                     this.BuildRect4V(sideLeftBottomCoord, sideRightBottomCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
                 }
             }

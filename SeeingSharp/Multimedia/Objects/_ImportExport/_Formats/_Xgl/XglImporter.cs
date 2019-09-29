@@ -323,12 +323,12 @@
 //            if (height < 0) { throw new SeeingSharpGraphicsException("Unable to read height of a texture!"); }
 //            if (inMemoryTexture == null) { throw new SeeingSharpGraphicsException("Unable to read the contents of a texture!"); }
 
-//            // Add the imported texture
+//            // AddObject the imported texture
 //            var resKeyTexture = container.GetResourceKey(RES_CLASS_TEXTURE, id);
-//            container.ImportedResources.Add(new ImportedResourceInfo(
+//            container.ImportedResources.AddObject(new ImportedResourceInfo(
 //                resKeyTexture,
 //                () => new StandardTextureResource(inMemoryTexture)));
-//            container.ImportedResources.Add(new ImportedResourceInfo(
+//            container.ImportedResources.AddObject(new ImportedResourceInfo(
 //                container.GetResourceKey(RES_CLASS_MATERIAL, id),
 //                () => new SimpleColoredMaterialResource(resKeyTexture)));
 //        }
@@ -463,7 +463,7 @@
 //                            referencedMatObject.TextureKey = container.GetResourceKey(RES_CLASS_TEXTURE, referencedTexture.ToString());
 //                        }
 
-//                        // Add the triangle
+//                        // AddObject the triangle
 //                        if (loopFacePoint != 3) { throw new SeeingSharpGraphicsException("Invalid face index count!"); }
 //                        actGeometry
 //                            .CreateOrGetExistingSurface(referencedMatObject)
@@ -472,8 +472,8 @@
 //                }
 //            }
 
-//            // Add the geometry resource
-//            container.ImportedResources.Add(new ImportedResourceInfo(
+//            // AddObject the geometry resource
+//            container.ImportedResources.AddObject(new ImportedResourceInfo(
 //                container.GetResourceKey(RES_CLASS_MESH, id),
 //                () => new GeometryResource(actGeometry)));
 //        }
@@ -572,12 +572,12 @@
 //                newObject.TransformationType = SpacialTransformationType.TranslationDirection;
 //                newObject.RotationForward = forwardVector;
 //                newObject.RotationUp = upVector;
-//                container.Objects.Add(newObject);
+//                container.Objects.AddObject(newObject);
 
-//                // Add dependency (parent => child)
+//                // AddObject dependency (parent => child)
 //                if (parentObject != null)
 //                {
-//                    container.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(parentObject, newObject));
+//                    container.ParentChildRelationships.AddObject(Tuple.Create<SceneObject, SceneObject>(parentObject, newObject));
 //                }
 //            }
 

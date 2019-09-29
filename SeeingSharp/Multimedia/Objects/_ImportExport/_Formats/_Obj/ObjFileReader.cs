@@ -171,7 +171,7 @@ namespace SeeingSharp.Multimedia.Objects
                             continue;
                         }
 
-                        // Remove leading and ending spaces
+                        // RemoveObject leading and ending spaces
                         actLine = actLine.Trim();
 
                         // Discard comments
@@ -279,7 +279,7 @@ namespace SeeingSharp.Multimedia.Objects
                             continue;
                         }
 
-                        // Remove leading and ending spaces
+                        // RemoveObject leading and ending spaces
                         actLine = actLine.Trim();
 
                         // Discard comments

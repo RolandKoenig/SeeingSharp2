@@ -59,7 +59,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                         {
                             CountOfSegments = 50
                         }));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create cylinder object
                 var cylinderMesh = new Mesh(resGeometry, resMaterial);
@@ -71,7 +71,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                     .WaitFinished()
                     .CallAction(() => cylinderMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cylinderMesh);
+                manipulator.AddObject(cylinderMesh);
             });
 
             // Configure camera

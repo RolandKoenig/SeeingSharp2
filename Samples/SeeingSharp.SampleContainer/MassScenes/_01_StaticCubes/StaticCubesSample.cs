@@ -70,13 +70,13 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create resources
-                var resGeometry = manipulator.AddGeometry(
+                var resGeometry = manipulator.AddGeometryResource(
                     new CubeGeometryFactory());
-                var resColoredMaterial = manipulator.AddSimpleColoredMaterial();
-                var resTexture = manipulator.AddTexture(
+                var resColoredMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
-                var resTexturedMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
+                var resTexturedMaterial = manipulator.AddSimpleColoredMaterialResource(resTexture);
 
                 // Create cubes
                 var sideLength = castedSettings.CubeCountPerSide;
@@ -115,7 +115,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                                     .ApplyAndRewind();
                             }
 
-                            manipulator.Add(cubeMesh);
+                            manipulator.AddObject(cubeMesh);
                         }
                     }
                 }

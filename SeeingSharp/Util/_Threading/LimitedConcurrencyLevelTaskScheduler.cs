@@ -59,7 +59,7 @@ namespace SeeingSharp.Util
         /// </summary>
         protected sealed override void QueueTask(Task task)
         {
-            // Add the task to the list of tasks to be processed.  If there aren't enough
+            // AddObject the task to the list of tasks to be processed.  If there aren't enough
             // delegates currently queued or running to process tasks, schedule another.
             lock (m_tasks)
             {

@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                     // Two steps here:
                     // - Merge current filling polygon and all its holes.
-                    // - Remove found holes from current hole list
+                    // - RemoveObject found holes from current hole list
                     var polygonForRendering = actFillingPolygon;
                     var polygonForTriangulation = actFillingPolygon.Clone();
                     var cutPoints = new List<SDX.Vector2>();
@@ -230,7 +230,7 @@ namespace SeeingSharp.Multimedia.Objects
                     volumetricTextDepth = volumetricTextDepth / m_geometryOptions.VerticesScaleFactor;
                 }
 
-                // Add all side surfaces
+                // AddObject all side surfaces
                 foreach (var actPolygon in geometryExtruder.GeneratedPolygons)
                 {
                     foreach (var actLine in actPolygon.Lines)

@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     *(SDXM.RawVector2*)&startPoint,
                     D2D.FigureBegin.Filled);
 
-                // Add all lines
+                // AddObject all lines
                 var vertexCount = vertices.Count;
 
                 for (var loop = 1; loop < vertexCount; loop++)

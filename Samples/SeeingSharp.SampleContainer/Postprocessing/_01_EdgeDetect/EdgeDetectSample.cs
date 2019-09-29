@@ -65,7 +65,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 // Create resources
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(new CubeGeometryFactory()));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create object and put it on the EdgeDetectLayer
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
@@ -79,7 +79,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                     .WaitFinished()
                     .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cubeMesh, "EdgeDetectLayer");
+                manipulator.AddObject(cubeMesh, "EdgeDetectLayer");
             });
 
             // Configure camera

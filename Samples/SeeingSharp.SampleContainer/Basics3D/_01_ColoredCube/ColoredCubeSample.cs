@@ -27,6 +27,7 @@ using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
 using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
@@ -53,13 +54,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create resources
-                //var resGeometry = manipulator.AddGeometry(new CubeGeometryFactory());
-                //var resMaterial = manipulator.AddSimpleColoredMaterial();
-
-var resGeometry = manipulator.AddResource(
-    device => new GeometryResource(new CubeGeometryFactory()));
-var resMaterial = manipulator.AddResource(
-    device => new SimpleColoredMaterialResource());
+                var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
                 cubeMesh.Color = Color4Ex.GreenColor;
@@ -72,7 +68,7 @@ var resMaterial = manipulator.AddResource(
                     .WaitFinished()
                     .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cubeMesh);
+                manipulator.AddObject(cubeMesh);
             });
 
             // Configure camera

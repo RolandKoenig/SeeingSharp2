@@ -70,7 +70,7 @@ namespace SeeingSharp.WinFormsSamples
                 m_mnuChangeDevice.DropDownItems.Add(newButton);
             }
 
-            // Add all sample pages
+            // AddObject all sample pages
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
             TabPage firstTabPage = null;

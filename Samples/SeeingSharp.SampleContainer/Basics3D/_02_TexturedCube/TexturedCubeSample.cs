@@ -54,13 +54,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Define texture and material resource
-                var resTexture = manipulator.AddTexture(
+                var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
-                var resMaterial = manipulator.AddSimpleColoredMaterial(resTexture);
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource(resTexture);
 
                 // Create cube geometry resource
-                var resGeometry = manipulator.AddGeometry(new CubeGeometryFactory());
+                var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
@@ -74,7 +74,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
                     .WaitFinished()
                     .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.Add(cubeMesh);
+                manipulator.AddObject(cubeMesh);
             });
 
             // Configure camera

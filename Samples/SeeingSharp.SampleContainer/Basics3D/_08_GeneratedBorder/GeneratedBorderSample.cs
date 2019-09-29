@@ -61,7 +61,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                 // Create resources
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(new CubeGeometryFactory()));
-                var resMaterial = manipulator.AddSimpleColoredMaterial();
+                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 // Create cubes with border
                 const float SPACE = 1.05f;
@@ -71,14 +71,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                     cubeMesh.Color = Color4Ex.GreenColor;
                     cubeMesh.Position = new Vector3(0f, 0.5f, loop * SPACE);
                     cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
-                    manipulator.Add(cubeMesh);
+                    manipulator.AddObject(cubeMesh);
                     m_cubes.Add(cubeMesh);
 
                     cubeMesh = new Mesh(resGeometry, resMaterial);
                     cubeMesh.Color = Color4Ex.GreenColor;
                     cubeMesh.Position = new Vector3(-SPACE, 0.5f, loop * SPACE);
                     cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
-                    manipulator.Add(cubeMesh);
+                    manipulator.AddObject(cubeMesh);
                     m_cubes.Add(cubeMesh);
                 }
 
@@ -88,12 +88,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
                     var cubeMesh = new Mesh(resGeometry, resMaterial);
                     cubeMesh.Color = Color4Ex.GreenColor;
                     cubeMesh.Position = new Vector3(SPACE, 0.5f, loop * SPACE);
-                    manipulator.Add(cubeMesh);
+                    manipulator.AddObject(cubeMesh);
 
                     cubeMesh = new Mesh(resGeometry, resMaterial);
                     cubeMesh.Color = Color4Ex.GreenColor;
                     cubeMesh.Position = new Vector3(2* SPACE, 0.5f, loop * SPACE);
-                    manipulator.Add(cubeMesh);
+                    manipulator.AddObject(cubeMesh);
                 }
             });
 

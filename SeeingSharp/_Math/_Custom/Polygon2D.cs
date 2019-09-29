@@ -141,7 +141,7 @@ namespace SeeingSharp
             var resultBuilder = new List<Vector2>(m_vertices.Length + actHole.m_vertices.Length + 2);
             for (var loopFillVertex = 0; loopFillVertex < m_vertices.Length; loopFillVertex++)
             {
-                // Add current vertex from filling polygon first
+                // AddObject current vertex from filling polygon first
                 resultBuilder.Add(m_vertices[loopFillVertex]);
 
                 // Do special logic on cut point
@@ -153,7 +153,7 @@ namespace SeeingSharp
                         resultBuilder.Add(foundLine.Item3);
                     }
 
-                    // Add all vertices from the hole polygon
+                    // AddObject all vertices from the hole polygon
                     resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
                     var loopHoleVertex = holeVertexIndexWithHighestX + 1;
                     while (loopHoleVertex != holeVertexIndexWithHighestX)
@@ -166,19 +166,19 @@ namespace SeeingSharp
                         if (loopHoleVertex >= actHole.m_vertices.Length) { loopHoleVertex = 0; }
                     }
 
-                    // Add cutpoints again to continue with main polygon
+                    // AddObject cutpoints again to continue with main polygon
                     if (mergeOptions.MakeMergepointSpaceForTriangulation)
                     {
                         resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX] + new Vector2(0f, 0.001f));
 
-                        // Add the cutpoint again
+                        // AddObject the cutpoint again
                         resultBuilder.Add(foundLine.Item3 + new Vector2(0f, 0.001f));
                     }
                     else
                     {
                         resultBuilder.Add(actHole.m_vertices[holeVertexIndexWithHighestX]);
 
-                        // Add the cutpoint again
+                        // AddObject the cutpoint again
                         resultBuilder.Add(foundLine.Item3);
                     }
 

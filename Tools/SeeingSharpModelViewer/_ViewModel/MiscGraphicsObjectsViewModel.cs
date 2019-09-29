@@ -70,8 +70,8 @@ namespace SeeingSharpModelViewer
                     ResourceLink linkBackgroundTexture = new AssemblyResourceLink(
                         typeof(App),
                         "Assets.Textures.Background.dds");
-                    var resBackgroundTexture = manipulator.AddTexture(linkBackgroundTexture);
-                    manipulator.Add(new FullscreenTexture(resBackgroundTexture), bgImageLayer.Name);
+                    var resBackgroundTexture = manipulator.AddTextureResource(linkBackgroundTexture);
+                    manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgImageLayer.Name);
                 }
 
                 // Define ground
@@ -85,32 +85,32 @@ namespace SeeingSharpModelViewer
                 objTypeGrid.XLineHighlightColor = Color4Ex.GreenColor;
                 objTypeGrid.ZLineHighlightColor = Color4Ex.BlueColor;
 
-                var resGridGeometry = manipulator.AddGeometry(objTypeGrid);
-                manipulator.Add(new Mesh(resGridGeometry), Constants.LAYER_BACKGROUND);
+                var resGridGeometry = manipulator.AddGeometryResource(objTypeGrid);
+                manipulator.AddObject(new Mesh(resGridGeometry), Constants.LAYER_BACKGROUND);
 
-                var resSimpleMaterial = manipulator.AddSimpleColoredMaterial();
+                var resSimpleMaterial = manipulator.AddSimpleColoredMaterialResource();
 
                 var textXOptions = TextGeometryOptions.Default;
                 textXOptions.SurfaceVertexColor = Color4Ex.GreenColor;
                 textXOptions.MakeVolumetricText = false;
                 textXOptions.FontSize = 30;
-                var resTextXGeometry = manipulator.Add3DTextGeometry(
+                var resTextXGeometry = manipulator.Add3DTextGeometryResource(
                     "X", textXOptions,
                     realignToCenter: true);
                 var textXMesh = new Mesh(resTextXGeometry, resSimpleMaterial);
                 textXMesh.Position = new SharpDX.Vector3((m_tilesPerSide / 2f) + 1f, 0, 0);
-                manipulator.Add(textXMesh, Constants.LAYER_BACKGROUND);
+                manipulator.AddObject(textXMesh, Constants.LAYER_BACKGROUND);
 
                 var textZOptions = TextGeometryOptions.Default;
                 textZOptions.SurfaceVertexColor = Color4Ex.BlueColor;
                 textZOptions.MakeVolumetricText = false;
                 textZOptions.FontSize = 30;
-                var resTextZGeometry = manipulator.Add3DTextGeometry(
+                var resTextZGeometry = manipulator.Add3DTextGeometryResource(
                     "Z", textZOptions,
                     realignToCenter: true);
                 var textZMesh = new Mesh(resTextZGeometry, resSimpleMaterial);
                 textZMesh.Position = new SharpDX.Vector3(0f, 0f, (m_tilesPerSide / 2f) + 1f);
-                manipulator.Add(textZMesh, Constants.LAYER_BACKGROUND);
+                manipulator.AddObject(textZMesh, Constants.LAYER_BACKGROUND);
             });
         }
 

@@ -90,10 +90,10 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var baseIndex = this.Owner.VerticesInternal.Count;
 
-            // Add all vertices to local geometry
+            // AddObject all vertices to local geometry
             this.Owner.VerticesInternal.AddRange(geometry.VerticesInternal);
 
-            // Add all corners to local surface
+            // AddObject all corners to local surface
             foreach(var actSurface in geometry.Surfaces)
             {
                 var corners = actSurface.m_corners;
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="vertices">The vertices to add.</param>
         public void AddPolygonByCuttingEars(IEnumerable<Vertex> vertices)
         {
-            //Add vertices first
+            //AddObject vertices first
             var indices = new List<int>();
 
             foreach (var actVertex in vertices)
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name = "twoSided" > The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<Vertex> vertices, bool twoSided = false)
         {
-            //Add vertices first
+            //AddObject vertices first
             var indices = new List<int>();
 
             foreach (var actVertex in vertices)
@@ -215,7 +215,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="twoSided">The indexes for front- and backside?</param>
         public void AddPolygonByCuttingEarsAndCalculateNormals(IEnumerable<int> indices, bool twoSided)
         {
-            //Add the triangles using cutting ears algorithm
+            //AddObject the triangles using cutting ears algorithm
             var addedIndices = this.AddPolygonByCuttingEarsInternal(new List<int>(indices), twoSided);
 
             //Calculate all normals
@@ -651,7 +651,7 @@ namespace SeeingSharp.Multimedia.Objects
                 throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
             }
 
-            //Add all triangle data
+            //AddObject all triangle data
             var indexEnumerator = triangleIndices.GetEnumerator();
             try
             {

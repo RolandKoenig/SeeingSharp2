@@ -473,7 +473,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                 if (currentObject != null)
                                 {
-                                    //Add object to parent object, if any related
+                                    //AddObject object to parent object, if any related
                                     var addedToParent = false;
 
                                     if (parentObjects.Count > 0)
@@ -513,7 +513,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                                     if (currentObject.KidCount > 0) { parentObjects.Push(currentObject); }
 
-                                    //Add to scene root if this object has no parent
+                                    //AddObject to scene root if this object has no parent
                                     loadedObjects.Pop();
 
                                     if (!addedToParent)

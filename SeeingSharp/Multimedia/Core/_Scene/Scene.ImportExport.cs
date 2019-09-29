@@ -97,7 +97,7 @@ namespace SeeingSharp.Multimedia.Core
             // Append all data to the scene
             await this.ManipulateSceneAsync(manipulator =>
             {
-                // Add all resources first
+                // AddObject all resources first
                 foreach(var actResourceInfo in modelContainer.ImportedResources)
                 {
                     manipulator.AddResource(
@@ -105,17 +105,17 @@ namespace SeeingSharp.Multimedia.Core
                         actResourceInfo.ResourceKey);
                 }
 
-                // Add all objects
+                // AddObject all objects
                 foreach(var actObject in modelContainer.Objects)
                 {
-                    manipulator.Add(actObject);
+                    manipulator.AddObject(actObject);
                     result.Add(actObject);
                 }
 
                 // Apply parent/child relationships
                 foreach(var actDependencyInfo in modelContainer.ParentChildRelationships)
                 {
-                    manipulator.AddChild(
+                    manipulator.AddChildObject(
                         actDependencyInfo.Item1,
                         actDependencyInfo.Item2);
                 }
