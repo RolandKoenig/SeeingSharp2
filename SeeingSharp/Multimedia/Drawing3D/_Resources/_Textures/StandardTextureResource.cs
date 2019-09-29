@@ -79,7 +79,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Select source texture
             var source = m_resourceLinkLowQuality;
-
             if (device.Configuration.TextureQuality == TextureQuality.High)
             {
                 source = m_resourceLinkHighQuality;

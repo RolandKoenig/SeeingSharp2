@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// on load time. So Draw2D is called only once per device!
     /// Use this class for static textures, backgrounds, etc.
     /// </summary>
-    public class Direct2DSingleRenderTextureResource : TextureResource
+    public class Direct2DOneTimeRenderTextureResource : TextureResource
     {
         // Configuration
         private Custom2DDrawingLayer m_drawingLayer;
@@ -47,12 +47,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.ShaderResourceView m_renderTargetTextureView;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// Initializes a new instance of the <see cref="Direct2DOneTimeRenderTextureResource"/> class.
         /// </summary>
         /// <param name="drawingLayer">The drawing layer.</param>
         /// <param name="height">The width of the generated texture.</param>
         /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
+        public Direct2DOneTimeRenderTextureResource(Custom2DDrawingLayer drawingLayer, int width, int height)
         {
             drawingLayer.EnsureNotNull(nameof(drawingLayer));
             width.EnsurePositiveOrZero(nameof(width));
@@ -64,12 +64,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSingleRenderTextureResource"/> class.
+        /// Initializes a new instance of the <see cref="Direct2DOneTimeRenderTextureResource"/> class.
         /// </summary>
         /// <param name="fillBrush">The brush which gets used when painting the texture on load time.</param>
         /// <param name="height">The width of the generated texture.</param>
         /// <param name="width">The height of the generated texture.</param>
-        public Direct2DSingleRenderTextureResource(BrushResource fillBrush, int width, int height)
+        public Direct2DOneTimeRenderTextureResource(BrushResource fillBrush, int width, int height)
         {
             fillBrush.EnsureNotNull(nameof(fillBrush));
             width.EnsurePositiveOrZero(nameof(width));
