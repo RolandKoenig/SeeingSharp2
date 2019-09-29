@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        public abstract D3D11.Texture2D Texture
+        internal abstract D3D11.Texture2D Texture
         {
             get;
         }
@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public abstract D3D11.ShaderResourceView TextureView
+        internal abstract D3D11.ShaderResourceView TextureView
         {
             get;
         }

@@ -148,12 +148,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        public override D3D11.Texture2D Texture => m_renderTargetTexture;
+        internal override D3D11.Texture2D Texture => m_renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
+        internal override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.

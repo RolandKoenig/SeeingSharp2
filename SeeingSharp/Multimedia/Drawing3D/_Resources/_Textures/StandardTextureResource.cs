@@ -125,12 +125,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the texture object.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override D3D11.Texture2D Texture => m_texture;
+        internal override D3D11.Texture2D Texture => m_texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView => m_textureView;
+        internal override D3D11.ShaderResourceView TextureView => m_textureView;
 
         /// <summary>
         /// Is the object loaded correctly?

@@ -301,12 +301,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the texture itself.
         /// </summary>
-        public override D3D11.Texture2D Texture => m_colorBuffer;
+        internal override D3D11.Texture2D Texture => m_colorBuffer;
 
         /// <summary>
         /// Gets the shader resource view to the texture.
         /// </summary>
-        public override D3D11.ShaderResourceView TextureView => m_colorBufferShaderResourceView;
+        internal override D3D11.ShaderResourceView TextureView => m_colorBufferShaderResourceView;
 
         public override int ArraySize => 1;
 
