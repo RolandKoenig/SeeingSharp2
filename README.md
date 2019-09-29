@@ -1,4 +1,6 @@
 # SeeingSharp2
+### Screenshots
+![alt tag](Misc/WikiImages/SeeingSharp_Samples.png)
 
 ### Common information
 Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps.
