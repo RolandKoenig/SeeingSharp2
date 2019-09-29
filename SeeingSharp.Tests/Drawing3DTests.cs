@@ -141,7 +141,7 @@ namespace SeeingSharp.Tests
                 {
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -187,7 +187,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddResource(
-                        device => new SimpleColoredMaterialResource()
+                        device => new StandardMaterialResource()
                         {
                             MaterialDiffuseColor = Color4Ex.BlueColor,
                             UseVertexColors = false
@@ -242,7 +242,7 @@ namespace SeeingSharp.Tests
 
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(stackedType));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -286,7 +286,7 @@ namespace SeeingSharp.Tests
                 {
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -335,7 +335,7 @@ namespace SeeingSharp.Tests
                 {
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -381,7 +381,7 @@ namespace SeeingSharp.Tests
                     var cubeType = new CubeGeometryFactory();
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(cubeType));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     // Create pallet object
                     var cubeMesh = manipulator.AddMeshObject(resGeometry, resMaterial);

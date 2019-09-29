@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             return resourceDict.GetResourceAndEnsureLoaded(
                 ResourceKeys.RES_MATERIAL_COLORED,
-                () => new SimpleColoredMaterialResource());
+                () => new StandardMaterialResource());
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if(textureKey.IsEmpty)
             {
                 // Create a default material without any texture
-                var result = resourceDict.AddResource(materialKey, new SimpleColoredMaterialResource());
+                var result = resourceDict.AddResource(materialKey, new StandardMaterialResource());
                 result.MaterialDiffuseColor = targetSurface.CommonMaterialProperties.DiffuseColor;
                 return result;
             }
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 var result = resourceDict.AddResource(
                     materialKey,
-                    new SimpleColoredMaterialResource(textureKey));
+                    new StandardMaterialResource(textureKey));
                 result.MaterialDiffuseColor = targetSurface.CommonMaterialProperties.DiffuseColor;
                 return result;
             }
@@ -144,7 +144,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 var result = resourceDict.AddResource(
                     materialKey,
-                    new SimpleColoredMaterialResource());
+                    new StandardMaterialResource());
                 result.MaterialDiffuseColor = targetSurface.CommonMaterialProperties.DiffuseColor;
                 return result;
             }

@@ -61,7 +61,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
                             PDiv = 30,
                             Radius = 0.5f
                         }));
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create Sphere object
                 var sphereMesh = new Mesh(resGeometry, resMaterial);

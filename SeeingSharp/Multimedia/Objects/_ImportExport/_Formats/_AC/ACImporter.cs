@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Objects
                 result.ImportedResources.Add(
                     new ImportedResourceInfo(
                         actMaterialKey,
-                        device => new SimpleColoredMaterialResource()
+                        device => new StandardMaterialResource()
                         {
                             MaterialDiffuseColor = actMaterialProperties.DiffuseColor,
                             UseVertexColors = false

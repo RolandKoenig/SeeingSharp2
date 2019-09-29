@@ -63,7 +63,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                     textOptions);
 
                 // Create material
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create text geometry and object
                 var textObject = manipulator.AddMeshObject(resGeometry, resMaterial);

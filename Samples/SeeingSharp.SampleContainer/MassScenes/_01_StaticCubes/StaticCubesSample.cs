@@ -72,11 +72,11 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                 // Create resources
                 var resGeometry = manipulator.AddGeometryResource(
                     new CubeGeometryFactory());
-                var resColoredMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resColoredMaterial = manipulator.AddStandardMaterialResource();
                 var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
-                var resTexturedMaterial = manipulator.AddSimpleColoredMaterialResource(resTexture);
+                var resTexturedMaterial = manipulator.AddStandardMaterialResource(resTexture);
 
                 // Create cubes
                 var sideLength = castedSettings.CubeCountPerSide;

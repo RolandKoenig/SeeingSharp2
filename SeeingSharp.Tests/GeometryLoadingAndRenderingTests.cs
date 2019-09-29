@@ -62,7 +62,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
@@ -106,7 +106,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
@@ -150,7 +150,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
@@ -195,7 +195,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
-                    var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                    var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });

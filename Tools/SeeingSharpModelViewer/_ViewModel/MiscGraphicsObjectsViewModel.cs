@@ -88,7 +88,7 @@ namespace SeeingSharpModelViewer
                 var resGridGeometry = manipulator.AddGeometryResource(objTypeGrid);
                 manipulator.AddObject(new Mesh(resGridGeometry), Constants.LAYER_BACKGROUND);
 
-                var resSimpleMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resSimpleMaterial = manipulator.AddStandardMaterialResource();
 
                 var textXOptions = TextGeometryOptions.Default;
                 textXOptions.SurfaceVertexColor = Color4Ex.GreenColor;

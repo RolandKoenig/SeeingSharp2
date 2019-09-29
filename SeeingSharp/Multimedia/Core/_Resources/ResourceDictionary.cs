@@ -161,7 +161,7 @@ namespace SeeingSharp.Multimedia.Core
             // Try to create default resources
             if (resourceType == typeof(MaterialResource))
             {
-                result = new SimpleColoredMaterialResource() as T;
+                result = new StandardMaterialResource() as T;
             }
             else if (resourceType == typeof(TextureResource))
             {

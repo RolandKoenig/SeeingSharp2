@@ -26,7 +26,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    public class SimpleColoredMaterialResource : MaterialResource
+    public class StandardMaterialResource : MaterialResource
     {
         // Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
@@ -50,10 +50,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private DefaultResources m_defaultResources;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleColoredMaterialResource"/> class.
+        /// Initializes a new instance of the <see cref="StandardMaterialResource"/> class.
         /// </summary>
         /// <param name="textureKey">The name of the texture to be rendered.</param>
-        public SimpleColoredMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey())
+        public StandardMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey())
         {
             this.TextureKey = textureKey;
             m_maxClipDistance = 1000f;

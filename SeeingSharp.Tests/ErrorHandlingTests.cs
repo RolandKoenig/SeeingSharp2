@@ -90,7 +90,7 @@ namespace SeeingSharp.Tests
                     {
                         var resD2DTexture = manipulator.AddResource(
                             device => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
-                        var resD2DMaterial = manipulator.AddSimpleColoredMaterialResource(resD2DTexture);
+                        var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
                         var resGeometry = manipulator.AddResource(
                             device => new GeometryResource(new CubeGeometryFactory()));
 

@@ -56,7 +56,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(
                         new PyramidGeometryFactory()));
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create Sphere object
                 var pyramidMesh = new Mesh(resGeometry, resMaterial);

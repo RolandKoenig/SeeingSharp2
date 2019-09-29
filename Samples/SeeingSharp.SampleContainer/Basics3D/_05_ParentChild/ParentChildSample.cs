@@ -54,7 +54,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 
                 // Create cube geometry resource
                 var resCubeGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 //********************************
                 // Create parent object

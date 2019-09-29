@@ -128,7 +128,7 @@ namespace SeeingSharp.Multimedia.Objects
                 actSurface.Material = actMaterialKey;
                 m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                     actMaterialKey,
-                    device => new SimpleColoredMaterialResource(textureKey)
+                    device => new StandardMaterialResource(textureKey)
                     {
                         ClipFactor = textureKey != NamedOrGenericKey.Empty ? 0.1f : 0f,
                         MaterialDiffuseColor = actSurface.DiffuseColor

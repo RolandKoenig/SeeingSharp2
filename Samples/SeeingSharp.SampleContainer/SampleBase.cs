@@ -68,7 +68,7 @@ namespace SeeingSharp.SampleContainer
 
             // Define textures and materials
             var resTileTexture = manipulator.AddResource(device => new StandardTextureResource(sourceTileTexture));
-            var resTileMaterial = manipulator.AddResource(device => new SimpleColoredMaterialResource(resTileTexture));
+            var resTileMaterial = manipulator.AddResource(device => new StandardMaterialResource(resTileTexture));
 
             // Define floor geometry
             var floorType = new FloorGeometryFactory(new Vector2(4f, 4f), 0f)

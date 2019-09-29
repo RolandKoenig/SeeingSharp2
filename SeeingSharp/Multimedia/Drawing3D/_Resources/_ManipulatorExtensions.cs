@@ -56,9 +56,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Adds a new simple colored material resource to the scene.
         /// </summary>
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
-        public static NamedOrGenericKey AddSimpleColoredMaterialResource(this SceneManipulator sceneManipulator)
+        public static NamedOrGenericKey AddStandardMaterialResource(this SceneManipulator sceneManipulator)
         {
-            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource());
+            return sceneManipulator.AddResource(device => new StandardMaterialResource());
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="addToAlpha">Needed for video rendering (Frames from the MF SourceReader have alpha always to zero).</param>
         /// <param name="materialDiffuseColor">The fixed diffuse color for this material.</param>
         /// <param name="useVertexColors">Set this to false to use the material's diffuse color.</param>
-        public static NamedOrGenericKey AddSimpleColoredMaterialResource(
+        public static NamedOrGenericKey AddStandardMaterialResource(
             this SceneManipulator sceneManipulator, 
             NamedOrGenericKey textureKey = default(NamedOrGenericKey),
             float clipFactor = 0f,
@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             bool useVertexColors = true)
         {
             return sceneManipulator.AddResource(
-                device => new SimpleColoredMaterialResource(textureKey)
+                device => new StandardMaterialResource(textureKey)
                 {
                     AdjustTextureCoordinates = adjustTextureCoordinates,
                     MaxClipDistance = maxClipDistance,
@@ -99,10 +99,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         /// <param name="textureSource">The source of the texture which should be loaded.</param>
-        public static NamedOrGenericKey AddSimpleColoredMaterialResource(this SceneManipulator sceneManipulator, ResourceLink textureSource)
+        public static NamedOrGenericKey AddStandardMaterialResource(this SceneManipulator sceneManipulator, ResourceLink textureSource)
         {
             var resTexture = sceneManipulator.AddTextureResource(textureSource);
-            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(device => new StandardMaterialResource(resTexture));
         }
 
         /// <summary>
@@ -111,12 +111,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         /// <param name="textureSourceHighQuality">The source of the texture which should be loaded.</param>
         /// <param name="textureSourceLowQuality">The source of the texture with low quality.</param>
-        public static NamedOrGenericKey AddSimpleColoredMaterialResource(
+        public static NamedOrGenericKey AddStandardMaterialResource(
             this SceneManipulator sceneManipulator,
             ResourceLink textureSourceHighQuality, ResourceLink textureSourceLowQuality)
         {
             var resTexture = sceneManipulator.AddTextureResource(textureSourceHighQuality, textureSourceLowQuality);
-            return sceneManipulator.AddResource(device => new SimpleColoredMaterialResource(resTexture));
+            return sceneManipulator.AddResource(device => new StandardMaterialResource(resTexture));
         }
 
         /// <summary>

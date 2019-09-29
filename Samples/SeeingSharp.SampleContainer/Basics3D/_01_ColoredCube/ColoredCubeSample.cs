@@ -55,7 +55,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
 
                 // Create resources
                 var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
                 cubeMesh.Color = Color4Ex.GreenColor;

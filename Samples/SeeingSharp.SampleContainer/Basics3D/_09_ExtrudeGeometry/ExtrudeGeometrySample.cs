@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
                 // Create material
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create geometry resource
                 ExtrudeGeometryFactory geometryFactory = null;

@@ -59,7 +59,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                         {
                         CountOfSegments = 50
                     }));
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create cone object
                 var coneMesh = new Mesh(resGeometry, resMaterial);

@@ -59,7 +59,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_ColoredCylinder
                         {
                             CountOfSegments = 50
                         }));
-                var resMaterial = manipulator.AddSimpleColoredMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create cylinder object
                 var cylinderMesh = new Mesh(resGeometry, resMaterial);

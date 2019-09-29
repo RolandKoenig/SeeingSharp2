@@ -60,9 +60,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                         "SimpleTexture.png"));
                 var resMaterials = new NamedOrGenericKey[]
                 {
-                    manipulator.AddSimpleColoredMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
-                    manipulator.AddSimpleColoredMaterialResource(resTexture),
-                    manipulator.AddSimpleColoredMaterialResource(materialDiffuseColor:Color4Ex.CornflowerBlue, useVertexColors:false)
+                    manipulator.AddStandardMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
+                    manipulator.AddStandardMaterialResource(resTexture),
+                    manipulator.AddStandardMaterialResource(materialDiffuseColor:Color4Ex.CornflowerBlue, useVertexColors:false)
                 };
 
                 // Create cube geometry resource

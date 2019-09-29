@@ -89,7 +89,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
                     device => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
-                var resD2DMaterial = manipulator.AddSimpleColoredMaterialResource(resD2DTexture);
+                var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
