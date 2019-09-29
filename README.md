@@ -14,7 +14,7 @@ The first one is the core library which contains all logic for 2D/3D-rendering. 
 the particular gui framework. 
  
 ### Features
- - Supports .Net Core (.Net Standard 2.0) and the classic .Net Framework
+ - Support .Net Core (.Net Standard 2.0) and the classic .Net Framework
  - Full integration into Windows.Forms, WPF and WinRT
  - Heavy multithreading (all calculations and rendering is done in background threads)
  - Working with multiple graphics devices at once (dynamically configure the target device per view)
