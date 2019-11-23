@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>SeeingSharp.Wpf</RootNamespace>
+    <PackageId>SeeingSharp2.WpfCore</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

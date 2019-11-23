@@ -7,19 +7,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <Authors>Roland König</Authors>
-    <Company>Roland König</Company>
     <PackageId>SeeingSharp2</PackageId>
-    <Description>Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</Description>
-    <Copyright>©2019 by Roland König</Copyright>
-    <PackageProjectUrl>https://github.com/RolandKoenig/SeeingSharp2</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/RolandKoenig/SeeingSharp2</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <Version>0.9.0</Version>
-    <Product>SeeingSharp 2</Product>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -51,10 +39,6 @@
     <None Remove="Resources\Shaders\Sprite\SpriteVertexShader.hlsl" />
     <None Remove="Resources\Shaders\structures.hlsl" />
     <None Remove="Resources\Shaders\_mainInclude.hlsl" />
-    <None Include="..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.hlsl" />

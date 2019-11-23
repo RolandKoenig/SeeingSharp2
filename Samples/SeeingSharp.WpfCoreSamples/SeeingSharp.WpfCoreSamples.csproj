@@ -40,7 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0-unstable0141" />
+    <PackageReference Include="PropertyTools" Version="3.0.0" />
+    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />

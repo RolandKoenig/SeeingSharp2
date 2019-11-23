@@ -1,164 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{37B0B699-DF5E-4761-8213-0F1C5F1B1481}</ProjectGuid>
+    <TargetFramework>net461</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SeeingSharp.WpfSamples</RootNamespace>
-    <AssemblyName>SeeingSharp.WpfSamples</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug.AnyCPU\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1701;1702</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release.AnyCPU\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Logo.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>SeeingSharp.WpfSamples.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
+    <None Remove="App.xaml" />
+    <None Remove="MainWindow.xaml" />
+    <None Remove="_Dialogs\PerformanceOverviewDialog.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PropertyTools" Version="3.0.0" />
+    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainWindow.xaml" />
+    <Page Include="_Dialogs\PerformanceOverviewDialog.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
+    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+    <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="_Dialogs\PerformanceOverviewDialog.xaml.cs">
-      <DependentUpon>PerformanceOverviewDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="_Dialogs\PerformanceOverviewViewModel.cs" />
-    <Compile Include="PropertyGridControlFactory.cs" />
-    <Compile Include="SampleViewModel.cs" />
-    <Compile Include="_DesignData.cs" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="_Dialogs\PerformanceOverviewDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader">
-      <Link>_SeeingSharp.Multimedia.licenseheader</Link>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj">
-      <Project>{4d0ff6e2-ae9f-4b80-9285-cb4b8141a439}</Project>
-      <Name>SeeingSharp.Wpf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj">
-      <Project>{d81a4b09-9569-4ead-aa4d-d2012ed30cbc}</Project>
-      <Name>SeeingSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj">
-      <Project>{60ba236f-cf64-4c7f-854b-aa23ca910417}</Project>
-      <Name>SeeingSharp.SampleContainer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Icons\Adapter16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Icons\Output16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="PropertyTools.Wpf">
-      <Version>2.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX.D3DCompiler">
-      <Version>4.2.0</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX.Direct2D1">
-      <Version>4.2.0</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX.Direct3D11">
-      <Version>4.2.0</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX.Direct3D9">
-      <Version>4.2.0</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX.Mathematics">
-      <Version>4.2.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Logo.ico" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
