@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{790928B0-DED6-4996-9BAE-421B79C36561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WinForms", "SeeingSharp.WinForms\SeeingSharp.WinForms.csproj", "{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.WinForms", "SeeingSharp.WinForms\SeeingSharp.WinForms.csproj", "{A4B14753-77FD-42D4-80E3-BA9DDB80AC34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Uwp", "SeeingSharp.Uwp\SeeingSharp.Uwp.csproj", "{5988C93B-E668-4171-BCAE-7CB6E88920C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Wpf", "SeeingSharp.Wpf\SeeingSharp.Wpf.csproj", "{4D0FF6E2-AE9F-4B80-9285-CB4B8141A439}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.Wpf", "SeeingSharp.Wpf\SeeingSharp.Wpf.csproj", "{4D0FF6E2-AE9F-4B80-9285-CB4B8141A439}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{74AA889D-5C0E-4AC1-B37E-BFB75E5236C4}"
 EndProject
@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 		Resharper.DotSettings = Resharper.DotSettings
+		script-publish.ps1 = script-publish.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B7FC299C-0886-4049-831B-39DA781C61FB}"
@@ -39,9 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.SampleContainer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.UwpSamples", "Samples\SeeingSharp.UwpSamples\SeeingSharp.UwpSamples.csproj", "{BFD179BE-D61F-470D-9669-84AD9372F06B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WinFormsSamples", "Samples\SeeingSharp.WinFormsSamples\SeeingSharp.WinFormsSamples.csproj", "{2861261F-440A-44BC-A334-D4611D0673F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.WinFormsSamples", "Samples\SeeingSharp.WinFormsSamples\SeeingSharp.WinFormsSamples.csproj", "{2861261F-440A-44BC-A334-D4611D0673F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.WpfSamples", "Samples\SeeingSharp.WpfSamples\SeeingSharp.WpfSamples.csproj", "{37B0B699-DF5E-4761-8213-0F1C5F1B1481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.WpfSamples", "Samples\SeeingSharp.WpfSamples\SeeingSharp.WpfSamples.csproj", "{37B0B699-DF5E-4761-8213-0F1C5F1B1481}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharpModelViewer", "Tools\SeeingSharpModelViewer\SeeingSharpModelViewer.csproj", "{89EE6470-2297-4441-ABD8-2DDAE6F6F300}"
 EndProject
