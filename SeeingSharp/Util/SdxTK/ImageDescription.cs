@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// A description for <see cref="Image"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct ImageDescription : IEquatable<ImageDescription>
+    internal struct ImageDescription : IEquatable<ImageDescription>
     {
         /// <summary>
         /// The dimension of a texture.

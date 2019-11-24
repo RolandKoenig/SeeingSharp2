@@ -27,7 +27,7 @@ using System;
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    public static class MipMapHelper
+    internal static class MipMapHelper
     {
         /// <summary>
         /// Calculates the number of miplevels for a Texture 2D.

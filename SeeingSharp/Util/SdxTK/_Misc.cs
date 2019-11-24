@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// <summary>
     /// Defines the dimension of a texture.
     /// </summary>
-    public enum TextureDimension
+    internal enum TextureDimension
     {
         /// <summary>
         /// The texture dimension is 1D.
@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
         TextureCube
     }
 
-    public enum ImageFileType
+    internal enum ImageFileType
     {
         /// <summary>
         /// A DDS file.

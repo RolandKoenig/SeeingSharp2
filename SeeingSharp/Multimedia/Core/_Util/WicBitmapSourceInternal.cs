@@ -25,9 +25,9 @@ using SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
+    internal class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
-        public WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
+        internal WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
         {
             this.Decoder = decoder;
             this.Converter = converter;
@@ -41,13 +41,13 @@ namespace SeeingSharp.Multimedia.Core
 
         public bool IsDisposed => this.Converter == null;
 
-        public BitmapDecoder Decoder
+        internal BitmapDecoder Decoder
         {
             get;
             private set;
         }
 
-        public FormatConverter Converter
+        internal FormatConverter Converter
         {
             get;
             private set;

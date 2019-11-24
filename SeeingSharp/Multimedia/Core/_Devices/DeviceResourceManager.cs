@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 using SeeingSharp.Checking;
 
-namespace SeeingSharp.Multimedia.Core._Devices
+namespace SeeingSharp.Multimedia.Core
 {
     public class DeviceResourceManager
     {

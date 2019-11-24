@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// </ul>
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct MipMapCount : IEquatable<MipMapCount>
+    internal struct MipMapCount : IEquatable<MipMapCount>
     {
         /// <summary>
         /// Automatic mipmap level based on texture size.

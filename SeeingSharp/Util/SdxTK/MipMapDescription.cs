@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// <summary>
     /// Describes a mipmap.
     /// </summary>
-    public class MipMapDescription : IEquatable<MipMapDescription>
+    internal class MipMapDescription : IEquatable<MipMapDescription>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MipMapDescription" /> class.

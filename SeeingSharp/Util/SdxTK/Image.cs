@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>
-    public sealed class Image : IDisposable
+    internal sealed class Image : IDisposable
     {
         private const string MagicCodeTKTX = "TKTX";
         private static List<LoadSaveDelegate> loadSaveDelegates = new List<LoadSaveDelegate>();

@@ -37,6 +37,42 @@ namespace SeeingSharp.Multimedia.Drawing2D
         Bgra = SharpDX.DXGI.Format.B8G8R8A8_UNorm
     }
 
+    // Copied from SharpDX project
+    public enum AlphaMode
+    {
+        /// <summary>
+        /// <dd> <p>Indicates that the transparency behavior is not specified.</p> </dd>
+        /// </summary>
+        /// <doc-id>hh404496</doc-id>
+        /// <unmanaged>DXGI_ALPHA_MODE_UNSPECIFIED</unmanaged>
+        /// <unmanaged-short>DXGI_ALPHA_MODE_UNSPECIFIED</unmanaged-short>
+        Unspecified,
+
+        /// <summary>
+        /// <dd> <p>Indicates that the transparency behavior is premultiplied. Each color is first scaled by the alpha value. The alpha value itself is the same in both straight and premultiplied alpha. Typically, no color channel value is greater than the alpha channel value. If a color channel value in a premultiplied format is greater than the alpha channel, the standard source-over blending math results in an additive blend.</p> </dd>
+        /// </summary>
+        /// <doc-id>hh404496</doc-id>
+        /// <unmanaged>DXGI_ALPHA_MODE_PREMULTIPLIED</unmanaged>
+        /// <unmanaged-short>DXGI_ALPHA_MODE_PREMULTIPLIED</unmanaged-short>
+        Premultiplied,
+
+        /// <summary>
+        /// <dd> <p>Indicates that the transparency behavior is not premultiplied. The alpha channel indicates the transparency of the color.</p> </dd>
+        /// </summary>
+        /// <doc-id>hh404496</doc-id>
+        /// <unmanaged>DXGI_ALPHA_MODE_STRAIGHT</unmanaged>
+        /// <unmanaged-short>DXGI_ALPHA_MODE_STRAIGHT</unmanaged-short>
+        Straight,
+
+        /// <summary>
+        /// <dd> <p>Indicates to ignore the transparency behavior.</p> </dd>
+        /// </summary>
+        /// <doc-id>hh404496</doc-id>
+        /// <unmanaged>DXGI_ALPHA_MODE_IGNORE</unmanaged>
+        /// <unmanaged-short>DXGI_ALPHA_MODE_IGNORE</unmanaged-short>
+        Ignore,
+    }
+
     ///// <summary>
     ///// Represents enum from Direct2D.
     ///// Contains the position and color of a gradient stop.

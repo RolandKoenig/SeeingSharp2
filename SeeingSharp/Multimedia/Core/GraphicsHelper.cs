@@ -38,17 +38,17 @@ using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public static class GraphicsHelper
+    internal static class GraphicsHelper
     {
         // All default texture formats
-        public const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = Format.B8G8R8A8_UNorm;
-        public const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
-        public const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
-        public const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
-        public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = PixelFormat.Format32bppPBGRA;
+        internal const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
+        internal const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
+        internal const Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = Format.B8G8R8A8_UNorm;
+        internal const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
+        internal const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
+        internal const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
+        internal static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
+        internal static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = PixelFormat.Format32bppPBGRA;
 
         /// <summary>
         /// Creates a Direct3D 11 texture that can be shared between more devices.
@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The Direct3D 11 device.</param>
         /// <param name="width">The width of the generated texture.</param>
         /// <param name="height">The height of the generated texture.</param>
-        public static D3D11.Texture2D CreateSharedTexture(EngineDevice device, int width, int height)
+        internal static D3D11.Texture2D CreateSharedTexture(EngineDevice device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -84,7 +84,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">Graphics device.</param>
         /// <param name="rawImage">Raw image data.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, Image rawImage)
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, Image rawImage)
         {
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -115,7 +115,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The device on which to create the texture.</param>
         /// <param name="inStream">The source stream.</param>
         /// <returns></returns>
-        public static D3D11.Texture2D LoadTexture2D(EngineDevice device, Stream inStream)
+        internal static D3D11.Texture2D LoadTexture2D(EngineDevice device, Stream inStream)
         {
             using (var bitmapSourceWrapper = LoadBitmapSource(inStream))
             {
@@ -129,7 +129,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The device on which to create the texture.</param>
         /// <param name="fileName">The source file</param>
         /// <returns></returns>
-        public static D3D11.Texture2D LoadTexture2D(EngineDevice device, string fileName)
+        internal static D3D11.Texture2D LoadTexture2D(EngineDevice device, string fileName)
         {
             using (var bitmapSourceWrapper = LoadBitmapSource(fileName))
             {
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a bitmap using WIC.
         /// </summary>
-        public static WicBitmapSourceInternal LoadBitmapSource(ResourceLink resource)
+        internal static WicBitmapSourceInternal LoadBitmapSource(ResourceLink resource)
         {
             using (var inStream = resource.OpenInputStream())
             {
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Loads a bitmap using WIC.
         /// </summary>
         /// <param name="inStream">The stream from which to load the texture file.</param>
-        public static WicBitmapSourceInternal LoadBitmapSource(Stream inStream)
+        internal static WicBitmapSourceInternal LoadBitmapSource(Stream inStream)
         {
             inStream.EnsureNotNull(nameof(inStream));
             inStream.EnsureReadable(nameof(inStream));
@@ -177,7 +177,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a bitmap using WIC.
         /// </summary>
-        public static WicBitmapSourceInternal LoadBitmapSource_D2D(ResourceLink resource)
+        internal static WicBitmapSourceInternal LoadBitmapSource_D2D(ResourceLink resource)
         {
             using (var inStream = resource.OpenInputStream())
             {
@@ -189,7 +189,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Loads a bitmap using WIC.
         /// </summary>
         /// <param name="inStream">The stream from which to load the texture file.</param>
-        public static WicBitmapSourceInternal LoadBitmapSource_D2D(Stream inStream)
+        internal static WicBitmapSourceInternal LoadBitmapSource_D2D(Stream inStream)
         {
             inStream.EnsureNotNull(nameof(inStream));
             inStream.EnsureReadable(nameof(inStream));
@@ -214,7 +214,7 @@ namespace SeeingSharp.Multimedia.Core
             return new WicBitmapSourceInternal(bitmapDecoder, formatConverter);
         }
 
-        public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture32bpp m_mappedTexture)
+        internal static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture32bpp m_mappedTexture)
         {
             //Create the texture
             var dataRectangle = new DataRectangle(
@@ -250,7 +250,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The Direct3D11 device</param>
         /// <param name="bitmapSourceWrapper">The WIC bitmap source</param>
         /// <returns>A Texture2D</returns>
-        public static D3D11.Texture2D LoadTexture2DFromBitmap(EngineDevice device, WicBitmapSourceInternal bitmapSourceWrapper)
+        internal static D3D11.Texture2D LoadTexture2DFromBitmap(EngineDevice device, WicBitmapSourceInternal bitmapSourceWrapper)
         {
             device.EnsureNotNull(nameof(device));
             bitmapSourceWrapper.EnsureNotNullOrDisposed(nameof(bitmapSourceWrapper));
@@ -296,7 +296,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Creates a default viewport for the given width and height
         /// </summary>
-        public static RawViewportF CreateDefaultViewport(int width, int height)
+        internal static RawViewportF CreateDefaultViewport(int width, int height)
         {
             width.EnsurePositiveOrZero(nameof(width));
             height.EnsurePositiveOrZero(nameof(height));
@@ -321,7 +321,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format which is used to create the texture.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -351,7 +351,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format which is used to create the texture.</param>
-        public static D3D11.Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
+        internal static D3D11.Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -381,7 +381,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="rawData">Raw data to be loaded into the texture.</param>
-        public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DataBox[] rawData)
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DataBox[] rawData)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -412,7 +412,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="format">The format used to create the texture.</param>
-        public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
+        internal static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -444,7 +444,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">Graphics device.</param>
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
-        public static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height)
+        internal static D3D11.Texture2D CreateStagingTexture(EngineDevice device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -478,7 +478,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="gfxConfig">The GFX configuration.</param>
-        public static D3D11.Texture2D CreateRenderTargetTextureNormalDepth(
+        internal static D3D11.Texture2D CreateRenderTargetTextureNormalDepth(
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
@@ -527,7 +527,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="gfxConfig">The GFX configuration.</param>
-        public static D3D11.Texture2D CreateRenderTargetTextureObjectIDs(
+        internal static D3D11.Texture2D CreateRenderTargetTextureObjectIDs(
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
@@ -575,7 +575,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="gfxConfig">The GFX configuration.</param>
-        public static D3D11.Texture2D CreateRenderTargetTexture(
+        internal static D3D11.Texture2D CreateRenderTargetTexture(
             EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
@@ -623,7 +623,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        public static D3D11.Texture2D CreateDepthBufferTexture(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static D3D11.Texture2D CreateDepthBufferTexture(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -686,7 +686,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">The device on which to create the view.</param>
         /// <param name="depthBuffer">The target resource.</param>
-        public static D3D11.DepthStencilView CreateDepthBufferView(EngineDevice device, D3D11.Texture2D depthBuffer)
+        internal static D3D11.DepthStencilView CreateDepthBufferView(EngineDevice device, D3D11.Texture2D depthBuffer)
         {
             device.EnsureNotNull(nameof(device));
             depthBuffer.EnsureNotNullOrDisposed(nameof(depthBuffer));
@@ -699,7 +699,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">The device for which to get the value.</param>
         /// <param name="zValue">The z value to be added.</param>
-        public static int GetDepthBiasValue(EngineDevice device, float zValue)
+        internal static int GetDepthBiasValue(EngineDevice device, float zValue)
         {
             device.EnsureNotNull(nameof(device));
 
@@ -729,7 +729,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="T">Type of the vertices.</typeparam>
         /// <param name="device">Graphics device.</param>
         /// <param name="vertexCount">Maximum count of vertices within the buffer.</param>
-        public static D3D11.Buffer CreateDynamicVertexBuffer<T>(EngineDevice device, int vertexCount)
+        internal static D3D11.Buffer CreateDynamicVertexBuffer<T>(EngineDevice device, int vertexCount)
             where T : struct
         {
             device.EnsureNotNull(nameof(device));
@@ -757,7 +757,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="T">Type of a vertex.</typeparam>
         /// <param name="device">Graphics device.</param>
         /// <param name="vertices">The vertex array.</param>
-        public static D3D11.Buffer CreateImmutableVertexBuffer<T>(EngineDevice device, params T[][] vertices)
+        internal static D3D11.Buffer CreateImmutableVertexBuffer<T>(EngineDevice device, params T[][] vertices)
             where T : struct
         {
             device.EnsureNotNull(nameof(device));
@@ -798,7 +798,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">Graphics device.</param>
         /// <param name="indices">Source index array.</param>
-        public static D3D11.Buffer CreateImmutableIndexBuffer(EngineDevice device, params int[][] indices)
+        internal static D3D11.Buffer CreateImmutableIndexBuffer(EngineDevice device, params int[][] indices)
         {
             device.EnsureNotNull(nameof(device));
             indices.EnsureNotNull(nameof(indices));
@@ -847,7 +847,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">The device to create the state for.</param>
         /// <param name="samplerQualityLevel">The target sampler quality</param>
-        public static D3D11.SamplerState CreateDefaultTextureSampler(EngineDevice device, TextureSamplerQualityLevel samplerQualityLevel)
+        internal static D3D11.SamplerState CreateDefaultTextureSampler(EngineDevice device, TextureSamplerQualityLevel samplerQualityLevel)
         {
             device.EnsureNotNull(nameof(device));
 
@@ -900,7 +900,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">Graphics device.</param>
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
-        public static D3D11.Texture2D CreateRenderTargetTextureDummy(D3D11.Device device, int width, int height)
+        internal static D3D11.Texture2D CreateRenderTargetTextureDummy(D3D11.Device device, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));

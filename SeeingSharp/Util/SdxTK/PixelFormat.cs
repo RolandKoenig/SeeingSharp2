@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// <unmanaged>DXGI_FORMAT</unmanaged>
     /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct PixelFormat : IEquatable<PixelFormat>
+    internal struct PixelFormat : IEquatable<PixelFormat>
     {
         /// <summary>
         /// Gets the value as a <see cref="SharpDX.DXGI.Format"/> enum.

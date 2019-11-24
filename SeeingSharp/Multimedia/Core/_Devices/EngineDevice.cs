@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core._Devices;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
@@ -122,7 +121,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Get the sample description for the given quality level.
         /// </summary>
         /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        internal SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
         {
             switch (qualityLevel)
             {
@@ -550,6 +549,11 @@ namespace SeeingSharp.Multimedia.Core
             public void DeregisterDeviceResource(IEngineDeviceResource resource)
             {
                 m_host.DeregisterDeviceResource(resource);
+            }
+
+            public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+            {
+                return m_host.GetSampleDescription(qualityLevel);
             }
 
             public Adapter1 Adapter => m_host.m_handlerDXGI?.Adapter;

@@ -33,7 +33,7 @@ using SDX = SharpDX;
 
 namespace SeeingSharp.Multimedia.Util.SdxTK
 {
-    public class WICHelper
+    internal class WICHelper
     {
         private static ImagingFactory _factory = new ImagingFactory();
 

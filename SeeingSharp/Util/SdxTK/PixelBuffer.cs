@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
     /// <summary>
     /// An unmanaged buffer of pixels.
     /// </summary>
-    public sealed class PixelBuffer
+    internal sealed class PixelBuffer
     {
         private Format format;
 
