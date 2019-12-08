@@ -122,6 +122,7 @@ namespace SeeingSharp.UwpSamples
             viewModel?.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
 
             // Start update loop
+            CtrlSwapChain.RenderLoop.ViewConfiguration.AlphaEnabledSwapChain = true;
             CtrlSwapChain.RenderLoop.PrepareRender += (innerSender, eArgs) =>
             {
                 var actSample = m_actSample;

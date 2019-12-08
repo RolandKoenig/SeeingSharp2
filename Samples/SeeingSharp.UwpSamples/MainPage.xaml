@@ -21,6 +21,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- Title bar -->
         <Grid x:Name="AppTitleBar" Background="Transparent"
               Grid.Row="0">
             <TextBlock Text="Custom Title Bar" 

@@ -34,39 +34,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Creates the SwapChain object that is used on WinRT platforms.
         /// </summary>
         /// <param name="device">The device on which to create the SwapChain.</param>
-        /// <param name="coreWindow">The target CoreWindow object.</param>
-        /// <param name="width">Width of the screen in pixels.</param>
-        /// <param name="height">Height of the screen in pixels.</param>
-        /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static SwapChain1 CreateSwapChainForCoreWindow(EngineDevice device, ComObject coreWindow, int width, int height, GraphicsViewConfiguration gfxConfig)
-        {
-            device.EnsureNotNull(nameof(device));
-            width.EnsurePositiveOrZero(nameof(width));
-            height.EnsurePositiveOrZero(nameof(height));
-            gfxConfig.EnsureNotNull(nameof(gfxConfig));
-
-            var desc = new SwapChainDescription1
-            {
-                Width = width,
-                Height = height,
-                Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
-                Stereo = false,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                BufferCount = 2,
-                Scaling = Scaling.None,
-                SwapEffect = SwapEffect.FlipSequential,
-                AlphaMode = AlphaMode.Ignore
-            };
-
-            //Creates the swap chain for the given CoreWindow object
-            return new SwapChain1(device.Internals.FactoryDxgi, device.Internals.DeviceD3D11_1, coreWindow, ref desc);
-        }
-
-        /// <summary>
-        /// Creates the SwapChain object that is used on WinRT platforms.
-        /// </summary>
-        /// <param name="device">The device on which to create the SwapChain.</param>
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>

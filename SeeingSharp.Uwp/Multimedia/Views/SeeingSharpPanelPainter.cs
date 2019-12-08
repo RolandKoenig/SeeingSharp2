@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Views
             // Create the RenderLoop object
             this.RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
             {
-                ClearColor = Color4Ex.White
+                ClearColor = Color4Ex.Transparent
             };
 
             this.RenderLoop.Internals.CallPresentInUIThread = false;
@@ -405,8 +405,8 @@ namespace SeeingSharp.Multimedia.Views
                         {
                             var inverseScale = new RawMatrix3x2
                             {
-                                M11 = 1.0f / (float) m_targetPanel.CompositionScaleX,
-                                M22 = 1.0f / (float) m_targetPanel.CompositionScaleY
+                                M11 = 1.0f / (float)m_targetPanel.CompositionScaleX,
+                                M22 = 1.0f / (float)m_targetPanel.CompositionScaleY
                             };
 
                             swapChain2.MatrixTransform = inverseScale;
