@@ -8,9 +8,8 @@
     <RepositoryUrl>https://github.com/RolandKoenig/SeeingSharp2</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>LGPL</PackageLicenseExpression>
     <Version>0.5.0</Version>
     <Product>SeeingSharp 2</Product>
-    <PackageLicenseFile></PackageLicenseFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 </Project>

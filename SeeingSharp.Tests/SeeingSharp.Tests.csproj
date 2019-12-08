@@ -107,6 +107,9 @@
     <EmbeddedResource Include="Resources\Textures\SkyBox.dds" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />

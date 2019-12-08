@@ -1,5 +1,5 @@
-dotnet publish -c Release ./SeeingSharp
-dotnet publish -c Release ./SeeingSharp.WinForms
-dotnet publish -c Release ./SeeingSharp.WinFormsCore
-dotnet publish -c Release ./SeeingSharp.Wpf
-dotnet publish -c Release ./SeeingSharp.WpfCore
+dotnet pack -c Release -o ./publish ./SeeingSharp
+dotnet pack -c Release -o ./publish ./SeeingSharp.WinForms
+dotnet pack -c Release -o ./publish ./SeeingSharp.WinFormsCore
+dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf
+dotnet pack -c Release -o ./publish ./SeeingSharp.WpfCore
