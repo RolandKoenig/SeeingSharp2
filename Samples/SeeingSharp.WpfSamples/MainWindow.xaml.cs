@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using SeeingSharp.Multimedia.Core;
@@ -25,6 +26,8 @@ namespace SeeingSharp.WpfSamples
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
+                this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
+
                 var sampleRepo = new SampleRepository();
                 sampleRepo.LoadSampleData();
 

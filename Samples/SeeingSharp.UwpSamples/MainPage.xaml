@@ -16,12 +16,21 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <Grid x:Name="AppTitleBar" Background="Transparent"
+              Grid.Row="0">
+            <TextBlock Text="Custom Title Bar" 
+                       x:Name="TextAppTitle"
+                       Style="{StaticResource CaptionTextBlockStyle}" 
+                       Margin="12,8,0,0"/>
+        </Grid>
+
         <!-- List of sample groups -->
-        <ListBox Grid.Row="0"
+        <ListBox Grid.Row="1"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
@@ -39,7 +48,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
             <ListBox VerticalAlignment="Top"

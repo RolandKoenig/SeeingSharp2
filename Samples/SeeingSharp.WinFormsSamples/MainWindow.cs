@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -53,6 +54,8 @@ namespace SeeingSharp.WinFormsSamples
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }

@@ -23,6 +23,7 @@
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -54,6 +55,10 @@ namespace SeeingSharp.UwpSamples
             GraphicsCore.Loader
                 .SupportUwp()
                 .Load();
+
+            // Hide default title bar.
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
 
             var rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)

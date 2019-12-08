@@ -13,14 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.Wpf", "SeeingSh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp", "SeeingSharp\SeeingSharp.csproj", "{74AA889D-5C0E-4AC1-B37E-BFB75E5236C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.Tests", "SeeingSharp.Tests\SeeingSharp.Tests.csproj", "{4FA605DB-7FC0-46A1-9741-5B07E394D5A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.Tests", "SeeingSharp.Tests\SeeingSharp.Tests.csproj", "{4FA605DB-7FC0-46A1-9741-5B07E394D5A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{4B6075B0-74B1-441E-8FF8-43754C876B1D}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
 		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
-		Resharper.DotSettings = Resharper.DotSettings
-		_Misc\SolutionInfo.cs = _Misc\SolutionInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966-EFF6-44CD-815F-1A30329AF41C}"
@@ -32,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966
 		README.md = README.md
 		Resharper.DotSettings = Resharper.DotSettings
 		script-publish.ps1 = script-publish.ps1
+		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B7FC299C-0886-4049-831B-39DA781C61FB}"

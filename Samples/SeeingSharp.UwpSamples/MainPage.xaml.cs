@@ -1,4 +1,5 @@
-﻿using Windows.ApplicationModel;
+﻿using System.Reflection;
+using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SeeingSharp.Multimedia.Core;
@@ -17,6 +18,13 @@ namespace SeeingSharp.UwpSamples
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Manipulate titlebar
+            //  see https://social.msdn.microsoft.com/Forums/windows/en-US/08462adc-a7ba-459f-9d2b-32a14c7a7de1/uwp-how-to-change-the-text-of-the-application-title-bar?forum=wpdevelop
+            var package = Package.Current;
+            var appName = package.DisplayName;
+            TextAppTitle.Text = $@"{appName} ({Assembly.GetExecutingAssembly().GetName().Version})";
+            Window.Current.SetTitleBar(AppTitleBar);
 
             this.Loaded += this.OnLoaded;
         }
@@ -104,6 +112,8 @@ namespace SeeingSharp.UwpSamples
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (DesignMode.DesignModeEnabled) { return; }
+
+            //this.na = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();

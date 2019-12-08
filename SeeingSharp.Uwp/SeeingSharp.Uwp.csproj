@@ -44,6 +44,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Multimedia\Core\GraphicsHelperUwp.cs" />
     <Compile Include="Multimedia\Input\WinRTKeyAndMouseInputHandler.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpPanelPainter.cs" />
