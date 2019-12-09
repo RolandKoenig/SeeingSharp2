@@ -661,16 +661,10 @@ namespace SeeingSharp.Multimedia.Core
             // Set buffer format
             switch (device.DriverLevel)
             {
+                case HardwareDriverLevel.Direct3D12:
                 case HardwareDriverLevel.Direct3D11:
                 case HardwareDriverLevel.Direct3D10:
                     textureDescription.Format = Format.D32_Float_S8X24_UInt;
-                    break;
-
-                // This would be for Direct3D 9 hardware
-                case HardwareDriverLevel.Direct3D9_1:
-                case HardwareDriverLevel.Direct3D9_2:
-                case HardwareDriverLevel.Direct3D9_3:
-                    textureDescription.Format = Format.D24_UNorm_S8_UInt;
                     break;
 
                 default:
@@ -709,14 +703,10 @@ namespace SeeingSharp.Multimedia.Core
 
             switch (device.DriverLevel)
             {
+                case HardwareDriverLevel.Direct3D12:
                 case HardwareDriverLevel.Direct3D11:
                 case HardwareDriverLevel.Direct3D10:
                     return (int)(zValue / (1 / Math.Pow(2, 23)));
-
-                case HardwareDriverLevel.Direct3D9_1:
-                case HardwareDriverLevel.Direct3D9_2:
-                case HardwareDriverLevel.Direct3D9_3:
-                    return (int)Math.Floor(zValue * (1f / (2 ^ 24)));
 
                 default:
                     throw new SeeingSharpGraphicsException("Unable to calculate depth bias value: Target hardware unknown!");
@@ -804,7 +794,7 @@ namespace SeeingSharp.Multimedia.Core
             indices.EnsureNotNull(nameof(indices));
 
             var countIndices = indices.Sum(actArray => actArray.Length);
-            var bytesPerIndex = device.SupportsOnly16BitIndexBuffer ? Marshal.SizeOf<ushort>() : Marshal.SizeOf<uint>();
+            var bytesPerIndex = Marshal.SizeOf<uint>();
 
             var outStreamIndex = new DataStream(
                 countIndices *
@@ -817,8 +807,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 for (var loop = 0; loop < actArrayLength; loop++)
                 {
-                    if (device.SupportsOnly16BitIndexBuffer) { outStreamIndex.Write((ushort)actArray[loop]); }
-                    else { outStreamIndex.Write((uint)actArray[loop]); }
+                    outStreamIndex.Write((uint)actArray[loop]); 
                 }
             }
 

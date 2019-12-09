@@ -407,26 +407,18 @@ namespace SeeingSharp.Multimedia.Core
             {
                 switch(this.DriverLevel)
                 {
-                    case HardwareDriverLevel.Direct3D9_1:
-                    case HardwareDriverLevel.Direct3D9_2:
-                        return "ps_4_0_level_9_1";
-
-                    case HardwareDriverLevel.Direct3D9_3:
-                        return "ps_4_0_level_9_3";
-
+                    case HardwareDriverLevel.Direct3D12:
                     case HardwareDriverLevel.Direct3D11:
                         return "ps_5_0";
 
-                    default:
+                    case HardwareDriverLevel.Direct3D10:
                         return "ps_4_0";
+
+                    default:
+                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
                 }
             }
         }
-
-        /// <summary>
-        /// Some older hardware only support 16-bit index buffers.
-        /// </summary>
-        public bool SupportsOnly16BitIndexBuffer => this.DriverLevel == HardwareDriverLevel.Direct3D9_1;
 
         /// <summary>
         /// Gets the name of the default shader model.
@@ -437,18 +429,15 @@ namespace SeeingSharp.Multimedia.Core
             {
                 switch (this.DriverLevel)
                 {
-                    case HardwareDriverLevel.Direct3D9_1:
-                    case HardwareDriverLevel.Direct3D9_2:
-                        return "vs_4_0_level_9_1";
-
-                    case HardwareDriverLevel.Direct3D9_3:
-                        return "vs_4_0_level_9_3";
-
+                    case HardwareDriverLevel.Direct3D12:
                     case HardwareDriverLevel.Direct3D11:
                         return "vs_5_0";
 
-                    default:
+                    case HardwareDriverLevel.Direct3D10:
                         return "vs_4_0";
+
+                    default:
+                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
                 }
             }
         }

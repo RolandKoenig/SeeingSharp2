@@ -91,7 +91,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             var device = this.Device;
             var deviceContext = device.DeviceImmediateContextD3D11;
-            var indexBufferFormat = device.SupportsOnly16BitIndexBuffer ? Format.R16_UInt : Format.R32_UInt;
 
             var lastVertexBufferID = -1;
             var lastIndexBufferID = -1;
@@ -111,7 +110,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (lastIndexBufferID != actChunk.Template.IndexBufferID)
                 {
                     lastIndexBufferID = actChunk.Template.IndexBufferID;
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, indexBufferFormat, 0);
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
                 }
 
                 // Apply material

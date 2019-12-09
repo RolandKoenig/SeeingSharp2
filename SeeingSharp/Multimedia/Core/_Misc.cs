@@ -134,22 +134,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Driver runs on Direct3D10 hardware.
         /// </summary>
-        Direct3D10,
-
-        /// <summary>
-        /// Driver runs on Direct3D9 hardware.
-        /// </summary>
-        Direct3D9_1,
-
-        /// <summary>
-        /// Driver runs on Direct3D9 hardware.
-        /// </summary>
-        Direct3D9_2,
-
-        /// <summary>
-        /// Driver runs on Direct3D9 hardware.
-        /// </summary>
-        Direct3D9_3
+        Direct3D10
     }
 
     /// <summary>

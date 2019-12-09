@@ -56,15 +56,6 @@ namespace SeeingSharp.Checking
             var maxDimension = 0;
             switch(driverLevel)
             {
-                case HardwareDriverLevel.Direct3D9_1:
-                case HardwareDriverLevel.Direct3D9_2:
-                    maxDimension = 2048;
-                    break;
-
-                case HardwareDriverLevel.Direct3D9_3:
-                    maxDimension = 4096;
-                    break;
-
                 case HardwareDriverLevel.Direct3D10:
                     maxDimension = 8192;
                     break;

@@ -58,12 +58,10 @@ namespace SeeingSharp.Multimedia.Core
             m_dxgiAdapter = dxgiAdapter;
 
             // Define possible create flags
-            var createFlagsBgra = D3D11.DeviceCreationFlags.BgraSupport;
-            var createFlagsNormal = D3D11.DeviceCreationFlags.None;
+            var createFlags = D3D11.DeviceCreationFlags.BgraSupport;
             if (deviceLoadSettings.DebugEnabled)
             {
-                createFlagsBgra |= D3D11.DeviceCreationFlags.Debug;
-                createFlagsNormal |= D3D11.DeviceCreationFlags.Debug;
+                createFlags |= D3D11.DeviceCreationFlags.Debug;
             }
 
             // Define all steps on which we try to initialize Direct3D
@@ -72,25 +70,11 @@ namespace SeeingSharp.Multimedia.Core
 
             // Define all tries for hardware initialization
             initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_11_1, createFlagsBgra, HardwareDriverLevel.Direct3D11));
+                D3D.FeatureLevel.Level_11_1, createFlags, HardwareDriverLevel.Direct3D11));
             initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_11_0, createFlagsBgra, HardwareDriverLevel.Direct3D11));
+                D3D.FeatureLevel.Level_11_0, createFlags, HardwareDriverLevel.Direct3D11));
             initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_10_0, createFlagsBgra, HardwareDriverLevel.Direct3D10));
-            initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_9_3, createFlagsBgra, HardwareDriverLevel.Direct3D9_3));
-            initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_9_2, createFlagsBgra, HardwareDriverLevel.Direct3D9_2));
-            initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_9_1, createFlagsBgra, HardwareDriverLevel.Direct3D9_1));
-            initParameterQueue.Add(Tuple.Create(
-                D3D.FeatureLevel.Level_10_0, createFlagsNormal, HardwareDriverLevel.Direct3D10));
-            initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_3, createFlagsNormal, HardwareDriverLevel.Direct3D9_3));
-            initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_2, createFlagsNormal, HardwareDriverLevel.Direct3D9_2));
-            initParameterQueue.Add(Tuple.Create(
-                 D3D.FeatureLevel.Level_9_1, createFlagsNormal, HardwareDriverLevel.Direct3D9_1));
+                D3D.FeatureLevel.Level_10_0, createFlags, HardwareDriverLevel.Direct3D10));
 
             // Try to create the device, each defined configuration step by step
             foreach (var (actFeatureLevel, actCreateFlags, actDriverLevel) in initParameterQueue)
