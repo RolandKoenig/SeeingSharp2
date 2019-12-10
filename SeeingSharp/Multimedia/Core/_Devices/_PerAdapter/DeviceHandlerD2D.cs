@@ -76,12 +76,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        public D2D.Device Device => m_deviceD2D;
+        internal D2D.Device Device => m_deviceD2D;
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        public D2D.DeviceContext DeviceContext => m_deviceContextD2D;
+        internal D2D.DeviceContext DeviceContext => m_deviceContextD2D;
 
         internal D2D.RenderTarget RenderTarget => m_renderTarget;
     }

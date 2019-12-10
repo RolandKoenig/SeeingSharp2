@@ -226,12 +226,8 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Set default configuration
-            this.Configuration.TextureQuality = !this.IsSoftware && m_handlerD3D11.IsDirect3D10OrUpperHardware
-                ? TextureQuality.High
-                : TextureQuality.Low;
-            this.Configuration.GeometryQuality = !this.IsSoftware && m_handlerD3D11.IsDirect3D10OrUpperHardware
-                ? GeometryQuality.High
-                : GeometryQuality.Low;
+            this.Configuration.TextureQuality = !this.IsSoftware ? TextureQuality.High : TextureQuality.Low;
+            this.Configuration.GeometryQuality = !this.IsSoftware ? GeometryQuality.High : GeometryQuality.Low;
 
             // Initialize handlers for feature support information
             if (this.InitializationException == null)

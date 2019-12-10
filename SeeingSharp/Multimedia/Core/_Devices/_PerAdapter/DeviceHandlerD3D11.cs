@@ -130,25 +130,11 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Is the hardware Direct3D 10 or upper?
-        /// </summary>
-        public bool IsDirect3D10OrUpperHardware =>
-            m_featureLevel == D3D.FeatureLevel.Level_10_0 ||
-            m_featureLevel == D3D.FeatureLevel.Level_10_1 ||
-            m_featureLevel == D3D.FeatureLevel.Level_11_0 ||
-            m_featureLevel == D3D.FeatureLevel.Level_11_1;
-
-        /// <summary>
         /// Is the hardware Direct3D 11 or upper?
         /// </summary>
         public bool IsDirect3D11OrUpperHardware =>
             m_featureLevel == D3D.FeatureLevel.Level_11_0 ||
             m_featureLevel == D3D.FeatureLevel.Level_11_1;
-
-        /// <summary>
-        /// Gets the native pointer to the device object.
-        /// </summary>
-        public IntPtr DeviceNativePointer => m_device1.NativePointer;
 
         /// <summary>
         /// Is device successfully initialized?
@@ -164,7 +150,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 if (m_device1 == null) { return "None"; }
 
-                return m_dxgiAdapter + " - " + m_featureLevel + (this.IsDirect2DTextureEnabled ? " - Bgra" : " - No Bgra");
+                return m_dxgiAdapter + " - " + m_featureLevel;
             }
         }
 
@@ -172,11 +158,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the driver level.
         /// </summary>
         public HardwareDriverLevel DriverLevel { get; }
-
-        /// <summary>
-        /// Are Direct2D textures possible?
-        /// </summary>
-        public bool IsDirect2DTextureEnabled => (m_creationFlags & D3D11.DeviceCreationFlags.BgraSupport) == D3D11.DeviceCreationFlags.BgraSupport;
 
         /// <summary>
         /// Gets current feature level.
