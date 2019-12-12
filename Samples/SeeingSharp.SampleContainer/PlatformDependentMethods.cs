@@ -40,7 +40,12 @@ namespace SeeingSharp.SampleContainer
             else
             {
                 // Default implementation
-                Process.Start(url);
+                var psi = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
         }
     }
