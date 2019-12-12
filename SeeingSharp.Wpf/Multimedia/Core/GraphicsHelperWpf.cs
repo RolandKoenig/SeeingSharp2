@@ -51,18 +51,18 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The device on which the texture is created.</param>
         /// <param name="stagingTexture">The texture to be loaded into the bitmap.</param>
         /// <param name="targetBitmap">The target bitmap to write all contents to.</param>
+        /// <param name="pixelWidth">With of the bitmap in pixels.</param>
+        /// <param name="pixelHeight">Height of the bitmap in pixels.</param>
         /// <param name="lockTimeout">Timeout for locking the target bitmap.</param>
-        internal static void LoadBitmapFromStagingTexture(EngineDevice device, D3D11.Texture2D stagingTexture, WriteableBitmap targetBitmap, TimeSpan lockTimeout)
+        internal static void LoadBitmapFromStagingTexture(EngineDevice device, D3D11.Texture2D stagingTexture, WriteableBitmap targetBitmap, int pixelWidth, int pixelHeight, TimeSpan lockTimeout)
         {
             device.EnsureNotNull(nameof(device));
             stagingTexture.EnsureNotNull(nameof(stagingTexture));
             targetBitmap.EnsureNotNull(nameof(targetBitmap));
 
-            var width = targetBitmap.PixelWidth;
-            var height = targetBitmap.PixelHeight;
             var textureDesc = stagingTexture.Description;
-            width.EnsureEqualComparable(textureDesc.Width, $"{nameof(textureDesc)}.{nameof(textureDesc.Width)}");
-            height.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
+            pixelWidth.EnsureEqualComparable(textureDesc.Width, $"{nameof(textureDesc)}.{nameof(textureDesc.Width)}");
+            pixelHeight.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
 
             // Prepare target bitmap
             var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
@@ -78,12 +78,12 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Copy data row by row
                     //  => Rows from data source may have more pixels because driver changes the size of textures
-                    var rowPitch = (ulong)(width * 4);
+                    var rowPitch = (ulong)(pixelWidth * 4);
 
-                    for (var loopRow = 0; loopRow < height; loopRow++)
+                    for (var loopRow = 0; loopRow < pixelHeight; loopRow++)
                     {
                         var rowPitchSource = dataBox.RowPitch;
-                        var rowPitchDestination = width * 4;
+                        var rowPitchDestination = pixelWidth * 4;
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopRow * rowPitchSource,
                             targetBitmap.BackBuffer + loopRow * rowPitchDestination,
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 finally
                 {
-                    targetBitmap.AddDirtyRect(new Int32Rect(0, 0, width, height));
+                    targetBitmap.AddDirtyRect(new Int32Rect(0, 0, pixelWidth, pixelHeight));
                     targetBitmap.Unlock();
                 }
             }

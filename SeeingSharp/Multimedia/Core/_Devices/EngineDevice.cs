@@ -88,7 +88,11 @@ namespace SeeingSharp.Multimedia.Core
             m_initializer = initializer;
             m_engineFactory = engineFactory;
             this.IsSoftware = adapterInfo.IsSoftwareAdapter;
+
+            // Set default configuration
             this.Configuration = new GraphicsDeviceConfiguration(coreConfiguration);
+            this.Configuration.TextureQuality = !this.IsSoftware ? TextureQuality.High : TextureQuality.Low;
+            this.Configuration.GeometryQuality = !this.IsSoftware ? GeometryQuality.High : GeometryQuality.Low;
 
             // Set default antialiasing configurations
             m_sampleDescWithAntialiasing = new SampleDescription(1, 0);
@@ -224,10 +228,6 @@ namespace SeeingSharp.Multimedia.Core
                 this.UnloadResources();
                 return false;
             }
-
-            // Set default configuration
-            this.Configuration.TextureQuality = !this.IsSoftware ? TextureQuality.High : TextureQuality.Low;
-            this.Configuration.GeometryQuality = !this.IsSoftware ? GeometryQuality.High : GeometryQuality.Low;
 
             // Initialize handlers for feature support information
             if (this.InitializationException == null)

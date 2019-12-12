@@ -552,6 +552,7 @@ namespace SeeingSharp.Multimedia.Views
 
                     // Invalidate the D3D image
                     m_d3dImageSource.InvalidateD3DImage();
+                    //m_d3dImageSource.AddDirtyRect(new Int32Rect(0, 0, m_lastRecreateWidth, m_lastRecreateHeight));
                 }
                 finally
                 {
@@ -576,6 +577,7 @@ namespace SeeingSharp.Multimedia.Views
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(
                     engineDevice, this.RenderLoop.Internals.CopyHelperTextureStaging,
                     m_fallbackWpfImageSource,
+                    m_lastRecreateWidth, m_lastRecreateHeight,
                     TimeSpan.FromMilliseconds(500.0));
             }
         }
