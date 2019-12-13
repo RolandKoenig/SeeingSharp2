@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using SharpDX;
 
 namespace SeeingSharp.Benchmarks.Math
 {
+    [SimpleJob(RuntimeMoniker.CoreRt31)]
+    [SimpleJob(RuntimeMoniker.Net471)]
     public class SceneSpacialObject_Transform
     { 
         private SharpDX.Matrix m_sdxScaling = SharpDX.Matrix.Scaling(2.5f, -2f, 3f);
