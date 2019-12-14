@@ -41,9 +41,9 @@ namespace SeeingSharp.Tests
             var animHelper2 = new MovementAnimationHelper(palletConveyorSpeed, new Vector3(3f, 4f, 2f));
             var animHelper3 = new MovementAnimationHelper(trayConveyorSpeed, new Vector3(5f, 0f, 0f));
 
-            Assert.IsTrue((int)animHelper1.MovementTime.TotalMilliseconds == 16667);
-            Assert.IsTrue((int)animHelper2.MovementTime.TotalMilliseconds == 17951);
-            Assert.IsTrue((int)animHelper3.MovementTime.TotalMilliseconds == 6250);
+            Assert.IsTrue((int)Math.Round(animHelper1.MovementTime.TotalMilliseconds) == 16667);
+            Assert.IsTrue((int)Math.Round(animHelper2.MovementTime.TotalMilliseconds) == 17951);
+            Assert.IsTrue((int)Math.Round(animHelper3.MovementTime.TotalMilliseconds) == 6250);
         }
 
         [TestMethod]

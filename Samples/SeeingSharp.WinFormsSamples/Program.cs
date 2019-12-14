@@ -23,6 +23,7 @@
 using System;
 using System.Windows.Forms;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
 
 namespace SeeingSharp.WinFormsSamples
 {
