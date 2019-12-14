@@ -30,6 +30,7 @@ using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
+using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.Tests
 {
@@ -224,89 +225,89 @@ namespace SeeingSharp.Tests
             }
         }
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task Render_SimpleRoundedRect_Filled_LinearGradient()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task Render_SimpleRoundedRect_Filled_LinearGradient()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //    using (var gradientBrush = new LinearGradientBrushResource(
-        //        new Vector2(0f, 0f),
-        //        new Vector2(512f, 0f),
-        //        new[]
-        //        {
-        //            new GradientStop { Color = Color4.Gray, Position = 0f },
-        //            new GradientStop { Color = Color4.White, Position = 0.6f },
-        //            new GradientStop { Color = Color4.Black, Position = 1f }
-        //        },
-        //        ExtendMode.Mirror))
+            using (var gradientBrush = new LinearGradientBrushResource(
+                new Vector2(0f, 0f),
+                new Vector2(512f, 0f),
+                new[]
+                {
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.Gray), Position = 0f },
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.White), Position = 0.6f },
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.Black), Position = 1f }
+                },
+                SharpDX.Direct2D1.ExtendMode.Mirror))
 
-        //    using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        // Perform rendering
-        //        memRenderTarget.ClearColor = Color4.CornflowerBlue;
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                // Perform rendering
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
-        //        await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync(graphics =>
-        //        {
-        //            // 2D rendering is made here
-        //            graphics.FillRoundedRectangle(
-        //                new RectangleF(10, 10, 900, 900), 30, 30,
-        //                gradientBrush);
-        //        });
+                await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync(graphics =>
+                {
+                    // 2D rendering is made here
+                    graphics.FillRoundedRectangle(
+                        new RectangleF(10, 10, 900, 900), 30, 30,
+                        gradientBrush);
+                });
 
-        //        await memRenderTarget.AwaitRenderAsync();
+                await memRenderTarget.AwaitRenderAsync();
 
-        //        // Take screenshot
-        //        var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-        //        // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        // Calculate and check difference
-        //        var diff = BitmapComparison.CalculatePercentageDifference(
-        //            screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_LinearGradient.png"));
-        //        Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
-        //    }
-        //}
+                // Calculate and check difference
+                var diff = BitmapComparison.CalculatePercentageDifference(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_LinearGradient.png"));
+                Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
+            }
+        }
 
-        //[TestMethod]
-        //[TestCategory(TEST_CATEGORY)]
-        //public async Task Render_SimpleRoundedRect_Filled_RadialGradient()
-        //{
-        //    await TestUtilities.InitializeWithGrahicsAsync();
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task Render_SimpleRoundedRect_Filled_RadialGradient()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
 
-        //    using (var radialGradientBrush = new RadialGradientBrushResource(
-        //        new Vector2(200f, 400f),
-        //        new Vector2(0f, 0f),
-        //        200f, 400f,
-        //        new[]
-        //        {
-        //            new GradientStop { Color = Color4.Gray, Position = 0f },
-        //            new GradientStop { Color = Color4.White, Position = 0.6f },
-        //            new GradientStop { Color = Color4.BlueColor, Position = 1f }
-        //        },
-        //        ExtendMode.Clamp))
-        //    using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
-        //    {
-        //        // Perform rendering
-        //        memRenderTarget.ClearColor = Color4.CornflowerBlue;
-        //        await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync(graphics =>
-        //        {
-        //            // 2D rendering is made here
-        //            graphics.FillRoundedRectangle(
-        //                new RectangleF(10, 10, 900, 900), 30, 30,
-        //                radialGradientBrush);
-        //        });
-        //        await memRenderTarget.AwaitRenderAsync();
+            using (var radialGradientBrush = new RadialGradientBrushResource(
+                new Vector2(200f, 400f),
+                new Vector2(0f, 0f),
+                200f, 400f,
+                new[]
+                {
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.Gray), Position = 0f },
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.White), Position = 0.6f },
+                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.BlueColor), Position = 1f }
+                },
+                SharpDX.Direct2D1.ExtendMode.Clamp))
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                // Perform rendering
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
+                await memRenderTarget.RenderLoop.Register2DDrawingLayerAsync(graphics =>
+                {
+                    // 2D rendering is made here
+                    graphics.FillRoundedRectangle(
+                        new RectangleF(10, 10, 900, 900), 30, 30,
+                        radialGradientBrush);
+                });
+                await memRenderTarget.AwaitRenderAsync();
 
-        //        // Take screenshot
-        //        var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-        //        // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
-        //        // Calculate and check difference
-        //        var diff = BitmapComparison.CalculatePercentageDifference(
-        //            screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_RadialGradient.png"));
-        //        Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
-        //    }
-        //}
+                // Calculate and check difference
+                var diff = BitmapComparison.CalculatePercentageDifference(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleRoundedRectFilled_RadialGradient.png"));
+                Assert.IsTrue(diff < 0.2, "Difference to reference image is to big!");
+            }
+        }
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]
@@ -531,6 +532,11 @@ namespace SeeingSharp.Tests
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Animated.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
             }
+        }
+
+        private static SharpDX.Mathematics.Interop.RawColor4 Helper_Color4ToRaw(Color4 color)
+        {
+            return new RawColor4(color.Red, color.Green, color.Blue, color.Alpha);
         }
     }
 }
