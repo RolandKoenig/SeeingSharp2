@@ -21,9 +21,9 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 using D3D = SharpDX.Direct3D;
 
 namespace SeeingSharp.Multimedia.Core
@@ -488,7 +488,7 @@ namespace SeeingSharp.Multimedia.Core
                 ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize(),
                 LightPower = viewConfiguration.LightPower,
                 StrongLightFactor = viewConfiguration.StrongLightFactor,
-                ViewProj = Matrix.Transpose(this.ViewInformation.Camera.ViewProjection)
+                ViewProj = Matrix4x4.Transpose(this.ViewInformation.Camera.ViewProjection)
             };
 
             m_renderParameters.UpdateValues(renderState, cbPerView);

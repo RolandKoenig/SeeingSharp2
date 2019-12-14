@@ -1,27 +1,9 @@
-﻿/*
-    Seeing# and all games/applications distributed together with it. 
-    Exception are projects where it is noted otherwhise.
-    More info at 
-     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
-    Copyright (C) 2019 Roland König (RolandK)
-    
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program.  If not, see http://www.gnu.org/licenses/.
-*/
-
+﻿using System;
 using System.Collections.Generic;
-using SharpDX;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -61,7 +43,7 @@ namespace SeeingSharp
             // allocate and initialize list of indices in polygon
             var result = new List<int>(contour.Count * 3);
 
-            var n = contour.Count;
+            int n = contour.Count;
             if (n < 3)
             {
                 return null;
@@ -72,28 +54,28 @@ namespace SeeingSharp
             // we want a counter-clockwise polygon in V
             if (Area(contour) > 0)
             {
-                for (var v = 0; v < n; v++)
+                for (int v = 0; v < n; v++)
                 {
                     V[v] = v;
                 }
             }
             else
             {
-                for (var v = 0; v < n; v++)
+                for (int v = 0; v < n; v++)
                 {
-                    V[v] = n - 1 - v;
+                    V[v] = (n - 1) - v;
                 }
             }
 
-            var nv = n;
+            int nv = n;
 
             // remove nv-2 Vertices, creating 1 triangle every time
-            var count = 2 * nv; // error detection
+            int count = 2 * nv; // error detection
 
-            for (var v = nv - 1; nv > 2; )
+            for (int m = 0, v = nv - 1; nv > 2; )
             {
                 // if we loop, it is probably a non-simple polygon
-                if (0 >= count--)
+                if (0 >= (count--))
                 {
                     // ERROR - probable bad polygon!
                     //return null;
@@ -101,7 +83,7 @@ namespace SeeingSharp
                 }
 
                 // three consecutive vertices in current polygon, <u,v,w>
-                var u = v;
+                int u = v;
                 if (nv <= u)
                 {
                     u = 0; // previous
@@ -113,7 +95,7 @@ namespace SeeingSharp
                     v = 0; // new v
                 }
 
-                var w = v + 1;
+                int w = v + 1;
                 if (nv <= w)
                 {
                     w = 0; // next
@@ -124,14 +106,16 @@ namespace SeeingSharp
                     int s, t;
 
                     // true names of the vertices
-                    var a = V[u];
-                    var b = V[v];
-                    var c = V[w];
+                    int a = V[u];
+                    int b = V[v];
+                    int c = V[w];
 
                     // output Triangle
-                    result.Add(a);
-                    result.Add(b);
-                    result.Add(c);
+                    result.Add((int)a);
+                    result.Add((int)b);
+                    result.Add((int)c);
+
+                    m++;
 
                     // remove v from remaining polygon
                     for (s = v, t = v + 1; t < nv; s++, t++)
@@ -141,7 +125,7 @@ namespace SeeingSharp
 
                     nv--;
 
-                    // resets error detection counter
+                    // resest error detection counter
                     count = 2 * nv;
                 }
             }
@@ -157,8 +141,8 @@ namespace SeeingSharp
         /// <returns>The area.</returns>
         private static double Area(IList<Vector2> contour)
         {
-            var n = contour.Count;
-            var A = 0.0;
+            int n = contour.Count;
+            double A = 0.0;
             for (int p = n - 1, q = 0; q < n; p = q++)
             {
                 A += contour[p].X * contour[q].Y - contour[q].X * contour[p].Y;
@@ -200,24 +184,27 @@ namespace SeeingSharp
         private static bool InsideTriangle(
             double Ax, double Ay, double Bx, double By, double Cx, double Cy, double Px, double Py)
         {
-            var ax = Cx - Bx;
-            var ay = Cy - By;
-            var bx = Ax - Cx;
-            var by = Ay - Cy;
-            var cx = Bx - Ax;
-            var cy = By - Ay;
-            var apx = Px - Ax;
-            var apy = Py - Ay;
-            var bpx = Px - Bx;
-            var bpy = Py - By;
-            var cpx = Px - Cx;
-            var cpy = Py - Cy;
+            double ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
+            double cCROSSap, bCROSScp, aCROSSbp;
 
-            var aCROSSbp = ax * bpy - ay * bpx;
-            var cCROSSap = cx * apy - cy * apx;
-            var bCROSScp = bx * cpy - by * cpx;
+            ax = Cx - Bx;
+            ay = Cy - By;
+            bx = Ax - Cx;
+            by = Ay - Cy;
+            cx = Bx - Ax;
+            cy = By - Ay;
+            apx = Px - Ax;
+            apy = Py - Ay;
+            bpx = Px - Bx;
+            bpy = Py - By;
+            cpx = Px - Cx;
+            cpy = Py - Cy;
 
-            return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
+            aCROSSbp = ax * bpy - ay * bpx;
+            cCROSSap = cx * apy - cy * apx;
+            bCROSScp = bx * cpy - by * cpx;
+
+            return (aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f);
         }
 
         /// <summary>
@@ -233,30 +220,31 @@ namespace SeeingSharp
         private static bool Snip(IList<Vector2> contour, int u, int v, int w, int n, int[] V)
         {
             int p;
+            double Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
-            double Ax = contour[V[u]].X;
-            double Ay = contour[V[u]].Y;
+            Ax = contour[V[u]].X;
+            Ay = contour[V[u]].Y;
 
-            double Bx = contour[V[v]].X;
-            double By = contour[V[v]].Y;
+            Bx = contour[V[v]].X;
+            By = contour[V[v]].Y;
 
-            double Cx = contour[V[w]].X;
-            double Cy = contour[V[w]].Y;
+            Cx = contour[V[w]].X;
+            Cy = contour[V[w]].Y;
 
-            if (Epsilon > (Bx - Ax) * (Cy - Ay) - (By - Ay) * (Cx - Ax))
+            if (Epsilon > (((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax))))
             {
                 return false;
             }
 
             for (p = 0; p < n; p++)
             {
-                if (p == u || p == v || p == w)
+                if ((p == u) || (p == v) || (p == w))
                 {
                     continue;
                 }
 
-                double Px = contour[V[p]].X;
-                double Py = contour[V[p]].Y;
+                Px = contour[V[p]].X;
+                Py = contour[V[p]].Y;
                 if (InsideTriangle(Ax, Ay, Bx, By, Cx, Cy, Px, Py))
                 {
                     return false;

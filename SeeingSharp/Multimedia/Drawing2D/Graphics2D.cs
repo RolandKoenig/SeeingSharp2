@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 using SDXM = SharpDX.Mathematics.Interop;
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="clearColor">Color of the clear.</param>
         public void Clear(Color4 clearColor)
         {
-            m_renderTarget?.Clear(clearColor);
+            m_renderTarget?.Clear(SdxMathHelper.RawFromColor4(clearColor));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
             m_renderTarget.DrawRectangle(
-                rectangle,
+                SdxMathHelper.RawFromRectangleF(rectangle),
                 brush.GetBrush(this.Device),
                 strokeWidth);
         }
@@ -166,7 +166,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             var roundedRect = new D2D.RoundedRectangle
             {
-                Rect = rectangle,
+                Rect = SdxMathHelper.RawFromRectangleF(rectangle),
                 RadiusX = radiusX,
                 RadiusY = radiusY
             };
@@ -182,7 +182,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
         {
-            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
             m_renderTarget.DrawEllipse(
                 ellipse,
@@ -200,7 +200,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
             m_renderTarget.DrawEllipse(
                 ellipse,
@@ -229,7 +229,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             strokeWidth.EnsurePositiveAndNotZero(nameof(strokeWidth));
 
             m_renderTarget.DrawLine(
-                start, end,
+                SdxMathHelper.RawFromVector2(start), SdxMathHelper.RawFromVector2(end),
                 brush.GetBrush(this.Device),
                 strokeWidth);
         }
@@ -247,7 +247,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             brush.EnsureNotNull(nameof(brush));
 
             m_renderTarget.FillRectangle(
-                rectangle,
+                SdxMathHelper.RawFromRectangleF(rectangle),
                 brush.GetBrush(this.Device));
         }
 
@@ -303,7 +303,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             var roundedRect = new D2D.RoundedRectangle
             {
-                Rect = rectangle,
+                Rect = SdxMathHelper.RawFromRectangleF(rectangle),
                 RadiusX = radiusX,
                 RadiusY = radiusY
             };
@@ -318,7 +318,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void FillEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush)
         {
-            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
             m_renderTarget.FillEllipse(
                 ellipse,
@@ -335,7 +335,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            var ellipse = new D2D.Ellipse(center, radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
             m_renderTarget.FillEllipse(
                 ellipse,
@@ -365,7 +365,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_renderTarget.DrawText(
                 textToDraw,
                 textFormat.GetTextFormat(this.Device),
-                targetRectangle,
+                SdxMathHelper.RawFromRectangleF(targetRectangle),
                 brush.GetBrush(this.Device),
                 drawOptions, measuringMode);
         }
@@ -416,17 +416,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Render tiled bitmap
                 m_renderTarget.DrawBitmap(
                     nativeBitmap,
-                    destinationRectangle,
+                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
                     interpolationMode,
-                    sourceRectangle);
+                    SdxMathHelper.RawFromRectangleF(sourceRectangle));
             }
             else
             {
                 // Render non-tiled bitmap
                 m_renderTarget.DrawBitmap(
                     bitmap.GetBitmap(this.Device),
-                    destinationRectangle,
+                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
                     interpolationMode);
             }
@@ -482,10 +482,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Render tiled bitmap
                 m_renderTarget.DrawBitmap(
                     nativeBitmap,
-                    destinationRectangle,
+                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
                     interpolationMode,
-                    sourceRectangle);
+                    SdxMathHelper.RawFromRectangleF(sourceRectangle));
             }
             else
             {
@@ -525,7 +525,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                 m_deviceContext.DrawImage(
                     d2dImage,
-                    destinationOrigin,
+                    SdxMathHelper.RawFromVector2(destinationOrigin),
                     null,
                     D2D.InterpolationMode.Linear,
                     D2D.CompositeMode.SourceOver);
@@ -572,8 +572,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                     this.TransformStack.Push();
                     this.TransformStack.TransformLocal(
-                        Matrix3x2.Scaling(combinedScaleFactor) *
-                        Matrix3x2.Translation(this.ScreenPixelSize.Width / 2f - truePixelWidth / 2f, this.ScreenPixelSize.Height / 2f - truePixelHeight / 2f));
+                        Matrix3x2.CreateScale(combinedScaleFactor) *
+                        Matrix3x2.CreateTranslation(this.ScreenPixelSize.Width / 2f - truePixelWidth / 2f, this.ScreenPixelSize.Height / 2f - truePixelHeight / 2f));
                     break;
 
                 default:
@@ -689,12 +689,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             get
             {
                 if (m_renderTarget == null) { return Matrix3x2.Identity; }
-                return m_renderTarget.Transform;
+                return SdxMathHelper.Matrix3x2FromRaw(m_renderTarget.Transform);
             }
             set
             {
                 if (m_renderTarget == null) { return; }
-                m_renderTarget.Transform = value;
+                m_renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
             }
         }
     }

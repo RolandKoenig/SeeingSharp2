@@ -26,15 +26,14 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.DrawingVideo;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -84,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.Texture2D m_renderTargetDepth;
         private D3D11.RenderTargetView m_renderTargetView;
         private D3D11.DepthStencilView m_renderTargetDepthView;
-        private RawViewportF m_viewport;
+        private SharpDX.Mathematics.Interop.RawViewportF m_viewport;
         private int m_loadDeviceIndex;
 
         // Direct3D resources for rendertarget capturing
@@ -310,7 +309,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     var direction = Vector3.TransformNormal(
                         new Vector3(0f, 0f, -1f),
-                        Matrix.RotationYawPitchRoll(horizontalRotation, verticalRotation, 0f));
+                        Matrix4x4.CreateFromYawPitchRoll(horizontalRotation, verticalRotation, 0f));
 
                     m_camera.Position = bottomCenter + direction * (centerToEdgeDistance * 2f);
                     m_camera.Target = bottomCenter;
@@ -530,9 +529,9 @@ namespace SeeingSharp.Multimedia.Core
                 pickingVector.Y = -(2.0f * pixelLocation.Y / m_currentViewSize.Height - 1) / projectionMatrix.M22;
                 pickingVector.Z = 1f;
 
-                var worldMatrix = Matrix.Identity;
+                var worldMatrix = Matrix4x4.Identity;
                 var viewWorld = m_camera.View * worldMatrix;
-                Matrix.Invert(ref viewWorld, out var inversionViewWorld);
+                Matrix4x4.Invert(viewWorld, out var inversionViewWorld);
 
                 var rayDirection = Vector3.Normalize(new Vector3(
                     pickingVector.X * inversionViewWorld.M11 + pickingVector.Y * inversionViewWorld.M21 + pickingVector.Z * inversionViewWorld.M31,
@@ -690,7 +689,7 @@ namespace SeeingSharp.Multimedia.Core
             m_renderTargetView = null;
             m_renderTargetDepth = null;
             m_renderTargetDepthView = null;
-            m_viewport = new RawViewportF();
+            m_viewport = new SharpDX.Mathematics.Interop.RawViewportF();
             m_currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
@@ -794,7 +793,7 @@ namespace SeeingSharp.Multimedia.Core
                         {
                             this.RefreshViewResources();
                         }
-                        catch (SharpDXException dxException)
+                        catch (SharpDX.SharpDXException dxException)
                         {
                             if (dxException.ResultCode == ResultCode.DeviceRemoved ||
                                 dxException.ResultCode == ResultCode.DeviceReset)
@@ -1039,7 +1038,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_renderState.ApplyMaterial(null);
 
                 // Paint using Direct3D
-                m_currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(m_renderTargetView, this.ClearColor);
+                m_currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(m_renderTargetView, SdxMathHelper.RawFromColor4(this.ClearColor));
                 m_currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(m_renderTargetDepthView, D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil, 1f, 0);
 
                 // Render currently configured scene
@@ -1098,7 +1097,7 @@ namespace SeeingSharp.Multimedia.Core
                         {
                             m_d2dOverlay.EndDraw();
                         }
-                        catch (SharpDXException dxException)
+                        catch (SharpDX.SharpDXException dxException)
                         {
                             if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                             {
@@ -1211,7 +1210,7 @@ namespace SeeingSharp.Multimedia.Core
                     // Finish rendering now
                     m_renderLoopHost.OnRenderLoop_AfterRendering(m_currentDevice);
                 }
-                catch (SharpDXException dxException)
+                catch (SharpDX.SharpDXException dxException)
                 {
                     if (dxException.ResultCode == ResultCode.DeviceRemoved ||
                         dxException.ResultCode == ResultCode.DeviceReset)

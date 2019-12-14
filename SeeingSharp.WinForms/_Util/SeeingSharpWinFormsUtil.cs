@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using GDI = System.Drawing;
 using SDX = SharpDX;
 
@@ -27,18 +26,18 @@ namespace SeeingSharp.Util
 {
     public static class SeeingSharpWinFormsUtil
     {
-        public static SDX.Color4 Color4FromGdiColor(this ref GDI.Color drawingColor)
+        public static Color4 Color4FromGdiColor(this ref GDI.Color drawingColor)
         {
-            return new SDX.Color4(
+            return new Color4(
                 drawingColor.R / 255f,
                 drawingColor.G / 255f,
                 drawingColor.B / 255f,
                 drawingColor.A / 255f);
         }
 
-        public static SDX.Point PointFromGdiPoint(GDI.Point point)
+        public static Point PointFromGdiPoint(GDI.Point point)
         {
-            return new SDX.Point(point.X, point.Y);
+            return new Point(point.X, point.Y);
         }
     }
 }

@@ -20,7 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -100,15 +100,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="projMatrix">The calculated projection matrix.</param>
         protected override void CalculateViewProjectionMatrices(
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
-            out Matrix viewMatrix, out Matrix projMatrix)
+            out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
             if (m_zoomFactor <= ZOOM_FACTOR_MIN) { m_zoomFactor = ZOOM_FACTOR_MIN; }
 
-            MatrixEx.CreateOrthoLH(this.ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
+            Matrix4x4Ex.CreateOrthoLH(this.ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
                 Math.Abs(Math.Max(zNear, zFar)),
                 out projMatrix);
-            MatrixEx.CreateLookAtLH(
+            Matrix4x4Ex.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
         }

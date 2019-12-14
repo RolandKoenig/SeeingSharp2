@@ -19,13 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.ComponentModel;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 {
@@ -45,13 +43,13 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 
             var castedSettings = (RectangleSampleSettings) settings;
 
-            m_fillBrush = new SolidBrushResource(Color4Ex.Gray);
-            m_fillBrushTransparent = new SolidBrushResource(Color4Ex.Gray, 0.5f);
+            m_fillBrush = new SolidBrushResource(Color4.Gray);
+            m_fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
 
             await targetRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
-                graphics.Clear(Color4Ex.WhiteSmoke);
+                graphics.Clear(Color4.WhiteSmoke);
 
                 // Calculate rectangle location
                 var width = castedSettings.Width;

@@ -21,13 +21,13 @@
 */
 
 using System.Threading.Tasks;
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
-using SharpDX;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -47,7 +47,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -71,7 +71,7 @@ namespace SeeingSharp.Tests
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
-                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.Color = Color4.RedColor;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 
@@ -98,7 +98,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -125,7 +125,7 @@ namespace SeeingSharp.Tests
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
-                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.Color = Color4.RedColor;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 

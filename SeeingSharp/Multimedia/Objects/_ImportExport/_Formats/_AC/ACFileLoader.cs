@@ -20,11 +20,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Util;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Objects
                 dummyGeometry.FirstSurface.BuildCube24V(
                     new Vector3(),
                     new Vector3(1f, 1f, 1f),
-                    Color4Ex.Transparent);
+                    Color4.Transparent);
                 return dummyGeometry;
             }
         }
@@ -205,7 +205,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     var position = Vector3.Transform(
                                         objInfo.Vertices[surfaceVertexReferences[loop]].Position,
-                                        transformStack.Top).ToXYZ();
+                                        transformStack.Top);
                                     localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new Vertex(
                                         position, Color4.White, actTexCoord, Vector3.Zero));
                                     if (actSurface.IsTwoSided)
@@ -228,7 +228,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 // Create one vertex for one reference for flat shading
                                 var position = Vector3.Transform(
                                     objInfo.Vertices[surfaceVertexReferences[loop]].Position,
-                                    transformStack.Top).ToXYZ();
+                                    transformStack.Top);
                                 onGeometryReferencedVertices[loop] = geometry.AddVertex(new Vertex(
                                     position, Color4.White, actTexCoord, Vector3.Zero));
 
@@ -609,7 +609,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 {
                                     var lineData = actLine.Split(' ');
 
-                                    var rotation = Matrix.Identity;
+                                    var rotation = Matrix4x4.Identity;
                                     rotation.M11 = !string.IsNullOrEmpty(lineData[1]) ? float.Parse(lineData[1], CultureInfo.InvariantCulture) : 0f;
                                     rotation.M12 = !string.IsNullOrEmpty(lineData[2]) ? float.Parse(lineData[2], CultureInfo.InvariantCulture) : 0f;
                                     rotation.M13 = !string.IsNullOrEmpty(lineData[3]) ? float.Parse(lineData[3], CultureInfo.InvariantCulture) : 0f;
@@ -844,7 +844,7 @@ namespace SeeingSharp.Multimedia.Objects
                 Children = new List<ACObjectInfo>();
                 Surfaces = new List<ACSurface>();
                 Vertices = new List<ACVertex>();
-                Rotation = Matrix.Identity;
+                Rotation = Matrix4x4.Identity;
             }
 
             /// <summary>
@@ -876,7 +876,7 @@ namespace SeeingSharp.Multimedia.Objects
             public List<ACObjectInfo> Children;
             public int KidCount;
             public string Name;
-            public Matrix Rotation;
+            public Matrix4x4 Rotation;
             public List<ACSurface> Surfaces;
             public string Texture;
             public Vector2 TextureRepeat;

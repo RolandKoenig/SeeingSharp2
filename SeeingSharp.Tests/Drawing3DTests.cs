@@ -22,13 +22,13 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
-using SharpDX;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -48,7 +48,7 @@ namespace SeeingSharp.Tests
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Take screenshot
@@ -73,7 +73,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -101,7 +101,7 @@ namespace SeeingSharp.Tests
                                 new Vector3(-0.5f, 0f, 0.5f),
                                 new Vector3(-0.5f, 0f, -0.5f))
                         },
-                        LineColor = Color4Ex.RedColor
+                        LineColor = Color4.RedColor
                     };
 
 
@@ -128,7 +128,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -146,7 +146,7 @@ namespace SeeingSharp.Tests
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
-                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.Color = Color4.RedColor;
                     newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
                 });
                 await memRenderTarget.AwaitRenderAsync();
@@ -173,7 +173,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -189,14 +189,14 @@ namespace SeeingSharp.Tests
                     var resMaterial = manipulator.AddResource(
                         device => new StandardMaterialResource()
                         {
-                            MaterialDiffuseColor = Color4Ex.BlueColor,
+                            MaterialDiffuseColor = Color4.BlueColor,
                             UseVertexColors = false
                         });
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
-                    newMesh.Color = Color4Ex.RedColor;
+                    newMesh.Color = Color4.RedColor;
                     newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
                 });
                 await memRenderTarget.AwaitRenderAsync();
@@ -223,7 +223,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -273,7 +273,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -317,7 +317,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = new OrthographicCamera3D
@@ -366,7 +366,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -385,7 +385,7 @@ namespace SeeingSharp.Tests
 
                     // Create pallet object
                     var cubeMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
-                    cubeMesh.Color = Color4Ex.GreenColor;
+                    cubeMesh.Color = Color4.GreenColor;
                     cubeMesh.EnableShaderGeneratedBorder();
                     cubeMesh.BuildAnimationSequence()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))

@@ -21,13 +21,13 @@
 */
 
 using System.Threading.Tasks;
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
-using SharpDX;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -46,7 +46,7 @@ namespace SeeingSharp.Tests
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
-                memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
                 var camera = memRenderTarget.Camera as PerspectiveCamera3D;

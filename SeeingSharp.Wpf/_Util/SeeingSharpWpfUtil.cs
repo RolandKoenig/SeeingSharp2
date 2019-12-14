@@ -19,10 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Reflection;
-using SharpDX;
 using Wpf = System.Windows;
 using WpfMedia = System.Windows.Media;
 

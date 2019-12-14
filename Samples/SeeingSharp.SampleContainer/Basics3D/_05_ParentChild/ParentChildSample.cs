@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
 {
@@ -59,7 +58,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 //********************************
                 // Create parent object
                 var cubeMesh = new Mesh(resCubeGeometry, resMaterial);
-                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
                 cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()
@@ -90,7 +89,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 var actSecondLevelParent = new Mesh(resCubeGeometry, resMaterial);
                 actSecondLevelParent.Position = new Vector3(3f, 0f, 0f);
                 actSecondLevelParent.Scaling = new Vector3(0.8f, 0.8f, 0.8f);
-                actSecondLevelParent.Color = Color4Ex.BlueColor;
+                actSecondLevelParent.Color = Color4.BlueColor;
                 actSecondLevelParent.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

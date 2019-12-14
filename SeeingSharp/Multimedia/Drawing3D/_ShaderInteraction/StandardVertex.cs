@@ -22,9 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 

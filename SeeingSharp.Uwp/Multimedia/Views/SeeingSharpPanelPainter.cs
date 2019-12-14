@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading;
 using Windows.Foundation;
@@ -31,7 +30,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using Color = Windows.UI.Color;
@@ -71,7 +69,7 @@ namespace SeeingSharp.Multimedia.Views
             // Create the RenderLoop object
             this.RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
             {
-                ClearColor = Color4Ex.Transparent
+                ClearColor = Color4.Transparent
             };
 
             this.RenderLoop.Internals.CallPresentInUIThread = false;

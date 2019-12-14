@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -123,15 +123,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     engineDevice.FakeRenderTarget2D,
                     new D2D.RadialGradientBrushProperties
                     {
-                        Center = this.Center,
-                        GradientOriginOffset = this.GradientOriginOffset,
+                        Center = SdxMathHelper.RawFromVector2(this.Center),
+                        GradientOriginOffset = SdxMathHelper.RawFromVector2(this.GradientOriginOffset),
                         RadiusX = this.RadiusX,
                         RadiusY = this.RadiusY
                     },
                     new D2D.BrushProperties
                     {
                         Opacity = m_opacity,
-                        Transform = Matrix3x2.Identity
+                        Transform = SdxMathHelper.RawFromMatrix3x2(Matrix3x2.Identity)
                     },
                     result.GradientStops);
 

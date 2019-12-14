@@ -1,10 +1,11 @@
-﻿/*
-    Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwise.
+﻿#region License information (SeeingSharp and all based games/applications)
+/*
+    Seeing# and all games/applications distributed together with it. 
+	Exception are projects where it is noted otherwhise.
     More info at 
-     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the authors homepage, german)
-    Copyright (C) 2019 Roland König (RolandK)
+     - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
+     - http://www.rolandk.de/wp (the autors homepage, german)
+    Copyright (C) 2016 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -19,8 +20,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+#endregion
 using System;
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -34,8 +36,8 @@ namespace SeeingSharp
         /// </summary>
         public Ray2D(Vector2 origin, Vector2 direction)
         {
-            Origin = origin;
-            Direction = direction;
+            this.Origin = origin;
+            this.Direction = direction;
         }
 
         /// <summary>
@@ -46,21 +48,28 @@ namespace SeeingSharp
         {
             //Intersection method taken from http://stackoverflow.com/questions/4543506/algorithm-for-intersection-of-2-lines
 
-            var a1 = this.A;
-            var b1 = this.B;
-            var c1 = this.C;
-            var a2 = other.A;
-            var b2 = other.B;
-            var c2 = other.C;
+            float a1 = this.A;
+            float b1 = this.B;
+            float c1 = this.C;
+            float a2 = other.A;
+            float b2 = other.B;
+            float c2 = other.C;
 
-            var delta = a1 * b2 - a2 * b1;
-            if (EngineMath.EqualsWithTolerance(delta, 0))
+            //float delta = A1 * B2 - A2 * B1;
+            //if (delta == 0)
+            //    throw new ArgumentException("Lines are parallel");
+
+            //float x = (B2 * C1 - B1 * C2) / delta;
+            //float y = (A1 * C2 - A2 * C1) / delta;
+
+            float delta = a1 * b2 - a2 * b1;
+            if (delta == 0)
             {
                 return Tuple.Create(false, Vector2.Zero);
             }
 
-            var intersectionX = (b2 * c1 - b1 * c2) / delta;
-            var intersectionY = (a1 * c2 - a2 * c1) / delta;
+            float intersectionX = (b2 * c1 - b1 * c2) / delta;
+            float intersectionY = (a1 * c2 - a2 * c1) / delta;
 
             return Tuple.Create(true, new Vector2(intersectionX, intersectionY));
         }
@@ -71,16 +80,16 @@ namespace SeeingSharp
         /// <param name="otherRay">The other ray to check.</param>
         public bool EqualsWithTolerance(Ray2D otherRay)
         {
-            return Origin.Equals(otherRay.Origin) &&
-                   Direction.Equals(otherRay.Direction);
+            return this.Origin.Equals(otherRay.Origin) &&
+                   this.Direction.Equals(otherRay.Direction);
         }
 
         public float A
         {
             get
             {
-                var start = Origin;
-                var end = Origin + Direction;
+                Vector2 start = this.Origin;
+                Vector2 end = this.Origin + Direction;
                 return end.Y - start.Y;
             }
         }
@@ -89,8 +98,8 @@ namespace SeeingSharp
         {
             get
             {
-                var start = Origin;
-                var end = Origin + Direction;
+                Vector2 start = this.Origin;
+                Vector2 end = this.Origin + Direction;
                 return start.X - end.X;
             }
         }
@@ -99,8 +108,8 @@ namespace SeeingSharp
         {
             get
             {
-                var start = Origin;
-                var end = Origin + Direction;
+                Vector2 start = this.Origin;
+                Vector2 end = this.Origin + Direction;
                 return this.A * start.X + this.B * start.Y;
             }
         }

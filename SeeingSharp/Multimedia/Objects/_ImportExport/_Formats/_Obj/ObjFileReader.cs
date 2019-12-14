@@ -24,10 +24,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -83,7 +83,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
             var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
 
-            if(coordSpaceTransformMatrix != Matrix.Identity)
+            if(coordSpaceTransformMatrix != Matrix4x4.Identity)
             {
                 this.TargetGeometry.EnableBuildTimeTransform(coordSpaceTransformMatrix);
             }

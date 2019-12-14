@@ -21,7 +21,6 @@
 */
 using System;
 using SeeingSharp.Util;
-using SharpDX;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -44,10 +43,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 ParagraphAlignment = DWrite.ParagraphAlignment.Center
             };
 
-            var grayColor = Color4Ex.LightGray;
+            var grayColor = Color4.LightGray;
             grayColor.ChangeAlphaTo(0.8f);
             m_solidBrushBackground = new SolidBrushResource(grayColor);
-            m_solidBrushForeground = new SolidBrushResource(Color4Ex.RedColor);
+            m_solidBrushForeground = new SolidBrushResource(Color4.RedColor);
         }
 
         public void Dispose()

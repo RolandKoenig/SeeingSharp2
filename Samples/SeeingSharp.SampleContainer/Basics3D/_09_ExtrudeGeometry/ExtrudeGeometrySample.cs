@@ -19,14 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
@@ -63,12 +62,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     //  https://docs.microsoft.com/en-us/windows/desktop/direct2d/path-geometries-overview
                     var geoSink = pathGeo.Open();
                     geoSink.BeginFigure(
-                        new Vector2(346f, 255f), 
+                        new SharpDX.Vector2(346f, 255f), 
                         D2D.FigureBegin.Filled);
-                    geoSink.AddLine(new Vector2(267f, 177f));
-                    geoSink.AddLine(new Vector2(236f, 192f));
-                    geoSink.AddLine(new Vector2(212f, 160f));
-                    geoSink.AddLine(new Vector2(156f, 255f));
+                    geoSink.AddLine(new SharpDX.Vector2(267f, 177f));
+                    geoSink.AddLine(new SharpDX.Vector2(236f, 192f));
+                    geoSink.AddLine(new SharpDX.Vector2(212f, 160f));
+                    geoSink.AddLine(new SharpDX.Vector2(156f, 255f));
                     geoSink.EndFigure(D2D.FigureEnd.Closed);
                     geoSink.Close();
 
@@ -83,7 +82,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
 
                 // Create the 3D object
                 var extrudedMesh = new Mesh(resGeometry, resMaterial);
-                extrudedMesh.Color = Color4Ex.GreenColor;
+                extrudedMesh.Color = Color4.GreenColor;
                 extrudedMesh.Position = new Vector3(0f, 0.5f, 0f);
                 extrudedMesh.Scaling = new Vector3(2f, 1f, 2f);
                 manipulator.AddObject(extrudedMesh);

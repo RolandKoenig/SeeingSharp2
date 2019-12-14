@@ -19,11 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Drawing.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using GDI = System.Drawing;
 using D3D11 = SharpDX.Direct3D11;
@@ -114,7 +112,7 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Open a reading stream for bitmap memory
-                var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
+                var dataRectangle = new SharpDX.DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
                 result = new D3D11.Texture2D(device.Internals.DeviceD3D11_1, new D3D11.Texture2DDescription

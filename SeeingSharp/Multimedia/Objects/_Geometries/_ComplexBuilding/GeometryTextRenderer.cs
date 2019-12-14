@@ -21,6 +21,7 @@
 */
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
@@ -73,7 +74,7 @@ namespace SeeingSharp.Multimedia.Objects
             var d2DFactory = GraphicsCore.Current.FactoryD2D;
 
             // Extrude geometry data out of given glyph run
-            var geometryExtruder = new SimplePolygon2DGeometrySink(new SDX.Vector2(baselineOriginX, baselineOriginY));
+            var geometryExtruder = new SimplePolygon2DGeometrySink(new Vector2(baselineOriginX, baselineOriginY));
 
             using (var pathGeometry = new PathGeometry(d2DFactory))
             {
@@ -127,7 +128,7 @@ namespace SeeingSharp.Multimedia.Objects
                     // - RemoveObject found holes from current hole list
                     var polygonForRendering = actFillingPolygon;
                     var polygonForTriangulation = actFillingPolygon.Clone();
-                    var cutPoints = new List<SDX.Vector2>();
+                    var cutPoints = new List<Vector2>();
 
                     foreach (var actHole in correspondingHoles)
                     {
@@ -144,11 +145,11 @@ namespace SeeingSharp.Multimedia.Objects
                     for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                     {
                         // Calculate 3d location and texture coordinate
-                        var actVertexLocation = new SDX.Vector3(
+                        var actVertexLocation = new Vector3(
                             polygonForRendering.Vertices[loop].X,
                             0f,
                             polygonForRendering.Vertices[loop].Y);
-                        var actTexCoord = new SDX.Vector2(
+                        var actTexCoord = new Vector2(
                             (polygonForRendering.Vertices[loop].X - polygonForRendering.BoundingBox.Location.X) / polygonForRendering.BoundingBox.Size.X,
                             (polygonForRendering.Vertices[loop].Y - polygonForRendering.BoundingBox.Location.Y) / polygonForRendering.BoundingBox.Size.Y);
 
@@ -168,7 +169,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 actVertexLocation,
                                 m_geometryOptions.SurfaceVertexColor,
                                 actTexCoord,
-                                new SDX.Vector3(0f, 1f, 0f)));
+                                new Vector3(0f, 1f, 0f)));
                     }
 
                     // Generate cubes on each vertex if requested
@@ -176,16 +177,16 @@ namespace SeeingSharp.Multimedia.Objects
                     {
                         for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                         {
-                            var colorToUse = Color4Ex.GreenColor;
+                            var colorToUse = Color4.GreenColor;
                             var pointRenderSize = 0.1f;
 
                             if (cutPoints.Contains(polygonForRendering.Vertices[loop]))
                             {
-                                colorToUse = Color4Ex.RedColor;
+                                colorToUse = Color4.RedColor;
                                 pointRenderSize = 0.15f;
                             }
 
-                            var actVertexLocation = new SDX.Vector3(
+                            var actVertexLocation = new Vector3(
                                 polygonForRendering.Vertices[loop].X,
                                 0f,
                                 polygonForRendering.Vertices[loop].Y);
@@ -236,10 +237,10 @@ namespace SeeingSharp.Multimedia.Objects
                     foreach (var actLine in actPolygon.Lines)
                     {
                         tempSurface.BuildRect4V(
-                            new SDX.Vector3(actLine.StartPosition.X, -volumetricTextDepth, actLine.StartPosition.Y),
-                            new SDX.Vector3(actLine.EndPosition.X, -volumetricTextDepth, actLine.EndPosition.Y),
-                            new SDX.Vector3(actLine.EndPosition.X, 0f, actLine.EndPosition.Y),
-                            new SDX.Vector3(actLine.StartPosition.X, 0f, actLine.StartPosition.Y),
+                            new Vector3(actLine.StartPosition.X, -volumetricTextDepth, actLine.StartPosition.Y),
+                            new Vector3(actLine.EndPosition.X, -volumetricTextDepth, actLine.EndPosition.Y),
+                            new Vector3(actLine.EndPosition.X, 0f, actLine.EndPosition.Y),
+                            new Vector3(actLine.StartPosition.X, 0f, actLine.StartPosition.Y),
                             m_geometryOptions.VolumetricSideSurfaceVertexColor);
                     }
                 }
@@ -254,12 +255,12 @@ namespace SeeingSharp.Multimedia.Objects
                     var vertex0 = tempGeometry.Vertices[triangle.Index1];
                     var vertex1 = tempGeometry.Vertices[triangle.Index2];
                     var vertex2 = tempGeometry.Vertices[triangle.Index3];
-                    var changeVector = new SDX.Vector3(0f, -m_geometryOptions.VolumetricTextDepth, 0f);
+                    var changeVector = new Vector3(0f, -m_geometryOptions.VolumetricTextDepth, 0f);
 
                     tempSurface.AddTriangle(
-                        vertex2.Copy(vertex2.Position - changeVector, SDX.Vector3.Negate(vertex2.Normal)),
-                        vertex1.Copy(vertex1.Position - changeVector, SDX.Vector3.Negate(vertex1.Normal)),
-                        vertex0.Copy(vertex0.Position - changeVector, SDX.Vector3.Negate(vertex0.Normal)));
+                        vertex2.Copy(vertex2.Position - changeVector, Vector3.Negate(vertex2.Normal)),
+                        vertex1.Copy(vertex1.Position - changeVector, Vector3.Negate(vertex1.Normal)),
+                        vertex0.Copy(vertex0.Position - changeVector, Vector3.Negate(vertex0.Normal)));
                 }
             }
 
@@ -269,7 +270,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Scale the text using given scale factor
             if (m_geometryOptions.VerticesScaleFactor > 0f)
             {
-                var scaleMatrix = SDX.Matrix.Scaling(
+                var scaleMatrix = Matrix4x4.CreateScale(
                     m_geometryOptions.VerticesScaleFactor,
                     m_geometryOptions.VerticesScaleFactor,
                     m_geometryOptions.VerticesScaleFactor);
@@ -277,7 +278,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var transformMatrix = new Matrix4Stack(scaleMatrix);
                 transformMatrix.TransformLocal(m_geometryOptions.VertexTransform);
 
-                tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => SDX.Vector3.Transform(actVector, transformMatrix.Top).ToXYZ());
+                tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => Vector3.Transform(actVector, transformMatrix.Top));
             }
 
             // Calculate all normals before adding to target geometry

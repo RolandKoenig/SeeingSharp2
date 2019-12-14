@@ -21,7 +21,6 @@
 */
 using System;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 

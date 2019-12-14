@@ -19,12 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
 
@@ -93,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 {
                     m_overlayRenderer.EndDraw();
                 }
-                catch (SharpDXException dxException)
+                catch (SharpDX.SharpDXException dxException)
                 {
                     if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                     {

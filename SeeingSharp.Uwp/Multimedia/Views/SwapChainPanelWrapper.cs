@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using Windows.Foundation;
 using Windows.Graphics.Display;
@@ -27,7 +26,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Views
@@ -65,7 +63,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_bgPanel = bgPanel;
-            m_bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(m_bgPanel);
+            m_bgPanelNative = SharpDX.ComObject.As<ISwapChainBackgroundPanelNative>(m_bgPanel);
 
             m_bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
             m_bgPanel.Loaded += this.OnAnyPanel_Loaded;
@@ -80,7 +78,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             m_panel = panel;
-            m_panelNative = ComObject.As<ISwapChainPanelNative>(m_panel);
+            m_panelNative = SharpDX.ComObject.As<ISwapChainPanelNative>(m_panel);
 
             m_panel.SizeChanged += this.OnAnyPanel_SizeChanged;
             m_panel.Loaded += this.OnAnyPanel_Loaded;

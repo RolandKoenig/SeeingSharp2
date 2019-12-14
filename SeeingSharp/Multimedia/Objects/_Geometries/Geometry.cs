@@ -23,10 +23,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         // Members for build time transform
         private bool m_buildTimeTransformEnabled;
-        private Matrix m_buildTransformMatrix;
+        private Matrix4x4 m_buildTransformMatrix;
         private Func<Vertex, Vertex> m_buildTimeTransformFunc;
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             var fullBoundingBox = this.GenerateBoundingBox();
             var fullCenter = fullBoundingBox.GetMiddleCenter();
-            var targetCenter = new Vector3(0f, fullBoundingBox.Size.Y / 2f, 0f);
+            var targetCenter = new Vector3(0f, fullBoundingBox.GetSize().Y / 2f, 0f);
             var moveToTargetCenter = targetCenter - fullCenter;
 
             this.UpdateVerticesUsingRelocationBy(moveToTargetCenter);
@@ -209,7 +209,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             //Get whole bounding box
             var boundingBox = this.GenerateBoundingBox();
-            var boundingBoxSize = boundingBox.Size;
+            var boundingBoxSize = boundingBox.GetSize();
 
             if (boundingBox.IsEmpty()) { return; }
             if (boundingBoxSize.X <= 0f) { return; }
@@ -244,7 +244,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Bring the geometry to origin based location and then scale it
-            this.UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.GetCornerA()));
+            this.UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.CornerA));
             this.UpdateVerticesUsingRelocationFunc(actPosition => new Vector3(
                 actPosition.X * resizeFactorX,
                 actPosition.Y * resizeFactorY,
@@ -272,7 +272,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// Enables build-time transform using the given matrix.
         /// </summary>
         /// <param name="transformMatrix">Transform matrix.</param>
-        public void EnableBuildTimeTransform(Matrix transformMatrix)
+        public void EnableBuildTimeTransform(Matrix4x4 transformMatrix)
         {
             m_buildTimeTransformEnabled = true;
             m_buildTransformMatrix = transformMatrix;
@@ -285,7 +285,7 @@ namespace SeeingSharp.Multimedia.Objects
         public void EnableBuildTimeTransform(Func<Vertex, Vertex> transformFunc)
         {
             m_buildTimeTransformEnabled = true;
-            m_buildTransformMatrix = Matrix.Identity;
+            m_buildTransformMatrix = Matrix4x4.Identity;
             m_buildTimeTransformFunc = transformFunc;
         }
 
@@ -295,7 +295,7 @@ namespace SeeingSharp.Multimedia.Objects
         public void DisableBuildTimeTransform()
         {
             m_buildTimeTransformEnabled = false;
-            m_buildTransformMatrix = Matrix.Identity;
+            m_buildTransformMatrix = Matrix4x4.Identity;
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace SeeingSharp.Multimedia.Objects
                 if (m_buildTimeTransformFunc != null) { vertex = m_buildTimeTransformFunc(vertex); }
                 else
                 {
-                    vertex.Position = Vector3.Transform(vertex.Position, m_buildTransformMatrix).ToXYZ();
+                    vertex.Position = Vector3.Transform(vertex.Position, m_buildTransformMatrix);
                     vertex.Normal = Vector3.TransformNormal(vertex.Normal, m_buildTransformMatrix);
                 }
             }
@@ -599,13 +599,13 @@ namespace SeeingSharp.Multimedia.Objects
         /// Transforms positions and normals of all vertices using the given transform matrix
         /// </summary>
         /// <param name="transformMatrix"></param>
-        public void TransformVertices(Matrix transformMatrix)
+        public void TransformVertices(Matrix4x4 transformMatrix)
         {
             var length = this.VerticesInternal.Count;
             for (var loop = 0; loop < length; loop++)
             {
                 this.VerticesInternal[loop] = this.VerticesInternal[loop].Copy(
-                    Vector3.Transform(this.VerticesInternal[loop].Position, transformMatrix).ToXYZ(),
+                    Vector3.Transform(this.VerticesInternal[loop].Position, transformMatrix),
                     Vector3.TransformNormal(this.VerticesInternal[loop].Normal, transformMatrix));
             }
         }

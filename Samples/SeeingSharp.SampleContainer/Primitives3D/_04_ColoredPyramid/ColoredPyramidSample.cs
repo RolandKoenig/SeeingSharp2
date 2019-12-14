@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
 {
@@ -60,7 +59,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
 
                 // Create Sphere object
                 var pyramidMesh = new Mesh(resGeometry, resMaterial);
-                pyramidMesh.Color = Color4Ex.GreenColor;
+                pyramidMesh.Color = Color4.GreenColor;
                 pyramidMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

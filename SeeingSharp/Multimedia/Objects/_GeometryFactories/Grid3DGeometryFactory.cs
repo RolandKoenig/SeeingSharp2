@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -41,11 +41,11 @@ namespace SeeingSharp.Multimedia.Objects
             this.BuildBackFaces = true;
 
             this.HighlightXZLines = false;
-            this.ZLineHighlightColor = Color4Ex.BlueColor;
-            this.XLineHighlightColor = Color4Ex.GreenColor;
+            this.ZLineHighlightColor = Color4.BlueColor;
+            this.XLineHighlightColor = Color4.GreenColor;
 
-            this.GroundColor = Color4Ex.LightSteelBlue;
-            this.LineColor = Color4Ex.LightGray;
+            this.GroundColor = Color4.LightSteelBlue;
+            this.LineColor = Color4.LightGray;
         }
 
         /// <summary>

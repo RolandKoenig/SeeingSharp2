@@ -25,11 +25,11 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -274,16 +274,16 @@ namespace SeeingSharp.Multimedia.Objects
                     if (importOptions.IsChangeTriangleOrderNeeded())
                     {
                         targetSurface.AddTriangle(
-                            new Vertex(m_cachedPoints[2], Color4Ex.Transparent, Vector2.Zero, normal),
-                            new Vertex(m_cachedPoints[1], Color4Ex.Transparent, Vector2.Zero, normal),
-                            new Vertex(m_cachedPoints[0], Color4Ex.Transparent, Vector2.Zero, normal));
+                            new Vertex(m_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal),
+                            new Vertex(m_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
+                            new Vertex(m_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal));
                     }
                     else
                     {
                         targetSurface.AddTriangle(
-                            new Vertex(m_cachedPoints[0], Color4Ex.Transparent, Vector2.Zero, normal),
-                            new Vertex(m_cachedPoints[1], Color4Ex.Transparent, Vector2.Zero, normal),
-                            new Vertex(m_cachedPoints[2], Color4Ex.Transparent, Vector2.Zero, normal));
+                            new Vertex(m_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal),
+                            new Vertex(m_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
+                            new Vertex(m_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal));
                     }
                     break;
 
@@ -294,7 +294,7 @@ namespace SeeingSharp.Multimedia.Objects
                         for (var loop = pointCount - 1; loop > -1; loop--)
                         {
                             indices[loop] = newGeometry.AddVertex(
-                                new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
+                                new Vertex(m_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
                         }
                     }
                     else
@@ -302,7 +302,7 @@ namespace SeeingSharp.Multimedia.Objects
                         for (var loop = 0; loop < pointCount; loop++)
                         {
                             indices[loop] = newGeometry.AddVertex(
-                                new Vertex(m_cachedPoints[loop], Color4Ex.Transparent, Vector2.Zero, normal));
+                                new Vertex(m_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
                         }
                     }
 

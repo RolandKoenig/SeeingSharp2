@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
     public enum ObjectThreadState
     {
         /// <summary>
-        /// Threre is no thread created at the moment.
+        /// There is no thread created at the moment.
         /// </summary>
         None,
 

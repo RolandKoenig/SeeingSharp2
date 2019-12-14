@@ -21,9 +21,9 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Input;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneRelatedUpdateState(Scene owner)
         {
             m_owner = owner;
-            this.World = new Matrix4Stack(Matrix.Identity);
+            this.World = new Matrix4Stack(Matrix4x4.Identity);
             m_inputFrames = null;
         }
 

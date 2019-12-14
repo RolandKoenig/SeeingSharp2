@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 using System.Collections.Generic;
 using Resource = SeeingSharp.Multimedia.Core.Resource;
 
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
 
-            m_boundingBox = BoundingBoxEx.Create(vertexLocations);
+            m_boundingBox = new BoundingBox(vertexLocations);
 
             // Build geometry
             var builtChunks = this.BuildBuffers(device, geometries, resources);

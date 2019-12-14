@@ -22,11 +22,11 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {

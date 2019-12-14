@@ -20,8 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
-using SharpDX;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Objects

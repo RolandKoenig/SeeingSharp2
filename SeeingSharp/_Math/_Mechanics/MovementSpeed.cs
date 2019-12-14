@@ -1,10 +1,11 @@
-﻿/*
-    Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwise.
+﻿#region License information (SeeingSharp and all based games/applications)
+/*
+    Seeing# and all games/applications distributed together with it. 
+	Exception are projects where it is noted otherwhise.
     More info at 
-     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the authors homepage, german)
-    Copyright (C) 2019 Roland König (RolandK)
+     - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
+     - http://www.rolandk.de/wp (the autors homepage, german)
+    Copyright (C) 2016 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -19,8 +20,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+#endregion
 using System;
-using SharpDX;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -41,7 +47,7 @@ namespace SeeingSharp
         /// <summary>
         /// The deceleration in m/s².
         /// </summary>
-        public float Deceleration;
+        public float Decelration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementSpeed"/> struct.
@@ -50,11 +56,11 @@ namespace SeeingSharp
         /// <param name="timeSpan">The total timespan the movement should take.</param>
         public MovementSpeed(Vector3 movementVector, TimeSpan timeSpan)
         {
-            var totalLength = movementVector.Length();
+            float totalLength = movementVector.Length();
 
-            MaximumSpeed = (float)(totalLength / timeSpan.TotalSeconds);
-            Acceleration = 0f;
-            Deceleration = 0f;
+            this.MaximumSpeed = (float)((double)totalLength / timeSpan.TotalSeconds);
+            this.Acceleration = 0f;
+            this.Decelration = 0f;
         }
 
         /// <summary>
@@ -63,9 +69,9 @@ namespace SeeingSharp
         /// <param name="maxSpeed">The maximum speed in m/s.</param>
         public MovementSpeed(float maxSpeed)
         {
-            MaximumSpeed = maxSpeed;
-            Acceleration = 0f;
-            Deceleration = 0f;
+            this.MaximumSpeed = maxSpeed;
+            this.Acceleration = 0f;
+            this.Decelration = 0f;
         }
 
         /// <summary>
@@ -75,9 +81,9 @@ namespace SeeingSharp
         /// <param name="acceleration">The acceleration in m/s².</param>
         public MovementSpeed(float maxSpeed, float acceleration)
         {
-            MaximumSpeed = maxSpeed;
-            Acceleration = EngineMath.ForcePositive(acceleration);
-            Deceleration = 0f;
+            this.MaximumSpeed = maxSpeed;
+            this.Acceleration = EngineMath.ForcePositive(acceleration);
+            this.Decelration = 0f;
         }
 
         /// <summary>
@@ -88,16 +94,23 @@ namespace SeeingSharp
         /// <param name="deceleration">The deceleration in m/s².</param>
         public MovementSpeed(float maxSpeed, float acceleration, float deceleration)
         {
-            MaximumSpeed = EngineMath.ForcePositive(maxSpeed);
-            Acceleration = EngineMath.ForcePositive(acceleration);
-            Deceleration = EngineMath.ForceNegative(deceleration);
+            this.MaximumSpeed = EngineMath.ForcePositive(maxSpeed);
+            this.Acceleration = EngineMath.ForcePositive(acceleration);
+            this.Decelration = EngineMath.ForceNegative(deceleration);
         }
 
+        /// <summary>
+        /// Gibt an, ob das aktuelle Objekt einem anderen Objekt des gleichen Typs entspricht.
+        /// </summary>
+        /// <param name="other">Ein Objekt, das mit diesem Objekt verglichen werden soll.</param>
+        /// <returns>
+        /// true, wenn das aktuelle Objekt gleich dem <paramref name="other" />-Parameter ist, andernfalls false.
+        /// </returns>
         public bool Equals(MovementSpeed other)
         {
-            return Math.Abs(other.Acceleration - Acceleration) < MathUtil.ZeroTolerance &&
-                   Math.Abs(other.Deceleration - Deceleration) < MathUtil.ZeroTolerance &&
-                   Math.Abs(other.MaximumSpeed - MaximumSpeed) < MathUtil.ZeroTolerance;
+            return (Math.Abs(other.Acceleration - Acceleration) < MathUtil.ZeroTolerance &&
+                    Math.Abs(other.Decelration - Decelration) < MathUtil.ZeroTolerance &&
+                    Math.Abs(other.MaximumSpeed - MaximumSpeed) < MathUtil.ZeroTolerance);
         }
 
         /// <summary>
@@ -110,16 +123,12 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
-            {
                 return false;
-            }
 
             if (!ReferenceEquals(value.GetType(), typeof(MovementSpeed)))
-            {
                 return false;
-            }
 
-            return this.Equals((MovementSpeed)value);
+            return Equals((MovementSpeed)value);
         }
 
         /// <summary>
@@ -130,7 +139,7 @@ namespace SeeingSharp
         /// </returns>
         public override int GetHashCode()
         {
-            return Acceleration.GetHashCode() + Deceleration.GetHashCode() + MaximumSpeed.GetHashCode();
+            return Acceleration.GetHashCode() + Decelration.GetHashCode() + MaximumSpeed.GetHashCode();
         }
 
         /// <summary>
@@ -139,9 +148,9 @@ namespace SeeingSharp
         /// </summary>
         public void ValidateWithException()
         {
-            if (MaximumSpeed <= EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for MaximumSpeed (musst be positive)!"); }
-            if (Acceleration < EngineMath.TOLERANCE_FLOAT_NEGATIVE) { throw new InvalidOperationException("Invalid value for acceleration (musst be possitive or zero)!"); }
-            if (Deceleration > EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for deceleration (musst be negative or zero)!"); }
+            if (this.MaximumSpeed <= EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for MaximumSpeed (musst be positive)!"); }
+            if (this.Acceleration < EngineMath.TOLERANCE_FLOAT_NEGATIVE) { throw new InvalidOperationException("Invalid value for acceleration (musst be possitive or zero)!"); }
+            if (this.Decelration > EngineMath.TOLERANCE_FLOAT_POSITIVE) { throw new InvalidOperationException("Invalid value for deceleration (musst be negative or zero)!"); }
         }
 
         /// <summary>

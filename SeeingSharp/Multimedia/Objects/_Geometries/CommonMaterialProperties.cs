@@ -22,7 +22,6 @@
 using System;
 using System.Text;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {

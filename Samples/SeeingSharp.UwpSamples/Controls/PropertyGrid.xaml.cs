@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
@@ -29,7 +28,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 namespace SeeingSharp.UwpSamples.Controls
 {
@@ -98,7 +96,7 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.FontWeight = FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    var rect = new Rectangle
+                    var rect = new Windows.UI.Xaml.Shapes.Rectangle
                     {
                         Height = 2d,
                         Fill = new SolidColorBrush(Colors.Black),

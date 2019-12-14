@@ -20,9 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Runtime.InteropServices;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public EdgeDetectPostprocessEffectResource()
         {
             this.Thickness = 2f;
-            m_borderColor = Color4Ex.BlueColor;
+            m_borderColor = Color4.BlueColor;
             this.DrawOriginalObject = true;
         }
 

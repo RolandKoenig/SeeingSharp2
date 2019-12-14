@@ -21,7 +21,7 @@
 */
 using System;
 using System.Collections.Generic;
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Core
 {

@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -40,27 +40,27 @@ namespace SeeingSharp.Multimedia.Objects
         /// Gets the transform matrix for coordinate system.
         /// </summary>
         /// <returns></returns>
-        public Matrix GetTransformMatrixForCoordinateSystem()
+        public Matrix4x4 GetTransformMatrixForCoordinateSystem()
         {
             switch (this.ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
-                    return Matrix.Identity;
+                    return Matrix4x4.Identity;
 
                 case CoordinateSystem.LeftHanded_UpZ:
                     return
-                        Matrix.Scaling(1f, -1f, 1f) *
-                        Matrix.RotationX(-EngineMath.RAD_90DEG);
+                        Matrix4x4.CreateScale(1f, -1f, 1f) *
+                        Matrix4x4.CreateRotationX(-EngineMath.RAD_90DEG);
 
                 case CoordinateSystem.RightHanded_UpY:
-                    return Matrix.Scaling(new Vector3(1f, 1f, -1f));
+                    return Matrix4x4.CreateScale(new Vector3(1f, 1f, -1f));
 
                 case CoordinateSystem.RightHanded_UpZ:
                     return
-                        Matrix.RotationX(-EngineMath.RAD_90DEG);
+                        Matrix4x4.CreateRotationX(-EngineMath.RAD_90DEG);
             }
 
-            return Matrix.Identity;
+            return Matrix4x4.Identity;
         }
 
         /// <summary>

@@ -1,10 +1,11 @@
-﻿/*
-    Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwise.
+﻿#region License information (SeeingSharp and all based games/applications)
+/*
+    Seeing# and all games/applications distributed together with it. 
+	Exception are projects where it is noted otherwhise.
     More info at 
-     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the authors homepage, german)
-    Copyright (C) 2019 Roland König (RolandK)
+     - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
+     - http://www.rolandk.de/wp (the autors homepage, german)
+    Copyright (C) 2016 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -19,27 +20,32 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+#endregion
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using SharpDX;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Numerics;
 
 namespace SeeingSharp
 {
     public class Polygon
     {
-        private Lazy<Vector3> m_normal;
         private Vector3[] m_vertices;
+        private ReadOnlyCollection<Vector3> m_verticesPublic;
+        private Lazy<Vector3> m_normal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Polygon" /> class.
         /// </summary>
         public Polygon(params Vector3[] vertices)
         {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
+            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
 
             m_vertices = vertices;
-            this.Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
+            m_verticesPublic = new ReadOnlyCollection<Vector3>(m_vertices);
 
             //Define normal calculation method
             m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
@@ -50,17 +56,17 @@ namespace SeeingSharp
         /// </summary>
         public Polygon2D Flattern()
         {
-            //Inspired by implementation of the Helix Toolkit from Codeplex (http://helixtoolkit.codeplex.com/)
+            //Inspired by implementation of the Helix Toolkit from codeplex (http://helixtoolkit.codeplex.com/)
             //Original sources:
             // http://forums.xna.com/forums/p/16529/86802.aspx
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
             //Calculate transform matrix
-            var upVector = m_normal.Value;
-            var right = Vector3.Cross(
+            Vector3 upVector = m_normal.Value;
+            Vector3 right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
-            var backward = Vector3.Cross(right, upVector);
-            var m = new Matrix(
+            Vector3 backward = Vector3.Cross(right, upVector);
+            var m = new Matrix4x4(
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
             //Make first point origin
@@ -69,8 +75,8 @@ namespace SeeingSharp
             m.M42 = -offs.Y;
 
             //Calculate 2D surface
-            var resultVertices = new Vector2[m_vertices.Length];
-            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            Vector2[] resultVertices = new Vector2[m_vertices.Length];
+            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
                 var pp = Vector3.Transform(m_vertices[loopVertex], m);
                 resultVertices[loopVertex] = new Vector2(pp.X, pp.Y);
@@ -84,18 +90,24 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            var surface2D = this.Flattern();
+            Polygon2D surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 
         /// <summary>
         /// Gets a collection containing all vertices.
         /// </summary>
-        public ReadOnlyCollection<Vector3> Vertices { get; }
+        public ReadOnlyCollection<Vector3> Vertices
+        {
+            get { return m_verticesPublic; }
+        }
 
         /// <summary>
         /// Gets the normal of this polygon.
         /// </summary>
-        public Vector3 Normal => m_normal.Value;
+        public Vector3 Normal
+        {
+            get { return m_normal.Value; }
+        }
     }
 }

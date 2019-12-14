@@ -21,7 +21,6 @@
 */
 using System;
 using System.Runtime.InteropServices;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {

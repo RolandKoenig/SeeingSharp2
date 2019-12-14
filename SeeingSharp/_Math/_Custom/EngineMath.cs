@@ -1,10 +1,11 @@
+#region License information (SeeingSharp and all based games/applications)
 /*
-    Seeing# and all applications distributed together with it. 
-	Exceptions are projects where it is noted otherwise.
+    Seeing# and all games/applications distributed together with it. 
+	Exception are projects where it is noted otherwhise.
     More info at 
-     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the authors homepage, german)
-    Copyright (C) 2019 Roland König (RolandK)
+     - https://github.com/RolandKoenig/SeeingSharp (sourcecode)
+     - http://www.rolandk.de/wp (the autors homepage, german)
+    Copyright (C) 2016 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -19,7 +20,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+#endregion
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -50,7 +54,7 @@ namespace SeeingSharp
         {
             if (value <= 1) { return 1; }
 
-            var valueLong = value;
+            long valueLong = (long)value;
             long result = 0;
 
             for (long actValue = 1; actValue <= valueLong; actValue++)
@@ -64,15 +68,15 @@ namespace SeeingSharp
         /// <summary>
         /// Calculates the binomial coefficient out of the given two values.
         /// </summary>
-        /// <param name="n">The upper value normally mentioned as 'n'.</param>
-        /// <param name="k">The lower value normally mentioned as 'k'.</param>
+        /// <param name="n">The upper vlaue normally mentioned as 'n'.</param>
+        /// <param name="k">The lower vlaue normally mentioned as 'k'.</param>
         public static decimal BinomialCoefficient(decimal n, decimal k)
         {
-            var upperValueInt = (int)n;
-            var lowerValueInt = (int)k;
+            int upperValueInt = (int)n;
+            int lowerValueInt = (int)k;
 
             return
-                Factorial(upperValueInt) /
+                (decimal)Factorial(upperValueInt) /
                 (decimal)(Factorial(lowerValueInt) * Factorial(upperValueInt - lowerValueInt));
         }
 
@@ -82,10 +86,10 @@ namespace SeeingSharp
         /// <param name="angle">The angle to convert.</param>
         public static float GetAbsoluteAngleRadian(float angle)
         {
-            var result = angle;
+            float result = angle;
 
             result = result % ((float)Math.PI * 2f);
-            if (result < 0) { result = (float)Math.PI * 2f + result; }
+            if (result < 0) { result = ((float)Math.PI * 2f) + result; }
 
             return result;
         }
@@ -94,9 +98,9 @@ namespace SeeingSharp
         /// Converts the given angle value to an absolute value (e. g. -10° to 350°).
         /// </summary>
         /// <param name="angle">The angle to convert.</param>
-        public static float GetAbsoluteAngleDegree(float angle)
+        public static float GetAboluteAngleDegree(float angle)
         {
-            var result = angle;
+            float result = angle;
 
             result = result % 360f;
             if (result < 0) { result = 360f + result; }
@@ -111,7 +115,7 @@ namespace SeeingSharp
         /// <returns>The radian value of the angle.</returns>
         public static float DegreeToRadian(float degreeValue)
         {
-            return degreeValue / 360f * RAD_360DEG;
+            return (degreeValue / 360f) * RAD_360DEG;
         }
 
         /// <summary>
@@ -121,17 +125,17 @@ namespace SeeingSharp
         /// <returns>The radian value of the angle.</returns>
         public static float DegreeToRadian(int degreeValue)
         {
-            return degreeValue / 360f * RAD_360DEG;
+            return (degreeValue / 360f) * RAD_360DEG;
         }
 
         /// <summary>
-        /// Converts the given radian value to degree.
+        /// Converts the given radian vlaue to degree.
         /// </summary>
         /// <param name="radianValue">A angle in radian.</param>
         /// <returns>The degree value of the angle.</returns>
         public static float RadianToDegree(float radianValue)
         {
-            return radianValue / RAD_360DEG * 360f;
+            return (radianValue / RAD_360DEG) * 360f;
         }
 
         /// <summary>

@@ -23,12 +23,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Util.SdxTK;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Core
         internal static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture32bpp m_mappedTexture)
         {
             //Create the texture
-            var dataRectangle = new DataRectangle(
+            var dataRectangle = new SharpDX.DataRectangle(
                 m_mappedTexture.Pointer,
                 m_mappedTexture.Width * 4);
             var result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
@@ -259,13 +259,13 @@ namespace SeeingSharp.Multimedia.Core
 
             // Allocate DataStream to receive the WIC image pixels
             var stride = bitmapSource.Size.Width * 4;
-            using (var buffer = new DataStream(bitmapSource.Size.Height * stride, true, true))
+            using (var buffer = new SharpDX.DataStream(bitmapSource.Size.Height * stride, true, true))
             {
                 // Copy the content of the WIC to the buffer
                 bitmapSource.CopyPixels(stride, buffer);
 
                 //Create the texture
-                var dataRectangle = new DataRectangle(buffer.DataPointer, stride);
+                var dataRectangle = new SharpDX.DataRectangle(buffer.DataPointer, stride);
 
                 var result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
                 {
@@ -381,7 +381,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="width">Width of generated texture.</param>
         /// <param name="height">Height of generated texture.</param>
         /// <param name="rawData">Raw data to be loaded into the texture.</param>
-        internal static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, DataBox[] rawData)
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, SharpDX.DataBox[] rawData)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
@@ -756,7 +756,7 @@ namespace SeeingSharp.Multimedia.Core
             var vertexType = typeof(T);
             var vertexCount = vertices.Sum(actArray => actArray.Length);
             var vertexSize = Marshal.SizeOf<T>();
-            var outStream = new DataStream(
+            var outStream = new SharpDX.DataStream(
                 vertexCount * vertexSize,
                 true, true);
 
@@ -796,7 +796,7 @@ namespace SeeingSharp.Multimedia.Core
             var countIndices = indices.Sum(actArray => actArray.Length);
             var bytesPerIndex = Marshal.SizeOf<uint>();
 
-            var outStreamIndex = new DataStream(
+            var outStreamIndex = new SharpDX.DataStream(
                 countIndices *
                 bytesPerIndex, true, true);
 

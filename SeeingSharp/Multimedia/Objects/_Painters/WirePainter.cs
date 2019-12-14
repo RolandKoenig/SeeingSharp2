@@ -20,9 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Objects
         private bool m_isValid;
         private LineRenderResources m_renderResources;
         private RenderState m_renderState;
-        private Lazy<Matrix> m_worldViewPojCreator;
+        private Lazy<Matrix4x4> m_worldViewPojCreator;
 
         internal WirePainter(RenderState renderState, LineRenderResources renderResources)
         {
@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Objects
             m_renderResources = renderResources;
             m_renderState = renderState;
 
-            m_worldViewPojCreator = new Lazy<Matrix>(() => Matrix.Transpose(renderState.ViewProj));
+            m_worldViewPojCreator = new Lazy<Matrix4x4>(() => Matrix4x4.Transpose(renderState.ViewProj));
         }
 
         public void DrawLine(Vector3 start, Vector3 destination)

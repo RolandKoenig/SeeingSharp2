@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         new Vector3(1f, -1f, 0f),
                         new Vector3(1f, 1f, 0f),
                         new Vector3(-1f, 1f, 0f),
-                        Color4Ex.Transparent);
+                        Color4.Transparent);
                     geometry.FirstSurface.Material = KEY_MATERIAL;
                     return new GeometryResource(geometry);
                 });
@@ -130,7 +130,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 Color = Vector4.Zero,
                 Opacity = this.Opacity,
                 SpriteScaling = this.Scaling,
-                World = Matrix.Identity
+                World = Matrix4x4.Identity
             });
 
             // Render using current configuration

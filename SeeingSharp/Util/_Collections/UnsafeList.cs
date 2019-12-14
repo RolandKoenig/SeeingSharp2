@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Text;
-/*
+﻿/*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
@@ -25,7 +19,10 @@ using System.Text;
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Threading;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util

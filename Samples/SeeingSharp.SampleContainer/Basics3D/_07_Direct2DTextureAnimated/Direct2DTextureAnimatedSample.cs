@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -29,7 +29,6 @@ using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 {
@@ -56,14 +55,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             var animationMillis = 3000f;
 
             // 2D rendering is made here
-            m_solidBrush = new SolidBrushResource(Color4Ex.Gray);
-            m_animatedRectBrush = new SolidBrushResource(Color4Ex.RedColor);
+            m_solidBrush = new SolidBrushResource(Color4.Gray);
+            m_animatedRectBrush = new SolidBrushResource(Color4.RedColor);
 
             var d2DDrawingLayer = new Custom2DDrawingLayer(graphics =>
             {
                 // Draw the background
                 var d2DRectangle = new RectangleF(10, 10, 236, 236);
-                graphics.Clear(Color4Ex.LightBlue);
+                graphics.Clear(Color4.LightBlue);
                 graphics.FillRoundedRectangle(
                     d2DRectangle, 30, 30,
                     m_solidBrush);
@@ -97,7 +96,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
-                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.YPos = 0.5f;
                 cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()

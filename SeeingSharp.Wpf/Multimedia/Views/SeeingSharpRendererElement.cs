@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +34,6 @@ using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using Color = System.Windows.Media.Color;
@@ -113,7 +111,7 @@ namespace SeeingSharp.Multimedia.Views
             // Break here if we are in design mode
             if (this.IsInDesignMode()) { return; }
 
-            this.RenderLoop.ClearColor = Color4Ex.Transparent;
+            this.RenderLoop.ClearColor = Color4.Transparent;
             this.RenderLoop.Internals.CallPresentInUIThread = true;
 
             // Create new scene and camera object
@@ -631,12 +629,12 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Gets or sets the clear color of this 3D view.
         /// </summary>
-        public Color ClearColor
+        public System.Windows.Media.Color ClearColor
         {
             get
             {
                 var clearColor = this.RenderLoop.ClearColor;
-                var result = new Color();
+                var result = new System.Windows.Media.Color();
                 SeeingSharpWpfUtil.WpfColorFromColor4(ref clearColor, ref result);
                 return result;
             }

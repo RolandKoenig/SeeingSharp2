@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Objects
                     new Vector3(0f, 0f, 0f),
                     this.Width,
                     this.Height,
-                    Color4Ex.Transparent);
+                    Color4.Transparent);
 
             return result;
         }

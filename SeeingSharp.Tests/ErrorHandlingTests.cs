@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -31,7 +31,6 @@ using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
-using SharpDX;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -58,13 +57,13 @@ namespace SeeingSharp.Tests
                 Assert.IsTrue(GraphicsCore.IsLoaded);
                 Assert.IsFalse(GraphicsCore.Current.DefaultDevice.Supports2D);
 
-                using (var solidBrush = new SolidBrushResource(Color4Ex.Gray))
+                using (var solidBrush = new SolidBrushResource(Color4.Gray))
                 using (var textFormat = new TextFormatResource("Arial", 36))
-                using (var textBrush = new SolidBrushResource(Color4Ex.RedColor))
+                using (var textBrush = new SolidBrushResource(Color4.RedColor))
 
                 using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
                 {
-                    memRenderTarget.ClearColor = Color4Ex.CornflowerBlue;
+                    memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                     // Get and configure the camera
                     var camera = memRenderTarget.Camera as PerspectiveCamera3D;
@@ -76,7 +75,7 @@ namespace SeeingSharp.Tests
                     var d2dDrawingLayer = new Custom2DDrawingLayer(graphics =>
                     {
                         var d2dRectangle = new RectangleF(10, 10, 236, 236);
-                        graphics.Clear(Color4Ex.LightBlue);
+                        graphics.Clear(Color4.LightBlue);
                         graphics.FillRoundedRectangle(
                             d2dRectangle, 30, 30,
                             solidBrush);

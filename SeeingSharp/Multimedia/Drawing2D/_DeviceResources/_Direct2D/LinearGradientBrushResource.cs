@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
@@ -129,8 +129,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         engineDevice.FakeRenderTarget2D,
                         new D2D.LinearGradientBrushProperties
                         {
-                            StartPoint = this.StartPoint,
-                            EndPoint = this.EndPoint
+                            StartPoint = SdxMathHelper.RawFromVector2(this.StartPoint),
+                            EndPoint = SdxMathHelper.RawFromVector2(this.EndPoint)
                         },
                         new D2D.BrushProperties
                         {

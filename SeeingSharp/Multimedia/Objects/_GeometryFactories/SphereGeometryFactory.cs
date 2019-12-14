@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 namespace SeeingSharp.Multimedia.Objects
 {
     public class SphereGeometryFactory : GeometryFactory
@@ -28,7 +29,7 @@ namespace SeeingSharp.Multimedia.Objects
             var result = new Geometry();
 
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius, Color4Ex.Transparent);
+            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius, Color4.Transparent);
 
             return result;
         }

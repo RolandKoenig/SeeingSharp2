@@ -19,11 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -249,7 +248,7 @@ namespace SeeingSharp.Multimedia.Objects
                     // Transform picking ray to local space
                     var pickingRay = new Ray(rayStart, rayDirection);
                     var localTransform = this.Transform;
-                    Matrix.Invert(ref localTransform, out var temp);
+                    Matrix4x4.Invert(localTransform, out var temp);
                     pickingRay.Transform(temp);
 
                     // Check for intersection on the bounding box

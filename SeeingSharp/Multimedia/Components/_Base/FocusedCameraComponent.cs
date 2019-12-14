@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Components
 {
@@ -124,10 +124,10 @@ namespace SeeingSharp.Multimedia.Components
             var cameraOffset = Vector3.UnitX;
             cameraOffset = Vector3.TransformNormal(
                 cameraOffset,
-                Matrix.RotationY(componentContext.CameraHVRotation.X));
+                Matrix4x4.CreateRotationY(componentContext.CameraHVRotation.X));
             cameraOffset = Vector3.TransformNormal(
                 cameraOffset,
-                Matrix.RotationAxis(Vector3.Cross(cameraOffset, Vector3.UnitY), componentContext.CameraHVRotation.Y));
+                Matrix4x4.CreateFromAxisAngle(Vector3.Cross(cameraOffset, Vector3.UnitY), componentContext.CameraHVRotation.Y));
 
             var focusedLocation = this.GetFocusedLocation();
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;

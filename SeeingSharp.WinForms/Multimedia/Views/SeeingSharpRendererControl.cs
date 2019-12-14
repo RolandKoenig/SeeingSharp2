@@ -19,9 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-//Some namespace mappings
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +32,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
@@ -530,7 +526,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
             }
-            catch(SharpDXException ex)
+            catch(SharpDX.SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware

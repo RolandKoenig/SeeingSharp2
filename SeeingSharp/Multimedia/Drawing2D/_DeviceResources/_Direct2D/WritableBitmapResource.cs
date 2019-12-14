@@ -22,7 +22,6 @@
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 
@@ -87,7 +86,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 // Load the bitmap initially
                 result = new D2D.Bitmap(
                     engineDevice.FakeRenderTarget2D,
-                    m_bitmapSize,
+                    SdxMathHelper.SdxFromSize2(m_bitmapSize),
                     new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
                 m_loadedBitmaps[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);

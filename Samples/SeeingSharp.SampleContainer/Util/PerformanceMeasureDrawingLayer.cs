@@ -36,9 +36,9 @@ namespace SeeingSharp.SampleContainer.Util
                 "Arial", 18f);
             m_textFormat.TextAlignment = TextAlignment.Center;
 
-            m_backBrush = new SolidBrushResource(Color4Ex.LightGray);
-            m_foreBrush = new SolidBrushResource(Color4Ex.Black);
-            m_borderBrush = new SolidBrushResource(Color4Ex.DarkGray);
+            m_backBrush = new SolidBrushResource(Color4.LightGray);
+            m_foreBrush = new SolidBrushResource(Color4.Black);
+            m_borderBrush = new SolidBrushResource(Color4.DarkGray);
         }
 
         protected override void Draw2D(Graphics2D graphics)

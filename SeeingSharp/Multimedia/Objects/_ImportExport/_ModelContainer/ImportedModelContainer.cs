@@ -22,9 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {

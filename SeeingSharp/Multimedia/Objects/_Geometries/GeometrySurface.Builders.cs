@@ -20,8 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -172,9 +172,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var actAngle = EngineMath.RAD_360DEG * actPercent;
 
                 // Calculate next points
-                Matrix3x2.Rotation(actAngle, out var rotationMatrix);
-                Matrix3x2.TransformPoint(ref rotationMatrix, ref nearVector, out var nextNearVector);
-                Matrix3x2.TransformPoint(ref rotationMatrix, ref farVector, out var nextFarVector);
+                var rotationMatrix = Matrix3x2.CreateRotation(actAngle);
+                var nextNearVector = Vector2.Transform(nearVector, rotationMatrix);
+                var nextFarVector = Vector2.Transform(farVector, rotationMatrix);
 
                 // Build current segment
                 this.BuildRect4V(
@@ -182,29 +182,29 @@ namespace SeeingSharp.Multimedia.Objects
                     middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
                     middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
                     middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
-                    Vector3.Up,
-                    Color4Ex.Transparent);
+                    Vector3.UnitY,
+                    Color4.Transparent);
                 this.BuildRect4V(
                     middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
                     middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
                     middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
                     middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
                     Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
-                    Color4Ex.Transparent);
+                    Color4.Transparent);
                 this.BuildRect4V(
                     middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
                     middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
                     middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
                     middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
-                    -Vector3.Up,
-                    Color4Ex.Transparent);
+                    -Vector3.UnitY,
+                    Color4.Transparent);
                 this.BuildRect4V(
                     middle + new Vector3(lastNearVector.X, halfHeight, lastNearVector.Y),
                     middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
                     middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
                     middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
                     Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
-                    Color4Ex.Transparent);
+                    Color4.Transparent);
 
                 lastNearVector = nextNearVector;
                 lastFarVector = nextFarVector;
@@ -769,7 +769,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="color">Color of generated vertices.</param>
         public BuiltVerticesRange BuildCube24V(BoundingBox box, Color4 color)
         {
-            return this.BuildCube24V(box.Minimum, box.Size, color);
+            return this.BuildCube24V(box.Minimum, box.GetSize(), color);
         }
 
         /// <summary>

@@ -19,14 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.ComponentModel;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics2D._02_Image
@@ -63,7 +61,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
 
-                graphics.Clear(Color4Ex.WhiteSmoke);
+                graphics.Clear(Color4.WhiteSmoke);
                 graphics.DrawBitmap(
                     m_bitmap,
                     bitmapRect,

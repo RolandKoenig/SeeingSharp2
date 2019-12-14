@@ -1,0 +1,2 @@
+﻿Common math functionality taken from SharpDX (licensed under MIT)
+See http://sharpdx.org

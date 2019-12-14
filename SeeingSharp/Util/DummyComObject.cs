@@ -24,7 +24,7 @@ using SharpDX;
 
 namespace SeeingSharp.Util
 {
-    public class DummyComObject : IUnknown, ICallbackable, IDisposable
+    internal class DummyComObject : IUnknown, ICallbackable, IDisposable
     {
         private int m_referenceCounter;
 

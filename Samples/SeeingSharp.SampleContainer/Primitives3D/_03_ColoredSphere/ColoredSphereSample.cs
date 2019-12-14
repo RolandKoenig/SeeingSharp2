@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
 {
@@ -65,7 +64,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_ColoredSphere
 
                 // Create Sphere object
                 var sphereMesh = new Mesh(resGeometry, resMaterial);
-                sphereMesh.Color = Color4Ex.GreenColor;
+                sphereMesh.Color = Color4.GreenColor;
                 sphereMesh.Position = new Vector3(0f, 0.5f, 0f);
                 sphereMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))

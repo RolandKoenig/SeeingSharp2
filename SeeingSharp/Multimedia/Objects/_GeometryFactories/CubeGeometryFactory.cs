@@ -19,8 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -36,7 +35,7 @@ namespace SeeingSharp.Multimedia.Objects
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),
                     new Vector3(size, size, size),
-                    Color4Ex.Transparent);
+                    Color4.Transparent);
 
             return result;
         }

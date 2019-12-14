@@ -23,7 +23,7 @@
 //Some namespace mappings
 
 using System.Runtime.InteropServices;
-using SharpDX;
+using System.Numerics;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 

@@ -20,9 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
-using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var geometryThis = this.GetGeometry();
             var geometryOther = other.GetGeometry();
 
-            return geometryThis.Compare(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;
+            return geometryThis.Compare(geometryOther, SdxMathHelper.RawFromMatrix3x2(otherTransform), 1f) != D2D.GeometryRelation.Disjoint;
         }
 
         public abstract void Dispose();

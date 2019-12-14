@@ -21,7 +21,6 @@
 */
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using SharpDX;
 
 namespace SeeingSharp.Checking
 {

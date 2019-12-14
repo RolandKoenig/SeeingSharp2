@@ -20,8 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -39,9 +39,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Vector3 m_up;
         private Vector3 m_right;
         private Vector3 m_look;
-        private Matrix m_view;
-        private Matrix m_project;
-        private Matrix m_viewProj;
+        private Matrix4x4 m_view;
+        private Matrix4x4 m_project;
+        private Matrix4x4 m_viewProj;
 
         // Additional parameters
         private float m_zNear = 0.1f;
@@ -279,7 +279,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="projMatrix">The calculated projection matrix.</param>
         protected abstract void CalculateViewProjectionMatrices(
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
-            out Matrix viewMatrix, out Matrix projMatrix);
+            out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix);
 
         /// <summary>
         /// Gets the current AnimationHandler for this camera.
@@ -291,12 +291,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves the view-matrix.
         /// </summary>
-        public Matrix View => m_view;
+        public Matrix4x4 View => m_view;
 
         /// <summary>
         /// Gets the view-projection matrix.
         /// </summary>
-        public Matrix ViewProjection => m_viewProj;
+        public Matrix4x4 ViewProjection => m_viewProj;
 
         /// <summary>
         /// Retrieves or sets the direction / target.
@@ -425,7 +425,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves projection-matrix.
         /// </summary>
-        public Matrix Projection => m_project;
+        public Matrix4x4 Projection => m_project;
 
         /// <summary>
         /// Width of the screen.

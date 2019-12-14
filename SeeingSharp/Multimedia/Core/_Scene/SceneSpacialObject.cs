@@ -21,9 +21,9 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -43,8 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         private Vector3 m_rotationForward;
         private Vector3 m_rotationUp;
         private Vector3 m_scaling;
-        private Matrix m_transform;
-        private Matrix m_customTransform;
+        private Matrix4x4 m_transform;
+        private Matrix4x4 m_customTransform;
         private SceneSpacialObject m_transformSourceObject;
         private bool m_transformParamsChanged;
         private bool m_forceTransformUpdateOnChildren;
@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Core
             m_position = Vector3.Zero;
             m_rotation = Vector3.Zero;
             m_scaling = new Vector3(1f, 1f, 1f);
-            m_transform = Matrix.Identity;
+            m_transform = Matrix4x4.Identity;
             m_rotationQuaternion = Quaternion.Identity;
             m_transformParamsChanged = true;
         }
@@ -207,30 +207,30 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the rotation matrix for this object.
         /// </summary>
-        public Matrix GetRotationMatrix()
+        public Matrix4x4 GetRotationMatrix()
         {
             switch (m_transformationType)
             {
                 case SpacialTransformationType.ScalingTranslationEulerAngles:
                 case SpacialTransformationType.TranslationEulerAngles:
-                    return Matrix.RotationYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z);
+                    return Matrix4x4.CreateFromYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z);
 
                 case SpacialTransformationType.ScalingTranslationQuaternion:
                 case SpacialTransformationType.TranslationQuaternion:
-                    return Matrix.RotationQuaternion(m_rotationQuaternion);
+                    return Matrix4x4.CreateFromQuaternion(m_rotationQuaternion);
 
                 case SpacialTransformationType.ScalingTranslationDirection:
                 case SpacialTransformationType.TranslationDirection:
-                    return MatrixEx.RotationDirection(m_rotationUp, m_rotationForward);
+                    return Matrix4x4Ex.CreateRotationDirection(m_rotationUp, m_rotationForward);
 
                 case SpacialTransformationType.Translation:
                 case SpacialTransformationType.None:
                 case SpacialTransformationType.CustomTransform:
-                    return Matrix.Identity;
+                    return Matrix4x4.Identity;
 
                 case SpacialTransformationType.TakeFromOtherObject:
                     if (m_transformSourceObject != null) { return m_transformSourceObject.GetRotationMatrix(); }
-                    else { return Matrix.Identity; }
+                    else { return Matrix4x4.Identity; }
 
                 default:
                     throw new SeeingSharpGraphicsException("Unknown transformation type: " + m_transformationType);
@@ -240,17 +240,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the scaling matrix for this object.
         /// </summary>
-        public Matrix GetScalingMatrix()
+        public Matrix4x4 GetScalingMatrix()
         {
-            return Matrix.Scaling(m_scaling);
+            return Matrix4x4.CreateScale(m_scaling);
         }
 
         /// <summary>
         /// Gets the translation matrix for this object.
         /// </summary>
-        public Matrix GetTranslationMatrix()
+        public Matrix4x4 GetTranslationMatrix()
         {
-            return Matrix.Translation(m_position);
+            return Matrix4x4.CreateTranslation(m_position);
         }
 
         /// <summary>
@@ -291,59 +291,59 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     case SpacialTransformationType.ScalingTranslationEulerAngles:
                         m_transform =
-                            Matrix.Scaling(m_scaling) *
-                            Matrix.RotationYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateScale(m_scaling) *
+                            Matrix4x4.CreateFromYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.ScalingTranslationQuaternion:
                         m_transform =
-                            Matrix.Scaling(m_scaling) *
-                            Matrix.RotationQuaternion(m_rotationQuaternion) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateScale(m_scaling) *
+                            Matrix4x4.CreateFromQuaternion(m_rotationQuaternion) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.ScalingTranslationDirection:
                         m_transform =
-                            Matrix.Scaling(m_scaling) *
-                            MatrixEx.RotationDirection(m_rotationUp, m_rotationForward) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateScale(m_scaling) *
+                            Matrix4x4Ex.CreateRotationDirection(m_rotationUp, m_rotationForward) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.ScalingTranslation:
                         m_transform =
-                            Matrix.Scaling(m_scaling) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateScale(m_scaling) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationEulerAngles:
                         m_transform =
-                            Matrix.RotationYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateFromYawPitchRoll(m_rotation.Y, m_rotation.X, m_rotation.Z) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationQuaternion:
                         m_transform =
-                            Matrix.RotationQuaternion(m_rotationQuaternion) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateFromQuaternion(m_rotationQuaternion) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.TranslationDirection:
                         m_transform =
-                            MatrixEx.RotationDirection(m_rotationUp, m_rotationForward) *
-                            Matrix.Translation(m_position) *
+                            Matrix4x4Ex.CreateRotationDirection(m_rotationUp, m_rotationForward) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
                     case SpacialTransformationType.Translation:
                         m_transform =
-                            Matrix.Translation(m_position) *
+                            Matrix4x4.CreateTranslation(m_position) *
                             updateState.World.Top;
                         break;
 
@@ -438,7 +438,7 @@ namespace SeeingSharp.Multimedia.Core
                     AccentuationFactor = m_accentuationFactor,
                     Color = m_color.ToVector4(),
                     Opacity = m_opacity,
-                    World = Matrix.Transpose(m_transform),
+                    World = Matrix4x4.Transpose(m_transform),
                     BorderPart = m_borderPart,
                     BorderMultiplier = m_borderMultiplier,
                     ObjectScaling = m_scaling
@@ -651,7 +651,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a matrix that transforms local space to world space.
         /// </summary>
-        public Matrix Transform => m_transform;
+        public Matrix4x4 Transform => m_transform;
 
         /// <summary>
         /// Gets or sets the source of the transformation value when SpacialTransformationType.CustomTransform is set.
@@ -670,9 +670,9 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Getr or sets a matrix which is to apply on SpacialTransformationType.CustomTransform.
+        /// Gets or sets a matrix which is to apply on SpacialTransformationType.CustomTransform.
         /// </summary>
-        public Matrix CustomTransform
+        public Matrix4x4 CustomTransform
         {
             get => m_customTransform;
             set
@@ -685,17 +685,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the vector that looks up.
         /// </summary>
-        public Vector3 Up => Vector3.Transform(new Vector3(0f, 1f, 0f), m_transform).ToXYZ();
+        public Vector3 Up => Vector3.Transform(new Vector3(0f, 1f, 0f), m_transform);
 
         /// <summary>
         /// Gets the vector that looks into front.
         /// </summary>
-        public Vector3 Look => Vector3.Transform(new Vector3(0f, 0f, 1f), m_transform).ToXYZ();
+        public Vector3 Look => Vector3.Transform(new Vector3(0f, 0f, 1f), m_transform);
 
         /// <summary>
         /// Gets the vector that looks to the right.
         /// </summary>
-        public Vector3 Right => Vector3.Transform(new Vector3(1f, 0f, 0f), m_transform).ToXYZ();
+        public Vector3 Right => Vector3.Transform(new Vector3(1f, 0f, 0f), m_transform);
 
         /// <summary>
         /// The color of this object.

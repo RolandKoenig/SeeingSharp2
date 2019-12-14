@@ -19,13 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using System.Numerics;
 using SeeingSharp.Multimedia.Views;
-using SharpDX;
 using Point = System.Windows.Point;
 
 namespace SeeingSharp.Multimedia.Input
@@ -37,7 +36,7 @@ namespace SeeingSharp.Multimedia.Input
 
         // Helper
         private bool m_lastDragPointValid;
-        private Point m_lastDragPoint;
+        private System.Windows.Point m_lastDragPoint;
 
         // Input states
         private MouseOrPointerState m_stateMouseOrPointer;
@@ -214,7 +213,7 @@ namespace SeeingSharp.Multimedia.Input
             m_stateMouseOrPointer.Internals.NotifyInside(false);
 
             m_lastDragPointValid = false;
-            m_lastDragPoint = new Point();
+            m_lastDragPoint = new System.Windows.Point();
         }
 
         private void OnRendererElement_MouseMove(object sender, MouseEventArgs e)

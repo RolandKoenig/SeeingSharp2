@@ -19,24 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-using Windows.UI;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Util
 {
     public static class SeeingSharpUwpUtil
     {
-        public static SDX.Color4 Color4FromUIColor(ref Color uiColor)
+        public static Color4 Color4FromUIColor(ref Color uiColor)
         {
-            return new SDX.Color4(
+            return new Color4(
                 uiColor.R / 255f,
                 uiColor.G / 255f,
                 uiColor.B / 255f,
                 uiColor.A / 255f);
         }
 
-        public static Color UIColorFromColor4(ref SDX.Color4 color)
+        public static Color UIColorFromColor4(ref Color4 color)
         {
             var uiColor = new Color
             {

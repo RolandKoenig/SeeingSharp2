@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
@@ -29,7 +29,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
 {
@@ -62,7 +61,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 {
                     manipulator.AddStandardMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
                     manipulator.AddStandardMaterialResource(resTexture),
-                    manipulator.AddStandardMaterialResource(materialDiffuseColor:Color4Ex.CornflowerBlue, useVertexColors:false)
+                    manipulator.AddStandardMaterialResource(materialDiffuseColor:Color4.CornflowerBlue, useVertexColors:false)
                 };
 
                 // Create cube geometry resource
@@ -119,27 +118,27 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
             surface1.BuildCubeBottom4V(
                 new Vector3(-1f, 0f, -1f), 
                 new Vector3(2f, 1f, 2f),
-                Color4Ex.White);
+                Color4.White);
             surface1.BuildCubeSides16V(
                 new Vector3(-1f, 0f, -1f),
                 new Vector3(2f, 1f, 2f),
-                Color4Ex.White);
+                Color4.White);
 
             var surface2 = result.CreateSurface();
             surface2.BuildCubeSides16V(
                 new Vector3(-1f, 1f, -1f), 
                 new Vector3(2f, 1f, 2f),
-                Color4Ex.White);
+                Color4.White);
 
             var surface3 = result.CreateSurface();
             surface3.BuildCubeSides16V(
                 new Vector3(-1f, 2f, -1f),
                 new Vector3(2f, 1f, 2f),
-                Color4Ex.White);
+                Color4.White);
             surface3.BuildCubeTop4V(
                 new Vector3(-1f, 2f, -1f),
                 new Vector3(2f, 1f, 2f),
-                Color4Ex.White);
+                Color4.White);
 
             return result;
         }

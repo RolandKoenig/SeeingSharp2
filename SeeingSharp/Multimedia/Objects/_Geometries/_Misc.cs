@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Numerics;
 using SeeingSharp.Util;
-using SharpDX;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -97,7 +97,7 @@ namespace SeeingSharp.Multimedia.Objects
             VolumetricTextDepth = 0.2f,
             VolumetricSideSurfaceVertexColor = Color4.White,
             CalculateNormals = true,
-            VertexTransform = Matrix.Identity
+            VertexTransform = Matrix4x4.Identity
         };
 
         public string FontFamily;
@@ -115,6 +115,6 @@ namespace SeeingSharp.Multimedia.Objects
         public bool MakeSurface;
         public float VolumetricTextDepth;
         public bool CalculateNormals;
-        public Matrix VertexTransform;
+        public Matrix4x4 VertexTransform;
     }
 }

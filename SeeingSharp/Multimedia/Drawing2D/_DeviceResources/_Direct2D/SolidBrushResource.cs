@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -84,11 +84,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 // Load the brush
                 result = new D2D.SolidColorBrush(
-                    engineDevice.FakeRenderTarget2D, this.Color,
+                    engineDevice.FakeRenderTarget2D, SdxMathHelper.RawFromColor4(this.Color),
                     new D2D.BrushProperties
                     {
                         Opacity = this.Opacity,
-                        Transform = Matrix3x2.Identity
+                        Transform = SdxMathHelper.RawFromMatrix3x2(Matrix3x2.Identity)
                     });
                 m_loadedBrushes[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);

@@ -19,16 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
 {
@@ -64,7 +63,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
-                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
                 cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()

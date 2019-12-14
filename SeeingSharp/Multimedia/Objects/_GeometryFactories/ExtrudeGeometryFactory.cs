@@ -20,9 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Util;
-using SharpDX;
-using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -71,7 +70,7 @@ namespace SeeingSharp.Multimedia.Objects
             var minY = float.MaxValue;
             var maxY = float.MinValue;
             var minPoint = Vector2.Zero;
-            void UpdateMinWidthHeight(Vector2 actCorner)
+            void UpdateMinWidthHeight(SharpDX.Mathematics.Interop.RawVector2 actCorner)
             {
                 if (actCorner.X < minX) { minX = actCorner.X; }
                 if (actCorner.X > maxX) { maxX = actCorner.X; }
@@ -81,7 +80,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             //  Do some postprocessing
             var triangleCount = 0;
-            var bounds = Size2F.Empty;
+            var bounds = new Size2F();
             foreach (var actTriangleArray in generatedTriangles)
             {
                 foreach (var actTriangle in actTriangleArray)
@@ -118,9 +117,9 @@ namespace SeeingSharp.Multimedia.Objects
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = new RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
-                        actTriangle.Point2 = new RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
-                        actTriangle.Point3 = new RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
+                        actTriangle.Point1 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
+                        actTriangle.Point2 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
+                        actTriangle.Point3 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
 
                         actTriangleArray[loop] = actTriangle;
                     }
@@ -142,9 +141,9 @@ namespace SeeingSharp.Multimedia.Objects
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = actTriangle.Point1 - newOrigin;
-                        actTriangle.Point2 = actTriangle.Point2 - newOrigin;
-                        actTriangle.Point3 = actTriangle.Point3 - newOrigin;
+                        actTriangle.Point1 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point1) - newOrigin);
+                        actTriangle.Point2 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point2) - newOrigin);
+                        actTriangle.Point3 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point3) - newOrigin);
 
                         actTriangleArray[loop] = actTriangle;
                     }
@@ -192,7 +191,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// The <see cref="Color4"/> to be assigned to each generated <see cref="Vertex"/>
         /// </summary>
-        public Color4 Color { get; set; } = Color4Ex.Transparent;
+        public Color4 Color { get; set; } = Color4.Transparent;
 
         //*********************************************************************
         //*********************************************************************

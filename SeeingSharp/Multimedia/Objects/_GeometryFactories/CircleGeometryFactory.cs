@@ -19,7 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4Ex.Transparent);
+            mainSurface.BuildCircleFullV(Vector3.Zero, this.Radius, this.Width, this.Height, this.CountOfSegments, Color4.Transparent);
 
             return result;
         }

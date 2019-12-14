@@ -20,11 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Runtime.InteropServices;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
-using D3D = SharpDX.Direct3D;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -84,7 +83,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="lineColor">The color for the line.</param>
         /// <param name="lineVertexBuffer">The vertex buffer containing all line vertices.</param>
         /// <param name="vertexCount">Total count of vertices.</param>
-        internal void RenderLines(RenderState renderState, Matrix worldViewProj, Color4 lineColor, D3D11.Buffer lineVertexBuffer, int vertexCount)
+        internal void RenderLines(RenderState renderState, Matrix4x4 worldViewProj, Color4 lineColor, D3D11.Buffer lineVertexBuffer, int vertexCount)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
@@ -135,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         [StructLayout(LayoutKind.Sequential)]
         private struct ConstantBufferData
         {
-            public Matrix WorldViewProj;
+            public Matrix4x4 WorldViewProj;
             public Color4 DiffuseColor;
         }
     }

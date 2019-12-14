@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using SharpDX;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 

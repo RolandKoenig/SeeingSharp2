@@ -19,7 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SharpDX;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -92,12 +92,12 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Perform some checks based on the bounding box
-                    if (boundingBox.GetUpperA().Y < m_yFilterMin)
+                    if (boundingBox.Maximum.Y < m_yFilterMin)
                     {
                         return false;
                     }
 
-                    if (boundingBox.GetLowerA().Y > m_yFilterMax)
+                    if (boundingBox.Minimum.Y > m_yFilterMax)
                     {
                         return false;
                     }

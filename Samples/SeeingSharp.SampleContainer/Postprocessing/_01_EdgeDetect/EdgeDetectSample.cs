@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 {
@@ -55,7 +54,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 // Create edge detect resource
                 var resEdgeDetect = manipulator.AddResource(device => new EdgeDetectPostprocessEffectResource
                 {
-                    BorderColor = Color4Ex.BlueColor,
+                    BorderColor = Color4.BlueColor,
                     Thickness = 5f
                 });
 
@@ -69,7 +68,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
 
                 // Create object and put it on the EdgeDetectLayer
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
-                cubeMesh.Color = Color4Ex.GreenColor;
+                cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
                 cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()

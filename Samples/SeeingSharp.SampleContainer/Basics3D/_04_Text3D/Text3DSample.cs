@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Drawing3D;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
 {
@@ -57,7 +56,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                 textOptions.FontSize = 50;
                 textOptions.MakeVolumetricText = true;
                 textOptions.SurfaceVertexColor = Color.Blue;
-                textOptions.VolumetricSideSurfaceVertexColor = Color4Ex.CornflowerBlue;
+                textOptions.VolumetricSideSurfaceVertexColor = Color4.CornflowerBlue;
                 var resGeometry = manipulator.Add3DTextGeometryResource(
                     $"Seeing# 2 {Environment.NewLine} Text3D Sample",
                     textOptions);

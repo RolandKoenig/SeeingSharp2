@@ -19,17 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using SharpDX;
 
 namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
 {
@@ -98,7 +97,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                             }
 
                             var cubeMesh = new Mesh(resGeometry, material);
-                            cubeMesh.Color = Color4Ex.GreenColor;
+                            cubeMesh.Color = Color4.GreenColor;
                             cubeMesh.Position = new Vector3(loopX * 1.5f, loopY * 1.5f, loopZ * 1.5f);
                             cubeMesh.EnableShaderGeneratedBorder();
 
