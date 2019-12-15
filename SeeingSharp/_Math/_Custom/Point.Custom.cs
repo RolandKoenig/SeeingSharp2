@@ -27,25 +27,5 @@ namespace SeeingSharp
     public partial struct Point
     {
         public static readonly Point Empty;
-
-#if DESKTOP
-        public static Point FromGdiPoint(System.Drawing.Point gdiPoint)
-        {
-            return new Point(gdiPoint.X, gdiPoint.Y);
-        }
-
-        public static Point FromWpfPoint(System.Windows.Point wpfPoint)
-        {
-            return new Point((int)wpfPoint.X, (int)wpfPoint.Y);
-        }
-#endif
-
-#if UNIVERSAL
-        public static Point FromWinRTPoint(Windows.Foundation.Point winRTPoint)
-        {
-            return new Point((int)winRTPoint.X, (int)winRTPoint.Y);
-        }
-#endif
-
     }
 }

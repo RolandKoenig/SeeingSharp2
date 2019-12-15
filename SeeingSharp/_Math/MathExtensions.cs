@@ -24,10 +24,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-#if DESKTOP
-using System.Windows.Media.Media3D;
-#endif
-
 namespace SeeingSharp
 {
     public static class MathExtensions
@@ -36,32 +32,6 @@ namespace SeeingSharp
         {
             return vector.Equals(Vector2.Zero);
         }
-
-#if DESKTOP
-        public static Vector3 ToRKVector(this Vector3D wpfVector)
-        {
-            return new Vector3((float)wpfVector.X, (float)wpfVector.Y, (float)wpfVector.Z);
-        }
-
-        public static Vector3 ToRKVector(this Point3D wpfVector)
-        {
-            return new Vector3((float)wpfVector.X, (float)wpfVector.Y, (float)wpfVector.Z);
-        }
-
-        public static Vector3D ToWpfVector(this Point3D wpfPoint)
-        {
-            return new Vector3D(wpfPoint.X, wpfPoint.Y, wpfPoint.Z);
-        }
-
-        public static System.Windows.Media.Color ToWpfColor(this Color4 color)
-        {
-            return System.Windows.Media.Color.FromArgb(
-                (byte)(color.Alpha * 255),
-                (byte)(color.Red * 255),
-                (byte)(color.Green * 255),
-                (byte)(color.Blue * 255));
-        }
-#endif
 
         /// <summary>
         /// Gets all points contained in given line collection.

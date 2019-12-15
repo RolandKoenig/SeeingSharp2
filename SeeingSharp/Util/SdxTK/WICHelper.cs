@@ -63,10 +63,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 new WICTranslate(SharpDX.WIC.PixelFormat.Format8bppAlpha, Format.A8_UNorm),
 
                 new WICTranslate(SharpDX.WIC.PixelFormat.FormatBlackWhite, Format.R1_UNorm),
-
-#if DIRECTX11_1
-                new WICTranslate(SharpDX.WIC.PixelFormat.Format96bppRGBFloat,         SharpDX.DXGI.Format.R32G32B32_Float ),
-        #endif
             };
 
         private static readonly WICConvert[] WICConvertTable =
@@ -117,14 +113,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 new WICConvert(SharpDX.WIC.PixelFormat.Format40bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format80bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
 
-#if DIRECTX11_1
-                new WICConvert( WIC.PixelFormat.Format32bppRGB,              WIC.PixelFormat.Format32bppRGBA ), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert( WIC.PixelFormat.Format64bppRGB,              WIC.PixelFormat.Format64bppRGBA ), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert( WIC.PixelFormat.Format64bppPRGBAHalf,        WIC.PixelFormat.Format64bppRGBAHalf ), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert( WIC.PixelFormat.Format96bppRGBFixedPoint,    WIC.PixelFormat.Format96bppRGBFloat ), // DXGI.Format.R32G32B32_FLOAT
-#else
                 new WICConvert(SharpDX.WIC.PixelFormat.Format96bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
-#endif
 
                 // We don't support n-channel formats
             };

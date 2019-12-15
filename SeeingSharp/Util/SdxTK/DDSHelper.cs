@@ -104,13 +104,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                                                                                            | ConversionFlags.FormatA8P8, new DDS.PixelFormat(DDS.PixelFormatFlags.Pal8, 0, 16, 0, 0, 0, 0)), // D3DFMT_A8P8
                                                                  new LegacyMap(Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Pal8, new DDS.PixelFormat(DDS.PixelFormatFlags.Pal8, 0, 8, 0, 0, 0, 0)), // D3DFMT_P8
-#if DIRECTX11_1
-    new LegacyMap( DXGI.Format.B4G4R4A4_UNorm,     ConversionFlags.Format4444,        DDS.PixelFormat.A4R4G4B4 ), // D3DFMT_A4R4G4B4 (uses DXGI 1.2 format)
-    new LegacyMap( DXGI.Format.B4G4R4A4_UNorm,     ConversionFlags.NoAlpha
-                                      | ConversionFlags.Format4444,      new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb,       0, 16, 0x0f00,     0x00f0,     0x000f,     0x0000     ) ), // D3DFMT_X4R4G4B4 (uses DXGI 1.2 format)
-    new LegacyMap( DXGI.Format.B4G4R4A4_UNorm,     ConversionFlags.Expand
-                                      | ConversionFlags.Format44,        new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0,  8, 0x0f,       0x00,       0x00,       0xf0       ) ), // D3DFMT_A4L4 (uses DXGI 1.2 format)
-#else
+
                                                                  // !DXGI_1_2_FORMATS
                                                                  new LegacyMap(Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format4444, DDS.PixelFormat.A4R4G4B4), // D3DFMT_A4R4G4B4
@@ -120,8 +114,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                                                                  // D3DFMT_X4R4G4B4
                                                                  new LegacyMap(Format.R8G8B8A8_UNorm, ConversionFlags.Expand
                                                                                                            | ConversionFlags.Format44, new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0, 8, 0x0f, 0x00, 0x00, 0xf0)), // D3DFMT_A4L4
-#endif
-                                                             };
+        };
 
         /// <summary>
         /// Load a DDS file in memory
@@ -438,31 +431,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                         SDX.Utilities.ClearMemory(pDestination, 0xff, outSize);
                         return;
 
-#if DIRECTX11_1
-                    //-----------------------------------------------------------------------------
-                    case Format.B4G4R4A4_UNorm:
-                        {
-                            if (pDestination == pSource)
-                            {
-                                var dPtr = (ushort*) (pDestination);
-                                for (int count = 0; count < outSize; count += 2)
-                                {
-                                    *(dPtr++) |= 0xF000;
-                                }
-                            }
-                            else
-                            {
-                                var sPtr = (ushort*) (pSource);
-                                var dPtr = (ushort*) (pDestination);
-                                int size = Math.Min(outSize, inSize);
-                                for (int count = 0; count < size; count += 2)
-                                {
-                                    *(dPtr++) = (ushort) (*(sPtr++) | 0xF000);
-                                }
-                            }
-                        }
-                        return;
-#endif
                         // DXGI_1_2_FORMATS
                 }
             }
@@ -883,9 +851,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                 {
                     case Format.B5G6R5_UNorm:
                     case Format.B5G5R5A1_UNorm:
-#if DIRECTX11_1
-                    case Format.B4G4R4A4_UNorm:
-#endif
                         description.Format = Format.R8G8B8A8_UNorm;
                         convFlags |= ConversionFlags.Expand;
                         if (description.Format == Format.B5G6R5_UNorm)
@@ -981,11 +946,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     case Format.B8G8R8X8_UNorm:
                         ddpf = DDS.PixelFormat.X8R8G8B8;
                         break; // DXGI 1.1
-#if DIRECTX11_1
-                    case Format.B4G4R4A4_UNorm:
-                        ddpf = DDS.PixelFormat.A4R4G4B4;
-                        break;
-#endif
+
                     // Legacy D3DX formats using D3DFMT enum value as FourCC
                     case Format.R32G32B32A32_Float:
                         ddpf.Size = SDX.Utilities.SizeOf<DDS.PixelFormat>();
@@ -1506,11 +1467,7 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                             {
                                 if ((convFlags & ConversionFlags.Expand) != 0)
                                 {
-#if DIRECTX11_1
-                                if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551 | ConversionFlags.Format4444)) != 0)
-#else
                                     if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551)) != 0)
-#endif
                                     {
                                         ExpandScanline(pDest, dpitch, pSrc, spitch, (convFlags & ConversionFlags.Format565) != 0 ? Format.B5G6R5_UNorm : Format.B5G5R5A1_UNorm, tflags);
                                     }
@@ -1606,27 +1563,6 @@ namespace SeeingSharp.Multimedia.Util.SdxTK
                     }
                     break;
 
-#if DIRECTX11_1
-                case DXGI.Format.B4G4R4A4_UNorm:
-                    // DXGI.Format.B4G4R4A4_UNorm -> DXGI.Format.R8G8B8A8_UNorm
-                    {
-                        var sPtr = (ushort*) (pSource);
-                        var dPtr = (uint*) (pDestination);
-
-                        for (uint ocount = 0, icount = 0; ((icount < inSize) && (ocount < outSize)); icount += 2, ocount += 4)
-                        {
-                            ushort t = *(sPtr++);
-
-                            uint t1 = (uint) (((t & 0x0f00) >> 4) | ((t & 0x0f00) >> 8));
-                            uint t2 = (uint) (((t & 0x00f0) << 8) | ((t & 0x00f0) << 4));
-                            uint t3 = (uint) (((t & 0x000f) << 20) | ((t & 0x000f) << 16));
-                            uint ta = (flags & ScanlineFlags.SetAlpha) != 0 ? 0xff000000 : (uint) ((((t & 0xf000) << 16) | ((t & 0xf000) << 12)));
-
-                            *(dPtr++) = t1 | t2 | t3 | ta;
-                        }
-                    }
-                    break;
-#endif
                     // DXGI_1_2_FORMATS
             }
         }
