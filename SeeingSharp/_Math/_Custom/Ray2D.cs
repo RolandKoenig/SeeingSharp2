@@ -72,10 +72,11 @@ namespace SeeingSharp
         /// Performs a equality check with a slight tolerance.
         /// </summary>
         /// <param name="otherRay">The other ray to check.</param>
-        public bool EqualsWithTolerance(Ray2D otherRay)
+        /// <param name="tolerance">The tolerated difference between two values.</param>
+        public bool EqualsWithTolerance(Ray2D otherRay, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
-            return Vector2Ex.EqualsWithTolerance(this.Origin, otherRay.Origin) &&
-                   Vector2Ex.EqualsWithTolerance(this.Direction, otherRay.Direction);
+            return Vector2Ex.EqualsWithTolerance(this.Origin, otherRay.Origin, tolerance: tolerance) &&
+                   Vector2Ex.EqualsWithTolerance(this.Direction, otherRay.Direction, tolerance: tolerance);
         }
 
         public float A

@@ -32,7 +32,7 @@ namespace SeeingSharp
     public static class Vector3Ex
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EqualsWithTolerance(Vector3 left, Vector3 right, double tolerance = 0.00001)
+        public static bool EqualsWithTolerance(Vector3 left, Vector3 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
                 EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&

@@ -54,12 +54,12 @@ namespace SeeingSharp
         /// Equality test with a small tolerance.
         /// </summary>
         /// <param name="otherLine">The other line to check.</param>
-        public bool EqualsWithTolerance(Line otherLine)
+        /// <param name="tolerance">The tolerance for the equality test.</param>
+        public bool EqualsWithTolerance(Line otherLine, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
-            //Check in both directions
             return
-                StartPosition.Equals(otherLine.StartPosition) && EndPosition.Equals(otherLine.EndPosition) ||
-                EndPosition.Equals(otherLine.StartPosition) && StartPosition.Equals(otherLine.EndPosition);
+                Vector3Ex.EqualsWithTolerance(this.StartPosition, otherLine.StartPosition, tolerance: tolerance) &&
+                Vector3Ex.EqualsWithTolerance(this.EndPosition, otherLine.EndPosition, tolerance: tolerance);
         }
 
         /// <summary>

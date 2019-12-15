@@ -45,6 +45,8 @@ namespace SeeingSharp
         public const float TOLERANCE_FLOAT_NEGATIVE = -0.00001f;
         public const double TOLERANCE_DOUBLE_POSITIVE = 0.00001;
         public const double TOLERANCE_DOUBLE_NEGATIVE = -0.00001;
+        public const decimal TOLERANCE_DECIMAL_POSITIVE = 0.00001M;
+        public const decimal TOLERANCE_DECIMAL_NEGATIVE = -0.00001M;
 
         /// <summary>
         /// Calculates the factorial of the given value.
@@ -190,7 +192,7 @@ namespace SeeingSharp
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EqualsWithTolerance(double left, double right, double tolerance = 0.00001)
+        public static bool EqualsWithTolerance(double left, double right, double tolerance = EngineMath.TOLERANCE_DOUBLE_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }
@@ -202,7 +204,7 @@ namespace SeeingSharp
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EqualsWithTolerance(float left, float right, float tolerance = 0.00001f)
+        public static bool EqualsWithTolerance(float left, float right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }
@@ -214,7 +216,7 @@ namespace SeeingSharp
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = 0.00001M)
+        public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = EngineMath.TOLERANCE_DECIMAL_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }
