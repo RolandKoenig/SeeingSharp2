@@ -21,11 +21,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -40,7 +38,7 @@ namespace SeeingSharp
         /// <param name="verticalRotation">Vertical rotation value.</param>
         public static Vector3 NormalFromHVRotation(float horizontalRotation, float verticalRotation)
         {
-            Vector3 result = Vector3.Zero;
+            var result = Vector3.Zero;
 
             //Generate vector
             result.X = (float)(1f * Math.Cos(verticalRotation) * Math.Cos(horizontalRotation));
@@ -69,11 +67,11 @@ namespace SeeingSharp
         public static Vector3 Average(params Vector3[] vectors)
         {
             if (vectors.Length == 0) { return Vector3.Zero; }
-            Vector3 result = Vector3Ex.Sum(vectors);
+            var result = Sum(vectors);
 
-            result.X = result.X / (float)vectors.Length;
-            result.Y = result.Y / (float)vectors.Length;
-            result.Z = result.Z / (float)vectors.Length;
+            result.X = result.X / vectors.Length;
+            result.Y = result.Y / vectors.Length;
+            result.Z = result.Z / vectors.Length;
 
             return result;
         }
@@ -85,11 +83,11 @@ namespace SeeingSharp
         public static Vector3 Average(List<Vector3> vectors)
         {
             if (vectors.Count == 0) { return Vector3.Zero; }
-            Vector3 result = Vector3Ex.Sum(vectors);
+            var result = Sum(vectors);
 
-            result.X = result.X / (float)vectors.Count;
-            result.Y = result.Y / (float)vectors.Count;
-            result.Z = result.Z / (float)vectors.Count;
+            result.X = result.X / vectors.Count;
+            result.Y = result.Y / vectors.Count;
+            result.Z = result.Z / vectors.Count;
 
             return result;
         }
@@ -101,9 +99,9 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 ToHVRotation(Vector3 vector)
         {
-            Vector3 normal = Vector3.Normalize(vector);
+            var normal = Vector3.Normalize(vector);
 
-            Vector2 result = new Vector2();
+            var result = new Vector2();
             result.X = (float)Math.Atan2(normal.Z, normal.X);
             result.Y = (float)Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length());
             return result;
@@ -116,8 +114,8 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Sum(params Vector3[] vectors)
         {
-            Vector3 result = Vector3.Zero;
-            for (int loop = 0; loop < vectors.Length; loop++)
+            var result = Vector3.Zero;
+            for (var loop = 0; loop < vectors.Length; loop++)
             {
                 result = result + vectors[loop];
             }
@@ -131,8 +129,8 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Sum(List<Vector3> vectors)
         {
-            Vector3 result = Vector3.Zero;
-            for (int loop = 0; loop < vectors.Count; loop++)
+            var result = Vector3.Zero;
+            for (var loop = 0; loop < vectors.Count; loop++)
             {
                 result = result + vectors[loop];
             }
@@ -154,7 +152,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToHVRotation(Vector3 vector, out float hRotation, out float vRotation)
         {
-            Vector3 normal = Vector3.Normalize(vector);
+            var normal = Vector3.Normalize(vector);
 
             hRotation = (float)Math.Atan2(normal.Z, normal.X);
             vRotation = (float)Math.Atan2(normal.Y, new Vector2(normal.Z, normal.X).Length());
@@ -182,7 +180,7 @@ namespace SeeingSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 CalculateTriangleNormal(Vector3 p0, Vector3 p1, Vector3 p2, bool doNormalize)
         {
-            Vector3 result = new Vector3();
+            var result = new Vector3();
 
             // Calculation of the normal based on 'Mathematics for 3D Game Programming and Computer Graphics (Eric Lengyel, 2012)
             //  Page 175: 7.7.1 Calculating Normal Vectors
@@ -190,7 +188,7 @@ namespace SeeingSharp
             //  We have two modes: Normalized and unnormalized form of the result
             if (doNormalize)
             {
-                Vector3 crossProductVector = Vector3.Cross(p1 - p0, p2 - p0);
+                var crossProductVector = Vector3.Cross(p1 - p0, p2 - p0);
                 result = crossProductVector / crossProductVector.Length();
             }
             else
@@ -224,8 +222,8 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the vector in screen space.</param>
         public static void Project(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix4x4 worldViewProjection, out Vector3 result)
         {
-            Vector3 v = Vector3.Transform(vector, worldViewProjection);
-            result = new Vector3(((1.0f + v.X) * 0.5f * width) + x, ((1.0f - v.Y) * 0.5f * height) + y, (v.Z * (maxZ - minZ)) + minZ);
+            var v = Vector3.Transform(vector, worldViewProjection);
+            result = new Vector3((1.0f + v.X) * 0.5f * width + x, (1.0f - v.Y) * 0.5f * height + y, v.Z * (maxZ - minZ) + minZ);
         }
 
         /// <summary>
@@ -261,12 +259,12 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the vector in object space.</param>
         public static void Unproject(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix4x4 worldViewProjection, out Vector3 result)
         {
-            Vector3 v = new Vector3();
-            Matrix4x4 matrix = new Matrix4x4();
+            var v = new Vector3();
+            var matrix = new Matrix4x4();
             Matrix4x4.Invert(worldViewProjection, out matrix);
 
-            v.X = (((vector.X - x) / width) * 2.0f) - 1.0f;
-            v.Y = -((((vector.Y - y) / height) * 2.0f) - 1.0f);
+            v.X = (vector.X - x) / width * 2.0f - 1.0f;
+            v.Y = -((vector.Y - y) / height * 2.0f - 1.0f);
             v.Z = (vector.Z - minZ) / (maxZ - minZ);
 
             result = Vector3.Transform(v, matrix);
@@ -301,11 +299,11 @@ namespace SeeingSharp
         /// whether the original vector was close enough to the surface to hit it.</remarks>
         public static void Reflect(ref Vector3 vector, ref Vector3 normal, out Vector3 result)
         {
-            float dot = (vector.X * normal.X) + (vector.Y * normal.Y) + (vector.Z * normal.Z);
+            var dot = vector.X * normal.X + vector.Y * normal.Y + vector.Z * normal.Z;
 
-            result.X = vector.X - ((2.0f * dot) * normal.X);
-            result.Y = vector.Y - ((2.0f * dot) * normal.Y);
-            result.Z = vector.Z - ((2.0f * dot) * normal.Z);
+            result.X = vector.X - 2.0f * dot * normal.X;
+            result.Y = vector.Y - 2.0f * dot * normal.Y;
+            result.Z = vector.Z - 2.0f * dot * normal.Z;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -335,13 +333,13 @@ namespace SeeingSharp
         public static Vector3 MinValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return new Vector3(float.MinValue, float.MinValue, float.MinValue); }
+            get => new Vector3(float.MinValue, float.MinValue, float.MinValue);
         }
 
         public static Vector3 MaxValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return new Vector3(float.MaxValue, float.MaxValue, float.MaxValue); }
+            get => new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         }
     }
 }

@@ -21,11 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Numerics;
 
 namespace SeeingSharp
@@ -37,8 +33,8 @@ namespace SeeingSharp
         /// </summary>
         public void Transform(Matrix4x4 transformMatrix)
         {
-            this.Position = Vector3.Transform(Position, transformMatrix);
-            this.Direction = Vector3.TransformNormal(Direction, transformMatrix);
+            Position = Vector3.Transform(Position, transformMatrix);
+            Direction = Vector3.TransformNormal(Direction, transformMatrix);
         }
     }
 }

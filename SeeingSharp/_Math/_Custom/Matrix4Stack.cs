@@ -21,7 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
+
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -178,14 +178,14 @@ namespace SeeingSharp
         /// <summary>
         /// Clones the object
         /// </summary>
-        public Object Clone()
+        public object Clone()
         {
-            Matrix4Stack cloned = new Matrix4Stack();
+            var cloned = new Matrix4Stack();
 
-            Matrix4x4[] allElements = m_stack.ToArray();
+            var allElements = m_stack.ToArray();
 
             cloned.m_stack = new Stack<Matrix4x4>();
-            for (int loop = 0; loop < allElements.Length; loop++)
+            for (var loop = 0; loop < allElements.Length; loop++)
             {
                 cloned.m_stack.Push(allElements[loop]);
                 cloned.m_pushTimes++;
@@ -229,9 +229,6 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the top matrix
         /// </summary>
-        public Matrix4x4 Top
-        {
-            get { return m_top; }
-        }
+        public Matrix4x4 Top => m_top;
     }
 }

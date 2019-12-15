@@ -21,26 +21,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace SeeingSharp
 {
     public partial struct BoundingBox
     {
-        public static BoundingBox Empty = new BoundingBox();
+        public static BoundingBox Empty;
 
         public BoundingBox(IEnumerable<Vector3> containedLocations)
         {
-            Vector3 minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-            bool anyInteration = false;
-            foreach(Vector3 actContainedLocation in containedLocations)
+            var anyInteration = false;
+            foreach(var actContainedLocation in containedLocations)
             {
                 anyInteration = true;
 
@@ -55,14 +52,14 @@ namespace SeeingSharp
 
             if (!anyInteration) { throw new SeeingSharpException("No vectors given!"); }
 
-            this.Minimum = minimum;
-            this.Maximum = maximum;
+            Minimum = minimum;
+            Maximum = maximum;
         }
 
         public void Transform(Matrix4x4 matrix)
         {
-            Vector3[] corners = this.GetCorners();
-            for (int loop = 0; loop < corners.Length; loop++)
+            var corners = this.GetCorners();
+            for (var loop = 0; loop < corners.Length; loop++)
             {
                 corners[loop] = Vector3.Transform(corners[loop], matrix);
             }
@@ -76,16 +73,16 @@ namespace SeeingSharp
         /// <param name="points">All points to apply.</param>
         public void Redefine(Vector3[] points)
         {
-            Vector3 min = new Vector3(float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue);
-            for (int i = 0; i < points.Length; ++i)
+            var min = new Vector3(float.MaxValue);
+            var max = new Vector3(float.MinValue);
+            for (var i = 0; i < points.Length; ++i)
             {
                 min = Vector3.Min(min, points[i]);
                 max = Vector3.Max(max, points[i]);
             }
 
-            this.Minimum = min;
-            this.Maximum = max;
+            Minimum = min;
+            Maximum = max;
         }
 
         /// <summary>
@@ -112,16 +109,16 @@ namespace SeeingSharp
         /// </summary>
         public void MergeWith(BoundingBox other)
         {
-            Vector3 minimum1 = this.Minimum;
-            Vector3 minimum2 = other.Minimum;
-            Vector3 maximum1 = this.Maximum;
-            Vector3 maximum2 = other.Maximum;
+            var minimum1 = Minimum;
+            var minimum2 = other.Minimum;
+            var maximum1 = Maximum;
+            var maximum2 = other.Maximum;
 
-            Vector3 newMinimum = Vector3.Min(minimum1, minimum2);
-            Vector3 newMaximum = Vector3.Max(maximum1, maximum2);
+            var newMinimum = Vector3.Min(minimum1, minimum2);
+            var newMaximum = Vector3.Max(maximum1, maximum2);
 
-            this.Minimum = newMinimum;
-            this.Maximum = newMaximum;
+            Minimum = newMinimum;
+            Maximum = newMaximum;
         }
 
         /// <summary>
@@ -129,7 +126,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBottomLeftMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Minimum.Y;
             result.X = Minimum.X;
             return result;
@@ -140,7 +137,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBottomRightMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Minimum.Y;
             result.X = Maximum.X;
             return result;
@@ -151,7 +148,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBottomFrontMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Minimum.Y;
             result.Z = Minimum.Z;
             return result;
@@ -162,7 +159,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBottomBackMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Minimum.Y;
             result.Z = Maximum.Z;
             return result;
@@ -181,7 +178,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetTopMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Maximum.Y;
             return result;
         }
@@ -191,7 +188,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetTopLeftMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Maximum.Y;
             result.X = Minimum.X;
             return result;
@@ -202,7 +199,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetTopRightMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Maximum.Y;
             result.X = Maximum.X;
             return result;
@@ -213,7 +210,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetTopFrontMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Maximum.Y;
             result.Z = Minimum.Z;
             return result;
@@ -224,7 +221,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetTopBackMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Y = Maximum.Y;
             result.Z = Maximum.Z;
             return result;
@@ -235,7 +232,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetFrontMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Z = Minimum.Z;
             return result;
         }
@@ -245,7 +242,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBackMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.Z = Maximum.Z;
             return result;
         }
@@ -255,7 +252,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetLeftMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Minimum.X;
             return result;
         }
@@ -265,7 +262,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetLeftFrontMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Minimum.X;
             result.Z = Minimum.Z;
             return result;
@@ -276,7 +273,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetLeftBackMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Minimum.X;
             result.Z = Maximum.Z;
             return result;
@@ -287,7 +284,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetRightMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Maximum.X;
             return result;
         }
@@ -297,7 +294,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetRightFrontMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Maximum.X;
             result.Z = Minimum.Z;
             return result;
@@ -308,7 +305,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetRightBackMiddleCoordinate()
         {
-            Vector3 result = Minimum + (Maximum - Minimum) / 2f;
+            var result = Minimum + (Maximum - Minimum) / 2f;
             result.X = Maximum.X;
             result.Z = Maximum.Z;
             return result;
@@ -319,7 +316,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetMiddleCenter()
         {
-            Vector3 size = this.GetSize();
+            var size = this.GetSize();
             return new Vector3(
                 Minimum.X + size.X / 2f,
                 Minimum.Y + size.Y / 2f,
@@ -331,7 +328,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetBottomCenter()
         {
-            Vector3 size = this.GetSize();
+            var size = this.GetSize();
             return new Vector3(
                 Minimum.X + size.X / 2f,
                 Minimum.Y,
@@ -343,8 +340,8 @@ namespace SeeingSharp
         /// </summary>
         public List<Vector3> BuildLineListForBorders()
         {
-            List<Vector3> result = new List<Vector3>();
-            Vector3 size = this.GetSize();
+            var result = new List<Vector3>();
+            var size = this.GetSize();
 
             //Add front face
             result.Add(Minimum);
@@ -399,144 +396,87 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the corner A (lower left front).
         /// </summary>
-        public Vector3 CornerA
-        {
-            get { return Minimum; }
-        }
+        public Vector3 CornerA => Minimum;
 
         /// <summary>
         /// Gets the corner B (lower right front).
         /// </summary>
-        public Vector3 CornerB
-        {
-            get { return new Vector3(Maximum.X, Minimum.Y, Minimum.Z); }
-        }
+        public Vector3 CornerB => new Vector3(Maximum.X, Minimum.Y, Minimum.Z);
 
         /// <summary>
         /// Gets the corner C (lower right back).
         /// </summary>
-        public Vector3 CornerC
-        {
-            get { return new Vector3(Maximum.X, Minimum.Y, Maximum.Z); }
-        }
+        public Vector3 CornerC => new Vector3(Maximum.X, Minimum.Y, Maximum.Z);
 
         /// <summary>
         /// Gets the corner D (lower left back).
         /// </summary>
-        public Vector3 CornerD
-        {
-            get { return new Vector3(Minimum.X, Minimum.Y, Maximum.Z); }
-        }
+        public Vector3 CornerD => new Vector3(Minimum.X, Minimum.Y, Maximum.Z);
 
         /// <summary>
         /// Gets the corner E (upper left front).
         /// </summary>
-        public Vector3 CornerE
-        {
-            get { return new Vector3(Minimum.X, Maximum.Y, Minimum.Z); }
-        }
+        public Vector3 CornerE => new Vector3(Minimum.X, Maximum.Y, Minimum.Z);
 
         /// <summary>
         /// Gets the corner F (upper right front).
         /// </summary>
-        public Vector3 CornerF
-        {
-            get { return new Vector3(Maximum.X, Maximum.Y, Minimum.Z); }
-        }
+        public Vector3 CornerF => new Vector3(Maximum.X, Maximum.Y, Minimum.Z);
 
         /// <summary>
         /// Gets the corner G (upper right back).
         /// </summary>
-        public Vector3 CornerG
-        {
-            get { return new Vector3(Maximum.X, Maximum.Y, Maximum.Z); }
-        }
+        public Vector3 CornerG => new Vector3(Maximum.X, Maximum.Y, Maximum.Z);
 
         /// <summary>
         /// Gets the corner H (upper left back).
         /// </summary>
-        public Vector3 CornerH
-        {
-            get { return new Vector3(Minimum.X, Maximum.Y, Maximum.Z); }
-        }
+        public Vector3 CornerH => new Vector3(Minimum.X, Maximum.Y, Maximum.Z);
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 LowerA
-        {
-            get { return this.Minimum; }
-        }
+        public Vector3 LowerA => Minimum;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 LowerB
-        {
-            get { return this.CornerB; }
-        }
+        public Vector3 LowerB => this.CornerB;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 LowerC
-        {
-            get { return this.CornerC; }
-        }
+        public Vector3 LowerC => this.CornerC;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 LowerD
-        {
-            get { return this.CornerD; }
-        }
+        public Vector3 LowerD => this.CornerD;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 UpperA
-        {
-            get { return this.CornerE; }
-        }
+        public Vector3 UpperA => this.CornerE;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 UpperB
-        {
-            get { return this.CornerF; }
-        }
+        public Vector3 UpperB => this.CornerF;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 UpperC
-        {
-            get { return this.CornerG; }
-        }
+        public Vector3 UpperC => this.CornerG;
 
         /// <summary>
         ///
         /// </summary>
-        public Vector3 UpperD
-        {
-            get { return this.CornerH; }
-        }
+        public Vector3 UpperD => this.CornerH;
 
-        public float Width
-        {
-            get { return this.Maximum.X - this.Minimum.X; }
-        }
+        public float Width => Maximum.X - Minimum.X;
 
-        public float Height
-        {
-            get { return this.Maximum.Y - this.Minimum.Y; }
-        }
+        public float Height => Maximum.Y - Minimum.Y;
 
-        public float Depth
-        {
-            get { return this.Maximum.Y - this.Minimum.Y; }
-        }
+        public float Depth => Maximum.Y - Minimum.Y;
     }
 }

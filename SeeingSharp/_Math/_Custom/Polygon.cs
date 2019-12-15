@@ -21,12 +21,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace SeeingSharp
@@ -62,10 +60,10 @@ namespace SeeingSharp
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
             //Calculate transform matrix
-            Vector3 upVector = m_normal.Value;
-            Vector3 right = Vector3.Cross(
+            var upVector = m_normal.Value;
+            var right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
-            Vector3 backward = Vector3.Cross(right, upVector);
+            var backward = Vector3.Cross(right, upVector);
             var m = new Matrix4x4(
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
@@ -75,8 +73,8 @@ namespace SeeingSharp
             m.M42 = -offs.Y;
 
             //Calculate 2D surface
-            Vector2[] resultVertices = new Vector2[m_vertices.Length];
-            for (int loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            var resultVertices = new Vector2[m_vertices.Length];
+            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
             {
                 var pp = Vector3.Transform(m_vertices[loopVertex], m);
                 resultVertices[loopVertex] = new Vector2(pp.X, pp.Y);
@@ -90,24 +88,18 @@ namespace SeeingSharp
         /// </summary>
         public IEnumerable<int> TriangulateUsingCuttingEars()
         {
-            Polygon2D surface2D = this.Flattern();
+            var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
 
         /// <summary>
         /// Gets a collection containing all vertices.
         /// </summary>
-        public ReadOnlyCollection<Vector3> Vertices
-        {
-            get { return m_verticesPublic; }
-        }
+        public ReadOnlyCollection<Vector3> Vertices => m_verticesPublic;
 
         /// <summary>
         /// Gets the normal of this polygon.
         /// </summary>
-        public Vector3 Normal
-        {
-            get { return m_normal.Value; }
-        }
+        public Vector3 Normal => m_normal.Value;
     }
 }

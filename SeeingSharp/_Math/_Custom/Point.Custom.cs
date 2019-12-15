@@ -21,18 +21,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 
 namespace SeeingSharp
 {
     public partial struct Point
     {
-        public static readonly Point Empty = new Point();
+        public static readonly Point Empty;
 
 #if DESKTOP
         public static Point FromGdiPoint(System.Drawing.Point gdiPoint)

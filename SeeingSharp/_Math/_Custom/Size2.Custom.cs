@@ -21,11 +21,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace SeeingSharp
@@ -40,7 +37,7 @@ namespace SeeingSharp
 
         public Vector2 ToVector2()
         {
-            return new Vector2((float)this.Width, (float)this.Height);
+            return new Vector2(Width, Height);
         }
     }
 }

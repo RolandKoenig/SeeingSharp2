@@ -21,13 +21,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -39,8 +35,8 @@ namespace SeeingSharp
 
         public Line(Vector3 start, Vector3 end)
         {
-            this.StartPosition = start;
-            this.EndPosition = end;
+            StartPosition = start;
+            EndPosition = end;
         }
 
         /// <summary>
@@ -62,8 +58,8 @@ namespace SeeingSharp
         {
             //Check in both directions
             return
-                (StartPosition.Equals(otherLine.StartPosition) && EndPosition.Equals(otherLine.EndPosition)) ||
-                (EndPosition.Equals(otherLine.StartPosition) && StartPosition.Equals(otherLine.EndPosition));
+                StartPosition.Equals(otherLine.StartPosition) && EndPosition.Equals(otherLine.EndPosition) ||
+                EndPosition.Equals(otherLine.StartPosition) && StartPosition.Equals(otherLine.EndPosition);
         }
 
         /// <summary>
@@ -72,8 +68,8 @@ namespace SeeingSharp
         /// <param name="xLocation">The location to set.</param>
         public void SetAllXLocations(float xLocation)
         {
-            this.StartPosition.X = xLocation;
-            this.EndPosition.X = xLocation;
+            StartPosition.X = xLocation;
+            EndPosition.X = xLocation;
         }
 
         /// <summary>
@@ -82,8 +78,8 @@ namespace SeeingSharp
         /// <param name="yLocation">The location to set.</param>
         public void SetAllYLocations(float yLocation)
         {
-            this.StartPosition.Y = yLocation;
-            this.EndPosition.Y = yLocation;
+            StartPosition.Y = yLocation;
+            EndPosition.Y = yLocation;
         }
 
         /// <summary>
@@ -92,8 +88,8 @@ namespace SeeingSharp
         /// <param name="zLocation">The location to set.</param>
         public void SetAllZLocations(float zLocation)
         {
-            this.StartPosition.Z = zLocation;
-            this.EndPosition.Z = zLocation;
+            StartPosition.Z = zLocation;
+            EndPosition.Z = zLocation;
         }
     }
 }

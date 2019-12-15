@@ -21,11 +21,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeingSharp
 {
@@ -36,10 +31,10 @@ namespace SeeingSharp
         /// <param name="verticalAmount">Value to push the top and bottom out by.</param>
         public void Inflate(float horizontalAmount, float verticalAmount)
         {
-            X -= horizontalAmount;
-            Y -= verticalAmount;
-            Width += horizontalAmount * 2;
-            Height += verticalAmount * 2;
+            this.X -= horizontalAmount;
+            this.Y -= verticalAmount;
+            this.Width += horizontalAmount * 2;
+            this.Height += verticalAmount * 2;
         }
     }
 }

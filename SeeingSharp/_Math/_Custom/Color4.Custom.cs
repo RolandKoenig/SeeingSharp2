@@ -21,12 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+
 using SeeingSharp.Checking;
 
 namespace SeeingSharp
@@ -42,10 +37,10 @@ namespace SeeingSharp
         /// <param name="alpha">The alpha.</param>
         public Color4(int red, int green, int blue, int alpha)
         {
-            this.Alpha = alpha / 255f;
-            this.Red = red / 255f;
-            this.Green = green / 255f;
-            this.Blue = blue / 255f;
+            Alpha = alpha / 255f;
+            Red = red / 255f;
+            Green = green / 255f;
+            Blue = blue / 255f;
         }
 
         /// <summary>
@@ -62,7 +57,7 @@ namespace SeeingSharp
 
         public Color4 ChangeAlphaTo(float newAlpha)
         {
-            this.Alpha = newAlpha;
+            Alpha = newAlpha;
             return this;
         }
 
@@ -70,9 +65,9 @@ namespace SeeingSharp
         {
             changeFactor.EnsureInRange(0.000001f, 0.4999999f, nameof(changeFactor));
 
-            this.Red = this.Red < 0.5f ? this.Red + changeFactor : this.Red - changeFactor;
-            this.Green = this.Green < 0.5f ? this.Green + changeFactor : this.Green - changeFactor;
-            this.Blue = this.Blue < 0.5f ? this.Blue + changeFactor : this.Blue - changeFactor;
+            Red = Red < 0.5f ? Red + changeFactor : Red - changeFactor;
+            Green = Green < 0.5f ? Green + changeFactor : Green - changeFactor;
+            Blue = Blue < 0.5f ? Blue + changeFactor : Blue - changeFactor;
 
             return this;
         }

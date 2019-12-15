@@ -21,6 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
+
 using System.Numerics;
 
 namespace SeeingSharp
@@ -33,8 +34,8 @@ namespace SeeingSharp
         /// <param name="point">The point to calculate the distance to.</param>
         public float Distance(ref Vector3 point)
         {
-            float distance = Vector3.Dot(this.Normal, point);
-            distance += this.D;
+            var distance = Vector3.Dot(Normal, point);
+            distance += D;
 
             return distance;
         }

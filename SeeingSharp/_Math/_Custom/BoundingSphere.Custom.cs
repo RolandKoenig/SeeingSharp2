@@ -21,26 +21,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Numerics;
 
 namespace SeeingSharp
 {
     public partial struct BoundingSphere
     {
-        public static BoundingSphere Empty = new BoundingSphere();
+        public static BoundingSphere Empty;
 
         public void Transform(Matrix4x4 matrix)
         {
-            Vector3 center = this.Center;
-            Vector3 otherPoint = center + new Vector3(this.Radius, 0f, 0f);
+            var center = Center;
+            var otherPoint = center + new Vector3(Radius, 0f, 0f);
 
-            this.Center = Vector3.Transform(center, matrix);
-            this.Radius = (Vector3.Transform(otherPoint, matrix) - this.Center).Length();
+            Center = Vector3.Transform(center, matrix);
+            Radius = (Vector3.Transform(otherPoint, matrix) - Center).Length();
         }
     }
 }

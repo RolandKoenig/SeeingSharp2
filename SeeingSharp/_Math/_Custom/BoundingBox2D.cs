@@ -21,11 +21,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Numerics;
 
 namespace SeeingSharp
@@ -44,8 +40,8 @@ namespace SeeingSharp
         /// <param name="size">The size.</param>
         public BoundingBox2D(Vector2 location, Vector2 size)
         {
-            this.Location = location;
-            this.Size = size;
+            Location = location;
+            Size = size;
         }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace SeeingSharp
         /// </returns>
         public override string ToString()
         {
-            return "Pos: " + this.Location.ToString() + "; Size: " + this.Size.ToString();
+            return "Pos: " + Location + "; Size: " + Size;
         }
 
         /// <summary>
@@ -65,15 +61,15 @@ namespace SeeingSharp
         /// <param name="otherOne"></param>
         public bool IsContainedBy(BoundingBox2D otherOne)
         {
-            Vector2 thisMinimum = this.Location;
-            Vector2 thisMaximum = this.Location + this.Size;
-            Vector2 otherMinimum = otherOne.Location;
-            Vector2 otherMaximum = otherOne.Location + otherOne.Size;
+            var thisMinimum = Location;
+            var thisMaximum = Location + Size;
+            var otherMinimum = otherOne.Location;
+            var otherMaximum = otherOne.Location + otherOne.Size;
 
-            return (otherMinimum.X <= thisMinimum.X) &&
-                   (otherMinimum.Y <= thisMinimum.Y) &&
-                   (otherMaximum.X >= thisMaximum.X) &&
-                   (otherMaximum.Y >= thisMaximum.Y);
+            return otherMinimum.X <= thisMinimum.X &&
+                   otherMinimum.Y <= thisMinimum.Y &&
+                   otherMaximum.X >= thisMaximum.X &&
+                   otherMaximum.Y >= thisMaximum.Y;
         }
 
         /// <summary>
@@ -89,9 +85,6 @@ namespace SeeingSharp
         /// <summary>
         /// Is this box empty?
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this.Location.IsEmpty() && this.Size.IsEmpty(); }
-        }
+        public bool IsEmpty => Location.IsEmpty() && Size.IsEmpty();
     }
 }
