@@ -99,6 +99,7 @@ namespace SeeingSharp.Multimedia.Views
             m_renderLoop.ManipulateFilterList += this.OnRenderLoopManipulateFilterList;
             m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
             m_renderLoop.DiscardRendering = true;
+            m_renderLoop.Internals.CallPresentInUIThread = false;
             this.Disposed += (sender, eArgs) =>
             {
                 m_renderLoop.Dispose();

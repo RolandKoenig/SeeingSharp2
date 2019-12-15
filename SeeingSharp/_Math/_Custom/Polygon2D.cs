@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Threading;
 
 namespace SeeingSharp
 {
@@ -86,9 +87,9 @@ namespace SeeingSharp
             //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
             //Find the hole vertex with the highest x value
-            Vector2 holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
+            var holeVertexWithHighestX = new Vector2(float.MinValue, 0f);
             int holeVertexIndexWithHighestX = -1;
-            for (int loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
+            for (var loopVertex = 0; loopVertex < actHole.m_vertices.Length; loopVertex++)
             {
                 if (actHole.m_vertices[loopVertex].X > holeVertexWithHighestX.X)
                 {
@@ -99,20 +100,20 @@ namespace SeeingSharp
             if (cutPoints != null) { cutPoints.Add(holeVertexWithHighestX); }
 
             //Define a ray from the found vertex pointing in x direction
-            Ray2D ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
+            var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
             //Find the line on current filling polygon with intersects first with the created ray
             Tuple<int, float, Vector2> foundLine = null;
-            int actLineIndex = 0;
-            foreach (Line2D actLine in this.Lines)
+            var actLineIndex = 0;
+            foreach (var actLine in this.Lines)
             {
                 var actIntersection = actLine.Intersect(ray2D);
                 if (actIntersection.Item1)
                 {
-                    Ray2D rayToIntersectionPoint = new Ray2D(
+                    var rayToIntersectionPoint = new Ray2D(
                         ray2D.Origin,
                         Vector2.Normalize(actIntersection.Item2 - ray2D.Origin));
-                    float lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
+                    var lengthToIntersectionPoint = Vector2.Distance(actIntersection.Item2, ray2D.Origin);
                     if ((lengthToIntersectionPoint > 0f) &&
                         (rayToIntersectionPoint.EqualsWithTolerance(ray2D)))
                     {
@@ -123,19 +124,22 @@ namespace SeeingSharp
                         }
                         else if (lengthToIntersectionPoint < foundLine.Item2)
                         {
-                            //More intersections found.. take the one with smalles distance to intersection point
+                            //More intersections found.. take the one with smallest distance to intersection point
                             foundLine = Tuple.Create(actLineIndex, lengthToIntersectionPoint, actIntersection.Item2);
                         }
                     }
                 }
                 actLineIndex++;
             }
-            if (cutPoints != null) { cutPoints.Add(foundLine.Item3); }
+            if ((cutPoints != null) && (foundLine != null)) { cutPoints.Add(foundLine.Item3); }
 
-            //Check for found intersection
+            // Check for found intersection
+            // Return a duplicate of this polygon as the result if no intersection found
             if (foundLine == null)
             {
-                throw new SeeingSharpException("No point found on which given polygons can be combinded!");
+                var newPolygonVertices = new Vector2[m_vertices.Length];
+                Array.Copy(m_vertices, newPolygonVertices, m_vertices.Length);
+                return new Polygon2D(newPolygonVertices);
             }
 
             //Now generate result polygon 
