@@ -502,6 +502,5 @@ namespace SeeingSharp
         {
             return TimeSpan.FromTicks(NextLong(random, min.Ticks, max.Ticks));
         }
-#endif
     }
 }
