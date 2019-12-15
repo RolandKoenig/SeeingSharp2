@@ -81,8 +81,8 @@ namespace SeeingSharp
         /// <param name="otherRay">The other ray to check.</param>
         public bool EqualsWithTolerance(Ray2D otherRay)
         {
-            return Origin.Equals(otherRay.Origin) &&
-                   Direction.Equals(otherRay.Direction);
+            return Vector2Ex.EqualsWithTolerance(this.Origin, otherRay.Origin) &&
+                   Vector2Ex.EqualsWithTolerance(this.Direction, otherRay.Direction);
         }
 
         public float A

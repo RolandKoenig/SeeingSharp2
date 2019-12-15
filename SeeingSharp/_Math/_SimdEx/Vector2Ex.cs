@@ -30,6 +30,13 @@ namespace SeeingSharp
 {
     public static class Vector2Ex
     {
+        public static bool EqualsWithTolerance(Vector2 left, Vector2 right)
+        {
+            return
+                EngineMath.EqualsWithTolerance(left.X, right.X) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y);
+        }
+
         public static Vector2 FromSize2(Size2 size)
         {
             return new Vector2(size.Width, size.Height);
