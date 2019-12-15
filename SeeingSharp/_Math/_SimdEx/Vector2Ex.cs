@@ -30,18 +30,21 @@ namespace SeeingSharp
 {
     public static class Vector2Ex
     {
-        public static bool EqualsWithTolerance(Vector2 left, Vector2 right)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool EqualsWithTolerance(Vector2 left, Vector2 right, double tolerance = 0.00001)
         {
             return
-                EngineMath.EqualsWithTolerance(left.X, right.X) &&
-                EngineMath.EqualsWithTolerance(left.Y, right.Y);
+                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 FromSize2(Size2 size)
         {
             return new Vector2(size.Width, size.Height);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 FromSize2(Size2F size)
         {
             return new Vector2(size.Width, size.Height);

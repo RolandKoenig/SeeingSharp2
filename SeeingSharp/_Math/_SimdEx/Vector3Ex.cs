@@ -31,6 +31,15 @@ namespace SeeingSharp
 {
     public static class Vector3Ex
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool EqualsWithTolerance(Vector3 left, Vector3 right, double tolerance = 0.00001)
+        {
+            return
+                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Z, right.Z, tolerance: tolerance);
+        }
+
         /// <summary>
         /// Generates a normal out of given horizontal and vertical rotation.
         /// </summary>

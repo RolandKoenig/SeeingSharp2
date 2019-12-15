@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace SeeingSharp
 {
@@ -67,8 +68,8 @@ namespace SeeingSharp
         /// <summary>
         /// Calculates the binomial coefficient out of the given two values.
         /// </summary>
-        /// <param name="n">The upper vlaue normally mentioned as 'n'.</param>
-        /// <param name="k">The lower vlaue normally mentioned as 'k'.</param>
+        /// <param name="n">The upper value normally mentioned as 'n'.</param>
+        /// <param name="k">The lower value normally mentioned as 'k'.</param>
         public static decimal BinomialCoefficient(decimal n, decimal k)
         {
             var upperValueInt = (int)n;
@@ -97,11 +98,11 @@ namespace SeeingSharp
         /// Converts the given angle value to an absolute value (e. g. -10° to 350°).
         /// </summary>
         /// <param name="angle">The angle to convert.</param>
-        public static float GetAboluteAngleDegree(float angle)
+        public static float GetAbsoluteAngleDegree(float angle)
         {
             var result = angle;
 
-            result = result % 360f;
+            result %= 360f;
             if (result < 0) { result = 360f + result; }
 
             return result;
@@ -112,6 +113,7 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="degreeValue">A angle in degree.</param>
         /// <returns>The radian value of the angle.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DegreeToRadian(float degreeValue)
         {
             return degreeValue / 360f * RAD_360DEG;
@@ -122,16 +124,18 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="degreeValue">A angle in degree.</param>
         /// <returns>The radian value of the angle.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DegreeToRadian(int degreeValue)
         {
             return degreeValue / 360f * RAD_360DEG;
         }
 
         /// <summary>
-        /// Converts the given radian vlaue to degree.
+        /// Converts the given radian value to degree.
         /// </summary>
         /// <param name="radianValue">A angle in radian.</param>
         /// <returns>The degree value of the angle.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float RadianToDegree(float radianValue)
         {
             return radianValue / RAD_360DEG * 360f;
@@ -143,6 +147,7 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Clamp(float valueToClamp, float minValue, float maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -156,6 +161,7 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Clamp(int valueToClamp, int minValue, int maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -169,6 +175,7 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Clamp(double valueToClamp, double minValue, double maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -182,6 +189,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(double left, double right, double tolerance = 0.00001)
         {
             return Math.Abs(left - right) < tolerance;
@@ -193,6 +201,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(float left, float right, float tolerance = 0.00001f)
         {
             return Math.Abs(left - right) < tolerance;
@@ -204,6 +213,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = 0.00001M)
         {
             return Math.Abs(left - right) < tolerance;
@@ -213,6 +223,7 @@ namespace SeeingSharp
         /// Force the given value to be negative.
         /// </summary>
         /// <param name="floatValue">The value to be changed.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static float ForceNegative(float floatValue)
         {
             if (floatValue > 0) { return -floatValue; }
@@ -223,6 +234,7 @@ namespace SeeingSharp
         /// Force the given value to be positive.
         /// </summary>
         /// <param name="floatValue">The value to be changed.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static float ForcePositive(float floatValue)
         {
             if (floatValue < 0) { return -floatValue; }
