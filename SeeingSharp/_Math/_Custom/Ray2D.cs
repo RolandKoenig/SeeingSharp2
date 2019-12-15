@@ -56,15 +56,8 @@ namespace SeeingSharp
             var b2 = other.B;
             var c2 = other.C;
 
-            //float delta = A1 * B2 - A2 * B1;
-            //if (delta == 0)
-            //    throw new ArgumentException("Lines are parallel");
-
-            //float x = (B2 * C1 - B1 * C2) / delta;
-            //float y = (A1 * C2 - A2 * C1) / delta;
-
             var delta = a1 * b2 - a2 * b1;
-            if (delta == 0)
+            if (EngineMath.EqualsWithTolerance(delta, 0))
             {
                 return Tuple.Create(false, Vector2.Zero);
             }
