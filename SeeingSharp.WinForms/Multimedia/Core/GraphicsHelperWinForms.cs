@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
                 swapChainDesc.BufferCount = 2;
-                swapChainDesc.SampleDescription = device.GetSampleDescription(gfxConfig.AntialiasingQuality);
+                swapChainDesc.SampleDescription = device.Internals.GetSampleDescription(gfxConfig.AntialiasingQuality);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Core
             // Set common parameters
             swapChainDesc.Width = targetControl.Width;
             swapChainDesc.Height = targetControl.Height;
-            swapChainDesc.Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT;
+            swapChainDesc.Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT;
             swapChainDesc.Scaling = Scaling.Stretch;
             swapChainDesc.SwapEffect = SwapEffect.Discard;
             swapChainDesc.Usage = Usage.RenderTargetOutput;
@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                     OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
                     MipLevels = 0,
                     Usage = D3D11.ResourceUsage.Default,
@@ -130,10 +130,8 @@ namespace SeeingSharp.Multimedia.Core
                 }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
 
                 // Workaround for now... auto generate mip-levels
-                using (var shaderResourceView = new D3D11.ShaderResourceView(device.Internals.DeviceD3D11_1, result))
-                {
-                    device.Internals.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
-                }
+                using var shaderResourceView = new D3D11.ShaderResourceView(device.Internals.DeviceD3D11_1, result);
+                device.Internals.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
             }
             finally
             {

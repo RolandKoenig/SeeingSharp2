@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_buffer = GraphicsHelper.CreateImmutableVertexBuffer(
+            m_buffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(
                 device, m_bufferDataFactory());
         }
 

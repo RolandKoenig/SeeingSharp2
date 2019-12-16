@@ -33,23 +33,20 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Create a new <see cref="ExtruderTessellationSink"/>
         /// </summary>
-        /// <param name="geometry">The new geometry to be set.</param>
-        /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
-        /// <param name="extrudeOptions">Additional options for extruding.</param>
-        public ExtrudeGeometryFactory(
-            D2D.Geometry geometry, float flatteningTolerance, 
-            ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
+        public ExtrudeGeometryFactory()
         {
-            this.UpdateGeometry(geometry, flatteningTolerance, extrudeOptions);
+            m_generatedTriangles = new List<D2D.Triangle[]>();
+
+            this.Internals = new ExtrudeGeometryFactoryInternals(this);
         }
 
         /// <summary>
-        /// Changes current geometry of this object.
+        /// Sets the current geometry of this object.
         /// </summary>
         /// <param name="geometry">The new geometry to be set.</param>
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
         /// <param name="extrudeOptions">Additional options for extruding.</param>
-        public void UpdateGeometry(
+        internal void SetGeometry(
             D2D.Geometry geometry, float flatteningTolerance,
             ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
         {
@@ -160,6 +157,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <inheritdoc />
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
+            // Handle empty case
+            if (m_generatedTriangles.Count == 0)
+            {
+                return new Geometry(0);
+            }
+
             var result = new Geometry(this.TriangleCount * 3);
             var surface = result.CreateSurface(this.TriangleCount);
 
@@ -192,6 +195,34 @@ namespace SeeingSharp.Multimedia.Objects
         /// The <see cref="Color4"/> to be assigned to each generated <see cref="Vertex"/>
         /// </summary>
         public Color4 Color { get; set; } = Color4.Transparent;
+
+        public ExtrudeGeometryFactoryInternals Internals { get; }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class ExtrudeGeometryFactoryInternals
+        {
+            private ExtrudeGeometryFactory m_owner;
+
+            internal ExtrudeGeometryFactoryInternals(ExtrudeGeometryFactory owner)
+            {
+                m_owner = owner;
+            }
+
+            /// <summary>
+            /// Sets the current geometry of this object.
+            /// </summary>
+            /// <param name="geometry">The new geometry to be set.</param>
+            /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
+            /// <param name="extrudeOptions">Additional options for extruding.</param>
+            public void SetGeometry(
+                D2D.Geometry geometry, float flatteningTolerance,
+                ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
+            {
+                m_owner.SetGeometry(geometry, flatteningTolerance, extrudeOptions);
+            }
+        }
 
         //*********************************************************************
         //*********************************************************************

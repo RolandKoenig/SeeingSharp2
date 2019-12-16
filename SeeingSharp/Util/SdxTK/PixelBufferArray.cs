@@ -23,7 +23,7 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>
     /// Used by <see cref="Image"/> to provide a selector to a <see cref="PixelBuffer"/>.

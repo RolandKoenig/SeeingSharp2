@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_renderTargetTexture = GraphicsHelper.CreateRenderTargetTexture(
+            m_renderTargetTexture = GraphicsHelper.Internals.CreateRenderTargetTexture(
                 device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
             m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
 

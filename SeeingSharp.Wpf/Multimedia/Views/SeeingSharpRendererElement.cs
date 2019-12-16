@@ -395,12 +395,12 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Create the swap chain and the render target
-                m_backBufferD3D11 = GraphicsHelper.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
-                m_backBufferForWpf = GraphicsHelper.CreateSharedTexture(engineDevice, width, height);
+                m_backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
+                m_backBufferForWpf = GraphicsHelper.Internals.CreateSharedTexture(engineDevice, width, height);
                 m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
 
                 // Create the depth buffer
-                m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
+                m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
                 m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
 
                 // Apply render target size values
@@ -408,7 +408,7 @@ namespace SeeingSharp.Multimedia.Views
                 m_renderTargetHeight = height;
 
                 // Define the viewport for rendering
-                viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+                viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
                 // Apply new width and height values of the viewport
                 m_viewportWidth = width;
@@ -562,13 +562,13 @@ namespace SeeingSharp.Multimedia.Views
                 // Get and read data from the gpu (create copy helper texture on demand)
                 if (this.RenderLoop.Internals.CopyHelperTextureStaging == null)
                 {
-                    this.RenderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
-                    this.RenderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    this.RenderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    this.RenderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
                 }
 
                 // Copy resources
                 engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
-                    GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+                    GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
                 engineDevice.Internals.DeviceImmediateContextD3D11.CopyResource(this.RenderLoop.Internals.CopyHelperTextureStandard, this.RenderLoop.Internals.CopyHelperTextureStaging);
 
                 // Copy texture into wpf bitmap

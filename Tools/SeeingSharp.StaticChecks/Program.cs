@@ -52,11 +52,6 @@ namespace PublicSharpDXChecker
                 }
             }
 
-            if (typeDefinition.FullName.EndsWith("GraphicsCoreInternals"))
-            {
-
-            }
-
             // Check for correct namespace
             if (typeDefinition.Namespace.Contains("._"))
             {

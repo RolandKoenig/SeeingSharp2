@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Get all supported modes
             var modes = output.GetDisplayModeList(
-                GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                 DisplayModeEnumerationFlags.Interlaced);
 
             // Convert and sort them

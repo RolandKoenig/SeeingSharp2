@@ -185,7 +185,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             void FinishIndexBuffer()
             {
                 // Create the vertex buffer
-                var indexBuffer = GraphicsHelper.CreateImmutableIndexBuffer(device, cachedIndices.ToArray());
+                var indexBuffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(device, cachedIndices.ToArray());
                 cachedIndices.Clear();
                 actIndexCount = 0;
                 indexBufferID++;
@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             void FinishVertexBuffer()
             {
                 // Create the vertex buffer
-                var vertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(device, cachedVertices.ToArray());
+                var vertexBuffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(device, cachedVertices.ToArray());
                 cachedVertices.Clear();
                 actVertexCount = 0;
                 vertexBufferID++;

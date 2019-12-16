@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 Width = width,
                 Height = height,
-                Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                 Stereo = false,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.BackBuffer | Usage.RenderTargetOutput,

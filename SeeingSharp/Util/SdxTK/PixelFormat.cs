@@ -27,7 +27,7 @@ using System;
 using System.Runtime.InteropServices;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>
     /// PixelFormat is equivalent to <see cref="SharpDX.DXGI.Format"/>.

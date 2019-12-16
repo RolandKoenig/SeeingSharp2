@@ -22,7 +22,7 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SDXTK = SeeingSharp.Multimedia.Util.SdxTK;
+using SDXTK = SeeingSharp.Util.SdxTK;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             else if (m_inMemoryTexture != null)
             {
-                m_texture = GraphicsHelper.LoadTexture2DFromMappedTexture(device, m_inMemoryTexture);
+                m_texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, m_inMemoryTexture);
             }
 
             // Create view for shaders

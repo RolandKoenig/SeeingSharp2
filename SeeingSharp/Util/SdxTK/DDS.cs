@@ -30,7 +30,7 @@ using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     internal class DDS
     {

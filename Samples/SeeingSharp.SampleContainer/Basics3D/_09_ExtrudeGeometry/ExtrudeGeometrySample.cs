@@ -74,7 +74,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     // Create the GeometryFactory
                     // We can dispose the PathGeometry after that, because the ExtrudeGeometryFactory
                     // extracts all information needed within the constructor
-                    geometryFactory = new ExtrudeGeometryFactory(
+                    geometryFactory = new ExtrudeGeometryFactory();
+                    geometryFactory.Internals.SetGeometry(
                         pathGeo, 0.1f, 
                         ExtrudeGeometryOptions.RescaleToUnitSize | ExtrudeGeometryOptions.ChangeOriginToCenter);
                 }

@@ -31,7 +31,7 @@ using SharpDX.DXGI;
 using SharpDX.WIC;
 using SDX = SharpDX;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     internal class WICHelper
     {

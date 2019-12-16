@@ -33,7 +33,7 @@ using SDX = SharpDX;
 using SDXIO = SharpDX.IO;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 { 
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.

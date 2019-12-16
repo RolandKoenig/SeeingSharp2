@@ -426,11 +426,11 @@ namespace SeeingSharp.Multimedia.Views
             m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
 
             //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
+            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
             m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
 
             //Define the viewport for rendering
-            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
             // Query for current dpi value
             var dpiScaling = DpiScaling.Default;

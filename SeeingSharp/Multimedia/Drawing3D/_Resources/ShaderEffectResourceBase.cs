@@ -85,7 +85,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_defaultResources = resources.DefaultResources;
             m_vertexShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_VERTEX_SHADER,
-                () => GraphicsHelper.GetVertexShaderResource(device, "Postprocessing", "PostprocessVertexShader"));
+                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Postprocessing", "PostprocessVertexShader"));
         }
 
         /// <summary>

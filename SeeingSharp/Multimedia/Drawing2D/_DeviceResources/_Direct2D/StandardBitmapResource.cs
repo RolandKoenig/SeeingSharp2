@@ -103,7 +103,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             if (result == null)
             {
                 using (var inputStream = m_resourceLink.OpenInputStream())
-                using (var bitmapSourceWrapper = GraphicsHelper.LoadBitmapSource_D2D(inputStream))
+                using (var bitmapSourceWrapper = GraphicsHelper.Internals.LoadBitmapSource_D2D(inputStream))
                 {
                     BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 

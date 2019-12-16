@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // Loading of line data
                 SeeingSharpUtil.SafeDispose(ref resourceData.LineVertexBuffer);
-                resourceData.LineVertexBuffer = GraphicsHelper.CreateImmutableVertexBuffer(renderState.Device, m_lineData);
+                resourceData.LineVertexBuffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(renderState.Device, m_lineData);
                 resourceData.LineDataLoaded = true;
             }
 

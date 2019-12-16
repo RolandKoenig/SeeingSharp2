@@ -49,10 +49,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_vertexShader = resources.GetResourceAndEnsureLoaded(
                 KEY_VERTEX_SHADER,
-                () => GraphicsHelper.GetVertexShaderResource(device, "LineRendering", "LineVertexShader"));
+                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "LineRendering", "LineVertexShader"));
             m_pixelShader = resources.GetResourceAndEnsureLoaded(
                 KEY_PIXEL_SHADER,
-                () => GraphicsHelper.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
             m_constantBuffer = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<ConstantBufferData>());

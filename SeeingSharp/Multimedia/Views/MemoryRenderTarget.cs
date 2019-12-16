@@ -122,15 +122,15 @@ namespace SeeingSharp.Multimedia.Views
             m_deviceContext = m_device.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_renderTarget = GraphicsHelper.CreateRenderTargetTexture(device, width, height, this.RenderLoop.ViewConfiguration);
+            m_renderTarget = GraphicsHelper.Internals.CreateRenderTargetTexture(device, width, height, this.RenderLoop.ViewConfiguration);
             m_renderTargetView = new D3D11.RenderTargetView(m_device, m_renderTarget);
 
             //Create the depth buffer
-            m_renderTargetDepth = GraphicsHelper.CreateDepthBufferTexture(device, width, height, this.RenderLoop.ViewConfiguration);
+            m_renderTargetDepth = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, this.RenderLoop.ViewConfiguration);
             m_renderTargetDepthView = new D3D11.DepthStencilView(m_device, m_renderTargetDepth);
 
             //Define the viewport for rendering
-            var viewPort = GraphicsHelper.CreateDefaultViewport(width, height);
+            var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
             //Return all generated objects
             return Tuple.Create(m_renderTarget, m_renderTargetView, m_renderTargetDepth, m_renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);

@@ -54,10 +54,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             //Load all required shaders and constant buffers
             m_vertexShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_VERTEX_SHADER,
-                () => GraphicsHelper.GetVertexShaderResource(device, "Sprite", "SpriteVertexShader"));
+                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Sprite", "SpriteVertexShader"));
             m_pixelShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER,
-                () => GraphicsHelper.GetPixelShaderResource(device, "Sprite", "SpritePixelShader"));
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Sprite", "SpritePixelShader"));
 
             // Get a reference to default resource object
             m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);

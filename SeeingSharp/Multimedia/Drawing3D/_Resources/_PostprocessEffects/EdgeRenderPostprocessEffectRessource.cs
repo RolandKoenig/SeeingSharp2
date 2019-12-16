@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Load graphics resources
             m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER_BLUR,
-                () => GraphicsHelper.GetPixelShaderResource(device, "Postprocessing", "PostprocessEdgeDetect"));
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Postprocessing", "PostprocessEdgeDetect"));
             m_renderTarget = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_TARGET,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));

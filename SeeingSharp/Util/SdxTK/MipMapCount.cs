@@ -26,7 +26,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>
     /// A simple wrapper to specify number of mipmaps.

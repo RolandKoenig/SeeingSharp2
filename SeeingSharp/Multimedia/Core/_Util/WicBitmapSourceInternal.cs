@@ -25,12 +25,14 @@ using SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    internal class WicBitmapSourceInternal : IDisposable, ICheckDisposed
+    public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
         internal WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
         {
             this.Decoder = decoder;
             this.Converter = converter;
+
+            this.Internals = new WicBitmapSourceInternalInternals(this);
         }
 
         public void Dispose()
@@ -51,6 +53,25 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             private set;
+        }
+
+        public WicBitmapSourceInternalInternals Internals { get; }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class WicBitmapSourceInternalInternals
+        {
+            private WicBitmapSourceInternal m_owner;
+
+            public WicBitmapSourceInternalInternals(WicBitmapSourceInternal owner)
+            {
+                m_owner = owner;
+            }
+
+            public BitmapDecoder Decoder => m_owner.Decoder;
+
+            public FormatConverter Converter => m_owner.Converter;
         }
     }
 }

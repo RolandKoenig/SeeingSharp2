@@ -29,7 +29,7 @@ using SharpDX.DXGI;
 using SharpDX.IO;
 using SDX = SharpDX;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>
     /// An unmanaged buffer of pixels.

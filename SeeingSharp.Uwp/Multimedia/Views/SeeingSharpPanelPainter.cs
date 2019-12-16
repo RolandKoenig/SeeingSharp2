@@ -342,7 +342,7 @@ namespace SeeingSharp.Multimedia.Views
             D3D11.Texture2D backBufferForRenderloop = null;
             if (this.RenderLoop.ViewConfiguration.AntialiasingEnabled)
             {
-                m_backBufferMultisampled = GraphicsHelper.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
+                m_backBufferMultisampled = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
                 m_renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, m_backBufferMultisampled);
                 backBufferForRenderloop = m_backBufferMultisampled;
             }
@@ -353,11 +353,11 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
+            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
             m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.Internals.DeviceD3D11_1, m_depthBuffer);
 
             //Define the viewport for rendering
-            var viewPort = GraphicsHelper.CreateDefaultViewport(viewSize.Width, viewSize.Height);
+            var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(viewSize.Width, viewSize.Height);
             m_lastRefreshTargetSize = new Size(viewSize.Width, viewSize.Height);
 
             var dpiScaling = new DpiScaling
@@ -434,7 +434,7 @@ namespace SeeingSharp.Multimedia.Views
             // Copy contents of the backbuffer if in multisampling mode
             if (m_backBufferMultisampled != null)
             {
-                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(m_backBufferMultisampled, 0, m_backBuffer, 0, GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(m_backBufferMultisampled, 0, m_backBuffer, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
             }
 
             // Present all rendered stuff on screen

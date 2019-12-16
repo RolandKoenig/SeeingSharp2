@@ -289,7 +289,7 @@ namespace SeeingSharp.Multimedia.Core
             // More on the used technique
             //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
 
-            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+            var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
 
             if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
             if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
@@ -303,7 +303,7 @@ namespace SeeingSharp.Multimedia.Core
                     Height = 100,
                     MipLevels = 1,
                     ArraySize = 1,
-                    Format = GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                     Usage = D3D11.ResourceUsage.Default,
                     SampleDescription = new SampleDescription(2, 0),
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
@@ -320,9 +320,9 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check for quality levels
-            var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 2);
-            var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 4);
-            var highQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.DEFAULT_TEXTURE_FORMAT, 8);
+            var lowQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, 2);
+            var mediumQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, 4);
+            var highQualityLevels = m_handlerD3D11.Device1.CheckMultisampleQualityLevels(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, 8);
 
             // Generate sample descriptions for each possible quality level
             if (lowQualityLevels > 0)

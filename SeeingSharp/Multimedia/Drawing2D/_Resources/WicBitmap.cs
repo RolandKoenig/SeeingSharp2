@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             using (var inStream = await resourceLink.OpenInputStreamAsync())
 
-            using (var bitmapSourceWrapper = await SeeingSharpUtil.CallAsync(() => GraphicsHelper.LoadBitmapSource(inStream)))
+            using (var bitmapSourceWrapper = await SeeingSharpUtil.CallAsync(() => GraphicsHelper.Internals.LoadBitmapSource(inStream)))
             {
                 wicBitmap = new Bitmap(
                     GraphicsCore.Current.FactoryWIC, bitmapSourceWrapper.Converter, BitmapCreateCacheOption.CacheOnLoad);

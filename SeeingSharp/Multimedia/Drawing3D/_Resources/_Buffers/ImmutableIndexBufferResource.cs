@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_buffer = GraphicsHelper.CreateImmutableIndexBuffer(
+            m_buffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(
                 device, m_bufferDataFactory());
         }
 

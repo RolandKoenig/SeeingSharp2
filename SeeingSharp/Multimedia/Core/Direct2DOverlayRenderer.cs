@@ -142,7 +142,7 @@ namespace SeeingSharp.Multimedia.Core
                     DpiX = dpiScaling.DpiX,
                     DpiY = dpiScaling.DpiY,
                     BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
-                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.DEFAULT_TEXTURE_FORMAT,
+                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                         D2D.AlphaMode.Premultiplied)
                 };
 

@@ -67,9 +67,9 @@ namespace SeeingSharp.Multimedia.Core
         public void UploadToIntBuffer(MemoryMappedTexture32bpp intBuffer)
         {
             // Check current format
-            if (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT &&
-                m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING &&
-                m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_SHARING_D2D)
+            if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT &&
+                m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_SHARING &&
+                m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_SHARING_D2D)
             {
                 throw new SeeingSharpGraphicsException(
                     $"Invalid format for texture uploading to a color map ({m_format})!");
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Core
         public void UploadToFloatBuffer(MemoryMappedTextureFloat floatBuffer)
         {
             // Check current format
-            if (m_format != GraphicsHelper.DEFAULT_TEXTURE_FORMAT_OBJECT_ID)
+            if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_OBJECT_ID)
             {
                 throw new SeeingSharpGraphicsException("Invalid format for texture uploading to gdi bitmap (" + m_format + ")!");
             }
@@ -183,10 +183,10 @@ namespace SeeingSharp.Multimedia.Core
             // Prepare needed textures
             if (m_copyHelperTextureStaging == null)
             {
-                m_copyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(m_device, m_width, m_height, m_format);
+                m_copyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(m_device, m_width, m_height, m_format);
                 if (m_isMultisampled && handleMultiSampling)
                 {
-                    m_copyHelperTextureStandard = GraphicsHelper.CreateTexture(m_device, m_width, m_height, m_format);
+                    m_copyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(m_device, m_width, m_height, m_format);
                 }
             }
 

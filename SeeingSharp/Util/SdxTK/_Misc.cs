@@ -25,7 +25,7 @@
 
 using System;
 
-namespace SeeingSharp.Multimedia.Util.SdxTK
+namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>
     /// Defines the dimension of a texture.

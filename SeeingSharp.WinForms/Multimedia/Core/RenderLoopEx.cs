@@ -68,15 +68,15 @@ namespace SeeingSharp.Multimedia.Core
             // Get and read data from the gpu (create copy helper texture on demand)
             if (renderLoop.Internals.CopyHelperTextureStaging == null)
             {
-                renderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.CreateStagingTexture(currentDevice, width, height);
-                renderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.CreateTexture(currentDevice, width, height);
+                renderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(currentDevice, width, height);
+                renderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(currentDevice, width, height);
             }
 
             // Copy resources
             currentDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(
                 renderLoop.Internals.RenderTarget, 0,
                 renderLoop.Internals.CopyHelperTextureStandard, 0,
-                GraphicsHelper.DEFAULT_TEXTURE_FORMAT);
+                GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
             currentDevice.Internals.DeviceImmediateContextD3D11.CopyResource(
                 renderLoop.Internals.CopyHelperTextureStandard,
                 renderLoop.Internals.CopyHelperTextureStaging);

@@ -51,10 +51,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Load all required shaders and constant buffers
             m_vertexShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_VERTEX_SHADER,
-                () => GraphicsHelper.GetVertexShaderResource(device, "Common", "SingleForcedColorVertexShader"));
+                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Common", "SingleForcedColorVertexShader"));
             m_pixelShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER,
-                () => GraphicsHelper.GetPixelShaderResource(device, "Common", "SingleForcedColorPixelShader"));
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "SingleForcedColorPixelShader"));
 
             m_cbPerMaterial = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,

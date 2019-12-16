@@ -126,7 +126,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_rasterStateBiased = new Lazy<D3D11.RasterizerState>(() =>
             {
                 var rasterDesc = D3D11.RasterizerStateDescription.Default();
-                rasterDesc.DepthBias = GraphicsHelper.GetDepthBiasValue(device, -0.00003f);
+                rasterDesc.DepthBias = GraphicsHelper.Internals.GetDepthBiasValue(device, -0.00003f);
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
 
@@ -150,11 +150,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Create sampler states
             m_samplerStateLow = new Lazy<D3D11.SamplerState>(
-                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low));
+                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low));
             m_samplerStateMedium = new Lazy<D3D11.SamplerState>(
-                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium));
+                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium));
             m_samplerStateHigh = new Lazy<D3D11.SamplerState>(
-                () => GraphicsHelper.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High));
+                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High));
         }
 
         /// <summary>
