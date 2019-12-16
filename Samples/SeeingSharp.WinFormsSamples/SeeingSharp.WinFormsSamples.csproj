@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <ApplicationIcon />
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject />
   </PropertyGroup>

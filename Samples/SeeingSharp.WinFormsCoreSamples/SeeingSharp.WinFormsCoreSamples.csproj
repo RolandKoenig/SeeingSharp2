@@ -6,7 +6,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>SeeingSharp.WinFormsCoreSamples</AssemblyName>
     <RootNamespace>SeeingSharp.WinFormsSamples</RootNamespace>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SeeingSharp.WinFormsSamples\MainWindow.cs" Link="MainWindow.cs" />
@@ -23,7 +28,6 @@
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\OutputAdd16x16.png" Link="Assets\Icons\OutputAdd16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PageCSharp16x16.png" Link="Assets\Icons\PageCSharp16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\PerformanceMeasure16x16.png" Link="Assets\Icons\PerformanceMeasure16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Logo.ico" Link="Logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +56,10 @@
 
   <ItemGroup>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

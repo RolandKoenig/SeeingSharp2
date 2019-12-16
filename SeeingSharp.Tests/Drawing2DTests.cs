@@ -279,11 +279,11 @@ namespace SeeingSharp.Tests
                 200f, 400f,
                 new[]
                 {
-                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.Gray), Position = 0f },
-                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.White), Position = 0.6f },
-                    new SharpDX.Direct2D1.GradientStop { Color = Helper_Color4ToRaw(Color4.BlueColor), Position = 1f }
+                    new GradientStop { Color = Color4.Gray, Position = 0f },
+                    new GradientStop { Color = Color4.White, Position = 0.6f },
+                    new GradientStop { Color = Color4.BlueColor, Position = 1f }
                 },
-                SharpDX.Direct2D1.ExtendMode.Clamp))
+                ExtendMode.Clamp))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering

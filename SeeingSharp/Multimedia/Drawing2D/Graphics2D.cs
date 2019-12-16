@@ -54,6 +54,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_renderTarget = renderTarget;
             this.ScreenPixelSize = screenSize;
             m_deviceContext = m_renderTarget as D2D.DeviceContext;
+
+            this.Internals = new Graphics2DInternals(this);
         }
 
         /// <summary>
@@ -696,6 +698,25 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 if (m_renderTarget == null) { return; }
                 m_renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
             }
+        }
+
+        public Graphics2DInternals Internals { get; }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        public class Graphics2DInternals
+        {
+            private Graphics2D m_owner;
+
+            internal Graphics2DInternals(Graphics2D owner)
+            {
+                m_owner = owner;
+            }
+
+            public D2D.RenderTarget RenderTarget => m_owner.m_renderTarget;
+
+            public D2D.DeviceContext DeviceContext => m_owner.m_deviceContext;
         }
     }
 }
