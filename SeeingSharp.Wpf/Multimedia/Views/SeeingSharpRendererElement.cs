@@ -77,7 +77,6 @@ namespace SeeingSharp.Multimedia.Views
         private bool m_forceCompositionOverSoftware;
 
         // State members for handling rendering problems
-        private int m_isDirtyCount;
         public event EventHandler CameraChanged;
         public event EventHandler DrawingLayer2DChanged;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -318,6 +317,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 // Dispose the render target
                 m_d3dImageSource.SetRenderTarget(null);
+                m_d3dImageSource.IsFrontBufferAvailableChanged -= this.OnD3DImageSource_IsFrontBufferAvailableChanged;
                 m_d3dImageSource.Dispose();
                 m_d3dImageSource = null;
             }
@@ -379,6 +379,7 @@ namespace SeeingSharp.Multimedia.Views
                         try
                         {
                             m_d3dImageSource = new HigherD3DImageSource(engineDevice, handlerD3D9);
+                            m_d3dImageSource.IsFrontBufferAvailableChanged += this.OnD3DImageSource_IsFrontBufferAvailableChanged;
                         }
                         catch (Exception)
                         {
@@ -390,7 +391,6 @@ namespace SeeingSharp.Multimedia.Views
                 // Switch to fallback method if we can't create the HigherD3DImageSource
                 if (m_d3dImageSource == null)
                 {
-                    m_d3dImageSource = null;
                     m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
                 }
 
@@ -469,22 +469,6 @@ namespace SeeingSharp.Multimedia.Views
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
 
-            if (m_d3dImageSource != null)
-            {
-                if (SeeingSharpWpfUtil.ReadPrivateMember<bool, D3DImage>(m_d3dImageSource, "_isDirty") ||
-                    SeeingSharpWpfUtil.ReadPrivateMember<IntPtr, D3DImage>(m_d3dImageSource, "_pUserSurfaceUnsafe") == IntPtr.Zero)
-                {
-                    m_isDirtyCount++;
-                    if (m_isDirtyCount > 20)
-                    {
-                        this.RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
-                        return true;
-                    }
-                    return false;
-                }
-                m_isDirtyCount = 0;
-            }
-
             return true;
         }
 
@@ -524,11 +508,15 @@ namespace SeeingSharp.Multimedia.Views
 
             if (m_d3dImageSource != null)
             {
+                // Final checks
+                if (!m_d3dImageSource.IsFrontBufferAvailable) { return; }
+                if (!m_d3dImageSource.HasRenderTarget) { return; }
+
+                // Try to lock the D3DImage
                 var isLocked = false;
                 GraphicsCore.Current.PerformanceAnalyzer.ExecuteAndMeasureActivityDuration(
                     "Render.Lock",
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
-
                 if (!isLocked)
                 {
                     return;
@@ -550,7 +538,6 @@ namespace SeeingSharp.Multimedia.Views
 
                     // Invalidate the D3D image
                     m_d3dImageSource.InvalidateD3DImage();
-                    //m_d3dImageSource.AddDirtyRect(new Int32Rect(0, 0, m_lastRecreateWidth, m_lastRecreateHeight));
                 }
                 finally
                 {
@@ -586,6 +573,15 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_AfterRendering(EngineDevice engineDevice)
         {
 
+        }
+
+        private void OnD3DImageSource_IsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue == true)
+            {
+                // Recreate view resources if we got the frontbuffer back
+                this.RenderLoop.ForceViewReload();
+            }
         }
 
         /// <summary>
