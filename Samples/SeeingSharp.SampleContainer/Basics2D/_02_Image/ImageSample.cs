@@ -25,7 +25,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics2D._02_Image
 {

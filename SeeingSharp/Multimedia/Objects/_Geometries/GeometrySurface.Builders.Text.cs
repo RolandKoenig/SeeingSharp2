@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var textLayout = new DWrite.TextLayout(
                     writeFactory, stringToBuild,
                     new DWrite.TextFormat(
-                        writeFactory, geometryOptions.FontFamily, fontWeight, fontStyle, geometryOptions.FontSize),
+                        writeFactory, geometryOptions.FontFamily, (DWrite.FontWeight)fontWeight, (DWrite.FontStyle)fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
                 // Render the text using the geometry text renderer

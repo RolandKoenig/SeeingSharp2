@@ -21,7 +21,7 @@
 */
 using System.Numerics;
 using SeeingSharp.Util;
-using DWrite = SharpDX.DirectWrite;
+using SeeingSharp.Multimedia.Drawing2D;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -85,8 +85,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             FontSize = 20,
             FontFamily = "Sergoe UI",
-            FontWeight = DWrite.FontWeight.Normal,
-            FontStyle = DWrite.FontStyle.Normal,
+            FontWeight = FontWeight.Normal,
+            FontStyle = FontStyle.Normal,
             SimplificationFlatternTolerance = 0.1f,
             SurfaceMaterial = NamedOrGenericKey.Empty,
             VerticesScaleFactor = 0.05f,
@@ -102,8 +102,8 @@ namespace SeeingSharp.Multimedia.Objects
 
         public string FontFamily;
         public int FontSize;
-        public DWrite.FontWeight FontWeight;
-        public DWrite.FontStyle FontStyle;
+        public FontWeight FontWeight;
+        public FontStyle FontStyle;
         public float VerticesScaleFactor;
         public float SimplificationFlatternTolerance;
         public NamedOrGenericKey SurfaceMaterial;

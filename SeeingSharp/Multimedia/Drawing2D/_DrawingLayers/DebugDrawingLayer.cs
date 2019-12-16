@@ -39,8 +39,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             m_textFormat = new TextFormatResource("Arial", 30f)
             {
-                TextAlignment = DWrite.TextAlignment.Center,
-                ParagraphAlignment = DWrite.ParagraphAlignment.Center
+                TextAlignment = TextAlignment.Center,
+                ParagraphAlignment = ParagraphAlignment.Center
             };
 
             var grayColor = Color4.LightGray;

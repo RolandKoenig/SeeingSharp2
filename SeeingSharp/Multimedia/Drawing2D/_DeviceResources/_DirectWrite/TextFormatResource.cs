@@ -22,7 +22,6 @@
 using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -33,16 +32,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private DWrite.TextFormat[] m_loadedTextFormats;
         private string m_fontFamilyName;
         private float m_fontSize;
-        private DWrite.FontWeight m_fontWeight;
-        private DWrite.FontStyle m_fontStyle;
-        private DWrite.FontStretch m_fontStretch;
+        private FontWeight m_fontWeight;
+        private FontStyle m_fontStyle;
+        private FontStretch m_fontStretch;
 
         // Dynamic runtime parameters (possible to pass on each render call)
         private bool[] m_runtimeDataChangedFlags;
-        private DWrite.ParagraphAlignment m_paragraphAlignment;
-        private DWrite.TextAlignment m_textAlignment;
-        private DWrite.WordWrapping m_wordWrapping;
-        private DWrite.ReadingDirection m_readingDirection;
+        private ParagraphAlignment m_paragraphAlignment;
+        private TextAlignment m_textAlignment;
+        private WordWrapping m_wordWrapping;
+        private ReadingDirection m_readingDirection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
@@ -54,9 +53,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="fontStyle">The style parameter for the font.</param>
         public TextFormatResource(
             string fontFamilyName, float fontSize,
-            DWrite.FontWeight fontWeight = DWrite.FontWeight.Normal,
-            DWrite.FontStyle fontStyle = DWrite.FontStyle.Normal,
-            DWrite.FontStretch fontStretch = DWrite.FontStretch.Normal)
+            FontWeight fontWeight = FontWeight.Normal,
+            FontStyle fontStyle = FontStyle.Normal,
+            FontStretch fontStretch = FontStretch.Normal)
         {
             m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
             m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
@@ -66,10 +65,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             m_fontStyle = fontStyle;
             m_fontStretch = fontStretch;
 
-            m_paragraphAlignment = DWrite.ParagraphAlignment.Near;
-            m_textAlignment = DWrite.TextAlignment.Leading;
-            m_wordWrapping = DWrite.WordWrapping.Wrap;
-            m_readingDirection = DWrite.ReadingDirection.LeftToRight;
+            m_paragraphAlignment = Drawing2D.ParagraphAlignment.Near; //ParagraphAlignment.Near;
+            m_textAlignment = Drawing2D.TextAlignment.Leading;
+            m_wordWrapping = Drawing2D.WordWrapping.Wrap;
+            m_readingDirection = Drawing2D.ReadingDirection.LeftToRight;
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 result = new DWrite.TextFormat(
                     GraphicsCore.Current.FactoryDWrite,
                     m_fontFamilyName,
-                    m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
+                    (DWrite.FontWeight)m_fontWeight, (DWrite.FontStyle)m_fontStyle, (DWrite.FontStretch)m_fontStretch, m_fontSize);
                 m_loadedTextFormats[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);
             }
@@ -122,8 +121,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 result = new DWrite.TextFormat(
                     GraphicsCore.Current.FactoryDWrite,
                     m_fontFamilyName,
-                    m_fontWeight, m_fontStyle, m_fontStretch, m_fontSize);
-                result.TextAlignment = m_textAlignment;
+                    (DWrite.FontWeight)m_fontWeight, (DWrite.FontStyle)m_fontStyle, (DWrite.FontStretch)m_fontStretch, m_fontSize);
+                result.TextAlignment = (DWrite.TextAlignment)m_textAlignment;
                 m_loadedTextFormats[engineDevice.DeviceIndex] = result;
             }
 
@@ -133,7 +132,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the alignment of the paragraph.
         /// </summary>
-        public DWrite.ParagraphAlignment ParagraphAlignment
+        public ParagraphAlignment ParagraphAlignment
         {
             get => m_paragraphAlignment;
             set
@@ -151,7 +150,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the alignment of the paragraph.
         /// </summary>
-        public DWrite.TextAlignment TextAlignment
+        public TextAlignment TextAlignment
         {
             get => m_textAlignment;
             set
@@ -169,7 +168,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the WordWrapping mode.
         /// </summary>
-        public DWrite.WordWrapping WordWrapping
+        public WordWrapping WordWrapping
         {
             get => m_wordWrapping;
             set
@@ -187,7 +186,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Gets or sets the reading direction.
         /// </summary>
-        public DWrite.ReadingDirection ReadingDirection
+        public ReadingDirection ReadingDirection
         {
             get => m_readingDirection;
             set

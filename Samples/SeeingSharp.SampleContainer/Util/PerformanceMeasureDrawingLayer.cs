@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Linq;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using SharpDX;
-using SharpDX.DirectWrite;
 
 namespace SeeingSharp.SampleContainer.Util
 {

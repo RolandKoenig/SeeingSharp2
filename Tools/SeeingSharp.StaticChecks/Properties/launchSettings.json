@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PublicSharpDXChecker": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Projekte\\Github\\SeeingSharp2\\bin\\Debug.AnyCPU\\netstandard2.0\\SeeingSharp.dll"
+    }
+  }
+}

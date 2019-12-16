@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class LinearGradientBrushResource : BrushResource
     {
         // Configuration
-        private D2D.GradientStop[] m_gradientStops;
+        private GradientStop[] m_gradientStops;
         private float m_opacity;
 
         // Resources
@@ -49,9 +49,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="opacity">The opacity value of the brush.</param>
         public LinearGradientBrushResource(
             Vector2 startPoint, Vector2 endPoint,
-            D2D.GradientStop[] gradientStops,
-            D2D.ExtendMode extendMode = D2D.ExtendMode.Clamp,
-            D2D.Gamma gamma = D2D.Gamma.StandardRgb,
+            GradientStop[] gradientStops,
+            ExtendMode extendMode = ExtendMode.Clamp,
+            Gamma gamma = Gamma.StandardRgb,
             float opacity = 1f)
         {
             startPoint.EnsureNotEqual(endPoint, nameof(startPoint), nameof(endPoint));
@@ -103,12 +103,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 // Convert gradient stops to structure from SharpDX
                 var d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
-
-                for(var loop =0; loop<d2dGradientStops.Length; loop++)
+                for (var loop = 0; loop < d2dGradientStops.Length; loop++)
                 {
-                    d2dGradientStops[loop] = new D2D.GradientStop
+                    d2dGradientStops[loop] = new D2D.GradientStop()
                     {
-                        Color = m_gradientStops[loop].Color,
+                        Color = SdxMathHelper.RawFromColor4(m_gradientStops[loop].Color),
                         Position = m_gradientStops[loop].Position
                     };
                 }
@@ -119,7 +118,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     GradientStops = new D2D.GradientStopCollection(
                         engineDevice.FakeRenderTarget2D,
                         d2dGradientStops,
-                        this.Gamma, this.ExtendMode)
+                        (D2D.Gamma)this.Gamma, (D2D.ExtendMode)this.ExtendMode)
                 };
 
                 unsafe
@@ -147,9 +146,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
             return result.Brush;
         }
 
-        public D2D.Gamma Gamma { get; }
+        public Gamma Gamma { get; }
 
-        public D2D.ExtendMode ExtendMode { get; }
+        public ExtendMode ExtendMode { get; }
 
         public Vector2 StartPoint { get; }
 
