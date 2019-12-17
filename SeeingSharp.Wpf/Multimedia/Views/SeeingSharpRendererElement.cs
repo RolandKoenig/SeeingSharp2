@@ -146,9 +146,9 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="minSize">The minimum size to be returned.</param>
         public Size GetPixelSize(Size minSize)
         {
-            PresentationSource source = PresentationSource.FromVisual(this);
-            double dpiScaleFactorX = 1.0;
-            double dpiScaleFactorY = 1.0;
+            var source = PresentationSource.FromVisual(this);
+            var dpiScaleFactorX = 1.0;
+            var dpiScaleFactorY = 1.0;
             if (source != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
@@ -161,14 +161,14 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Transporms the given wpf point to pure pixel coordinates.
+        /// Transforms the given wpf point to pure pixel coordinates.
         /// </summary>
         /// <param name="wpfPoint">The wpf point to be transformed.</param>
         public System.Windows.Point GetPixelLocation(System.Windows.Point wpfPoint)
         {
-            PresentationSource source = PresentationSource.FromVisual(this);
-            double dpiScaleFactorX = 1.0;
-            double dpiScaleFactorY = 1.0;
+            var source = PresentationSource.FromVisual(this);
+            var dpiScaleFactorX = 1.0;
+            var dpiScaleFactorY = 1.0;
             if (source != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
