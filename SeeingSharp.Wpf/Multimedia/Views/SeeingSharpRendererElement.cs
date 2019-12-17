@@ -58,6 +58,7 @@ namespace SeeingSharp.Multimedia.Views
         private WriteableBitmap m_fallbackWpfImageSource;
         private int m_lastRecreateWidth;
         private int m_lastRecreateHeight;
+        private int m_lockImageErrorCount;
 
         // All needed direct3d resources
         private D3D11.Texture2D m_backBufferForWpf;
@@ -341,6 +342,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
+            m_lockImageErrorCount = 0;
+
             // Calculate pixel with and high of this visual
             var pixelSize = new Size(
                 Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
@@ -519,8 +522,11 @@ namespace SeeingSharp.Multimedia.Views
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
                 if (!isLocked)
                 {
+                    m_lockImageErrorCount++;
+                    if(m_lockImageErrorCount > 5) { this.RenderLoop.ForceViewReload(); }
                     return;
                 }
+                m_lockImageErrorCount = 0;
 
                 try
                 {
