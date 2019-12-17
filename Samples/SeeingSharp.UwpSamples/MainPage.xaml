@@ -49,17 +49,18 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
             <ListBox VerticalAlignment="Top"
-                     Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
+                     Background="#E0D3D3D3" Foreground="Black"
                      ItemsSource="{Binding Path=Samples}"
                      SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
                      SelectionChanged="OnSelectedSampleChanged"
                      SelectionMode="Single"
                      VerticalContentAlignment="Top"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     Height="125">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
@@ -78,6 +79,9 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Rectangle VerticalAlignment="Top"
+                       Height="1" Fill="DarkGray"
+                       Margin="0,125,0,0"/>
 
             <!-- Command bar -->
             <ItemsControl ItemsSource="{Binding Path=SampleCommands}"
@@ -90,7 +94,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Margin="10,135,10,40"
-                                Background="#BBD3D3D3"
+                                Background="#E0D3D3D3" 
+                                BorderThickness="1" BorderBrush="DarkGray"
                                 MinWidth="200"
                                 Command="{Binding}">
                             <TextBlock Text="{Binding Path=CommandText}"
@@ -101,14 +106,17 @@
             </ItemsControl>
 
             <!-- PropertyGrid on the left -->
-            <localControls:PropertyGrid Margin="10,180,10,40"
-                                        MaxWidth="530" Background="Red"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top"
-                                        SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
+            <Border BorderBrush="DarkGray" BorderThickness="1"
+                    Margin="10,180,10,40"
+                    MaxWidth="530"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top">
+                <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}"/>
+            </Border>
+            
 
             <StackPanel Orientation="Horizontal"
-                        Background="#BBD3D3D3"
+                        Background="#EBD3D3D3"
                         VerticalAlignment="Bottom">
                 <StackPanel.Resources>
                     <Style TargetType="TextBlock">

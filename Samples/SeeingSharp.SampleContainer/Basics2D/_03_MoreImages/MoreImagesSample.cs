@@ -26,14 +26,14 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Basics2D._02_Image
+namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
 {
     [SampleDescription(
-        "Image", 2, nameof(Basics2D),
+        "More Images", 3, nameof(Basics2D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_02_Image",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/_03_MoreImages",
         typeof(ImageSampleSettings))]
-    public class ImageSample : SampleBase
+    public class MoreImagesSample : SampleBase
     {
         private const float IMAGE_WIDTH = 64;
         private const float IMAGE_HEIGHT = 64;
@@ -56,18 +56,30 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
                 // Clear the screen
                 base.Draw2DBackground(graphics);
 
-                var width = IMAGE_WIDTH * EngineMath.Clamp(castedSettings.Scaling, 0f, 100f);
-                var height = IMAGE_HEIGHT * EngineMath.Clamp(castedSettings.Scaling, 0f, 100f);
-                var bitmapRect = new RectangleF(
-                    graphics.ScreenWidth / 2f - width / 2f,
-                    graphics.ScreenHeight / 2f - height / 2f,
-                    width, height);
+                // Get all parameters
+                var transparency = castedSettings.Transparent ? 0.4f : 1f;
+                var imageWidth = EngineMath.Clamp(castedSettings.ImageWidth, 5, 500);
+                var imageHeight = imageWidth;
+                var screenWidth = (int)graphics.ScreenWidth;
+                var screenHeight = (int)graphics.ScreenHeight;
+                var interpolationMode = castedSettings.HighQuality
+                    ? BitmapInterpolationMode.NearestNeighbor
+                    : BitmapInterpolationMode.Linear;
 
-                graphics.DrawBitmap(
-                    m_bitmap,
-                    bitmapRect,
-                    castedSettings.Transparent ? 0.5f : 1f,
-                    BitmapInterpolationMode.Linear);
+                // Draw all bitmaps
+                for (var loopX = 0; loopX < screenWidth / imageWidth + 1; loopX++)
+                {
+                    for (var loopY = 0; loopY < screenHeight / imageHeight + 1; loopY++)
+                    {
+                        graphics.DrawBitmap(
+                            m_bitmap,
+                            new RectangleF(
+                                loopX * (imageWidth + 3), loopY * (imageHeight + 3),
+                                imageWidth, imageHeight),
+                            transparency,
+                            interpolationMode);
+                    }
+                }
             });
         }
 
@@ -84,10 +96,13 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
         private class ImageSampleSettings : SampleSettings
         {
             [Category("Image")]
-            public float Scaling { get; set; } = 5f;
+            public bool Transparent { get; set; } = false;
 
             [Category("Image")]
-            public bool Transparent { get; set; } = false;
+            public bool HighQuality { get; set; } = true;
+
+            [Category("Image")]
+            public int ImageWidth { get; set; } = 40;
         }
     }
 }

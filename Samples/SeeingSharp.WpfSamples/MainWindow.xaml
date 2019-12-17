@@ -67,6 +67,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Rectangle Height="1" Fill="DarkGray" />
 
                 <ItemsControl ItemsSource="{Binding Path=SampleCommands}">
                     <ItemsControl.ItemsPanel>

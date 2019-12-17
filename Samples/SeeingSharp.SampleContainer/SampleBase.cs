@@ -22,6 +22,7 @@
 using System.Threading.Tasks;
 using System.Numerics;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
@@ -30,6 +31,8 @@ namespace SeeingSharp.SampleContainer
 {
     public abstract class SampleBase
     {
+        private LinearGradientBrushResource m_backgroundBrush;
+
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
 
         public virtual Task OnReloadAsync(RenderLoop targetRenderLoop, SampleSettings settings)
@@ -44,7 +47,32 @@ namespace SeeingSharp.SampleContainer
 
         public virtual void NotifyClosed()
         {
+            SeeingSharpUtil.SafeDispose(ref m_backgroundBrush);
+        }
 
+        /// <summary>
+        /// Draws the default background for 2D rendering
+        /// </summary>
+        /// <param name="graphics"></param>
+        protected void Draw2DBackground(Graphics2D graphics)
+        {
+            if ((m_backgroundBrush == null) ||
+                (!EngineMath.EqualsWithTolerance(m_backgroundBrush.EndPoint.Y, graphics.ScreenHeight)))
+            {
+                SeeingSharpUtil.SafeDispose(ref m_backgroundBrush);
+
+                m_backgroundBrush = new LinearGradientBrushResource(
+                    new Vector2(0, 0),
+                    new Vector2(0, graphics.ScreenHeight),
+                    new GradientStop[]
+                    {
+                        new GradientStop(Color4.LightGray, 0f),
+                        new GradientStop(Color4.LightSteelBlue, 1f),
+                    },
+                    ExtendMode.Wrap);
+            }
+
+            graphics.FillRectangle(graphics.ScreenBounds, m_backgroundBrush);
         }
 
         /// <summary>

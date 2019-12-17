@@ -10,7 +10,7 @@
     d:DesignWidth="400">
 
     <Grid x:Name="GridMain"
-          Background="#BBD3D3D3">
+          Background="#E0D3D3D3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />

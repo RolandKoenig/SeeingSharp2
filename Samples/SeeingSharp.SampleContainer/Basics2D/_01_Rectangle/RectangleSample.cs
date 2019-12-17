@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 {
@@ -49,7 +50,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
             await targetRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
-                graphics.Clear(Color4.WhiteSmoke);
+                base.Draw2DBackground(graphics);
 
                 // Calculate rectangle location
                 var width = castedSettings.Width;
@@ -78,17 +79,10 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 
         public override void NotifyClosed()
         {
-            if (m_fillBrush != null)
-            {
-                m_fillBrush.Dispose();
-                m_fillBrush = null;
-            }
+            base.NotifyClosed();
 
-            if (m_fillBrushTransparent != null)
-            {
-                m_fillBrushTransparent.Dispose();
-                m_fillBrushTransparent = null;
-            }
+            SeeingSharpUtil.SafeDispose(ref m_fillBrush);
+            SeeingSharpUtil.SafeDispose(ref m_fillBrushTransparent);
         }
 
         //*********************************************************************
