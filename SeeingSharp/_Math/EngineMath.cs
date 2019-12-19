@@ -115,7 +115,6 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="degreeValue">A angle in degree.</param>
         /// <returns>The radian value of the angle.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DegreeToRadian(float degreeValue)
         {
             return degreeValue / 360f * RAD_360DEG;
@@ -126,7 +125,6 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="degreeValue">A angle in degree.</param>
         /// <returns>The radian value of the angle.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DegreeToRadian(int degreeValue)
         {
             return degreeValue / 360f * RAD_360DEG;
@@ -137,7 +135,6 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="radianValue">A angle in radian.</param>
         /// <returns>The degree value of the angle.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float RadianToDegree(float radianValue)
         {
             return radianValue / RAD_360DEG * 360f;
@@ -149,7 +146,6 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Clamp(float valueToClamp, float minValue, float maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -163,7 +159,6 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Clamp(int valueToClamp, int minValue, int maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -177,7 +172,6 @@ namespace SeeingSharp
         /// <param name="valueToClamp">The value that should be in range between min and max value.</param>
         /// <param name="minValue">The min value.</param>
         /// <param name="maxValue">The max value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Clamp(double valueToClamp, double minValue, double maxValue)
         {
             if (valueToClamp < minValue) { return minValue; }
@@ -191,7 +185,6 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(double left, double right, double tolerance = EngineMath.TOLERANCE_DOUBLE_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
@@ -203,7 +196,6 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(float left, float right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
@@ -215,7 +207,6 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = EngineMath.TOLERANCE_DECIMAL_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
@@ -225,7 +216,6 @@ namespace SeeingSharp
         /// Force the given value to be negative.
         /// </summary>
         /// <param name="floatValue">The value to be changed.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static float ForceNegative(float floatValue)
         {
             if (floatValue > 0) { return -floatValue; }
@@ -236,7 +226,6 @@ namespace SeeingSharp
         /// Force the given value to be positive.
         /// </summary>
         /// <param name="floatValue">The value to be changed.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static float ForcePositive(float floatValue)
         {
             if (floatValue < 0) { return -floatValue; }

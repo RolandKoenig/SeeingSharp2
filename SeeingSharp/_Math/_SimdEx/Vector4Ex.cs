@@ -30,7 +30,6 @@ namespace SeeingSharp
 {
     public static class Vector4Ex
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(Vector4 left, Vector4 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
@@ -40,7 +39,6 @@ namespace SeeingSharp
                 EngineMath.EqualsWithTolerance(left.W, right.W, tolerance: tolerance);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(Vector4 vector, int index)
         {
             switch (index)
@@ -53,7 +51,6 @@ namespace SeeingSharp
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetValue(Vector4 vector, int index, float value)
         {
             switch (index)

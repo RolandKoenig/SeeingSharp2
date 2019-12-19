@@ -30,7 +30,6 @@ namespace SeeingSharp
 {
     public static class Vector2Ex
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EqualsWithTolerance(Vector2 left, Vector2 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
@@ -38,19 +37,16 @@ namespace SeeingSharp
                 EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 FromSize2(Size2 size)
         {
             return new Vector2(size.Width, size.Height);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 FromSize2(Size2F size)
         {
             return new Vector2(size.Width, size.Height);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(Vector2 vector, int index)
         {
             switch (index)
@@ -61,7 +57,6 @@ namespace SeeingSharp
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetValue(Vector2 vector, int index, float value)
         {
             switch (index)
@@ -71,6 +66,5 @@ namespace SeeingSharp
                 default: throw new ArgumentException("Invalid index!");
             }
         }
-
     }
 }

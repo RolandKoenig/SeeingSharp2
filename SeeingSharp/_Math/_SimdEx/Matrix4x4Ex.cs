@@ -160,8 +160,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreateOrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreateOrthoOffCenterRH(left, right, bottom, top, znear, zfar, out result);
+            CreateOrthoOffCenterRH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -170,7 +169,6 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="upVector">The up vector (standard: y-axis).</param>
         /// <param name="forwardVector">The forward vector (standard: x-axis)</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4x4 CreateRotationDirection(Vector3 upVector, Vector3 forwardVector)
         {
             var right = Vector3.Cross(upVector, forwardVector);
@@ -467,15 +465,13 @@ namespace SeeingSharp
         /// <returns>The created look-at matrix.</returns>
         public static Matrix4x4 LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix4x4 result;
-            CreateLookAtRH(ref eye, ref target, ref up, out result);
+            CreateLookAtRH(ref eye, ref target, ref up, out var result);
             return result;
         }
 
         /// <summary>
         /// Gets the value at the given index of the given matrix.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(Matrix4x4 matrix, int index)
         {
             switch (index)
@@ -498,13 +494,12 @@ namespace SeeingSharp
                 case 15: return matrix.M44;
             }
 
-            throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+            throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
         }
 
         /// <summary>
         /// Sets the value at the given index of the given matrix.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetValue(Matrix4x4 matrix, int index, float value)
         {
             switch (index)
@@ -537,16 +532,15 @@ namespace SeeingSharp
         /// <param name="column">The column of the matrix to access.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetValue(Matrix4x4 matrix, int row, int column)
         {
             if (row < 0 || row > 3)
             {
-                throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
             if (column < 0 || column > 3)
             {
-                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
 
             return GetValue(matrix,row * 4 + column);
@@ -561,16 +555,15 @@ namespace SeeingSharp
         /// <param name="value">The value to be set.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetValue(Matrix4x4 matrix, int row, int column, float value)
         {
             if (row < 0 || row > 3)
             {
-                throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
             if (column < 0 || column > 3)
             {
-                throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
 
             SetValue(matrix, row * 4 + column, value);
