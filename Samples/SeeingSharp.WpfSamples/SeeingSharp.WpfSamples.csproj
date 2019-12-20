@@ -2,19 +2,24 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <OutputType>WinExe</OutputType>
+    <LangVersion>8.0</LangVersion>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="App.xaml" />
     <None Remove="MainWindow.xaml" />
     <None Remove="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
+
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="PropertyTools" Version="3.0.0" />
     <PackageReference Include="PropertyTools.Wpf" Version="3.0.0" />
@@ -25,15 +30,18 @@
     <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
     <Page Include="MainWindow.xaml" />
     <Page Include="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
     <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

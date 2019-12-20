@@ -6,10 +6,12 @@
     <RootNamespace>SeeingSharp.WinForms</RootNamespace>
     <PackageId>SeeingSharp2.WinForms</PackageId>
   </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
@@ -18,9 +20,11 @@
     <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
