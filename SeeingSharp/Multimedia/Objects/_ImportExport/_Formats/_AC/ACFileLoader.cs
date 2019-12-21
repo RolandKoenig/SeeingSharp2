@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Generates the geometry needed for this object
         /// </summary>
-        private static Geometry GenerateGeometry(ACFileInfo fileInfo)
+        internal static Geometry GenerateGeometry(ACFileInfo fileInfo)
         {
             var result = new Geometry();
 
@@ -337,7 +337,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Loads a ac file from the given uri
         /// </summary>
-        private static ACFileInfo LoadFile(Stream inStream)
+        internal static ACFileInfo LoadFile(Stream inStream)
         {
             ACFileInfo result = null;
 
@@ -755,182 +755,5 @@ namespace SeeingSharp.Multimedia.Objects
         /// Gets the default extension (e. g. ".ac").
         /// </summary>
         public static string DefaultExtension => ".ac";
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private enum ACObjectType
-        {
-            World,
-            Poly,
-            Group
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class ACFileInfo
-        {
-            public ACFileInfo()
-            {
-                Materials = new List<ACMaterialInfo>();
-                Objects = new List<ACObjectInfo>();
-            }
-
-            /// <summary>
-            /// Counts all objects within this file
-            /// </summary>
-            public int CountAllObjects()
-            {
-                var result = 0;
-
-                foreach (var actObj in Objects)
-                {
-                    result++;
-                    result += actObj.CountAllChildObjects();
-                }
-
-                return result;
-            }
-
-            public List<ACMaterialInfo> Materials;
-            public List<ACObjectInfo> Objects;
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class ACMaterialInfo
-        {
-            public CommonMaterialProperties CreateMaterialProperties(int materialIndex)
-            {
-                var result = new CommonMaterialProperties
-                {
-                    DiffuseColor = Diffuse,
-                    AmbientColor = Ambient,
-                    EmissiveColor = Emissive,
-                    SpecularColor = Specular,
-                    Shininess = Shininess,
-                    Name = $"{materialIndex}-{this.Name}"
-                };
-
-                return result;
-            }
-
-            public Color4 Ambient;
-            public Color4 Diffuse;
-            public Color4 Emissive;
-            public string Name;
-            public float Shininess;
-            public Color4 Specular;
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class ACObjectInfo
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ACObjectInfo"/> class.
-            /// </summary>
-            public ACObjectInfo()
-            {
-                Children = new List<ACObjectInfo>();
-                Surfaces = new List<ACSurface>();
-                Vertices = new List<ACVertex>();
-                Rotation = Matrix4x4.Identity;
-            }
-
-            /// <summary>
-            /// Returns a <see cref="System.String"/> that represents this instance.
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/> that represents this instance.
-            /// </returns>
-            public override string ToString()
-            {
-                return Name;
-            }
-
-            /// <summary>
-            /// Gets total count of all child objects
-            /// </summary>
-            public int CountAllChildObjects()
-            {
-                var result = 0;
-
-                foreach (var actObj in Children)
-                {
-                    result += actObj.CountAllChildObjects();
-                }
-
-                return result;
-            }
-
-            public List<ACObjectInfo> Children;
-            public int KidCount;
-            public string Name;
-            public Matrix4x4 Rotation;
-            public List<ACSurface> Surfaces;
-            public string Texture;
-            public Vector2 TextureRepeat;
-            public Vector3 Translation;
-            public ACObjectType Type;
-            public string Url;
-            public List<ACVertex> Vertices;
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class ACSurface
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ACSurface"/> class.
-            /// </summary>
-            public ACSurface()
-            {
-                VertexReferences = new List<int>();
-                TextureCoordinates = new List<Vector2>();
-            }
-
-            /// <summary>
-            /// Is this surface built using polygons?
-            /// </summary>
-            public bool IsPolygon => (Flags & 0xF0) == 0;
-
-            /// <summary>
-            /// Is this surface a closed line?
-            /// </summary>
-            public bool IsClosedLine => (Flags & 0xF0) == 1;
-
-            /// <summary>
-            /// Is this surface a line?
-            /// </summary>
-            public bool IsLine => (Flags & 0xF0) == 2;
-
-            /// <summary>
-            /// Is this surface flat shaded?
-            /// </summary>
-            public bool IsFlatShaded => (Flags & 16) != 16;
-
-            /// <summary>
-            /// Is this surface two sided?
-            /// </summary>
-            public bool IsTwoSided => (Flags & 32) == 32;
-
-            public int Flags;
-            public int Material;
-            public List<Vector2> TextureCoordinates;
-            public List<int> VertexReferences;
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class ACVertex
-        {
-            public Vector3 Position;
-        }
     }
 }

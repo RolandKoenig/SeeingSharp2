@@ -44,19 +44,33 @@ namespace SeeingSharp.Multimedia.Objects
             // Create result container
             var result = new ImportedModelContainer(acImportOptions);
 
-            // Load Geometry
-            var importedGeometry = ACFileLoader.ImportGeometry(sourceFile);
-            var resGeometry = GraphicsCore.GetNextGenericResourceKey();
-            var resMaterial = GraphicsCore.GetNextGenericResourceKey();
+            // Read the AC file
+            var fileInfo = ACFileLoader.LoadFile(sourceFile.OpenInputStream());
+
+            // Generate GeometryResource
+            var resGeometry = result.GetResourceKey("Geometry", "Main");
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
-                device => new GeometryResource(importedGeometry)));
-            result.ImportedResources.Add(new ImportedResourceInfo(
-                resMaterial,
-                device => new StandardMaterialResource()));
+                device => new GeometryResource(ACFileLoader.GenerateGeometry(fileInfo))));
+
+            // Generate Material resources
+            var materialKeys = new NamedOrGenericKey[fileInfo.Materials.Count];
+            for (var loop = 0; loop < materialKeys.Length; loop++)
+            {
+                var actACMaterial = fileInfo.Materials[loop];
+                materialKeys[loop] = result.GetResourceKey("Material", actACMaterial.Name);
+
+                result.ImportedResources.Add(new ImportedResourceInfo(
+                    materialKeys[loop],
+                    (device) => new StandardMaterialResource()
+                    {
+                        UseVertexColors = false,
+                        MaterialDiffuseColor = actACMaterial.Diffuse,
+                    }));
+            }
 
             // Create the mesh
-            result.Objects.Add(new Mesh(resGeometry, resMaterial));
+            result.Objects.Add(new Mesh(resGeometry, materialKeys));
 
             return result;
         }
