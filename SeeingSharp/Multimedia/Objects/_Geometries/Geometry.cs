@@ -22,7 +22,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
@@ -160,8 +159,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         public void RealignToFloorCenter()
-        {
-
+        { 
             var fullBoundingBox = this.GenerateBoundingBox();
             var fullCenter = fullBoundingBox.GetMiddleCenter();
             var targetCenter = new Vector3(0f, fullBoundingBox.GetSize().Y / 2f, 0f);
