@@ -30,13 +30,8 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public const float DEFAULT_HEIGHT = 0.1f;
 
-        //Material names
-        private List<BorderInformation> m_borders;
-
         //Properties
-        private float m_borderSize;
         private List<FloorTile> m_groundTiles;
-        private float m_height;
         private Vector2 m_tileSize;
         private int m_tilesX;
         private int m_tilesY;
@@ -46,13 +41,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
         /// </summary>
-        public FloorGeometryFactory(Vector2 tileSize, float borderSize)
+        public FloorGeometryFactory(Vector2 tileSize)
         {
-            m_height = DEFAULT_HEIGHT;
             m_groundTiles = new List<FloorTile>();
-            m_borders = new List<BorderInformation>();
             m_tileSize = tileSize;
-            m_borderSize = borderSize;
         }
 
         /// <summary>
@@ -64,8 +56,14 @@ namespace SeeingSharp.Multimedia.Objects
             //Get width and height of the tilemap
             var tilesX = tileMap.GetLength(0);
             var tilesY = tileMap.GetLength(1);
-            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap)); }
-            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap)); }
+            if (tilesX <= 0)
+            {
+                throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap));
+            }
+            if (tilesY <= 0)
+            {
+                throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap));
+            }
             m_tilesX = tilesX;
             m_tilesY = tilesY;
 
@@ -90,7 +88,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             //Generate all borders
             var boolTileMap = this.CreateBooleanMap(tileMap);
-            this.GenerateBorders(boolTileMap, tilesX, tilesY);
         }
 
         /// <summary>
@@ -120,8 +117,14 @@ namespace SeeingSharp.Multimedia.Objects
             // Get width and height of the tilemap
             var tilesX = tileMap.GetLength(0);
             var tilesY = tileMap.GetLength(1);
-            if (tilesX <= 0) { throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap)); }
-            if (tilesY <= 0) { throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap)); }
+            if (tilesX <= 0)
+            {
+                throw new ArgumentException("Width of tilemap <= 0!", nameof(tileMap));
+            }
+            if (tilesY <= 0)
+            {
+                throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap));
+            }
             m_tilesX = tilesX;
             m_tilesY = tilesY;
 
@@ -144,9 +147,6 @@ namespace SeeingSharp.Multimedia.Objects
                     }
                 }
             }
-
-            // Generate all borders
-            this.GenerateBorders(tileMap, tilesX, tilesY);
         }
 
         /// <summary>
@@ -157,8 +157,14 @@ namespace SeeingSharp.Multimedia.Objects
         public Vector3 GetTilePosition(int xPos, int yPos)
         {
             //Check parameters
-            if (xPos < 0 || xPos >= m_tilesX) { throw new ArgumentException("Invalid x position!", nameof(xPos)); }
-            if (yPos < 0 || yPos >= m_tilesY) { throw new ArgumentException("Invalid y position!", nameof(yPos)); }
+            if (xPos < 0 || xPos >= m_tilesX)
+            {
+                throw new ArgumentException("Invalid x position!", nameof(xPos));
+            }
+            if (yPos < 0 || yPos >= m_tilesY)
+            {
+                throw new ArgumentException("Invalid y position!", nameof(yPos));
+            }
 
             //Calculate half sizes
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -178,13 +184,9 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
 
-            // Hold dictionary containing materials and corresponding geometry
-            var materialRelated = new Dictionary<NamedOrGenericKey, GeometrySurface>();
-
             // Build bottom geometry
             var bottomSurface = result.CreateSurface();
-            bottomSurface.Material = this.BottomMaterial;
-            materialRelated[this.BottomMaterial] = bottomSurface;
+
 
             // Calculate half vector of total ground size.
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
@@ -194,26 +196,19 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actTile in m_groundTiles)
             {
                 // Get the material of the tile
-                var actMaterial = actTile.Material;
-
-                if (actMaterial.IsEmpty)
+                var actMaterialIndex = actTile.MaterialIndex;
+                if (actMaterialIndex < 0)
                 {
-                    actMaterial = this.DefaultFloorMaterial;
+                    actMaterialIndex = 0;
                 }
 
                 // Get surface object
                 GeometrySurface actSurface = null;
-
-                if (materialRelated.ContainsKey(actMaterial))
+                while (result.CountSurfaces <= actMaterialIndex)
                 {
-                    actSurface = materialRelated[actMaterial];
+                    result.CreateSurface();
                 }
-                else
-                {
-                    actSurface = result.CreateSurface();
-                    actSurface.Material = actMaterial;
-                    materialRelated[actMaterial] = actSurface;
-                }
+                actSurface = result.Surfaces[actMaterialIndex];
 
                 // Get position of the tile
                 var tilePosition = new Vector3(
@@ -223,69 +218,9 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // AddObject tile information to current Geometry
                 actSurface.BuildCubeTop4V(
-                    new Vector3(tilePosition.X, -m_height, tilePosition.Z),
-                    new Vector3(m_tileSize.X, m_height, m_tileSize.Y),
+                    new Vector3(tilePosition.X, 0, tilePosition.Z),
+                    new Vector3(m_tileSize.X, 0, m_tileSize.Y),
                     Color4.White);
-                bottomSurface.BuildCubeBottom4V(
-                    new Vector3(tilePosition.X, -m_height, tilePosition.Z),
-                    new Vector3(m_tileSize.X, m_height, m_tileSize.Y),
-                    Color4.White);
-            }
-
-            // Build all borders
-            GeometrySurface borderSurface = null;
-            if (materialRelated.ContainsKey(this.BorderMaterial)) { borderSurface = materialRelated[this.BorderMaterial]; }
-            else
-            {
-                borderSurface = result.CreateSurface();
-                borderSurface.Material = this.BorderMaterial;
-                materialRelated[this.BorderMaterial] = borderSurface;
-            }
-            foreach (var actBorder in m_borders)
-            {
-                if (m_borderSize <= 0f)
-                {
-                    var tilePosition = new Vector3(
-                        actBorder.TileXPos * m_tileSize.X - totalHalfSize.X,
-                        0f,
-                        actBorder.TileYPos * m_tileSize.Y - totalHalfSize.Y);
-
-                    //Build simple borders
-                    switch (actBorder.Location)
-                    {
-                        case BorderLocation.Left:
-                            borderSurface.BuildRect4V(
-                                new Vector3(tilePosition.X, -m_height, tilePosition.Z),
-                                new Vector3(tilePosition.X, 0f, tilePosition.Z),
-                                new Vector3(tilePosition.X, 0f, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X, -m_height, tilePosition.Z + m_tileSize.Y));
-                            break;
-
-                        case BorderLocation.Top:
-                            borderSurface.BuildRect4V(
-                                new Vector3(tilePosition.X, -m_height, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X, 0f, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X + m_tileSize.X, 0f, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X + m_tileSize.X, -m_height, tilePosition.Z + m_tileSize.Y));
-                            break;
-
-                        case BorderLocation.Right:
-                            borderSurface.BuildRect4V(
-                                new Vector3(tilePosition.X + m_tileSize.X, -m_height, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X + m_tileSize.X, 0f, tilePosition.Z + m_tileSize.Y),
-                                new Vector3(tilePosition.X + m_tileSize.X, 0f, tilePosition.Z),
-                                new Vector3(tilePosition.X + m_tileSize.X, -m_height, tilePosition.Z));
-                            break;
-
-                        case BorderLocation.Bottom:
-                            borderSurface.BuildRect4V(
-                                new Vector3(tilePosition.X + m_tileSize.X, -m_height, tilePosition.Z),
-                                new Vector3(tilePosition.X + m_tileSize.X, 0f, tilePosition.Z),
-                                new Vector3(tilePosition.X, 0f, tilePosition.Z),
-                                new Vector3(tilePosition.X, -m_height, tilePosition.Z));
-                            break;
-                    }
-                }
             }
 
             // Return all generated Geometry
@@ -312,94 +247,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Generates borders for the ground.
-        /// </summary>
-        /// <param name="tileMap">The tilemap.</param>
-        /// <param name="tilesX">Tiles in x direction.</param>
-        /// <param name="tilesY">Tiles in y direction.</param>
-        private void GenerateBorders(bool[,] tileMap, int tilesX, int tilesY)
-        {
-            m_borders.Clear();
-            for (var loopX = 0; loopX < tilesX; loopX++)
-            {
-                for (var loopY = 0; loopY < tilesY; loopY++)
-                {
-                    if (tileMap[loopX, loopY])
-                    {
-                        if (loopY == 0 || !tileMap[loopX, loopY - 1])
-                        {
-                            m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Bottom));
-                        }
-                        if (loopX == 0 || !tileMap[loopX - 1, loopY])
-                        {
-                            m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Left));
-                        }
-                        if (loopY == tilesY - 1 || !tileMap[loopX, loopY + 1])
-                        {
-                            m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Top));
-                        }
-                        if (loopX == tilesX - 1 || !tileMap[loopX + 1, loopY])
-                        {
-                            m_borders.Add(new BorderInformation(loopX, loopY, BorderLocation.Right));
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the border material
-        /// </summary>
-        public NamedOrGenericKey BorderMaterial { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ground material
-        /// </summary>
-        public NamedOrGenericKey DefaultFloorMaterial { get; set; }
-
-        /// <summary>
-        /// Gets or sets material for sides.
-        /// </summary>
-        public NamedOrGenericKey SideMaterial { get; set; }
-
-        /// <summary>
-        /// Gets or sets the material for bottom.
-        /// </summary>
-        public NamedOrGenericKey BottomMaterial { get; set; }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private enum BorderLocation
-        {
-            Left,
-            LeftTop,
-            LeftBottom,
-            Top,
-            Right,
-            RightTop,
-            RightBottom,
-            Bottom
-        }
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        private class BorderInformation
-        {
-            public BorderInformation(int xPos, int yPos, BorderLocation location)
-            {
-                TileXPos = xPos;
-                TileYPos = yPos;
-                Location = location;
-            }
-
-            public BorderLocation Location;
-            public int TileXPos;
-            public int TileYPos;
         }
     }
 }

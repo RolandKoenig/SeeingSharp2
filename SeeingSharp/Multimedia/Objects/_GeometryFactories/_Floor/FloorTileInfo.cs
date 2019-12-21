@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -28,15 +27,15 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="FloorTileInfo"/> class.
         /// </summary>
-        /// <param name="material">The material to use for the tile (string.Empty or null to use default material).</param>
-        public FloorTileInfo(NamedOrGenericKey material)
+        /// <param name="material">The index of the material to set on this tile.</param>
+        public FloorTileInfo(int material)
         {
-            this.Material = material;
+            this.MaterialIndex = material;
         }
 
         /// <summary>
         /// Gets the material used for this tile.
         /// </summary>
-        public NamedOrGenericKey Material { get; }
+        public int MaterialIndex { get; set; }
     }
 }

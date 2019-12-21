@@ -70,20 +70,6 @@ namespace SeeingSharp.Multimedia.Objects
             var tileMiddleX = this.TilesX % 2 == 0 && this.HighlightXZLines ? this.TilesX / 2 : 1;
             var tileMiddleZ = this.TilesZ % 2 == 0 && this.HighlightXZLines ? this.TilesZ / 2 : 1;
 
-            // Define lower ground geometry
-            if (this.GenerateGround)
-            {
-                var lowerGround = result.CreateSurface();
-                lowerGround.EnableTextureTileMode(new Vector2(this.TileWidth, this.TileWidth));
-                lowerGround.BuildRect4V(
-                    new Vector3(-fieldWidthHalf, -0.01f, -fieldDepthHalf),
-                    new Vector3(fieldWidthHalf, -0.01f, -fieldDepthHalf),
-                    new Vector3(fieldWidthHalf, -0.01f, fieldDepthHalf),
-                    new Vector3(-fieldWidthHalf, -0.01f, fieldDepthHalf),
-                    new Vector3(0f, 1f, 0f), this.GroundColor);
-                lowerGround.Material = this.GroundMaterial;
-            }
-
             // Define line geometry
             var genSurfaceDefaultLine = result.CreateSurface();
             var genSurfaceGroupLine = result.CreateSurface();
@@ -153,31 +139,11 @@ namespace SeeingSharp.Multimedia.Objects
                         actLineColor);
                 }
             }
-            genSurfaceDefaultLine.Material = this.LineMaterial;
-            genSurfaceGroupLine.Material = this.LineMaterial;
             if (genSurfaceDefaultLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceDefaultLine); }
             if (genSurfaceGroupLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceGroupLine); }
 
             // Return the generated geometry
             return result;
-        }
-
-        public NamedOrGenericKey LineMaterial
-        {
-            get;
-            set;
-        }
-
-        public NamedOrGenericKey GroupLineMaterial
-        {
-            get;
-            set;
-        }
-
-        public NamedOrGenericKey GroundMaterial
-        {
-            get;
-            set;
         }
 
         public int GroupTileCount

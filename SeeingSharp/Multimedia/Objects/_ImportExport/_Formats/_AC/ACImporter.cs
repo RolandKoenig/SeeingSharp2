@@ -47,31 +47,16 @@ namespace SeeingSharp.Multimedia.Objects
             // Load Geometry
             var importedGeometry = ACFileLoader.ImportGeometry(sourceFile);
             var resGeometry = GraphicsCore.GetNextGenericResourceKey();
+            var resMaterial = GraphicsCore.GetNextGenericResourceKey();
             result.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
                 device => new GeometryResource(importedGeometry)));
-
-            // Create all materials by material properties on the geometry
-            var resMaterials = new NamedOrGenericKey[importedGeometry.CountSurfaces];
-            for(var loop=0; loop<importedGeometry.CountSurfaces; loop++)
-            {
-                var actSurface = importedGeometry.Surfaces[loop];
-                var actMaterialProperties = actSurface.CommonMaterialProperties;
-
-                var actMaterialKey = result.GetResourceKey("Material", actMaterialProperties.Name);
-                result.ImportedResources.Add(
-                    new ImportedResourceInfo(
-                        actMaterialKey,
-                        device => new StandardMaterialResource()
-                        {
-                            MaterialDiffuseColor = actMaterialProperties.DiffuseColor,
-                            UseVertexColors = false
-                        }));
-                resMaterials[loop] = actMaterialKey;
-            }
+            result.ImportedResources.Add(new ImportedResourceInfo(
+                resMaterial,
+                device => new StandardMaterialResource()));
 
             // Create the mesh
-            result.Objects.Add(new Mesh(resGeometry, resMaterials));
+            result.Objects.Add(new Mesh(resGeometry, resMaterial));
 
             return result;
         }

@@ -72,77 +72,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// Creates the surface on this Geometry.
         /// </summary>
         /// <param name="triangleCapacity">The triangle capacity.</param>
-        /// <param name="name">The internal name of the material.</param>
-        public GeometrySurface CreateSurface(int triangleCapacity = 512, string name = "")
+        public GeometrySurface CreateSurface(int triangleCapacity = 512)
         {
-            var newSurface = new GeometrySurface(this, triangleCapacity)
-            {
-                CommonMaterialProperties = {Name = name}
-            };
-
+            var newSurface = new GeometrySurface(this, triangleCapacity);
             m_surfaces.Add(newSurface);
             return newSurface;
-        }
-
-        /// <summary>
-        /// Tries to get an existing surface using given name.
-        /// If none exists, then a new surface is created.
-        /// </summary>
-        /// <param name="name">The internal name of the material.</param>
-        /// <param name="triangleCapacity">The triangle capacity.</param>
-        public GeometrySurface CreateOrGetExistingSurfaceByName(string name, int triangleCapacity = 512)
-        {
-            foreach (var actSurface in m_surfaces)
-            {
-                if (actSurface.CommonMaterialProperties.Name == name)
-                {
-                    return actSurface;
-                }
-            }
-
-            return this.CreateSurface(triangleCapacity, name);
-        }
-
-        /// <summary>
-        /// Tries to get an existing surface using given CommonMaterialProperties.
-        /// If none exists, then a new surface is created.
-        /// </summary>
-        /// <param name="matProperties">The material properties.</param>
-        /// <param name="triangleCapacity">The triangle capacity.</param>
-        public GeometrySurface CreateOrGetExistingSurface(CommonMaterialProperties matProperties, int triangleCapacity = 512)
-        {
-            foreach(var actSurface in m_surfaces)
-            {
-                if (actSurface.CommonMaterialProperties == matProperties)
-                {
-                    return actSurface;
-                }
-            }
-
-            var result = this.CreateSurface(triangleCapacity);
-            result.CommonMaterialProperties = matProperties;
-            return result;
-        }
-
-        /// <summary>
-        /// Tries to get an existing surface using given CommonMaterialProperties.
-        /// If none exists, then a new surface is created.
-        /// </summary>
-        /// <param name="name">The internal name of the material.</param>
-        /// <param name="triangleCapacity">The triangle capacity.</param>
-        public GeometrySurface CreateOrGetExistingSurface(string name, int triangleCapacity = 512)
-        {
-            foreach (var actSurface in m_surfaces)
-            {
-                if (actSurface.CommonMaterialProperties.Name == name)
-                {
-                    return actSurface;
-                }
-            }
-
-            var result = this.CreateSurface(triangleCapacity);
-            result.CommonMaterialProperties.Name = name;
-            return result;
         }
 
         /// <summary>

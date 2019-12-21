@@ -57,11 +57,10 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="resourceLink">The link to the ac file.</param>
         public static GeometryFactory ImportGeometryFactory(ResourceLink resourceLink)
         {
-            using (var inStream = resourceLink.OpenInputStream())
-            {
-                var geometry = ImportGeometry(inStream, resourceLink);
-                return new CustomGeometryFactory(geometry);
-            }
+            using var inStream = resourceLink.OpenInputStream();
+
+            var geometry = ImportGeometry(inStream, resourceLink);
+            return new CustomGeometryFactory(geometry);
         }
 
         /// <summary>
@@ -70,10 +69,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="resourceLink">The link to the ac file.</param>
         public static Geometry ImportGeometry(ResourceLink resourceLink)
         {
-            using (var inStream = resourceLink.OpenInputStream())
-            {
-                return ImportGeometry(inStream, resourceLink);
-            }
+            using var inStream = resourceLink.OpenInputStream();
+
+            return ImportGeometry(inStream, resourceLink);
         }
 
         /// <summary>
@@ -124,10 +122,7 @@ namespace SeeingSharp.Multimedia.Objects
             var materialList = fileInfo.Materials;
             for(var actMaterialIndex = 0; actMaterialIndex < materialList.Count; actMaterialIndex++)
             {
-                var actMaterial = materialList[actMaterialIndex];
-
-                var newSurface = result.CreateSurface();
-                newSurface.CommonMaterialProperties = actMaterial.CreateMaterialProperties(actMaterialIndex);
+                result.CreateSurface();
             }
 
             // Now load the geometry itself

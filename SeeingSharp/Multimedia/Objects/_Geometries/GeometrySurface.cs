@@ -46,7 +46,6 @@ namespace SeeingSharp.Multimedia.Objects
             this.Indices = new IndexCollection(m_corners);
             this.Corners = new CornerCollection(m_corners);
             this.Triangles = new TriangleCollection(m_corners);
-            this.CommonMaterialProperties = new CommonMaterialProperties();
         }
 
         /// <summary>
@@ -73,9 +72,6 @@ namespace SeeingSharp.Multimedia.Objects
                     result.m_corners.Add(cornerToAdd);
                 }
             }
-
-            // Copy metadata
-            result.CommonMaterialProperties = this.CommonMaterialProperties.Clone();
 
             return result;
         }
@@ -640,53 +636,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets the name of the material.
-        /// </summary>
-        public NamedOrGenericKey Material
-        {
-            get => this.CommonMaterialProperties.Key;
-            set => this.CommonMaterialProperties.Key = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the diffuse color of the material.
-        /// </summary>
-        public Color4 DiffuseColor
-        {
-            get => this.CommonMaterialProperties.DiffuseColor;
-            set => this.CommonMaterialProperties.DiffuseColor = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the name of the texture (used for the NamedOrGenericKey geometry behind).
-        /// </summary>
-        public string TextureName
-        {
-            get => this.CommonMaterialProperties.TextureKey.NameKey;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) {
-                    this.CommonMaterialProperties.TextureKey = NamedOrGenericKey.Empty; }
-                else {
-                    this.CommonMaterialProperties.TextureKey = new NamedOrGenericKey(value); }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the key of the texture.
-        /// </summary>
-        public NamedOrGenericKey TextureKey
-        {
-            get => this.CommonMaterialProperties.TextureKey;
-            set => this.CommonMaterialProperties.TextureKey = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the material properties object.
-        /// </summary>
-        public CommonMaterialProperties CommonMaterialProperties { get; internal set; }
-
-        /// <summary>
         /// Retrieves a collection of triangles
         /// </summary>
         public TriangleCollection Triangles { get; }
@@ -706,6 +655,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public int CountTriangles => m_corners.Count / 3;
 
+        /// <summary>
+        /// Gets the owner of this surface.
+        /// </summary>
         public Geometry Owner { get; }
 
         /// <summary>

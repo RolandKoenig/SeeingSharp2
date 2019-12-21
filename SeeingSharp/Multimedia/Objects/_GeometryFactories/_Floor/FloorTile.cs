@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             this.XPos = xPos;
             this.YPos = yPos;
-            m_tileInfo = new FloorTileInfo(NamedOrGenericKey.Empty);
+            m_tileInfo = new FloorTileInfo(0);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets the material used by this tile.
         /// </summary>
-        public NamedOrGenericKey Material => m_tileInfo.Material;
+        public int MaterialIndex => m_tileInfo.MaterialIndex;
 
         /// <summary>
         /// Gets the x-position of the tile.
