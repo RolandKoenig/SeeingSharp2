@@ -83,7 +83,7 @@
 //            // Apply transform matrix in case of a different coordinate system (switched coordinate axes)
 //            var coordSpaceTransformMatrix = importOptions.GetTransformMatrixForCoordinateSystem();
 
-//            if(coordSpaceTransformMatrix != Matrix4x4.Identity)
+//            if (coordSpaceTransformMatrix != Matrix4x4.Identity)
 //            {
 //                this.TargetGeometry.EnableBuildTimeTransform(coordSpaceTransformMatrix);
 //            }
@@ -99,7 +99,7 @@
 //                string.IsNullOrEmpty(m_importOptions.TextureSubfolderName) ? new string[0] : new string[1] { m_importOptions.TextureSubfolderName };
 
 //            // Toggle triangle order, when configured
-//            if(m_importOptions.ToggleTriangleIndexOrder)
+//            if (m_importOptions.ToggleTriangleIndexOrder)
 //            {
 //                this.TargetGeometry.ToggleTriangleIndexOrder();
 //            }
@@ -242,13 +242,13 @@
 
 //                }
 //            }
-//            catch(Exception ex)
+//            catch (Exception ex)
 //            {
 //                throw new SeeingSharpGraphicsException($"Unable to read obj file {m_resource}: Error at line {actLineNumber}: {ex.Message}", ex);
 //            }
 
 //            // Reorders all triangle indices when necessary
-//            if(m_importOptions.IsChangeTriangleOrderNeeded())
+//            if (m_importOptions.IsChangeTriangleOrderNeeded())
 //            {
 //                this.TargetGeometry.ToggleTriangleIndexOrder();
 //            }
@@ -307,7 +307,7 @@
 //                            continue;
 //                        }
 
-//                        switch(actKeyword.ToLower())
+//                        switch (actKeyword.ToLower())
 //                        {
 //                            case "newmtl":
 //                                this.HandleKeyword_Mtl_NewMtl(actArguments);
@@ -357,7 +357,7 @@
 //        {
 //            var mtlFiles = arguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-//            for(var loop =0; loop<mtlFiles.Length; loop++)
+//            for (var loop = 0; loop < mtlFiles.Length; loop++)
 //            {
 //                var mtlLibResource = m_resource.GetForAnotherFile(mtlFiles[loop]);
 
@@ -375,7 +375,7 @@
 //        private void HandleKeyword_Mtl_NewMtl(string arguments)
 //        {
 //            var names = arguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-//            if(names.Length != 1)
+//            if (names.Length != 1)
 //            {
 //                throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'newmtl', (expected=1, got={names.Length})!");
 //            }
@@ -413,7 +413,7 @@
 //        private void HandleKeyword_Mtl_Map_Kd(string arguments)
 //        {
 //            var subArguments = arguments.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-//            if(subArguments.Length < 1)
+//            if (subArguments.Length < 1)
 //            {
 //                throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'usemtl', (expected= > 0, got={subArguments.Length})!");
 //            }
@@ -445,13 +445,13 @@
 //            // Split arguments
 //            var vertexArguments = arguments.Split(ARGUMENT_SPLITTER, StringSplitOptions.RemoveEmptyEntries);
 
-//            if(vertexArguments.Length < 3 || vertexArguments.Length > 4)
+//            if (vertexArguments.Length < 3 || vertexArguments.Length > 4)
 //            {
 //                throw new SeeingSharpGraphicsException($"Invalid count of arguments for keyword 'v', (expected=3, got={vertexArguments.Length})!");
 //            }
 
 //            // Parse vertex arguments (we don't support the w coordinate)
-//            if(!TryParseStringsToFloats(vertexArguments, m_dummyFloatArguments_3, 3))
+//            if (!TryParseStringsToFloats(vertexArguments, m_dummyFloatArguments_3, 3))
 //            {
 //                throw new SeeingSharpGraphicsException($"Unable to parse vertex arguments: {arguments}!");
 //            }
@@ -500,7 +500,7 @@
 //            }
 
 //            // We don't support 1D texture, so add a dummy coordinate here
-//            if(vertexArguments.Length == 1)
+//            if (vertexArguments.Length == 1)
 //            {
 //                m_rawTextureCoordinates.Add(new Vector2(0f, 0f));
 //                return;
@@ -523,7 +523,7 @@
 //        private void HandleKeyword_Obj_F(string arguments)
 //        {
 //            // This is needed, when no mtlib is defined
-//            if(m_currentSurface == null)
+//            if (m_currentSurface == null)
 //            {
 //                m_currentSurface = this.TargetGeometry.CreateSurface();
 //            }
@@ -604,7 +604,7 @@
 //            }
 
 //            // Generate vertices and triangles on current Geometry
-//            if(faceIndices.Length == 3)
+//            if (faceIndices.Length == 3)
 //            {
 //                this.GenerateFaceVertices(faceIndices).ForEachInEnumeration(actIndex => { });
 //                var highestVertexIndex = this.TargetGeometry.CountVertices - 1;
@@ -612,7 +612,7 @@
 //                    highestVertexIndex - 2,
 //                    highestVertexIndex - 1,
 //                    highestVertexIndex);
-//                if(m_importOptions.TwoSidedSurfaces)
+//                if (m_importOptions.TwoSidedSurfaces)
 //                {
 //                    m_currentSurface.AddTriangle(
 //                        highestVertexIndex,
@@ -689,7 +689,7 @@
 //        {
 //            for (var loop = 0; loop < countValuesToParse; loop++)
 //            {
-//                if(!float.TryParse(sourceStrings[loop], NumberStyles.Float, FILE_NUMBER_FORMAT, out var actParsedFloat))
+//                if (!float.TryParse(sourceStrings[loop], NumberStyles.Float, FILE_NUMBER_FORMAT, out var actParsedFloat))
 //                {
 //                    return false;
 //                }
@@ -725,7 +725,7 @@
 //        private static bool ParseFaceData(string sourceString, int[] targetInts)
 //        {
 //            var splitted = sourceString.Split('/');
-//            if(splitted.Length < 1 || splitted.Length > 3)
+//            if (splitted.Length < 1 || splitted.Length > 3)
 //            {
 //                throw new SeeingSharpGraphicsException($"Invalid face argument: {sourceString}! (invalid count of items)");
 //            }
@@ -735,7 +735,7 @@
 //                if (splitted.Length <= loop ||
 //                    string.IsNullOrEmpty(splitted[loop]))
 //                {
-//                    if(loop==0)
+//                    if (loop == 0)
 //                    {
 //                        throw new SeeingSharpGraphicsException($"Invalid face argument: {sourceString} (first value missing)!");
 //                    }
@@ -745,7 +745,7 @@
 //                }
 //                else
 //                {
-//                    if(!int.TryParse(splitted[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out var parsedValue))
+//                    if (!int.TryParse(splitted[loop], NumberStyles.Integer, FILE_NUMBER_FORMAT, out var parsedValue))
 //                    {
 //                        throw new SeeingSharpGraphicsException($"Invalid face argument: {sourceString} (unable to parse int)!");
 //                    }

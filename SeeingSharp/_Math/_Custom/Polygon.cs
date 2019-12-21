@@ -32,7 +32,6 @@ namespace SeeingSharp
     public class Polygon
     {
         private Vector3[] m_vertices;
-        private ReadOnlyCollection<Vector3> m_verticesPublic;
         private Lazy<Vector3> m_normal;
 
         /// <summary>
@@ -40,10 +39,10 @@ namespace SeeingSharp
         /// </summary>
         public Polygon(params Vector3[] vertices)
         {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+            if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
             m_vertices = vertices;
-            m_verticesPublic = new ReadOnlyCollection<Vector3>(m_vertices);
+            this.Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
 
             //Define normal calculation method
             m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
@@ -95,7 +94,7 @@ namespace SeeingSharp
         /// <summary>
         /// Gets a collection containing all vertices.
         /// </summary>
-        public ReadOnlyCollection<Vector3> Vertices => m_verticesPublic;
+        public ReadOnlyCollection<Vector3> Vertices { get; }
 
         /// <summary>
         /// Gets the normal of this polygon.

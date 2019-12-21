@@ -46,8 +46,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var writeFactory = GraphicsCore.Current.FactoryDWrite;
 
-            //TODO: Cache font objects
-
             // Get font properties
             var fontWeight = geometryOptions.FontWeight;
             var fontStyle = geometryOptions.FontStyle;
@@ -55,63 +53,19 @@ namespace SeeingSharp.Multimedia.Objects
             // Create the text layout object
             try
             {
-                var textLayout = new DWrite.TextLayout(
+                using var textLayout = new DWrite.TextLayout(
                     writeFactory, stringToBuild,
                     new DWrite.TextFormat(
                         writeFactory, geometryOptions.FontFamily, (DWrite.FontWeight)fontWeight, (DWrite.FontStyle)fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 
                 // Render the text using the geometry text renderer
-                using (var textRenderer = new GeometryTextRenderer(this, geometryOptions))
-                {
-                    textLayout.Draw(textRenderer, 0f, 0f);
-                }
+                using var textRenderer = new GeometryTextRenderer(this, geometryOptions);
+                textLayout.Draw(textRenderer, 0f, 0f);
             }
             catch (Exception ex)
             {
                 GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.CreateTextGeometry);
-            }
-        }
-
-        /// <summary>
-        /// Builds a plain polygon using the given coordinates.
-        /// </summary>
-        /// <param name="coordinates">The coordinates to build the polygon from.</param>
-        public void BuildPlainPolygon(Vector3[] coordinates)
-        {
-            // Build the polygon
-            var polygon = new Polygon(coordinates);
-
-            // Try to triangulate it
-            var indices = polygon.TriangulateUsingCuttingEars();
-
-            if (indices == null)
-            {
-                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
-            }
-
-            // Append all vertices
-            var baseIndex = this.Owner.CountVertices;
-
-            for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
-            {
-                this.Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
-            }
-
-            // Append all indices
-            using (var indexEnumerator = indices.GetEnumerator())
-            {
-                while (indexEnumerator.MoveNext())
-                {
-                    var index1 = indexEnumerator.Current;
-                    var index2 = 0;
-                    var index3 = 0;
-
-                    if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
-                    if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
-
-                    this.AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
-                }
             }
         }
     }

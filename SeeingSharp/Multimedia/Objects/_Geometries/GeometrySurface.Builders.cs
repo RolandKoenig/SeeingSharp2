@@ -77,6 +77,46 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Builds a plain polygon using the given coordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates to build the polygon from.</param>
+        public void BuildPlainPolygon(Vector3[] coordinates)
+        {
+            // Build the polygon
+            var polygon = new Polygon(coordinates);
+
+            // Try to triangulate it
+            var indices = polygon.TriangulateUsingCuttingEars();
+
+            if (indices == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
+            }
+
+            // Append all vertices
+            var baseIndex = this.Owner.CountVertices;
+
+            for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
+            {
+                this.Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
+            }
+
+            // Append all indices
+            using var indexEnumerator = indices.GetEnumerator();
+            while (indexEnumerator.MoveNext())
+            {
+                var index1 = indexEnumerator.Current;
+                var index2 = 0;
+                var index3 = 0;
+
+                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
+                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
+
+                this.AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
+            }
+        }
+
+        /// <summary>
         /// Builds a column using 24 vertices.
         /// </summary>
         /// <param name="bottomMiddle">The bottom middle point.</param>
