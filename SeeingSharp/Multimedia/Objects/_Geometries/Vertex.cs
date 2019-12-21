@@ -39,7 +39,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position);
             m_textureData = new TextureData();
-            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData();
-            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -59,7 +57,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, color);
             m_textureData = new TextureData(texCoord1);
-            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -69,7 +66,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_geoData = new GeometryData(position, normal, color);
             m_textureData = new TextureData(texCoord1);
-            this.Animation = new AnimationData();
         }
 
         /// <summary>
@@ -151,11 +147,6 @@ namespace SeeingSharp.Multimedia.Objects
             get => m_geoData;
             set => m_geoData = value;
         }
-
-        /// <summary>
-        /// Gets or sets all animation related data of the vertex.
-        /// </summary>
-        public AnimationData Animation { get; set; }
 
         /// <summary>
         /// Retrieves or sets texture data
