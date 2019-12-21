@@ -763,11 +763,6 @@ namespace SeeingSharp.Multimedia.Objects
         public int CountTriangles => m_corners.Count / 3;
 
         /// <summary>
-        /// Gets or sets the resource source assembly.
-        /// </summary>
-        public Assembly ResourceSourceAssembly => this.Owner.ResourceSourceAssembly;
-
-        /// <summary>
         /// Gets or sets the original source of this geometry.
         /// </summary>
         public ResourceLink ResourceLink => this.Owner.ResourceLink;

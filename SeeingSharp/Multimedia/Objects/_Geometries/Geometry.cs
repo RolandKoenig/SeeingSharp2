@@ -258,17 +258,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Ensures that there is a vertex at the given index and returns it.
-        /// </summary>
-        /// <param name="index">The index to get the vertex from.</param>
-        public Vertex EnsureVertexAt(int index)
-        {
-            while (this.VerticesInternal.Count <= index) {
-                this.AddVertex(); }
-            return this.VerticesInternal[index];
-        }
-
-        /// <summary>
         /// Enables build-time transform using the given matrix.
         /// </summary>
         /// <param name="transformMatrix">Transform matrix.</param>
@@ -552,18 +541,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Changes the color on each vertex.
-        /// </summary>
-        /// <param name="Color4">The new color.</param>
-        public void SetColorOnEachVertex(Color4 Color4)
-        {
-            for (var loop = 0; loop < this.VerticesInternal.Count; loop++)
-            {
-                this.VerticesInternal[loop] = this.VerticesInternal[loop].Copy(Color4);
-            }
-        }
-
-        /// <summary>
         /// Changes the index order of each triangle.
         /// </summary>
         public void ToggleTriangleIndexOrder()
@@ -598,7 +575,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Transforms positions and normals of all vertices using the given transform matrix
         /// </summary>
-        /// <param name="transformMatrix"></param>
         public void TransformVertices(Matrix4x4 transformMatrix)
         {
             var length = this.VerticesInternal.Count;
@@ -608,14 +584,6 @@ namespace SeeingSharp.Multimedia.Objects
                     Vector3.Transform(this.VerticesInternal[loop].Position, transformMatrix),
                     Vector3.TransformNormal(this.VerticesInternal[loop].Normal, transformMatrix));
             }
-        }
-
-        /// <summary>
-        /// Gets an array with this object as a single item.
-        /// </summary>
-        public Geometry[] ToSingleItemArray()
-        {
-            return new[] { this };
         }
 
         /// <summary>
@@ -719,11 +687,6 @@ namespace SeeingSharp.Multimedia.Objects
                 return sum;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the resource source assembly.
-        /// </summary>
-        public Assembly ResourceSourceAssembly { get; set; }
 
         /// <summary>
         /// Gets or sets the original source of this geometry.

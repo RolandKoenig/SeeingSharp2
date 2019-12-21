@@ -93,30 +93,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     // Try to find and create the texture resource by its name
                     if (targetSurface.ResourceLink != null)
                     {
-                        var textureResourceLink = targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey);
-
                         resourceDict.AddResource(
                             textureKey,
                             new StandardTextureResource(
                                 targetSurface.ResourceLink.GetForAnotherFile(textureKey.NameKey)));
-                    }
-                    else if (targetSurface.ResourceSourceAssembly != null)
-                    {
-                        var textureResourceLink = new AssemblyResourceLink(
-                            targetSurface.ResourceSourceAssembly,
-                            targetSurface.ResourceSourceAssembly.GetName().Name + ".Resources.Textures",
-                            textureKey.NameKey);
-                        if (textureResourceLink.IsValid())
-                        {
-                            resourceDict.AddResource(
-                                textureKey,
-                                new StandardTextureResource(textureResourceLink));
-                        }
-                        else
-                        {
-                            // Unable to resolve texture
-                            textureKey = NamedOrGenericKey.Empty;
-                        }
                     }
                     else
                     {
