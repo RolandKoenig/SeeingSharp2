@@ -25,7 +25,10 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    public class RenderingChunk : IDisposable
+    /// <summary>
+    /// Describes on rendering chunk.
+    /// </summary>
+    public class RenderingChunk : IDisposable, ICheckDisposed
     {
         internal RenderingChunkTemplate Template;
         internal D3D11.InputLayout InputLayout;
@@ -35,5 +38,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             SeeingSharpUtil.SafeDispose(ref InputLayout);
         }
+
+        public bool IsDisposed => this.InputLayout != null;
     }
 }

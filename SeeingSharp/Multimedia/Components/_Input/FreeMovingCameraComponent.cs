@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Components
 {
@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Components
         /// <summary>
         /// Attaches this component to a scene.
         /// Be careful, this method gets called from a background thread of seeing#!
-        /// It may also be called from multiple scenes in parallel or simply withoud previous Detach call.
+        /// It may also be called from multiple scenes in parallel or simply without previous Detach call.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Components
             Camera3DBase actCamera, KeyboardState actKeyboardState,
             out bool isControlKeyDown)
         {
-            // Define multiplyer
+            // Define multiplier
             var multiplier = 1f;
             isControlKeyDown = false;
 

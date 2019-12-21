@@ -27,7 +27,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    public class RenderingChunkTemplate : IDisposable
+    public class RenderingChunkTemplate : IDisposable, ICheckDisposed
     {
         internal D3D11.Buffer IndexBuffer;
         internal int IndexBufferID;
@@ -54,5 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref IndexBuffer);
             SeeingSharpUtil.SafeDispose(ref VertexBuffer);
         }
+
+        public bool IsDisposed => this.IndexBuffer != null;
     }
 }

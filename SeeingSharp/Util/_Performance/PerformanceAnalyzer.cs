@@ -51,8 +51,6 @@ namespace SeeingSharp.Util
         // Configuration
         private TimeSpan m_valueInterval;
 
-        // Collections for UI
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
         /// </summary>
