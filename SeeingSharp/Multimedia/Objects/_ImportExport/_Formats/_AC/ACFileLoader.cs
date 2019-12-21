@@ -97,7 +97,6 @@ namespace SeeingSharp.Multimedia.Objects
                 // Load the file and generate all Geometries
                 var fileInfo = LoadFile(inStream);
                 var result = GenerateGeometry(fileInfo);
-                result.ResourceLink = originalSource;
 
                 // return the result
                 return result;

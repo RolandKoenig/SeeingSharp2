@@ -20,12 +20,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Numerics;
+using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
-using System.Collections.Generic;
-using Resource = SeeingSharp.Multimedia.Core.Resource;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -138,7 +137,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_boundingBox = new BoundingBox(vertexLocations);
 
             // Build geometry
-            m_chunkTemplates = this.BuildBuffers(device, geometries, resources);
+            m_chunkTemplates = BuildBuffers(device, geometries, resources);
         }
 
         /// <inheritdoc />
@@ -159,7 +158,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device on which to build all buffers.</param>
         /// <param name="geometries">All geometries to be loaded.</param>
         /// <param name="resources">The current resource dictionary</param>
-        private RenderingChunkTemplate[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
+        private static RenderingChunkTemplate[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
         {
             var resultTemplates = new List<RenderingChunkTemplate>(geometries.Length * 2);
 
@@ -232,10 +231,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var actBaseVertex = actVertexCount;
                 actVertexCount += vertexArray.Length;
 
-                // Sort all surfaces by material
+                // Generate one RenderingChunkTemplate per surface
                 var surfaceList = new List<GeometrySurface>(actGeometry.Surfaces);
-                surfaceList.Sort((left, right) => left.CommonMaterialProperties.GetHashCode().CompareTo(right.CommonMaterialProperties.GetHashCode()));
-
                 var surfaceCount = surfaceList.Count;
                 for (var loopSurface = 0; loopSurface < surfaceCount; loopSurface++)
                 {

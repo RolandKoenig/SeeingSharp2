@@ -36,7 +36,6 @@ namespace SeeingSharp.Multimedia.Objects
     /// </summary>
     public partial class GeometrySurface
     {
-        private Dictionary<Type, object> m_materialPropertiesExtended;
         private List<TriangleCorner> m_corners;
 
         internal GeometrySurface(Geometry owner, int triangleCapacity)
@@ -440,61 +439,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Sets the extended material properties.
-        /// </summary>
-        /// <typeparam name="T">The type of properties to set.</typeparam>
-        /// <param name="properties">The properties to set.</param>
-        public void SetExtendedMaterialProperties<T>(T properties)
-            where T : class
-        {
-            if (m_materialPropertiesExtended == null)
-            {
-                m_materialPropertiesExtended = new Dictionary<Type, object>();
-            }
-
-            if (properties == null)
-            {
-                var propertiesType = typeof(T);
-
-                if (m_materialPropertiesExtended.ContainsKey(propertiesType))
-                {
-                    m_materialPropertiesExtended.Remove(propertiesType);
-                }
-
-                if (m_materialPropertiesExtended.Count == 0)
-                {
-                    m_materialPropertiesExtended = null;
-                }
-            }
-            else
-            {
-                m_materialPropertiesExtended[typeof(T)] = properties;
-            }
-        }
-
-        /// <summary>
-        /// Gets extended material properties of the given type.
-        /// </summary>
-        /// <typeparam name="T">The type of properties to get.</typeparam>
-        public T GetExtendedMaterialProperties<T>()
-            where T : class
-        {
-            if (m_materialPropertiesExtended == null)
-            {
-                return null;
-            }
-
-            var propertiesType = typeof(T);
-
-            if (m_materialPropertiesExtended.ContainsKey(propertiesType))
-            {
-                return m_materialPropertiesExtended[propertiesType] as T;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Gets an index array
         /// </summary>
         public int[] GetIndexArray()
@@ -761,11 +705,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// Retrieves total count of all triangles within this geometry
         /// </summary>
         public int CountTriangles => m_corners.Count / 3;
-
-        /// <summary>
-        /// Gets or sets the original source of this geometry.
-        /// </summary>
-        public ResourceLink ResourceLink => this.Owner.ResourceLink;
 
         public Geometry Owner { get; }
 

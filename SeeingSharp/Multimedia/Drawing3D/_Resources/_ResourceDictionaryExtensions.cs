@@ -90,7 +90,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var newGeometry = new Geometry();
             newGeometry.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
-            newGeometry.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDictionary.AddGeometry(newGeometry);
         }
 
@@ -101,7 +100,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var newGeometry = new Geometry();
             newGeometry.FirstSurface.BuildTextGeometry(textToAdd, textGeometryOptions);
-            newGeometry.FirstSurface.Material = textGeometryOptions.SurfaceMaterial;
             return resourceDictionary.AddGeometry(resourceKey, newGeometry);
         }
 

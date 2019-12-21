@@ -125,7 +125,6 @@ namespace SeeingSharp.Multimedia.Objects
 
                 // Handle material itself
                 var actMaterialKey = m_targetContainer.GetResourceKey("Material", actSurface.CommonMaterialProperties.Name);
-                actSurface.Material = actMaterialKey;
                 m_targetContainer.ImportedResources.Add(new ImportedResourceInfo(
                     actMaterialKey,
                     device => new StandardMaterialResource(textureKey)

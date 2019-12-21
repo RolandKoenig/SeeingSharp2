@@ -79,7 +79,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         new Vector3(1f, 1f, 0f),
                         new Vector3(-1f, 1f, 0f),
                         Color4.Transparent);
-                    geometry.FirstSurface.Material = KEY_MATERIAL;
                     return new GeometryResource(geometry);
                 });
 

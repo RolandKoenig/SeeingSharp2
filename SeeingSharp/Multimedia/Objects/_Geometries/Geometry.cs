@@ -687,11 +687,6 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Gets or sets the original source of this geometry.
-        /// </summary>
-        public ResourceLink ResourceLink { get; set; }
-
-        /// <summary>
         /// Gets a collection of vertices.
         /// </summary>
         internal List<Vertex> VerticesInternal { get; }
