@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         public byte[] ToArray()
         {
             var result = new byte[this.SizeInBytes];
-            Marshal.Copy(m_pointer, result, 0, (int) this.SizeInBytes);
+            Marshal.Copy(m_pointer, result, 0, (int)this.SizeInBytes);
             return result;
         }
 

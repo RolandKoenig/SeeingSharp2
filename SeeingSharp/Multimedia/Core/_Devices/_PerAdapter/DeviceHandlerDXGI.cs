@@ -21,7 +21,6 @@
 */
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {

@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.ComponentModel;
-using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 {
@@ -42,7 +42,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            var castedSettings = (RectangleSampleSettings) settings;
+            var castedSettings = (RectangleSampleSettings)settings;
 
             m_fillBrush = new SolidBrushResource(Color4.Gray);
             m_fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
@@ -59,12 +59,12 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
                     graphics.ScreenWidth / 2f - width / 2f,
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
-                
+
                 // Draw the rectangle
                 if (castedSettings.Rounded)
                 {
                     graphics.FillRoundedRectangle(
-                        rectToDraw, 
+                        rectToDraw,
                         castedSettings.RoundedRadius, castedSettings.RoundedRadius,
                         castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
                 }

@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Create a surface for each material first
             var materialList = fileInfo.Materials;
-            for(var actMaterialIndex = 0; actMaterialIndex < materialList.Count; actMaterialIndex++)
+            for (var actMaterialIndex = 0; actMaterialIndex < materialList.Count; actMaterialIndex++)
             {
                 result.CreateSurface();
             }

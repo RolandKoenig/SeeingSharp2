@@ -49,13 +49,13 @@ namespace SeeingSharp.Util
 
         public StringBuilder TakeStringBuilder(int requiredCapacity = 128)
         {
-            if(!s_stringBuilders.TryPop(out var result))
+            if (!s_stringBuilders.TryPop(out var result))
             {
                 result = new StringBuilder(requiredCapacity);
             }
             else
             {
-                if(result.Capacity < requiredCapacity) { result.EnsureCapacity(requiredCapacity); }
+                if (result.Capacity < requiredCapacity) { result.EnsureCapacity(requiredCapacity); }
             }
             return result;
         }

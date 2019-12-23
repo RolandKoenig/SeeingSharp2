@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 var totalTime = TimeSpan.Zero;
 
-                foreach(var actAnimStep in this.Steps)
+                foreach (var actAnimStep in this.Steps)
                 {
                     totalTime = totalTime + actAnimStep.UpdateTime;
                 }

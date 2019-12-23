@@ -96,9 +96,9 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Change the 'Ignore pause state'
-            if(ignorePause != null)
+            if (ignorePause != null)
             {
-                foreach(var actAnimation in m_sequenceList)
+                foreach (var actAnimation in m_sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }

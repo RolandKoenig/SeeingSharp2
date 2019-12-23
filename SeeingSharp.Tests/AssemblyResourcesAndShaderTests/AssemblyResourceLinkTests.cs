@@ -20,9 +20,9 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Util;
+using System.IO;
 
 namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
 {
@@ -44,7 +44,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
             using (var inStreamReader = new StreamReader(inStream))
             {
                 string actLine;
-                while(null != (actLine = inStreamReader.ReadLine()))
+                while (null != (actLine = inStreamReader.ReadLine()))
                 {
                     if (actLine.StartsWith("#include"))
                     {

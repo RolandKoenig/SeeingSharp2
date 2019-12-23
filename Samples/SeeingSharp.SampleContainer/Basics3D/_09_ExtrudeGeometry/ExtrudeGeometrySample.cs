@@ -19,13 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Threading.Tasks;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using System.Numerics;
+using System.Threading.Tasks;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
@@ -62,7 +62,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     //  https://docs.microsoft.com/en-us/windows/desktop/direct2d/path-geometries-overview
                     var geoSink = pathGeo.Open();
                     geoSink.BeginFigure(
-                        new SharpDX.Vector2(346f, 255f), 
+                        new SharpDX.Vector2(346f, 255f),
                         D2D.FigureBegin.Filled);
                     geoSink.AddLine(new SharpDX.Vector2(267f, 177f));
                     geoSink.AddLine(new SharpDX.Vector2(236f, 192f));
@@ -76,7 +76,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                     // extracts all information needed within the constructor
                     geometryFactory = new ExtrudeGeometryFactory();
                     geometryFactory.Internals.SetGeometry(
-                        pathGeo, 0.1f, 
+                        pathGeo, 0.1f,
                         ExtrudeGeometryOptions.RescaleToUnitSize | ExtrudeGeometryOptions.ChangeOriginToCenter);
                 }
                 var resGeometry = manipulator.AddGeometryResource(geometryFactory);

@@ -102,7 +102,7 @@ namespace SeeingSharp.Util
         public int CompareTo(NamedOrGenericKey other)
         {
             var result = m_hashCode.CompareTo(other.m_hashCode);
-            if(result == 0)
+            if (result == 0)
             {
                 if (this.NameKey != null)
                 {

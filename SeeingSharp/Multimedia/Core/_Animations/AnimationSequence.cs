@@ -19,13 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -412,7 +412,7 @@ namespace SeeingSharp.Multimedia.Core
                 else
                 {
                     m_timeTillNextPartFinished = m_timeTillNextPartFinished - updateState.UpdateTime;
-                    if(m_timeTillNextPartFinished < this.DefaultCycleTime)
+                    if (m_timeTillNextPartFinished < this.DefaultCycleTime)
                     {
                         m_timeTillNextPartFinished = this.DefaultCycleTime;
                     }

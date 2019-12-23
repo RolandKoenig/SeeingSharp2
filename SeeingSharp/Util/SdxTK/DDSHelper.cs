@@ -23,14 +23,14 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using SharpDX.DXGI;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX.DXGI;
+using D3D11 = SharpDX.Direct3D11;
 using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -1307,25 +1307,25 @@ namespace SeeingSharp.Util.SdxTK
                 case TEXP_LEGACY_FORMAT.A4L4:
                     switch (outFormat)
                     {
-                case Format.B4G4R4A4_UNorm :
-                    // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm
-                    {
-                        var sPtr = (byte*)pSource;
-                        var dPtr = (short*)pDestination;
+                        case Format.B4G4R4A4_UNorm:
+                            // D3DFMT_A4L4 -> Format.B4G4R4A4_UNorm
+                            {
+                                var sPtr = (byte*)pSource;
+                                var dPtr = (short*)pDestination;
 
-                        for( int ocount = 0, icount = 0; icount < inSize && ocount < outSize; ++icount, ocount += 2 )
-                        {
-                            var t = *sPtr++;
+                                for (int ocount = 0, icount = 0; icount < inSize && ocount < outSize; ++icount, ocount += 2)
+                                {
+                                    var t = *sPtr++;
 
-                            var t1 = (short)(t & 0x0f);
-                            var ta = (flags & ScanlineFlags.SetAlpha ) != 0 ?  (ushort)0xf000 : (ushort)((t & 0xf0) << 8);
+                                    var t1 = (short)(t & 0x0f);
+                                    var ta = (flags & ScanlineFlags.SetAlpha) != 0 ? (ushort)0xf000 : (ushort)((t & 0xf0) << 8);
 
 #pragma warning disable
-                            *dPtr++ = (short)(t1 | (t1 << 4) | (t1 << 8) | ta);
+                                    *dPtr++ = (short)(t1 | (t1 << 4) | (t1 << 8) | ta);
 #pragma warning restore
-                        }
-                    }
-                    return true;
+                                }
+                            }
+                            return true;
                         // DXGI_1_2_FORMATS
 
                         case Format.R8G8B8A8_UNorm:

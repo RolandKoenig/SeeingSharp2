@@ -19,13 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
+using System;
+using System.Numerics;
 using D2D = SharpDX.Direct2D1;
-using DWrite = SharpDX.DirectWrite;
 using SDXM = SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -536,7 +535,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 var bitmap = internalImage.TryGetSourceBitmap();
 
-                if(bitmap != null)
+                if (bitmap != null)
                 {
                     this.DrawBitmap(bitmap, destinationOrigin);
                 }
@@ -552,19 +551,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             m_transformSettings = transformSettings;
 
-            switch(transformSettings.TransformMode)
+            switch (transformSettings.TransformMode)
             {
-                    // Overtake given scaling matrix
+                // Overtake given scaling matrix
                 case Graphics2DTransformMode.Custom:
                     this.TransformStack.Push(transformSettings.CustomTransform);
                     break;
 
-                    // Calculate scaling matrix here
+                // Calculate scaling matrix here
                 case Graphics2DTransformMode.AutoScaleToVirtualScreen:
                     var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
                     var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
-                    if(EngineMath.EqualsWithTolerance(virtualWidth, 0f)) { virtualWidth = this.ScreenPixelSize.Width; }
-                    if(EngineMath.EqualsWithTolerance(virtualHeight, 0f)) { virtualHeight = this.ScreenPixelSize.Height; }
+                    if (EngineMath.EqualsWithTolerance(virtualWidth, 0f)) { virtualWidth = this.ScreenPixelSize.Width; }
+                    if (EngineMath.EqualsWithTolerance(virtualHeight, 0f)) { virtualHeight = this.ScreenPixelSize.Height; }
 
                     var scaleFactorX = this.ScreenPixelSize.Width / virtualWidth;
                     var scaleFactorY = this.ScreenPixelSize.Height / virtualHeight;
@@ -649,7 +648,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                switch(m_transformSettings.TransformMode)
+                switch (m_transformSettings.TransformMode)
                 {
                     case Graphics2DTransformMode.AutoScaleToVirtualScreen:
                         return m_transformSettings.VirtualScreenSize.Width;

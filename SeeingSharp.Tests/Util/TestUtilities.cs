@@ -19,14 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Tests.Util
 {

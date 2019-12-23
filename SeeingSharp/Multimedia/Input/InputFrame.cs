@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections.Generic;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
         internal void Reset(int expectedStateCount, TimeSpan frameDuration)
         {
-            if(m_inputStates == null)
+            if (m_inputStates == null)
             {
                 m_inputStates = new List<InputStateBase>(expectedStateCount);
                 m_recoveredStates = new List<InputStateBase>(expectedStateCount);
@@ -89,18 +89,18 @@ namespace SeeingSharp.Multimedia.Input
         {
             // Get the state object to where to copy the given InputState
             InputStateBase targetState = null;
-            for(var loop=0; loop<m_recoveredStates.Count; loop++)
+            for (var loop = 0; loop < m_recoveredStates.Count; loop++)
             {
-                if(m_recoveredStates[loop].CurrentType == inputState.CurrentType)
+                if (m_recoveredStates[loop].CurrentType == inputState.CurrentType)
                 {
                     targetState = m_recoveredStates[loop];
                     m_recoveredStates.RemoveAt(loop);
                     break;
                 }
             }
-            if(targetState == null)
+            if (targetState == null)
             {
-                targetState = (InputStateBase) Activator.CreateInstance(inputState.CurrentType);
+                targetState = (InputStateBase)Activator.CreateInstance(inputState.CurrentType);
             }
 
             // Copy all state data

@@ -66,7 +66,7 @@ namespace SeeingSharp.Util
             foreach (var dummy in m_lastDurationItems.DequeueWhile(actItem => actItem.Item1 < minTimeStamp)) { }
 
             // Check again wether we have any items
-            if(!m_lastDurationItems.HasAny())
+            if (!m_lastDurationItems.HasAny())
             {
                 return null;
             }
@@ -85,7 +85,7 @@ namespace SeeingSharp.Util
             }
 
             // Check again wether we have any items
-            if(itemCount == 0)
+            if (itemCount == 0)
             {
                 return null;
             }

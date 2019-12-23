@@ -19,10 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -31,6 +27,10 @@ using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests

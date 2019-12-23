@@ -19,6 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,12 +34,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
@@ -271,10 +271,14 @@ namespace SeeingSharp.Multimedia.Views
         {
             base.OnVisibleChanged(e);
 
-            if (this.Visible) {
-                this.StartRendering(); }
-            else if (!this.Visible) {
-                this.StopRendering(); }
+            if (this.Visible)
+            {
+                this.StartRendering();
+            }
+            else if (!this.Visible)
+            {
+                this.StopRendering();
+            }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -302,7 +306,7 @@ namespace SeeingSharp.Multimedia.Views
                 var downTimeStamp = m_mouseButtonDownTime[actButton];
                 m_mouseButtonDownTime.Remove(actButton);
 
-                if(DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)
+                if (DateTime.UtcNow - downTimeStamp < SeeingSharpConstantsWinForms.MOUSE_CLICK_MAX_TIME)
                 {
                     this.MouseClickEx?.Invoke(this, e);
                 }
@@ -476,21 +480,21 @@ namespace SeeingSharp.Multimedia.Views
             Form parentForm = null;
             var actParent = this.Parent;
 
-            while(parentForm == null && actParent != null)
+            while (parentForm == null && actParent != null)
             {
                 parentForm = actParent as Form;
                 actParent = actParent.Parent;
             }
 
             // Check parent form
-            if(parentForm == null)
+            if (parentForm == null)
             {
                 // TODO: Handle the case where we are hosted inside a wpf environment
 
                 // Control's parent chain is broken -> it is not visible.
                 return false;
             }
-            if(parentForm.WindowState == FormWindowState.Minimized) { return false; }
+            if (parentForm.WindowState == FormWindowState.Minimized) { return false; }
 
 
 
@@ -503,7 +507,7 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="device">The current rendering device.</param>
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice device)
         {
-            if(m_lastSizeChange != DateTime.MinValue &&
+            if (m_lastSizeChange != DateTime.MinValue &&
                DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinForms.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
             {
                 m_lastSizeChange = DateTime.MinValue;
@@ -527,7 +531,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 m_swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
             }
-            catch(SharpDX.SharpDXException ex)
+            catch (SharpDX.SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware

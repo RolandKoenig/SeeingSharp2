@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -160,7 +160,7 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 return false;
             }
-            if(!m_localResMaterials.HasObjectAt(device.DeviceIndex))
+            if (!m_localResMaterials.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }

@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_fadeIntensity;
             set
             {
-                if(!EngineMath.EqualsWithTolerance(m_fadeIntensity, value))
+                if (!EngineMath.EqualsWithTolerance(m_fadeIntensity, value))
                 {
                     m_fadeIntensity = value;
                     m_cbPerMaterialDataChanged = true;

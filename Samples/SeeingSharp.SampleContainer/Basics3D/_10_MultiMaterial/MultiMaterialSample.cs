@@ -19,16 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
 {
@@ -116,7 +116,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
 
             var surface1 = result.CreateSurface();
             surface1.BuildCubeBottom4V(
-                new Vector3(-1f, 0f, -1f), 
+                new Vector3(-1f, 0f, -1f),
                 new Vector3(2f, 1f, 2f),
                 Color4.White);
             surface1.BuildCubeSides16V(
@@ -126,7 +126,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
 
             var surface2 = result.CreateSurface();
             surface2.BuildCubeSides16V(
-                new Vector3(-1f, 1f, -1f), 
+                new Vector3(-1f, 1f, -1f),
                 new Vector3(2f, 1f, 2f),
                 Color4.White);
 

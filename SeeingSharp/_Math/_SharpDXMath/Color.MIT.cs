@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -303,7 +302,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the color in RGBA order.</returns>
         public byte[] ToArray()
         {
-            return new [] { R, G , B, A };
+            return new[] { R, G, B, A };
         }
 
         /// <summary>
@@ -415,7 +414,7 @@ namespace SeeingSharp
                 }
             }
             return s;
-        } 
+        }
 
         /// <summary>
         /// Adds two colors.
@@ -585,7 +584,7 @@ namespace SeeingSharp
         /// <returns>A color.</returns>
         public static Color FromBgra(uint color)
         {
-            return FromBgra(unchecked((int) color));
+            return FromBgra(unchecked((int)color));
         }
 
         /// <summary>
@@ -693,7 +692,7 @@ namespace SeeingSharp
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            return new Color(                
+            return new Color(
                 (byte)(start.R + ((end.R - start.R) * amount)),
                 (byte)(start.G + ((end.G - start.G) * amount)),
                 (byte)(start.B + ((end.B - start.B) * amount)),
@@ -776,10 +775,10 @@ namespace SeeingSharp
         /// <returns>The adjusted color.</returns>
         public static Color AdjustContrast(Color value, float contrast)
         {
-            return new Color(                
+            return new Color(
                 ToByte(0.5f + contrast * (value.R / 255.0f - 0.5f)),
                 ToByte(0.5f + contrast * (value.G / 255.0f - 0.5f)),
-                ToByte(0.5f + contrast * (value.B / 255.0f- 0.5f)),
+                ToByte(0.5f + contrast * (value.B / 255.0f - 0.5f)),
                 value.A);
         }
 
@@ -791,11 +790,11 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustSaturation(ref Color value, float saturation, out Color result)
         {
-            float grey = value.R  / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
+            float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
             result.A = value.A;
             result.R = ToByte(grey + saturation * (value.R / 255.0f - grey));
-            result.G = ToByte(grey + saturation * (value.G / 255.0f- grey));
+            result.G = ToByte(grey + saturation * (value.G / 255.0f - grey));
             result.B = ToByte(grey + saturation * (value.B / 255.0f - grey));
         }
 
@@ -809,7 +808,7 @@ namespace SeeingSharp
         {
             float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
-            return new Color(                
+            return new Color(
                 ToByte(grey + saturation * (value.R / 255.0f - grey)),
                 ToByte(grey + saturation * (value.G / 255.0f - grey)),
                 ToByte(grey + saturation * (value.B / 255.0f - grey)),

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -140,12 +139,12 @@ namespace SeeingSharp
         /// <param name="color">The color this structures will be based on.</param>
         public Color4(Color3 color)
         {
-          Red = color.Red;
-          Green = color.Green;
-          Blue = color.Blue;
-          Alpha = 1.0f;
+            Red = color.Red;
+            Green = color.Green;
+            Blue = color.Blue;
+            Alpha = 1.0f;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharp.Color4"/> struct.
         /// </summary>
@@ -153,10 +152,10 @@ namespace SeeingSharp
         /// <param name="alpha">The alpha component of the color.</param>
         public Color4(Color3 color, float alpha)
         {
-          Red = color.Red;
-          Green = color.Green;
-          Blue = color.Blue;
-          Alpha = alpha;
+            Red = color.Red;
+            Green = color.Green;
+            Blue = color.Blue;
+            Alpha = alpha;
         }
 
         /// <summary>
@@ -231,10 +230,10 @@ namespace SeeingSharp
         /// <returns>A packed integer containing all four color components.</returns>
         public int ToRgba()
         {
-            uint a = (uint) (Alpha * 255.0f) & 255;
-            uint r = (uint) (Red * 255.0f) & 255;
-            uint g = (uint) (Green * 255.0f) & 255;
-            uint b = (uint) (Blue * 255.0f) & 255;
+            uint a = (uint)(Alpha * 255.0f) & 255;
+            uint r = (uint)(Red * 255.0f) & 255;
+            uint g = (uint)(Green * 255.0f) & 255;
+            uint b = (uint)(Blue * 255.0f) & 255;
 
             uint value = r;
             value |= g << 8;
@@ -507,7 +506,7 @@ namespace SeeingSharp
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            return new Color4(                
+            return new Color4(
                 start.Red + ((end.Red - start.Red) * amount),
                 start.Green + ((end.Green - start.Green) * amount),
                 start.Blue + ((end.Blue - start.Blue) * amount),
@@ -590,7 +589,7 @@ namespace SeeingSharp
         /// <returns>The adjusted color.</returns>
         public static Color4 AdjustContrast(Color4 value, float contrast)
         {
-            return new Color4(                
+            return new Color4(
                 0.5f + contrast * (value.Red - 0.5f),
                 0.5f + contrast * (value.Green - 0.5f),
                 0.5f + contrast * (value.Blue - 0.5f),
@@ -623,7 +622,7 @@ namespace SeeingSharp
         {
             float grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
 
-            return new Color4(                
+            return new Color4(
                 grey + saturation * (value.Red - grey),
                 grey + saturation * (value.Green - grey),
                 grey + saturation * (value.Blue - grey),

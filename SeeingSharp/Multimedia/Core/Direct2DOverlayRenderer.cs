@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using System;
 using D2D = SharpDX.Direct2D1;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Core
         public void BeginDraw()
         {
             if (m_renderTarget2D == null) { return; }
-            if (m_renderTarget2D.IsDisposed){ return; }
+            if (m_renderTarget2D.IsDisposed) { return; }
 
             m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
             m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;

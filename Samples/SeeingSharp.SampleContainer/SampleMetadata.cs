@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Util;
+using System;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -42,13 +42,13 @@ namespace SeeingSharp.SampleContainer
 
         public SampleBase CreateSampleObject()
         {
-            if(m_sampleType == null)
+            if (m_sampleType == null)
             {
                 throw new ApplicationException("No sample type given!");
             }
 
             var result = Activator.CreateInstance(m_sampleType) as SampleBase;
-            if(result == null) { throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
+            if (result == null) { throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
 
             return result;
         }

@@ -48,7 +48,7 @@ namespace SeeingSharp.UwpSamples.Controls
 
         private static void OnSelectedObjectChanged(DependencyObject sender, DependencyPropertyChangedEventArgs eArgs)
         {
-            if(!(sender is PropertyGrid propGrid)) { return; }
+            if (!(sender is PropertyGrid propGrid)) { return; }
 
             propGrid.m_propertyGridVM.SelectedObject = eArgs.NewValue;
             propGrid.UpdatePropertiesView();
@@ -68,7 +68,7 @@ namespace SeeingSharp.UwpSamples.Controls
             // Define rows
             GridMain.RowDefinitions.Clear();
             var rowCount = lstProperties.Count + lstPropertyCategories.Count;
-            for(var loop=0; loop<rowCount; loop++)
+            for (var loop = 0; loop < rowCount; loop++)
             {
                 GridMain.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45.0) });
             }
@@ -77,9 +77,9 @@ namespace SeeingSharp.UwpSamples.Controls
             // Create all controls
             var actRowIndex = 0;
             var actCategory = string.Empty;
-            foreach(var actProperty in m_propertyGridVM.PropertyMetadata)
+            foreach (var actProperty in m_propertyGridVM.PropertyMetadata)
             {
-                if(actProperty.CategoryName != actCategory)
+                if (actProperty.CategoryName != actCategory)
                 {
                     actCategory = actProperty.CategoryName;
 

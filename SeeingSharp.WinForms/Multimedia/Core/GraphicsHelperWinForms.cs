@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Drawing.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using GDI = System.Drawing;
+using System.Drawing.Imaging;
 using D3D11 = SharpDX.Direct3D11;
+using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
 namespace SeeingSharp.Multimedia.Core

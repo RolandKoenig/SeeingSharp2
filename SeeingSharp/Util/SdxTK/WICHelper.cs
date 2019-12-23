@@ -23,12 +23,12 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using SharpDX.DXGI;
+using SharpDX.WIC;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX.DXGI;
-using SharpDX.WIC;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Util.SdxTK

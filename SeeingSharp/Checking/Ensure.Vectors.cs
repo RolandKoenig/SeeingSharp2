@@ -20,8 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace SeeingSharp.Checking
 {

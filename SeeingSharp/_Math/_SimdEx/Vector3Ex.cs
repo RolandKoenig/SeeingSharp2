@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SeeingSharp
 {
@@ -303,7 +302,7 @@ namespace SeeingSharp
 
         public static float GetValue(this Vector3 vector, int index)
         {
-            switch(index)
+            switch (index)
             {
                 case 1: return vector.X;
                 case 2: return vector.Y;
@@ -314,7 +313,7 @@ namespace SeeingSharp
 
         public static void SetValue(this Vector3 vector, int index, float value)
         {
-            switch(index)
+            switch (index)
             {
                 case 1: vector.X = value; break;
                 case 2: vector.Y = value; break;

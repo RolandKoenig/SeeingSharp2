@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             base.UnloadResources();
 
-            foreach(var actHelper in m_texturePainterHelpers)
+            foreach (var actHelper in m_texturePainterHelpers)
             {
                 actHelper.UnloadResources();
             }

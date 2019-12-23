@@ -20,11 +20,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
-using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.Util;
+using System;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -36,7 +36,7 @@ namespace SeeingSharp.WpfSamples
             {
                 var sampleRepo = new SampleRepository();
 
-                for(var loop =1; loop<5; loop++)
+                for (var loop = 1; loop < 5; loop++)
                 {
                     var actGroupName = $"DummyGroup {loop}";
                     var actGroup = new SampleGroupMetadata(actGroupName);

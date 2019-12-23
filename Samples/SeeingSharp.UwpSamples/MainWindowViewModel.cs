@@ -20,12 +20,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.Collections.ObjectModel;
-using System.Linq;
-using Windows.ApplicationModel;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.ApplicationModel;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -47,7 +47,7 @@ namespace SeeingSharp.UwpSamples
             }
             this.SelectedGroup = "DummyGroup 2";
 
-            for (var loop=1; loop<5; loop++)
+            for (var loop = 1; loop < 5; loop++)
             {
                 this.Samples.Add(new SampleViewModel(new SampleMetadata(
                     new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"), this.GetType())));
@@ -62,7 +62,7 @@ namespace SeeingSharp.UwpSamples
             m_renderLoop = renderLoop;
 
             // Load samples
-            foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
+            foreach (var actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select(actGroup => actGroup.GroupName))
             {
                 this.SampleGroups.Add(actSampleGroupName);
@@ -79,7 +79,7 @@ namespace SeeingSharp.UwpSamples
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();
-            foreach(var actSampleMetadata in sampleGroup.Samples)
+            foreach (var actSampleMetadata in sampleGroup.Samples)
             {
                 this.Samples.Add(new SampleViewModel(actSampleMetadata));
             }
@@ -97,7 +97,7 @@ namespace SeeingSharp.UwpSamples
             get => m_selectedGroup;
             set
             {
-                if(m_selectedGroup != value)
+                if (m_selectedGroup != value)
                 {
                     m_selectedGroup = value;
                     this.RaisePropertyChanged(nameof(this.SelectedGroup));
@@ -118,7 +118,7 @@ namespace SeeingSharp.UwpSamples
             get => m_selectedSample;
             set
             {
-                if(m_selectedSample != value)
+                if (m_selectedSample != value)
                 {
                     m_selectedSample = value;
                     if (m_selectedSample == null) { m_sampleSettings = null; }

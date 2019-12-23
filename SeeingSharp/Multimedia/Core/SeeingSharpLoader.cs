@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Objects;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Objects;
 
 namespace SeeingSharp.Multimedia.Core
 {

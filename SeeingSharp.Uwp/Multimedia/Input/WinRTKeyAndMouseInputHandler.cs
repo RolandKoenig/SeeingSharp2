@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Views;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -28,8 +30,6 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Input
         static WinRTKeyAndMouseInputHandler()
         {
             s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
-            foreach(VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
+            foreach (VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
             {
                 var actVirtualKeyCode = (short)actVirtualKey;
                 var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Input
             if (m_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             m_dispatcher = m_painter.Dispatcher;
-            if(m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
+            if (m_dispatcher == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
 
             // Delegate start logic to UI thread
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -154,8 +154,8 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             m_hasFocus = false;
-            if(m_painter == null) { return; }
-            if(m_dispatcher == null) { return; }
+            if (m_painter == null) { return; }
+            if (m_dispatcher == null) { return; }
 
             // Deregister all events on UI thread
             var dummyButtonForFocus = m_dummyButtonForFocus;
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if(m_painter == null) { return; }
+            if (m_painter == null) { return; }
 
             // This enables bubbling of the keyboard event
             e.Handled = false;

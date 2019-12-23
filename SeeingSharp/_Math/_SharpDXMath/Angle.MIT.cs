@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Globalization;
-using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -221,7 +218,7 @@ namespace SeeingSharp
                 radians = MathUtil.DegreesToRadians(degreesfloor);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the total number of radians this SeeingSharp.AngleSingle represents.
         /// </summary>

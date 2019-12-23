@@ -22,9 +22,9 @@
 
 //Some namespace mappings
 
-using System.Runtime.InteropServices;
-using System.Numerics;
 using SharpDX.DXGI;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D

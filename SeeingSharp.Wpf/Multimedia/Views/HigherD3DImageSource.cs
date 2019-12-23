@@ -20,13 +20,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
-using System.Windows;
-using System.Windows.Interop;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
+using System;
+using System.Windows;
+using System.Windows.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
 using Resource = SharpDX.DXGI.Resource;
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Views
             m_d3dContext = deviceHandlerD3D9.Context;
             m_d3dDevice = deviceHandlerD3D9.Device;
 
-            if(m_d3dDevice == null)
+            if (m_d3dDevice == null)
             {
                 throw new SeeingSharpException("Unable to create Wpf image source: No Direct3D 9 device available on " + device);
             }

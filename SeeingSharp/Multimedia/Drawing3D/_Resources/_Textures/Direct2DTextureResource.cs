@@ -23,8 +23,8 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
 using D2D = SharpDX.Direct2D1;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -74,8 +74,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">Current render state.</param>
         public void Render(RenderState renderState)
         {
-            if (renderState.Device.IsLost){ return; }
-            if (m_overlayRenderer.IsRenderTargetDisposed){ return; }
+            if (renderState.Device.IsLost) { return; }
+            if (m_overlayRenderer.IsRenderTargetDisposed) { return; }
 
             m_overlayRenderer.BeginDraw();
             try

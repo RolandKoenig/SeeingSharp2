@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -47,7 +47,7 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                if(m_bitmapSource == null && m_bitmapSourceTask == null)
+                if (m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
                     var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
 

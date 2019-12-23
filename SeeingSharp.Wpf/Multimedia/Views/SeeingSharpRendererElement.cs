@@ -19,11 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows;
+using Microsoft.Win32;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+
+/* Unmerged change from project 'SeeingSharp.WpfCore'
+Before:
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -36,7 +39,32 @@ using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
-using Color = System.Windows.Media.Color;
+After:
+using System.Util;
+using SharpDX.DXGI;
+using System.Mathematics.Interop;
+using System;
+using System.Collections.Generic;
+using Microsoft.ComponentModel;
+using System.Threading;
+using SeeingSharp.Multimedia.Windows;
+using System.Windows.Controls;
+using SeeingSharp.Multimedia.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+*/
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
@@ -194,14 +222,14 @@ namespace SeeingSharp.Multimedia.Views
             if (this.IsInDesignMode()) { return; }
 
             // Update render size
-            this.RenderLoop.Camera.SetScreenSize((int) this.RenderSize.Width, (int) this.RenderSize.Height);
+            this.RenderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
 
             //Resize render target only on greater size changes
             var resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
             var resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
             if (resizeFactorWidth > 1.3 || resizeFactorHeight > 1.3)
             {
-                this.RenderLoop.SetCurrentViewSize((int) this.RenderSize.Width, (int) this.RenderSize.Height);
+                this.RenderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
             }
 
             m_lastSizeChange = DateTime.UtcNow;
@@ -254,7 +282,7 @@ namespace SeeingSharp.Multimedia.Views
             if (this.IsInDesignMode()) { return; }
 
             // Update render size
-            this.RenderLoop.Camera.SetScreenSize((int) this.RenderSize.Width, (int) this.RenderSize.Height);
+            this.RenderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
 
             // Now connect this view with the main renderloop
             this.RenderLoop.RegisterRenderLoop();
@@ -282,8 +310,8 @@ namespace SeeingSharp.Multimedia.Views
 
             switch (e.Reason)
             {
-                    // Handle session lock/unload events
-                    //  => Force recreation of view resources in that case
+                // Handle session lock/unload events
+                //  => Force recreation of view resources in that case
                 case SessionSwitchReason.SessionUnlock:
                 case SessionSwitchReason.SessionLock:
                 case SessionSwitchReason.SessionLogon:
@@ -363,7 +391,7 @@ namespace SeeingSharp.Multimedia.Views
             do
             {
                 tryCount++;
-                if(tryCount > 2)
+                if (tryCount > 2)
                 {
                     this.Source = null;
                     this.CompositionMode = WpfSeeingSharpCompositionMode.None;
@@ -427,7 +455,7 @@ namespace SeeingSharp.Multimedia.Views
                         initializedSuccessfully = true;
                         this.CompositionMode = WpfSeeingSharpCompositionMode.OverHardware;
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         initializedSuccessfully = false;
                         forceFallbackSolution = true;
@@ -467,7 +495,7 @@ namespace SeeingSharp.Multimedia.Views
                 if (!m_d3dImageSource.IsFrontBufferAvailable) { return false; }
                 if (!m_d3dImageSource.HasRenderTarget) { return false; }
             }
-            else if(m_fallbackWpfImageSource == null) { return false; }
+            else if (m_fallbackWpfImageSource == null) { return false; }
 
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
@@ -523,7 +551,7 @@ namespace SeeingSharp.Multimedia.Views
                 if (!isLocked)
                 {
                     m_lockImageErrorCount++;
-                    if(m_lockImageErrorCount > 5) { this.RenderLoop.ForceViewReload(); }
+                    if (m_lockImageErrorCount > 5) { this.RenderLoop.ForceViewReload(); }
                     return;
                 }
                 m_lockImageErrorCount = 0;
@@ -550,7 +578,7 @@ namespace SeeingSharp.Multimedia.Views
                     m_d3dImageSource.Unlock();
                 }
             }
-            else if(m_fallbackWpfImageSource != null)
+            else if (m_fallbackWpfImageSource != null)
             {
                 // Get and read data from the gpu (create copy helper texture on demand)
                 if (this.RenderLoop.Internals.CopyHelperTextureStaging == null)
@@ -606,7 +634,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => (Scene) this.GetValue(SceneProperty);
+            get => (Scene)this.GetValue(SceneProperty);
             set => this.SetValue(SceneProperty, value);
         }
 
@@ -615,7 +643,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get => (Camera3DBase) this.GetValue(CameraProperty);
+            get => (Camera3DBase)this.GetValue(CameraProperty);
             set => this.SetValue(CameraProperty, value);
         }
 
@@ -695,7 +723,7 @@ namespace SeeingSharp.Multimedia.Views
             get => m_compositionMode;
             private set
             {
-                if(m_compositionMode != value)
+                if (m_compositionMode != value)
                 {
                     m_compositionMode = value;
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CompositionMode)));
@@ -723,7 +751,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Custom2DDrawingLayer DrawingLayer2D
         {
-            get => (Custom2DDrawingLayer) this.GetValue(DrawingLayer2DProperty);
+            get => (Custom2DDrawingLayer)this.GetValue(DrawingLayer2DProperty);
             set => this.SetValue(DrawingLayer2DProperty, value);
         }
     }

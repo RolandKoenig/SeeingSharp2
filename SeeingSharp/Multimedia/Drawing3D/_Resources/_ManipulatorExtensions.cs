@@ -72,13 +72,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="materialDiffuseColor">The fixed diffuse color for this material.</param>
         /// <param name="useVertexColors">Set this to false to use the material's diffuse color.</param>
         public static NamedOrGenericKey AddStandardMaterialResource(
-            this SceneManipulator sceneManipulator, 
+            this SceneManipulator sceneManipulator,
             NamedOrGenericKey textureKey = default(NamedOrGenericKey),
             float clipFactor = 0f,
             float maxClipDistance = 1000f,
             bool adjustTextureCoordinates = false,
             float addToAlpha = 0f,
-            Color4 materialDiffuseColor = default(Color4),  
+            Color4 materialDiffuseColor = default(Color4),
             bool useVertexColors = true)
         {
             return sceneManipulator.AddResource(

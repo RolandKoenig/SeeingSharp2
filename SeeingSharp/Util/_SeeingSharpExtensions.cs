@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,8 +30,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using SeeingSharp.Checking;
-using SharpDX;
 
 namespace SeeingSharp.Util
 {
@@ -65,7 +65,7 @@ namespace SeeingSharp.Util
         public static void CreateDummyObjectUntilCapacityReached<T>(this List<T> list, int targetCapacity)
         {
             if (list.Capacity < targetCapacity) { list.Capacity = targetCapacity; }
-            while(list.Count < targetCapacity)
+            while (list.Count < targetCapacity)
             {
                 list.Add(default);
             }
@@ -96,7 +96,7 @@ namespace SeeingSharp.Util
         /// <param name="newValue">The new value.</param>
         public static void SetAllValuesTo<T>(this T[] array, T newValue)
         {
-            for(var loop=0 ; loop<array.Length; loop++)
+            for (var loop = 0; loop < array.Length; loop++)
             {
                 array[loop] = newValue;
             }
@@ -110,7 +110,7 @@ namespace SeeingSharp.Util
         /// <param name="comparison">The comparison mode.</param>
         public static bool ContainsString(this IEnumerable<string> collection, string compareString, StringComparison comparison = StringComparison.CurrentCulture)
         {
-            foreach(var actString in collection)
+            foreach (var actString in collection)
             {
                 if (string.Equals(actString, compareString, StringComparison.OrdinalIgnoreCase))
                 {

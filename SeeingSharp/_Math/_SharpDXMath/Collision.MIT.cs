@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Numerics;
 
 namespace SeeingSharp
@@ -904,7 +901,7 @@ namespace SeeingSharp
 
             Vector3 point;
             Vector3 temp = plane1.D * plane2.Normal - plane2.D * plane1.Normal;
-            point =  Vector3.Cross(temp, direction);
+            point = Vector3.Cross(temp, direction);
 
             line.Position = point;
             line.Direction = Vector3.Normalize(direction);

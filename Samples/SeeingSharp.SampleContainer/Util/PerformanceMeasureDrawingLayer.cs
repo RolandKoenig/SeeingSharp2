@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Util;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Util
 {

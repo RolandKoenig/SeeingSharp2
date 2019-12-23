@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -213,16 +213,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Load all geometries into memory within a loop
-            for(var loopGeometry = 0; loopGeometry<geometriesCount; loopGeometry++)
+            for (var loopGeometry = 0; loopGeometry < geometriesCount; loopGeometry++)
             {
                 var actGeometry = geometries[loopGeometry];
 
-                if(actGeometry.CountVertices == 0) { continue; }
-                if(actGeometry.CountSurfaces == 0) { continue; }
+                if (actGeometry.CountVertices == 0) { continue; }
+                if (actGeometry.CountSurfaces == 0) { continue; }
 
                 // Handle vertex data
                 var vertexArray = StandardVertex.FromGeometry(actGeometry);
-                if(actVertexCount + vertexArray.Length > MAX_VERTEX_COUNT_PER_BUFFER)
+                if (actVertexCount + vertexArray.Length > MAX_VERTEX_COUNT_PER_BUFFER)
                 {
                     FinishVertexBuffer();
                 }
@@ -278,8 +278,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Finish all remaining buffers finally
-            if(cachedVertices.Count > 0) { FinishVertexBuffer(); }
-            if(cachedIndices.Count > 0) { FinishIndexBuffer(); }
+            if (cachedVertices.Count > 0) { FinishVertexBuffer(); }
+            if (cachedIndices.Count > 0) { FinishIndexBuffer(); }
 
             return resultTemplates.ToArray();
         }

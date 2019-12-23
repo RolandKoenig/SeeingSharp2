@@ -19,13 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -107,7 +107,7 @@ namespace SeeingSharp.Util
                 // Build a stack representing the current namespace path
                 var currentDirectoryParts = this.ResourceNamespace.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 var currentDirectoryPathStack = new Stack<string>(currentDirectoryParts.Length);
-                for(var loop=0; loop<currentDirectoryParts.Length; loop++)
+                for (var loop = 0; loop < currentDirectoryParts.Length; loop++)
                 {
                     currentDirectoryPathStack.Push(currentDirectoryParts[loop]);
                 }
@@ -156,7 +156,7 @@ namespace SeeingSharp.Util
         public Stream OpenRead()
         {
             var result = this.TargetAssembly.GetManifestResourceStream(this.ResourcePath);
-            if(result == null) { throw new SeeingSharpException($"Resource {this.ResourcePath} not found in assembly {this.TargetAssembly.FullName}!"); }
+            if (result == null) { throw new SeeingSharpException($"Resource {this.ResourcePath} not found in assembly {this.TargetAssembly.FullName}!"); }
             return result;
         }
 
@@ -174,8 +174,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public string GetText()
         {
-            using(var inStream = this.OpenRead())
-            using(var inStreamReader = new StreamReader(inStream))
+            using (var inStream = this.OpenRead())
+            using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
             }

@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             base.OnCurrentTimeUpdated(updateState, animationState);
 
-            if(m_taskToWaitFor.IsCanceled ||
+            if (m_taskToWaitFor.IsCanceled ||
                m_taskToWaitFor.IsCompleted ||
                m_taskToWaitFor.IsFaulted)
             {

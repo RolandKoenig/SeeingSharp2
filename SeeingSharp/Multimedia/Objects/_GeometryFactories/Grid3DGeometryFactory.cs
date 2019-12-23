@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System.Numerics;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -96,7 +95,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
                     actLineColor);
 
-                if(this.BuildBackFaces)
+                if (this.BuildBackFaces)
                 {
                     targetGeometry.BuildRect4V(
                         localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
@@ -129,7 +128,7 @@ namespace SeeingSharp.Multimedia.Objects
                     localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
                     actLineColor);
 
-                if(this.BuildBackFaces)
+                if (this.BuildBackFaces)
                 {
                     targetGeometry.BuildRect4V(
                         localEnd + new Vector3(0f, 0f, tileWidthZ / divider),

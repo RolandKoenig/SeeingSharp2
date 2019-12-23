@@ -37,18 +37,18 @@ namespace SeeingSharp.UwpSamples.Controls
 
             var selectedObject = this.SelectedObject;
 
-            if(selectedObject == null)
+            if (selectedObject == null)
             {
                 this.PropertyMetadata = newPropertyMetadata;
                 return;
             }
 
-            foreach(var actProperty in selectedObject.GetType().GetProperties())
+            foreach (var actProperty in selectedObject.GetType().GetProperties())
             {
                 // Check browsable attribute
                 var browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
 
-                if(browseAttrib != null &&
+                if (browseAttrib != null &&
                    !browseAttrib.Browsable)
                 {
                     continue;
@@ -65,7 +65,7 @@ namespace SeeingSharp.UwpSamples.Controls
             get => m_selectedObject;
             set
             {
-                if(m_selectedObject != value)
+                if (m_selectedObject != value)
                 {
                     m_selectedObject = value;
                     this.RaisePropertyChanged();
@@ -80,7 +80,7 @@ namespace SeeingSharp.UwpSamples.Controls
             get => m_propertyMetadata;
             set
             {
-                if(m_propertyMetadata != value)
+                if (m_propertyMetadata != value)
                 {
                     m_propertyMetadata = value;
                     this.RaisePropertyChanged();

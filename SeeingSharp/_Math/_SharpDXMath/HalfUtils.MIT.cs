@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -73,7 +72,7 @@ namespace SeeingSharp
                     e -= 0x00800000;
                     m <<= 1;
                 }
-                m &= ~ 0x00800000U;
+                m &= ~0x00800000U;
                 e += 0x38800000;
                 HalfToFloatMantissaTable[i] = m | e;
             }
@@ -107,7 +106,7 @@ namespace SeeingSharp
             // -------------------------------------------------------------------
             // Float to Half tables
             // -------------------------------------------------------------------
-       
+
             for (i = 0; i < 256; i++)
             {
                 int e = i - 127;

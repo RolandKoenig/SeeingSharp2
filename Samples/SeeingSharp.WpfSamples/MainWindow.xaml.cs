@@ -1,14 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
+Before:
+using System;
+After:
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
+using System;
+*/
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
+using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+
+/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
+Before:
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using TimeSpan = System.TimeSpan;
+After:
+using TimeSpan = System.TimeSpan;
+*/
+using System.Windows.Controls;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -57,10 +74,10 @@ namespace SeeingSharp.WpfSamples
 
         private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(!(this.DataContext is MainWindowViewModel viewModel)) { return; }
+            if (!(this.DataContext is MainWindowViewModel viewModel)) { return; }
 
             var selectedSample = viewModel.SelectedSample;
-            if(selectedSample == null) { return; }
+            if (selectedSample == null) { return; }
 
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }

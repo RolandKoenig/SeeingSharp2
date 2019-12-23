@@ -19,17 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Numerics;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
+using System.Reflection;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ReloadAfterReloadedDevice()
         {
-            if (m_lastDeviceLoadIndex == this.Device.LoadDeviceIndex){ return; }
+            if (m_lastDeviceLoadIndex == this.Device.LoadDeviceIndex) { return; }
 
             // Reload all resources
             foreach (var actResourceInfo in m_resources.Values)
@@ -170,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
                         typeof(ResourceDictionary),
                         "SeeingSharp.Multimedia.Resources.Textures.Blank_16x16.png")) as T;
             }
-            else if(resourceType == typeof(GeometryResource))
+            else if (resourceType == typeof(GeometryResource))
             {
                 var dummyGeometry = new Geometry();
                 dummyGeometry.FirstSurface.BuildCube24V(
@@ -290,7 +290,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadAllMarkedResources()
         {
-            foreach(var actResource in m_resourcesMarkedForUnloading.DequeueAll())
+            foreach (var actResource in m_resourcesMarkedForUnloading.DequeueAll())
             {
                 if (!actResource.IsKeyEmpty)
                 {
@@ -384,7 +384,7 @@ namespace SeeingSharp.Multimedia.Core
             if (!this.ContainsResource(resourceKey))
             {
                 // Try to query for existing default resources if given key is empty
-                if(resourceKey.IsEmpty)
+                if (resourceKey.IsEmpty)
                 {
                     resourceKey = new NamedOrGenericKey(typeof(T).FullName);
                     if (this.ContainsResource(resourceKey)) { result = this.GetResource<T>(resourceKey); }
@@ -402,7 +402,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Resource does exist, so return existing
                 var currentResource = m_resources[resourceKey].Resource;
                 result = currentResource as T;
-                if(currentResource != null && result == null)
+                if (currentResource != null && result == null)
                 {
                     throw new SeeingSharpGraphicsException("Resource type mismatch: Behind the requested key " + resourceKey + " is a resource of another type (requested: " + typeof(T).FullName + ", current: " + currentResource.GetType().FullName + ")");
                 }

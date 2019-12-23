@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -42,7 +42,7 @@ namespace SeeingSharp
             _bottom = y + height;
         }
 
-                /// <summary>
+        /// <summary>
         /// Checks, if specified point is inside <see cref="SeeingSharp.RectangleF"/>.
         /// </summary>
         /// <param name="x">X point coordinate.</param>

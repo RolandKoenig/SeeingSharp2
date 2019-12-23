@@ -19,12 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using D3D = SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -118,7 +116,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                foreach(var actAdapter in m_adapters)
+                foreach (var actAdapter in m_adapters)
                 {
                     if (actAdapter.IsSoftwareAdapter) { return actAdapter; }
                 }

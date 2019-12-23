@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.Numerics;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -114,11 +114,11 @@ namespace SeeingSharp.Multimedia.Input
             // Reset current object
             m_moveDistancePixel = Vector2.Zero;
             m_wheelDelta = 0;
-            for(var loop=0; loop<BUTTON_COUNT; loop++)
+            for (var loop = 0; loop < BUTTON_COUNT; loop++)
             {
                 m_buttonsUp[loop] = false;
 
-                if(m_buttonsHit[loop] || m_buttonsDown[loop])
+                if (m_buttonsHit[loop] || m_buttonsDown[loop])
                 {
                     m_buttonsHit[loop] = false;
                     m_buttonsDown[loop] = true;
@@ -166,7 +166,7 @@ namespace SeeingSharp.Multimedia.Input
             buttonStates.EnsureCountEquals(BUTTON_COUNT, nameof(buttonStates));
 
             // Update mouse states
-            for(var loop=0; loop<buttonStates.Length; loop++)
+            for (var loop = 0; loop < buttonStates.Length; loop++)
             {
                 this.UpdateMouseButtonState(loop, buttonStates[loop]);
             }
@@ -239,7 +239,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X,0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
                 if (EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
                 return m_moveDistancePixel / m_screenSizePixel;
@@ -250,8 +250,8 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
-                if(EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
                 return m_positionPixel / m_screenSizePixel;
             }

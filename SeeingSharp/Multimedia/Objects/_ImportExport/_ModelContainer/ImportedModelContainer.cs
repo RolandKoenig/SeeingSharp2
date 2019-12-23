@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Threading;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Objects
             var rootObject = new ScenePivotObject();
 
             // Handle base transformation
-            switch(m_importOptions.ResourceCoordinateSystem)
+            switch (m_importOptions.ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
                     rootObject.TransformationType = SpacialTransformationType.None;

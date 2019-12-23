@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -12,12 +12,12 @@ namespace SeeingSharp
     public struct BoundingFrustum : IEquatable<BoundingFrustum>
     {
         private Matrix4x4 pMatrix;
-        private Plane  pNear;
-        private Plane  pFar;
-        private Plane  pLeft;
-        private Plane  pRight;
-        private Plane  pTop;
-        private Plane  pBottom;
+        private Plane pNear;
+        private Plane pFar;
+        private Plane pLeft;
+        private Plane pRight;
+        private Plane pTop;
+        private Plane pBottom;
 
         /// <summary>
         /// Gets or sets the Matrix that describes this bounding frustum.
@@ -335,14 +335,14 @@ namespace SeeingSharp
         /// <returns>The 8 corners of the frustum</returns>
         public void GetCorners(Vector3[] corners)
         {
-            corners[0] = Get3PlanesInterPoint(ref pNear, ref  pBottom, ref  pRight);    //Near1
-            corners[1] = Get3PlanesInterPoint(ref pNear, ref  pTop, ref  pRight);       //Near2
-            corners[2] = Get3PlanesInterPoint(ref pNear, ref  pTop, ref  pLeft);        //Near3
-            corners[3] = Get3PlanesInterPoint(ref pNear, ref  pBottom, ref  pLeft);     //Near3
-            corners[4] = Get3PlanesInterPoint(ref pFar, ref  pBottom, ref  pRight);    //Far1
-            corners[5] = Get3PlanesInterPoint(ref pFar, ref  pTop, ref  pRight);       //Far2
-            corners[6] = Get3PlanesInterPoint(ref pFar, ref  pTop, ref  pLeft);        //Far3
-            corners[7] = Get3PlanesInterPoint(ref pFar, ref  pBottom, ref  pLeft);     //Far3
+            corners[0] = Get3PlanesInterPoint(ref pNear, ref pBottom, ref pRight);    //Near1
+            corners[1] = Get3PlanesInterPoint(ref pNear, ref pTop, ref pRight);       //Near2
+            corners[2] = Get3PlanesInterPoint(ref pNear, ref pTop, ref pLeft);        //Near3
+            corners[3] = Get3PlanesInterPoint(ref pNear, ref pBottom, ref pLeft);     //Near3
+            corners[4] = Get3PlanesInterPoint(ref pFar, ref pBottom, ref pRight);    //Far1
+            corners[5] = Get3PlanesInterPoint(ref pFar, ref pTop, ref pRight);       //Far2
+            corners[6] = Get3PlanesInterPoint(ref pFar, ref pTop, ref pLeft);        //Far3
+            corners[7] = Get3PlanesInterPoint(ref pFar, ref pBottom, ref pLeft);     //Far3
         }
 
         /// <summary>

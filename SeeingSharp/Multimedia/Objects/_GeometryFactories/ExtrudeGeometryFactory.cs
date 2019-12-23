@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Ensure that triangle list is created
-            if(m_generatedTriangles == null) { m_generatedTriangles = new List<D2D.Triangle[]>(); }
+            if (m_generatedTriangles == null) { m_generatedTriangles = new List<D2D.Triangle[]>(); }
 
             // Define methods for calculating bounds
             var minX = float.MaxValue;
@@ -122,7 +122,7 @@ namespace SeeingSharp.Multimedia.Objects
                     }
                 }
                 bounds = new Size2F(
-                    bounds.Width * scaleFactorX, 
+                    bounds.Width * scaleFactorX,
                     bounds.Height * scaleFactorY);
                 minPoint = new Vector2(minPoint.X * scaleFactorX, minPoint.Y * scaleFactorY);
             }
@@ -242,7 +242,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             public void Close()
             {
-                
+
             }
 
             public List<D2D.Triangle[]> Triangles { get; } = new List<D2D.Triangle[]>();

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -26,7 +27,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -129,7 +129,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Task WaitUntilSoppedAsync()
         {
-            switch(m_currentState)
+            switch (m_currentState)
             {
                 case ObjectThreadState.None:
                 case ObjectThreadState.Stopping:
@@ -344,8 +344,10 @@ namespace SeeingSharp.Util
                     }
 
                     //Notify stop process
-                    try {
-                        this.OnStopping(EventArgs.Empty); }
+                    try
+                    {
+                        this.OnStopping(EventArgs.Empty);
+                    }
                     catch (Exception ex)
                     {
                         this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));

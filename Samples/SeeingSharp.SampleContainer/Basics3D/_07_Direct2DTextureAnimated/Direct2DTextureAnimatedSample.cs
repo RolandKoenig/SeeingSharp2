@@ -19,9 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Threading.Tasks;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -29,6 +26,9 @@ using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
 {
@@ -132,17 +132,17 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             var xPos = 0f;
             var yPos = 0f;
             var currentLineLoc = procentualLoc % 0.25f / 0.25f;
-            if(procentualLoc < 0.25f)
+            if (procentualLoc < 0.25f)
             {
                 xPos = maxWidth * currentLineLoc;
                 yPos = 0f;
             }
-            else if(procentualLoc < 0.5f)
+            else if (procentualLoc < 0.5f)
             {
                 xPos = maxWidth;
                 yPos = maxHeight * currentLineLoc;
             }
-            else if(procentualLoc < 0.75f)
+            else if (procentualLoc < 0.75f)
             {
                 xPos = maxWidth - maxWidth * currentLineLoc;
                 yPos = maxHeight;

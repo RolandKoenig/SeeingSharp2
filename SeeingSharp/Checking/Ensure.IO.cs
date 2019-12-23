@@ -44,7 +44,7 @@ namespace SeeingSharp.Checking
                         $"Stream {checkedVariableName} within method {callerMethod} must be readable!");
                 }
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
                 throw new SeeingSharpCheckException(
                     $"Stream {checkedVariableName} within method {callerMethod} must not be disposed!");

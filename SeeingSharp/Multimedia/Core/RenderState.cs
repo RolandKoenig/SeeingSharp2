@@ -19,14 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 

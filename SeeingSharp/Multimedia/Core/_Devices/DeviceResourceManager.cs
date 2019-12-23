@@ -19,10 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using SeeingSharp.Checking;
+using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -85,7 +83,7 @@ namespace SeeingSharp.Multimedia.Core
             currentDeviceResourceIndex.EnsureNegativeAndNotZero(nameof(currentDeviceResourceIndex));
 
             m_deviceResources.Add(resource);
-            resource.SetDeviceResourceIndex(m_device, m_deviceResources.Count -1);
+            resource.SetDeviceResourceIndex(m_device, m_deviceResources.Count - 1);
         }
 
         internal void DeregisterDeviceResource(IEngineDeviceResource resource)

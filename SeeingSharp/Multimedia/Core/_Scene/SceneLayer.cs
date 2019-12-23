@@ -19,11 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -150,7 +149,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle static / non static objects
-            if(sceneObject.IsStatic)
+            if (sceneObject.IsStatic)
             {
                 m_sceneObjectsForSingleUpdateCall.Enqueue(sceneObject);
             }
@@ -231,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // RemoveObject object form non-static collection
-                if(!sceneObject.IsStatic)
+                if (!sceneObject.IsStatic)
                 {
                     m_sceneObjectsNotStatic.Remove(sceneObject);
                 }
@@ -314,10 +313,10 @@ namespace SeeingSharp.Multimedia.Core
             {
                 // Update all objects which are registered for initial update call
                 var initialUpdateCallCount = m_sceneObjectsForSingleUpdateCall.Count;
-                if(initialUpdateCallCount > 0)
+                if (initialUpdateCallCount > 0)
                 {
                     var initialUpdateCallItems = m_sceneObjectsForSingleUpdateCall.GetBackingArray();
-                    for(var loop=0; loop<initialUpdateCallCount; loop++)
+                    for (var loop = 0; loop < initialUpdateCallCount; loop++)
                     {
                         initialUpdateCallItems[loop].Update(updateState);
                     }
@@ -326,7 +325,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Call default update method for each object
                 var updateListLength = m_sceneObjectsNotStatic.Count;
                 var updateList = m_sceneObjectsNotStatic.GetBackingArray();
-                for(var actIndex = 0; actIndex < updateListLength; actIndex++)
+                for (var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
                     if (!updateList[actIndex].HasParent)
                     {

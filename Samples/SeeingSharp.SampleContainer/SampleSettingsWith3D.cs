@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.ComponentModel;
 using SeeingSharp.Multimedia.Core;
+using System.ComponentModel;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -32,9 +32,9 @@ namespace SeeingSharp.SampleContainer
             get => this.RenderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
             set
             {
-                if (this.RenderLoop == null){ return; }
+                if (this.RenderLoop == null) { return; }
 
-                if(value != this.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
+                if (value != this.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
                 {
                     this.RenderLoop.ViewConfiguration.AntialiasingEnabled = value;
                     this.RaisePropertyChanged(nameof(this.EnableAntialiasing));

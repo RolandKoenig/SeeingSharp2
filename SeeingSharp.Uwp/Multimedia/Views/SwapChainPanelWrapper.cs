@@ -19,14 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using System;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -170,8 +170,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if(m_bgPanel != null) { return m_bgPanel.Dispatcher; }
-                if(m_panel != null) { return m_panel.Dispatcher; }
+                if (m_bgPanel != null) { return m_bgPanel.Dispatcher; }
+                if (m_panel != null) { return m_panel.Dispatcher; }
                 throw new ObjectDisposedException("SwapChainPanelWrapper");
             }
         }

@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
+using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -44,9 +44,9 @@ namespace SeeingSharp.Multimedia.Core
             // Build child list
             m_children = new List<SceneObjectInfo>(obj.CountChildren);
 
-            if(buildFullChildTree)
+            if (buildFullChildTree)
             {
-                foreach(var actChildObject in obj.GetAllChildrenInternal())
+                foreach (var actChildObject in obj.GetAllChildrenInternal())
                 {
                     m_children.Add(new SceneObjectInfo(actChildObject));
                 }

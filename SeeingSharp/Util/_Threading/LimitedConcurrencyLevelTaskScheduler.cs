@@ -85,7 +85,7 @@ namespace SeeingSharp.Util
 
             // If the task was previously queued, remove it from the queue
             if (taskWasPreviouslyQueued)
-                // Try to run the task.
+            // Try to run the task.
             {
                 if (this.TryDequeue(task))
                 {

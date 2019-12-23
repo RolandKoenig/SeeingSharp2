@@ -43,26 +43,26 @@ namespace SeeingSharp.UwpSamples.Controls
             this.PropertyName = propertyInfo.Name;
             this.PropertyDisplayName = propertyInfo.Name;
             var attribDisplayName = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
-            if(attribDisplayName != null)
+            if (attribDisplayName != null)
             {
                 this.PropertyDisplayName = attribDisplayName.DisplayName;
             }
 
             var propertyType = m_propertyInfo.PropertyType;
-            if(propertyType == typeof(bool))
+            if (propertyType == typeof(bool))
             {
                 this.ValueType = PropertyValueType.Bool;
             }
-            else if(propertyType == typeof(string) ||
+            else if (propertyType == typeof(string) ||
                     propertyType == typeof(double) || propertyType == typeof(float) || propertyType == typeof(decimal) ||
                     propertyType == typeof(int) || propertyType == typeof(uint) ||
                     propertyType == typeof(byte) ||
                     propertyType == typeof(short) || propertyType == typeof(ushort) ||
                     propertyType == typeof(long) || propertyType == typeof(ulong))
-            { 
+            {
                 this.ValueType = PropertyValueType.String;
             }
-            else if(propertyType.IsSubclassOf(typeof(Enum)))
+            else if (propertyType.IsSubclassOf(typeof(Enum)))
             {
                 this.ValueType = PropertyValueType.Enum;
             }
@@ -79,7 +79,7 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public Array GetEnumMembers()
         {
-            if(this.ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(this.GetEnumMembers)} not supported on value type {this.ValueType}!"); }
+            if (this.ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(this.GetEnumMembers)} not supported on value type {this.ValueType}!"); }
             return Enum.GetValues(m_propertyInfo.PropertyType);
         }
 

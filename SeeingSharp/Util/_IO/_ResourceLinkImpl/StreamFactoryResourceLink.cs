@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -84,7 +84,7 @@ namespace SeeingSharp.Util
         {
             var result = m_streamFactory();
 
-            if(!result.CanWrite)
+            if (!result.CanWrite)
             {
                 result.Dispose();
                 throw new SeeingSharpException("Can not write to created stream!");

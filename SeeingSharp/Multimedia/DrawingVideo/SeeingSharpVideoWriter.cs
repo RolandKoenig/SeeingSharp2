@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
+using System;
 
 namespace SeeingSharp.Multimedia.DrawingVideo
 {
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
 
                 this.DrawFrameInternal(device, uploadedTexture);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 m_drawException = ex;
             }
@@ -131,7 +131,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
                 this.StartRenderingInternal(m_videoSize);
                 m_hasStarted = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 m_startException = ex;
                 m_hasStarted = false;
@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
 
                 this.FinishRenderingInternal();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 m_finishException = ex;
             }

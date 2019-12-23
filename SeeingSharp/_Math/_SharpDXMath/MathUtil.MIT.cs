@@ -191,7 +191,7 @@ namespace SeeingSharp
         {
             return value < min ? min : value > max ? max : value;
         }
-        
+
         /// <summary>
         /// Clamps the specified value.
         /// </summary>
@@ -203,7 +203,7 @@ namespace SeeingSharp
         {
             return value < min ? min : value > max ? max : value;
         }
-        
+
         /// <summary>
         /// Calculates the modulo of the specified value.
         /// </summary>
@@ -277,7 +277,7 @@ namespace SeeingSharp
 
             return value;
         }
-        
+
         /// <summary>
         /// Gauss function.
         /// </summary>
@@ -289,11 +289,11 @@ namespace SeeingSharp
         /// <param name="sigmaX">Curve sigma X.</param>
         /// <param name="sigmaY">Curve sigma Y.</param>
         /// <returns>The result of gaussian function.</returns>
-        public static float Gauss(float amplitude,float x,float y,float radX,float radY,float sigmaX,float sigmaY)
+        public static float Gauss(float amplitude, float x, float y, float radX, float radY, float sigmaX, float sigmaY)
         {
-            float AExp = (amplitude*2.718281828f);
+            float AExp = (amplitude * 2.718281828f);
 
-            return (float) 
+            return (float)
             (
                 AExp -
                 (
@@ -319,7 +319,7 @@ namespace SeeingSharp
         {
             double AExp = (amplitude * 2.718281828);
 
-            return 
+            return
             (
                 AExp -
                 (
@@ -329,7 +329,7 @@ namespace SeeingSharp
                 )
             );
         }
-        
+
         /// <summary>
         /// Gets random <c>float</c> number within range.
         /// </summary>

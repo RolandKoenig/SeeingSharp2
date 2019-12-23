@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Runtime.InteropServices;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
+using System;
+using System.Runtime.InteropServices;
 using D3D9 = SharpDX.Direct3D9;
 
 namespace SeeingSharp.Multimedia.Core
@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Direct3D 9 is only relevant on the primary device
-                    if(adapterIndex < 0) { return; }
+                    if (adapterIndex < 0) { return; }
 
                     // Try to create the device
                     m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, CREATE_FLAGS, presentparams);

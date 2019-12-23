@@ -23,18 +23,17 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using SharpDX;
+using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX;
-using SharpDX.DXGI;
 using SDX = SharpDX;
 using SDXIO = SharpDX.IO;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
-{ 
+{
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>

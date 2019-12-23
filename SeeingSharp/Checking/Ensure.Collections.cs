@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Checking
 {
@@ -57,7 +57,7 @@ namespace SeeingSharp.Checking
             var hasAnyElement = SeeingSharpUtil.HasAnyElement(collection);
 
             // Check result
-            if(!hasAnyElement)
+            if (!hasAnyElement)
             {
                 throw new SeeingSharpCheckException(
                     $"Collection {checkedVariableName} within method {callerMethod} musst have more than zero elements!");

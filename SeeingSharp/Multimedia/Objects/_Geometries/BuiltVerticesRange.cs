@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
             else
             {
-                if(StartVertex + VertexCount != otherRange.StartVertex)
+                if (StartVertex + VertexCount != otherRange.StartVertex)
                 {
                     throw new SeeingSharpGraphicsException("Unable to merge given vertex ranges!");
                 }

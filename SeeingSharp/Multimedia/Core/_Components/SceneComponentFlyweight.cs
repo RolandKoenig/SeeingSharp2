@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
+using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void AttachComponent(SceneComponentBase component, ViewInformation sourceView)
         {
             component.EnsureNotNull(nameof(component));
-            if(component.IsViewSpecific)
+            if (component.IsViewSpecific)
             {
                 sourceView.EnsureNotNull(nameof(sourceView));
             }
@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Core
                             continue;
                         }
 
-                        if(this.TryGetAttachedComponent(
+                        if (this.TryGetAttachedComponent(
                             actRequest.Component, actRequest.CorrespondingView,
                             out actComponent, out actComponentIndex))
                         {
@@ -142,9 +142,9 @@ namespace SeeingSharp.Multimedia.Core
 
                         // Trigger removing of all components with the same group like the new one
                         //  (new components replace old components with same group name)
-                        if(!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
+                        if (!string.IsNullOrEmpty(actRequest.Component.ComponentGroup))
                         {
-                            foreach(var actObsoleteComponent in this.GetExistingComponentsByGroup(
+                            foreach (var actObsoleteComponent in this.GetExistingComponentsByGroup(
                                 actRequest.Component.ComponentGroup,
                                 actRequest.Component.IsViewSpecific ? actRequest.CorrespondingView : null))
                             {
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Core
                         break;
 
                     case SceneComponentRequestType.DetachAll:
-                        while(m_attachedComponents.Count > 0)
+                        while (m_attachedComponents.Count > 0)
                         {
                             actManipulator = new SceneManipulator(m_owner)
                             {
@@ -240,7 +240,7 @@ namespace SeeingSharp.Multimedia.Core
             var attachedComponentCount = m_attachedComponents.Count;
             for (var loop = 0; loop < attachedComponentCount; loop++)
             {
-                if(m_attachedComponents[loop].Component.ComponentGroup == groupName &&
+                if (m_attachedComponents[loop].Component.ComponentGroup == groupName &&
                    m_attachedComponents[loop].CorrespondingView == correspondingView)
                 {
                     yield return m_attachedComponents[loop];
@@ -256,11 +256,11 @@ namespace SeeingSharp.Multimedia.Core
             out SceneComponentInfo componentInfo, out int componentIndex)
         {
             var attachedComponentCount = m_attachedComponents.Count;
-            for (var loop=0; loop<attachedComponentCount; loop++)
+            for (var loop = 0; loop < attachedComponentCount; loop++)
             {
-                if(component.IsViewSpecific)
+                if (component.IsViewSpecific)
                 {
-                    if(component == m_attachedComponents[loop].Component &&
+                    if (component == m_attachedComponents[loop].Component &&
                        correspondingView != null &&
                        correspondingView == m_attachedComponents[loop].CorrespondingView)
                     {

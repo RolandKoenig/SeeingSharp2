@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
 using D3D = SharpDX.Direct3D;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
                         m_device1 = device.QueryInterface<D3D11.Device1>();
                         m_device3 = SeeingSharpUtil.TryExecute(() => m_device1.QueryInterface<D3D11.Device3>());
 
-                        if(m_device3 != null)
+                        if (m_device3 != null)
                         {
                             m_immediateContext3 = m_device3.ImmediateContext3;
                         }

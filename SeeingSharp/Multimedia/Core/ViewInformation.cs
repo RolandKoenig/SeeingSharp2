@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Drawing3D;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.Multimedia.Core
 {

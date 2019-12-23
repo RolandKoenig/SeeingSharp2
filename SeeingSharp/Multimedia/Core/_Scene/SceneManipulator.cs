@@ -19,14 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -265,7 +264,7 @@ namespace SeeingSharp.Multimedia.Core
             newGeometry.FirstSurface.BuildTextGeometry(
                 textToDisplay,
                 textOptions);
-            if (realignToCenter){ newGeometry.RealignToCenter(); }
+            if (realignToCenter) { newGeometry.RealignToCenter(); }
 
             return this.AddResource(device => new GeometryResource(newGeometry));
         }

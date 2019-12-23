@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Drawing3D;
-using D3D11 = SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D;
 
 namespace SeeingSharp.Multimedia.Core

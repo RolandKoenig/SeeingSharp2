@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if(m_shaderBytecode == null)
+            if (m_shaderBytecode == null)
             {
                 m_shaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
             }
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         private static byte[] GetShaderBytecode(EngineDevice device, ResourceLink resourceLink, ShaderResourceKind resourceKind, string shaderModel)
         {
-            switch(resourceKind)
+            switch (resourceKind)
             {
                 case ShaderResourceKind.Bytecode:
                     using (var inStream = resourceLink.OpenInputStream())
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             shaderModel,
                             device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             sourceFileName: resourceLink.ToString());
-                        if(compileResult.HasErrors)
+                        if (compileResult.HasErrors)
                         {
                             throw new SeeingSharpGraphicsException($"Unable to compile shader from {resourceLink}: {compileResult.ResultCode} - {compileResult.Message}");
                         }

@@ -19,13 +19,32 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+/* Unmerged change from project 'SeeingSharp.WpfCore'
+Before:
 using System;
-using System.Collections.Generic;
+After:
+using SeeingSharp.Multimedia.Views;
+using System;
+*/
+using SeeingSharp.Multimedia.Views;
+
+/* Unmerged change from project 'SeeingSharp.WpfCore'
+Before:
 using System.Windows;
 using System.Windows.Input;
 using System.Numerics;
 using SeeingSharp.Multimedia.Views;
-using Point = System.Windows.Point;
+After:
+using System.Numerics;
+using System.Windows;
+using System.Windows.Input;
+*/
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -71,7 +90,7 @@ namespace SeeingSharp.Multimedia.Input
         public void Start(IInputEnabledView viewObject)
         {
             m_rendererElement = viewObject as SeeingSharpRendererElement;
-            if(m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
+            if (m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             // Register all events needed for mouse camera dragging
             m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
@@ -96,7 +115,7 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             // Deregister all events
-            if(m_rendererElement != null)
+            if (m_rendererElement != null)
             {
                 var rendererElement = m_rendererElement;
 
@@ -131,7 +150,7 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
         {
-            if(m_rendererElement == null) { return; }
+            if (m_rendererElement == null) { return; }
 
             m_stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
         }

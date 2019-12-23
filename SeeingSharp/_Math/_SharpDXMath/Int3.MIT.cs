@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -150,7 +149,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
         {
-            return new int[] {X, Y, Z};
+            return new int[] { X, Y, Z };
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
         public static void Multiply(ref Int3 value, int scale, out Int3 result)
         {
-            result = new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            result = new Int3(value.X * scale, value.Y * scale, value.Z * scale);
         }
 
         /// <summary>
@@ -216,7 +215,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int3 Multiply(Int3 value, int scale)
         {
-            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            return new Int3(value.X * scale, value.Y * scale, value.Z * scale);
         }
 
         /// <summary>
@@ -227,7 +226,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the modulated vector.</param>
         public static void Modulate(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result = new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
+            result = new Int3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
         }
 
         /// <summary>
@@ -238,7 +237,7 @@ namespace SeeingSharp
         /// <returns>The modulated vector.</returns>
         public static Int3 Modulate(Int3 left, Int3 right)
         {
-            return new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
+            return new Int3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
         }
 
         /// <summary>
@@ -249,7 +248,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
         public static void Divide(ref Int3 value, int scale, out Int3 result)
         {
-            result = new Int3(value.X/scale, value.Y/scale, value.Z/scale);
+            result = new Int3(value.X / scale, value.Y / scale, value.Z / scale);
         }
 
         /// <summary>
@@ -260,7 +259,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int3 Divide(Int3 value, int scale)
         {
-            return new Int3(value.X/scale, value.Y/scale, value.Z/scale);
+            return new Int3(value.X / scale, value.Y / scale, value.Z / scale);
         }
 
         /// <summary>
@@ -423,7 +422,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int3 operator *(int scale, Int3 value)
         {
-            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            return new Int3(value.X * scale, value.Y * scale, value.Z * scale);
         }
 
         /// <summary>
@@ -434,7 +433,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int3 operator *(Int3 value, int scale)
         {
-            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            return new Int3(value.X * scale, value.Y * scale, value.Z * scale);
         }
 
         /// <summary>
@@ -445,7 +444,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int3 operator /(Int3 value, int scale)
         {
-            return new Int3(value.X/scale, value.Y/scale, value.Z/scale);
+            return new Int3(value.X / scale, value.Y / scale, value.Z / scale);
         }
 
         /// <summary>
@@ -586,7 +585,7 @@ namespace SeeingSharp
             if (!ReferenceEquals(value.GetType(), typeof(Int3)))
                 return false;
 
-            return Equals((Int3) value);
+            return Equals((Int3)value);
         }
 
         /// <summary>

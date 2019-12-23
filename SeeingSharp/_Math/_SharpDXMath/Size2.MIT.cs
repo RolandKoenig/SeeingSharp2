@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -90,6 +89,6 @@ namespace SeeingSharp
         {
             return string.Format("({0},{1})", Width, Height);
         }
-   
+
     }
 }

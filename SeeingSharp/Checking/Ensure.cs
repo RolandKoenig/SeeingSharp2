@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Checking
 {
@@ -168,7 +168,7 @@ namespace SeeingSharp.Checking
         {
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
-            if(string.IsNullOrEmpty(stringParam))
+            if (string.IsNullOrEmpty(stringParam))
             {
                 throw new SeeingSharpCheckException(
                     $"String {checkedVariableName} within method {callerMethod} must not be null or empty!");

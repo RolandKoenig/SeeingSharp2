@@ -1,16 +1,32 @@
-﻿using System;
+﻿
+/* Unmerged change from project 'SeeingSharp.Benchmarks.Math (net471)'
+Before:
+using System;
 using System.Collections.Generic;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+After:
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using SharpDX;
+using System;
+*/
+using BenchmarkDotNet.Attributes;
+using System.Collections.Generic;
+/* Unmerged change from project 'SeeingSharp.Benchmarks.Math (net471)'
+Before:
+using SharpDX;
+After:
+using System.Text;
+*/
+
 
 namespace SeeingSharp.Benchmarks.Math
 {
     [SimpleJob(RuntimeMoniker.CoreRt31)]
     [SimpleJob(RuntimeMoniker.Net471)]
     public class SceneSpacialObject_Transform
-    { 
+    {
         private SharpDX.Matrix m_sdxScaling = SharpDX.Matrix.Scaling(2.5f, -2f, 3f);
         private SharpDX.Matrix m_sdxRotation = SharpDX.Matrix.RotationYawPitchRoll(0.23f, 0.42f, -0.23f);
         private SharpDX.Matrix m_sdxTranslation = SharpDX.Matrix.Translation(3f, 1.5f, 5f);

@@ -20,12 +20,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using PropertyTools.DataAnnotations;
+using PropertyTools.Wpf;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using PropertyTools.DataAnnotations;
-using PropertyTools.Wpf;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -33,7 +33,7 @@ namespace SeeingSharp.WpfSamples
     {
         public override FrameworkElement CreateControl(PropertyItem property, PropertyControlFactoryOptions options)
         {
-            if(property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
+            if (property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
             {
                 property.HeaderPlacement = HeaderPlacement.Hidden;
 

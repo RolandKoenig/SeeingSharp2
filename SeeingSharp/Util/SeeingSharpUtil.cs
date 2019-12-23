@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,8 +30,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Util
 {
@@ -179,7 +179,7 @@ namespace SeeingSharp.Util
             }
 
             // Do short delay phases until we reach a point where we are "near" the target value
-            while(stopwatch.GetTrueElapsedMilliseconds() < delayMilliseconds - 10.0)
+            while (stopwatch.GetTrueElapsedMilliseconds() < delayMilliseconds - 10.0)
             {
                 await Task.Delay(2);
             }
@@ -191,9 +191,9 @@ namespace SeeingSharp.Util
         /// <param name="delayMilliseconds">Total time for delay.</param>
         public static void MaximumDelay(double delayMilliseconds)
         {
-            if(delayMilliseconds <= 0) { return; }
+            if (delayMilliseconds <= 0) { return; }
 
-            using(var waitHandle = new ManualResetEvent(false))
+            using (var waitHandle = new ManualResetEvent(false))
             {
                 waitHandle.WaitOne((int)delayMilliseconds);
             }

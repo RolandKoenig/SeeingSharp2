@@ -19,11 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Resources;
@@ -32,8 +27,11 @@ using SeeingSharp.Util.SdxTK;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
+using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using D3D11 = SharpDX.Direct3D11;
-using D2D = SharpDX.Direct2D1;
 using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace SeeingSharp.Multimedia.Core

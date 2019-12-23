@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.Collections.Generic;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -41,7 +41,7 @@ namespace SeeingSharp.Util
 
         public void PushNext(T nextObject)
         {
-            for(var loop=0; loop<m_observers.Count; loop++)
+            for (var loop = 0; loop < m_observers.Count; loop++)
             {
                 m_observers[loop].OnNext(nextObject);
             }

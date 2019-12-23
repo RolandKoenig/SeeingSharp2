@@ -56,7 +56,7 @@ namespace SeeingSharp.Util
         /// <param name="items">The items to enqueue.</param>
         public void Enqueue(IEnumerable<T> items)
         {
-            foreach(var actItem in items)
+            foreach (var actItem in items)
             {
                 m_backingQueue.Enqueue(actItem);
             }
@@ -137,13 +137,13 @@ namespace SeeingSharp.Util
             Func<T, bool> checkPeekItem)
         {
             // Execute dequeuing first
-            foreach(var actItem in this.DequeueWhile(checkDequeueItem))
+            foreach (var actItem in this.DequeueWhile(checkDequeueItem))
             {
                 yield return actItem;
             }
 
             // Execute peeking at last
-            foreach(var actItem in this.PeekWhile(checkPeekItem))
+            foreach (var actItem in this.PeekWhile(checkPeekItem))
             {
                 yield return actItem;
             }

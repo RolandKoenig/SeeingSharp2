@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.IO;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Util;
+using System.IO;
+using System.Text;
 
 namespace SeeingSharp.Tests
 {
@@ -47,7 +47,7 @@ namespace SeeingSharp.Tests
             }
 
             Assert.IsTrue(cache.Count == 1);
-            using(cache.UseStringBuilder(out var stringBuilderSecond))
+            using (cache.UseStringBuilder(out var stringBuilderSecond))
             {
                 Assert.IsTrue(stringBuilderSecond.Length == 0);
                 Assert.IsTrue(stringBuilderSecond.Capacity == 256);

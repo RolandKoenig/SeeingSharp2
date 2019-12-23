@@ -19,11 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
+using System;
 using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {

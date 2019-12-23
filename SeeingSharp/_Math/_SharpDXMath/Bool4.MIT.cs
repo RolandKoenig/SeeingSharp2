@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -150,7 +149,7 @@ namespace SeeingSharp
             iX = x ? 1 : 0;
             iY = y ? 1 : 0;
             iZ = z ? 1 : 0;
-            iW = w ? 1 : 0; 
+            iW = w ? 1 : 0;
         }
 
 
@@ -229,7 +228,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public bool[] ToArray()
         {
-            return new bool[] {X, Y, Z, W};
+            return new bool[] { X, Y, Z, W };
         }
 
         /// <summary>
@@ -318,7 +317,7 @@ namespace SeeingSharp
             if (!ReferenceEquals(value.GetType(), typeof(Bool4)))
                 return false;
 
-            return Equals((Bool4) value);
+            return Equals((Bool4)value);
         }
 
         /// <summary>

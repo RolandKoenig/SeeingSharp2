@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
-using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Convert and sort them
             var engineModes = new EngineOutputModeInfo[modes.Length];
-            for(var loop=0; loop<engineModes.Length; loop++)
+            for (var loop = 0; loop < engineModes.Length; loop++)
             {
                 engineModes[loop] = new EngineOutputModeInfo(this, modes[loop]);
             }
@@ -62,9 +62,9 @@ namespace SeeingSharp.Multimedia.Core
             var strippedModeList = new List<EngineOutputModeInfo>(engineModes.Length);
             var lastOutputMode = new EngineOutputModeInfo();
 
-            for (var loop =engineModes.Length - 1; loop > -1; loop--)
+            for (var loop = engineModes.Length - 1; loop > -1; loop--)
             {
-                if(!engineModes[loop].Equals(lastOutputMode))
+                if (!engineModes[loop].Equals(lastOutputMode))
                 {
                     lastOutputMode = engineModes[loop];
                     strippedModeList.Add(lastOutputMode);

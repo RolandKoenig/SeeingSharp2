@@ -20,15 +20,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.Threading.Tasks;
-using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
-using GDI = System.Drawing;
+using System.Numerics;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.Tests
 {

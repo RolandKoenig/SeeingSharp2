@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Globalization;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -138,7 +135,7 @@ namespace SeeingSharp
             M11 = M12 = M13 = M14 =
             M21 = M22 = M23 = M24 =
             M31 = M32 = M33 = M34 =
-            M41 = M42 = M43 = M44 = 
+            M41 = M42 = M43 = M44 =
             M51 = M52 = M53 = M54 = value;
         }
 
@@ -788,7 +785,7 @@ namespace SeeingSharp
         /// <param name="z">Z-coordinate offset.</param>
         /// <param name="w"></param>
         /// <param name="result">When the method completes, contains the created translation Matrix5x4.</param>
-        public static void Translation(float x, float y, float z, float w,  out Matrix5x4 result)
+        public static void Translation(float x, float y, float z, float w, out Matrix5x4 result)
         {
             result = Matrix5x4.Identity;
             result.M51 = x;

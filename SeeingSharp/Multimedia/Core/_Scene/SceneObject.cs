@@ -19,14 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
 
             var actParent = other.m_parent;
 
-            while(actParent != null)
+            while (actParent != null)
             {
                 if (actParent == this)
                 {
@@ -138,7 +138,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="isVisible">The visibility state to set.</param>
         public bool TrySetInitialVisibility(ViewInformation viewInfo, bool isVisible)
         {
-            if(viewInfo.ViewIndex < 0) { return false; }
+            if (viewInfo.ViewIndex < 0) { return false; }
 
             var checkData = this.GetVisibilityCheckData(viewInfo);
 

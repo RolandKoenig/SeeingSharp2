@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia
         public static readonly NamedOrGenericKey RES_SKYBOX_PIXEL_SHADER = new NamedOrGenericKey(
             "ResourceKeys.RES_SKYBOX_PIXEL_SHADER");
 
-        public static readonly  NamedOrGenericKey RES_MATERIAL_COLORED = new NamedOrGenericKey(
+        public static readonly NamedOrGenericKey RES_MATERIAL_COLORED = new NamedOrGenericKey(
             $"{nameof(ResourceKeys)}.{nameof(RES_MATERIAL_COLORED)}");
     }
 }

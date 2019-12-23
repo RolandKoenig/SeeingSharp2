@@ -19,18 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -121,16 +120,16 @@ namespace SeeingSharp.Multimedia.Core
             var result = new List<SceneObjectInfo>(16);
             await this.PerformBesideRenderingAsync(() =>
             {
-                foreach(var actLayer in m_sceneLayers)
+                foreach (var actLayer in m_sceneLayers)
                 {
                     // Layer filter
-                    if(!string.IsNullOrEmpty(layer) &&
+                    if (!string.IsNullOrEmpty(layer) &&
                        actLayer.Name != layer)
                     {
                         continue;
                     }
 
-                    foreach(var actSceneObject in actLayer.ObjectsInternal)
+                    foreach (var actSceneObject in actLayer.ObjectsInternal)
                     {
                         if (actSceneObject.HasChildren) { continue; }
                         result.Add(new SceneObjectInfo(actSceneObject, true));
@@ -343,7 +342,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             foreach (var actResourceDict in m_registeredResourceDicts)
-            { 
+            {
                 actResourceDict.AddResource(resourceKey, resourceFactory(actResourceDict.Device));
             }
 
@@ -802,7 +801,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
 
-            foreach(var actObject in sceneObjects)
+            foreach (var actObject in sceneObjects)
             {
                 this.Remove(actObject);
             }
@@ -978,7 +977,7 @@ namespace SeeingSharp.Multimedia.Core
             deviceContext.OutputMerger.DepthStencilState = defaultResource.DepthStencilStateDefault;
 
             // Set initial rasterizer state
-            if(renderState.ViewInformation.ViewConfiguration.WireframeEnabled)
+            if (renderState.ViewInformation.ViewConfiguration.WireframeEnabled)
             {
                 deviceContext.Rasterizer.State = defaultResource.RasterStateWireframe;
             }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using Mono.Cecil;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Mono.Cecil;
 
 namespace PublicSharpDXChecker
 {
@@ -12,7 +9,7 @@ namespace PublicSharpDXChecker
     {
         public static void Main(string[] args)
         {
-            if(args.Length > 0) { CheckAssemblies(args); }
+            if (args.Length > 0) { CheckAssemblies(args); }
             else { CheckAssemblies(Directory.GetFiles(Environment.CurrentDirectory)); }
         }
 
@@ -83,7 +80,7 @@ namespace PublicSharpDXChecker
                 // Check properties
                 foreach (var actProperty in typeDefinition.Properties)
                 {
-                    var anyPublic = (actProperty.GetMethod?.IsPublic ?? false) || 
+                    var anyPublic = (actProperty.GetMethod?.IsPublic ?? false) ||
                                     (actProperty.SetMethod?.IsPublic ?? false);
                     if (!anyPublic) { continue; }
 
@@ -95,7 +92,7 @@ namespace PublicSharpDXChecker
                 }
 
                 // Check fields
-                foreach(var actField in typeDefinition.Fields)
+                foreach (var actField in typeDefinition.Fields)
                 {
                     if (!actField.IsPublic) { continue; }
 

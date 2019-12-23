@@ -23,10 +23,10 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using System;
-using System.IO;
 using SharpDX.DXGI;
 using SharpDX.IO;
+using System;
+using System.IO;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Util.SdxTK
@@ -94,7 +94,7 @@ namespace SeeingSharp.Util.SdxTK
             }
             else
             {
-                var srcPointer = (byte*) this.DataPointer;
+                var srcPointer = (byte*)this.DataPointer;
                 var dstPointer = (byte*)pixelBuffer.DataPointer;
                 var rowStride = Math.Min(this.RowStride, pixelBuffer.RowStride);
 
@@ -155,7 +155,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe T GetPixel<T>(int x, int y) where T : struct
         {
-            return SDX.Utilities.Read<T>(new IntPtr((byte*) this.DataPointer + this.RowStride * y + x * this.PixelSize));
+            return SDX.Utilities.Read<T>(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe void SetPixel<T>(int x, int y, T value) where T : struct
         {
-            SDX.Utilities.Write(new IntPtr((byte*) this.DataPointer + this.RowStride * y + x * this.PixelSize), ref value);
+            SDX.Utilities.Write(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize), ref value);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe void GetPixels<T>(T[] pixels, int yOffset, int pixelIndex, int pixelCount) where T : struct
         {
-            var pixelPointer = (byte*) this.DataPointer + yOffset * this.RowStride;
+            var pixelPointer = (byte*)this.DataPointer + yOffset * this.RowStride;
             if (isStrictRowStride)
             {
                 SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, 0, pixelCount);
@@ -276,7 +276,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe void SetPixels<T>(T[] sourcePixels, int yOffset, int pixelIndex, int pixelCount) where T : struct
         {
-            var pixelPointer = (byte*) this.DataPointer + yOffset * this.RowStride;
+            var pixelPointer = (byte*)this.DataPointer + yOffset * this.RowStride;
             if (isStrictRowStride)
             {
                 SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, 0, pixelCount);

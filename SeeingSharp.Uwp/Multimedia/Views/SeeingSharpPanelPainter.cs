@@ -19,6 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using System;
 using System.Threading;
 using Windows.Foundation;
@@ -26,13 +32,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
-using Color = Windows.UI.Color;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
@@ -139,7 +138,7 @@ namespace SeeingSharp.Multimedia.Views
                 m_targetPanel.Dispose();
                 m_targetPanel = null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new SeeingSharpException($"Error while detaching from view: {ex.Message}", ex);
             }
@@ -252,7 +251,7 @@ namespace SeeingSharp.Multimedia.Views
             this.RenderLoop.DeregisterRenderLoop();
 
             // Trigger detach if requested
-            if(this.DetachOnUnload)
+            if (this.DetachOnUnload)
             {
                 this.Detach();
             }
@@ -362,8 +361,8 @@ namespace SeeingSharp.Multimedia.Views
 
             var dpiScaling = new DpiScaling
             {
-                DpiX = (float) (96.0 * m_targetPanel.CompositionScaleX),
-                DpiY = (float) (96.0 * m_targetPanel.CompositionScaleY)
+                DpiX = (float)(96.0 * m_targetPanel.CompositionScaleX),
+                DpiY = (float)(96.0 * m_targetPanel.CompositionScaleY)
             };
 
             return Tuple.Create(backBufferForRenderloop, m_renderTargetView, m_depthBuffer, m_renderTargetDepth, viewPort, viewSize, dpiScaling);
@@ -383,8 +382,8 @@ namespace SeeingSharp.Multimedia.Views
 
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
-            if (m_targetPanel == null){ return; }
-            if (this.RenderLoop == null){ return; }
+            if (m_targetPanel == null) { return; }
+            if (this.RenderLoop == null) { return; }
 
             // Update swap chain scaling (only relevant for SwapChainPanel targets)
             //  see https://www.packtpub.com/books/content/integrating-direct3d-xaml-and-windows-81

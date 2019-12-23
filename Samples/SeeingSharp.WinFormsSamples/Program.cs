@@ -20,10 +20,18 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+
+/* Unmerged change from project 'SeeingSharp.WinFormsCoreSamples'
+Before:
 using System;
 using System.Windows.Forms;
+After:
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Windows.Drawing2D;
+*/
+using SeeingSharp.Multimedia.Core;
+using System;
+using System.Windows.Forms;
 
 namespace SeeingSharp.WinFormsSamples
 {

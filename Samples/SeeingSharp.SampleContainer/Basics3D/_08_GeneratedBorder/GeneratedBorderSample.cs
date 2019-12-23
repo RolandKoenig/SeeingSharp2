@@ -19,15 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Numerics;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 {
@@ -91,7 +91,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
 
                     cubeMesh = new Mesh(resGeometry, resMaterial);
                     cubeMesh.Color = Color4.GreenColor;
-                    cubeMesh.Position = new Vector3(2* SPACE, 0.5f, loop * SPACE);
+                    cubeMesh.Position = new Vector3(2 * SPACE, 0.5f, loop * SPACE);
                     manipulator.AddObject(cubeMesh);
                 }
             });

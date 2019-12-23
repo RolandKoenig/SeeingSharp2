@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using GDI = System.Drawing;
-using SDX = SharpDX;
 
 namespace SeeingSharp.Util
 {

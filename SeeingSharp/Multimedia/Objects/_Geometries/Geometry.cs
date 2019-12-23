@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         public void RealignToFloorCenter()
-        { 
+        {
             var fullBoundingBox = this.GenerateBoundingBox();
             var fullCenter = fullBoundingBox.GetMiddleCenter();
             var targetCenter = new Vector3(0f, fullBoundingBox.GetSize().Y / 2f, 0f);
@@ -227,9 +227,9 @@ namespace SeeingSharp.Multimedia.Objects
         public bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
         {
             var surfaceCount = m_surfaces.Count;
-            for(var loop=0; loop<surfaceCount; loop++)
+            for (var loop = 0; loop < surfaceCount; loop++)
             {
-                if(m_surfaces[loop].Intersects(pickingRay, pickingOptions, out distance))
+                if (m_surfaces[loop].Intersects(pickingRay, pickingOptions, out distance))
                 {
                     return true;
                 }
@@ -343,7 +343,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void CalculateNormalsFlat()
         {
-            foreach(var actSurface in m_surfaces)
+            foreach (var actSurface in m_surfaces)
             {
                 actSurface.CalculateNormalsFlat();
             }
@@ -432,7 +432,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Copy surfaces
-            foreach(var actSurface in m_surfaces)
+            foreach (var actSurface in m_surfaces)
             {
                 result.m_surfaces.Add(actSurface.Clone(result, copyGeometryData, capacityMultiplier));
             }
@@ -475,7 +475,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for(var loop=0; loop<m_surfaces.Count; loop++)
+            for (var loop = 0; loop < m_surfaces.Count; loop++)
             {
                 m_surfaces[loop].ToggleTriangleIndexOrder();
             }
@@ -496,7 +496,7 @@ namespace SeeingSharp.Multimedia.Objects
                 centerCoord.Z + (centerCoord.Z - givenVector.Z)));
 
             // Now change index ordering
-            foreach(var actSurface in m_surfaces)
+            foreach (var actSurface in m_surfaces)
             {
                 actSurface.ToggleCoordinateSystemInternal();
             }
@@ -549,8 +549,10 @@ namespace SeeingSharp.Multimedia.Objects
         {
             get
             {
-                if(m_surfaces.Count == 0) {
-                    this.CreateSurface(); }
+                if (m_surfaces.Count == 0)
+                {
+                    this.CreateSurface();
+                }
                 return m_surfaces[0];
             }
         }
@@ -597,7 +599,7 @@ namespace SeeingSharp.Multimedia.Objects
             get
             {
                 var sum = 0;
-                for(var loop=0; loop<m_surfaces.Count; loop++)
+                for (var loop = 0; loop < m_surfaces.Count; loop++)
                 {
                     sum += m_surfaces[loop].CountTriangles;
                 }

@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.ComponentModel;
-using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
 {
@@ -44,7 +44,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            var castedSettings = (ImageSampleSettings) settings;
+            var castedSettings = (ImageSampleSettings)settings;
 
             m_bitmap = new StandardBitmapResource(
                 new AssemblyResourceLink(

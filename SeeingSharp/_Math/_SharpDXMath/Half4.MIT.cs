@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -118,7 +117,7 @@ namespace SeeingSharp
         {
             return new Vector2(value.X, value.Y);
         }
-        
+
         /// <summary>
         /// Tests for equality between two objects.
         /// </summary>

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -141,9 +140,9 @@ namespace SeeingSharp
         public int ToRgba()
         {
             uint a = 255;
-            uint r = (uint) (Red * 255.0f) & 255;
-            uint g = (uint) (Green * 255.0f) & 255;
-            uint b = (uint) (Blue * 255.0f) & 255;
+            uint r = (uint)(Red * 255.0f) & 255;
+            uint g = (uint)(Green * 255.0f) & 255;
+            uint b = (uint)(Blue * 255.0f) & 255;
 
             uint value = r;
             value |= g << 8;
@@ -720,7 +719,7 @@ namespace SeeingSharp
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(formatProvider, "Red:{0} Green:{1} Blue:{2}",Red.ToString(format, formatProvider),
+            return string.Format(formatProvider, "Red:{0} Green:{1} Blue:{2}", Red.ToString(format, formatProvider),
                 Green.ToString(format, formatProvider), Blue.ToString(format, formatProvider));
         }
 

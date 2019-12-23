@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -262,7 +262,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the color in BGRA order.</returns>
         public byte[] ToArray()
         {
-            return new [] { B, G , R, A };
+            return new[] { B, G, R, A };
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace SeeingSharp
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            return new ColorBGRA(                
+            return new ColorBGRA(
                 (byte)(start.R + ((end.R - start.R) * amount)),
                 (byte)(start.G + ((end.G - start.G) * amount)),
                 (byte)(start.B + ((end.B - start.B) * amount)),
@@ -735,10 +735,10 @@ namespace SeeingSharp
         /// <returns>The adjusted color.</returns>
         public static ColorBGRA AdjustContrast(ColorBGRA value, float contrast)
         {
-            return new ColorBGRA(                
+            return new ColorBGRA(
                 ToByte(0.5f + contrast * (value.R / 255.0f - 0.5f)),
                 ToByte(0.5f + contrast * (value.G / 255.0f - 0.5f)),
-                ToByte(0.5f + contrast * (value.B / 255.0f- 0.5f)),
+                ToByte(0.5f + contrast * (value.B / 255.0f - 0.5f)),
                 value.A);
         }
 
@@ -750,11 +750,11 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustSaturation(ref ColorBGRA value, float saturation, out ColorBGRA result)
         {
-            float grey = value.R  / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
+            float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
             result.A = value.A;
             result.R = ToByte(grey + saturation * (value.R / 255.0f - grey));
-            result.G = ToByte(grey + saturation * (value.G / 255.0f- grey));
+            result.G = ToByte(grey + saturation * (value.G / 255.0f - grey));
             result.B = ToByte(grey + saturation * (value.B / 255.0f - grey));
         }
 
@@ -768,7 +768,7 @@ namespace SeeingSharp
         {
             float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
-            return new ColorBGRA(                
+            return new ColorBGRA(
                 ToByte(grey + saturation * (value.R / 255.0f - grey)),
                 ToByte(grey + saturation * (value.G / 255.0f - grey)),
                 ToByte(grey + saturation * (value.B / 255.0f - grey)),
@@ -909,7 +909,7 @@ namespace SeeingSharp
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Color4(ColorBGRA value)
         {
-            return new Color4(value.R/255.0f, value.G/255.0f, value.B/255.0f, value.A/255.0f);
+            return new Color4(value.R / 255.0f, value.G / 255.0f, value.B / 255.0f, value.A / 255.0f);
         }
 
         /// <summary>
@@ -919,7 +919,7 @@ namespace SeeingSharp
         /// <returns>The result of the conversion.</returns>
         public static explicit operator ColorBGRA(Vector3 value)
         {
-            return new ColorBGRA(value.X/255.0f, value.Y/255.0f, value.Z/255.0f, 1.0f);
+            return new ColorBGRA(value.X / 255.0f, value.Y / 255.0f, value.Z / 255.0f, 1.0f);
         }
 
         /// <summary>

@@ -19,11 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using SeeingSharp.Multimedia.Core;
-using SDX = SharpDX;
 
 namespace SeeingSharp.Checking
 {
@@ -38,7 +37,7 @@ namespace SeeingSharp.Checking
             if (string.IsNullOrEmpty(callerMethod)) { callerMethod = "Unknown"; }
 
             // Check for positive value
-            if(sizeValue < 1)
+            if (sizeValue < 1)
             {
                 throw new SeeingSharpCheckException(
                     $"Texture Size value {checkedVariableName} within method {callerMethod} musst not be smaller that 1!");
@@ -54,7 +53,7 @@ namespace SeeingSharp.Checking
             // Check for maximum dimension
             //  see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx#Overview
             var maxDimension = 0;
-            switch(driverLevel)
+            switch (driverLevel)
             {
                 case HardwareDriverLevel.Direct3D10:
                     maxDimension = 8192;
@@ -65,7 +64,7 @@ namespace SeeingSharp.Checking
                     maxDimension = 16384;
                     break;
             }
-            if(sizeValue > maxDimension)
+            if (sizeValue > maxDimension)
             {
                 throw new SeeingSharpCheckException(
                     $"Texture Size value {checkedVariableName} within method {callerMethod} can have a maximum of {maxDimension}!");

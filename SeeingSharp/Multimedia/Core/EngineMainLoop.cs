@@ -19,16 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -276,9 +276,9 @@ namespace SeeingSharp.Multimedia.Core
                             this.GenericInput?.Raise(this, new GenericInputEventArgs(inputFrames));
 
                             // Clear unreferenced Scenes finally
-                            lock(m_scenesForUnloadLock)
+                            lock (m_scenesForUnloadLock)
                             {
-                                foreach(var actScene in m_scenesForUnload)
+                                foreach (var actScene in m_scenesForUnload)
                                 {
                                     actScene.UnloadResources();
                                     actScene.Clear(true);
@@ -303,15 +303,15 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute global awaitors
-                    while(m_globalLoopAwaitors.Count > 0)
+                    while (m_globalLoopAwaitors.Count > 0)
                     {
-                        if(m_globalLoopAwaitors.TryDequeue(out var currentAction))
+                        if (m_globalLoopAwaitors.TryDequeue(out var currentAction))
                         {
                             currentAction();
                         }
                     }
 
-                    if(exceptionOccurred)
+                    if (exceptionOccurred)
                     {
                         // Wait some time and try rendering again
                         await Task.Delay(1000);
@@ -350,7 +350,7 @@ namespace SeeingSharp.Multimedia.Core
 
         internal void DeregisterSceneForUnload(Scene scene)
         {
-            lock(m_scenesForUnloadLock)
+            lock (m_scenesForUnloadLock)
             {
                 while (m_scenesForUnload.Remove(scene)) { }
             }
@@ -427,7 +427,7 @@ namespace SeeingSharp.Multimedia.Core
                                 additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
                             }
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
                             // Deregister this RenderLoop
                             lock (additionalContinuationActionsLock)
@@ -459,7 +459,7 @@ namespace SeeingSharp.Multimedia.Core
                             actScene.Update(actUpdateState);
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         exceptionsDuringUpdate.Enqueue(ex);
                     }
@@ -568,16 +568,16 @@ namespace SeeingSharp.Multimedia.Core
                 });
 
                 // Handle all invalid render loops
-                if(invalidRenderLoops.HasAny())
+                if (invalidRenderLoops.HasAny())
                 {
-                    foreach(var actRenderLoop in invalidRenderLoops.DequeueAll())
+                    foreach (var actRenderLoop in invalidRenderLoops.DequeueAll())
                     {
                         this.DeregisterRenderLoop(actRenderLoop);
                     }
                 }
 
                 // Reset camera changed flags
-                foreach(var actRenderLoop in registeredRenderLoops)
+                foreach (var actRenderLoop in registeredRenderLoops)
                 {
                     actRenderLoop.Camera.StateChanged = false;
                 }

@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Multimedia.Core;
+using System;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if(this.RelatedView == null) { return -1; }
+                if (this.RelatedView == null) { return -1; }
                 return this.RelatedView.ViewIndex;
             }
         }

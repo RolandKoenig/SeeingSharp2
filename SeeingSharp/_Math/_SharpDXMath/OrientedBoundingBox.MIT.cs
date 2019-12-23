@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -68,8 +68,8 @@ namespace SeeingSharp
 
             for (int i = 0; i < points.Length; ++i)
             {
-                minimum = Vector3.Min(minimum,points[i]);
-                maximum = Vector3.Max(maximum,points[i]);
+                minimum = Vector3.Min(minimum, points[i]);
+                maximum = Vector3.Max(maximum, points[i]);
             }
 
             var Center = minimum + (maximum - minimum) / 2f;
@@ -86,9 +86,9 @@ namespace SeeingSharp
             var xv = new Vector3(Extents.X, 0, 0);
             var yv = new Vector3(0, Extents.Y, 0);
             var zv = new Vector3(0, 0, Extents.Z);
-            xv = Vector3.TransformNormal(xv,Transformation);
-            yv = Vector3.TransformNormal(yv,Transformation);
-            zv = Vector3.TransformNormal(zv,Transformation);
+            xv = Vector3.TransformNormal(xv, Transformation);
+            yv = Vector3.TransformNormal(yv, Transformation);
+            zv = Vector3.TransformNormal(zv, Transformation);
 
             var center = Transformation.Translation;
 
@@ -420,8 +420,8 @@ namespace SeeingSharp
             {
                 ExtentA = Vector3Ex.GetValue(SizeA, i);
                 ExtentB = Vector3.Dot(SizeB, new Vector3(
-                    Matrix4x4Ex.GetValue(AR, i, 0), 
-                    Matrix4x4Ex.GetValue(AR, i, 1), 
+                    Matrix4x4Ex.GetValue(AR, i, 0),
+                    Matrix4x4Ex.GetValue(AR, i, 1),
                     Matrix4x4Ex.GetValue(AR, i, 2)));
                 Separation = Math.Abs(Vector3Ex.GetValue(vSepA, i));
 
@@ -433,13 +433,13 @@ namespace SeeingSharp
             for (k = 0; k < 3; k++)
             {
                 ExtentA = Vector3.Dot(SizeA, new Vector3(
-                    Matrix4x4Ex.GetValue(AR, 0, k), 
-                    Matrix4x4Ex.GetValue(AR, 1, k), 
+                    Matrix4x4Ex.GetValue(AR, 0, k),
+                    Matrix4x4Ex.GetValue(AR, 1, k),
                     Matrix4x4Ex.GetValue(AR, 2, k)));
                 ExtentB = Vector3Ex.GetValue(SizeB, k);
                 Separation = Math.Abs(Vector3.Dot(vSepA, new Vector3(
-                    Matrix4x4Ex.GetValue(R, 0, k), 
-                    Matrix4x4Ex.GetValue(R, 1, k), 
+                    Matrix4x4Ex.GetValue(R, 0, k),
+                    Matrix4x4Ex.GetValue(R, 1, k),
                     Matrix4x4Ex.GetValue(R, 2, k))));
 
                 if (Separation > ExtentA + ExtentB)
@@ -452,14 +452,14 @@ namespace SeeingSharp
                 {
                     int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
                     int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
-                    ExtentA = 
-                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) + 
+                    ExtentA =
+                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
                         Vector3Ex.GetValue(SizeA, i2) * Matrix4x4Ex.GetValue(AR, i1, k);
-                    ExtentB = 
-                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) + 
+                    ExtentB =
+                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
                         Vector3Ex.GetValue(SizeB, k2) * Matrix4x4Ex.GetValue(AR, i, k1);
                     Separation = Math.Abs(
-                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) - 
+                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) -
                         Vector3Ex.GetValue(vSepA, i1) * Matrix4x4Ex.GetValue(R, i2, k));
                     if (Separation > ExtentA + ExtentB)
                         return ContainmentType.Disjoint;
@@ -490,8 +490,8 @@ namespace SeeingSharp
             Matrix4x4 invTrans;
             Matrix4x4.Invert(Transformation, out invTrans);
 
-            Vector3 LB1 = Vector3.Transform(L1,invTrans);
-            Vector3 LB2 = Vector3.Transform(L1,invTrans);
+            Vector3 LB1 = Vector3.Transform(L1, invTrans);
+            Vector3 LB2 = Vector3.Transform(L1, invTrans);
 
             // Get line midpoint and extent
             var LMid = (LB1 + LB2) * 0.5f;
@@ -557,8 +557,8 @@ namespace SeeingSharp
             {
                 ExtentA = Vector3Ex.GetValue(SizeA, i);
                 ExtentB = Vector3.Dot(SizeB, new Vector3(
-                    Matrix4x4Ex.GetValue(AR, i, 0), 
-                    Matrix4x4Ex.GetValue(AR, i, 1), 
+                    Matrix4x4Ex.GetValue(AR, i, 0),
+                    Matrix4x4Ex.GetValue(AR, i, 1),
                     Matrix4x4Ex.GetValue(AR, i, 2)));
                 Separation = Math.Abs(Vector3Ex.GetValue(vSepA, i));
 
@@ -570,13 +570,13 @@ namespace SeeingSharp
             for (k = 0; k < 3; k++)
             {
                 ExtentA = Vector3.Dot(SizeA, new Vector3(
-                    Matrix4x4Ex.GetValue(AR, 0, k), 
-                    Matrix4x4Ex.GetValue(AR, 1, k), 
+                    Matrix4x4Ex.GetValue(AR, 0, k),
+                    Matrix4x4Ex.GetValue(AR, 1, k),
                     Matrix4x4Ex.GetValue(AR, 2, k)));
                 ExtentB = Vector3Ex.GetValue(SizeB, k);
                 Separation = Math.Abs(Vector3.Dot(vSepA, new Vector3(
-                    Matrix4x4Ex.GetValue(R, 0, k), 
-                    Matrix4x4Ex.GetValue(R, 1, k), 
+                    Matrix4x4Ex.GetValue(R, 0, k),
+                    Matrix4x4Ex.GetValue(R, 1, k),
                     Matrix4x4Ex.GetValue(R, 2, k))));
 
                 if (Separation > ExtentA + ExtentB)
@@ -589,14 +589,14 @@ namespace SeeingSharp
                 {
                     int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
                     int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
-                    ExtentA = 
-                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) + 
+                    ExtentA =
+                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
                         Vector3Ex.GetValue(SizeA, i2) * Matrix4x4Ex.GetValue(AR, i1, k);
-                    ExtentB = 
-                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) + 
+                    ExtentB =
+                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
                         Vector3Ex.GetValue(SizeB, k2) * Matrix4x4Ex.GetValue(AR, i, k1);
                     Separation = Math.Abs(
-                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) - 
+                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) -
                         Vector3Ex.GetValue(vSepA, i1) * Matrix4x4Ex.GetValue(R, i2, k));
                     if (Separation > ExtentA + ExtentB)
                         return ContainmentType.Disjoint;

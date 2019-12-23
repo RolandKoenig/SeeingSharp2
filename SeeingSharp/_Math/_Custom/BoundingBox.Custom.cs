@@ -34,7 +34,7 @@ namespace SeeingSharp
             var maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             var anyInteration = false;
-            foreach(var actContainedLocation in containedLocations)
+            foreach (var actContainedLocation in containedLocations)
             {
                 anyInteration = true;
 
@@ -386,7 +386,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 GetSize()
         {
-            return Maximum - Minimum; 
+            return Maximum - Minimum;
         }
 
 

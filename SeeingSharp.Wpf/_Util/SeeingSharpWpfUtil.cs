@@ -39,10 +39,10 @@ namespace SeeingSharp.Util
 
         public static void WpfColorFromColor4(ref Color4 source, ref WpfMedia.Color target)
         {
-            target.A = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
-            target.R= (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
-            target.G = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
-            target.B = (byte) EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
+            target.A = (byte)EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
+            target.R = (byte)EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
+            target.G = (byte)EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
+            target.B = (byte)EngineMath.Clamp(0f, 255f, source.Alpha * 255f);
         }
 
         public static void GetDpiScalingFactor(Wpf.UIElement uiElement, out double dpiScaleFactorX, out double dpiScaleFactorY)

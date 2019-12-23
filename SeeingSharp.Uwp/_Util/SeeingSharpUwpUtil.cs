@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SDX = SharpDX;
 
 namespace SeeingSharp.Util
 {
@@ -38,10 +37,10 @@ namespace SeeingSharp.Util
         {
             var uiColor = new Color
             {
-                A = (byte) EngineMath.Clamp(0f, 255f, color.Alpha * 255f),
-                R = (byte) EngineMath.Clamp(0f, 255f, color.Red * 255f),
-                G = (byte) EngineMath.Clamp(0f, 255f, color.Green * 255f),
-                B = (byte) EngineMath.Clamp(0f, 255f, color.Blue * 255f)
+                A = (byte)EngineMath.Clamp(0f, 255f, color.Alpha * 255f),
+                R = (byte)EngineMath.Clamp(0f, 255f, color.Red * 255f),
+                G = (byte)EngineMath.Clamp(0f, 255f, color.Green * 255f),
+                B = (byte)EngineMath.Clamp(0f, 255f, color.Blue * 255f)
             };
 
             return uiColor;

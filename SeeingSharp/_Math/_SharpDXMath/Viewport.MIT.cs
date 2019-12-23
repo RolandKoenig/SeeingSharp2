@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -158,7 +158,7 @@ namespace SeeingSharp
                 return hashCode;
             }
         }
-        
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

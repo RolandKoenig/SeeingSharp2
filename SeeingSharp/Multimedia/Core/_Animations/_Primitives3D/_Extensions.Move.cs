@@ -237,7 +237,7 @@ namespace SeeingSharp.Multimedia.Core
             where TargetObject : class, IAnimatableObjectPosition
             where HostObject : class
         {
-            foreach(var actTargetObject in targetObjects)
+            foreach (var actTargetObject in targetObjects)
             {
                 sequenceBuilder.Add(
                     new Move3DToAnimation(actTargetObject, targetVector, new MovementSpeed(speed)));

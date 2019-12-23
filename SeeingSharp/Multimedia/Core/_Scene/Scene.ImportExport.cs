@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -57,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Second step: Store all needed data into the container
-                foreach(var actObject in objectsToExport)
+                foreach (var actObject in objectsToExport)
                 {
                     if (!actObject.IsExportable)
                     {
@@ -98,7 +98,7 @@ namespace SeeingSharp.Multimedia.Core
             await this.ManipulateSceneAsync(manipulator =>
             {
                 // AddObject all resources first
-                foreach(var actResourceInfo in modelContainer.ImportedResources)
+                foreach (var actResourceInfo in modelContainer.ImportedResources)
                 {
                     manipulator.AddResource(
                         actResourceInfo.ResourceFactory,
@@ -106,14 +106,14 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // AddObject all objects
-                foreach(var actObject in modelContainer.Objects)
+                foreach (var actObject in modelContainer.Objects)
                 {
                     manipulator.AddObject(actObject);
                     result.Add(actObject);
                 }
 
                 // Apply parent/child relationships
-                foreach(var actDependencyInfo in modelContainer.ParentChildRelationships)
+                foreach (var actDependencyInfo in modelContainer.ParentChildRelationships)
                 {
                     manipulator.AddChildObject(
                         actDependencyInfo.Item1,

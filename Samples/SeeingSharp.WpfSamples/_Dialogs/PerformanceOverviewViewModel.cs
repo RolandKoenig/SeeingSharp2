@@ -1,11 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿
+/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
+Before:
+using System;
+After:
+using SeeingSharp.SampleContainer.Util;
+using SeeingSharp.Util;
+using System;
+*/
+using SeeingSharp.SampleContainer.Util;
+using SeeingSharp.Util;
+using System.Collections.
+/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
+Before:
 using System.Threading.Tasks;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.Util;
+After:
+using System.Threading.Tasks;
+*/
+ObjectModel;
 
 namespace SeeingSharp.WpfSamples
 {

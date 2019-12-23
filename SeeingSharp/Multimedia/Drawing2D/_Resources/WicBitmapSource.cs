@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.WIC;
+using System;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {

@@ -19,13 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -40,20 +40,20 @@ namespace SeeingSharp.Multimedia.Objects
         internal ImporterExporterRepository(SeeingSharpLoader loader)
         {
             var importers = (from actExtension in loader.Extensions
-                from actImporter in actExtension.CreateModelImporters()
-                select actImporter).ToList();
+                             from actImporter in actExtension.CreateModelImporters()
+                             select actImporter).ToList();
             var exporters = (from actExtension in loader.Extensions
-                from actExporter in actExtension.CreateModelExporters()
-                select actExporter).ToList();
+                             from actExporter in actExtension.CreateModelExporters()
+                             select actExporter).ToList();
 
             m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
 
             // Get format support on each importer
             m_importersByFileType = new Dictionary<string, IModelImporter>();
 
-            foreach(var actImporter in importers)
+            foreach (var actImporter in importers)
             {
-                foreach(var actSupportedFile in actImporter
+                foreach (var actSupportedFile in actImporter
                     .GetType().GetTypeInfo()
                     .GetCustomAttributes<SupportedFileFormatAttribute>())
                 {

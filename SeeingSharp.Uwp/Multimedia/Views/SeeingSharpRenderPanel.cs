@@ -19,19 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.ApplicationModel;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -68,7 +66,7 @@ namespace SeeingSharp.Multimedia.Views
             if (DesignMode.DesignModeEnabled) { return; }
 
             var renderPanel = sender as SeeingSharpRenderPanel;
-            if(renderPanel == null) { return; }
+            if (renderPanel == null) { return; }
 
             if (e.Property == SceneProperty) { renderPanel.RenderLoop.SetScene(e.NewValue as Scene); }
             else if (e.Property == CameraProperty) { renderPanel.Camera = e.NewValue as Camera3DBase; }
@@ -94,7 +92,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => (Scene) this.GetValue(SceneProperty);
+            get => (Scene)this.GetValue(SceneProperty);
             set => this.SetValue(SceneProperty, value);
         }
 
@@ -157,7 +155,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get => (Camera3DBase) this.GetValue(CameraProperty);
+            get => (Camera3DBase)this.GetValue(CameraProperty);
             set => this.SetValue(CameraProperty, value);
         }
 
@@ -166,7 +164,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Custom2DDrawingLayer DrawingLayer2D
         {
-            get => (Custom2DDrawingLayer) this.GetValue(DrawingLayer2DProperty);
+            get => (Custom2DDrawingLayer)this.GetValue(DrawingLayer2DProperty);
             set => this.SetValue(DrawingLayer2DProperty, value);
         }
     }

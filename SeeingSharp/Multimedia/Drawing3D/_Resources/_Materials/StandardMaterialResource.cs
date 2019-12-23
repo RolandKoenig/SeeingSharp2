@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_maxClipDistance;
             set
             {
-                if(!EngineMath.EqualsWithTolerance(m_maxClipDistance, value))
+                if (!EngineMath.EqualsWithTolerance(m_maxClipDistance, value))
                 {
                     m_maxClipDistance = value;
                     m_cbPerMaterialDataChanged = true;
@@ -235,7 +235,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_addToAlpha;
             set
             {
-                if(!EngineMath.EqualsWithTolerance(m_addToAlpha, value))
+                if (!EngineMath.EqualsWithTolerance(m_addToAlpha, value))
                 {
                     m_addToAlpha = value;
                     m_cbPerMaterialDataChanged = true;
@@ -248,7 +248,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get => m_materialDiffuseColor;
             set
             {
-                if(m_materialDiffuseColor != value)
+                if (m_materialDiffuseColor != value)
                 {
                     m_materialDiffuseColor = value;
                     m_cbPerMaterialDataChanged = true;

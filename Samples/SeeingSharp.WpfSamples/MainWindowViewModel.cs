@@ -20,12 +20,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -48,7 +48,7 @@ namespace SeeingSharp.WpfSamples
 
             // Load samples
             m_sampleRepo = sampleRepo;
-            foreach(var actSampleGroupName in m_sampleRepo.SampleGroups
+            foreach (var actSampleGroupName in m_sampleRepo.SampleGroups
                 .Select(actGroup => actGroup.GroupName))
             {
                 this.SampleGroups.Add(actSampleGroupName);
@@ -63,7 +63,7 @@ namespace SeeingSharp.WpfSamples
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();
-            foreach(var actSampleMetadata in sampleGroup.Samples)
+            foreach (var actSampleMetadata in sampleGroup.Samples)
             {
                 this.Samples.Add(new SampleViewModel(actSampleMetadata));
             }
@@ -86,7 +86,7 @@ namespace SeeingSharp.WpfSamples
             get => m_selectedGroup;
             set
             {
-                if(m_selectedGroup != value)
+                if (m_selectedGroup != value)
                 {
                     m_selectedGroup = value;
                     this.RaisePropertyChanged(nameof(this.SelectedGroup));
@@ -107,7 +107,7 @@ namespace SeeingSharp.WpfSamples
             get => m_selectedSample;
             set
             {
-                if(m_selectedSample != value)
+                if (m_selectedSample != value)
                 {
                     if (m_sampleSettings != null)
                     {
@@ -116,7 +116,7 @@ namespace SeeingSharp.WpfSamples
 
                     m_selectedSample = value;
 
-                    if(m_selectedSample == null) { m_sampleSettings = null; }
+                    if (m_selectedSample == null) { m_sampleSettings = null; }
                     else
                     {
                         m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();

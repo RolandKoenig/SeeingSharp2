@@ -19,10 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Util;
 using System;
 using System.ComponentModel;
-using System.Xml.Serialization;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -238,7 +237,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_alphaEnabledSwapChain;
             set
             {
-                if(m_alphaEnabledSwapChain != value)
+                if (m_alphaEnabledSwapChain != value)
                 {
                     m_alphaEnabledSwapChain = value;
                     this.ViewNeedsRefresh = true;

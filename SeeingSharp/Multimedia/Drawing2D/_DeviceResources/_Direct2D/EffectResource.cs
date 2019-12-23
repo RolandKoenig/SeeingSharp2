@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
+using System;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -44,10 +44,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             // Get all effect inputs
             m_effectInputs = new IImageInternal[effectInputs.Length];
-            for(var loop=0; loop<effectInputs.Length; loop++)
+            for (var loop = 0; loop < effectInputs.Length; loop++)
             {
                 m_effectInputs[loop] = effectInputs[loop] as IImageInternal;
-                if(m_effectInputs[loop] == null)
+                if (m_effectInputs[loop] == null)
                 {
                     throw new SeeingSharpGraphicsException("Unable to process effectinput at index " + loop + "!");
                 }
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         BitmapResource IImageInternal.TryGetSourceBitmap()
         {
-            if(m_effectInputs.Length > 0)
+            if (m_effectInputs.Length > 0)
             {
                 return m_effectInputs[0].TryGetSourceBitmap();
             }
@@ -98,13 +98,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var effect = m_loadedEffects[device.DeviceIndex];
 
-            if(effect == null)
+            if (effect == null)
             {
                 // Create the effect
                 effect = this.BuildEffect(device);
 
                 // Set input values
-                for(var loop =0; loop<m_effectInputs.Length; loop++)
+                for (var loop = 0; loop < m_effectInputs.Length; loop++)
                 {
                     using (var actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
                     {

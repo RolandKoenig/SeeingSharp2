@@ -170,7 +170,7 @@ namespace SeeingSharp.Util
                         // Trigger refresh of ui collections
                         await this.RefreshUICollectionsAsync();
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         // TODO: What to do in case of an exception?
                     }
@@ -277,7 +277,7 @@ namespace SeeingSharp.Util
 
             var result = newCalculatorInfo.Calculator as T;
 
-            if(result == null)
+            if (result == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
             }

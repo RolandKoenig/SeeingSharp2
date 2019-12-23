@@ -19,9 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
+using System;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             // Update runtime values on demand
-            if(m_runtimeDataChangedFlags[engineDevice.DeviceIndex])
+            if (m_runtimeDataChangedFlags[engineDevice.DeviceIndex])
             {
                 m_runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
 
@@ -139,7 +139,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 var castedValue = value;
 
-                if(castedValue != m_paragraphAlignment)
+                if (castedValue != m_paragraphAlignment)
                 {
                     m_paragraphAlignment = castedValue;
                     m_runtimeDataChangedFlags.SetAllValuesTo(true);
@@ -157,7 +157,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 var castedValue = value;
 
-                if(castedValue != m_textAlignment)
+                if (castedValue != m_textAlignment)
                 {
                     m_textAlignment = castedValue;
                     m_runtimeDataChangedFlags.SetAllValuesTo(true);
@@ -175,7 +175,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 var castedValue = value;
 
-                if(castedValue != m_wordWrapping)
+                if (castedValue != m_wordWrapping)
                 {
                     m_wordWrapping = castedValue;
                     m_runtimeDataChangedFlags.SetAllValuesTo(true);
@@ -193,7 +193,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             {
                 var castedValue = value;
 
-                if(castedValue != m_readingDirection)
+                if (castedValue != m_readingDirection)
                 {
                     m_readingDirection = castedValue;
                     m_runtimeDataChangedFlags.SetAllValuesTo(true);

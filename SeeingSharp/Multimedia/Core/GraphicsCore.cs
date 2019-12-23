@@ -19,20 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Util;
+using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Objects;
-using SeeingSharp.Util;
-using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
-using D3D = SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Core
@@ -65,16 +63,16 @@ namespace SeeingSharp.Multimedia.Core
         {
             add
             {
-                if(value == null) { return; }
-                lock(s_internalExListenersLock)
+                if (value == null) { return; }
+                lock (s_internalExListenersLock)
                 {
                     s_internalExListeners.Add(value);
                 }
             }
             remove
             {
-                if(value == null) { return; }
-                lock(s_internalExListenersLock)
+                if (value == null) { return; }
+                lock (s_internalExListenersLock)
                 {
                     s_internalExListeners.Remove(value);
                 }
@@ -121,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
                 EngineFactory engineFactory = null;
                 try
                 {
-                    if(s_throwDeviceInitError)
+                    if (s_throwDeviceInitError)
                     {
                         throw new SeeingSharpException("Simulated device load exception");
                     }
@@ -149,7 +147,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.HardwareInfo = new EngineHardwareInfo();
                 var actIndex = 0;
 
-                foreach(var actAdapterInfo in this.HardwareInfo.Adapters)
+                foreach (var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(
                         loadSettings,
@@ -157,7 +155,7 @@ namespace SeeingSharp.Multimedia.Core
                         engineFactory, this.Configuration,
                         this.HardwareInfo, actAdapterInfo);
 
-                    if(actEngineDevice.IsLoadedSuccessfully)
+                    if (actEngineDevice.IsLoadedSuccessfully)
                     {
                         actEngineDevice.DeviceIndex = actIndex;
                         actIndex++;
@@ -250,7 +248,7 @@ namespace SeeingSharp.Multimedia.Core
                 var fontFamilyCount = fontCollection.FontFamilyCount;
                 result = new List<string>(fontFamilyCount);
 
-                for(var loop =0; loop< fontFamilyCount; loop++)
+                for (var loop = 0; loop < fontFamilyCount; loop++)
                 {
                     using (var actFamily = fontCollection.GetFontFamily(loop))
                     using (var actLocalizedStrings = actFamily.FamilyNames)
@@ -259,12 +257,12 @@ namespace SeeingSharp.Multimedia.Core
                         {
                             var actName = actLocalizedStrings.GetString(0);
 
-                            if(!string.IsNullOrWhiteSpace(actName))
+                            if (!string.IsNullOrWhiteSpace(actName))
                             {
                                 result.Add(actName);
                             }
                         }
-                        else if(actLocalizedStrings.FindLocaleName("en-us", out _))
+                        else if (actLocalizedStrings.FindLocaleName("en-us", out _))
                         {
                             var actName = actLocalizedStrings.GetString(0);
 
@@ -340,17 +338,17 @@ namespace SeeingSharp.Multimedia.Core
             InternalExceptionLocation location)
         {
             List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
-            lock(s_internalExListenersLock)
+            lock (s_internalExListenersLock)
             {
-                if(s_internalExListeners.Count > 0)
+                if (s_internalExListeners.Count > 0)
                 {
                     handlers = new List<EventHandler<InternalCatchedExceptionEventArgs>>(
                         s_internalExListeners);
                 }
             }
-            if (handlers == null){ return; }
+            if (handlers == null) { return; }
 
-            foreach(var actEventHandler in handlers)
+            foreach (var actEventHandler in handlers)
             {
                 try
                 {
@@ -432,7 +430,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Loader)} after successfully loading!"); }
+                if (s_current != null) { throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Loader)} after successfully loading!"); }
                 return new SeeingSharpLoader();
             }
         }

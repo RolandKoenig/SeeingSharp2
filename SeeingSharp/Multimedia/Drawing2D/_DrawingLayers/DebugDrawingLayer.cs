@@ -19,9 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Util;
-using DWrite = SharpDX.DirectWrite;
+using System;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
@@ -68,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             // Check for minimum screen size
             var screenSize = graphics.ScreenSize;
 
-            if(screenSize.Width < 300f ||
+            if (screenSize.Width < 300f ||
                screenSize.Height < 100f)
             {
                 return;

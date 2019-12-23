@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace SeeingSharp
+﻿namespace SeeingSharp
 {
     /// <summary>
     /// List of predefined <see cref="Color"/>.

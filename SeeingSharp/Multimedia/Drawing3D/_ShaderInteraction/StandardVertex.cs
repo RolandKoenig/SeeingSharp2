@@ -19,13 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Objects;
 using SharpDX.DXGI;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D

@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
+using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Generate rendering chunks
             m_renderingChunks = m_geometryResource.BuildRenderingChunks(
-                resources.Device, new MaterialResource[] {m_materialResource});
+                resources.Device, new MaterialResource[] { m_materialResource });
 
             // Get default resources
             m_defaultResources = resources.GetResourceAndEnsureLoaded(

@@ -36,7 +36,7 @@ namespace SeeingSharp.Util
         {
             if (m_collection == null) { return; }
 
-            foreach(var actDisposable in m_collection)
+            foreach (var actDisposable in m_collection)
             {
                 actDisposable.Dispose();
             }

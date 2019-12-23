@@ -22,8 +22,8 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using SDXTK = SeeingSharp.Util.SdxTK;
 using D3D11 = SharpDX.Direct3D11;
+using SDXTK = SeeingSharp.Util.SdxTK;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {

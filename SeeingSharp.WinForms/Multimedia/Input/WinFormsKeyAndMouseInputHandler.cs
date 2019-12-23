@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Multimedia.Core;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             // First look for all key codes we have
             var supportedKeyCodes = new Dictionary<int, WinVirtualKey>();
-            foreach(WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
+            foreach (WinVirtualKey actVirtualKey in Enum.GetValues(typeof(WinVirtualKey)))
             {
                 supportedKeyCodes[(int)actVirtualKey] = actVirtualKey;
             }
@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Input
             foreach (WinForms.Keys actKeyMember in Enum.GetValues(typeof(WinForms.Keys)))
             {
                 var actKeyCode = (int)actKeyMember;
-                if(supportedKeyCodes.ContainsKey(actKeyCode))
+                if (supportedKeyCodes.ContainsKey(actKeyCode))
                 {
                     s_keyMappingDict[actKeyMember] = supportedKeyCodes[actKeyCode];
                 }
@@ -168,7 +168,7 @@ namespace SeeingSharp.Multimedia.Input
 
                 var removeEventRegistrationsAction = new Action(() =>
                 {
-                    if(currentControl == null) { return; }
+                    if (currentControl == null) { return; }
 
                     currentControl.MouseEnter -= this.OnMouseEnter;
                     currentControl.MouseClick -= this.OnMouseClick;
@@ -207,7 +207,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseEnter(object sender, EventArgs e)
         {
-            if(m_currentControl == null) { return; }
+            if (m_currentControl == null) { return; }
 
             m_lastMousePoint = m_currentControl.PointToClient(WinForms.Cursor.Position);
             m_isMouseInside = true;

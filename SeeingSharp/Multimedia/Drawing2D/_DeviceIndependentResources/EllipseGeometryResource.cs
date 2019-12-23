@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
+using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 

@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Checking;
+using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -58,8 +58,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState"></param>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (m_checkFunction()) {
-                this.NotifyAnimationFinished(); }
+            if (m_checkFunction())
+            {
+                this.NotifyAnimationFinished();
+            }
         }
 
         /// <summary>

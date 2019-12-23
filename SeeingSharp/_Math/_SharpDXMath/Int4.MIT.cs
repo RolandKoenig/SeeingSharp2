@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -169,7 +168,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
         {
-            return new int[] {X, Y, Z, W};
+            return new int[] { X, Y, Z, W };
         }
 
         /// <summary>
@@ -224,7 +223,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
         public static void Multiply(ref Int4 value, int scale, out Int4 result)
         {
-            result = new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            result = new Int4(value.X * scale, value.Y * scale, value.Z * scale, value.W * scale);
         }
 
         /// <summary>
@@ -235,7 +234,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int4 Multiply(Int4 value, int scale)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int4(value.X * scale, value.Y * scale, value.Z * scale, value.W * scale);
         }
 
         /// <summary>
@@ -246,7 +245,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the modulated vector.</param>
         public static void Modulate(ref Int4 left, ref Int4 right, out Int4 result)
         {
-            result = new Int4(left.X*right.X, left.Y*right.Y, left.Z*right.Z, left.W*right.W);
+            result = new Int4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
 
         /// <summary>
@@ -257,7 +256,7 @@ namespace SeeingSharp
         /// <returns>The modulated vector.</returns>
         public static Int4 Modulate(Int4 left, Int4 right)
         {
-            return new Int4(left.X*right.X, left.Y*right.Y, left.Z*right.Z, left.W*right.W);
+            return new Int4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
         }
 
         /// <summary>
@@ -268,7 +267,7 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
         public static void Divide(ref Int4 value, int scale, out Int4 result)
         {
-            result = new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            result = new Int4(value.X / scale, value.Y / scale, value.Z / scale, value.W / scale);
         }
 
         /// <summary>
@@ -279,7 +278,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int4 Divide(Int4 value, int scale)
         {
-            return new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            return new Int4(value.X / scale, value.Y / scale, value.Z / scale, value.W / scale);
         }
 
         /// <summary>
@@ -448,7 +447,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int4 operator *(int scale, Int4 value)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int4(value.X * scale, value.Y * scale, value.Z * scale, value.W * scale);
         }
 
         /// <summary>
@@ -459,7 +458,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int4 operator *(Int4 value, int scale)
         {
-            return new Int4(value.X*scale, value.Y*scale, value.Z*scale, value.W*scale);
+            return new Int4(value.X * scale, value.Y * scale, value.Z * scale, value.W * scale);
         }
 
         /// <summary>
@@ -470,7 +469,7 @@ namespace SeeingSharp
         /// <returns>The scaled vector.</returns>
         public static Int4 operator /(Int4 value, int scale)
         {
-            return new Int4(value.X/scale, value.Y/scale, value.Z/scale, value.W/scale);
+            return new Int4(value.X / scale, value.Y / scale, value.Z / scale, value.W / scale);
         }
 
         /// <summary>
@@ -623,7 +622,7 @@ namespace SeeingSharp
             if (!ReferenceEquals(value.GetType(), typeof(Int4)))
                 return false;
 
-            return Equals((Int4) value);
+            return Equals((Int4)value);
         }
 
         /// <summary>

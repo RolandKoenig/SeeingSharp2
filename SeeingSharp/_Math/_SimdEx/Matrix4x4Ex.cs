@@ -21,7 +21,6 @@
 */
 using System;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SeeingSharp
 {
@@ -540,7 +539,7 @@ namespace SeeingSharp
                 throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
             }
 
-            return GetValue(matrix,row * 4 + column);
+            return GetValue(matrix, row * 4 + column);
         }
 
         /// <summary>

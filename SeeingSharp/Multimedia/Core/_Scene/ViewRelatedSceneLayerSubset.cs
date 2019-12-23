@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
 using D3D = SharpDX.Direct3D;
 
 namespace SeeingSharp.Multimedia.Core
@@ -146,7 +146,7 @@ namespace SeeingSharp.Multimedia.Core
                     continue;
                 }
 
-                if((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
+                if ((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
                 {
                     sceneObjects[loop].RegisterLayerViewSubset(this);
                 }
@@ -205,7 +205,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Clear local subscription information
-            foreach(var actSubscriptionList in m_objectsPerPassDict.Values)
+            foreach (var actSubscriptionList in m_objectsPerPassDict.Values)
             {
                 actSubscriptionList.Subscriptions.Clear();
             }
@@ -249,10 +249,10 @@ namespace SeeingSharp.Multimedia.Core
                 }
             });
 
-            if(anyOrderChanges)
+            if (anyOrderChanges)
             {
                 // Synchronize ordering changes with corresponding scene object
-                for(var loop =0 ; loop<m_objectsPassTransparentRender.Subscriptions.Count; loop++)
+                for (var loop = 0; loop < m_objectsPassTransparentRender.Subscriptions.Count; loop++)
                 {
                     var actSubscription = m_objectsPassTransparentRender.Subscriptions[loop];
                     actSubscription.SubscriptionIndex = loop;
@@ -267,14 +267,14 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Update subscriptions based on visibility check result
-                if(m_changedVisibilitiesAction != null)
+                if (m_changedVisibilitiesAction != null)
                 {
                     m_changedVisibilitiesAction();
                     m_changedVisibilitiesAction = null;
                 }
 
                 // Unsubscribe all invalid objects
-                while(m_invalidObjectsToDeregister.Count > 0)
+                while (m_invalidObjectsToDeregister.Count > 0)
                 {
                     var actInvalidObject = m_invalidObjectsToDeregister.Dequeue();
                     actInvalidObject.UnsubsribeFromAllPasses(this);
@@ -306,10 +306,10 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Reorganize subscriptions if there is anything unsubscribed
-            if(m_anythingUnsubscribed)
+            if (m_anythingUnsubscribed)
             {
                 m_anythingUnsubscribed = false;
-                foreach(var actPassProperties in m_objectsPerPass)
+                foreach (var actPassProperties in m_objectsPerPass)
                 {
                     if (actPassProperties.UnsubscribeCallCount <= 0) { continue; }
 
@@ -322,7 +322,7 @@ namespace SeeingSharp.Multimedia.Core
                     var newSubscriptionList = new List<RenderPassSubscription>(
                         actPassProperties.Subscriptions.Count - actPassProperties.UnsubscribeCallCount + 128);
 
-                    for(var loop =0 ; loop<actPassProperties.Subscriptions.Count; loop++)
+                    for (var loop = 0; loop < actPassProperties.Subscriptions.Count; loop++)
                     {
                         var actSubscription = actPassProperties.Subscriptions[loop];
 
@@ -343,7 +343,7 @@ namespace SeeingSharp.Multimedia.Core
                     actPassProperties.UnsubscribeCallCount = 0;
 
                     // Check for consistency: Does unsubscribe-count match true unsubscriptions using IsSubscribed flag
-                    if(givenUnsubscribeCount != trueUnsubscribeCount)
+                    if (givenUnsubscribeCount != trueUnsubscribeCount)
                     {
                         throw new SeeingSharpException("Inconsistency: Given unsubscribe count does not mach true count of unsubscriptions!");
                     }
@@ -391,7 +391,7 @@ namespace SeeingSharp.Multimedia.Core
                     var actObject = allObjectsArray[loop];
 
                     // Don't handle static objects here if we don't want to handle them
-                    if(!refreshAllObjects)
+                    if (!refreshAllObjects)
                     {
                         if (actObject.IsStatic) { continue; }
                         if (!actObject.TransformationChanged) { continue; }
@@ -408,11 +408,11 @@ namespace SeeingSharp.Multimedia.Core
             // Update objects which are passed for a single update call (normally newly inserted static objects)
             var singleUpdateCallCount = sceneObjectsForSingleUpdateCall.Count;
 
-            if(!refreshAllObjects && singleUpdateCallCount  >0)
+            if (!refreshAllObjects && singleUpdateCallCount > 0)
             {
                 var singleUpdateArray = sceneObjectsForSingleUpdateCall.GetBackingArray();
 
-                for(var loop =0 ; loop<singleUpdateCallCount; loop++)
+                for (var loop = 0; loop < singleUpdateCallCount; loop++)
                 {
                     // Perform culling
                     this.PerformViewboxCulling(
@@ -856,7 +856,7 @@ namespace SeeingSharp.Multimedia.Core
         private void HandleInvalidObjects(List<SceneObject> invalidObjects)
         {
             // Register the given objects as invalid
-            foreach(var actInvalidObject in invalidObjects)
+            foreach (var actInvalidObject in invalidObjects)
             {
                 m_invalidObjects.Add(actInvalidObject, null);
                 m_invalidObjectsToDeregister.Enqueue(actInvalidObject);

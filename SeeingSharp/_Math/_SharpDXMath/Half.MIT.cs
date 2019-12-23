@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Numerics;
 
 namespace SeeingSharp
 {
@@ -94,9 +91,9 @@ namespace SeeingSharp
         /// <param name = "values">The values to be converted.</param>
         /// <returns>An array of converted values.</returns>
         public static float[] ConvertToFloat(Half[] values)
-        {            
+        {
             float[] results = new float[values.Length];
-            for(int i = 0; i < results.Length; i++)
+            for (int i = 0; i < results.Length; i++)
                 results[i] = HalfUtils.Unpack(values[i].RawValue);
             return results;
         }
@@ -109,7 +106,7 @@ namespace SeeingSharp
         public static Half[] ConvertToHalf(float[] values)
         {
             Half[] results = new Half[values.Length];
-            for(int i = 0; i < results.Length; i++)
+            for (int i = 0; i < results.Length; i++)
                 results[i] = new Half(values[i]);
             return results;
         }
@@ -175,7 +172,7 @@ namespace SeeingSharp
         public override int GetHashCode()
         {
             ushort num = value;
-            return (((num*3)/2) ^ num);
+            return (((num * 3) / 2) ^ num);
         }
 
         /// <summary>
@@ -218,7 +215,7 @@ namespace SeeingSharp
             {
                 return false;
             }
-            Half half = (Half) obj;
+            Half half = (Half)obj;
             return half.value == value;
         }
 

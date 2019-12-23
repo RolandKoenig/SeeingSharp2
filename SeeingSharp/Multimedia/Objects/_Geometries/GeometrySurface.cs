@@ -19,12 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -87,12 +87,12 @@ namespace SeeingSharp.Multimedia.Objects
             this.Owner.VerticesInternal.AddRange(geometry.VerticesInternal);
 
             // AddObject all corners to local surface
-            foreach(var actSurface in geometry.Surfaces)
+            foreach (var actSurface in geometry.Surfaces)
             {
                 var corners = actSurface.m_corners;
                 var cornerCount = corners.Count;
 
-                for(var loop=0; loop<cornerCount; loop++)
+                for (var loop = 0; loop < cornerCount; loop++)
                 {
                     var cornerToAdd = corners[loop];
                     cornerToAdd.Index = cornerToAdd.Index + baseIndex;

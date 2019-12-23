@@ -19,15 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
 using D2D = SharpDX.Direct2D1;
-using DWrite = SharpDX.DirectWrite;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -314,7 +313,7 @@ namespace SeeingSharp.Multimedia.Core
                 var testTexture = new D3D11.Texture2D(m_handlerD3D11.Device1, textureDescription);
                 SeeingSharpUtil.SafeDispose(ref testTexture);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -401,7 +400,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch(this.DriverLevel)
+                switch (this.DriverLevel)
                 {
                     case HardwareDriverLevel.Direct3D12:
                     case HardwareDriverLevel.Direct3D11:

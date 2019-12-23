@@ -20,17 +20,35 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection;
-using System.Windows.Forms;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+
+/* Unmerged change from project 'SeeingSharp.WinFormsCoreSamples'
+Before:
+using System.Windows.Forms;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+After:
 using SharpDX;
-using Color = System.Drawing.Color;
+using System;
+using System.Collections.Core;
+*/
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+
+/* Unmerged change from project 'SeeingSharp.WinFormsCoreSamples'
+Before:
+using SeeingSharp.SampleContainer.Util;
+using SharpDX;
+After:
+using SeeingSharp.SampleContainer.Reflection;
+using System.Windows.Forms;
+*/
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace SeeingSharp.WinFormsSamples
 {
@@ -263,20 +281,20 @@ namespace SeeingSharp.WinFormsSamples
 
         private void UpdateSampleCommands(SampleSettings settings)
         {
-            foreach(var actLastItem in m_sampleCommandToolbarItems)
+            foreach (var actLastItem in m_sampleCommandToolbarItems)
             {
                 m_barTools.Items.Remove(actLastItem);
                 actLastItem.Dispose();
             }
             m_sampleCommandToolbarItems.Clear();
 
-            if(settings == null) { return; }
+            if (settings == null) { return; }
             var isFirst = true;
-            foreach(var actCommand in settings.GetCommands())
+            foreach (var actCommand in settings.GetCommands())
             {
                 var actCommandInner = actCommand;
 
-                if(isFirst)
+                if (isFirst)
                 {
                     var separator = new ToolStripSeparator();
                     m_barTools.Items.Add(separator);
@@ -355,7 +373,7 @@ namespace SeeingSharp.WinFormsSamples
         private void OnCmdChangeDevice_Click(object sender, EventArgs e)
         {
             if (!(sender is ToolStripButton changeButton)) { return; }
-            if(!(changeButton.Tag is EngineDevice device)) { return; }
+            if (!(changeButton.Tag is EngineDevice device)) { return; }
 
             m_ctrlRenderPanel.RenderLoop.SetRenderingDevice(device);
         }

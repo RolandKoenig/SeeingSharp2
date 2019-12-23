@@ -19,10 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
+using System.Numerics;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Objects
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
             // Handle line data reloading flag
-            if(m_forceReloadLineData)
+            if (m_forceReloadLineData)
             {
                 m_localResources.ForEachInEnumeration(actItem => actItem.LineDataLoaded = false);
                 m_forceReloadLineData = false;

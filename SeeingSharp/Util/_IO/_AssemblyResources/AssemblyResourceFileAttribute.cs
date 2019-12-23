@@ -23,7 +23,7 @@ using System;
 
 namespace SeeingSharp.Util
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class AssemblyResourceFileAttribute : Attribute
     {
         /// <summary>

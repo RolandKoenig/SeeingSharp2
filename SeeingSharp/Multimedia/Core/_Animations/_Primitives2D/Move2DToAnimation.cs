@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
                     new MovementSpeed(moveVector, m_paramDuration),
                     moveVector);
             }
-            else if(m_paramMoveSpeed != MovementSpeed.Empty)
+            else if (m_paramMoveSpeed != MovementSpeed.Empty)
             {
                 m_moveHelper = new MovementAnimationHelper(m_paramMoveSpeed, moveVector);
             }

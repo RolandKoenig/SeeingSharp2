@@ -50,7 +50,7 @@ namespace SeeingSharp.Util
             using (var streamReader = new StreamReader(resourceLink.OpenInputStream()))
             {
                 string actLine = null;
-                while(null != (actLine = streamReader.ReadLine()))
+                while (null != (actLine = streamReader.ReadLine()))
                 {
                     // Handle all lines except include
                     if (!actLine.StartsWith("#include"))
@@ -62,11 +62,11 @@ namespace SeeingSharp.Util
                     // Handle include line
                     var indexStringStart = actLine.IndexOf('"');
                     var indexStringEnd = actLine.LastIndexOf('"');
-                    if(indexStringStart < 0) { continue; }
-                    if(indexStringStart == indexStringEnd) { continue; }
+                    if (indexStringStart < 0) { continue; }
+                    if (indexStringStart == indexStringEnd) { continue; }
 
                     var includeFilePathLength = indexStringEnd - indexStringStart - 1;
-                    if(includeFilePathLength <= 0) { continue; }
+                    if (includeFilePathLength <= 0) { continue; }
 
                     // Get full include file path in split it using path separators
                     var includeFilePath = actLine.Substring(indexStringStart + 1, includeFilePathLength);

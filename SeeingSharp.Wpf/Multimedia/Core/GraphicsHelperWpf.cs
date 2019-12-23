@@ -19,13 +19,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Windows;
-using System.Windows.Media.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
+using System;
+using System.Windows;
+
+/* Unmerged change from project 'SeeingSharp.WpfCore'
+Before:
+using SeeingSharp.Util;
 using GDI = System.Drawing;
+After:
+using System.Windows.Media.Drawing;
+*/
+using System.Windows.Media.Imaging;
 using D3D11 = SharpDX.Direct3D11;
+using GDI = System.Drawing;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -34,10 +42,10 @@ namespace SeeingSharp.Multimedia.Core
         public static void UniformRescale(ref int width, ref int height, float maxDimension)
         {
             var biggerValue = width;
-            if(height > biggerValue) { biggerValue = height; }
+            if (height > biggerValue) { biggerValue = height; }
 
             float biggerValueF = biggerValue;
-            if(biggerValueF <= maxDimension) { return; }
+            if (biggerValueF <= maxDimension) { return; }
 
             var scaleFactor = maxDimension / biggerValueF;
             width = (int)(width * scaleFactor);

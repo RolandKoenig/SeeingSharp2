@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Checking;
+using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            var changeFactor = this.CurrentTime.Ticks / (float) this.FixedTime.Ticks;
+            var changeFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
             m_targetObject.Opacity = m_startOpacity + m_moveOpacity * changeFactor;
         }
 

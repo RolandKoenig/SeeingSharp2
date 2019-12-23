@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
 using SeeingSharp.Checking;
+using System;
 
 namespace SeeingSharp.Util
 {
@@ -58,7 +58,7 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void AddWithOverride(T newItem)
         {
-            if(m_itemLength < this.Count)
+            if (m_itemLength < this.Count)
             {
                 m_buffer[(m_itemStart + m_itemLength) % this.Count] = newItem;
                 m_itemLength++;
@@ -68,7 +68,7 @@ namespace SeeingSharp.Util
                 m_itemStart = (m_itemStart + 1) % this.Count;
 
                 var nextIndex = m_itemStart - 1;
-                if(nextIndex < 0) { nextIndex = this.Count - 1; }
+                if (nextIndex < 0) { nextIndex = this.Count - 1; }
                 m_buffer[nextIndex] = newItem;
             }
         }
@@ -97,7 +97,7 @@ namespace SeeingSharp.Util
         /// <param name="targetObservable">The target observable.</param>
         public void RemoveAndPushItemsTo(CustomObservable<T> targetObservable)
         {
-            while(m_itemLength > 0)
+            while (m_itemLength > 0)
             {
                 targetObservable.PushNext(m_buffer[m_itemStart]);
                 m_buffer[m_itemStart] = default;
@@ -113,7 +113,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for(var loop=0; loop< this.Count; loop++)
+            for (var loop = 0; loop < this.Count; loop++)
             {
                 m_buffer[loop] = default;
             }

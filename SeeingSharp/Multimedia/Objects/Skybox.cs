@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
+using System.Numerics;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Objects
@@ -136,7 +136,7 @@ namespace SeeingSharp.Multimedia.Objects
             base.UnloadResources();
 
             // Dispose all locally created resources
-            foreach(var actLocalResource in m_localResources)
+            foreach (var actLocalResource in m_localResources)
             {
                 if (actLocalResource == null) { continue; }
 
@@ -189,7 +189,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="layerViewSubset">The layer view subset which called this update method.</param>
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if(this.CountRenderPassSubscriptions(layerViewSubset) <= 0)
+            if (this.CountRenderPassSubscriptions(layerViewSubset) <= 0)
             {
                 this.SubscribeToPass(RenderPassInfo.PASS_PLAIN_RENDER, layerViewSubset, this.Render);
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SeeingSharp
 {
@@ -111,7 +111,7 @@ namespace SeeingSharp
             }
         }
 
-    	/// <summary>
+        /// <summary>
         /// Determines whether the specified <see cref="SeeingSharp.ViewportF"/> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="SeeingSharp.ViewportF"/> to compare with this instance.</param>
@@ -123,7 +123,7 @@ namespace SeeingSharp
             return MathUtil.WithinEpsilon(X, other.X) && MathUtil.WithinEpsilon(Y, other.Y) && MathUtil.WithinEpsilon(Width, other.Width) && MathUtil.WithinEpsilon(Height, other.Height) && MathUtil.WithinEpsilon(MinDepth, other.MinDepth)
                    && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
         }
-	
+
         /// <summary>
         /// Determines whether the specified object is equal to this instance.
         /// </summary>
@@ -139,7 +139,7 @@ namespace SeeingSharp
             }
             return obj is ViewportF && Equals((ViewportF)obj);
         }
-	
+
         /// <summary>
         /// Returns a hash code for this instance.
         /// </summary>
@@ -160,7 +160,7 @@ namespace SeeingSharp
             }
         }
 
-	/// <summary>
+        /// <summary>
         /// Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
@@ -171,7 +171,7 @@ namespace SeeingSharp
             return left.Equals(right);
         }
 
-	/// <summary>
+        /// <summary>
         /// Implements the operator !=.
         /// </summary>
         /// <param name="left">The left.</param>

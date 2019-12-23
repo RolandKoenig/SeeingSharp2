@@ -19,14 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Numerics;
 
 namespace SeeingSharp
-{  
+{
     internal static class SdxMathHelper
     {
         internal static unsafe SharpDX.Mathematics.Interop.RawColor4 RawFromColor4(Color4 value)
@@ -46,7 +42,7 @@ namespace SeeingSharp
 
         internal static unsafe SharpDX.Mathematics.Interop.RawVector2 RawFromVector2(Vector2 value)
         {
-            return *(SharpDX.Mathematics.Interop.RawVector2*) (&value);
+            return *(SharpDX.Mathematics.Interop.RawVector2*)(&value);
         }
 
         internal static unsafe Vector2 Vector2FromRaw(SharpDX.Mathematics.Interop.RawVector2 value)

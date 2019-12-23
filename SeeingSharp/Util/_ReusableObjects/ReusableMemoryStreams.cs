@@ -49,13 +49,13 @@ namespace SeeingSharp.Util
 
         public MemoryStream TakeMemoryStream(int requiredCapacity = 128)
         {
-            if(!m_memoryStreams.TryPop(out var result))
+            if (!m_memoryStreams.TryPop(out var result))
             {
                 result = new MemoryStream(requiredCapacity);
             }
             else
             {
-                if(result.Capacity < requiredCapacity) { result.Capacity = requiredCapacity; }
+                if (result.Capacity < requiredCapacity) { result.Capacity = requiredCapacity; }
             }
             return result;
         }

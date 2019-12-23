@@ -19,17 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Numerics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Get import options
             var stlImportOptions = importOptions as StlImportOptions;
 
-            if(stlImportOptions == null)
+            if (stlImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for StlImporter!");
             }
@@ -414,16 +414,16 @@ namespace SeeingSharp.Multimedia.Objects
                     ParseLine(line, out var id, out var values);
                     switch (id)
                     {
-                            // Header.. not needed here
+                        // Header.. not needed here
                         case "solid":
                             break;
 
-                            // Geometry data
+                        // Geometry data
                         case "facet":
                             this.ReadFacet(reader, values, newGeometry, importOptions);
                             break;
 
-                            // End of file
+                        // End of file
                         case "endsolid":
                             break;
                     }
@@ -469,7 +469,7 @@ namespace SeeingSharp.Multimedia.Objects
                 //  (solid stands for Ascii format)
                 var header = ENCODING.GetString(reader.ReadBytes(80), 0, 80).Trim();
 
-                if(header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
+                if (header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
 
                 // Read and check number of triangles
                 var numberTriangles = ReadUInt32(reader);

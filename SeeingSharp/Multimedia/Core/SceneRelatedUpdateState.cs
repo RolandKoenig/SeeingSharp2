@@ -19,11 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Core
             this.SceneLayer = null;
 
             m_inputFrames = inputFrames;
-            if(m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
+            if (m_inputFrames == null) { m_inputFrames = DUMMY_FRAME_COLLECTION; }
         }
 
         /// <summary>

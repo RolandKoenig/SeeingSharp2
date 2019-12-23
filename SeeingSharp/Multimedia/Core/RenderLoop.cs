@@ -19,14 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -34,8 +26,16 @@ using SeeingSharp.Multimedia.DrawingVideo;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using D2D = SharpDX.Direct2D1;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -766,8 +766,8 @@ namespace SeeingSharp.Multimedia.Core
                     try
                     {
                         // Trigger deregister on scene if needed
-                        var reregisterOnScene = (m_targetDevice != null) && 
-                                                (m_targetDevice != m_currentDevice) && 
+                        var reregisterOnScene = (m_targetDevice != null) &&
+                                                (m_targetDevice != m_currentDevice) &&
                                                 (m_currentScene != null) ||
                                                 m_reregisterViewOnSceneForced;
                         if (reregisterOnScene)
@@ -936,7 +936,7 @@ namespace SeeingSharp.Multimedia.Core
                 catch (Exception ex)
                 {
                     GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_PrepareRendering);
-                }                
+                }
             });
 
             // Draw all frames to registered VideoWriters
@@ -1009,7 +1009,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (this.DiscardRendering) { return; }
             if (!m_nextRenderAllowed) { return; }
-            if (m_currentDevice.IsLost){ return; }
+            if (m_currentDevice.IsLost) { return; }
             m_nextRenderAllowed = false;
 
             var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(
@@ -1122,7 +1122,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     this.Rendered.Raise(this, EventArgs.Empty);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_RenderEvent);
                 }

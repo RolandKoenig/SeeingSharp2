@@ -20,12 +20,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using SeeingSharp.SampleContainer;
+using SeeingSharp.Util;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -63,10 +63,10 @@ namespace SeeingSharp.UwpSamples
         {
             get
             {
-                if(m_bitmapSource == null && m_bitmapSourceTask == null)
+                if (m_bitmapSource == null && m_bitmapSourceTask == null)
                 {
                     var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
-                    if(sourceLink == null) { return null; }
+                    if (sourceLink == null) { return null; }
 
                     m_bitmapSourceTask = this.LoadSampleImageAsync(sourceLink);
                 }
