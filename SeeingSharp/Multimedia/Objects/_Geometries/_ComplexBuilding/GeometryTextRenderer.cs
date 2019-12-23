@@ -70,7 +70,6 @@ namespace SeeingSharp.Multimedia.Objects
                 return SDX.Result.Ok;
             }
 
-            var dWriteFactory = GraphicsCore.Current.FactoryDWrite;
             var d2DFactory = GraphicsCore.Current.FactoryD2D;
 
             // Extrude geometry data out of given glyph run
@@ -138,8 +137,6 @@ namespace SeeingSharp.Multimedia.Objects
                     }
 
                     var actBaseIndex = tempGeometry.CountVertices;
-                    var edgeOrder = polygonForRendering.EdgeOrder;
-                    var edgeSize = edgeOrder == EdgeOrder.CounterClockwise ? 0.1f : 0.4f;
 
                     // Append all vertices to temporary Geometry
                     for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
@@ -264,7 +261,7 @@ namespace SeeingSharp.Multimedia.Objects
                 }
             }
 
-            // TODO: Make this configurable
+            // Toggle coordinate system becomes text input comes in opposite direction
             tempGeometry.ToggleCoordinateSystem();
 
             // Scale the text using given scale factor

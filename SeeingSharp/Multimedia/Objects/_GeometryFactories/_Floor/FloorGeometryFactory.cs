@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -85,9 +84,6 @@ namespace SeeingSharp.Multimedia.Objects
                     }
                 }
             }
-
-            //Generate all borders
-            var boolTileMap = this.CreateBooleanMap(tileMap);
         }
 
         /// <summary>
@@ -184,13 +180,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
 
-            // Build bottom geometry
-            var bottomSurface = result.CreateSurface();
-
-
             // Calculate half vector of total ground size.
             var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
-            var tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
 
             // Build all tiles
             foreach (var actTile in m_groundTiles)
@@ -224,28 +215,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Return all generated Geometry
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a boolean map out of given tilemap.
-        /// </summary>
-        /// <param name="tileMap">The tilemap to convert.</param>
-        private bool[,] CreateBooleanMap(FloorTileInfo[,] tileMap)
-        {
-            var tilesX = tileMap.GetLength(0);
-            var tilesY = tileMap.GetLength(1);
-
-            //Convert tilemap
-            var result = new bool[tilesX, tilesY];
-            for (var loopX = 0; loopX < tilesX; loopX++)
-            {
-                for (var loopY = 0; loopY < tilesY; loopY++)
-                {
-                    result[loopX, loopY] = tileMap[loopX, loopY] != null;
-                }
-            }
-
             return result;
         }
     }

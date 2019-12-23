@@ -87,7 +87,6 @@ namespace SeeingSharp.Multimedia.Objects
 
             // Try to triangulate it
             var indices = polygon.TriangulateUsingCuttingEars();
-
             if (indices == null)
             {
                 throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");
@@ -102,17 +101,19 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Append all indices
-            using var indexEnumerator = indices.GetEnumerator();
-            while (indexEnumerator.MoveNext())
+            using (var indexEnumerator = indices.GetEnumerator())
             {
-                var index1 = indexEnumerator.Current;
-                var index2 = 0;
-                var index3 = 0;
+                while (indexEnumerator.MoveNext())
+                {
+                    var index1 = indexEnumerator.Current;
+                    var index2 = 0;
+                    var index3 = 0;
 
-                if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
-                if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
+                    if (indexEnumerator.MoveNext()) { index2 = indexEnumerator.Current; } else { break; }
+                    if (indexEnumerator.MoveNext()) { index3 = indexEnumerator.Current; } else { break; }
 
-                this.AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
+                    this.AddTriangle(index1 + baseIndex, index2 + baseIndex, index3 + baseIndex);
+                }
             }
         }
 
@@ -197,7 +198,7 @@ namespace SeeingSharp.Multimedia.Objects
         public BuiltVerticesRange BuildCircleFullV(Vector3 middle, float radius, float width, float height, int countOfSegments, Color4 Color)
         {
             var startVertex = this.Owner.CountVertices;
-            if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
+            if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments)); }
 
             var halfWidth = width / 2f;
             var halfHeight = height / 2f;
@@ -334,7 +335,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             if (countOfSegments < 5)
             {
-                throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments");
+                throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments));
             }
 
             var diameter = radius * 2f;
@@ -360,24 +361,18 @@ namespace SeeingSharp.Multimedia.Objects
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
 
             // Generate all segments
-            var fullRadian = EngineMath.RAD_360DEG;
             var countOfSegmentsF = (float)countOfSegments;
-
             for (var loop = 0; loop < countOfSegments; loop++)
             {
                 // Calculate rotation values for each segment border
-                var startRadian = fullRadian * (loop / countOfSegmentsF);
-                var targetRadian = fullRadian * ((loop + 1) / countOfSegmentsF);
+                var startRadian = EngineMath.RAD_360DEG * (loop / countOfSegmentsF);
+                var targetRadian = EngineMath.RAD_360DEG * ((loop + 1) / countOfSegmentsF);
                 var normalRadian = startRadian + (targetRadian - startRadian) / 2f;
 
                 // Generate all normals
                 var sideNormal = Vector3Ex.NormalFromHVRotation(normalRadian, 0f);
                 var sideLeftNormal = Vector3Ex.NormalFromHVRotation(startRadian, 0f);
                 var sideRightNormal = Vector3Ex.NormalFromHVRotation(targetRadian, 0f);
-
-                //Calculate border texture coordinates
-                var sideLeftTexCoord = new Vector2(0.5f + sideLeftNormal.X * radius, 0.5f + sideLeftNormal.Z * radius);
-                var sideRightTexCoord = new Vector2(0.5f + sideRightNormal.X * radius, 0.5f + sideRightNormal.Z * radius);
 
                 //Generate all points
                 var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
@@ -476,7 +471,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var startVertex = this.Owner.CountVertices;
 
-            if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", "coundOfSegments"); }
+            if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments)); }
             var diameter = radius * 2f;
 
             // Get texture offsets
@@ -707,13 +702,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds a cube of 4 vertices and a defined height.
         /// </summary>
-        /// <param name="topA"></param>
-        /// <param name="topB"></param>
-        /// <param name="topC"></param>
-        /// <param name="topD"></param>
-        /// <param name="heigh"></param>
-        /// <param name="color"></param>
-        public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float heigh, Color4 color)
+        public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float height, Color4 color)
         {
             var result = new BuiltVerticesRange(this.Owner)
             {
@@ -725,7 +714,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Calculate texture coordinates
             var size = new Vector3(
                 (topB - topA).Length(),
-                Math.Abs(heigh),
+                Math.Abs(height),
                 (topC - topB).Length());
             var texX = 1f;
             var texY = 1f;
@@ -739,10 +728,10 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             // Calculate bottom vectors
-            var bottomA = new Vector3(topA.X, topA.Y - heigh, topA.Z);
-            var bottomB = new Vector3(topB.X, topB.Y - heigh, topB.Z);
-            var bottomC = new Vector3(topC.X, topC.Y - heigh, topC.Z);
-            var bottomD = new Vector3(topD.X, topD.Y - heigh, topD.Z);
+            var bottomA = new Vector3(topA.X, topA.Y - height, topA.Z);
+            var bottomB = new Vector3(topB.X, topB.Y - height, topB.Z);
+            var bottomC = new Vector3(topC.X, topC.Y - height, topC.Z);
+            var bottomD = new Vector3(topD.X, topD.Y - height, topD.Z);
 
             // Build Top side
             var vertex = new Vertex(topA, color, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));

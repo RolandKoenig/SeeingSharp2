@@ -29,9 +29,6 @@ namespace SeeingSharp.Multimedia.Objects
 {
     internal class SimplePolygon2DGeometrySink : DummyComObject, GeometrySink
     {
-        private FigureBegin m_currentFigureBegin;
-        private FillMode m_currentFillMode;
-        private PathSegment m_currentPathSegment;
         private List<Vector2> m_currentPolygonBuilder;
         private Vector2 m_origin;
         private List<Polygon2D> m_polygons2D;
@@ -137,8 +134,6 @@ namespace SeeingSharp.Multimedia.Objects
         {
             m_currentPolygonBuilder.Clear();
             m_currentPolygonBuilder.Add(new Vector2(startPoint.X, startPoint.Y) - m_origin);
-
-            m_currentFigureBegin = figureBegin;
         }
 
         /// <summary>
@@ -179,7 +174,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </remarks>
         public void SetFillMode(FillMode fillMode)
         {
-            m_currentFillMode = fillMode;
+
         }
 
         /// <summary>
@@ -192,7 +187,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </remarks>
         public void SetSegmentFlags(PathSegment vertexFlags)
         {
-            m_currentPathSegment = vertexFlags;
+
         }
 
         /// <summary>

@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -372,7 +371,6 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 // Find all triangles connected to this vertex and get normals from them
                 var finalNormalHelper = Vector3.Zero;
-                var finalNormalHelper2 = Vector3.Zero;
                 var normalCount = 0;
 
                 var surfaceCount = m_surfaces.Count;
