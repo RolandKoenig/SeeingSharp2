@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="App.xaml" />
+    <None Remove="ChildRenderWindow.xaml" />
     <None Remove="MainWindow.xaml" />
     <None Remove="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
@@ -32,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="ChildRenderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml" />
     <Page Include="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
@@ -47,5 +52,11 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ChildRenderWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

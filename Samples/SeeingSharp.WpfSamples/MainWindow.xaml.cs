@@ -1,13 +1,4 @@
 ﻿
-/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
-Before:
-using System;
-After:
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
-using System;
-*/
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
@@ -15,16 +6,6 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
-
-/* Unmerged change from project 'SeeingSharp.WpfCoreSamples'
-Before:
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
-using TimeSpan = System.TimeSpan;
-After:
-using TimeSpan = System.TimeSpan;
-*/
 using System.Windows.Controls;
 
 namespace SeeingSharp.WpfSamples
@@ -148,6 +129,14 @@ namespace SeeingSharp.WpfSamples
             dlgPerformance.DataContext = perfVM;
             dlgPerformance.Owner = this;
             dlgPerformance.Show();
+        }
+
+        private void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
+        {
+            var childWindow = new ChildRenderWindow();
+            childWindow.SetRenderingData(this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
+            childWindow.Owner = this;
+            childWindow.Show();
         }
     }
 }

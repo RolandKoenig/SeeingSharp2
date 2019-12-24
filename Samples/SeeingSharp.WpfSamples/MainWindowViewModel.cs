@@ -78,7 +78,6 @@ namespace SeeingSharp.WpfSamples
         public ObservableCollection<string> SampleGroups
         {
             get;
-            private set;
         } = new ObservableCollection<string>();
 
         public string SelectedGroup

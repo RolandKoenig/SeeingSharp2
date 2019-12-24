@@ -14,6 +14,8 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Performance"
                       Click="OnMnuCmdPerformance_ItemClick" />
+            <MenuItem Header="New child window"
+                      Click="OnMnuCmdNewChildWindow_Click"/>
         </Menu>
 
         <!-- List of sample groups -->

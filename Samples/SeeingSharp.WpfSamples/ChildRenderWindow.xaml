@@ -1,0 +1,63 @@
+﻿<Window x:Class="SeeingSharp.WpfSamples.ChildRenderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sSharp="http://www.rolandk.de/seeingsharp"
+        xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
+        mc:Ignorable="d"
+        Title="ChildRenderWindow" Height="450" Width="800">
+    <Grid>
+        <!-- The 3D renderer control-->
+        <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+
+        <!-- Bottom statusbar -->
+        <StackPanel Orientation="Horizontal"
+                    Background="#BBD3D3D3"
+                    VerticalAlignment="Bottom">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="Image">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="ComboBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="Rectangle">
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+            </StackPanel.Resources>
+
+            <Image Source="/Assets/Icons/Output16x16.png"
+                   Width="16" />
+            <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CurrentViewSize}" />
+            <TextBlock Text="px" />
+            <Rectangle Width="1"
+                       Fill="Gray" />
+
+            <Image Source="/Assets/Icons/Adapter16x16.png"
+                   Width="16" />
+            <ComboBox ItemsSource="{Binding ElementName=CtrlRenderer, Path=PossibleDevices}"
+                      SelectedItem="{Binding ElementName=CtrlRenderer, Path=SelectedDevice, Mode=TwoWay}"
+                      Width="200" />
+            <Rectangle Width="1"
+                       Fill="Gray" />
+
+            <TextBlock Text="Force composition over software: " />
+            <CheckBox x:Name="CtrlForceCompositionSoftware"
+                      IsChecked="{Binding ElementName=CtrlRenderer, Path=ForceCompositionOverSoftware}"
+                      VerticalAlignment="Center"
+                      Margin="5,0,0,0" />
+            <Rectangle Width="1"
+                       Fill="Gray" />
+
+            <TextBlock Text="Composition:" />
+            <TextBlock Text="{Binding ElementName=CtrlRenderer, Path=CompositionMode}" />
+        </StackPanel>
+    </Grid>
+</Window>
