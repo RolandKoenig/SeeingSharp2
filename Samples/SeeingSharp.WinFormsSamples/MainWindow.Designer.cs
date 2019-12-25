@@ -40,6 +40,7 @@
             this.m_lblDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_barTools = new System.Windows.Forms.ToolStrip();
             this.m_cmdScreenshot = new System.Windows.Forms.ToolStripButton();
+            this.m_cmdNewChildWindow = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.m_mnuChangeResolution = new System.Windows.Forms.ToolStripDropDownButton();
             this.x600ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,13 +64,11 @@
             // 
             // m_ctrlRenderPanel
             // 
-            this.m_ctrlRenderPanel.DiscardRendering = true;
             this.m_ctrlRenderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_ctrlRenderPanel.Location = new System.Drawing.Point(0, 0);
             this.m_ctrlRenderPanel.Name = "m_ctrlRenderPanel";
             this.m_ctrlRenderPanel.Size = new System.Drawing.Size(671, 431);
             this.m_ctrlRenderPanel.TabIndex = 0;
-            this.m_ctrlRenderPanel.ViewConfiguration.ViewNeedsRefresh = true;
             // 
             // m_refreshTimer
             // 
@@ -144,7 +143,8 @@
             this.m_cmdScreenshot,
             this.toolStripSeparator1,
             this.m_mnuChangeResolution,
-            this.m_mnuChangeDevice});
+            this.m_mnuChangeDevice,
+            m_cmdNewChildWindow});
             this.m_barTools.Location = new System.Drawing.Point(0, 0);
             this.m_barTools.Name = "m_barTools";
             this.m_barTools.Size = new System.Drawing.Size(843, 25);
@@ -160,6 +160,14 @@
             this.m_cmdScreenshot.Size = new System.Drawing.Size(23, 22);
             this.m_cmdScreenshot.Text = "Copy Screenshot to Clipboard";
             this.m_cmdScreenshot.Click += new System.EventHandler(this.OnCmdCopyScreenshot_Click);
+            // 
+            // m_cmdNewChildWindow
+            // 
+            this.m_cmdNewChildWindow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.m_cmdNewChildWindow.Name = "m_cmdNewChildWindow";
+            this.m_cmdNewChildWindow.Size = new System.Drawing.Size(23, 22);
+            this.m_cmdNewChildWindow.Text = "New child window";
+            this.m_cmdNewChildWindow.Click += new System.EventHandler(this.OnCmdNewChildWindow_Click);
             // 
             // toolStripSeparator1
             // 
@@ -290,7 +298,7 @@
             this.Controls.Add(this.m_barStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
-            this.Text = "Seeing# 2 - Windows.Forms samples";
+            this.Text = "Seeing# 2 - Windows.Forms samples - Main window";
             this.m_barStatus.ResumeLayout(false);
             this.m_barStatus.PerformLayout();
             this.m_barTools.ResumeLayout(false);
@@ -318,6 +326,7 @@
         private System.Windows.Forms.ToolStripMenuItem x1024ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x1080ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton m_cmdScreenshot;
+        private System.Windows.Forms.ToolStripButton m_cmdNewChildWindow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripStatusLabel m_lblObjectCountDesc;
         private System.Windows.Forms.ToolStripStatusLabel m_lblObjectCount;

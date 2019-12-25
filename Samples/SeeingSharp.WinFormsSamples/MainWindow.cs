@@ -39,23 +39,24 @@ namespace SeeingSharp.WinFormsSamples
         private bool m_isChangingSample;
         private List<ToolStripItem> m_sampleCommandToolbarItems;
 
+        private List<ChildRenderWindow> m_childWindows;
+
         public MainWindow()
         {
             this.InitializeComponent();
 
             m_sampleCommandToolbarItems = new List<ToolStripItem>();
-
-            this.UpdateWindowState();
+            m_childWindows = new List<ChildRenderWindow>();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
-
             if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
+
+            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
@@ -196,6 +197,12 @@ namespace SeeingSharp.WinFormsSamples
                         manipulator.Clear(true);
                     });
                     await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
+
+                    foreach (var actChildWindow in m_childWindows)
+                    {
+                        await actChildWindow.ClearAsync();
+                    }
+
                     m_actSample.OnClosed();
                 }
                 if (m_actSampleSettings != null)
@@ -215,6 +222,11 @@ namespace SeeingSharp.WinFormsSamples
                     await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
                     await sampleObject.OnInitRenderingWindowAsync(m_ctrlRenderPanel.RenderLoop);
                     await sampleObject.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+
+                    foreach (var actChildWindow in m_childWindows)
+                    {
+                        await actChildWindow.SetRenderingDataAsync(sampleObject);
+                    }
 
                     m_actSample = sampleObject;
                     m_actSampleSettings = sampleSettings;
@@ -244,12 +256,6 @@ namespace SeeingSharp.WinFormsSamples
 
                 await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
-
-                //// Apply new camera on child windows
-                //foreach (ChildRenderWindow actChildWindow in m_openedChildRenderers)
-                //{
-                //    actChildWindow.ApplyViewpoint(m_ctrlRenderer.Camera.GetViewPoint());
-                //}
             }
             finally
             {
@@ -294,6 +300,11 @@ namespace SeeingSharp.WinFormsSamples
 
         private void UpdateWindowState()
         {
+            if (this.DesignMode)
+            {
+                return;
+            }
+
             var viewSize = m_ctrlRenderPanel.RenderLoop.ViewInformation.CurrentViewSize;
             m_lblResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
             m_lblObjectCount.Text = m_ctrlRenderPanel.RenderLoop.Scene.CountObjects.ToString();
@@ -378,6 +389,20 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             await sample.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+        }
+
+        private async void OnCmdNewChildWindow_Click(object sender, EventArgs e)
+        {
+            var childWindow = new ChildRenderWindow();
+            childWindow.Icon = this.Icon;
+            childWindow.InitializeChildWindow(m_ctrlRenderPanel.Scene, m_ctrlRenderPanel.Camera.GetViewPoint());
+
+            m_childWindows.Add(childWindow);
+            childWindow.Closed += (_1, _2) => { m_childWindows.Remove(childWindow); };
+
+            childWindow.Show(this);
+
+            await childWindow.SetRenderingDataAsync(m_actSample);
         }
     }
 }
