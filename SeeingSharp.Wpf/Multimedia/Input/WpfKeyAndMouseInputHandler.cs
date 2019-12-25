@@ -19,27 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-/* Unmerged change from project 'SeeingSharp.WpfCore'
-Before:
-using System;
-After:
 using SeeingSharp.Multimedia.Views;
-using System;
-*/
-using SeeingSharp.Multimedia.Views;
-
-/* Unmerged change from project 'SeeingSharp.WpfCore'
-Before:
-using System.Windows;
-using System.Windows.Input;
-using System.Numerics;
-using SeeingSharp.Multimedia.Views;
-After:
-using System.Numerics;
-using System.Windows;
-using System.Windows.Input;
-*/
 using System;
 using System.Collections.Generic;
 using System.Numerics;

@@ -2,7 +2,7 @@ extensions: designer.cs generated.cs xaml.cs CPOL.cs MIT.cs StoreAssociation.xml
 extensions: APACHE2.cs
 extensions: MS.cs
 extensions: .rd.xml
-extensions: .cs .cpp .h .hlsl
+extensions: .cs .cpp .h .hlsl .xaml.cs
 /*
     Seeing# and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.

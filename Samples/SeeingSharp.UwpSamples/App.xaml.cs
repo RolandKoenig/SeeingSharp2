@@ -1,9 +1,9 @@
 ﻿/*
-    Seeing# and all games/applications distributed together with it. 
-    Exception are projects where it is noted otherwhise.
+    Seeing# and all applications distributed together with it. 
+	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
-     - http://www.rolandk.de (the autors homepage, german)
+     - http://www.rolandk.de (the authors homepage, german)
     Copyright (C) 2019 Roland König (RolandK)
     
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using System;

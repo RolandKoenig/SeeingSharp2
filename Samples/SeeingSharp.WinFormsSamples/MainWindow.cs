@@ -19,34 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
-
-/* Unmerged change from project 'SeeingSharp.WinFormsCoreSamples'
-Before:
-using System.Windows.Forms;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-After:
-using SharpDX;
-using System;
-using System.Collections.Core;
-*/
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
-/* Unmerged change from project 'SeeingSharp.WinFormsCoreSamples'
-Before:
-using SeeingSharp.SampleContainer.Util;
-using SharpDX;
-After:
-using SeeingSharp.SampleContainer.Reflection;
-using System.Windows.Forms;
-*/
 using System.Reflection;
 using System.Windows.Forms;
 

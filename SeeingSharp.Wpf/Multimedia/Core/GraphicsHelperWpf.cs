@@ -23,17 +23,8 @@ using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using System;
 using System.Windows;
-
-/* Unmerged change from project 'SeeingSharp.WpfCore'
-Before:
-using SeeingSharp.Util;
-using GDI = System.Drawing;
-After:
-using System.Windows.Media.Drawing;
-*/
 using System.Windows.Media.Imaging;
 using D3D11 = SharpDX.Direct3D11;
-using GDI = System.Drawing;
 
 namespace SeeingSharp.Multimedia.Core
 {
