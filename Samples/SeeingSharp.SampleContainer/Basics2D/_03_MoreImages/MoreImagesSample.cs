@@ -38,31 +38,38 @@ namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
         private const float IMAGE_WIDTH = 64;
         private const float IMAGE_HEIGHT = 64;
 
+        private ImageSampleSettings m_castedSettings;
+
         private StandardBitmapResource m_bitmap;
 
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            var castedSettings = (ImageSampleSettings)settings;
+            m_castedSettings = (ImageSampleSettings)settings;
 
             m_bitmap = new StandardBitmapResource(
                 new AssemblyResourceLink(
                     this.GetType(),
                     "SimpleImage.png"));
 
-            await targetRenderLoop.Register2DDrawingLayerAsync(graphics =>
+            return Task.FromResult<object>(null);
+        }
+
+        public override async Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
+        {
+            await mainOrChildRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
                 base.Draw2DBackground(graphics);
 
                 // Get all parameters
-                var transparency = castedSettings.Transparent ? 0.4f : 1f;
-                var imageWidth = EngineMath.Clamp(castedSettings.ImageWidth, 5, 500);
+                var transparency = m_castedSettings.Transparent ? 0.4f : 1f;
+                var imageWidth = EngineMath.Clamp(m_castedSettings.ImageWidth, 5, 500);
                 var imageHeight = imageWidth;
                 var screenWidth = (int)graphics.ScreenWidth;
                 var screenHeight = (int)graphics.ScreenHeight;
-                var interpolationMode = castedSettings.HighQuality
+                var interpolationMode = m_castedSettings.HighQuality
                     ? BitmapInterpolationMode.NearestNeighbor
                     : BitmapInterpolationMode.Linear;
 
@@ -83,14 +90,9 @@ namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
             });
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override void OnClosed()
         {
-            return Task.FromResult<object>(null);
-        }
-
-        public override void NotifyClosed()
-        {
-            base.NotifyClosed();
+            base.OnClosed();
 
             SeeingSharpUtil.SafeDispose(ref m_bitmap);
         }

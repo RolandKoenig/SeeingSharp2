@@ -39,11 +39,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
         typeof(SampleSettingsWith3D))]
     public class MultiMaterialSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(
@@ -93,8 +93,21 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 }
 
             });
+        }
 
-            ConfigureCamera(targetRenderLoop);
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
+        {
+            var camera = mainOrChildRenderLoop.Camera;
+
+            // Configure camera
+            camera.Position = new Vector3(-7f, 10f, -10f);
+            camera.Target = new Vector3(0f, 1.5f, 0f);
+            camera.UpdateCamera();
+
+            // Append camera behavior
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -131,26 +144,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 Color4.White);
 
             return result;
-        }
-
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
-        {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
-
-            // Configure camera
-            camera.Position = new Vector3(-7f, 10f, -10f);
-            camera.Target = new Vector3(0f, 1.5f, 0f);
-            camera.UpdateCamera();
-
-            // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
     }
 }

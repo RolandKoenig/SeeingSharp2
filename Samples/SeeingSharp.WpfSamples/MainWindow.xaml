@@ -7,7 +7,7 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
         mc:Ignorable="d"
-        Title="Seeing# 2 - Wpf samples" Width="800" Height="450"
+        Title="Seeing# 2 - Wpf samples - Main window" Width="800" Height="450"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
     <DockPanel LastChildFill="True">
 

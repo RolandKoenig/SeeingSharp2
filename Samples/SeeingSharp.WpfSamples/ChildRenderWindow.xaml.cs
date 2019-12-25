@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,28 +26,38 @@ namespace SeeingSharp.WpfSamples
     {
         public ChildRenderWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            this.Loaded += OnLoaded;
+            this.Loaded += this.OnLoaded;
         }
 
-        public void SetRenderingData(SampleBase actSample, Scene scene, Camera3DViewPoint viewPoint)
+        public void InitializeChildWindow(Scene scene, Camera3DViewPoint viewPoint)
         {
             this.CtrlRenderer.Scene = scene;
             this.CtrlRenderer.Camera.ApplyViewPoint(viewPoint);
-
-            actSample.OnNewChildWindow(this.CtrlRenderer.RenderLoop);
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        public async Task SetRenderingDataAsync(SampleBase actSample)
         {
-            if (!GraphicsCore.IsLoaded)
+            await actSample.OnInitRenderingWindowAsync(this.CtrlRenderer.RenderLoop);
+
+            await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
+                new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 10f));
+        }
+
+        public async Task ClearAsync()
+        {
+            await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (DesignerProperties.GetIsInDesignMode(this))
             {
                 return;
             }
 
-            await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 10f));
+            this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
         }
     }
 }

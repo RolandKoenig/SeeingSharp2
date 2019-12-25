@@ -35,56 +35,58 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         typeof(RectangleSampleSettings))]
     public class RectangleSample : SampleBase
     {
+        private RectangleSampleSettings m_castedSettings;
+
         private SolidBrushResource m_fillBrush;
         private SolidBrushResource m_fillBrushTransparent;
 
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            var castedSettings = (RectangleSampleSettings)settings;
+            m_castedSettings = (RectangleSampleSettings)settings;
 
             m_fillBrush = new SolidBrushResource(Color4.Gray);
             m_fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
 
-            await targetRenderLoop.Register2DDrawingLayerAsync(graphics =>
+            return Task.FromResult<object>(null);
+        }
+
+        public override async Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
+        {
+            await mainOrChildRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
                 base.Draw2DBackground(graphics);
 
                 // Calculate rectangle location
-                var width = castedSettings.Width;
-                var height = castedSettings.Height;
+                var width = m_castedSettings.Width;
+                var height = m_castedSettings.Height;
                 var rectToDraw = new RectangleF(
                     graphics.ScreenWidth / 2f - width / 2f,
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
 
                 // Draw the rectangle
-                if (castedSettings.Rounded)
+                if (m_castedSettings.Rounded)
                 {
                     graphics.FillRoundedRectangle(
                         rectToDraw,
-                        castedSettings.RoundedRadius, castedSettings.RoundedRadius,
-                        castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
+                        m_castedSettings.RoundedRadius, m_castedSettings.RoundedRadius,
+                        m_castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
                 }
                 else
                 {
                     graphics.FillRectangle(
                         rectToDraw,
-                        castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
+                        m_castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
                 }
             });
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override void OnClosed()
         {
-            return Task.FromResult<object>(null);
-        }
-
-        public override void NotifyClosed()
-        {
-            base.NotifyClosed();
+            base.OnClosed();
 
             SeeingSharpUtil.SafeDispose(ref m_fillBrush);
             SeeingSharpUtil.SafeDispose(ref m_fillBrushTransparent);

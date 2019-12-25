@@ -37,11 +37,11 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
         typeof(SampleSettingsWith3D))]
     public class ColoredConeSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(
@@ -68,20 +68,11 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
                     .ApplyAndRewind();
                 manipulator.AddObject(coneMesh);
             });
-
-            ConfigureCamera(targetRenderLoop);
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
         {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
+            var camera = mainOrChildRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);
@@ -89,7 +80,9 @@ namespace SeeingSharp.SampleContainer.Primitives3D._02_ColoredCone
             camera.UpdateCamera();
 
             // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
         }
     }
 }

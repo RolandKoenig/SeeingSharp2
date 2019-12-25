@@ -33,11 +33,11 @@ namespace SeeingSharp.SampleContainer
     {
         private LinearGradientBrushResource m_backgroundBrush;
 
-        public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
+        public abstract Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings);
 
-        public abstract Task OnNewChildWindow(RenderLoop targetRenderLoop);
+        public abstract Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop);
 
-        public virtual Task OnReloadAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public virtual Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             return Task.FromResult<object>(null);
         }
@@ -47,7 +47,7 @@ namespace SeeingSharp.SampleContainer
 
         }
 
-        public virtual void NotifyClosed()
+        public virtual void OnClosed()
         {
             SeeingSharpUtil.SafeDispose(ref m_backgroundBrush);
         }

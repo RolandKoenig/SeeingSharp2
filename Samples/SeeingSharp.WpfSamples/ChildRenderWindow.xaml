@@ -6,7 +6,7 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
         mc:Ignorable="d"
-        Title="ChildRenderWindow" Height="450" Width="800">
+        Title="Seeing# 2 - Wpf samples - Child window" Height="450" Width="800">
     <Grid>
         <!-- The 3D renderer control-->
         <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />

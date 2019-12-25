@@ -3,6 +3,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
@@ -16,28 +17,34 @@ namespace SeeingSharp.WpfSamples
         private SampleMetadata m_actSampleInfo;
         private bool m_isChangingSample;
 
+        private List<ChildRenderWindow> m_childWindows;
+
         public MainWindow()
         {
             this.InitializeComponent();
+
+            m_childWindows = new List<ChildRenderWindow>();
 
             this.Loaded += this.OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!DesignerProperties.GetIsInDesignMode(this))
+            if (DesignerProperties.GetIsInDesignMode(this))
             {
-                this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
-
-                var sampleRepo = new SampleRepository();
-                sampleRepo.LoadSampleData();
-
-                var viewModel = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
-                viewModel.ReloadRequest += OnViewModel_ReloadRequest;
-                this.DataContext = viewModel;
-
-                CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
+                return;
             }
+
+            this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
+
+            var sampleRepo = new SampleRepository();
+            sampleRepo.LoadSampleData();
+
+            var viewModel = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
+            viewModel.ReloadRequest += OnViewModel_ReloadRequest;
+            this.DataContext = viewModel;
+
+            CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
         }
 
         private async void OnViewModel_ReloadRequest(object sender, EventArgs e)
@@ -83,7 +90,13 @@ namespace SeeingSharp.WpfSamples
                         manipulator.Clear(true);
                     });
                     await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
-                    m_actSample.NotifyClosed();
+
+                    foreach (var actChildWindow in m_childWindows)
+                    {
+                        await actChildWindow.ClearAsync();
+                    }
+
+                    m_actSample.OnClosed();
                 }
 
                 // Reset members
@@ -95,7 +108,13 @@ namespace SeeingSharp.WpfSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
+                    await sampleObject.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlRenderer.RenderLoop, sampleSettings);
+
+                    foreach (var actChildWindow in m_childWindows)
+                    {
+                        await actChildWindow.SetRenderingDataAsync(sampleObject);
+                    }
 
                     m_actSample = sampleObject;
                     m_actSampleInfo = sampleInfo;
@@ -131,12 +150,18 @@ namespace SeeingSharp.WpfSamples
             dlgPerformance.Show();
         }
 
-        private void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
+        private async void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
         {
             var childWindow = new ChildRenderWindow();
-            childWindow.SetRenderingData(m_actSample, this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
+            childWindow.InitializeChildWindow(this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
+
+            m_childWindows.Add(childWindow);
+            childWindow.Closed += (_1, _2) => { m_childWindows.Remove(childWindow); };
+
             childWindow.Owner = this;
             childWindow.Show();
+
+            await childWindow.SetRenderingDataAsync(m_actSample);
         }
     }
 }

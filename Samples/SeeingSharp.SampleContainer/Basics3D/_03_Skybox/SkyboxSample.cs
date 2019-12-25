@@ -38,11 +38,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
         typeof(SampleSettingsWith3D))]
     public class SkyboxSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
@@ -74,20 +74,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                 var skyboxObject = new Skybox(resSkyboxTexture);
                 manipulator.AddObject(skyboxObject, "Skybox");
             });
-
-            ConfigureCamera(targetRenderLoop);
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
         {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
+            var camera = mainOrChildRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 1f, 3f);
@@ -95,7 +86,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
             camera.UpdateCamera();
 
             // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
         }
     }
 }

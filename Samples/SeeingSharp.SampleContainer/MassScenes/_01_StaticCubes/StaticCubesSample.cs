@@ -39,20 +39,33 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         typeof(StaticCubesSampleSettings))]
     public class StaticCubesSample : SampleBase
     {
-        public override Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
-
-            ConfigureCamera(targetRenderLoop);
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
             return Task.FromResult<object>(null);
         }
 
-        public override async Task OnReloadAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
+        {
+            var camera = mainOrChildRenderLoop.Camera;
+
+            // Configure camera
+            camera.Position = new Vector3(40f, 30f, 40f);
+            camera.Target = new Vector3(0f, 5f, 0f);
+            camera.UpdateCamera();
+
+            // Append camera behavior
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
+        }
+
+        public override async Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             var castedSettings = (StaticCubesSampleSettings)settings;
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Clear previous scene
                 manipulator.Clear();
@@ -112,26 +125,6 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                     }
                 }
             });
-        }
-
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
-        {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
-
-            // Configure camera
-            camera.Position = new Vector3(40f, 30f, 40f);
-            camera.Target = new Vector3(0f, 5f, 0f);
-            camera.UpdateCamera();
-
-            // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
 
         //*********************************************************************

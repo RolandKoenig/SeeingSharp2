@@ -217,7 +217,7 @@ namespace SeeingSharp.WinFormsSamples
                         manipulator.Clear(true);
                     });
                     await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
-                    m_actSample.NotifyClosed();
+                    m_actSample.OnClosed();
                 }
                 if (m_actSampleSettings != null)
                 {
@@ -234,6 +234,7 @@ namespace SeeingSharp.WinFormsSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+                    await sampleObject.OnInitRenderingWindowAsync(m_ctrlRenderPanel.RenderLoop);
                     await sampleObject.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;

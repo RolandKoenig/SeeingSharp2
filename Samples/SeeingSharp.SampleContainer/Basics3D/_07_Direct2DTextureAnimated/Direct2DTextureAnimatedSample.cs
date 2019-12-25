@@ -43,9 +43,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
         private SolidBrushResource m_solidBrush;
         private TextFormatResource m_textFormat;
 
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
             // Whole animation takes x milliseconds
             var animationMillis = 3000f;
@@ -75,7 +75,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             });
 
             // Build 3D scene
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(
@@ -104,20 +104,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh);
             });
-
-            ConfigureCamera(targetRenderLoop);
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
         {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
+            var camera = mainOrChildRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);
@@ -125,12 +116,14 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
             camera.UpdateCamera();
 
             // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
         }
 
-        public override void NotifyClosed()
+        public override void OnClosed()
         {
-            base.NotifyClosed();
+            base.OnClosed();
 
             SeeingSharpUtil.SafeDispose(ref m_solidBrush);
             SeeingSharpUtil.SafeDispose(ref m_animatedRectBrush);

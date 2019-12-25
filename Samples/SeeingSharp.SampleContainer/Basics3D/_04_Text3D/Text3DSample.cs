@@ -37,11 +37,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
         typeof(SampleSettingsWith3D))]
     public class Text3DSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings)
+        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+            await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(
@@ -64,20 +64,11 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
                 var textObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 textObject.YPos = textOptions.VolumetricTextDepth;
             });
-
-            ConfigureCamera(targetRenderLoop);
         }
 
-        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
         {
-            ConfigureCamera(targetRenderLoop);
-
-            return Task.FromResult<object>(null);
-        }
-
-        private static void ConfigureCamera(RenderLoop targetRenderLoop)
-        {
-            var camera = targetRenderLoop.Camera;
+            var camera = mainOrChildRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(0.7f, 8.5f, -15f);
@@ -85,7 +76,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
             camera.UpdateCamera();
 
             // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+
+            return Task.FromResult<object>(null);
         }
     }
 }

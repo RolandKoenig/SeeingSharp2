@@ -50,7 +50,7 @@ namespace SeeingSharp.UwpSamples
                         manipulator.Clear(true);
                     });
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
-                    m_actSample.NotifyClosed();
+                    m_actSample.OnClosed();
                 }
                 if (m_actSampleSettings != null)
                 {
@@ -67,6 +67,7 @@ namespace SeeingSharp.UwpSamples
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
                     await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
+                    await sampleObject.OnInitRenderingWindowAsync(CtrlSwapChain.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
 
                     m_actSample = sampleObject;

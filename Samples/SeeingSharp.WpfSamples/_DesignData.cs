@@ -80,12 +80,12 @@ namespace SeeingSharp.WpfSamples
 
         private class DummySampleClass : SampleBase
         {
-            public override Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings sampleSettings)
+            public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings sampleSettings)
             {
                 return Task.FromResult<object>(null);
             }
 
-            public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+            public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
             {
                 return Task.FromResult<object>(null);
             }
