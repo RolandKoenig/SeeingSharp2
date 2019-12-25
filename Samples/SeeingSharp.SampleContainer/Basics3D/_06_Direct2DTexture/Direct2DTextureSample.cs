@@ -50,10 +50,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
 
             var castedSettings = settings as Direct2DTextureSampleSettings ?? new Direct2DTextureSampleSettings();
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             // 2D rendering is made here
             m_solidBrush = new SolidBrushResource(Color4.Gray);
             m_textFormat = new TextFormatResource("Arial", 36);
@@ -103,6 +99,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_Direct2DTexture
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh);
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);

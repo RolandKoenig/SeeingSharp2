@@ -77,6 +77,11 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
             });
         }
 
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            return Task.FromResult<object>(null);
+        }
+
         public override void NotifyClosed()
         {
             base.NotifyClosed();

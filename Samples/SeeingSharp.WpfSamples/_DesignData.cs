@@ -84,6 +84,11 @@ namespace SeeingSharp.WpfSamples
             {
                 return Task.FromResult<object>(null);
             }
+
+            public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+            {
+                return Task.FromResult<object>(null);
+            }
         }
     }
 }

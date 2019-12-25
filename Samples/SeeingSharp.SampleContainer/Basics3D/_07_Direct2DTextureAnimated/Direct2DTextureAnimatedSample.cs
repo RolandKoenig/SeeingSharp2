@@ -47,10 +47,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             // Whole animation takes x milliseconds
             var animationMillis = 3000f;
 
@@ -108,6 +104,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh);
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);

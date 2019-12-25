@@ -42,11 +42,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
-            await scene.ManipulateSceneAsync(manipulator =>
+            await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
@@ -78,6 +74,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
                 var skyboxObject = new Skybox(resSkyboxTexture);
                 manipulator.AddObject(skyboxObject, "Skybox");
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 1f, 3f);

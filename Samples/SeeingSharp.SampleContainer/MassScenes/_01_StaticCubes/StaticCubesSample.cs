@@ -43,14 +43,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Configure camera
-            var camera = targetRenderLoop.Camera;
-            camera.Position = new Vector3(40f, 30f, 40f);
-            camera.Target = new Vector3(0f, 5f, 0f);
-            camera.UpdateCamera();
-
-            // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            ConfigureCamera(targetRenderLoop);
 
             return Task.FromResult<object>(null);
         }
@@ -119,6 +112,26 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                     }
                 }
             });
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
+
+            // Configure camera
+            camera.Position = new Vector3(40f, 30f, 40f);
+            camera.Target = new Vector3(0f, 5f, 0f);
+            camera.UpdateCamera();
+
+            // Append camera behavior
+            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
 
         //*********************************************************************

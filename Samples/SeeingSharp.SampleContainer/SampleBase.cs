@@ -35,6 +35,8 @@ namespace SeeingSharp.SampleContainer
 
         public abstract Task OnStartupAsync(RenderLoop targetRenderLoop, SampleSettings settings);
 
+        public abstract Task OnNewChildWindow(RenderLoop targetRenderLoop);
+
         public virtual Task OnReloadAsync(RenderLoop targetRenderLoop, SampleSettings settings)
         {
             return Task.FromResult<object>(null);

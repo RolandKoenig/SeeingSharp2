@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WpfSamples
@@ -27,10 +28,12 @@ namespace SeeingSharp.WpfSamples
             this.Loaded += OnLoaded;
         }
 
-        public void SetRenderingData(Scene scene, Camera3DViewPoint viewPoint)
+        public void SetRenderingData(SampleBase actSample, Scene scene, Camera3DViewPoint viewPoint)
         {
             this.CtrlRenderer.Scene = scene;
             this.CtrlRenderer.Camera.ApplyViewPoint(viewPoint);
+
+            actSample.OnNewChildWindow(this.CtrlRenderer.RenderLoop);
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)

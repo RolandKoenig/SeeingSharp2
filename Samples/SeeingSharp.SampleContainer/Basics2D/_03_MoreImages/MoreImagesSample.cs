@@ -83,6 +83,11 @@ namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
             });
         }
 
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            return Task.FromResult<object>(null);
+        }
+
         public override void NotifyClosed()
         {
             base.NotifyClosed();

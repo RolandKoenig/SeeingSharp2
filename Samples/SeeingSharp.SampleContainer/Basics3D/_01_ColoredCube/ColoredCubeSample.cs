@@ -41,10 +41,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Get scene and camera
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
@@ -68,6 +64,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_ColoredCube
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh);
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);

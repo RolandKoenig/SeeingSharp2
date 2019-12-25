@@ -43,10 +43,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
@@ -98,13 +94,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
 
             });
 
-            // Configure camera
-            camera.Position = new Vector3(-7f, 10f, -10f);
-            camera.Target = new Vector3(0f, 1.5f, 0f);
-            camera.UpdateCamera();
-
-            // Append camera behavior
-            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
+            ConfigureCamera(targetRenderLoop);
         }
 
         /// <summary>
@@ -141,6 +131,26 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 Color4.White);
 
             return result;
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
+
+            // Configure camera
+            camera.Position = new Vector3(-7f, 10f, -10f);
+            camera.Target = new Vector3(0f, 1.5f, 0f);
+            camera.UpdateCamera();
+
+            // Append camera behavior
+            targetRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
         }
     }
 }

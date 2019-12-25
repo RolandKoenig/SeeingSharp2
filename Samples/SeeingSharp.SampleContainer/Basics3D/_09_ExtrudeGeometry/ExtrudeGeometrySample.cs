@@ -41,10 +41,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Get scene and camera
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
@@ -88,6 +84,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
                 extrudedMesh.Scaling = new Vector3(2f, 1f, 2f);
                 manipulator.AddObject(extrudedMesh);
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);

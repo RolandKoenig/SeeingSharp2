@@ -134,7 +134,7 @@ namespace SeeingSharp.WpfSamples
         private void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
         {
             var childWindow = new ChildRenderWindow();
-            childWindow.SetRenderingData(this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
+            childWindow.SetRenderingData(m_actSample, this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
             childWindow.Owner = this;
             childWindow.Show();
         }

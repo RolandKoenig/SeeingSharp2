@@ -41,10 +41,6 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
@@ -80,6 +76,20 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh, "EdgeDetectLayer");
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(3f, 3f, 3f);

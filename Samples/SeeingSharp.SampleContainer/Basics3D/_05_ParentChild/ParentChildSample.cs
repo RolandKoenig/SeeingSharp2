@@ -41,10 +41,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
         {
             targetRenderLoop.EnsureNotNull(nameof(targetRenderLoop));
 
-            // Build dummy scene
-            var scene = targetRenderLoop.Scene;
-            var camera = targetRenderLoop.Camera;
-
             await targetRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
@@ -118,6 +114,20 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
                 manipulator.AddObject(actSecondLevelChild);
                 manipulator.AddChildObject(actSecondLevelParent, actSecondLevelChild);
             });
+
+            ConfigureCamera(targetRenderLoop);
+        }
+
+        public override Task OnNewChildWindow(RenderLoop targetRenderLoop)
+        {
+            ConfigureCamera(targetRenderLoop);
+
+            return Task.FromResult<object>(null);
+        }
+
+        private static void ConfigureCamera(RenderLoop targetRenderLoop)
+        {
+            var camera = targetRenderLoop.Camera;
 
             // Configure camera
             camera.Position = new Vector3(5f, 5f, 5f);
