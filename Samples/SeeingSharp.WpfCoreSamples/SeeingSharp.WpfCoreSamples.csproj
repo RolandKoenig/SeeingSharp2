@@ -19,6 +19,7 @@
     <Compile Include="..\SeeingSharp.WpfSamples\MainWindowViewModel.cs" Link="MainWindowViewModel.cs" />
     <Compile Include="..\SeeingSharp.WpfSamples\PropertyGridControlFactory.cs" Link="PropertyGridControlFactory.cs" />
     <Compile Include="..\SeeingSharp.WpfSamples\SampleViewModel.cs" Link="SampleViewModel.cs" />
+    <Compile Include="..\SeeingSharp.WpfSamples\StatusBarControl.xaml.cs" Link="StatusBarControl.xaml.cs" />
     <Compile Include="..\SeeingSharp.WpfSamples\_DesignData.cs" Link="_DesignData.cs" />
     <Compile Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewDialog.xaml.cs" Link="_Dialogs\PerformanceOverviewDialog.xaml.cs" />
     <Compile Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewViewModel.cs" Link="_Dialogs\PerformanceOverviewViewModel.cs" />
@@ -63,6 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="..\SeeingSharp.WpfSamples\MainWindow.xaml" Link="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="..\SeeingSharp.WpfSamples\StatusBarControl.xaml" Link="StatusBarControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="..\SeeingSharp.WpfSamples\_Dialogs\PerformanceOverviewDialog.xaml" Link="_Dialogs\PerformanceOverviewDialog.xaml">

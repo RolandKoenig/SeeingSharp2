@@ -24,35 +24,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
-
-/* Unmerged change from project 'SeeingSharp.WpfCore'
-Before:
-using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Microsoft.Win32;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
-After:
-using System.Util;
-using SharpDX.DXGI;
-using System.Mathematics.Interop;
-using System;
-using System.Collections.Generic;
-using Microsoft.ComponentModel;
-using System.Threading;
-using SeeingSharp.Multimedia.Windows;
-using System.Windows.Controls;
-using SeeingSharp.Multimedia.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-*/
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;

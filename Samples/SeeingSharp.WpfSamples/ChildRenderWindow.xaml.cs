@@ -59,5 +59,10 @@ namespace SeeingSharp.WpfSamples
 
             this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
         }
+
+        private void OnCmdClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

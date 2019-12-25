@@ -10,6 +10,7 @@
     <None Remove="App.xaml" />
     <None Remove="ChildRenderWindow.xaml" />
     <None Remove="MainWindow.xaml" />
+    <None Remove="StatusBarControl.xaml" />
     <None Remove="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
 
@@ -38,6 +39,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml" />
+    <Page Include="StatusBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="_Dialogs\PerformanceOverviewDialog.xaml" />
   </ItemGroup>
 
@@ -56,6 +61,9 @@
 
   <ItemGroup>
     <Compile Update="ChildRenderWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StatusBarControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
