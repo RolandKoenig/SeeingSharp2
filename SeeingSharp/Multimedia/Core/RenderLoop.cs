@@ -1418,6 +1418,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public EngineDevice Device => m_currentDevice;
 
+
+
         /// <summary>
         /// Gets the total count of visible objects.
         /// </summary>
@@ -1517,6 +1519,8 @@ namespace SeeingSharp.Multimedia.Core
                 get => m_target.m_callPresentInUiThread;
                 set => m_target.m_callPresentInUiThread = value;
             }
+
+            public EngineDevice TargetDevice => m_target.m_targetDevice;
         }
     }
 }

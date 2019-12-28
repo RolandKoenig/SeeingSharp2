@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="SeeingSharp.UwpSamples.ChildRenderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SeeingSharp.UwpSamples"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+
+        <StackPanel Orientation="Horizontal"
+                    Background="#EBD3D3D3"
+                    VerticalAlignment="Bottom">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="Image">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="ComboBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style TargetType="Rectangle">
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+            </StackPanel.Resources>
+
+            <Image Source="/Assets/Icons/Output16x16.png"
+                   Width="16" />
+            <TextBlock Text="Resolution:" />
+            <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize, Mode=OneWay}" />
+            <TextBlock Text="px" />
+            <Rectangle Width="1"
+                       Fill="Gray" />
+
+            <Image Source="/Assets/Icons/Adapter16x16.png"
+                   Width="16" />
+            <TextBlock Text="Device:" />
+            <ComboBox ItemsSource="{Binding ElementName=CtrlSwapChain, Path=PossibleDevices, Mode=OneWay}"
+                      SelectedItem="{Binding ElementName=CtrlSwapChain, Path=SelectedDevice, Mode=TwoWay}"
+                      Width="250" />
+        </StackPanel>
+    </Grid>
+</Page>

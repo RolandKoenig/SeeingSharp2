@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Views
                 ClearColor = Color4.Transparent
             };
 
-            this.RenderLoop.Internals.CallPresentInUIThread = false;
+            this.RenderLoop.Internals.CallPresentInUIThread = true;
             this.DetachOnUnload = true;
         }
 

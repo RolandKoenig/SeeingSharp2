@@ -372,75 +372,45 @@ namespace SeeingSharp.Multimedia.Core
                 var additionalContinuationActionsLock = new object();
 
                 // Trigger all tasks for preparing views
-                var prepareRenderTasks = new List<Task<List<Action>>>(renderingRenderLoops.Count);
-
+                var prepareRenderTasks = new List<Task<List<Action>>>(devicesInUse.Count + 1);
                 for (var actDeviceIndex = 0; actDeviceIndex < devicesInUse.Count; actDeviceIndex++)
                 {
-                    var actDevice = devicesInUse[actDeviceIndex];
-
-                    for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
-                    {
-                        var actRenderLoop = renderingRenderLoops[loop];
-
-                        if (actRenderLoop.Device == actDevice)
-                        {
-                            // Call prepare render and wait for the answer
-                            //  => Error handling is a bit tricky..
-                            //     Errors are catched by the continuation action
-                            var actTask = actRenderLoop.PrepareRenderAsync();
-
-                            prepareRenderTasks.Add(actTask.ContinueWith(givenTask =>
-                            {
-                                if (!givenTask.IsFaulted)
-                                {
-                                    return givenTask.Result;
-                                }
-                                // Deregister this RenderLoop
-                                lock (additionalContinuationActionsLock)
-                                {
-                                    additionalContinuationActions.Add(() =>
-                                    {
-                                        this.DeregisterRenderLoop(actRenderLoop);
-                                        renderingRenderLoops.Remove(actRenderLoop);
-                                    });
-                                }
-
-                                return new List<Action>();
-                            }));
-                        }
-                    }
+                    prepareRenderTasks.Add(this.PrepareRenderForDeviceAsync(
+                        renderingRenderLoops, devicesInUse[actDeviceIndex],
+                        additionalContinuationActions, additionalContinuationActionsLock));
                 }
 
-                // Handle initial configuration of render loops (=> No current device)
-                for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
-                {
-                    var actRenderLoop = renderingRenderLoops[loop];
-                    if (actRenderLoop.Device == null)
-                    {
-                        try
-                        {
-                            var actPrepareRenderTask = actRenderLoop.PrepareRenderAsync();
-                            await actPrepareRenderTask;
 
-                            lock (additionalContinuationActionsLock)
-                            {
-                                additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Deregister this RenderLoop
-                            lock (additionalContinuationActionsLock)
-                            {
-                                additionalContinuationActions.Add(() =>
-                                {
-                                    this.DeregisterRenderLoop(actRenderLoop);
-                                    renderingRenderLoops.Remove(actRenderLoop);
-                                });
-                            }
-                        }
-                    }
-                }
+                //for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
+                //{
+
+                //    //var actRenderLoop = renderingRenderLoops[loop];
+                //    //if (actRenderLoop.Device == null)
+                //    //{
+                //    //    try
+                //    //    {
+                //    //        var actPrepareRenderTask = actRenderLoop.PrepareRenderAsync();
+                //    //        await actPrepareRenderTask;
+
+                //    //        lock (additionalContinuationActionsLock)
+                //    //        {
+                //    //            additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
+                //    //        }
+                //    //    }
+                //    //    catch (Exception)
+                //    //    {
+                //    //        // Deregister this RenderLoop
+                //    //        lock (additionalContinuationActionsLock)
+                //    //        {
+                //    //            additionalContinuationActions.Add(() =>
+                //    //            {
+                //    //                this.DeregisterRenderLoop(actRenderLoop);
+                //    //                renderingRenderLoops.Remove(actRenderLoop);
+                //    //            });
+                //    //        }
+                //    //    }
+                //    //}
+                //}
 
                 // Update all scenes
                 var exceptionsDuringUpdate = new ThreadSaveQueue<Exception>();
@@ -471,6 +441,13 @@ namespace SeeingSharp.Multimedia.Core
                     await Task.WhenAll(prepareRenderTasks.ToArray());
                 }
 
+                // Handle initial configuration of render loops (=> No current device or changing device)
+                var prepareRenderingOnChangedDeviceTask = this.PrepareRenderForDeviceAsync(
+                    renderingRenderLoops, null,
+                    additionalContinuationActions, additionalContinuationActionsLock);
+                await prepareRenderingOnChangedDeviceTask;
+                prepareRenderTasks.Add(prepareRenderingOnChangedDeviceTask);
+
                 // Throw exceptions if any occurred during scene update
                 //  => This would be a fatal exception, so throw up to main loop
                 if (exceptionsDuringUpdate.HasAny())
@@ -481,14 +458,12 @@ namespace SeeingSharp.Multimedia.Core
                 // Trigger all continuation actions returned by the previously executed prepare tasks
                 foreach (var actPrepareTasks in prepareRenderTasks)
                 {
-                    if (actPrepareTasks.IsFaulted || actPrepareTasks.IsCanceled)
+                    if (actPrepareTasks.Result != null)
                     {
-                        continue;
-                    }
-
-                    foreach (var actContinuationAction in actPrepareTasks.Result)
-                    {
-                        actContinuationAction();
+                        foreach (var actContinuationAction in actPrepareTasks.Result)
+                        {
+                            actContinuationAction();
+                        }
                     }
                 }
 
@@ -507,6 +482,45 @@ namespace SeeingSharp.Multimedia.Core
                 await this.UpdateRenderLoopRegistrationsAsync(renderingRenderLoops);
             }
         }
+
+        private async Task<List<Action>> PrepareRenderForDeviceAsync(
+            List<RenderLoop> renderingRenderLoops,
+            EngineDevice device,
+            List<Action> additionalContinuationActions,
+            object additionalContinuationActionsLock)
+        {
+            List<Action> result = null;
+            for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
+            {
+                var actRenderLoop = renderingRenderLoops[loop];
+                if ((actRenderLoop.Device != device) || (actRenderLoop.Internals.TargetDevice != null))
+                {
+                    if(device != null){ continue; }
+                }
+
+                try
+                {
+                    var currentResult = await actRenderLoop.PrepareRenderAsync();
+
+                    if (result == null) { result = currentResult; }
+                    else { result.AddRange(currentResult); }
+                }
+                catch (Exception)
+                {
+                    // Deregister this RenderLoop
+                    lock (additionalContinuationActionsLock)
+                    {
+                        additionalContinuationActions.Add(() =>
+                        {
+                            this.DeregisterRenderLoop(actRenderLoop);
+                            renderingRenderLoops.Remove(actRenderLoop);
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Renders all given scenes using the different devices and performs "UpdateBesideRendering" step.

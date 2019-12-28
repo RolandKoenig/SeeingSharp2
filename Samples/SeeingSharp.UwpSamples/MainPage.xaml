@@ -16,22 +16,32 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="35" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Title bar -->
-        <Grid x:Name="AppTitleBar" Background="Transparent"
+        <Grid Background="Transparent"
               Grid.Row="0">
-            <TextBlock Text="Custom Title Bar" 
-                       x:Name="TextAppTitle"
-                       Style="{StaticResource CaptionTextBlockStyle}" 
-                       Margin="12,8,0,0"/>
+            <StackPanel Orientation="Horizontal"
+                        x:Name="CommandBarAppTitle">
+                <TextBlock Text="Custom Title Bar" 
+                           x:Name="TextAppTitle"
+                           Style="{StaticResource CaptionTextBlockStyle}" 
+                           Margin="12,8,0,0"/>
+            </StackPanel>
         </Grid>
 
+        <StackPanel Grid.Row="1">
+            <Button Content="New Child Window"
+                    Click="OnCmdNewChildWindow_Click"
+                    Margin="12,0,0,0"/>
+        </StackPanel>
+
         <!-- List of sample groups -->
-        <ListBox Grid.Row="1"
+        <ListBox Grid.Row="2"
                  Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">

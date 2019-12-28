@@ -19,11 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using System.Reflection;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -36,16 +42,22 @@ namespace SeeingSharp.UwpSamples
         private SampleMetadata m_actSampleInfo;
         private bool m_isChangingSample;
 
+        private List<ChildRenderPage> m_childPages;
+        private object m_childPagesLock;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            m_childPages = new List<ChildRenderPage>();
+            m_childPagesLock = new object();
 
             // Manipulate titlebar
             //  see https://social.msdn.microsoft.com/Forums/windows/en-US/08462adc-a7ba-459f-9d2b-32a14c7a7de1/uwp-how-to-change-the-text-of-the-application-title-bar?forum=wpdevelop
             var package = Package.Current;
             var appName = package.DisplayName;
             TextAppTitle.Text = $@"{appName} ({Assembly.GetExecutingAssembly().GetName().Version})";
-            Window.Current.SetTitleBar(AppTitleBar);
+            Window.Current.SetTitleBar(CommandBarAppTitle);
 
             this.Loaded += this.OnLoaded;
         }
@@ -161,6 +173,30 @@ namespace SeeingSharp.UwpSamples
             if (selectedSample == null) { return; }
 
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+        }
+
+        private async void OnCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
+        {
+            var newView = CoreApplication.CreateNewView();
+            var newViewId = 0;
+            ChildRenderPage childPage = null;
+
+            var currentScene = this.CtrlSwapChain.Scene;
+            var currentViewPoint = this.CtrlSwapChain.Camera.GetViewPoint();
+
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                childPage = new ChildRenderPage();
+                childPage.InitializeChildWindow(currentScene, currentViewPoint);
+
+                Window.Current.Content = childPage;
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            m_childPages.Add(childPage);
+
+            var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
         }
     }
 }
