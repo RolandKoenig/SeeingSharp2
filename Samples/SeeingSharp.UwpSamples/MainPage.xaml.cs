@@ -57,7 +57,7 @@ namespace SeeingSharp.UwpSamples
             var package = Package.Current;
             var appName = package.DisplayName;
             TextAppTitle.Text = $@"{appName} ({Assembly.GetExecutingAssembly().GetName().Version})";
-            Window.Current.SetTitleBar(CommandBarAppTitle);
+            Window.Current.SetTitleBar(TextAppTitle);
 
             this.Loaded += this.OnLoaded;
         }
@@ -177,13 +177,15 @@ namespace SeeingSharp.UwpSamples
 
         private async void OnCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
         {
-            var newView = CoreApplication.CreateNewView();
-            var newViewId = 0;
-            ChildRenderPage childPage = null;
-
+            // Get current scene and camera viewpoint
             var currentScene = this.CtrlSwapChain.Scene;
             var currentViewPoint = this.CtrlSwapChain.Camera.GetViewPoint();
 
+            // Create the child window and the page
+            // Be careful: the child view has it's own UI thread. See https://docs.microsoft.com/en-us/windows/uwp/design/layout/application-view
+            var newView = CoreApplication.CreateNewView();
+            var newViewId = 0;
+            ChildRenderPage childPage = null;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 childPage = new ChildRenderPage();
@@ -194,9 +196,18 @@ namespace SeeingSharp.UwpSamples
 
                 newViewId = ApplicationView.GetForCurrentView().Id;
             });
-            m_childPages.Add(childPage);
 
+            // Show the child window
             var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            if (viewShown)
+            {
+                // Register the child page
+                m_childPages.Add(childPage);
+
+                // We can call this one in the current thread
+                // Should be thread save
+                await childPage.SetRenderingDataAsync(m_actSample);
+            }
         }
     }
 }

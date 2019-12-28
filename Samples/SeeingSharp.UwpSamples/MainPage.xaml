@@ -25,13 +25,10 @@
         <!-- Title bar -->
         <Grid Background="Transparent"
               Grid.Row="0">
-            <StackPanel Orientation="Horizontal"
-                        x:Name="CommandBarAppTitle">
-                <TextBlock Text="Custom Title Bar" 
-                           x:Name="TextAppTitle"
-                           Style="{StaticResource CaptionTextBlockStyle}" 
-                           Margin="12,8,0,0"/>
-            </StackPanel>
+            <TextBlock Text="Custom Title Bar" 
+                       x:Name="TextAppTitle"
+                       Style="{StaticResource CaptionTextBlockStyle}" 
+                       Margin="12,8,0,0"/>
         </Grid>
 
         <StackPanel Grid.Row="1">
@@ -59,7 +56,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3"
+              x:Name="MainGrid">
             <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
             <ListBox VerticalAlignment="Top"

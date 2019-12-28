@@ -42,14 +42,6 @@ namespace SeeingSharp.Multimedia.Views
 {
     public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
-        // Dependency properties
-        public static readonly DependencyProperty SceneProperty =
-            DependencyProperty.Register(nameof(Scene), typeof(Scene), typeof(SeeingSharpRendererElement), new PropertyMetadata(new Scene()));
-        public static readonly DependencyProperty CameraProperty =
-            DependencyProperty.Register(nameof(Camera), typeof(Camera3DBase), typeof(SeeingSharpRendererElement), new PropertyMetadata(new PerspectiveCamera3D()));
-        public static readonly DependencyProperty DrawingLayer2DProperty =
-            DependencyProperty.Register(nameof(DrawingLayer2D), typeof(Custom2DDrawingLayer), typeof(SeeingSharpRendererElement), new PropertyMetadata(null));
-
         private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
 
         // Some members..
@@ -204,34 +196,6 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             m_lastSizeChange = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Called when one of the dependency properties has changed.
-        /// </summary>
-        protected override async void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-
-            if (!GraphicsCore.IsLoaded) { return; }
-            if (this.IsInDesignMode()) { return; }
-
-            if (e.Property == SceneProperty)
-            {
-                this.RenderLoop.SetScene(this.Scene);
-                this.SceneChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else if (e.Property == CameraProperty)
-            {
-                this.RenderLoop.Camera = this.Camera;
-                this.CameraChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else if (e.Property == DrawingLayer2DProperty)
-            {
-                if (e.OldValue != null) { await this.RenderLoop.Deregister2DDrawingLayerAsync(e.OldValue as Custom2DDrawingLayer); }
-                if (e.NewValue != null) { await this.RenderLoop.Register2DDrawingLayerAsync(e.NewValue as Custom2DDrawingLayer); }
-                this.DrawingLayer2DChanged?.Invoke(this, EventArgs.Empty);
-            }
         }
 
         /// <summary>
@@ -605,8 +569,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Scene Scene
         {
-            get => (Scene)this.GetValue(SceneProperty);
-            set => this.SetValue(SceneProperty, value);
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
         }
 
         /// <summary>
@@ -614,8 +578,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public Camera3DBase Camera
         {
-            get => (Camera3DBase)this.GetValue(CameraProperty);
-            set => this.SetValue(CameraProperty, value);
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
         }
 
         /// <summary>
@@ -715,15 +679,6 @@ namespace SeeingSharp.Multimedia.Views
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.ForceCompositionOverSoftware)));
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom layer for 2D rendering.
-        /// </summary>
-        public Custom2DDrawingLayer DrawingLayer2D
-        {
-            get => (Custom2DDrawingLayer)this.GetValue(DrawingLayer2DProperty);
-            set => this.SetValue(DrawingLayer2DProperty, value);
         }
     }
 }

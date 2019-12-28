@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -31,6 +32,8 @@ namespace SeeingSharp.UwpSamples
         public ChildRenderPage()
         {
             this.InitializeComponent();
+
+            this.Loaded += OnLoaded;
         }
 
         public void InitializeChildWindow(Scene scene, Camera3DViewPoint viewPoint)
@@ -50,6 +53,13 @@ namespace SeeingSharp.UwpSamples
         public async Task ClearAsync()
         {
             await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (DesignMode.DesignModeEnabled) { return; }
+
+            CtrlSwapChain.RenderLoop.ViewConfiguration.AlphaEnabledSwapChain = true;
         }
     }
 }
