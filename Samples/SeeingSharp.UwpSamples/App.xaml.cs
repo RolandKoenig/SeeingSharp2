@@ -57,6 +57,8 @@ namespace SeeingSharp.UwpSamples
                 .SupportUwp()
                 .Load();
 
+            ApplicationView.TerminateAppOnFinalViewClose = true;
+
             // Hide default title bar.
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;

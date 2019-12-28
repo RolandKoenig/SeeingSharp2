@@ -132,8 +132,11 @@ namespace SeeingSharp.Multimedia.Views
                 m_targetPanel.CompositionScaleChanged -= this.OnTargetPanel_CompositionScaleChanged;
 
                 // Clear created references
-                SeeingSharpUtil.SafeDispose(ref m_targetPanel);
-                m_targetPanel = null;
+                if (m_targetPanel != null)
+                {
+                    m_targetPanel.SwapChain = null;
+                    SeeingSharpUtil.SafeDispose(ref m_targetPanel);
+                }
             }
             catch (Exception ex)
             {
@@ -309,6 +312,11 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice engineDevice)
         {
+            if (m_targetPanel != null)
+            {
+                m_targetPanel.SwapChain = null;
+            }
+
             m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
             m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
             m_renderTargetView = SeeingSharpUtil.DisposeObject(m_renderTargetView);
