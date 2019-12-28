@@ -57,8 +57,8 @@ namespace SeeingSharp.UwpSamples
             //  see https://social.msdn.microsoft.com/Forums/windows/en-US/08462adc-a7ba-459f-9d2b-32a14c7a7de1/uwp-how-to-change-the-text-of-the-application-title-bar?forum=wpdevelop
             var package = Package.Current;
             var appName = package.DisplayName;
-            TextAppTitle.Text = $@"{appName} ({Assembly.GetExecutingAssembly().GetName().Version})";
-            Window.Current.SetTitleBar(TextAppTitle);
+            TextAppTitle.Text = $@"{appName} - Main window - {Assembly.GetExecutingAssembly().GetName().Version}";
+            Window.Current.SetTitleBar(TextAppTitleRow);
 
             this.Loaded += this.OnLoaded;
         }
@@ -201,9 +201,12 @@ namespace SeeingSharp.UwpSamples
             var hostDispatcher = this.Dispatcher;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                // Hide default title bar.
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = true;
+
                 childPage = new ChildRenderPage();
                 childPage.InitializeChildWindow(currentScene, currentViewPoint);
-                
 
                 Window.Current.Content = childPage;
                 Window.Current.Activate();

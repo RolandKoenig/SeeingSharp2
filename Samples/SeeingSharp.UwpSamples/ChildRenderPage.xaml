@@ -10,9 +10,29 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal"
+        <!-- Title bar -->
+        <Grid Background="Transparent"
+              Grid.Row="0"
+              x:Name="TextAppTitleRow">
+            <TextBlock Text="Custom Title Bar" 
+                       x:Name="TextAppTitle"
+                       Style="{StaticResource CaptionTextBlockStyle}" 
+                       Margin="12,8,0,8"/>
+        </Grid>
+
+        <!-- Renderer -->
+        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain"
+                                       Grid.Row="1" Grid.RowSpan="2"/>
+
+        <!-- Status bar -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal"
                     Background="#EBD3D3D3"
                     VerticalAlignment="Bottom">
             <StackPanel.Resources>

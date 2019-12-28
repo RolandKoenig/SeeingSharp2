@@ -94,11 +94,6 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.Texture2D m_copyHelperTextureStaging;
         private D3D11.Texture2D m_copyHelperTextureStandard;
 
-        /// <summary>
-        /// Raised when the current camera has changed.
-        /// </summary>
-        public event EventHandler CameraChanged;
-
         public event EventHandler CurrentViewSizeChanged;
 
         /// <summary>
@@ -116,12 +111,6 @@ namespace SeeingSharp.Multimedia.Core
         /// This event is called within the UI thread.
         /// </summary>
         public event EventHandler PrepareRender;
-
-        /// <summary>
-        /// Raised directly after rendering a frame.
-        /// Be careful, this event comes from a background rendering thread!
-        /// </summary>
-        public event EventHandler Rendered;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderLoop" /> class.
@@ -672,8 +661,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadViewResources()
         {
-            // TODO: Do this action synchronized..
-
             m_lastRenderSuccessfully = false;
 
             if (m_currentDevice == null) { return; }
@@ -1120,15 +1107,6 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Update flag indicating that last render was successful
                 m_lastRenderSuccessfully = true;
-
-                try
-                {
-                    this.Rendered.Raise(this, EventArgs.Empty);
-                }
-                catch (Exception ex)
-                {
-                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_RenderEvent);
-                }
             }
             finally
             {
@@ -1405,8 +1383,6 @@ namespace SeeingSharp.Multimedia.Core
                         m_camera.SetScreenSize(this.CurrentViewSize.Width, this.CurrentViewSize.Height);
                         m_camera.AssociatedRenderLoop = this;
                     }
-
-                    this.CameraChanged.Raise(this, EventArgs.Empty);
                 }
             }
         }
@@ -1454,6 +1430,11 @@ namespace SeeingSharp.Multimedia.Core
             get;
             internal set;
         }
+
+        /// <summary>
+        /// The control which hosts this RenderLoop instance.
+        /// </summary>
+        public object RenderLoopHost => m_renderLoopHost;
 
         /// <summary>
         /// Is the current device in DeviceLost state?

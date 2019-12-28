@@ -126,7 +126,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 if (m_bgPanel != null) { return m_bgPanel; }
                 if (m_panel != null) { return m_panel; }
-                throw new ObjectDisposedException("SwapChainPanelWrapper");
+                throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }
 
@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Views
                 else if (m_panelNative != null) { m_panelNative.SwapChain = value; }
                 else
                 {
-                    throw new ObjectDisposedException("SwapChainPanelWrapper");
+                    throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
                 }
             }
         }
@@ -172,7 +172,17 @@ namespace SeeingSharp.Multimedia.Views
             {
                 if (m_bgPanel != null) { return m_bgPanel.Dispatcher; }
                 if (m_panel != null) { return m_panel.Dispatcher; }
-                throw new ObjectDisposedException("SwapChainPanelWrapper");
+                throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
+            }
+        }
+
+        public Visibility Visibility
+        {
+            get
+            {
+                if (m_bgPanel != null) { return m_bgPanel.Visibility; }
+                if (m_panel != null) { return m_panel.Visibility; }
+                throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }
     }

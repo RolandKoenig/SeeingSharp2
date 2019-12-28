@@ -5,6 +5,7 @@
     xmlns:local="using:SeeingSharp.UwpSamples"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:localControls="using:SeeingSharp.UwpSamples.Controls"
     xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
     mc:Ignorable="d"
@@ -24,17 +25,20 @@
 
         <!-- Title bar -->
         <Grid Background="Transparent"
-              Grid.Row="0">
+              Grid.Row="0"
+              x:Name="TextAppTitleRow">
             <TextBlock Text="Custom Title Bar" 
                        x:Name="TextAppTitle"
                        Style="{StaticResource CaptionTextBlockStyle}" 
                        Margin="12,8,0,0"/>
         </Grid>
 
-        <StackPanel Grid.Row="1">
+        <!-- Menu bar -->
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal">
             <Button Content="New Child Window"
                     Click="OnCmdNewChildWindow_Click"
-                    Margin="12,0,0,0"/>
+                    Margin="2,2,2,0"/>
         </StackPanel>
 
         <!-- List of sample groups -->

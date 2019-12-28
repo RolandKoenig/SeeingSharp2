@@ -70,8 +70,6 @@ namespace SeeingSharp.Multimedia.Core
         RenderLoop_PrepareRendering,
 
         RenderLoop_Unload,
-
-        RenderLoop_RenderEvent
     }
 
     public class ManipulateFilterListArgs : EventArgs

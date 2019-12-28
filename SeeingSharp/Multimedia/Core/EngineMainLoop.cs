@@ -131,6 +131,17 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Gets a collection containing all registered render loops.
+        /// </summary>
+        public IEnumerable<RenderLoop> GetRegisteredRenderLoops()
+        {
+            lock (m_registeredRenderLoopsLock)
+            {
+                return new List<RenderLoop>(m_registeredRenderLoops);
+            }
+        }
+
+        /// <summary>
         /// Registers the given resource for unloading.
         /// </summary>
         /// <param name="drawing2DResourceBase">The resource to be unloaded.</param>

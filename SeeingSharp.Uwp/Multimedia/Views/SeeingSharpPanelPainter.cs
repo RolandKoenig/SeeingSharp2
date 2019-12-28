@@ -194,12 +194,6 @@ namespace SeeingSharp.Multimedia.Views
             m_lastRefreshTargetSize = new Size(0.0, 0.0);
             m_targetPanel = targetPanel;
 
-            //// Attach to SizeChanged event (refresh view resources only after a specific time)
-            //m_observerSizeChanged = Observable.FromEventPattern<SizeChangedEventArgs>(m_targetPanel, "SizeChanged")
-            //    .Throttle(TimeSpan.FromSeconds(0.5))
-            //    .ObserveOn(SynchronizationContext.Current)
-            //    .Subscribe((eArgs) => OnTargetPanelThrottled_SizeChanged(eArgs.Sender, eArgs.EventArgs));
-
             m_targetPanel.SizeChanged += this.OnTargetPanel_SizeChanged;
             m_targetPanel.Loaded += this.OnTargetPanel_Loaded;
             m_targetPanel.Unloaded += this.OnTargetPanel_Unloaded;
@@ -381,6 +375,7 @@ namespace SeeingSharp.Multimedia.Views
             if (m_targetPanel == null) { return false; }
             if (m_targetPanel.ActualWidth <= 0) { return false; }
             if (m_targetPanel.ActualHeight <= 0) { return false; }
+            if (m_targetPanel.Visibility != Visibility.Visible) { return false; }
 
             return true;
         }
