@@ -26,6 +26,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using System.Reflection;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -83,6 +84,12 @@ namespace SeeingSharp.UwpSamples
                         manipulator.Clear(true);
                     });
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
+
+                    foreach (var actChildWindow in m_childPages)
+                    {
+                        await actChildWindow.ClearAsync();
+                    }
+
                     m_actSample.OnClosed();
                 }
                 if (m_actSampleSettings != null)
@@ -102,6 +109,11 @@ namespace SeeingSharp.UwpSamples
                     await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
                     await sampleObject.OnInitRenderingWindowAsync(CtrlSwapChain.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
+                    
+                    foreach (var actChildWindow in m_childPages)
+                    {
+                        await actChildWindow.SetRenderingDataAsync(sampleObject);
+                    }
 
                     m_actSample = sampleObject;
                     m_actSampleSettings = sampleSettings;
@@ -186,13 +198,37 @@ namespace SeeingSharp.UwpSamples
             var newView = CoreApplication.CreateNewView();
             var newViewId = 0;
             ChildRenderPage childPage = null;
+            var hostDispatcher = this.Dispatcher;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 childPage = new ChildRenderPage();
                 childPage.InitializeChildWindow(currentScene, currentViewPoint);
+                
 
                 Window.Current.Content = childPage;
                 Window.Current.Activate();
+                Window.Current.VisibilityChanged += async (o, args) =>
+                {
+                    // 'Visible == false' means that the user closed the window
+                    if (args.Visible == false)
+                    {
+                        // Set content to null --> This ensures that SeeingSharp gets the unloaded event from the view internally
+                        Window.Current.Content = null;
+
+                        // Notify the host that the ChildRenderPage was removed
+                        await hostDispatcher.RunAsync(
+                            CoreDispatcherPriority.Normal,
+                            () => m_childPages.Remove(childPage));
+
+                        // Wait some loop passes to ensure that all references to this additional view are cleared
+                        await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+                        await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+                        await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+                        
+                        // Finally close the window
+                        Window.Current.Close();
+                    }
+                };
 
                 newViewId = ApplicationView.GetForCurrentView().Id;
             });

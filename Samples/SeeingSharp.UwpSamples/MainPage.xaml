@@ -147,7 +147,9 @@
                 <Image Source="/Assets/Icons/Output16x16.png"
                        Width="16" />
                 <TextBlock Text="Resolution:" />
-                <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize, Mode=OneWay}" />
+                <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize.Width, Mode=OneWay}" />
+                <TextBlock Text="x" />
+                <TextBlock Text="{Binding ElementName=CtrlSwapChain, Path=CurrentViewSize.Height, Mode=OneWay}" />
                 <TextBlock Text="px" />
                 <Rectangle Width="1"
                            Fill="Gray" />

@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Waits for next passed loop cycle.
         /// </summary>
-        public Task WaitForNextPassedLoop()
+        public Task WaitForNextPassedLoopAsync()
         {
             var result = new TaskCompletionSource<object>();
             m_globalLoopAwaitors.Enqueue(() =>

@@ -40,13 +40,12 @@ namespace SeeingSharp.Multimedia.Views
     //  see http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
     public class SeeingSharpPanelPainter : ISeeingSharpPainter, IDisposable, IInputEnabledView, IRenderLoopHost
     {
-        private double MIN_PIXEL_SIZE_HEIGHT = 100.0;
-        private double MIN_PIXEL_SIZE_WIDTH = 100.0;
+        private const double MIN_PIXEL_SIZE_HEIGHT = 100.0;
+        private const double MIN_PIXEL_SIZE_WIDTH = 100.0;
 
         // SwapChainBackgroundPanel local members
         private SwapChainPanelWrapper m_targetPanel;
         private Size m_lastRefreshTargetSize;
-        private IDisposable m_observerSizeChanged;
         private bool m_compositionScaleChanged;
         private DateTime m_lastSizeChange;
 
@@ -132,10 +131,8 @@ namespace SeeingSharp.Multimedia.Views
                 m_targetPanel.Unloaded -= this.OnTargetPanel_Unloaded;
                 m_targetPanel.CompositionScaleChanged -= this.OnTargetPanel_CompositionScaleChanged;
 
-                //Clear created references
-                m_observerSizeChanged.Dispose();
-                m_observerSizeChanged = null;
-                m_targetPanel.Dispose();
+                // Clear created references
+                SeeingSharpUtil.SafeDispose(ref m_targetPanel);
                 m_targetPanel = null;
             }
             catch (Exception ex)

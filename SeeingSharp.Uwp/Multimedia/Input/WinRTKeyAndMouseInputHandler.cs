@@ -44,6 +44,7 @@ namespace SeeingSharp.Multimedia.Input
 
         // Objects from outside
         private SeeingSharpPanelPainter m_painter;
+        private Panel m_targetPanel;
         private IInputEnabledView m_viewInterface;
         private RenderLoop m_renderLoop;
         private CoreWindow m_coreWindow;
@@ -115,12 +116,13 @@ namespace SeeingSharp.Multimedia.Input
             var uiTask = m_dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Register all events
-                m_painter.TargetPanel.PointerExited += this.OnTargetPanel_PointerExited;
-                m_painter.TargetPanel.PointerEntered += this.OnTargetPanel_PointerEntered;
-                m_painter.TargetPanel.PointerWheelChanged += this.OnTargetPanel_PointerWheelChanged;
-                m_painter.TargetPanel.PointerPressed += this.OnTargetPanel_PointerPressed;
-                m_painter.TargetPanel.PointerReleased += this.OnTargetPanel_PointerReleased;
-                m_painter.TargetPanel.PointerMoved += this.OnTargetPanel_PointerMoved;
+                m_targetPanel = m_painter.TargetPanel;
+                m_targetPanel.PointerExited += this.OnTargetPanel_PointerExited;
+                m_targetPanel.PointerEntered += this.OnTargetPanel_PointerEntered;
+                m_targetPanel.PointerWheelChanged += this.OnTargetPanel_PointerWheelChanged;
+                m_targetPanel.PointerPressed += this.OnTargetPanel_PointerPressed;
+                m_targetPanel.PointerReleased += this.OnTargetPanel_PointerReleased;
+                m_targetPanel.PointerMoved += this.OnTargetPanel_PointerMoved;
 
                 // Create the dummy button for focus management
                 //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
@@ -137,7 +139,7 @@ namespace SeeingSharp.Multimedia.Input
                 m_dummyButtonForFocus.KeyUp += this.OnDummyButtonForFocus_KeyUp;
                 m_dummyButtonForFocus.LostFocus += this.OnDummyButtonForFocus_LostFocus;
                 m_dummyButtonForFocus.GotFocus += this.OnDummyButtonForFocus_GotFocus;
-                m_painter.TargetPanel.Children.Add(m_dummyButtonForFocus);
+                m_targetPanel.Children.Add(m_dummyButtonForFocus);
 
                 m_coreWindow = CoreWindow.GetForCurrentThread();
                 m_coreWindow.KeyDown += this.OnCoreWindow_KeyDown;
@@ -172,16 +174,18 @@ namespace SeeingSharp.Multimedia.Input
                     dummyButtonForFocus.LostFocus -= this.OnDummyButtonForFocus_LostFocus;
                     dummyButtonForFocus.GotFocus -= this.OnDummyButtonForFocus_GotFocus;
 
-                    painter.TargetPanel.Children.Remove(dummyButtonForFocus);
+                    m_targetPanel.Children.Remove(dummyButtonForFocus);
                 }
 
                 // Deregister all events
-                painter.TargetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
-                painter.TargetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
-                painter.TargetPanel.PointerWheelChanged -= this.OnTargetPanel_PointerWheelChanged;
-                painter.TargetPanel.PointerPressed -= this.OnTargetPanel_PointerPressed;
-                painter.TargetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
-                painter.TargetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
+                m_targetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
+                m_targetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
+                m_targetPanel.PointerWheelChanged -= this.OnTargetPanel_PointerWheelChanged;
+                m_targetPanel.PointerPressed -= this.OnTargetPanel_PointerPressed;
+                m_targetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
+                m_targetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
+
+                m_targetPanel = null;
 
                 // Deregister events from CoreWindow
                 coreWindow.KeyDown -= this.OnCoreWindow_KeyDown;
@@ -258,12 +262,13 @@ namespace SeeingSharp.Multimedia.Input
         private void OnTargetPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (m_painter == null) { return; }
+            if (m_targetPanel == null) { return; }
 
             // Set focus on target
             m_dummyButtonForFocus?.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
-            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var currentPoint = e.GetCurrentPoint(m_targetPanel);
             var pointProperties = currentPoint.Properties;
 
             if (pointProperties.IsPrimary)
@@ -283,12 +288,13 @@ namespace SeeingSharp.Multimedia.Input
         private void OnTargetPanel_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (m_painter == null) { return; }
+            if (m_targetPanel == null) { return; }
 
             // Set focus on target
             m_dummyButtonForFocus?.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
-            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var currentPoint = e.GetCurrentPoint(m_targetPanel);
             var pointProperties = currentPoint.Properties;
 
             if (pointProperties.IsPrimary)
@@ -309,13 +315,11 @@ namespace SeeingSharp.Multimedia.Input
 
         private void OnTargetPanel_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (m_painter == null)
-            {
-                return;
-            }
+            if (m_painter == null) { return; }
+            if (m_targetPanel == null) { return; }
 
             // Calculate move distance
-            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var currentPoint = e.GetCurrentPoint(m_targetPanel);
 
             if (m_lastDragPoint == null)
             {
@@ -354,9 +358,10 @@ namespace SeeingSharp.Multimedia.Input
         {
             if (m_painter == null) { return; }
             if (!m_hasFocus) { return; }
+            if (m_targetPanel == null) { return; }
 
             // Track mouse/pointer state
-            var currentPoint = e.GetCurrentPoint(m_painter.TargetPanel);
+            var currentPoint = e.GetCurrentPoint(m_targetPanel);
             var pointProperties = currentPoint.Properties;
             var wheelDelta = pointProperties.MouseWheelDelta;
 

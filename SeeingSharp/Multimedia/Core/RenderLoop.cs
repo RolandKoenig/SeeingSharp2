@@ -731,6 +731,8 @@ namespace SeeingSharp.Multimedia.Core
 
             await this.UISynchronizationContext.PostAsync(() =>
             {
+                if (!this.IsRegisteredOnMainLoop) { return; }
+
                 // Call present from UI thread (if configured)
                 if (m_callPresentInUiThread)
                 {
@@ -744,6 +746,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 if (this.DiscardRendering) { return; }
+                if (!this.IsRegisteredOnMainLoop) { return; }
 
                 // Update view frustum
                 this.ViewInformation.UpdateFrustum(m_camera.ViewProjection);
