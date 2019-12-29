@@ -39,12 +39,12 @@
     <None Remove="Basics3D\_10_MultiMaterial\SimpleTexture.png" />
     <None Remove="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\SimpleTexture.png" />
-    <None Remove="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
+    <None Remove="Primitives3D\PrimitiveTexture.png" />
+    <None Remove="Primitives3D\_01_Cylinder\PreviewImage.png" />
     <None Remove="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <None Remove="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
-    <None Remove="Primitives3D\_04_ColoredGeosphere\PreviewImage.png" />
-    <None Remove="Primitives3D\_04_ColoredGeosphere\SimpleTexture.png" />
+    <None Remove="Primitives3D\_04_Geosphere\PreviewImage.png" />
     <None Remove="Primitives3D\_05_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
@@ -72,12 +72,12 @@
     <EmbeddedResource Include="Basics3D\_10_MultiMaterial\SimpleTexture.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\SimpleTexture.png" />
-    <EmbeddedResource Include="Primitives3D\_01_ColoredCylinder\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\PrimitiveTexture.png" />
+    <EmbeddedResource Include="Primitives3D\_01_Cylinder\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_02_ColoredCone\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_04_ColoredGeosphere\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_04_ColoredGeosphere\SimpleTexture.png" />
+    <EmbeddedResource Include="Primitives3D\_04_Geosphere\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_05_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
