@@ -560,8 +560,12 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds a sphere geometry.
         /// </summary>
-        public BuiltVerticesRange BuildShpere(int tDiv, int pDiv, double radius, Color4 color)
+        public BuiltVerticesRange BuildShpere(int tDiv, int pDiv, double radius)
         {
+            tDiv = Math.Max(tDiv, 3);
+            pDiv = Math.Max(pDiv, 2);
+            radius = Math.Max(Math.Abs(radius), EngineMath.TOLERANCE_FLOAT_POSITIVE);
+
             Vector3 SphereGetPosition(double theta, double phi)
             {
                 var x = radius * Math.Sin(theta) * Math.Sin(phi);
@@ -593,7 +597,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var position = SphereGetPosition(theta, phi);
                     var vertex = new Vertex(
                         position,
-                        color,
+                        Color4.Transparent,
                         SphereGetTextureCoordinate(theta, phi),
                         Vector3.Normalize(position));
                     this.Owner.Vertices.Add(vertex);

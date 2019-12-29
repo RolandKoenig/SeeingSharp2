@@ -19,33 +19,36 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using System;
 using System.ComponentModel;
 using System.Numerics;
+using System.Threading.Tasks;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
+namespace SeeingSharp.SampleContainer.Primitives3D._05_Pyramid
 {
     [SampleDescription(
-        "Cylinder", 1, nameof(Primitives3D),
+        "Pyramid", 5, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_Cylinder",
-        typeof(CylinderSampleSettings))]
-    public class CylinderSample : Primitive3DSampleBase
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_05_Pyramid",
+        typeof(PyramidSampleSettings))]
+    public class PyramidSample : Primitive3DSampleBase
     {
         protected override Mesh CreateMesh(SceneManipulator manipulator, SampleSettings sampleSettings, NamedOrGenericKey resMaterial)
         {
-            var castedSettings = (CylinderSampleSettings) sampleSettings;
+            var castedSettings = (PyramidSampleSettings) sampleSettings;
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new CylinderGeometryFactory()
+                    new PyramidGeometryFactory()
                     { 
-                        Radius = castedSettings.Radius,
-                        Height = castedSettings.Height,
-                        CountOfSegments = castedSettings.CountOfSegments
+                        Width = castedSettings.Width,
+                        Height = castedSettings.Height
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
@@ -56,21 +59,20 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class CylinderSampleSettings : Primitive3DSampleSettings
+        private class PyramidSampleSettings : Primitive3DSampleSettings
         {
-            private float m_radius = 0.5f;
+            private float m_width = 1f;
             private float m_height = 1f;
-            private int m_countOfSegments = 10;
 
             [Category(CATEGORY_NAME)]
-            public float Radius
+            public float Width
             {
-                get => m_radius;
+                get => m_width;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_radius, value))
+                    if (!EngineMath.EqualsWithTolerance(m_width, value))
                     {
-                        m_radius = value;
+                        m_width = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -85,20 +87,6 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
                     if (!EngineMath.EqualsWithTolerance(m_height, value))
                     {
                         m_height = value;
-                        this.RaiseRecreateRequest();
-                    }
-                }
-            }
-
-            [Category(CATEGORY_NAME)]
-            public int CountOfSegments
-            {
-                get => m_countOfSegments;
-                set
-                {
-                    if (m_countOfSegments != value)
-                    {
-                        m_countOfSegments = value;
                         this.RaiseRecreateRequest();
                     }
                 }

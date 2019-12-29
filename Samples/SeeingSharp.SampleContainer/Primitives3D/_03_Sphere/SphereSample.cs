@@ -19,48 +19,81 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
+using System;
 using System.ComponentModel;
 using System.Numerics;
+using System.Threading.Tasks;
+using SeeingSharp.SampleContainer.Primitives3D._04_Geosphere;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
+namespace SeeingSharp.SampleContainer.Primitives3D._03_Sphere
 {
     [SampleDescription(
-        "Cylinder", 1, nameof(Primitives3D),
+        "Sphere", 3, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_Cylinder",
-        typeof(CylinderSampleSettings))]
-    public class CylinderSample : Primitive3DSampleBase
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_03_Sphere",
+        typeof(SphereSampleSettings))]
+    public class SphereSample : Primitive3DSampleBase
     {
         protected override Mesh CreateMesh(SceneManipulator manipulator, SampleSettings sampleSettings, NamedOrGenericKey resMaterial)
         {
-            var castedSettings = (CylinderSampleSettings) sampleSettings;
+            var castedSettings = (SphereSampleSettings) sampleSettings;
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new CylinderGeometryFactory()
-                    { 
-                        Radius = castedSettings.Radius,
-                        Height = castedSettings.Height,
-                        CountOfSegments = castedSettings.CountOfSegments
+                    new SphereGeometryFactory
+                    {
+                        TDiv = castedSettings.TDiv,
+                        PDiv = castedSettings.PDiv, 
+                        Radius = castedSettings.Radius
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f, 0f);
+            result.Position = new Vector3(0f, 0.5f + castedSettings.Radius, 0f);
             return result;
         }
 
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class CylinderSampleSettings : Primitive3DSampleSettings
+        private class SphereSampleSettings : Primitive3DSampleSettings
         {
+            private int m_tDiv = 30;
+            private int m_pDiv = 30;
             private float m_radius = 0.5f;
-            private float m_height = 1f;
-            private int m_countOfSegments = 10;
+
+            [Category(CATEGORY_NAME)]
+            public int TDiv
+            {
+                get => m_tDiv;
+                set
+                {
+                    if (m_tDiv != value)
+                    {
+                        m_tDiv= value;
+                        base.RaiseRecreateRequest();
+                    }
+                }
+            }
+
+            [Category(CATEGORY_NAME)]
+            public int PDiv
+            {
+                get => m_pDiv;
+                set
+                {
+                    if (m_pDiv != value)
+                    {
+                        m_pDiv= value;
+                        base.RaiseRecreateRequest();
+                    }
+                }
+            }
 
             [Category(CATEGORY_NAME)]
             public float Radius
@@ -71,35 +104,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
                     if (!EngineMath.EqualsWithTolerance(m_radius, value))
                     {
                         m_radius = value;
-                        this.RaiseRecreateRequest();
-                    }
-                }
-            }
-
-            [Category(CATEGORY_NAME)]
-            public float Height
-            {
-                get => m_height;
-                set
-                {
-                    if (!EngineMath.EqualsWithTolerance(m_height, value))
-                    {
-                        m_height = value;
-                        this.RaiseRecreateRequest();
-                    }
-                }
-            }
-
-            [Category(CATEGORY_NAME)]
-            public int CountOfSegments
-            {
-                get => m_countOfSegments;
-                set
-                {
-                    if (m_countOfSegments != value)
-                    {
-                        m_countOfSegments = value;
-                        this.RaiseRecreateRequest();
+                        base.RaiseRecreateRequest();
                     }
                 }
             }
