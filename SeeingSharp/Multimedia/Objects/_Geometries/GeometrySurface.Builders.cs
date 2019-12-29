@@ -631,8 +631,8 @@ namespace SeeingSharp.Multimedia.Objects
         {
             // Implemented with sample code from http://www.d3dcoder.net/d3d11.htm, Source Code Set II
 
-            countSubdivisions = Math.Min(countSubdivisions, 2);
-            radius = Math.Min(Math.Abs(radius), EngineMath.TOLERANCE_FLOAT_POSITIVE); // <-- this one prevents device by zero
+            countSubdivisions = Math.Max(countSubdivisions, 0);
+            radius = Math.Max(Math.Abs(radius), EngineMath.TOLERANCE_FLOAT_POSITIVE); // <-- this one prevents device by zero
 
             var startVertex = this.Owner.CountVertices;
             var startTriangle = this.Owner.CountTriangles;

@@ -25,8 +25,10 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Objects;
 using System;
+using System.ComponentModel;
 using System.Numerics;
 using System.Threading.Tasks;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredGeosphere
 {
@@ -34,33 +36,60 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredGeosphere
         "Colored Geosphere", 4, nameof(Primitives3D),
         "PreviewImage.png",
         "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_04_ColoredGeosphere",
-        typeof(SampleSettingsWith3D))]
+        typeof(ColoredGeosphereSampleSettings))]
     public class ColoredGeosphereSample : SampleBase
     {
-         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
+        private ColoredGeosphereSampleSettings m_sampleSettings;
+
+        public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
+            return Task.FromResult<object>(null);
+        }
+
+        public override async Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
+        {
+            mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
+
+            m_sampleSettings = (ColoredGeosphereSampleSettings) settings;
+
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
+                // Clear previous scene
+                manipulator.Clear();
+
                 // Create floor
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create resources
+                // Create geometry resource
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(
                         new GeosphereGeometryFactory
                         {
-                            CountSubdivisions = 3,
-                            Radius = 0.5f
+                            CountSubdivisions = m_sampleSettings.CountSubdivisions,
+                            Radius = m_sampleSettings.Radius
                         }));
-                var resMaterial = manipulator.AddStandardMaterialResource();
+
+                // Create material resource
+                NamedOrGenericKey resMaterial;
+                if (m_sampleSettings.Textured)
+                {
+                    var resTexture = manipulator.AddTextureResource(
+                        new AssemblyResourceLink(this.GetType(),
+                            "SimpleTexture.png"));
+                    resMaterial = manipulator.AddStandardMaterialResource(resTexture);
+                }
+                else
+                {
+                    resMaterial = manipulator.AddStandardMaterialResource();
+                }
 
                 // Create Sphere object
                 var sphereMesh = new Mesh(resGeometry, resMaterial);
                 sphereMesh.Color = Color4.GreenColor;
-                sphereMesh.Position = new Vector3(0f, 0.5f, 0f);
+                sphereMesh.Position = new Vector3(0f, 0.5f + m_sampleSettings.Radius, 0f);
                 sphereMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
@@ -85,6 +114,58 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredGeosphere
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
             return Task.FromResult<object>(null);
+        }
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        private class ColoredGeosphereSampleSettings : SampleSettingsWith3D
+        {
+            private int m_countSubdivisions = 3;
+            private float m_radius = 0.5f;
+            private bool m_textured = false;
+
+            [Category("Primitive")]
+            public int CountSubdivisions
+            {
+                get => m_countSubdivisions;
+                set
+                {
+                    if (m_countSubdivisions != value)
+                    {
+                        m_countSubdivisions = value;
+                        base.RaiseRecreateRequest();
+                    }
+                }
+            }
+
+            [Category("Primitive")]
+            public float Radius
+            {
+                get => m_radius;
+                set
+                {
+                    if (m_radius != value)
+                    {
+                        m_radius = value;
+                        base.RaiseRecreateRequest();
+                    }
+                }
+            }
+
+            [Category("Primitive")]
+            public bool Textured
+            {
+                get => m_textured;
+                set
+                {
+                    if (m_textured != value)
+                    {
+                        m_textured = value;
+                        base.RaiseRecreateRequest();
+                    }
+                }
+            }
         }
     }
 }

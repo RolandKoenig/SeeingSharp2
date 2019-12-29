@@ -44,6 +44,7 @@
     <None Remove="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
     <None Remove="Primitives3D\_04_ColoredGeosphere\PreviewImage.png" />
+    <None Remove="Primitives3D\_04_ColoredGeosphere\SimpleTexture.png" />
     <None Remove="Primitives3D\_05_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +77,7 @@
     <EmbeddedResource Include="Primitives3D\_03_ColoredSphere\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_04_ColoredGeosphere\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_04_ColoredGeosphere\SimpleTexture.png" />
     <EmbeddedResource Include="Primitives3D\_05_ColoredPyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
