@@ -102,6 +102,87 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Subdivides all triangles of this surface.
+        /// </summary>
+        public void Subdivide()
+        {
+            this.Subdivide(0, this.CountTriangles);
+        }
+        /// <summary>
+        /// Subdivides the given collection of triangles of this surface.
+        /// </summary>
+        /// <param name="startTriangleIndex">The triangle where to start.</param>
+        public void Subdivide(int startTriangleIndex)
+        {
+            this.Subdivide(startTriangleIndex, this.CountTriangles - startTriangleIndex);
+        }
+
+        /// <summary>
+        /// Subdivides the given collection of triangles of this surface.
+        /// </summary>
+        /// <param name="startTriangleIndex">The index of the triangle to start with.</param>
+        /// <param name="countTriangles">The total count of triangles to subdivide.</param>
+        public void Subdivide(int startTriangleIndex, int countTriangles)
+        {
+            var fullTriangleCount = this.CountTriangles;
+            startTriangleIndex.EnsureInRange(0, fullTriangleCount - 1, nameof(startTriangleIndex));
+            countTriangles.EnsureInRange(1, this.CountTriangles - startTriangleIndex, nameof(countTriangles));
+
+            var endingTriangle = startTriangleIndex + countTriangles;
+            for (var actTriangleIndex = startTriangleIndex; actTriangleIndex < endingTriangle; actTriangleIndex++)
+            {
+                // Subdivide the triangle like this:
+                //       v1                   v1
+                //       *                    *
+                //      / \                  / \
+                //     /   \                /   \
+                //    /     \    -->     m0*-----*m1
+                //   /       \            / \   / \
+                //  /         \          /   \ /   \
+                // *-----------*        *-----*-----*
+                // v0    m2     v2      v0    m2     v2  
+
+                // Get all three vertices of the current triangle
+                var i0 = actTriangleIndex * 3;
+                var i1 = i0 + 1;
+                var i2 = i0 + 2;
+                var vertexIndex0 = this.m_corners[i0].Index;
+                var vertexIndex1 = this.m_corners[i1].Index;
+                var vertexIndex2 = this.m_corners[i2].Index;
+                var v0 = this.Owner.VerticesInternal[vertexIndex0];
+                var v1 = this.Owner.VerticesInternal[vertexIndex1];
+                var v2 = this.Owner.VerticesInternal[vertexIndex2];
+
+                // Generate new vertices
+                Vertex.SubdivideVertices(ref v0, ref v1, out var m0);
+                Vertex.SubdivideVertices(ref v1, ref v2, out var m1);
+                Vertex.SubdivideVertices(ref v2, ref v0, out var m2);
+
+                // Add those newly generated vertices
+                var vertexIndex3 = this.Owner.AddVertex(m0);
+                var vertexIndex4 = this.Owner.AddVertex(m1);
+                var vertexIndex5 = this.Owner.AddVertex(m2);
+
+                // Now add new triangles
+                this.m_corners[i0] = new TriangleCorner(vertexIndex0);
+                this.m_corners[i1] = new TriangleCorner(vertexIndex3);
+                this.m_corners[i2] = new TriangleCorner(vertexIndex5);
+
+                this.m_corners.Add(new TriangleCorner(vertexIndex3));
+                this.m_corners.Add(new TriangleCorner(vertexIndex4));
+                this.m_corners.Add(new TriangleCorner(vertexIndex5));
+
+                this.m_corners.Add(new TriangleCorner(vertexIndex5));
+                this.m_corners.Add(new TriangleCorner(vertexIndex4));
+                this.m_corners.Add(new TriangleCorner(vertexIndex2));
+
+                this.m_corners.Add(new TriangleCorner(vertexIndex3));
+                this.m_corners.Add(new TriangleCorner(vertexIndex1));
+                this.m_corners.Add(new TriangleCorner(vertexIndex4));
+            }
+        }
+
+        /// <summary>
         /// Adds a triangle
         /// </summary>
         /// <param name="index1">Index of the first vertex</param>

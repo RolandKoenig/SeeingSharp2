@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Define all vertices
             StandardVertex[] CreateVertices()
             {
-                return new StandardVertex[] {
+                return new[] {
                     // Front side
                     new StandardVertex(new Vector3(-1f, +1f, -1f), new Vector2(0f, 0f)),
                     new StandardVertex(new Vector3(-1f, -1f, -1f), new Vector2(0f, 1f)),
@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Define all indices
             int[] CreateIndices()
             {
-                return new int[]
+                return new[]
                 {
                     0, 1, 2, 2, 3, 0, // Font side
                     4, 5, 6, 6, 7, 4, // Right side
@@ -108,7 +108,6 @@ namespace SeeingSharp.Multimedia.Objects
             // Create and fill resource container object
             var localResources = new SkyboxLocalResources
             {
-                DefaultResources = resourceDictionary.DefaultResources,
                 CubeTexture = resourceDictionary.GetResourceAndEnsureLoaded<TextureResource>(this.CubeTextureKey),
                 VertexBuffer = resourceDictionary.GetResourceAndEnsureLoaded(
                     ResourceKeys.RES_SKYBOX_VERTICES,
@@ -235,7 +234,6 @@ namespace SeeingSharp.Multimedia.Objects
         private class SkyboxLocalResources
         {
             public TextureResource CubeTexture;
-            public DefaultResources DefaultResources;
             public ImmutableIndexBufferResource IndexBuffer;
             public PixelShaderResource PixelShader;
             public ImmutableVertexBufferResource<StandardVertex> VertexBuffer;

@@ -140,6 +140,21 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Subdivides two vertices.
+        /// </summary>
+        public static void SubdivideVertices(ref Vertex v0, ref Vertex v1, out Vertex m0)
+        {
+            m0 = new Vertex();
+            m0.Position = (v0.Position + v1.Position) * 0.5f;
+            m0.Normal = Vector3.Normalize((v0.Normal + v1.Normal) * 0.5f);
+            m0.TexCoord = (v0.TexCoord + v1.TexCoord) * 0.5f;
+            m0.Color = (v0.Color + v1.Color) * 0.5f;
+            m0.TextureFactor = (v0.TextureFactor + v1.TextureFactor) * 0.5f;
+            m0.Binormal = Vector3.Normalize((v0.Binormal + v1.Binormal) * 0.5f);
+            m0.Tangent = Vector3.Normalize((v0.Tangent + v1.Tangent) * 0.5f);
+        }
+
+        /// <summary>
         /// Retrieves or sets geometry data
         /// </summary>
         public GeometryData Geometry

@@ -625,6 +625,73 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Builds a geosphere geometry.
+        /// </summary>
+        public BuiltVerticesRange BuildGeosphere(float radius, int countSubdivisions)
+        {
+            // Implemented with sample code from http://www.d3dcoder.net/d3d11.htm, Source Code Set II
+
+            countSubdivisions = Math.Min(countSubdivisions, 2);
+            radius = Math.Min(Math.Abs(radius), EngineMath.TOLERANCE_FLOAT_POSITIVE); // <-- this one prevents device by zero
+
+            var startVertex = this.Owner.CountVertices;
+            var startTriangle = this.Owner.CountTriangles;
+
+            // Build an icosahedron
+            const float X = 0.525731f;
+            const float Z = 0.850651f;
+            var pos = new[]
+            {
+                new Vector3(-X, 0f, Z),    new Vector3(X, 0f, Z), 
+                new Vector3(-X, 0f, -Z), new Vector3(X, 0f, -Z),
+                new Vector3(0f, Z, X),   new Vector3(0f, Z, -X),
+                new Vector3(0f, -Z, X),  new Vector3(0f, -Z, -X),
+                new Vector3(Z, X, 0f),   new Vector3(-Z, X, 0f),
+                new Vector3(Z, -X, 0f),  new Vector3(-Z, -X, 0f),  
+            };
+            var k = new[]
+            {
+                1, 4, 0,   4, 9, 0,   4, 5, 9,   8, 5, 4,   1, 8, 4,
+                1, 10, 8,  10, 3, 8,  8, 3, 5,   3, 2, 5,   3, 7, 2,
+                3, 10, 7,  10, 6, 7,  6, 11, 7,  6, 0, 11,  6, 1, 0,
+                10, 1, 6,  11, 0, 9,  2, 11, 9,  5, 2, 9,   11, 2, 7
+            };
+            foreach (var actPosition in pos)
+            {
+                this.Owner.AddVertex(new Vertex(actPosition));
+            }
+            for (var loop = 0; loop < k.Length; loop += 3)
+            {
+                this.AddTriangle(k[loop], k[loop +1], k[loop + 2]);
+            }
+
+            // Subdivide it n times
+            for (var loop = 0; loop < countSubdivisions; loop++)
+            {
+                this.Subdivide(startTriangle);
+            }
+
+            // Project vertices onto sphere and scale
+            var vertexCount = this.Owner.CountVertices;
+            for (var actVertexIndex = startVertex; actVertexIndex < vertexCount; actVertexIndex++)
+            {
+                var actVertex = this.Owner.VerticesInternal[actVertexIndex];
+                actVertex.Normal = Vector3.Normalize(actVertex.Position);
+                actVertex.Position = actVertex.Normal * radius;
+
+                var theta = EngineMath.AngleFromXY(actVertex.Position.X, actVertex.Position.Z);
+                var phi = (float)Math.Acos(actVertex.Position.Y / radius);
+                actVertex.TexCoord = new Vector2(
+                    theta / EngineMath.PI_2,
+                    phi / EngineMath.PI);
+
+                this.Owner.VerticesInternal[actVertexIndex] = actVertex;
+            }
+
+            return new BuiltVerticesRange(this.Owner, startVertex, this.Owner.CountVertices - startVertex);
+        }
+
+        /// <summary>
         /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so not texturing is supported)
         /// </summary>
         /// <param name="start">Start point of the cube (left-lower-front point)</param>

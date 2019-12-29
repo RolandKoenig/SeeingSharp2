@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Objects
             Position = position;
             Normal = Vector3.Zero;
             Tangent = Vector3.Zero;
-            Color = Color4.White;
+            Color = Color4.Transparent;
             Tangent = Vector3.Zero;
             Binormal = Vector3.Zero;
         }
@@ -71,7 +71,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             Position = position;
             Normal = normal;
-            Color = Color4.White;
+            Color = Color4.Transparent;
             Tangent = Vector3.Zero;
             Binormal = Vector3.Zero;
         }

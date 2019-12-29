@@ -20,11 +20,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp
 {
     public static class EngineMath
     {
+        public const float PI = (float) Math.PI;
+        public const float PI_2 = (float) Math.PI * 2f;
+
         public const float RAD_45DEG = (float)Math.PI * 0.25f;
         public const float RAD_90DEG = (float)Math.PI * 0.5f;
         public const float RAD_135DEG = (float)Math.PI * 0.75f;
@@ -43,6 +47,40 @@ namespace SeeingSharp
         public const double TOLERANCE_DOUBLE_NEGATIVE = -0.00001;
         public const decimal TOLERANCE_DECIMAL_POSITIVE = 0.00001M;
         public const decimal TOLERANCE_DECIMAL_NEGATIVE = -0.00001M;
+
+        public static float AngleFromXY(float x, float y)
+        {
+            // Implemented with sample code from http://www.d3dcoder.net/d3d11.htm, Source Code Set II
+            var theta = 0f;
+
+            if (x >= 0f)
+            {
+                // Quadrant I or IV
+                if (EngineMath.EqualsWithTolerance(x, 0f))
+                {
+                    // If x = 0, then atan(y/x) = +pi/2 if y > 0
+                    //                atan(y/x) = -pi/2 if y < 0
+                    if (y > 0f) { theta = EngineMath.PI / 2f; }
+                    else { theta = EngineMath.PI / -2f; }
+                }
+                else
+                {
+                    theta = (float)Math.Atan(y / x);
+                }
+
+                if (theta < 0f)
+                {
+                    theta += 2f * EngineMath.PI;
+                }
+            }
+            else
+            {
+                // Quadrant II or III
+                theta = (float) (Math.Atan(y / x) + EngineMath.PI);
+            }
+
+            return theta;
+        }
 
         /// <summary>
         /// Calculates the factorial of the given value.

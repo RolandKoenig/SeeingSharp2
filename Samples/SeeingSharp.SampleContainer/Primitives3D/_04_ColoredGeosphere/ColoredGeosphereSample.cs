@@ -28,16 +28,16 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
+namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredGeosphere
 {
     [SampleDescription(
-        "Colored Pyramid", 4, nameof(Primitives3D),
+        "Colored Geosphere", 4, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_04_ColoredPyramid",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_04_ColoredGeosphere",
         typeof(SampleSettingsWith3D))]
-    public class ColoredPyramidSample : SampleBase
+    public class ColoredGeosphereSample : SampleBase
     {
-        public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
+         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
@@ -50,20 +50,25 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_ColoredPyramid
                 // Create resources
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(
-                        new PyramidGeometryFactory()));
+                        new GeosphereGeometryFactory
+                        {
+                            CountSubdivisions = 3,
+                            Radius = 0.5f
+                        }));
                 var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create Sphere object
-                var pyramidMesh = new Mesh(resGeometry, resMaterial);
-                pyramidMesh.Color = Color4.GreenColor;
-                pyramidMesh.BuildAnimationSequence()
+                var sphereMesh = new Mesh(resGeometry, resMaterial);
+                sphereMesh.Color = Color4.GreenColor;
+                sphereMesh.Position = new Vector3(0f, 0.5f, 0f);
+                sphereMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()
-                    .CallAction(() => pyramidMesh.RotationEuler = Vector3.Zero)
+                    .CallAction(() => sphereMesh.RotationEuler = Vector3.Zero)
                     .ApplyAndRewind();
-                manipulator.AddObject(pyramidMesh);
+                manipulator.AddObject(sphereMesh);
             });
         }
 
