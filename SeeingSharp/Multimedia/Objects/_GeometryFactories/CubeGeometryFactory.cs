@@ -34,8 +34,7 @@ namespace SeeingSharp.Multimedia.Objects
             result.CreateSurface()
                 .BuildCube24V(
                     new Vector3(-halfSize, -halfSize, -halfSize),
-                    new Vector3(size, size, size),
-                    Color4.Transparent);
+                    new Vector3(size, size, size));
 
             return result;
         }

@@ -175,8 +175,8 @@ namespace SeeingSharp.Multimedia.Core
                 var dummyGeometry = new Geometry();
                 dummyGeometry.FirstSurface.BuildCube24V(
                     Vector3.Zero,
-                    new Vector3(1f, 1f, 1f),
-                    Color4.White);
+                    new Vector3(1f, 1f, 1f))
+                    .SetVertexColor(Color4.White);
                 result = new GeometryResource(dummyGeometry) as T;
             }
 

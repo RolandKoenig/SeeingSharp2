@@ -92,8 +92,8 @@ namespace SeeingSharp.Multimedia.Objects
                     localStart - new Vector3(tileWidthX / divider, 0f, 0f),
                     localStart + new Vector3(tileWidthX / divider, 0f, 0f),
                     localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
-                    localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
-                    actLineColor);
+                    localEnd - new Vector3(tileWidthX / divider, 0f, 0f))
+                    .SetVertexColor(actLineColor);
 
                 if (this.BuildBackFaces)
                 {
@@ -101,8 +101,8 @@ namespace SeeingSharp.Multimedia.Objects
                         localEnd - new Vector3(tileWidthX / divider, 0f, 0f),
                         localEnd + new Vector3(tileWidthX / divider, 0f, 0f),
                         localStart + new Vector3(tileWidthX / divider, 0f, 0f),
-                        localStart - new Vector3(tileWidthX / divider, 0f, 0f),
-                        actLineColor);
+                        localStart - new Vector3(tileWidthX / divider, 0f, 0f))
+                        .SetVertexColor(actLineColor);
                 }
             }
 
@@ -125,8 +125,8 @@ namespace SeeingSharp.Multimedia.Objects
                     localStart + new Vector3(0f, 0f, tileWidthZ / divider),
                     localStart - new Vector3(0f, 0f, tileWidthZ / divider),
                     localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
-                    localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
-                    actLineColor);
+                    localEnd + new Vector3(0f, 0f, tileWidthZ / divider))
+                    .SetVertexColor(actLineColor);
 
                 if (this.BuildBackFaces)
                 {
@@ -134,8 +134,8 @@ namespace SeeingSharp.Multimedia.Objects
                         localEnd + new Vector3(0f, 0f, tileWidthZ / divider),
                         localEnd - new Vector3(0f, 0f, tileWidthZ / divider),
                         localStart - new Vector3(0f, 0f, tileWidthZ / divider),
-                        localStart + new Vector3(0f, 0f, tileWidthZ / divider),
-                        actLineColor);
+                        localStart + new Vector3(0f, 0f, tileWidthZ / divider))
+                        .SetVertexColor(actLineColor);
                 }
             }
             if (genSurfaceDefaultLine.CountTriangles == 0) { result.RemoveSurface(genSurfaceDefaultLine); }

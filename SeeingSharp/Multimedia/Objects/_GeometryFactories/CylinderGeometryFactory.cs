@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4.Transparent);
+            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
 
             return result;
         }

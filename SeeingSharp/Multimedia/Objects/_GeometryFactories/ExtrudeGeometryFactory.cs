@@ -174,7 +174,7 @@ namespace SeeingSharp.Multimedia.Objects
                     surface.BuildTriangleV(
                         new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
                         new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
-                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y), this.Color);
+                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y));
                 }
             }
 
@@ -190,11 +190,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// Bounds of the given geometry.
         /// </summary>
         public Size2F Bounds { get; private set; }
-
-        /// <summary>
-        /// The <see cref="Color4"/> to be assigned to each generated <see cref="Vertex"/>
-        /// </summary>
-        public Color4 Color { get; set; } = Color4.Transparent;
 
         public ExtrudeGeometryFactoryInternals Internals { get; }
 

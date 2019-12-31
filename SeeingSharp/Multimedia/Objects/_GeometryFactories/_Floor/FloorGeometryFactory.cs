@@ -210,8 +210,7 @@ namespace SeeingSharp.Multimedia.Objects
                 // AddObject tile information to current Geometry
                 actSurface.BuildCubeTop4V(
                     new Vector3(tilePosition.X, 0, tilePosition.Z),
-                    new Vector3(m_tileSize.X, 0, m_tileSize.Y),
-                    Color4.White);
+                    new Vector3(m_tileSize.X, 0, m_tileSize.Y));
             }
 
             // Return all generated Geometry

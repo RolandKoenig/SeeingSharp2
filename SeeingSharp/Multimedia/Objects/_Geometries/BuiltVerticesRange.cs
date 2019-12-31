@@ -153,6 +153,20 @@ namespace SeeingSharp.Multimedia.Objects
             return this;
         }
 
+        public BuiltVerticesRange SetVertexColor(Color4 color)
+        {
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
+            {
+                var actVertex = Geometry.Vertices[loop];
+                actVertex.Color = color;
+                Geometry.Vertices[loop] = actVertex;
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>

@@ -195,7 +195,7 @@ namespace SeeingSharp.Multimedia.Objects
             return new BuiltVerticesRange(this.Owner, startVertex, this.Owner.CountVertices - startVertex);
         }
 
-        public BuiltVerticesRange BuildCircleFullV(Vector3 middle, float radius, float width, float height, int countOfSegments, Color4 Color)
+        public BuiltVerticesRange BuildCircleFullV(Vector3 middle, float radius, float width, float height, int countOfSegments)
         {
             var startVertex = this.Owner.CountVertices;
             if (countOfSegments < 3) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments)); }
@@ -206,7 +206,6 @@ namespace SeeingSharp.Multimedia.Objects
             var farVector = new Vector2(0f, radius + halfWidth);
             var lastNearVector = nearVector;
             var lastFarVector = farVector;
-
             for (var loop = 1; loop <= countOfSegments; loop++)
             {
                 var actPercent = loop / (float)countOfSegments;
@@ -223,29 +222,25 @@ namespace SeeingSharp.Multimedia.Objects
                     middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
                     middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
                     middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
-                    Vector3.UnitY,
-                    Color4.Transparent);
+                    Vector3.UnitY);
                 this.BuildRect4V(
                     middle + new Vector3(lastFarVector.X, halfHeight, lastFarVector.Y),
                     middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
                     middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
                     middle + new Vector3(nextFarVector.X, halfHeight, nextFarVector.Y),
-                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
-                    Color4.Transparent);
+                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)));
                 this.BuildRect4V(
                     middle + new Vector3(lastFarVector.X, -halfHeight, lastFarVector.Y),
                     middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
                     middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
                     middle + new Vector3(nextFarVector.X, -halfHeight, nextFarVector.Y),
-                    -Vector3.UnitY,
-                    Color4.Transparent);
+                    -Vector3.UnitY);
                 this.BuildRect4V(
                     middle + new Vector3(lastNearVector.X, halfHeight, lastNearVector.Y),
                     middle + new Vector3(nextNearVector.X, halfHeight, nextNearVector.Y),
                     middle + new Vector3(nextNearVector.X, -halfHeight, nextNearVector.Y),
                     middle + new Vector3(lastNearVector.X, -halfHeight, lastNearVector.Y),
-                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)),
-                    Color4.Transparent);
+                    Vector3.Normalize(new Vector3(lastFarVector.X, 0, lastFarVector.Y)));
 
                 lastNearVector = nextNearVector;
                 lastFarVector = nextFarVector;
@@ -257,7 +252,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Create a 4 Side Pyramid
         /// </summary>
-        public BuiltVerticesRange BuildPyramidFullV(Vector3 lowerMiddle, float width, float height, Color4 color)
+        public BuiltVerticesRange BuildPyramidFullV(Vector3 lowerMiddle, float width, float height)
         {
             var halfWidth = width / 2f;
             var start = new Vector3(lowerMiddle.X - halfWidth, lowerMiddle.Y, lowerMiddle.Z - halfWidth);
@@ -269,29 +264,24 @@ namespace SeeingSharp.Multimedia.Objects
                 new Vector3(start.X, dest.Y, dest.Z),
                 new Vector3(dest.X, dest.Y, dest.Z),
                 new Vector3(dest.X, dest.Y, start.Z),
-                new Vector3(0f, -1f, 0f),
-                color);
+                new Vector3(0f, -1f, 0f));
 
             this.BuildTriangleV(
                 new Vector3(start.X, dest.Y, start.Z),
                 new Vector3(dest.X, dest.Y, start.Z),
-                centerTopCoordination,
-                color);
+                centerTopCoordination);
             this.BuildTriangleV(
                 new Vector3(start.X, dest.Y, dest.Z),
                 new Vector3(start.X, dest.Y, start.Z),
-                centerTopCoordination,
-                color);
+                centerTopCoordination);
             this.BuildTriangleV(
                 new Vector3(dest.X, dest.Y, dest.Z),
                 new Vector3(start.X, dest.Y, dest.Z),
-                centerTopCoordination,
-                color);
+                centerTopCoordination);
             this.BuildTriangleV(
                 new Vector3(dest.X, dest.Y, start.Z),
                 new Vector3(dest.X, dest.Y, dest.Z),
-                centerTopCoordination,
-                color);
+                centerTopCoordination);
 
             return new BuiltVerticesRange(this.Owner, this.Owner.CountVertices - 4, 4);
         }
@@ -299,7 +289,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Build a Triangle.
         /// </summary>
-        public BuiltVerticesRange BuildTriangleV(Vector3 pointA, Vector3 pointB, Vector3 pointC, Color4 color)
+        public BuiltVerticesRange BuildTriangleV(Vector3 pointA, Vector3 pointB, Vector3 pointC)
         {
             var texX = 1f;
             var texY = 1f;
@@ -310,7 +300,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, color, new Vector2(0f, texY));
+            var vertex = new Vertex(pointA, new Vector2(0f, texY));
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -328,8 +318,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cone.</param>
         /// <param name="height">The height of the cone.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color for the generated vertices.</param>
-        public BuiltVerticesRange BuildConeFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
+        public BuiltVerticesRange BuildConeFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
             var startVertex = this.Owner.CountVertices;
 
@@ -355,7 +344,7 @@ namespace SeeingSharp.Multimedia.Objects
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             // Create bottom and top vertices
-            var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var bottomVertex = new Vertex(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
             // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
@@ -392,7 +381,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var topSideNormal = Vector3Ex.NormalFromHVRotation(vectorToTopRotation);
 
                 //AddObject segment top triangle
-                var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), topSideNormal);
+                var topVertex = new Vertex(topCoordinate, new Vector2(texX / 2f, texY / 2f), topSideNormal);
                 var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
                 var segmentTopRight = topVertex.Copy(sideRightBottomCoord);
 
@@ -409,10 +398,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color to be applied on the vertices.</param>
-        public BuiltVerticesRange BuildCylinderFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
+        public BuiltVerticesRange BuildCylinderFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
-            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, color, true, true, true);
+            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, true, true, true);
         }
 
         /// <summary>
@@ -422,10 +410,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color to be applied on the vertices.</param>
-        public BuiltVerticesRange BuildCylinderTopV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
+        public BuiltVerticesRange BuildCylinderTopV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
-            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, color, false, false, true);
+            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, false, false, true);
         }
 
         /// <summary>
@@ -435,10 +422,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color to be applied on the vertices.</param>
-        public BuiltVerticesRange BuildCylinderSidesV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
+        public BuiltVerticesRange BuildCylinderSidesV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
-            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, color, true, false, false);
+            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, true, false, false);
         }
 
         /// <summary>
@@ -448,10 +434,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color to be applied on the vertices.</param>
-        public BuiltVerticesRange BuildCylinderBottomV(Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color)
+        public BuiltVerticesRange BuildCylinderBottomV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
-            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, color, false, true, false);
+            return this.BuildCylinderV(bottomMiddle, radius, height, countOfSegments, false, true, false);
         }
 
         /// <summary>
@@ -461,12 +446,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        /// <param name="color">The color to be applied on the vertices.</param>
         /// <param name="buildBottom">Build bottom of the cylinder.</param>
         /// <param name="buildSides">Build sides of the cylinder.</param>
         /// <param name="buildTop">Build top side of the cylinder.</param>
         public BuiltVerticesRange BuildCylinderV(
-            Vector3 bottomMiddle, float radius, float height, int countOfSegments, Color4 color,
+            Vector3 bottomMiddle, float radius, float height, int countOfSegments,
             bool buildSides, bool buildBottom, bool buildTop)
         {
             var startVertex = this.Owner.CountVertices;
@@ -492,8 +476,8 @@ namespace SeeingSharp.Multimedia.Objects
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             // Create bottom and top vertices
-            var bottomVertex = new Vertex(bottomCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
-            var topVertex = new Vertex(topCoordinate, color, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
+            var bottomVertex = new Vertex(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var topVertex = new Vertex(topCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
             // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
@@ -550,7 +534,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var texCoordSegmentTarget = new Vector2(texSegmentX * ((loop + 1) / (float)countOfSegments), texSegmentY);
 
                     // AddObject segment side
-                    this.BuildRect4V(sideLeftBottomCoord, sideRightBottomCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, color, texCoordSegmentStart, texCoordSegmentTarget);
+                    this.BuildRect4V(sideLeftBottomCoord, sideRightBottomCoord, sideRightTopCoord, sideLeftTopCoord, sideNormal, texCoordSegmentStart, texCoordSegmentTarget);
                 }
             }
 
@@ -597,7 +581,6 @@ namespace SeeingSharp.Multimedia.Objects
                     var position = SphereGetPosition(theta, phi);
                     var vertex = new Vertex(
                         position,
-                        Color4.Transparent,
                         SphereGetTextureCoordinate(theta, phi),
                         Vector3.Normalize(position));
                     this.Owner.Vertices.Add(vertex);
@@ -696,27 +679,16 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so not texturing is supported)
+        /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so no texturing is supported)
         /// </summary>
         /// <param name="start">Start point of the cube (left-lower-front point)</param>
         /// <param name="size">Size of the cube</param>
         public BuiltVerticesRange BuildCube8V(Vector3 start, Vector3 size)
         {
-            return this.BuildCube8V(start, size, Color4.White);
-        }
-
-        /// <summary>
-        /// Builds a cube into a geometry (this cube is built up of just 8 vertices, so no texturing is supported)
-        /// </summary>
-        /// <param name="start">Start point of the cube (left-lower-front point)</param>
-        /// <param name="size">Size of the cube</param>
-        /// <param name="color">Color of the cube</param>
-        public BuiltVerticesRange BuildCube8V(Vector3 start, Vector3 size, Color4 color)
-        {
             var startVertex = this.Owner.CountVertices;
 
             var dest = start + size;
-            var vertex = new Vertex(start, color, new Vector2());
+            var vertex = new Vertex(start);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z)));
@@ -750,22 +722,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="size">Size of the cube</param>
         public BuiltVerticesRange BuildCube24V(Vector3 start, Vector3 size)
         {
-            return this.BuildCube24V(start, size, Color4.White);
-        }
-
-        /// <summary>
-        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
-        /// </summary>
-        /// <param name="start">Start point of the cube</param>
-        /// <param name="size">Size of the cube</param>
-        /// <param name="color">Color of the cube</param>
-        public BuiltVerticesRange BuildCube24V(Vector3 start, Vector3 size, Color4 color)
-        {
             var result = new BuiltVerticesRange(this.Owner);
 
-            result.Merge(this.BuildCubeSides16V(start, size, color));
-            result.Merge(this.BuildCubeTop4V(start, size, color));
-            result.Merge(this.BuildCubeBottom4V(start, size, color));
+            result.Merge(this.BuildCubeSides16V(start, size));
+            result.Merge(this.BuildCubeTop4V(start, size));
+            result.Merge(this.BuildCubeBottom4V(start, size));
 
             return result;
         }
@@ -773,7 +734,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds a cube of 4 vertices and a defined height.
         /// </summary>
-        public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float height, Color4 color)
+        public BuiltVerticesRange BuildCube24V(Vector3 topA, Vector3 topB, Vector3 topC, Vector3 topD, float height)
         {
             var result = new BuiltVerticesRange(this.Owner)
             {
@@ -805,7 +766,7 @@ namespace SeeingSharp.Multimedia.Objects
             var bottomD = new Vector3(topD.X, topD.Y - height, topD.Z);
 
             // Build Top side
-            var vertex = new Vertex(topA, color, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
+            var vertex = new Vertex(topA, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
             var c = this.Owner.AddVertex(vertex.Copy(topC, new Vector2(0f, texY)));
@@ -814,7 +775,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.AddTriangle(a, d, c);
 
             // Build Bottom side
-            vertex = new Vertex(topA, color, new Vector2(0f, 0f), new Vector3(0f, -1f, 0f));
+            vertex = new Vertex(topA, new Vector2(0f, 0f), new Vector3(0f, -1f, 0f));
             a = this.Owner.AddVertex(vertex);
             b = this.Owner.AddVertex(vertex.Copy(topD, new Vector2(texX, 0f)));
             c = this.Owner.AddVertex(vertex.Copy(topC, new Vector2(texX, texY)));
@@ -823,7 +784,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.AddTriangle(a, d, c);
 
             // Build Front side
-            vertex = new Vertex(topA, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
+            vertex = new Vertex(topA, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
             a = this.Owner.AddVertex(vertex);
             b = this.Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
             c = this.Owner.AddVertex(vertex.Copy(bottomB, new Vector2(texX, 0f)));
@@ -866,19 +827,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
         /// <param name="box">Box defining bounds of generated cube.</param>
-        /// <param name="color">Color of generated vertices.</param>
-        public BuiltVerticesRange BuildCube24V(BoundingBox box, Color4 color)
-        {
-            return this.BuildCube24V(box.Minimum, box.GetSize(), color);
-        }
-
-        /// <summary>
-        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
-        /// </summary>
-        /// <param name="box">Box defining bounds of generated cube.</param>
         public BuiltVerticesRange BuildCube24V(BoundingBox box)
         {
-            return this.BuildCube24V(box, Color4.White);
+            return this.BuildCube24V(box.Minimum, box.GetSize());
         }
 
         /// <summary>
@@ -886,13 +837,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="centerLocation">The location to draw the cube at.</param>
         /// <param name="sideLength">The side length of the cube.</param>
-        /// <param name="color">The color to be used.</param>
-        public BuiltVerticesRange BuildCube24V(Vector3 centerLocation, float sideLength, Color4 color)
+        public BuiltVerticesRange BuildCube24V(Vector3 centerLocation, float sideLength)
         {
             return this.BuildCube24V(
                 centerLocation - new Vector3(sideLength / 2f, sideLength / 2f, sideLength / 2f),
-                new Vector3(sideLength, sideLength, sideLength),
-                color);
+                new Vector3(sideLength, sideLength, sideLength));
         }
 
         /// <summary>
@@ -901,15 +850,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="bottomCenter">Bottom center point of the cube.</param>
         /// <param name="width">Width (and depth) of the cube.</param>
         /// <param name="height">Height of the cube.</param>
-        /// <param name="color">Color of the cube</param>
-        public BuiltVerticesRange BuildCube24V(Vector3 bottomCenter, float width, float height, Color4 color)
+        public BuiltVerticesRange BuildCube24V(Vector3 bottomCenter, float width, float height)
         {
             var start = new Vector3(
                 bottomCenter.X - width / 2f,
                 bottomCenter.Y,
                 bottomCenter.Z - width / 2f);
             var size = new Vector3(width, height, width);
-            return this.BuildCube24V(start, size, color);
+            return this.BuildCube24V(start, size);
         }
 
         /// <summary>
@@ -953,7 +901,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             var textureCoordinate = new Vector2(CalculateU(pointA), CalculateV(pointA));
-            var vertex = new Vertex(pointA, Color4.White, textureCoordinate, normal);
+            var vertex = new Vertex(pointA, textureCoordinate, normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(CalculateU(pointB), CalculateV(pointB))));
@@ -969,7 +917,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Builds the top side of a cube into this Geometry (Built up of 4 vertices, so texture coordinates and normals are set)
         /// </summary>
-        public BuiltVerticesRange BuildCubeTop4V(Vector3 start, Vector3 size, Color4 color)
+        public BuiltVerticesRange BuildCubeTop4V(Vector3 start, Vector3 size)
         {
             var dest = start + size;
 
@@ -978,14 +926,13 @@ namespace SeeingSharp.Multimedia.Objects
                 new Vector3(dest.X, dest.Y, start.Z),
                 new Vector3(dest.X, dest.Y, dest.Z),
                 new Vector3(start.X, dest.Y, dest.Z),
-                new Vector3(0f, 1f, 0f),
-                color);
+                new Vector3(0f, 1f, 0f));
         }
 
         /// <summary>
         /// Builds the bottom side of a cube into this Geometry (Built up of 4 vertices, so texture coordinates and normals are set)
         /// </summary>
-        public BuiltVerticesRange BuildCubeBottom4V(Vector3 start, Vector3 size, Color4 color)
+        public BuiltVerticesRange BuildCubeBottom4V(Vector3 start, Vector3 size)
         {
             var dest = start + size;
 
@@ -994,8 +941,7 @@ namespace SeeingSharp.Multimedia.Objects
                 new Vector3(dest.X, start.Y, dest.Z),
                 new Vector3(dest.X, start.Y, start.Z),
                 new Vector3(start.X, start.Y, start.Z),
-                new Vector3(0f, -1f, 0f),
-                color);
+                new Vector3(0f, -1f, 0f));
         }
 
         /// <summary>
@@ -1003,8 +949,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>
-        /// <param name="color">Color of the cube</param>
-        public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size, Color4 color)
+        public BuiltVerticesRange BuildCubeSides16V(Vector3 start, Vector3 size)
         {
             var result = new BuiltVerticesRange(this.Owner)
             {
@@ -1025,7 +970,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Front side
-            var vertex = new Vertex(start, color, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
+            var vertex = new Vertex(start, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector2(texX, texY)));
             var c = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector2(texX, 0f)));
@@ -1062,17 +1007,9 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Build a single rectangle into the geometry
-        /// </summary>
-        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD)
-        {
-            return this.BuildRect4V(pointA, pointB, pointC, pointD, Color4.White);
-        }
-
-        /// <summary>
         /// Build a single rectangle into the geometry (Supports texturing)
         /// </summary>
-        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Color4 color)
+        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD)
         {
             var texX = 1f;
             var texY = 1f;
@@ -1083,7 +1020,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, color, new Vector2(0f, texY));
+            var vertex = new Vertex(pointA, new Vector2(0f, texY));
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -1101,14 +1038,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal)
         {
-            return this.BuildRect4V(pointA, pointB, pointC, pointD, normal, Color4.White);
-        }
-
-        /// <summary>
-        /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
-        /// </summary>
-        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Color4 color)
-        {
             var texX = 1f;
             var texY = 1f;
 
@@ -1118,7 +1047,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, color, new Vector2(0f, texY), normal);
+            var vertex = new Vertex(pointA, new Vector2(0f, texY), normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -1134,9 +1063,9 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Build a single rectangle into the geometry (Supports texturing and normal vectors)
         /// </summary>
-        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Color4 color, Vector2 minTexCoord, Vector2 maxTexCoord)
+        public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Vector2 minTexCoord, Vector2 maxTexCoord)
         {
-            var vertex = new Vertex(pointA, color, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
+            var vertex = new Vertex(pointA, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(maxTexCoord.X, maxTexCoord.Y)));

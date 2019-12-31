@@ -62,9 +62,27 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Creates a new vertex
         /// </summary>
+        public Vertex(Vector3 position, Vector2 texCoord1)
+        {
+            m_geoData = new GeometryData(position);
+            m_textureData = new TextureData(texCoord1);
+        }
+
+        /// <summary>
+        /// Creates a new vertex
+        /// </summary>
         public Vertex(Vector3 position, Color4 color, Vector2 texCoord1, Vector3 normal)
         {
             m_geoData = new GeometryData(position, normal, color);
+            m_textureData = new TextureData(texCoord1);
+        }
+
+        /// <summary>
+        /// Creates a new vertex
+        /// </summary>
+        public Vertex(Vector3 position, Vector2 texCoord1, Vector3 normal)
+        {
+            m_geoData = new GeometryData(position, normal);
             m_textureData = new TextureData(texCoord1);
         }
 

@@ -32,8 +32,7 @@ namespace SeeingSharp.Multimedia.Objects
                 .BuildPyramidFullV(
                     new Vector3(0f, 0f, 0f),
                     this.Width,
-                    this.Height,
-                    Color4.Transparent);
+                    this.Height);
 
             return result;
         }

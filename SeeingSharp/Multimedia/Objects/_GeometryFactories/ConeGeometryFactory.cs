@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildConeFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments, Color4.Transparent);
+            mainSurface.BuildConeFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
 
             return result;
         }

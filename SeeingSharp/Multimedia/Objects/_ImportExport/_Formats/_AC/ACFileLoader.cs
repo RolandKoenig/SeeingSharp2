@@ -105,8 +105,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var dummyGeometry = new Geometry();
                 dummyGeometry.FirstSurface.BuildCube24V(
                     new Vector3(),
-                    new Vector3(1f, 1f, 1f),
-                    Color4.Transparent);
+                    new Vector3(1f, 1f, 1f));
                 return dummyGeometry;
             }
         }

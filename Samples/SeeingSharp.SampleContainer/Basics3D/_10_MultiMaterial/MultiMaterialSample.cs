@@ -120,28 +120,28 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
             var surface1 = result.CreateSurface();
             surface1.BuildCubeBottom4V(
                 new Vector3(-1f, 0f, -1f),
-                new Vector3(2f, 1f, 2f),
-                Color4.White);
+                new Vector3(2f, 1f, 2f))
+                .SetVertexColor(Color4.White);
             surface1.BuildCubeSides16V(
                 new Vector3(-1f, 0f, -1f),
-                new Vector3(2f, 1f, 2f),
-                Color4.White);
+                new Vector3(2f, 1f, 2f))
+                .SetVertexColor(Color4.White);
 
             var surface2 = result.CreateSurface();
             surface2.BuildCubeSides16V(
                 new Vector3(-1f, 1f, -1f),
-                new Vector3(2f, 1f, 2f),
-                Color4.White);
+                new Vector3(2f, 1f, 2f))
+                .SetVertexColor(Color4.White);
 
             var surface3 = result.CreateSurface();
             surface3.BuildCubeSides16V(
                 new Vector3(-1f, 2f, -1f),
-                new Vector3(2f, 1f, 2f),
-                Color4.White);
+                new Vector3(2f, 1f, 2f))
+                .SetVertexColor(Color4.White);
             surface3.BuildCubeTop4V(
                 new Vector3(-1f, 2f, -1f),
-                new Vector3(2f, 1f, 2f),
-                Color4.White);
+                new Vector3(2f, 1f, 2f))
+                .SetVertexColor(Color4.White);
 
             return result;
         }

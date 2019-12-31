@@ -187,7 +187,7 @@ namespace SeeingSharp.Multimedia.Objects
                                 polygonForRendering.Vertices[loop].X,
                                 0f,
                                 polygonForRendering.Vertices[loop].Y);
-                            tempSurface.BuildCube24V(actVertexLocation, pointRenderSize, colorToUse);
+                            tempSurface.BuildCube24V(actVertexLocation, pointRenderSize).SetVertexColor(colorToUse);
                         }
                     }
 
@@ -237,8 +237,8 @@ namespace SeeingSharp.Multimedia.Objects
                             new Vector3(actLine.StartPosition.X, -volumetricTextDepth, actLine.StartPosition.Y),
                             new Vector3(actLine.EndPosition.X, -volumetricTextDepth, actLine.EndPosition.Y),
                             new Vector3(actLine.EndPosition.X, 0f, actLine.EndPosition.Y),
-                            new Vector3(actLine.StartPosition.X, 0f, actLine.StartPosition.Y),
-                            m_geometryOptions.VolumetricSideSurfaceVertexColor);
+                            new Vector3(actLine.StartPosition.X, 0f, actLine.StartPosition.Y))
+                            .SetVertexColor(m_geometryOptions.VolumetricSideSurfaceVertexColor);
                     }
                 }
             }
