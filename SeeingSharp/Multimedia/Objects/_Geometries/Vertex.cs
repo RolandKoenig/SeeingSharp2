@@ -29,16 +29,19 @@ namespace SeeingSharp.Multimedia.Objects
     {
         public static readonly Vertex Empty;
 
-        private GeometryData m_geoData;
-        private TextureData m_textureData;
-
         /// <summary>
         /// Creates a new vertex
         /// </summary>
         public Vertex(Vector3 position)
         {
-            m_geoData = new GeometryData(position);
-            m_textureData = new TextureData();
+            Position = position;
+            Normal = Vector3.Zero;
+            Color = Color4.Transparent;
+            TexCoord1 = Vector2.Zero;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -46,8 +49,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex(Vector3 position, Color4 color)
         {
-            m_geoData = new GeometryData(position, color);
-            m_textureData = new TextureData();
+            Position = position;
+            Normal = Vector3.Zero;
+            Color = color;
+            TexCoord1 = Vector2.Zero;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -55,8 +64,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex(Vector3 position, Color4 color, Vector2 texCoord1)
         {
-            m_geoData = new GeometryData(position, color);
-            m_textureData = new TextureData(texCoord1);
+            Position = position;
+            Normal = Vector3.Zero;
+            Color = color;
+            TexCoord1 = texCoord1;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -64,8 +79,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex(Vector3 position, Vector2 texCoord1)
         {
-            m_geoData = new GeometryData(position);
-            m_textureData = new TextureData(texCoord1);
+            Position = position;
+            Normal = Vector3.Zero;
+            Color = Color4.Transparent;
+            TexCoord1 = texCoord1;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -73,8 +94,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex(Vector3 position, Color4 color, Vector2 texCoord1, Vector3 normal)
         {
-            m_geoData = new GeometryData(position, normal, color);
-            m_textureData = new TextureData(texCoord1);
+            Position = position;
+            Normal = normal;
+            Color = color;
+            TexCoord1 = texCoord1;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
         /// <summary>
@@ -82,19 +109,19 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public Vertex(Vector3 position, Vector2 texCoord1, Vector3 normal)
         {
-            m_geoData = new GeometryData(position, normal);
-            m_textureData = new TextureData(texCoord1);
+            Position = position;
+            Normal = normal;
+            Color = Color4.Transparent;
+            TexCoord1 = texCoord1;
+            TextureFactor = 0f;
+
+            Tangent = Vector3.Zero;
+            Binormal = Vector3.Zero;
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
         public override string ToString()
         {
-            return m_geoData.Position.ToString();
+            return Position.ToString();
         }
 
         /// <summary>
@@ -103,18 +130,18 @@ namespace SeeingSharp.Multimedia.Objects
         public Vertex Copy(Vector3 newPosition)
         {
             var result = this;
-            result.m_geoData = result.m_geoData.Copy(newPosition);
+            result.Position = newPosition;
             return result;
         }
 
         /// <summary>
         /// Copies this vertex and changes the texture coordinate of the result.
         /// </summary>
-        /// <param name="actTexCoord">The texture coordinate to be set.</param>
-        public Vertex Copy(Vector2 actTexCoord)
+        /// <param name="newTexCoord1">The texture coordinate to be set.</param>
+        public Vertex Copy(Vector2 newTexCoord1)
         {
             var result = this;
-            result.m_textureData.Coordinate1 = actTexCoord;
+            result.TexCoord1 = newTexCoord1;
             return result;
         }
 
@@ -131,8 +158,8 @@ namespace SeeingSharp.Multimedia.Objects
         public Vertex Copy(Vector3 newPosition, Vector2 newTexCoord1)
         {
             var result = this;
-            result.m_geoData = result.m_geoData.Copy(newPosition);
-            result.m_textureData = result.m_textureData.Copy(newTexCoord1);
+            result.Position = newPosition;
+            result.TexCoord1 = newTexCoord1;
             return result;
         }
 
@@ -142,8 +169,9 @@ namespace SeeingSharp.Multimedia.Objects
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal, Vector2 newTexCoord1)
         {
             var result = this;
-            result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
-            result.m_textureData = result.m_textureData.Copy(newTexCoord1);
+            result.Position = newPosition;
+            result.Normal = newNormal;
+            result.TexCoord1 = newTexCoord1;
             return result;
         }
 
@@ -153,7 +181,8 @@ namespace SeeingSharp.Multimedia.Objects
         public Vertex Copy(Vector3 newPosition, Vector3 newNormal)
         {
             var result = this;
-            result.m_geoData = result.m_geoData.Copy(newPosition, newNormal);
+            result.Position = newPosition;
+            result.Normal = newNormal;
             return result;
         }
 
@@ -165,7 +194,7 @@ namespace SeeingSharp.Multimedia.Objects
             m0 = new Vertex();
             m0.Position = (v0.Position + v1.Position) * 0.5f;
             m0.Normal = Vector3.Normalize((v0.Normal + v1.Normal) * 0.5f);
-            m0.TexCoord = (v0.TexCoord + v1.TexCoord) * 0.5f;
+            m0.TexCoord1 = (v0.TexCoord1 + v1.TexCoord1) * 0.5f;
             m0.Color = (v0.Color + v1.Color) * 0.5f;
             m0.TextureFactor = (v0.TextureFactor + v1.TextureFactor) * 0.5f;
             m0.Binormal = Vector3.Normalize((v0.Binormal + v1.Binormal) * 0.5f);
@@ -173,86 +202,40 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
-        /// Retrieves or sets geometry data
+        /// Retrieves or sets the position of the vertex
         /// </summary>
-        public GeometryData Geometry
-        {
-            get => m_geoData;
-            set => m_geoData = value;
-        }
+        public Vector3 Position;
 
         /// <summary>
-        /// Retrieves or sets texture data
+        /// Retrieves or sets the normal of the vertex
         /// </summary>
-        public TextureData Texture
-        {
-            get => m_textureData;
-            set => m_textureData = value;
-        }
+        public Vector3 Normal;
 
         /// <summary>
-        /// Gets or sets the position
+        /// Retrieves or sets the color of the vertex
         /// </summary>
-        public Vector3 Position
-        {
-            get => m_geoData.Position;
-            set => m_geoData.Position = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the normal
-        /// </summary>
-        public Vector3 Normal
-        {
-            get => m_geoData.Normal;
-            set => m_geoData.Normal = value;
-        }
+        public Color4 Color;
 
         /// <summary>
         /// Gets or sets the tangent vector.
         /// </summary>
-        public Vector3 Tangent
-        {
-            get => m_geoData.Tangent;
-            set => m_geoData.Tangent = value;
-        }
+        public Vector3 Tangent;
 
         /// <summary>
         /// Gets or sets the binormal vector.
         /// </summary>
-        public Vector3 Binormal
-        {
-            get => m_geoData.Binormal;
-            set => m_geoData.Binormal = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the texture coordinate
-        /// </summary>
-        public Vector2 TexCoord
-        {
-            get => m_textureData.Coordinate1;
-            set => m_textureData.Coordinate1 = value;
-        }
+        public Vector3 Binormal;
 
         /// <summary>
         /// Gets or sets the texture factor.
         /// This value decides whether a texture is displayed on this vertex or not.
         /// A value greater or equal 0 will show the texture, all negatives will hide it.
         /// </summary>
-        public float TextureFactor
-        {
-            get => m_textureData.TextureFactor;
-            set => m_textureData.TextureFactor = value;
-        }
+        public float TextureFactor;
 
         /// <summary>
-        /// Gets or sets the diffuse color
+        /// Retrieves or sets first texture coordinate
         /// </summary>
-        public Color4 Color
-        {
-            get => m_geoData.Color;
-            set => m_geoData.Color = value;
-        }
+        public Vector2 TexCoord1;
     }
 }

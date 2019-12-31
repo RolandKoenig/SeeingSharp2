@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             Position = vertex.Position;
             Normal = vertex.Normal;
-            Texture = vertex.TexCoord;
+            Texture = vertex.TexCoord1;
             Color = vertex.Color.ToRgba();
             Tangent = vertex.Tangent;
             Binormal = vertex.Binormal;

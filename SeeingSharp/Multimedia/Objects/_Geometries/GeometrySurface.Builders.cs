@@ -668,7 +668,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                 var theta = EngineMath.AngleFromXY(actVertex.Position.X, actVertex.Position.Z);
                 var phi = (float)Math.Acos(actVertex.Position.Y / radius);
-                actVertex.TexCoord = new Vector2(
+                actVertex.TexCoord1 = new Vector2(
                     theta / EngineMath.PI_2,
                     phi / EngineMath.PI);
 

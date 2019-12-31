@@ -394,7 +394,7 @@ namespace SeeingSharp.Multimedia.Objects
                             var v2 = this.VerticesInternal[actSurface.Indices[triangleStartIndex + 1]];
                             var v3 = this.VerticesInternal[actSurface.Indices[triangleStartIndex + 2]];
 
-                            finalNormalHelper += Vector3Ex.CalculateTriangleNormal(v1.Geometry.Position, v2.Geometry.Position, v3.Geometry.Position, false);
+                            finalNormalHelper += Vector3Ex.CalculateTriangleNormal(v1.Position, v2.Position, v3.Position, false);
 
                             normalCount++;
                         }
@@ -526,7 +526,7 @@ namespace SeeingSharp.Multimedia.Objects
             var length = this.VerticesInternal.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                this.VerticesInternal[loop] = this.VerticesInternal[loop].Copy(Vector3.Add(this.VerticesInternal[loop].Geometry.Position, relocateVector));
+                this.VerticesInternal[loop] = this.VerticesInternal[loop].Copy(Vector3.Add(this.VerticesInternal[loop].Position, relocateVector));
             }
         }
 

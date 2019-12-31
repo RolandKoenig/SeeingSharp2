@@ -547,11 +547,11 @@ namespace SeeingSharp.Multimedia.Objects
             var v2 = this.Owner.VerticesInternal[actTriangle.Index2];
             var v3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
-            var normal = Vector3Ex.CalculateTriangleNormal(v1.Geometry.Position, v2.Geometry.Position, v3.Geometry.Position);
+            var normal = Vector3Ex.CalculateTriangleNormal(v1.Position, v2.Position, v3.Position);
 
-            v1 = v1.Copy(v1.Geometry.Position, normal);
-            v2 = v2.Copy(v2.Geometry.Position, normal);
-            v3 = v3.Copy(v3.Geometry.Position, normal);
+            v1 = v1.Copy(v1.Position, normal);
+            v2 = v2.Copy(v2.Position, normal);
+            v3 = v3.Copy(v3.Position, normal);
 
             this.Owner.VerticesInternal[actTriangle.Index1] = v1;
             this.Owner.VerticesInternal[actTriangle.Index2] = v2;
@@ -596,9 +596,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var vertex3 = this.Owner.VerticesInternal[actTriangle.Index3];
 
                 // Perform some precalculations
-                var w1 = vertex1.TexCoord;
-                var w2 = vertex2.TexCoord;
-                var w3 = vertex3.TexCoord;
+                var w1 = vertex1.TexCoord1;
+                var w2 = vertex2.TexCoord1;
+                var w3 = vertex3.TexCoord1;
                 var x1 = vertex2.Position.X - vertex1.Position.X;
                 var x2 = vertex3.Position.X - vertex1.Position.X;
                 var y1 = vertex2.Position.Y - vertex1.Position.Y;

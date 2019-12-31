@@ -95,9 +95,9 @@ namespace SeeingSharp.Multimedia.Objects
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
                 ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
-                actVertex.TexCoord = new Vector2(
-                    -actVertex.TexCoord.X,
-                    actVertex.TexCoord.Y);
+                actVertex.TexCoord1 = new Vector2(
+                    -actVertex.TexCoord1.X,
+                    actVertex.TexCoord1.Y);
             }
 
             return this;
@@ -110,9 +110,9 @@ namespace SeeingSharp.Multimedia.Objects
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
                 ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
-                actVertex.TexCoord = new Vector2(
-                    actVertex.TexCoord.X,
-                    -actVertex.TexCoord.Y);
+                actVertex.TexCoord1 = new Vector2(
+                    actVertex.TexCoord1.X,
+                    -actVertex.TexCoord1.Y);
             }
 
             return this;
@@ -125,9 +125,9 @@ namespace SeeingSharp.Multimedia.Objects
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
                 ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
-                actVertex.TexCoord = new Vector2(
-                    -actVertex.TexCoord.X,
-                    -actVertex.TexCoord.Y);
+                actVertex.TexCoord1 = new Vector2(
+                    -actVertex.TexCoord1.X,
+                    -actVertex.TexCoord1.Y);
             }
 
             return this;
@@ -140,9 +140,9 @@ namespace SeeingSharp.Multimedia.Objects
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
                 ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
-                actVertex.TexCoord = new Vector2(
-                    actVertex.TexCoord.Y,
-                    actVertex.TexCoord.X);
+                actVertex.TexCoord1 = new Vector2(
+                    actVertex.TexCoord1.Y,
+                    actVertex.TexCoord1.X);
             }
 
             return this;
