@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Objects
 {
@@ -38,6 +39,7 @@ namespace SeeingSharp.Multimedia.Objects
 
         // Geometry
         private List<GeometrySurface> m_surfaces;
+        private UnsafeList<Vertex> m_vertices;
 
         // Members for build time transform
         private bool m_buildTimeTransformEnabled;
@@ -60,10 +62,10 @@ namespace SeeingSharp.Multimedia.Objects
             m_name = string.Empty;
             this.Description = string.Empty;
 
-            this.VerticesInternal = new List<Vertex>(verticesCapacity);
+            m_vertices = new UnsafeList<Vertex>(verticesCapacity);
             m_surfaces = new List<GeometrySurface>();
 
-            this.Vertices = new VertexCollection(this.VerticesInternal);
+            this.Vertices = new VertexCollection(this);
             this.Surfaces = new SurfaceCollection(m_surfaces);
         }
 
@@ -623,7 +625,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection of vertices.
         /// </summary>
-        internal List<Vertex> VerticesInternal { get; }
+        internal UnsafeList<Vertex> VerticesInternal => m_vertices;
 
         //*********************************************************************
         //*********************************************************************
@@ -633,11 +635,11 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public class VertexCollection : IEnumerable<Vertex>
         {
-            private List<Vertex> m_vertices;
+            private Geometry m_owner;
 
-            internal VertexCollection(List<Vertex> vertices)
+            internal VertexCollection(Geometry owner)
             {
-                m_vertices = vertices;
+                m_owner = owner;
             }
 
             /// <summary>
@@ -645,7 +647,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public void Add(Vertex vertex)
             {
-                m_vertices.Add(vertex);
+                m_owner.AddVertex(vertex);
             }
 
             /// <summary>
@@ -653,12 +655,12 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public IEnumerator<Vertex> GetEnumerator()
             {
-                return m_vertices.GetEnumerator();
+                return m_owner.VerticesInternal.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_vertices.GetEnumerator();
+                return m_owner.VerticesInternal.GetEnumerator();
             }
 
             /// <summary>
@@ -666,8 +668,8 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public Vertex this[int index]
             {
-                get => m_vertices[index];
-                internal set => m_vertices[index] = value;
+                get => m_owner.VerticesInternal[index];
+                internal set => m_owner.VerticesInternal[index] = value;
             }
         }
 

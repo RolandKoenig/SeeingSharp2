@@ -81,9 +81,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.TextureFactor = -100;
-                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -95,11 +94,10 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     actVertex.TexCoord.Y);
-                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -111,11 +109,10 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -127,11 +124,10 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.TexCoord = new Vector2(
                     -actVertex.TexCoord.X,
                     -actVertex.TexCoord.Y);
-                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -143,11 +139,10 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.TexCoord = new Vector2(
                     actVertex.TexCoord.Y,
                     actVertex.TexCoord.X);
-                Geometry.Vertices[loop] = actVertex;
             }
 
             return this;
@@ -159,9 +154,21 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = StartVertex; loop < lastVertex; loop++)
             {
-                var actVertex = Geometry.Vertices[loop];
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
                 actVertex.Color = color;
-                Geometry.Vertices[loop] = actVertex;
+            }
+
+            return this;
+        }
+
+        public BuiltVerticesRange SetNormal(Vector3 normal)
+        {
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
+            {
+                ref var actVertex = ref Geometry.VerticesInternal.BackingArray[loop];
+                actVertex.Normal = normal;
             }
 
             return this;
