@@ -59,9 +59,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < m_corners.Count; loop += 3)
             {
-                var vertex1 = this.Owner.VerticesInternal[m_corners[loop].Index].Position;
-                var vertex2 = this.Owner.VerticesInternal[m_corners[loop + 1].Index].Position;
-                var vertex3 = this.Owner.VerticesInternal[m_corners[loop + 2].Index].Position;
+                var vertex1 = this.Owner.VertexBackingArray[m_corners[loop].Index].Position;
+                var vertex2 = this.Owner.VertexBackingArray[m_corners[loop + 1].Index].Position;
+                var vertex3 = this.Owner.VertexBackingArray[m_corners[loop + 2].Index].Position;
 
                 if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out float currentDistance))
                 {
@@ -662,7 +662,7 @@ namespace SeeingSharp.Multimedia.Objects
             var vertexCount = this.Owner.CountVertices;
             for (var actVertexIndex = startVertex; actVertexIndex < vertexCount; actVertexIndex++)
             {
-                var actVertex = this.Owner.VerticesInternal[actVertexIndex];
+                var actVertex = this.Owner.VertexBackingArray[actVertexIndex];
                 actVertex.Normal = Vector3.Normalize(actVertex.Position);
                 actVertex.Position = actVertex.Normal * radius;
 
@@ -672,7 +672,7 @@ namespace SeeingSharp.Multimedia.Objects
                     theta / EngineMath.PI_2,
                     phi / EngineMath.PI);
 
-                this.Owner.VerticesInternal[actVertexIndex] = actVertex;
+                this.Owner.VertexBackingArray[actVertexIndex] = actVertex;
             }
 
             return new BuiltVerticesRange(this.Owner, startVertex, this.Owner.CountVertices - startVertex);

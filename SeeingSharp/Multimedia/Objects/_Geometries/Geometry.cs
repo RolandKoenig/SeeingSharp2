@@ -289,7 +289,7 @@ namespace SeeingSharp.Multimedia.Objects
         {
             var baseIndex = m_vertices.Count;
 
-            m_vertices.AddRange(otherGeometry.Vertices);
+            this.AddVertices(otherGeometry);
             var otherGeometrySurfaceCount = otherGeometry.m_surfaces.Count;
 
             for (var loopSurface = 0; loopSurface < otherGeometrySurfaceCount; loopSurface++)
@@ -298,6 +298,28 @@ namespace SeeingSharp.Multimedia.Objects
                     this,
                     baseIndex: baseIndex));
             }
+        }
+
+        /// <summary>
+        /// Adds all vertices from the given geometry to this geometry.
+        /// </summary>
+        /// <param name="otherGeometry">The Geometry from which to copy all vertices.</param>
+        public BuiltVerticesRange AddVertices(Geometry otherGeometry)
+        {
+            var startVertex = m_vertices.Count;
+
+            // Prepare vertex array for new capacity
+            m_vertices.Capacity = startVertex + otherGeometry.CountVertices;
+
+            // Copy all vertices
+            var otherGeometryVertexCount = otherGeometry.CountVertices;
+            for (var loop = 0; loop < otherGeometryVertexCount; loop++)
+            {
+                ref var actCopyVertex = ref otherGeometry.VertexBackingArray[loop];
+                this.AddVertex(actCopyVertex);
+            }
+
+            return new BuiltVerticesRange(this, startVertex, this.CountVertices - startVertex);
         }
 
         /// <summary>
@@ -427,7 +449,7 @@ namespace SeeingSharp.Multimedia.Objects
             {
                 for (var loop = 0; loop < vertexCount; loop++)
                 {
-                    m_vertices.Add(m_vertices[loop]);
+                    result.m_vertices.Add(m_vertices[loop]);
                 }
             }
 
@@ -623,7 +645,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Gets a collection of vertices.
         /// </summary>
-        internal UnsafeList<Vertex> VerticesInternal => m_vertices;
+        internal Vertex[] VertexBackingArray => m_vertices.BackingArray;
 
         //*********************************************************************
         //*********************************************************************
@@ -653,12 +675,12 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public IEnumerator<Vertex> GetEnumerator()
             {
-                return m_owner.VerticesInternal.GetEnumerator();
+                return m_owner.m_vertices.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_owner.VerticesInternal.GetEnumerator();
+                return m_owner.m_vertices.GetEnumerator();
             }
 
             /// <summary>
@@ -666,7 +688,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public Vertex this[int index]
             {
-                get => m_owner.VerticesInternal[index];
+                get => m_owner.VertexBackingArray[index];
             }
         }
 
