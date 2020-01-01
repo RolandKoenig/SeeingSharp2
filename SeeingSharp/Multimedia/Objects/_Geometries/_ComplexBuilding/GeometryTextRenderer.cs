@@ -162,7 +162,7 @@ namespace SeeingSharp.Multimedia.Objects
 
                         // Append the vertex to the result
                         tempGeometry.AddVertex(
-                            new Vertex(
+                            new VertexBasic(
                                 actVertexLocation,
                                 m_geometryOptions.SurfaceVertexColor,
                                 actTexCoord,

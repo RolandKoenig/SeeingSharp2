@@ -59,9 +59,9 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < m_corners.Count; loop += 3)
             {
-                var vertex1 = this.Owner.VertexBackingArray[m_corners[loop].Index].Position;
-                var vertex2 = this.Owner.VertexBackingArray[m_corners[loop + 1].Index].Position;
-                var vertex3 = this.Owner.VertexBackingArray[m_corners[loop + 2].Index].Position;
+                var vertex1 = this.Owner.VerticesBasicBackingArray[m_corners[loop].Index].Position;
+                var vertex2 = this.Owner.VerticesBasicBackingArray[m_corners[loop + 1].Index].Position;
+                var vertex3 = this.Owner.VerticesBasicBackingArray[m_corners[loop + 2].Index].Position;
 
                 if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out float currentDistance))
                 {
@@ -97,7 +97,7 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loopCoordinates = 0; loopCoordinates < coordinates.Length; loopCoordinates++)
             {
-                this.Owner.AddVertex(new Vertex(coordinates[loopCoordinates]));
+                this.Owner.AddVertex(new VertexBasic(coordinates[loopCoordinates]));
             }
 
             // Append all indices
@@ -300,7 +300,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, new Vector2(0f, texY));
+            var vertex = new VertexBasic(pointA, new Vector2(0f, texY));
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -344,7 +344,7 @@ namespace SeeingSharp.Multimedia.Objects
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             // Create bottom and top vertices
-            var bottomVertex = new Vertex(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var bottomVertex = new VertexBasic(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
 
             // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
@@ -381,7 +381,7 @@ namespace SeeingSharp.Multimedia.Objects
                 var topSideNormal = Vector3Ex.NormalFromHVRotation(vectorToTopRotation);
 
                 //AddObject segment top triangle
-                var topVertex = new Vertex(topCoordinate, new Vector2(texX / 2f, texY / 2f), topSideNormal);
+                var topVertex = new VertexBasic(topCoordinate, new Vector2(texX / 2f, texY / 2f), topSideNormal);
                 var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
                 var segmentTopRight = topVertex.Copy(sideRightBottomCoord);
 
@@ -476,8 +476,8 @@ namespace SeeingSharp.Multimedia.Objects
             var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
 
             // Create bottom and top vertices
-            var bottomVertex = new Vertex(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
-            var topVertex = new Vertex(topCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
+            var bottomVertex = new VertexBasic(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));
+            var topVertex = new VertexBasic(topCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, 1f, 0f));
 
             // AddObject bottom and top vertices to the geometry
             var bottomVertexIndex = this.Owner.AddVertex(bottomVertex);
@@ -579,7 +579,7 @@ namespace SeeingSharp.Multimedia.Objects
                     var theta = ti * dt;
 
                     var position = SphereGetPosition(theta, phi);
-                    var vertex = new Vertex(
+                    var vertex = new VertexBasic(
                         position,
                         SphereGetTextureCoordinate(theta, phi),
                         Vector3.Normalize(position));
@@ -645,7 +645,7 @@ namespace SeeingSharp.Multimedia.Objects
             };
             foreach (var actPosition in pos)
             {
-                this.Owner.AddVertex(new Vertex(actPosition));
+                this.Owner.AddVertex(new VertexBasic(actPosition));
             }
             for (var loop = 0; loop < k.Length; loop += 3)
             {
@@ -662,7 +662,7 @@ namespace SeeingSharp.Multimedia.Objects
             var vertexCount = this.Owner.CountVertices;
             for (var actVertexIndex = startVertex; actVertexIndex < vertexCount; actVertexIndex++)
             {
-                var actVertex = this.Owner.VertexBackingArray[actVertexIndex];
+                var actVertex = this.Owner.VerticesBasicBackingArray[actVertexIndex];
                 actVertex.Normal = Vector3.Normalize(actVertex.Position);
                 actVertex.Position = actVertex.Normal * radius;
 
@@ -672,7 +672,7 @@ namespace SeeingSharp.Multimedia.Objects
                     theta / EngineMath.PI_2,
                     phi / EngineMath.PI);
 
-                this.Owner.VertexBackingArray[actVertexIndex] = actVertex;
+                this.Owner.VerticesBasicBackingArray[actVertexIndex] = actVertex;
             }
 
             return new BuiltVerticesRange(this.Owner, startVertex, this.Owner.CountVertices - startVertex);
@@ -688,7 +688,7 @@ namespace SeeingSharp.Multimedia.Objects
             var startVertex = this.Owner.CountVertices;
 
             var dest = start + size;
-            var vertex = new Vertex(start);
+            var vertex = new VertexBasic(start);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z)));
@@ -766,7 +766,7 @@ namespace SeeingSharp.Multimedia.Objects
             var bottomD = new Vector3(topD.X, topD.Y - height, topD.Z);
 
             // Build Top side
-            var vertex = new Vertex(topA, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
+            var vertex = new VertexBasic(topA, new Vector2(texX, 0f), new Vector3(0f, 1f, 0f));
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
             var c = this.Owner.AddVertex(vertex.Copy(topC, new Vector2(0f, texY)));
@@ -775,7 +775,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.AddTriangle(a, d, c);
 
             // Build Bottom side
-            vertex = new Vertex(topA, new Vector2(0f, 0f), new Vector3(0f, -1f, 0f));
+            vertex = new VertexBasic(topA, new Vector2(0f, 0f), new Vector3(0f, -1f, 0f));
             a = this.Owner.AddVertex(vertex);
             b = this.Owner.AddVertex(vertex.Copy(topD, new Vector2(texX, 0f)));
             c = this.Owner.AddVertex(vertex.Copy(topC, new Vector2(texX, texY)));
@@ -784,7 +784,7 @@ namespace SeeingSharp.Multimedia.Objects
             this.AddTriangle(a, d, c);
 
             // Build Front side
-            vertex = new Vertex(topA, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
+            vertex = new VertexBasic(topA, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
             a = this.Owner.AddVertex(vertex);
             b = this.Owner.AddVertex(vertex.Copy(topB, new Vector2(texX, texY)));
             c = this.Owner.AddVertex(vertex.Copy(bottomB, new Vector2(texX, 0f)));
@@ -901,7 +901,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             var textureCoordinate = new Vector2(CalculateU(pointA), CalculateV(pointA));
-            var vertex = new Vertex(pointA, textureCoordinate, normal);
+            var vertex = new VertexBasic(pointA, textureCoordinate, normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(CalculateU(pointB), CalculateV(pointB))));
@@ -970,7 +970,7 @@ namespace SeeingSharp.Multimedia.Objects
             }
 
             //Front side
-            var vertex = new Vertex(start, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
+            var vertex = new VertexBasic(start, new Vector2(0f, texY), new Vector3(0f, 0f, -1f));
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, start.Y, start.Z), new Vector2(texX, texY)));
             var c = this.Owner.AddVertex(vertex.Copy(new Vector3(dest.X, dest.Y, start.Z), new Vector2(texX, 0f)));
@@ -1020,7 +1020,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, new Vector2(0f, texY));
+            var vertex = new VertexBasic(pointA, new Vector2(0f, texY));
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -1047,7 +1047,7 @@ namespace SeeingSharp.Multimedia.Objects
                 texY = (pointC - pointB).Length() / m_tileSize.Y;
             }
 
-            var vertex = new Vertex(pointA, new Vector2(0f, texY), normal);
+            var vertex = new VertexBasic(pointA, new Vector2(0f, texY), normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(texX, texY)));
@@ -1065,7 +1065,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// </summary>
         public BuiltVerticesRange BuildRect4V(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointD, Vector3 normal, Vector2 minTexCoord, Vector2 maxTexCoord)
         {
-            var vertex = new Vertex(pointA, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
+            var vertex = new VertexBasic(pointA, new Vector2(minTexCoord.X, maxTexCoord.Y), normal);
 
             var a = this.Owner.AddVertex(vertex);
             var b = this.Owner.AddVertex(vertex.Copy(pointB, new Vector2(maxTexCoord.X, maxTexCoord.Y)));

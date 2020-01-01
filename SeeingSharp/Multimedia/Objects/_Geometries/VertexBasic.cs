@@ -25,98 +25,80 @@ using System.Runtime.InteropServices;
 namespace SeeingSharp.Multimedia.Objects
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct Vertex
+    public struct VertexBasic
     {
-        public static readonly Vertex Empty;
+        public static readonly VertexBasic Empty;
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position)
+        public VertexBasic(Vector3 position)
         {
             Position = position;
             Normal = Vector3.Zero;
             Color = Color4.Transparent;
             TexCoord1 = Vector2.Zero;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position, Color4 color)
+        public VertexBasic(Vector3 position, Color4 color)
         {
             Position = position;
             Normal = Vector3.Zero;
             Color = color;
             TexCoord1 = Vector2.Zero;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position, Color4 color, Vector2 texCoord1)
+        public VertexBasic(Vector3 position, Color4 color, Vector2 texCoord1)
         {
             Position = position;
             Normal = Vector3.Zero;
             Color = color;
             TexCoord1 = texCoord1;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position, Vector2 texCoord1)
+        public VertexBasic(Vector3 position, Vector2 texCoord1)
         {
             Position = position;
             Normal = Vector3.Zero;
             Color = Color4.Transparent;
             TexCoord1 = texCoord1;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position, Color4 color, Vector2 texCoord1, Vector3 normal)
+        public VertexBasic(Vector3 position, Color4 color, Vector2 texCoord1, Vector3 normal)
         {
             Position = position;
             Normal = normal;
             Color = color;
             TexCoord1 = texCoord1;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         /// <summary>
         /// Creates a new vertex
         /// </summary>
-        public Vertex(Vector3 position, Vector2 texCoord1, Vector3 normal)
+        public VertexBasic(Vector3 position, Vector2 texCoord1, Vector3 normal)
         {
             Position = position;
             Normal = normal;
             Color = Color4.Transparent;
             TexCoord1 = texCoord1;
             TextureFactor = 0f;
-
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
         }
 
         public override string ToString()
@@ -127,7 +109,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Copies this vertex and sets the new position
         /// </summary>
-        public Vertex Copy(Vector3 newPosition)
+        public VertexBasic Copy(Vector3 newPosition)
         {
             var result = this;
             result.Position = newPosition;
@@ -138,14 +120,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// Copies this vertex and changes the texture coordinate of the result.
         /// </summary>
         /// <param name="newTexCoord1">The texture coordinate to be set.</param>
-        public Vertex Copy(Vector2 newTexCoord1)
+        public VertexBasic Copy(Vector2 newTexCoord1)
         {
             var result = this;
             result.TexCoord1 = newTexCoord1;
             return result;
         }
 
-        internal Vertex Copy(Color4 Color4)
+        internal VertexBasic Copy(Color4 Color4)
         {
             var result = this;
             result.Color = Color4;
@@ -155,7 +137,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Copies this vertex and sets a new position and texture coordinate
         /// </summary>
-        public Vertex Copy(Vector3 newPosition, Vector2 newTexCoord1)
+        public VertexBasic Copy(Vector3 newPosition, Vector2 newTexCoord1)
         {
             var result = this;
             result.Position = newPosition;
@@ -166,7 +148,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Copies this vertex and sets a new position, normal and texture coordinate
         /// </summary>
-        public Vertex Copy(Vector3 newPosition, Vector3 newNormal, Vector2 newTexCoord1)
+        public VertexBasic Copy(Vector3 newPosition, Vector3 newNormal, Vector2 newTexCoord1)
         {
             var result = this;
             result.Position = newPosition;
@@ -178,7 +160,7 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Copies this vertex and sets the new values
         /// </summary>
-        public Vertex Copy(Vector3 newPosition, Vector3 newNormal)
+        public VertexBasic Copy(Vector3 newPosition, Vector3 newNormal)
         {
             var result = this;
             result.Position = newPosition;
@@ -189,16 +171,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <summary>
         /// Subdivides two vertices.
         /// </summary>
-        public static void SubdivideVertices(ref Vertex v0, ref Vertex v1, out Vertex m0)
+        public static void SubdivideVertices(ref VertexBasic v0, ref VertexBasic v1, out VertexBasic m0)
         {
-            m0 = new Vertex();
+            m0 = new VertexBasic();
             m0.Position = (v0.Position + v1.Position) * 0.5f;
             m0.Normal = Vector3.Normalize((v0.Normal + v1.Normal) * 0.5f);
             m0.TexCoord1 = (v0.TexCoord1 + v1.TexCoord1) * 0.5f;
             m0.Color = (v0.Color + v1.Color) * 0.5f;
             m0.TextureFactor = (v0.TextureFactor + v1.TextureFactor) * 0.5f;
-            m0.Binormal = Vector3.Normalize((v0.Binormal + v1.Binormal) * 0.5f);
-            m0.Tangent = Vector3.Normalize((v0.Tangent + v1.Tangent) * 0.5f);
         }
 
         /// <summary>
@@ -215,16 +195,6 @@ namespace SeeingSharp.Multimedia.Objects
         /// Retrieves or sets the color of the vertex
         /// </summary>
         public Color4 Color;
-
-        /// <summary>
-        /// Gets or sets the tangent vector.
-        /// </summary>
-        public Vector3 Tangent;
-
-        /// <summary>
-        /// Gets or sets the binormal vector.
-        /// </summary>
-        public Vector3 Binormal;
 
         /// <summary>
         /// Gets or sets the texture factor.

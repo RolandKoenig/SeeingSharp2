@@ -199,11 +199,11 @@ namespace SeeingSharp.Multimedia.Objects
                                     var position = Vector3.Transform(
                                         objInfo.Vertices[surfaceVertexReferences[loop]].Position,
                                         transformStack.Top);
-                                    localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new Vertex(
+                                    localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new VertexBasic(
                                         position, Color4.White, actTexCoord, Vector3.Zero));
                                     if (actSurface.IsTwoSided)
                                     {
-                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = geometry.AddVertex(new Vertex(
+                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = geometry.AddVertex(new VertexBasic(
                                             position, Color4.White, actTexCoord, Vector3.Zero));
                                     }
                                 }
@@ -222,12 +222,12 @@ namespace SeeingSharp.Multimedia.Objects
                                 var position = Vector3.Transform(
                                     objInfo.Vertices[surfaceVertexReferences[loop]].Position,
                                     transformStack.Top);
-                                onGeometryReferencedVertices[loop] = geometry.AddVertex(new Vertex(
+                                onGeometryReferencedVertices[loop] = geometry.AddVertex(new VertexBasic(
                                     position, Color4.White, actTexCoord, Vector3.Zero));
 
                                 if (actSurface.IsTwoSided)
                                 {
-                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] = geometry.AddVertex(new Vertex(
+                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] = geometry.AddVertex(new VertexBasic(
                                         position, Color4.White, actTexCoord, Vector3.Zero));
                                 }
                             }

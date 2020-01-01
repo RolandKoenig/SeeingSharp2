@@ -41,18 +41,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public static readonly D3D11.InputElement[] InputElements = {
             new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
             new D3D11.InputElement("NORMAL", 0, Format.R32G32B32_Float, 12, 0),
-            new D3D11.InputElement("TANGENT", 0, Format.R32G32B32_Float, 24, 0),
-            new D3D11.InputElement("BINORMAL", 0, Format.R32G32B32_Float, 36, 0),
-            new D3D11.InputElement("COLOR", 0, Format.R8G8B8A8_UNorm, 48, 0),
-            new D3D11.InputElement("TEXCOORD", 0, Format.R32G32_Float, 52, 0),
-            new D3D11.InputElement("TEXCOORD", 1, Format.R32_Float, 60, 0)
+            new D3D11.InputElement("COLOR", 0, Format.R8G8B8A8_UNorm, 24, 0),
+            new D3D11.InputElement("TEXCOORD", 0, Format.R32G32_Float, 28, 0),
+            new D3D11.InputElement("TEXCOORD", 1, Format.R32_Float, 36, 0)
         };
 
         // All vertex elements
         public Vector3 Position;
         public Vector3 Normal;
-        public Vector3 Tangent;
-        public Vector3 Binormal;
         public int Color;
         public Vector2 Texture;
         public float TextureFactor;
@@ -68,8 +64,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Normal = new Vector3(0, 1, 0);
             Texture = new Vector2(0f, 0f);
             Color = color;
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
             TextureFactor = 0f;
         }
 
@@ -84,8 +78,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Normal = new Vector3();
             Texture = texCoord;
             Color = 0;
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
             TextureFactor = 0f;
         }
 
@@ -101,8 +93,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Normal = normal;
             Texture = texCoord;
             Color = 0;
-            Tangent = Vector3.Zero;
-            Binormal = Vector3.Zero;
             TextureFactor = 0f;
         }
 
@@ -110,14 +100,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="StandardVertex"/> struct.
         /// </summary>
         /// <param name="vertex">Source vertex data.</param>
-        public StandardVertex(Vertex vertex)
+        public StandardVertex(VertexBasic vertex)
         {
             Position = vertex.Position;
             Normal = vertex.Normal;
             Texture = vertex.TexCoord1;
             Color = vertex.Color.ToRgba();
-            Tangent = vertex.Tangent;
-            Binormal = vertex.Binormal;
             TextureFactor = vertex.TextureFactor;
         }
 
