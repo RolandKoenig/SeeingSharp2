@@ -150,9 +150,9 @@ namespace SeeingSharp.Multimedia.Objects
                 var vertexIndex0 = m_corners[i0].Index;
                 var vertexIndex1 = m_corners[i1].Index;
                 var vertexIndex2 = m_corners[i2].Index;
-                ref var v0 = ref this.Owner.VerticesBasicBackingArray[vertexIndex0];
-                ref var v1 = ref this.Owner.VerticesBasicBackingArray[vertexIndex1];
-                ref var v2 = ref this.Owner.VerticesBasicBackingArray[vertexIndex2];
+                ref var v0 = ref this.Owner.GetVertexBasicRef(vertexIndex0);
+                ref var v1 = ref this.Owner.GetVertexBasicRef(vertexIndex1);
+                ref var v2 = ref this.Owner.GetVertexBasicRef(vertexIndex2);
 
                 // Generate new vertices
                 VertexBasic.SubdivideVertices(ref v0, ref v1, out var m0);
@@ -341,12 +341,12 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-                var vertex2 = this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-                var vertex3 = this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
-                ref var vertexEx1 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index1];
-                ref var vertexEx2 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index2];
-                ref var vertexEx3 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index3];
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
+                ref var vertexEx1 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index1);
+                ref var vertexEx2 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index2);
+                ref var vertexEx3 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index3);
 
                 //Get average values for current face
                 var averageBinormal = Vector3.Normalize(Vector3Ex.Average(vertexEx1.Binormal, vertexEx2.Binormal, vertexEx3.Binormal));
@@ -375,9 +375,9 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-                var vertex2 = this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-                var vertex3 = this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
 
                 //Get average values for current face
                 var averageNormal = Vector3.Normalize(Vector3Ex.Average(vertex1.Normal, vertex2.Normal, vertex3.Normal));
@@ -406,12 +406,12 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                ref var vertex1 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-                ref var vertex2 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-                ref var vertex3 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
-                ref var vertexEx1 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index1];
-                ref var vertexEx2 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index2];
-                ref var vertexEx3 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index3];
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
+                ref var vertexEx1 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index1);
+                ref var vertexEx2 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index2);
+                ref var vertexEx3 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index3);
 
                 //Get average values for current face
                 var averageTangent = Vector3.Normalize(Vector3Ex.Average(vertexEx1.Tangent, vertexEx2.Tangent, vertexEx3.Tangent));
@@ -439,10 +439,10 @@ namespace SeeingSharp.Multimedia.Objects
             //Generate all lines
             for (var loop = 0; loop < this.Owner.CountVertices; loop++)
             {
-                ref var actVertexEx = ref this.Owner.VerticesBasicBinormalTangentBackingArray[loop];
+                ref var actVertexEx = ref this.Owner.GetVertexBinormalTangentRef(loop);
                 if (actVertexEx.Binormal.Length() > 0.1f)
                 {
-                    ref var actVertex = ref this.Owner.VerticesBasicBackingArray[loop];
+                    ref var actVertex = ref this.Owner.GetVertexBasicRef(loop);
 
                     result.Add(actVertex.Position);
                     result.Add(actVertex.Position + actVertexEx.Binormal * 0.2f);
@@ -462,7 +462,7 @@ namespace SeeingSharp.Multimedia.Objects
             // Generate all lines
             for (var loop = 0; loop < this.Owner.CountVertices; loop++)
             {
-                ref var actVertex = ref this.Owner.VerticesBasicBackingArray[loop];
+                ref var actVertex = ref this.Owner.GetVertexBasicRef(loop);
                 if (actVertex.Normal.Length() > 0.1f)
                 {
                     result.Add(actVertex.Position);
@@ -483,10 +483,10 @@ namespace SeeingSharp.Multimedia.Objects
             // Generate all lines
             for (var loop = 0; loop < this.Owner.CountVertices; loop++)
             {
-                ref var actVertexEx = ref this.Owner.VerticesBasicBinormalTangentBackingArray[loop];
+                ref var actVertexEx = ref this.Owner.GetVertexBinormalTangentRef(loop);
                 if (actVertexEx.Tangent.Length() > 0.1f)
                 {
-                    ref var actVertex = ref this.Owner.VerticesBasicBackingArray[loop];
+                    ref var actVertex = ref this.Owner.GetVertexBasicRef(loop);
 
                     result.Add(actVertex.Position);
                     result.Add(actVertex.Position + actVertexEx.Tangent * 0.2f);
@@ -507,9 +507,9 @@ namespace SeeingSharp.Multimedia.Objects
             foreach (var actTriangle in this.Triangles)
             {
                 //Get all vertices of current face
-                var vertex1 = this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-                var vertex2 = this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-                var vertex3 = this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
 
                 //first line (c)
                 result.Add(vertex1.Position);
@@ -557,19 +557,14 @@ namespace SeeingSharp.Multimedia.Objects
         /// <param name="actTriangle">The triangle for which to calculate the normal (flat).</param>
         public void CalculateNormalsFlat(Triangle actTriangle)
         {
-            var v1 = this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-            var v2 = this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-            var v3 = this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
+            ref var v1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+            ref var v2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+            ref var v3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
 
             var normal = Vector3Ex.CalculateTriangleNormal(v1.Position, v2.Position, v3.Position);
-
-            v1 = v1.Copy(v1.Position, normal);
-            v2 = v2.Copy(v2.Position, normal);
-            v3 = v3.Copy(v3.Position, normal);
-
-            this.Owner.VerticesBasicBackingArray[actTriangle.Index1] = v1;
-            this.Owner.VerticesBasicBackingArray[actTriangle.Index2] = v2;
-            this.Owner.VerticesBasicBackingArray[actTriangle.Index3] = v3;
+            v1.Normal = normal;
+            v2.Normal = normal;
+            v3.Normal = normal;
         }
 
         /// <summary>
@@ -605,12 +600,12 @@ namespace SeeingSharp.Multimedia.Objects
                 var actTriangle = this.Triangles[loop];
 
                 //Get all vertices of current face
-                ref var vertex1 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index1];
-                ref var vertex2 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index2];
-                ref var vertex3 = ref this.Owner.VerticesBasicBackingArray[actTriangle.Index3];
-                ref var vertexEx1 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index1];
-                ref var vertexEx2 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index2];
-                ref var vertexEx3 = ref this.Owner.VerticesBasicBinormalTangentBackingArray[actTriangle.Index3];
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(actTriangle.Index1);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(actTriangle.Index2);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(actTriangle.Index3);
+                ref var vertexEx1 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index1);
+                ref var vertexEx2 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index2);
+                ref var vertexEx3 = ref this.Owner.GetVertexBinormalTangentRef(actTriangle.Index3);
 
                 // Perform some precalculations
                 var w1 = vertex1.TexCoord1;
@@ -670,7 +665,8 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < vertexIndices.Count; loop++)
             {
-                coordinates[loop] = this.Owner.VerticesBasicBackingArray[vertexIndices[loop]].Position;
+                ref var actVertex = ref this.Owner.GetVertexBasicRef(vertexIndices[loop]);
+                coordinates[loop] = actVertex.Position;
             }
 
             //Triangulate all data

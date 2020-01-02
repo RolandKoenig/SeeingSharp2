@@ -79,6 +79,24 @@ namespace SeeingSharp.Multimedia.Objects
         }
 
         /// <summary>
+        /// Gets the reference to the vertex at the given index.
+        /// </summary>
+        /// <param name="vertexIndex">The index of the vertex.</param>
+        public ref VertexBasic GetVertexBasicRef(int vertexIndex)
+        {
+            return ref m_verticesBasic.BackingArray[vertexIndex];
+        }
+
+        /// <summary>
+        /// Gets the reference to the vertex at the given index.
+        /// </summary>
+        /// <param name="vertexIndex">The index of the vertex.</param>
+        public ref VertexBinormalTangent GetVertexBinormalTangentRef(int vertexIndex)
+        {
+            return ref m_verticesBinormalTangents.BackingArray[vertexIndex];
+        }
+
+        /// <summary>
         /// Realigns all given geometries to their center coordinate.
         /// </summary>
         public void RealignToCenter()
@@ -313,8 +331,8 @@ namespace SeeingSharp.Multimedia.Objects
             var otherGeometryVertexCount = otherGeometry.CountVertices;
             for (var loop = 0; loop < otherGeometryVertexCount; loop++)
             {
-                ref var actCopyVertex = ref otherGeometry.VerticesBasicBackingArray[loop];
-                this.AddVertex(actCopyVertex);
+                ref var actVertex = ref otherGeometry.GetVertexBasicRef(loop);
+                this.AddVertex(actVertex);
             }
 
             return new BuiltVerticesRange(this, startVertex, this.CountVertices - startVertex);
@@ -628,16 +646,6 @@ namespace SeeingSharp.Multimedia.Objects
             }
         }
 
-        /// <summary>
-        /// Gets the backing array for all basic vertices.
-        /// </summary>
-        internal VertexBasic[] VerticesBasicBackingArray => m_verticesBasic.BackingArray;
-
-        /// <summary>
-        /// Gets the backing array for BinormalTangent vertices.
-        /// </summary>
-        internal VertexBinormalTangent[] VerticesBasicBinormalTangentBackingArray => m_verticesBinormalTangents.BackingArray;
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -676,7 +684,7 @@ namespace SeeingSharp.Multimedia.Objects
             /// </summary>
             public VertexBasic this[int index]
             {
-                get => m_owner.VerticesBasicBackingArray[index];
+                get => m_owner.m_verticesBasic[index];
             }
         }
 

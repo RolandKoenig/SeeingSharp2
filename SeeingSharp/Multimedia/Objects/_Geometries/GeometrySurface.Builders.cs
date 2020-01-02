@@ -59,11 +59,11 @@ namespace SeeingSharp.Multimedia.Objects
 
             for (var loop = 0; loop < m_corners.Count; loop += 3)
             {
-                var vertex1 = this.Owner.VerticesBasicBackingArray[m_corners[loop].Index].Position;
-                var vertex2 = this.Owner.VerticesBasicBackingArray[m_corners[loop + 1].Index].Position;
-                var vertex3 = this.Owner.VerticesBasicBackingArray[m_corners[loop + 2].Index].Position;
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(m_corners[loop].Index);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(m_corners[loop + 1].Index);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(m_corners[loop + 2].Index);
 
-                if (pickingRay.Intersects(ref vertex1, ref vertex2, ref vertex3, out float currentDistance))
+                if (pickingRay.Intersects(ref vertex1.Position, ref vertex2.Position, ref vertex3.Position, out float currentDistance))
                 {
                     result = true;
                     if (currentDistance < distance)
@@ -662,7 +662,7 @@ namespace SeeingSharp.Multimedia.Objects
             var vertexCount = this.Owner.CountVertices;
             for (var actVertexIndex = startVertex; actVertexIndex < vertexCount; actVertexIndex++)
             {
-                var actVertex = this.Owner.VerticesBasicBackingArray[actVertexIndex];
+                ref var actVertex = ref this.Owner.GetVertexBasicRef(actVertexIndex);
                 actVertex.Normal = Vector3.Normalize(actVertex.Position);
                 actVertex.Position = actVertex.Normal * radius;
 
@@ -671,8 +671,6 @@ namespace SeeingSharp.Multimedia.Objects
                 actVertex.TexCoord1 = new Vector2(
                     theta / EngineMath.PI_2,
                     phi / EngineMath.PI);
-
-                this.Owner.VerticesBasicBackingArray[actVertexIndex] = actVertex;
             }
 
             return new BuiltVerticesRange(this.Owner, startVertex, this.Owner.CountVertices - startVertex);
