@@ -117,24 +117,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Copies this vertex and changes the texture coordinate of the result.
-        /// </summary>
-        /// <param name="newTexCoord1">The texture coordinate to be set.</param>
-        public VertexBasic Copy(Vector2 newTexCoord1)
-        {
-            var result = this;
-            result.TexCoord1 = newTexCoord1;
-            return result;
-        }
-
-        internal VertexBasic Copy(Color4 Color4)
-        {
-            var result = this;
-            result.Color = Color4;
-            return result;
-        }
-
-        /// <summary>
         /// Copies this vertex and sets a new position and texture coordinate
         /// </summary>
         public VertexBasic Copy(Vector3 newPosition, Vector2 newTexCoord1)

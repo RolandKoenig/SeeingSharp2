@@ -55,14 +55,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Creates a new Geometry object
         /// </summary>
-        public Geometry(int verticesCapacity)
+        public Geometry(int verticesCapacity, bool hasBinormalsTangents = false)
         {
             this.Description = string.Empty;
 
+            // Vertex data
             m_verticesBasic = new UnsafeList<VertexBasic>(verticesCapacity);
-            m_verticesBinormalTangents = new UnsafeList<VertexBinormalTangent>(verticesCapacity);
+            if (hasBinormalsTangents) { m_verticesBinormalTangents = new UnsafeList<VertexBinormalTangent>(verticesCapacity); }
+
+            // Triangle data
             m_surfaces = new List<GeometrySurface>();
 
+            // Public accessors
             this.Vertices = new VertexCollection(this);
             this.Surfaces = new SurfaceCollection(this);
         }
@@ -93,6 +97,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertexIndex">The index of the vertex.</param>
         public ref VertexBinormalTangent GetVertexBinormalTangentRef(int vertexIndex)
         {
+            if(m_verticesBinormalTangents == null){ throw new SeeingSharpException("Unable to get binormal/tangent information: This geometry doesn't provide them!");}
             return ref m_verticesBinormalTangents.BackingArray[vertexIndex];
         }
 
@@ -364,7 +369,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // AddObject the vertex and return the index
             m_verticesBasic.Add(vertex);
-            m_verticesBinormalTangents.Add(new VertexBinormalTangent());
+            m_verticesBinormalTangents?.Add(new VertexBinormalTangent());
             return m_verticesBasic.Count - 1;
         }
 
@@ -429,9 +434,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             actSurface.Indices[triangleStartIndex + 1] == actVertexIndex ||
                             actSurface.Indices[triangleStartIndex + 2] == actVertexIndex)
                         {
-                            var v1 = m_verticesBasic[actSurface.Indices[triangleStartIndex]];
-                            var v2 = m_verticesBasic[actSurface.Indices[triangleStartIndex + 1]];
-                            var v3 = m_verticesBasic[actSurface.Indices[triangleStartIndex + 2]];
+                            ref var v1 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex]];
+                            ref var v2 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 1]];
+                            ref var v3 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 2]];
 
                             finalNormalHelper += Vector3Ex.CalculateTriangleNormal(v1.Position, v2.Position, v3.Position, false);
 
@@ -458,8 +463,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Create new Geometry object
             var vertexCount = m_verticesBasic.Count;
+            var hasBinormalsTangents = this.HasBinormalsTangents;
             var result = new Geometry(
-                vertexCount * capacityMultiplier);
+                verticesCapacity: vertexCount * capacityMultiplier,
+                hasBinormalsTangents: hasBinormalsTangents);
 
             // Copy geometry
             if (copyGeometryData)
@@ -467,7 +474,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 for (var loop = 0; loop < vertexCount; loop++)
                 {
                     result.m_verticesBasic.Add(m_verticesBasic[loop]);
-                    result.m_verticesBinormalTangents.Add(m_verticesBinormalTangents[loop]);
+                    if(hasBinormalsTangents){ result.m_verticesBinormalTangents.Add(m_verticesBinormalTangents[loop]); }
                 }
             }
 
@@ -549,9 +556,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var length = m_verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                m_verticesBasic[loop] = m_verticesBasic[loop].Copy(
-                    Vector3.Transform(m_verticesBasic[loop].Position, transformMatrix),
-                    Vector3.TransformNormal(m_verticesBasic[loop].Normal, transformMatrix));
+                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                actVertex.Position = Vector3.Transform(actVertex.Position, transformMatrix);
+                actVertex.Normal = Vector3.TransformNormal(actVertex.Normal, transformMatrix);
             }
         }
 
@@ -563,7 +570,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var length = m_verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                m_verticesBasic[loop] = m_verticesBasic[loop].Copy(Vector3.Add(m_verticesBasic[loop].Position, relocateVector));
+                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                actVertex.Position += relocateVector;
             }
         }
 
@@ -576,7 +584,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var length = m_verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                m_verticesBasic[loop] = m_verticesBasic[loop].Copy(calculatePositionFunc(this.Vertices[loop].Position));
+                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                actVertex.Position = calculatePositionFunc(actVertex.Position);
             }
         }
 
@@ -645,6 +654,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 return sum;
             }
         }
+
+        public bool HasBinormalsTangents => m_verticesBinormalTangents != null;
 
         //*********************************************************************
         //*********************************************************************
