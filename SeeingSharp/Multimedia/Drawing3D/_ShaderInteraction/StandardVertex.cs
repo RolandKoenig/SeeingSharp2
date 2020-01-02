@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;

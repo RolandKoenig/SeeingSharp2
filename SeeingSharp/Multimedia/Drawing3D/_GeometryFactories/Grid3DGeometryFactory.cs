@@ -61,10 +61,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 -(this.TilesZ * this.TileWidth / 2f));
             var tileWidthX = this.TileWidth;
             var tileWidthZ = this.TileWidth;
-            var fieldWidth = tileWidthX * this.TilesX;
-            var fieldDepth = tileWidthZ * this.TilesZ;
-            var fieldWidthHalf = fieldWidth / 2f;
-            var fieldDepthHalf = fieldDepth / 2f;
 
             var tileMiddleX = this.TilesX % 2 == 0 && this.HighlightXZLines ? this.TilesX / 2 : 1;
             var tileMiddleZ = this.TilesZ % 2 == 0 && this.HighlightXZLines ? this.TilesZ / 2 : 1;

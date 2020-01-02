@@ -9,7 +9,7 @@
     <RepositoryType>Git</RepositoryType>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Version>0.5.1</Version>
-    <PackageVersion>0.5.1-alpha</PackageVersion>
+    <PackageVersion>0.5.2</PackageVersion>
     <Product>SeeingSharp 2</Product>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>

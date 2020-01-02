@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -65,7 +64,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="sceneManipulator">The manipulator of the scene.</param>
         /// <param name="textureKey">The resource key of the texture to be used.</param>
-        /// <param name="clipFactor">Pixel are clipped up to an alpha value defined by this Clipfactor within the pixel shader.</param>
+        /// <param name="clipFactor">Pixel are clipped up to an alpha value defined by this clipping factor within the pixel shader.</param>
         /// <param name="maxClipDistance">The maximum distance on which to apply pixel clipping (defined by ClipFactor property).</param>
         /// <param name="adjustTextureCoordinates">Interpolate texture coordinate based on xy-scaling.</param>
         /// <param name="addToAlpha">Needed for video rendering (Frames from the MF SourceReader have alpha always to zero).</param>
@@ -73,12 +72,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="useVertexColors">Set this to false to use the material's diffuse color.</param>
         public static NamedOrGenericKey AddStandardMaterialResource(
             this SceneManipulator sceneManipulator,
-            NamedOrGenericKey textureKey = default(NamedOrGenericKey),
+            NamedOrGenericKey textureKey = default,
             float clipFactor = 0f,
             float maxClipDistance = 1000f,
             bool adjustTextureCoordinates = false,
             float addToAlpha = 0f,
-            Color4 materialDiffuseColor = default(Color4),
+            Color4 materialDiffuseColor = default,
             bool useVertexColors = true)
         {
             return sceneManipulator.AddResource(

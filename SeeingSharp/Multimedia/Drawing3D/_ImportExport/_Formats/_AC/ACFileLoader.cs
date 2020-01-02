@@ -744,7 +744,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             finally
             {
-                reader?.Dispose();
+                SeeingSharpUtil.SafeDispose(ref reader);
             }
 
             return result;

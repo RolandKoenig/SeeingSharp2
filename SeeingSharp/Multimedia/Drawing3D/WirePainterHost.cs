@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System;
 

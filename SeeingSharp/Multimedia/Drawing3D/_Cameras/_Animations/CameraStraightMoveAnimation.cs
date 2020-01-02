@@ -29,7 +29,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Configuration
         private Camera3DBase m_camera;
-        private PerspectiveCamera3D m_cameraPerspective;
         private OrthographicCamera3D m_cameraOrthographic;
         private Camera3DViewPoint m_viewPointSource;
         private Camera3DViewPoint m_viewPointTarget;
@@ -47,7 +46,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
 
             m_camera = targetCamera;
-            m_cameraPerspective = m_camera as PerspectiveCamera3D;
             m_cameraOrthographic = m_camera as OrthographicCamera3D;
 
             m_viewPointSource = m_camera.GetViewPoint();

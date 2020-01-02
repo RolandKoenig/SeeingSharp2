@@ -19,9 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-//Some namespace mappings
-
 using SharpDX.DXGI;
 using System.Numerics;
 using System.Runtime.InteropServices;

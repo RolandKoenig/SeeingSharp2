@@ -39,6 +39,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref InputLayout);
         }
 
-        public bool IsDisposed => this.InputLayout != null;
+        public bool IsDisposed => InputLayout != null;
     }
 }

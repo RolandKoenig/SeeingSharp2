@@ -69,12 +69,7 @@ namespace SeeingSharp.Multimedia.Views
         private bool m_forceCompositionOverSoftware;
 
         // State members for handling rendering problems
-        public event EventHandler CameraChanged;
-        public event EventHandler DrawingLayer2DChanged;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        // Change events
-        public event EventHandler SceneChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpRendererElement"/> class.

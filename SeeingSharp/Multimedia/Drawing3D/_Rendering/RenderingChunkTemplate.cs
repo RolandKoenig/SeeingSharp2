@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System;
 using D3D11 = SharpDX.Direct3D11;
@@ -44,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var result = new RenderingChunk();
             result.Template = this;
             result.Material = material;
-            result.InputLayout = material.GenerateInputLayout(device, this.InputElements);
+            result.InputLayout = material.GenerateInputLayout(device, InputElements);
 
             return result;
         }
@@ -55,6 +54,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref VertexBuffer);
         }
 
-        public bool IsDisposed => this.IndexBuffer != null;
+        public bool IsDisposed => IndexBuffer != null;
     }
 }

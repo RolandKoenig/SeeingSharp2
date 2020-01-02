@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_cbPerObject = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerObject>());
-            this.NeedsRefresh = true;
+            NeedsRefresh = true;
         }
 
         /// <summary>

@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System.Numerics;
 
@@ -37,7 +36,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private NamedOrGenericKey m_texture;
 
         // Used resources
-        private TextureResource m_textureResource;
         private GeometryResource m_geometryResource;
         private SpriteMaterialResource m_materialResource;
         private DefaultResources m_defaultResources;
@@ -81,9 +79,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     return new GeometryResource(geometry);
                 });
 
-            // Load the texture resource
-            m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(m_texture);
-
             // Generate rendering chunks
             m_renderingChunks = m_geometryResource.BuildRenderingChunks(
                 resources.Device, new MaterialResource[] { m_materialResource });
@@ -107,7 +102,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderingChunks = null;
 
             m_geometryResource = null;
-            m_textureResource = null;
             m_defaultResources = null;
             m_renderParameters = null;
             m_materialResource = null;
