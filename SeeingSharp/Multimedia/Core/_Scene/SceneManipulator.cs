@@ -22,7 +22,6 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;

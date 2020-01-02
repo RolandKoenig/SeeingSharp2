@@ -21,7 +21,6 @@
 */
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
 using System.ComponentModel;
 using System.Numerics;
 using SeeingSharp.Util;

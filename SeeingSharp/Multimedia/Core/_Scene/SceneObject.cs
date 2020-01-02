@@ -21,7 +21,7 @@
 */
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;

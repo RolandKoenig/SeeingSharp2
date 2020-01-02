@@ -23,7 +23,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;

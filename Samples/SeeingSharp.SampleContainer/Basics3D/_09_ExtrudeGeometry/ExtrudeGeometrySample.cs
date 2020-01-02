@@ -23,7 +23,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Objects;
 using System.Numerics;
 using System.Threading.Tasks;
 using D2D = SharpDX.Direct2D1;

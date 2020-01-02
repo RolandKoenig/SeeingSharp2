@@ -20,7 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Objects;
+using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
