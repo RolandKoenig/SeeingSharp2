@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>8.0</LangVersion>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
