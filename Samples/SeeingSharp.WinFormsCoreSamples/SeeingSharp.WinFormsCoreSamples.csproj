@@ -20,12 +20,14 @@
     <Compile Include="..\SeeingSharp.WinFormsSamples\MainWindow.cs" Link="MainWindow.cs" />
     <Compile Include="..\SeeingSharp.WinFormsSamples\MainWindow.Designer.cs" Link="MainWindow.Designer.cs" />
     <Compile Include="..\SeeingSharp.WinFormsSamples\Program.cs" Link="Program.cs" />
+    <Compile Include="..\SeeingSharp.WinFormsSamples\RenderWindowControlsComponent.cs" Link="RenderWindowControlsComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="Assets\Icons\Camera16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Copy16x16.png" Link="Assets\Icons\Copy16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Cross16x16.png" Link="cross16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Help16x16.png" Link="Assets\Icons\Help16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\OutputAdd16x16.png" Link="Assets\Icons\OutputAdd16x16.png" />
