@@ -100,7 +100,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // Start drawing
                 overlayRenderer.BeginDraw();
-
                 try
                 {
                     if (m_drawingLayer != null)

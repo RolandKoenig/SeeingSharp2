@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Background.dds" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Background.dds" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
+    <PackageReference Include="FakeItEasy" Version="5.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.WpfCore\SeeingSharp.WpfCore.csproj" />
+    <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="_Controls\StatusBarControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="_Controls\StatusBarControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Icons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
+  </ItemGroup>
+
+</Project>
