@@ -35,6 +35,11 @@ namespace SeeingSharp.Multimedia.Components
             m_focusedLocation = Vector3.Zero;
         }
 
+        public FocusedPointCameraComponent(Vector3 focusedLocation)
+        {
+            m_focusedLocation = focusedLocation;
+        }
+
         protected override Vector3 GetFocusedLocation()
         {
             return m_focusedLocation;

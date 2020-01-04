@@ -11,10 +11,13 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Open" />
-                <MenuItem Header="Close" />
+                <MenuItem Header="Open"
+                          Command="{Binding Path=Command_OpenFile}"/>
+                <MenuItem Header="Close"
+                          Command="{Binding Path=Command_CloseFile}"/>
                 <Separator />
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit"
+                          Command="{Binding Path=Command_Exit}"/>
             </MenuItem>
         </Menu>
 

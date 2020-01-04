@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
@@ -21,6 +22,8 @@ namespace SeeingSharp.ModelViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowVM? m_viewModel;
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -28,8 +31,33 @@ namespace SeeingSharp.ModelViewer
             // Initialize Viewmodel
             if (GraphicsCore.IsLoaded)
             {
-                this.DataContext = new MainWindowVM(this.CtrlRenderer.RenderLoop);
+                m_viewModel = new MainWindowVM(this.CtrlRenderer.RenderLoop);
+                m_viewModel.OpenFileDialogRequest += this.OnViewModelOpenFileDialogRequest;
+                this.DataContext = m_viewModel;
+
+                this.Loaded += this.OnLoaded;
             }
+        }
+
+        private void OnViewModelOpenFileDialogRequest(object? sender, OpenFileDialogEventArgs e)
+        {
+            var dlgOpenFile = new OpenFileDialog();
+            dlgOpenFile.Filter = e.FilterString;
+            if (true == dlgOpenFile.ShowDialog(this))
+            {
+                e.SelectedFile = dlgOpenFile.FileName;
+            }
+            else
+            {
+                e.SelectedFile = string.Empty;
+            }
+        }
+
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (m_viewModel == null) { return; }
+
+            await m_viewModel.LoadInitialScene();
         }
     }
 }

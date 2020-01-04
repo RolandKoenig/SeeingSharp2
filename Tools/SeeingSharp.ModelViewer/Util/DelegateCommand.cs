@@ -26,12 +26,11 @@ namespace SeeingSharp.ModelViewer.Util
 {
     public class DelegateCommand : ICommand
     {
-        private Func<bool> m_canExecuteAction;
-
+        private Func<bool>? m_canExecuteAction;
         private Action m_executeAction;
 
 #pragma warning disable
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 #pragma warning restore
 
         public DelegateCommand(Action executeAction)
