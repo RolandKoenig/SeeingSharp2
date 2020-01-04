@@ -254,6 +254,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public BuiltVerticesRange BuildPyramidFullV(Vector3 lowerMiddle, float width, float height)
         {
+            width = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, width);
+            height = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, height);
+
             var halfWidth = width / 2f;
             var start = new Vector3(lowerMiddle.X - halfWidth, lowerMiddle.Y, lowerMiddle.Z - halfWidth);
             var dest = start + new Vector3(width, 0f, width);
@@ -321,18 +324,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public BuiltVerticesRange BuildConeFullV(Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
             var startVertex = this.Owner.CountVertices;
-
-            if (countOfSegments < 5)
-            {
-                throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments));
-            }
+            radius = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, radius);
+            height = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, height);
+            countOfSegments = Math.Max(3, countOfSegments);
 
             var diameter = radius * 2f;
 
             // Get texture offsets
             var texX = 1f;
             var texY = 1f;
-
             if (m_tileSize != Vector2.Zero)
             {
                 texX = diameter / m_tileSize.X;
@@ -367,10 +367,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var sideLeftBottomCoord = bottomCoordinate + sideLeftNormal * radius;
                 var sideRightBottomCoord = bottomCoordinate + sideRightNormal * radius;
                 var sideMiddleBottomCoord = bottomCoordinate + sideNormal * radius;
+                var sideLeftTexCoord = new Vector2(
+                    texX / (diameter / (sideLeftBottomCoord.X + radius)),
+                    texY / (diameter / (sideLeftBottomCoord.Z + radius)));
+                var sideRightTexCoord = new Vector2(
+                    texX / (diameter / (sideRightBottomCoord.X + radius)),
+                    texY / (diameter / (sideRightBottomCoord.Z + radius)));
 
                 //AddObject segment bottom triangle
-                var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord);
-                var segmentBottomRight = bottomVertex.Copy(sideRightBottomCoord);
+                var segmentBottomLeft = bottomVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
+                var segmentBottomRight = bottomVertex.Copy(sideRightBottomCoord, sideRightTexCoord);
                 this.AddTriangle(
                     bottomVertexIndex, this.Owner.AddVertex(segmentBottomLeft), this.Owner.AddVertex(segmentBottomRight));
 
@@ -382,8 +388,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 //AddObject segment top triangle
                 var topVertex = new VertexBasic(topCoordinate, new Vector2(texX / 2f, texY / 2f), topSideNormal);
-                var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord);
-                var segmentTopRight = topVertex.Copy(sideRightBottomCoord);
+                var segmentTopLeft = topVertex.Copy(sideLeftBottomCoord, sideLeftTexCoord);
+                var segmentTopRight = topVertex.Copy(sideRightBottomCoord, sideRightTexCoord);
 
                 this.AddTriangle(this.Owner.AddVertex(topVertex), this.Owner.AddVertex(segmentTopRight), this.Owner.AddVertex(segmentTopLeft));
             }
@@ -454,8 +460,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             bool buildSides, bool buildBottom, bool buildTop)
         {
             var startVertex = this.Owner.CountVertices;
+            radius = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, radius);
+            height = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, height);
+            countOfSegments = Math.Max(3, countOfSegments);
 
-            if (countOfSegments < 5) { throw new ArgumentException("Segment count of " + countOfSegments + " is too small!", nameof(countOfSegments)); }
             var diameter = radius * 2f;
 
             // Get texture offsets
