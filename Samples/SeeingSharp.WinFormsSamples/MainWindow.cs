@@ -60,17 +60,6 @@ namespace SeeingSharp.WinFormsSamples
 
             m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
-            foreach (var actDevice in GraphicsCore.Current.Devices)
-            {
-                var newButton = new ToolStripButton($"to {actDevice.AdapterDescription}")
-                {
-                    Tag = actDevice
-                };
-
-                newButton.Click += this.OnCmdChangeDevice_Click;
-                m_mnuChangeDevice.DropDownItems.Add(newButton);
-            }
-
             // AddObject all sample pages
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
@@ -145,34 +134,6 @@ namespace SeeingSharp.WinFormsSamples
             {
                 firstListView.SelectedIndices.Add(0);
             }
-
-            this.UpdateWindowState();
-        }
-
-        /// <summary>
-        /// Changes the render resolution to given width and height.
-        /// </summary>
-        /// <param name="width">The width in pixels.</param>
-        /// <param name="height">The height in pixels.</param>
-        private void ChangeRenderResolution(int width, int height)
-        {
-            var renderControl = m_ctrlRenderPanel;
-
-            if (renderControl == null)
-            {
-                return;
-            }
-
-            var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            var currentWindowSize = new Size2(this.Width, this.Height);
-            var difference = new Size2(
-                currentWindowSize.Width - currentViewSize.Width,
-                currentWindowSize.Height - currentViewSize.Height);
-            var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
-
-            this.WindowState = FormWindowState.Normal;
-            this.Width = newWindowSize.Width;
-            this.Height = newWindowSize.Height;
         }
 
         /// <summary>
@@ -185,8 +146,6 @@ namespace SeeingSharp.WinFormsSamples
             m_isChangingSample = true;
             try
             {
-                this.UpdateWindowState();
-
                 if (m_actSampleInfo == sampleInfo) { return; }
 
                 // Clear previous sample
@@ -261,8 +220,6 @@ namespace SeeingSharp.WinFormsSamples
             {
                 m_isChangingSample = false;
             }
-
-            this.UpdateWindowState();
         }
 
         private void UpdateSampleCommands(SampleSettings settings)
@@ -298,19 +255,6 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        private void UpdateWindowState()
-        {
-            if (this.DesignMode)
-            {
-                return;
-            }
-
-            var viewSize = m_ctrlRenderPanel.RenderLoop.ViewInformation.CurrentViewSize;
-            m_lblResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
-            m_lblObjectCount.Text = m_ctrlRenderPanel.RenderLoop.Scene.CountObjects.ToString();
-            m_lblDevice.Text = m_ctrlRenderPanel.RenderLoop.Device?.AdapterDescription ?? "-";
-        }
-
         private void OnListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (!e.IsSelected)
@@ -337,36 +281,13 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            this.UpdateWindowState();
-        }
-
-        private void OnCmdChangeResolution_Click(object sender, EventArgs e)
-        {
-            var menuItem = sender as ToolStripMenuItem;
-
-            if (menuItem?.Tag == null) { return; }
-
-            var splittedResolution = menuItem.Tag.ToString().Split('x');
-
-            if (splittedResolution.Length != 2) { return; }
-            if (!int.TryParse(splittedResolution[0], out var width)) { return; }
-            if (!int.TryParse(splittedResolution[1], out var height)) { return; }
-
-            this.ChangeRenderResolution(width, height);
+            m_renderWindowControlsComponent.UpdateTargetControlStates();
         }
 
         private async void OnCmdCopyScreenshot_Click(object sender, EventArgs e)
         {
             var bitmap = await m_ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
             Clipboard.SetImage(bitmap);
-        }
-
-        private void OnCmdChangeDevice_Click(object sender, EventArgs e)
-        {
-            if (!(sender is ToolStripButton changeButton)) { return; }
-            if (!(changeButton.Tag is EngineDevice device)) { return; }
-
-            m_ctrlRenderPanel.RenderLoop.SetRenderingDevice(device);
         }
 
         private void OnRenderLoop_PrepareRender(object sender, EventArgs e)

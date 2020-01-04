@@ -53,11 +53,6 @@ namespace SeeingSharp.WinFormsSamples
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
         }
 
-        private void OnCmdClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
             this.m_renderWindowControlsComponent.UpdateTargetControlStates();

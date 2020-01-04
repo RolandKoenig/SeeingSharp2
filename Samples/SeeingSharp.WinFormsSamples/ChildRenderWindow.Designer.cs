@@ -33,7 +33,6 @@
             this.m_ctrlRenderer = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
             this.m_refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.m_barTools = new System.Windows.Forms.ToolStrip();
-            this.m_cmdClose = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.m_mnuChangeResolution = new System.Windows.Forms.ToolStripDropDownButton();
             this.x600ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,7 +75,6 @@
             this.m_barTools.AllowMerge = false;
             this.m_barTools.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.m_barTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_cmdClose,
             this.toolStripSeparator1,
             this.m_mnuChangeResolution,
             this.m_mnuChangeDevice});
@@ -85,15 +83,6 @@
             this.m_barTools.Size = new System.Drawing.Size(887, 25);
             this.m_barTools.TabIndex = 5;
             this.m_barTools.Text = "toolStrip1";
-            // 
-            // m_cmdClose
-            // 
-            this.m_cmdClose.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Cross16x16;
-            this.m_cmdClose.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_cmdClose.Name = "m_cmdClose";
-            this.m_cmdClose.Size = new System.Drawing.Size(40, 22);
-            this.m_cmdClose.Text = "Close";
-            this.m_cmdClose.Click += new System.EventHandler(this.OnCmdClose_Click);
             // 
             // toolStripSeparator1
             // 
@@ -257,7 +246,6 @@
         private Multimedia.Views.SeeingSharpRendererControl m_ctrlRenderer;
         private System.Windows.Forms.Timer m_refreshTimer;
         private System.Windows.Forms.ToolStrip m_barTools;
-        private System.Windows.Forms.ToolStripButton m_cmdClose;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripDropDownButton m_mnuChangeResolution;
         private System.Windows.Forms.ToolStripMenuItem x600ToolStripMenuItem;

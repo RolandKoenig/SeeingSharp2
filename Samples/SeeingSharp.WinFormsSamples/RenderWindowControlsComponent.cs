@@ -151,13 +151,16 @@ namespace SeeingSharp.WinFormsSamples
                 if (m_mnuChangeResolution != value)
                 {
                     // Deregister from old menu
-                    foreach (var actItem in m_mnuChangeResolution.DropDownItems)
+                    if (m_mnuChangeResolution != null)
                     {
-                        if (!(actItem is ToolStripMenuItem actDropDownButton)) { continue; }
-                        if (!(actDropDownButton.Tag is string actTag)){ continue; }
-                        if (!actTag.Contains("x")){ continue; }
+                        foreach (var actItem in m_mnuChangeResolution.DropDownItems)
+                        {
+                            if (!(actItem is ToolStripMenuItem actDropDownButton)) { continue; }
+                            if (!(actDropDownButton.Tag is string actTag)){ continue; }
+                            if (!actTag.Contains("x")){ continue; }
 
-                        actDropDownButton.Click -= this.OnCmdChangeResolution_Click;
+                            actDropDownButton.Click -= this.OnCmdChangeResolution_Click;
+                        }
                     }
 
                     // Update member

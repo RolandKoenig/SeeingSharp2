@@ -54,6 +54,7 @@
             this.m_images = new System.Windows.Forms.ImageList(this.components);
             this.m_propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.m_splitter = new System.Windows.Forms.SplitContainer();
+            this.m_renderWindowControlsComponent = new SeeingSharp.WinFormsSamples.RenderWindowControlsComponent();
             this.m_barStatus.SuspendLayout();
             this.m_barTools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).BeginInit();
@@ -195,7 +196,6 @@
             this.x600ToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.x600ToolStripMenuItem.Tag = "800x600";
             this.x600ToolStripMenuItem.Text = "to 800x600";
-            this.x600ToolStripMenuItem.Click += new System.EventHandler(this.OnCmdChangeResolution_Click);
             // 
             // x768ToolStripMenuItem
             // 
@@ -203,7 +203,6 @@
             this.x768ToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.x768ToolStripMenuItem.Tag = "1024x768";
             this.x768ToolStripMenuItem.Text = "to 1024x768";
-            this.x768ToolStripMenuItem.Click += new System.EventHandler(this.OnCmdChangeResolution_Click);
             // 
             // x1024ToolStripMenuItem
             // 
@@ -211,7 +210,6 @@
             this.x1024ToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.x1024ToolStripMenuItem.Tag = "1280x1024";
             this.x1024ToolStripMenuItem.Text = "to 1280x1024";
-            this.x1024ToolStripMenuItem.Click += new System.EventHandler(this.OnCmdChangeResolution_Click);
             // 
             // x1080ToolStripMenuItem
             // 
@@ -219,7 +217,6 @@
             this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.x1080ToolStripMenuItem.Tag = "1600x1200";
             this.x1080ToolStripMenuItem.Text = "to 1600x1200";
-            this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.OnCmdChangeResolution_Click);
             // 
             // toolStripSeparator2
             // 
@@ -232,7 +229,6 @@
             this.to1024x1024ToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.to1024x1024ToolStripMenuItem.Tag = "1024x1024";
             this.to1024x1024ToolStripMenuItem.Text = "to 1024x1024";
-            this.to1024x1024ToolStripMenuItem.Click += new System.EventHandler(this.OnCmdChangeResolution_Click);
             // 
             // m_mnuChangeDevice
             // 
@@ -287,6 +283,16 @@
             this.m_splitter.SplitterDistance = 168;
             this.m_splitter.TabIndex = 6;
             // 
+            // m_renderWindowControlsComponent
+            // 
+            this.m_renderWindowControlsComponent.LblCurrentDevice = this.m_lblDevice;
+            this.m_renderWindowControlsComponent.LblCurrentObjectCount = this.m_lblObjectCount;
+            this.m_renderWindowControlsComponent.LblCurrentResolution = this.m_lblResolution;
+            this.m_renderWindowControlsComponent.RenderControl = this.m_ctrlRenderPanel;
+            this.m_renderWindowControlsComponent.MnuChooseDevice = this.m_mnuChangeDevice;
+            this.m_renderWindowControlsComponent.TargetWindow = this;
+            this.m_renderWindowControlsComponent.MnuChangeResolution = this.m_mnuChangeResolution;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -340,6 +346,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.PropertyGrid m_propertyGrid;
         private System.Windows.Forms.SplitContainer m_splitter;
+        private RenderWindowControlsComponent m_renderWindowControlsComponent;
     }
 }
 
