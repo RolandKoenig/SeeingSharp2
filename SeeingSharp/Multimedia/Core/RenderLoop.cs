@@ -52,7 +52,6 @@ namespace SeeingSharp.Multimedia.Core
         private ThreadSaveQueue<Action> m_afterPresentActions;
 
         // Target parameters for rendering
-        private DateTime m_lastTargetParametersChanged;
         private EngineDevice m_targetDevice;
         private Size2 m_targetSize;
         private DpiScaling m_currentDpiScaling;
@@ -76,7 +75,7 @@ namespace SeeingSharp.Multimedia.Core
         private DebugDrawingLayer m_debugDrawingLayer;
         private EngineDevice m_currentDevice;
         private Size2 m_currentViewSize;
-        private Size2F m_currentViewSizeDpiScaled;
+
         private Scene m_currentScene;
         private Direct2DOverlayRenderer m_d2dOverlay;
         private D3D11.Texture2D m_renderTarget;
@@ -156,7 +155,6 @@ namespace SeeingSharp.Multimedia.Core
             this.ClearColor = Color4.White;
 
             // Set initial target parameters
-            m_lastTargetParametersChanged = DateTime.MinValue;
             m_targetDevice = null;
             m_targetSize = new Size2(0, 0);
             m_loadDeviceIndex = -1;
@@ -650,10 +648,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal async Task UnloadViewResourcesAsync()
         {
-            await this.UISynchronizationContext.PostAsync(() =>
-            {
-                this.UnloadViewResources();
-            });
+            await this.UISynchronizationContext.PostAsync(this.UnloadViewResources);
         }
 
         /// <summary>
@@ -763,7 +758,7 @@ namespace SeeingSharp.Multimedia.Core
                         if (reregisterOnScene)
                         {
                             var localScene = m_currentScene;
-                            refreshViewContinuationActions.Add(() => localScene.DeregisterView(this.ViewInformation));
+                            refreshViewContinuationActions.Add(() => localScene?.DeregisterView(this.ViewInformation));
                         }
 
                         // Unload view resources first
@@ -1138,9 +1133,6 @@ namespace SeeingSharp.Multimedia.Core
             m_currentViewSize = generatedViewResources.Item6;
             m_targetSize = m_currentViewSize;
             m_currentDpiScaling = generatedViewResources.Item7;
-            m_currentViewSizeDpiScaled = new Size2F(
-                m_currentViewSize.Width / m_currentDpiScaling.ScaleFactorX,
-                m_currentViewSize.Height / m_currentDpiScaling.ScaleFactorY);
 
             m_loadDeviceIndex = m_currentDevice.LoadDeviceIndex;
 

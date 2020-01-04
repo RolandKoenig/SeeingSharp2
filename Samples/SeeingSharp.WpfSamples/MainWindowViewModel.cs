@@ -71,7 +71,7 @@ namespace SeeingSharp.WpfSamples
 
         private void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
         {
-            this.ReloadRequest?.Invoke(this, EventArgs.Empty);
+            ReloadRequest?.Invoke(this, EventArgs.Empty);
         }
 
         public ObservableCollection<string> SampleGroups
@@ -97,7 +97,6 @@ namespace SeeingSharp.WpfSamples
         public ObservableCollection<SampleViewModel> Samples
         {
             get;
-            private set;
         } = new ObservableCollection<SampleViewModel>();
 
         public SampleViewModel SelectedSample
@@ -140,7 +139,6 @@ namespace SeeingSharp.WpfSamples
         public ObservableCollection<SampleCommand> SampleCommands
         {
             get;
-            private set;
         } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings => m_sampleSettings;

@@ -54,8 +54,6 @@ namespace SeeingSharp.Multimedia.Input
             m_commandQueue = new ThreadSaveQueue<Action>();
             m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
             m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
-
-            //m_globalInputHandlers = new List<IInputHandler>();
             m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
         }
 

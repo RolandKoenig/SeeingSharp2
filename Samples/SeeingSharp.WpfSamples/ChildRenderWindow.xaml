@@ -9,11 +9,6 @@
         Title="Seeing# 2 - Wpf samples - Child window" Height="450" Width="800">
 
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Close"
-                      Click="OnCmdClose_Click"/>
-        </Menu>
-
         <Grid>
             <!-- The 3D renderer control-->
             <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />

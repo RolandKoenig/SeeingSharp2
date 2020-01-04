@@ -391,38 +391,6 @@ namespace SeeingSharp.Multimedia.Core
                         additionalContinuationActions, additionalContinuationActionsLock));
                 }
 
-
-                //for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
-                //{
-
-                //    //var actRenderLoop = renderingRenderLoops[loop];
-                //    //if (actRenderLoop.Device == null)
-                //    //{
-                //    //    try
-                //    //    {
-                //    //        var actPrepareRenderTask = actRenderLoop.PrepareRenderAsync();
-                //    //        await actPrepareRenderTask;
-
-                //    //        lock (additionalContinuationActionsLock)
-                //    //        {
-                //    //            additionalContinuationActions.AddRange(actPrepareRenderTask.Result);
-                //    //        }
-                //    //    }
-                //    //    catch (Exception)
-                //    //    {
-                //    //        // Deregister this RenderLoop
-                //    //        lock (additionalContinuationActionsLock)
-                //    //        {
-                //    //            additionalContinuationActions.Add(() =>
-                //    //            {
-                //    //                this.DeregisterRenderLoop(actRenderLoop);
-                //    //                renderingRenderLoops.Remove(actRenderLoop);
-                //    //            });
-                //    //        }
-                //    //    }
-                //    //}
-                //}
-
                 // Update all scenes
                 var exceptionsDuringUpdate = new ThreadSaveQueue<Exception>();
                 Parallel.For(0, scenesToRender.Count, actTaskIndex =>

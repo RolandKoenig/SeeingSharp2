@@ -62,7 +62,7 @@ namespace SeeingSharp.WpfSamples
             sampleRepo.LoadSampleData();
 
             var viewModel = new MainWindowViewModel(sampleRepo, CtrlRenderer.RenderLoop);
-            viewModel.ReloadRequest += OnViewModel_ReloadRequest;
+            viewModel.ReloadRequest += this.OnViewModel_ReloadRequest;
             this.DataContext = viewModel;
 
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
@@ -174,7 +174,7 @@ namespace SeeingSharp.WpfSamples
         private async void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
         {
             var childWindow = new ChildRenderWindow();
-            childWindow.InitializeChildWindow(this.CtrlRenderer.Scene, this.CtrlRenderer.Camera.GetViewPoint());
+            childWindow.InitializeChildWindow(CtrlRenderer.Scene, CtrlRenderer.Camera.GetViewPoint());
 
             m_childWindows.Add(childWindow);
             childWindow.Closed += (_1, _2) => { m_childWindows.Remove(childWindow); };
