@@ -27,7 +27,7 @@ namespace SeeingSharp
     {
         public static SeeingSharpLoader SupportWpf(this SeeingSharpLoader loader)
         {
-            loader.RegisterExtensions(new SeeingSharpWpfExtensions());
+            loader.RegisterExtension(new SeeingSharpWpfExtensions());
             return loader;
         }
     }

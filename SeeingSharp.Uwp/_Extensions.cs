@@ -27,7 +27,7 @@ namespace SeeingSharp
     {
         public static SeeingSharpLoader SupportUwp(this SeeingSharpLoader loader)
         {
-            loader.RegisterExtensions(new SeeingSharpUwpExtensions());
+            loader.RegisterExtension(new SeeingSharpUwpExtensions());
             return loader;
         }
     }

@@ -39,11 +39,13 @@ namespace SeeingSharp.Multimedia.Core
             this.LoadSettings = new DeviceLoadSettings();
         }
 
-        public void RegisterExtensions(ISeeingSharpExtensions extensions)
+        public SeeingSharpLoader RegisterExtension(ISeeingSharpExtensions extensions)
         {
             extensions.EnsureNotNull(nameof(extensions));
 
             m_extensions.Add(extensions);
+
+            return this;
         }
 
         public void Load()
@@ -54,6 +56,18 @@ namespace SeeingSharp.Multimedia.Core
         public Task LoadAsync()
         {
             return Task.Factory.StartNew(() => GraphicsCore.Load(this));
+        }
+
+        public SeeingSharpLoader RegisterModelImporter(IModelImporter importer)
+        {
+            return this.RegisterExtension(
+                new LoaderModelImporterExtension(importer));
+        }
+
+        public SeeingSharpLoader RegisterModelExporter(IModelExporter exporter)
+        {
+            return this.RegisterExtension(
+                new LoaderModelExporterExtension(exporter));
         }
 
         public SeeingSharpLoader Configure(DeviceLoadSettings loadSettings)

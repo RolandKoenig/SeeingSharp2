@@ -18,6 +18,7 @@ namespace SeeingSharp.ModelViewer
         {
             GraphicsCore.Loader
                 .SupportWpf()
+                .RegisterModelImporter(new AssimpImporter())
                 .Load();
 
             base.OnStartup(e);

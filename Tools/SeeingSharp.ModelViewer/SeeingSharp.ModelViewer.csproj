@@ -49,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="Assets\Icons\" />
-    <Folder Include="_Assimp\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace SeeingSharp
     {
         public static SeeingSharpLoader SupportWinForms(this SeeingSharpLoader loader)
         {
-            loader.RegisterExtensions(new SeeingSharpWinFormsExtensions());
+            loader.RegisterExtension(new SeeingSharpWinFormsExtensions());
             return loader;
         }
     }
