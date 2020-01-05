@@ -32,11 +32,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerD2D"/> class.
         /// </summary>
-        internal FactoryHandlerD2D(DeviceLoadSettings deviceLoadSettings)
+        internal FactoryHandlerD2D(GraphicsCoreConfiguration coreConfiguration)
         {
             m_factory2 = new D2D.Factory2(
                 D2D.FactoryType.SingleThreaded,
-                deviceLoadSettings.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
+                coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
         }
 
         /// <summary>

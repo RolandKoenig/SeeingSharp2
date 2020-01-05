@@ -30,23 +30,38 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IInputHandler> CreateInputHandlers()
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IModelExporter> CreateModelExporters()
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IModelImporter> CreateModelImporters()
         {
             yield return new ACImporter();
             yield return new StLImporter();
+        }
+
+        public void EditCoreConfiguration(GraphicsCoreConfiguration coreConfig)
+        {
+     
+        }
+
+        public void EditDeviceConfiguration(EngineAdapterInfo adapterInfo, GraphicsDeviceConfiguration deviceConfig)
+        {
+
+        }
+
+        public void EditViewConfiguration(RenderLoop renderLoop, GraphicsViewConfiguration viewConfig)
+        {
+
         }
     }
 }

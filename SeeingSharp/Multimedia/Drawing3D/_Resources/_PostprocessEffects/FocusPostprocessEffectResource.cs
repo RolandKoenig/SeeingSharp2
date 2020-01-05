@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         // Clear current render target
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
-                        // Configure stencil state (invert z logic, disable z writes)
+                        // ConfigureLoading stencil state (invert z logic, disable z writes)
                         renderState.Device.DeviceImmediateContextD3D11.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateInvertedZTest;
                         break;
 

@@ -49,7 +49,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(40f, 30f, 40f);
             camera.Target = new Vector3(0f, 5f, 0f);
             camera.UpdateCamera();

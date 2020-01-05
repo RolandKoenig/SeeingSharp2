@@ -39,18 +39,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal ImporterExporterRepository(SeeingSharpLoader loader)
         {
-            var importers = (from actExtension in loader.Extensions
-                             from actImporter in actExtension.CreateModelImporters()
-                             select actImporter).ToList();
-            var exporters = (from actExtension in loader.Extensions
-                             from actExporter in actExtension.CreateModelExporters()
-                             select actExporter).ToList();
+            var importers = new List<IModelImporter>();
+            var exporters = new List<IModelExporter>();
+            foreach (var actExtension in loader.Extensions)
+            {
+                var actImporterList = actExtension.CreateModelImporters();
+                if (actImporterList != null)
+                {
+                    importers.AddRange(actImporterList);
+                }
+
+                var actExporterList = actExtension.CreateModelExporters();
+                if (actExporterList != null)
+                {
+                    exporters.AddRange(actExporterList);
+                }
+            }
 
             m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
 
             // Get format support on each importer
             m_importersByFileType = new Dictionary<string, IModelImporter>();
-
             foreach (var actImporter in importers)
             {
                 foreach (var actSupportedFile in actImporter
@@ -65,7 +74,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Get format support on each exporter
             var exportersByFileType = new Dictionary<string, IModelExporter>();
-
             foreach (var actExporter in exporters)
             {
                 foreach (var actSupportedFile in actExporter

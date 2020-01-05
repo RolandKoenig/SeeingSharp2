@@ -79,7 +79,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(3f, 1f, 3f);
             camera.Target = new Vector3(0f, 1.2f, 0f);
             camera.UpdateCamera();

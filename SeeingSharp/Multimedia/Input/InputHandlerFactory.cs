@@ -37,10 +37,17 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         internal InputHandlerFactory(SeeingSharpLoader loader)
         {
-            m_inputHandlers =
-                (from actExtension in loader.Extensions
-                 from actInputHandler in actExtension.CreateInputHandlers()
-                 select actInputHandler).ToList();
+            m_inputHandlers = new List<IInputHandler>(4);
+            foreach (var actExtension in loader.Extensions)
+            {
+                var actInputHandlers = actExtension.CreateInputHandlers();
+                if(actInputHandlers == null){ continue; }
+
+                foreach (var actInputHandler in actInputHandlers)
+                {
+                    m_inputHandlers.Add(actInputHandler);
+                }
+            }
         }
 
         /// <summary>

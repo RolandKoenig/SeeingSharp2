@@ -59,6 +59,9 @@ namespace SeeingSharp.Multimedia.Core
         private Task m_mainLoopTask;
         private CancellationTokenSource m_mainLoopCancelTokenSource;
 
+        // Misc dependencies
+        private SeeingSharpLoader m_loader;
+
         public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCatchedException
         {
             add
@@ -94,8 +97,7 @@ namespace SeeingSharp.Multimedia.Core
 
             try
             {
-                this.IsDebugEnabled = loadSettings.DebugEnabled;
-
+                m_loader = loader;
                 m_devices = new List<EngineDevice>();
 
                 // Start performance value measuring
@@ -106,10 +108,16 @@ namespace SeeingSharp.Multimedia.Core
                 this.PerformanceAnalyzer.RunAsync(CancellationToken.None)
                     .FireAndForget();
 
+                // Create CoreConfiguration object
                 this.Configuration = new GraphicsCoreConfiguration
                 {
-                    DebugEnabled = loadSettings.DebugEnabled
+                    DebugEnabled = loadSettings.DebugEnabled,
+                    ThrowD2DInitDeviceError = loadSettings.ThrowD2DInitDeviceError
                 };
+                foreach (var actExtension in loader.Extensions)
+                {
+                    actExtension.EditCoreConfiguration(this.Configuration);
+                }
 
                 // Create container object for all input handlers
                 this.InputHandlers = new InputHandlerFactory(loader);
@@ -124,7 +132,7 @@ namespace SeeingSharp.Multimedia.Core
                         throw new SeeingSharpException("Simulated device load exception");
                     }
 
-                    engineFactory = new EngineFactory(loadSettings);
+                    engineFactory = new EngineFactory(this.Configuration);
                     m_factoryHandlerWIC = engineFactory.WindowsImagingComponent;
                     m_factoryHandlerD2D = engineFactory.Direct2D;
                     m_factoryHandlerDWrite = engineFactory.DirectWrite;
@@ -150,7 +158,6 @@ namespace SeeingSharp.Multimedia.Core
                 foreach (var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(
-                        loadSettings,
                         loader,
                         engineFactory, this.Configuration,
                         this.HardwareInfo, actAdapterInfo);
@@ -220,6 +227,14 @@ namespace SeeingSharp.Multimedia.Core
             s_throwDeviceInitError = true;
 
             return new DummyDisposable(() => s_throwDeviceInitError = false);
+        }
+
+        internal void InitializeViewConfiguration(RenderLoop renderLoop, GraphicsViewConfiguration viewConfig)
+        {
+            foreach (var actExtension in m_loader.Extensions)
+            {
+                actExtension.EditViewConfiguration(renderLoop, viewConfig);
+            }
         }
 
         /// <summary>
@@ -461,7 +476,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is debug enabled?
         /// </summary>
-        public bool IsDebugEnabled { get; }
+        public bool IsDebugEnabled => this.Configuration.DebugEnabled;
 
         /// <summary>
         /// Gets the current resource key generator.

@@ -51,7 +51,7 @@ namespace SeeingSharp.Tests
             using (GraphicsCore.AutomatedTest_NewTestEnvironment())
             {
                 await GraphicsCore.Loader
-                    .Configure(settings => settings.ThrowD2DInitDeviceError = true)
+                    .ConfigureLoading(settings => settings.ThrowD2DInitDeviceError = true)
                     .LoadAsync();
                 Assert.IsTrue(GraphicsCore.IsLoaded);
                 Assert.IsFalse(GraphicsCore.Current.DefaultDevice.Supports2D);

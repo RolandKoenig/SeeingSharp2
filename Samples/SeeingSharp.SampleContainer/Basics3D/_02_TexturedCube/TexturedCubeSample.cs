@@ -76,7 +76,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_TexturedCube
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(3f, 3f, 3f);
             camera.Target = new Vector3(0f, 0.5f, 0f);
             camera.UpdateCamera();

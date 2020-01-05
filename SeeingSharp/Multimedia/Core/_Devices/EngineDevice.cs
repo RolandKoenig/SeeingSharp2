@@ -36,9 +36,8 @@ namespace SeeingSharp.Multimedia.Core
         private SampleDescription m_sampleDescWithAntialiasing;
 
         // Main members
-        private SeeingSharpLoader m_initializer;
+        private SeeingSharpLoader m_loader;
         private EngineFactory m_engineFactory;
-        private DeviceLoadSettings m_deviceLoadSettings;
         private EngineHardwareInfo m_hardwareInfo;
         private EngineAdapterInfo m_adapterInfo;
 
@@ -64,11 +63,10 @@ namespace SeeingSharp.Multimedia.Core
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
         /// </summary>
         internal EngineDevice(
-            DeviceLoadSettings loadSettings, SeeingSharpLoader initializer,
+            SeeingSharpLoader loader,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
             EngineHardwareInfo hardwareInfo, EngineAdapterInfo adapterInfo)
         {
-            loadSettings.EnsureNotNull(nameof(loadSettings));
             engineFactory.EnsureNotNull(nameof(engineFactory));
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
             hardwareInfo.EnsureNotNull(nameof(hardwareInfo));
@@ -83,8 +81,7 @@ namespace SeeingSharp.Multimedia.Core
             m_hardwareInfo = hardwareInfo;
             m_adapterInfo = adapterInfo;
 
-            m_deviceLoadSettings = loadSettings;
-            m_initializer = initializer;
+            m_loader = loader;
             m_engineFactory = engineFactory;
             this.IsSoftware = adapterInfo.IsSoftwareAdapter;
 
@@ -95,6 +92,12 @@ namespace SeeingSharp.Multimedia.Core
 
             // Set default antialiasing configurations
             m_sampleDescWithAntialiasing = new SampleDescription(1, 0);
+
+            // Let loaders edit the device configuration
+            foreach (var actExtension in loader.Extensions)
+            {
+                actExtension.EditDeviceConfiguration(adapterInfo, this.Configuration);
+            }
 
             // Load all resources
             this.LoadResources();
@@ -219,7 +222,7 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 m_handlerDXGI = new DeviceHandlerDXGI(m_hardwareInfo, m_adapterInfo);
-                m_handlerD3D11 = new DeviceHandlerD3D11(m_deviceLoadSettings, m_handlerDXGI.Adapter);
+                m_handlerD3D11 = new DeviceHandlerD3D11(this.Configuration, m_handlerDXGI.Adapter);
             }
             catch (Exception ex)
             {
@@ -237,19 +240,19 @@ namespace SeeingSharp.Multimedia.Core
             // Initialize direct2D handler finally
             if (m_handlerD3D11 != null)
             {
-                m_handlerD2D = new DeviceHandlerD2D(m_deviceLoadSettings, m_engineFactory, this);
+                m_handlerD2D = new DeviceHandlerD2D(this.Configuration, m_engineFactory, this);
                 this.FakeRenderTarget2D = m_handlerD2D.RenderTarget;
             }
 
             // Create additional device handlers
-            foreach (var actExtension in m_initializer.Extensions)
+            foreach (var actExtension in m_loader.Extensions)
             {
-                foreach (var actAdditionalDeviceHandler in actExtension.CreateAdditionalDeviceHandlers(this))
+                var additionalDeviceHandlers = actExtension.CreateAdditionalDeviceHandlers(this);
+                if(additionalDeviceHandlers == null){ continue; }
+
+                foreach (var actAdditionalDeviceHandler in additionalDeviceHandlers)
                 {
-                    if (actAdditionalDeviceHandler == null)
-                    {
-                        continue;
-                    }
+                    if (actAdditionalDeviceHandler == null) { continue; }
                     m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
                 }
             }
@@ -506,7 +509,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is debug mode enabled?
         /// </summary>
-        public bool DebugEnabled => m_deviceLoadSettings.DebugEnabled;
+        public bool DebugEnabled => this.Configuration.CoreConfiguration.DebugEnabled;
 
         /// <summary>
         /// Internal members, use with care.

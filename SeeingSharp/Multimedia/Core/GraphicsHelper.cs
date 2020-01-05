@@ -816,7 +816,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 outStreamIndex.Position = 0;
 
-                // Configure index buffer
+                // ConfigureLoading index buffer
                 var bufferDescriptionIndex = new D3D11.BufferDescription
                 {
                     BindFlags = D3D11.BindFlags.IndexBuffer,

@@ -36,12 +36,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
         /// </summary>
-        internal DeviceHandlerD2D(DeviceLoadSettings deviceLoadSettings, EngineFactory engineFactory, EngineDevice engineDevice)
+        internal DeviceHandlerD2D(GraphicsDeviceConfiguration deviceConfig, EngineFactory engineFactory, EngineDevice engineDevice)
         {
             try
             {
                 // Simulate exception if requested
-                if (deviceLoadSettings.ThrowD2DInitDeviceError)
+                if (deviceConfig.CoreConfiguration.ThrowD2DInitDeviceError)
                 {
                     throw new SeeingSharpGraphicsException("Simulation Direct2D device init exception");
                 }

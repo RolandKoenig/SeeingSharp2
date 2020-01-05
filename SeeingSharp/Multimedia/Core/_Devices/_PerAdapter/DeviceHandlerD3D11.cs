@@ -53,13 +53,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
-        internal DeviceHandlerD3D11(DeviceLoadSettings deviceLoadSettings, Adapter1 dxgiAdapter)
+        internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, Adapter1 dxgiAdapter)
         {
             m_dxgiAdapter = dxgiAdapter;
 
             // Define possible create flags
             var createFlags = D3D11.DeviceCreationFlags.BgraSupport;
-            if (deviceLoadSettings.DebugEnabled)
+            if (deviceConfig.CoreConfiguration.DebugEnabled)
             {
                 createFlags |= D3D11.DeviceCreationFlags.Debug;
             }

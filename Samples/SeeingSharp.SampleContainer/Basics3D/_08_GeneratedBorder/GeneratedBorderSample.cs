@@ -96,7 +96,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(-3f, 3f, -3f);
             camera.Target = new Vector3(1f, -0.5f, 2f);
             camera.UpdateCamera();

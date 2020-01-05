@@ -119,7 +119,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(5f, 5f, 5f);
             camera.Target = new Vector3(0f, 0.5f, 0f);
             camera.UpdateCamera();

@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
         /// </summary>
-        internal FactoryHandlerDWrite(DeviceLoadSettings deviceLoadSettings)
+        internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
         {
             // Create DirectWrite Factory object
             m_factory = new DWrite.Factory(DWrite.FactoryType.Shared);

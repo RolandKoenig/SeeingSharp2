@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
         /// </summary>
-        internal FactoryHandlerWIC(DeviceLoadSettings deviceLoadSettings)
+        internal FactoryHandlerWIC(GraphicsCoreConfiguration coreConfiguration)
         {
             this.Factory = new ImagingFactory();
         }

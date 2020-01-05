@@ -63,6 +63,7 @@ namespace SeeingSharp.Multimedia.Core
         private IRenderLoopHost m_renderLoopHost;
 
         // Values needed for runtime
+        private bool m_loadCalled;
         private bool m_lastRenderSuccessfully;
         private bool m_nextRenderAllowed;
         private int m_totalRenderCount;
@@ -1121,6 +1122,13 @@ namespace SeeingSharp.Multimedia.Core
 
             // Return here if the current device is marked as lost
             if (m_currentDevice.IsLost) { return; }
+
+            // Initialize view configuration on the first load
+            if (!m_loadCalled)
+            {
+                GraphicsCore.Current.InitializeViewConfiguration(this, this.ViewConfiguration);
+                m_loadCalled = true;
+            }
 
             // Recreate view resources
             var generatedViewResources = m_renderLoopHost.OnRenderLoop_CreateViewResources(m_currentDevice);

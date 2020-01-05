@@ -17,22 +17,37 @@ namespace SeeingSharp.Multimedia.Core
 
         public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IInputHandler> CreateInputHandlers()
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IModelImporter> CreateModelImporters()
         {
-            yield break;
+            return null;
         }
 
         public IEnumerable<IModelExporter> CreateModelExporters()
         {
             yield return m_modelExporter;
+        }
+
+        public void EditCoreConfiguration(GraphicsCoreConfiguration coreConfig)
+        {
+     
+        }
+
+        public void EditDeviceConfiguration(EngineAdapterInfo adapterInfo, GraphicsDeviceConfiguration deviceConfig)
+        {
+
+        }
+
+        public void EditViewConfiguration(RenderLoop renderLoop, GraphicsViewConfiguration viewConfig)
+        {
+
         }
     }
 }

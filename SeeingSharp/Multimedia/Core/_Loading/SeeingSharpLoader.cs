@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
                 new LoaderModelExporterExtension(exporter));
         }
 
-        public SeeingSharpLoader Configure(DeviceLoadSettings loadSettings)
+        public SeeingSharpLoader ConfigureLoading(DeviceLoadSettings loadSettings)
         {
             loadSettings.EnsureNotNull(nameof(loadSettings));
             this.LoadSettings = loadSettings;
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Core
             return this;
         }
 
-        public SeeingSharpLoader Configure(Action<DeviceLoadSettings> manipulateConfigAction)
+        public SeeingSharpLoader ConfigureLoading(Action<DeviceLoadSettings> manipulateConfigAction)
         {
             manipulateConfigAction.EnsureNotNull(nameof(manipulateConfigAction));
 
@@ -86,9 +86,39 @@ namespace SeeingSharp.Multimedia.Core
             return this;
         }
 
+        /// <summary>
+        /// Change some settings before loading the core the first time.
+        /// </summary>
+        /// <param name="manipulateCoreConfigAction">An action which gets the <see cref="GraphicsCoreConfiguration"/> object.</param>
+        public SeeingSharpLoader ConfigureCore(Action<GraphicsCoreConfiguration> manipulateCoreConfigAction)
+        {
+            return this.RegisterExtension(
+                new LoaderConfigurationExtension(manipulateCoreConfigAction, null, null));
+        }
+
+        /// <summary>
+        /// Change some settings before loading a device the first time.
+        /// </summary>
+        /// <param name="manipulateDeviceConfigAction">An action which gets the <see cref="EngineAdapterInfo"/> which is loading currently and its <see cref="GraphicsDeviceConfiguration"/> object.</param>
+        public SeeingSharpLoader ConfigureDevices(Action<EngineAdapterInfo, GraphicsDeviceConfiguration> manipulateDeviceConfigAction)
+        {
+            return this.RegisterExtension(
+                new LoaderConfigurationExtension(null, manipulateDeviceConfigAction, null));
+        }
+
+        /// <summary>
+        /// Change some settings before loading a view the first time.
+        /// </summary>
+        /// <param name="manipulateViewConfigAction">An action which gets the <see cref="RenderLoop"/> which is loading currently and its <see cref="GraphicsViewConfiguration"/> object.</param>
+        public SeeingSharpLoader ConfigureViews(Action<RenderLoop, GraphicsViewConfiguration> manipulateViewConfigAction)
+        {
+            return this.RegisterExtension(
+                new LoaderConfigurationExtension(null, null, manipulateViewConfigAction));
+        }
+
         public SeeingSharpLoader EnableDirectXDebugMode()
         {
-            return this.Configure(
+            return this.ConfigureLoading(
                 loadSettings => loadSettings.DebugEnabled = true);
         }
 

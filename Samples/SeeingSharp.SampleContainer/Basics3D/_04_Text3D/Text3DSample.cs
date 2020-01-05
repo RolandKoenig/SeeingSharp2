@@ -69,7 +69,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Text3D
         {
             var camera = mainOrChildRenderLoop.Camera;
 
-            // Configure camera
+            // ConfigureLoading camera
             camera.Position = new Vector3(0.7f, 8.5f, -15f);
             camera.RelativeTarget = new Vector3(0.44f, -0.62f, 0.64f);
             camera.UpdateCamera();
