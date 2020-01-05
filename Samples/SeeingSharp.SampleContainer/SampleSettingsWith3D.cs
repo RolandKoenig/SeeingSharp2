@@ -29,14 +29,14 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public bool EnableAntialiasing
         {
-            get => this.RenderLoop?.ViewConfiguration.AntialiasingEnabled ?? false;
+            get => this.RenderLoop?.Configuration.AntialiasingEnabled ?? false;
             set
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.ViewConfiguration.AntialiasingEnabled)
+                if (value != this.RenderLoop?.Configuration.AntialiasingEnabled)
                 {
-                    this.RenderLoop.ViewConfiguration.AntialiasingEnabled = value;
+                    this.RenderLoop.Configuration.AntialiasingEnabled = value;
                     this.RaisePropertyChanged(nameof(this.EnableAntialiasing));
                 }
             }
@@ -45,14 +45,14 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public bool EnableWireframe
         {
-            get => this.RenderLoop?.ViewConfiguration.WireframeEnabled ?? false;
+            get => this.RenderLoop?.Configuration.WireframeEnabled ?? false;
             set
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.ViewConfiguration.WireframeEnabled)
+                if (value != this.RenderLoop?.Configuration.WireframeEnabled)
                 {
-                    this.RenderLoop.ViewConfiguration.WireframeEnabled = value;
+                    this.RenderLoop.Configuration.WireframeEnabled = value;
                     this.RaisePropertyChanged(nameof(this.EnableWireframe));
                 }
             }
@@ -61,14 +61,14 @@ namespace SeeingSharp.SampleContainer
         [Category("3D Rendering")]
         public AntialiasingQualityLevel AntialiasingQuality
         {
-            get => this.RenderLoop?.ViewConfiguration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
+            get => this.RenderLoop?.Configuration.AntialiasingQuality ?? AntialiasingQualityLevel.Medium;
             set
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.ViewConfiguration.AntialiasingQuality)
+                if (value != this.RenderLoop?.Configuration.AntialiasingQuality)
                 {
-                    this.RenderLoop.ViewConfiguration.AntialiasingQuality = value;
+                    this.RenderLoop.Configuration.AntialiasingQuality = value;
                     this.RaisePropertyChanged(nameof(this.AntialiasingQuality));
                 }
             }

@@ -21,7 +21,7 @@
 */
 namespace SeeingSharp.Multimedia.Core
 {
-    public class DeviceLoadSettings
+    public class SeeingSharpLoadSettings
     {
         public bool DebugEnabled
         {

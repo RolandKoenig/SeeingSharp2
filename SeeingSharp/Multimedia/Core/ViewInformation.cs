@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the configuration that belongs to this view.
         /// </summary>
-        public GraphicsViewConfiguration ViewConfiguration => Owner.ViewConfiguration;
+        public GraphicsViewConfiguration ViewConfiguration => Owner.Configuration;
 
         /// <summary>
         /// Gets the collection containing all filters.

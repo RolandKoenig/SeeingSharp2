@@ -425,12 +425,12 @@ namespace SeeingSharp.Multimedia.Views
             m_renderDeviceContext = m_renderDevice.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.ViewConfiguration);
+            m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.Configuration);
             m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
             m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
 
             //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, m_renderLoop.ViewConfiguration);
+            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, m_renderLoop.Configuration);
             m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
 
             //Define the viewport for rendering
@@ -605,7 +605,7 @@ namespace SeeingSharp.Multimedia.Views
         [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public GraphicsViewConfiguration ViewConfiguration => m_renderLoop.ViewConfiguration;
+        public GraphicsViewConfiguration Configuration => m_renderLoop.Configuration;
 
         public sealed override GDI.Color BackColor
         {

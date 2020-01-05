@@ -36,13 +36,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public bool IsHighDetail => (this.TargetDetailLevel & DetailLevel.High) == DetailLevel.High;
     }
 
-    public enum SpiralChuteRotationDirection
-    {
-        Clockwise,
-
-        Counterclockwise
-    }
-
     [Flags]
     public enum ExtrudeGeometryOptions
     {

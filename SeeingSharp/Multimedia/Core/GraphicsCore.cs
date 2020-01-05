@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Core
             ResourceKeyGenerator = new UniqueGenericKeyGenerator();
         }
 
-        private GraphicsCore(DeviceLoadSettings loadSettings, SeeingSharpLoader loader)
+        private GraphicsCore(SeeingSharpLoadSettings loadSettings, SeeingSharpLoader loader)
         {
             this.Internals = new GraphicsCoreInternals(this);
 

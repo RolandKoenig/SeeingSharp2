@@ -329,7 +329,7 @@ namespace SeeingSharp.Multimedia.Views
             var viewSize = this.GetTargetRenderPixelSize();
 
             // Create the SwapChain and associate it with the SwapChainBackgroundPanel
-            m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
+            m_swapChain = GraphicsHelperUwp.CreateSwapChainForComposition(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
             m_targetPanel.SwapChain = m_swapChain;
             m_compositionScaleChanged = true;
 
@@ -338,9 +338,9 @@ namespace SeeingSharp.Multimedia.Views
 
             // Define the render target (in case of multisample an own render target)
             D3D11.Texture2D backBufferForRenderloop = null;
-            if (this.RenderLoop.ViewConfiguration.AntialiasingEnabled)
+            if (this.RenderLoop.Configuration.AntialiasingEnabled)
             {
-                m_backBufferMultisampled = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
+                m_backBufferMultisampled = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
                 m_renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, m_backBufferMultisampled);
                 backBufferForRenderloop = m_backBufferMultisampled;
             }
@@ -351,7 +351,7 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             //Create the depth buffer
-            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.ViewConfiguration);
+            m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
             m_renderTargetDepth = new D3D11.DepthStencilView(engineDevice.Internals.DeviceD3D11_1, m_depthBuffer);
 
             //Define the viewport for rendering
@@ -473,6 +473,8 @@ namespace SeeingSharp.Multimedia.Views
         /// Gets current renderloop object.
         /// </summary>
         public RenderLoop RenderLoop { get; }
+
+        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
 
         /// <summary>
         /// Discard rendering?

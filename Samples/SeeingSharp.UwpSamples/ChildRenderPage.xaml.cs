@@ -68,7 +68,7 @@ namespace SeeingSharp.UwpSamples
         {
             if (DesignMode.DesignModeEnabled) { return; }
 
-            CtrlSwapChain.RenderLoop.ViewConfiguration.AlphaEnabledSwapChain = true;
+            CtrlSwapChain.RenderLoop.Configuration.AlphaEnabledSwapChain = true;
         }
     }
 }

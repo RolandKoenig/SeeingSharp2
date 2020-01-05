@@ -63,7 +63,7 @@
             this.m_ctrlRenderer.Name = "m_ctrlRenderer";
             this.m_ctrlRenderer.Size = new System.Drawing.Size(887, 427);
             this.m_ctrlRenderer.TabIndex = 0;
-            this.m_ctrlRenderer.ViewConfiguration.ViewNeedsRefresh = true;
+            this.m_ctrlRenderer.Configuration.ViewNeedsRefresh = true;
             // 
             // m_refreshTimer
             // 

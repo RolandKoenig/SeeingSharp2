@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderLoop : IDisposable
     {
         // Configuration values
-        private GraphicsViewConfiguration m_viewConfiguration;
+        private GraphicsViewConfiguration m_configuration;
         private Camera3DBase m_camera;
 
         // Async actions
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             this.ViewInformation = new ViewInformation(this);
-            m_viewConfiguration = new GraphicsViewConfiguration();
+            m_configuration = new GraphicsViewConfiguration();
 
             m_afterPresentActions = new ThreadSaveQueue<Action>();
 
@@ -230,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ForceViewReload()
         {
-            m_viewConfiguration.ViewNeedsRefresh = true;
+            m_configuration.ViewNeedsRefresh = true;
         }
 
         /// <summary>
@@ -549,7 +549,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Changes the ViewConfiguration object.
+        /// Changes the Configuration object.
         /// </summary>
         /// <param name="newViewConfiguration">The new configuration object to be applied.</param>
         public Task ExchangeViewConfigurationAsync(GraphicsViewConfiguration newViewConfiguration)
@@ -560,11 +560,11 @@ namespace SeeingSharp.Multimedia.Core
 
             m_afterPresentActions.Enqueue(() =>
             {
-                var deviceConfig = m_viewConfiguration.DeviceConfiguration;
+                var deviceConfig = m_configuration.DeviceConfiguration;
 
-                m_viewConfiguration = newViewConfiguration;
-                m_viewConfiguration.DeviceConfiguration = deviceConfig;
-                m_viewConfiguration.ViewNeedsRefresh = true;
+                m_configuration = newViewConfiguration;
+                m_configuration.DeviceConfiguration = deviceConfig;
+                m_configuration.ViewNeedsRefresh = true;
 
                 result.TrySetResult(null);
             });
@@ -742,7 +742,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_renderTargetView == null ||
                     viewSizeChanged ||
                     m_targetDevice != null && m_targetDevice != m_currentDevice ||
-                    m_viewConfiguration.ViewNeedsRefresh ||
+                    m_configuration.ViewNeedsRefresh ||
                     (m_loadDeviceIndex != m_currentDevice?.LoadDeviceIndex) ||
                     m_viewRefreshForced || m_reregisterViewOnSceneForced)
                 {
@@ -1126,7 +1126,7 @@ namespace SeeingSharp.Multimedia.Core
             // Initialize view configuration on the first load
             if (!m_loadCalled)
             {
-                GraphicsCore.Current.InitializeViewConfiguration(this, this.ViewConfiguration);
+                GraphicsCore.Current.InitializeViewConfiguration(this, this.Configuration);
                 m_loadCalled = true;
             }
 
@@ -1147,7 +1147,7 @@ namespace SeeingSharp.Multimedia.Core
             // Update view size on camera
             m_camera?.SetScreenSize(m_currentViewSize.Width, m_currentViewSize.Height);
 
-            m_viewConfiguration.ViewNeedsRefresh = false;
+            m_configuration.ViewNeedsRefresh = false;
 
             // Try to create a Direct2D overlay
             m_d2dOverlay = new Direct2DOverlayRenderer(
@@ -1307,7 +1307,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current view configuration.
         /// </summary>
-        public GraphicsViewConfiguration ViewConfiguration => m_viewConfiguration;
+        public GraphicsViewConfiguration Configuration => m_configuration;
 
         /// <summary>
         /// Gets the current scene object.

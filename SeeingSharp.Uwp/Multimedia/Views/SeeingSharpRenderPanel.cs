@@ -93,6 +93,8 @@ namespace SeeingSharp.Multimedia.Views
             set => m_painter.RenderLoop.SetRenderingDevice(value);
         }
 
+        public GraphicsViewConfiguration Configuration => m_painter.RenderLoop.Configuration;
+
         public Size CurrentViewSize
         {
             get

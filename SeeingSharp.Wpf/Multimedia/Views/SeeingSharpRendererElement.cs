@@ -247,7 +247,7 @@ namespace SeeingSharp.Multimedia.Views
                 case SessionSwitchReason.SessionLogon:
                     if (this.RenderLoop.IsRegisteredOnMainLoop)
                     {
-                        this.RenderLoop.ViewConfiguration.ViewNeedsRefresh = true;
+                        this.RenderLoop.Configuration.ViewNeedsRefresh = true;
                     }
                     break;
             }
@@ -356,12 +356,12 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Create the swap chain and the render target
-                m_backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
+                m_backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.Configuration);
                 m_backBufferForWpf = GraphicsHelper.Internals.CreateSharedTexture(engineDevice, width, height);
                 m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
 
                 // Create the depth buffer
-                m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.ViewConfiguration);
+                m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.Configuration);
                 m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
 
                 // Apply render target size values
@@ -618,6 +618,8 @@ namespace SeeingSharp.Multimedia.Views
             get => this.RenderLoop.Device;
             set => this.RenderLoop.SetRenderingDevice(value);
         }
+
+        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
 
         public Size CurrentViewSize
         {
