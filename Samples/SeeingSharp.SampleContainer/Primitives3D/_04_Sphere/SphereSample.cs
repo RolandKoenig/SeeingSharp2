@@ -19,23 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using System;
 using System.ComponentModel;
 using System.Numerics;
-using System.Threading.Tasks;
-using SeeingSharp.SampleContainer.Primitives3D._04_Geosphere;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._03_Sphere
+namespace SeeingSharp.SampleContainer.Primitives3D._04_Sphere
 {
     [SampleDescription(
-        "Sphere", 3, nameof(Primitives3D),
+        "Sphere", 4, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_03_Sphere",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_04_Sphere",
         typeof(SphereSampleSettings))]
     public class SphereSample : Primitive3DSampleBase
     {
@@ -75,7 +70,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Sphere
                     if (m_tDiv != value)
                     {
                         m_tDiv= value;
-                        base.RaiseRecreateRequest();
+                        this.RaiseRecreateRequest();
                     }
                 }
             }
@@ -89,7 +84,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Sphere
                     if (m_pDiv != value)
                     {
                         m_pDiv= value;
-                        base.RaiseRecreateRequest();
+                        this.RaiseRecreateRequest();
                     }
                 }
             }
@@ -103,7 +98,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Sphere
                     if (!EngineMath.EqualsWithTolerance(m_radius, value))
                     {
                         m_radius = value;
-                        base.RaiseRecreateRequest();
+                        this.RaiseRecreateRequest();
                     }
                 }
             }

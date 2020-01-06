@@ -25,22 +25,22 @@ using System.ComponentModel;
 using System.Numerics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
+namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
 {
     [SampleDescription(
-        "Cylinder", 1, nameof(Primitives3D),
+        "Cone", 3, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_Cylinder",
-        typeof(CylinderSampleSettings))]
-    public class CylinderSample : Primitive3DSampleBase
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_03_Cone",
+        typeof(ConeSampleSettings))]
+    public class ConeSample : Primitive3DSampleBase
     {
         protected override Mesh CreateMesh(SceneManipulator manipulator, SampleSettings sampleSettings, NamedOrGenericKey resMaterial)
         {
-            var castedSettings = (CylinderSampleSettings) sampleSettings;
+            var castedSettings = (ConeSampleSettings) sampleSettings;
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new CylinderGeometryFactory()
+                    new ConeGeometryFactory()
                     { 
                         Radius = castedSettings.Radius,
                         Height = castedSettings.Height,
@@ -55,7 +55,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cylinder
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class CylinderSampleSettings : Primitive3DSampleSettings
+        private class ConeSampleSettings : Primitive3DSampleSettings
         {
             private float m_radius = 0.5f;
             private float m_height = 1f;

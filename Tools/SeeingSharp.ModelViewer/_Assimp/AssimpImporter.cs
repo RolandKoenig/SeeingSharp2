@@ -8,8 +8,12 @@ using SeeingSharp.Util;
 
 namespace SeeingSharp.ModelViewer
 {
-    [SupportedFileFormat("obj", "Wavefront Object (.obj) format")]
-    [SupportedFileFormat("dae", "Collada (.dae)")]
+    [SupportedFileFormat("obj", "Wavefront Object format (*.obj)")]
+    [SupportedFileFormat("fbx", "(*.fbx)")]
+    [SupportedFileFormat("3ds", "3D Studio Max (*.3ds)")]
+    [SupportedFileFormat("dae", "Collada (*.dae)")]
+    [SupportedFileFormat("c4d", "Cinema 4D (*.c4d)")]
+    [SupportedFileFormat("ac", "AC3D format (*.ac)")]
     public class AssimpImporter : IModelImporter
     {
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
@@ -21,18 +25,34 @@ namespace SeeingSharp.ModelViewer
                 sourceFile.OpenInputStream(),
                 Assimp.PostProcessPreset.TargetRealTimeFast);
 
-            foreach (var actMaterial in scene.Materials)
-            {
-                ProcessMaterial(modelContainer, actMaterial);
-            }
+            ProcessMaterials(modelContainer, scene);
             ProcessNode(modelContainer, scene, scene.RootNode, null);
 
             return modelContainer;
         }
 
-        private static void ProcessMaterial(ImportedModelContainer modelContainer, Assimp.Material material)
+        private static void ProcessMaterials(ImportedModelContainer modelContainer, Assimp.Scene scene)
         {
-            
+            var materialCount = scene.MaterialCount;
+            for(var materialIndex=0; materialIndex < materialCount; materialIndex++)
+            {
+                var actMaterial = scene.Materials[materialIndex];
+
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                    modelContainer.GetResourceKey("Material", materialIndex.ToString()),
+                    (device) =>
+                    {
+                        var materialResource = new StandardMaterialResource();
+                        if (actMaterial.HasColorDiffuse)
+                        {
+                            materialResource.UseVertexColors = false;
+                            materialResource.MaterialDiffuseColor =
+                                AssimpHelper.Color4FromAssimp(actMaterial.ColorDiffuse);
+                        }
+                        return materialResource;
+                    }));
+            }
+
         }
 
         private static void ProcessNode(ImportedModelContainer modelContainer, Assimp.Scene scene, Assimp.Node actNode, SceneObject? actParent)
@@ -49,9 +69,12 @@ namespace SeeingSharp.ModelViewer
                 }
 
                 // This one has true geometry
+                var meshCount = actNode.MeshCount;
                 var newGeometry = new Geometry(fullVertexCount);
-                foreach (var actMeshID in actNode.MeshIndices)
+                var materialKeys = new NamedOrGenericKey[meshCount];
+                for (var meshIndex = 0; meshIndex < meshCount; meshIndex++)
                 {
+                    var actMeshID = actNode.MeshIndices[meshIndex]; 
                     var actBaseVertex = newGeometry.CountVertices;
                     var actMesh = scene.Meshes[actMeshID];
 
@@ -100,6 +123,8 @@ namespace SeeingSharp.ModelViewer
                             actBaseVertex + actFace.Indices[1],
                             actBaseVertex + actFace.Indices[2]);
                     }
+
+                    materialKeys[meshIndex] = modelContainer.GetResourceKey("Material", meshIndex.ToString());
                 }
 
                 var geometryKey = modelContainer.GetResourceKey("Geometry", actNode.Name);
@@ -107,8 +132,8 @@ namespace SeeingSharp.ModelViewer
                     modelContainer.GetResourceKey("Geometry", actNode.Name),
                     (device)=> new GeometryResource(newGeometry)));
 
-                var newMesh = new Mesh(geometryKey);
-                newMesh.CustomTransform = AssimpHelper.MatrixFromAssimp(actNode.Transform);
+                var newMesh = new Mesh(geometryKey, materialKeys);
+                newMesh.CustomTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
                 newMesh.TransformationType = SpacialTransformationType.CustomTransform;
                 modelContainer.Objects.Add(newMesh);
                 nextParent = newMesh;
@@ -122,7 +147,7 @@ namespace SeeingSharp.ModelViewer
             {
                 // This one is just a pivot
                 var actPivotObject = new ScenePivotObject();
-                actPivotObject.CustomTransform = AssimpHelper.MatrixFromAssimp(actNode.Transform);
+                actPivotObject.CustomTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
                 actPivotObject.TransformationType = SpacialTransformationType.CustomTransform;
                 modelContainer.Objects.Add(actPivotObject);
                 nextParent = actPivotObject;

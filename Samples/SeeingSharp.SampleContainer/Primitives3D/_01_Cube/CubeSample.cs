@@ -19,49 +19,47 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using System;
 using System.ComponentModel;
 using System.Numerics;
-using System.Threading.Tasks;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.SampleContainer.Primitives3D._05_Pyramid
+namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
 {
     [SampleDescription(
-        "Pyramid", 5, nameof(Primitives3D),
+        "Pyramid", 1, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_05_Pyramid",
-        typeof(PyramidSampleSettings))]
-    public class PyramidSample : Primitive3DSampleBase
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_Cube",
+        typeof(CubeSampleSettings))]
+    public class CubeSample : Primitive3DSampleBase
     {
         protected override Mesh CreateMesh(SceneManipulator manipulator, SampleSettings sampleSettings, NamedOrGenericKey resMaterial)
         {
-            var castedSettings = (PyramidSampleSettings) sampleSettings;
+            var castedSettings = (CubeSampleSettings) sampleSettings;
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new PyramidGeometryFactory()
-                    { 
+                    new CubeGeometryFactory()
+                    {
                         Width = castedSettings.Width,
-                        Height = castedSettings.Height
+                        Height = castedSettings.Height,
+                        Depth = castedSettings.Depth
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f, 0f);
+            result.Position = new Vector3(0f, 0.5f + (castedSettings.Height / 2f), 0f);
             return result;
         }
 
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class PyramidSampleSettings : Primitive3DSampleSettings
+        private class CubeSampleSettings : Primitive3DSampleSettings
         {
             private float m_width = 1f;
             private float m_height = 1f;
+            private float m_depth = 1f;
 
             [Category(CATEGORY_NAME)]
             public float Width
@@ -86,6 +84,20 @@ namespace SeeingSharp.SampleContainer.Primitives3D._05_Pyramid
                     if (!EngineMath.EqualsWithTolerance(m_height, value))
                     {
                         m_height = value;
+                        this.RaiseRecreateRequest();
+                    }
+                }
+            }
+
+            [Category(CATEGORY_NAME)]
+            public float Depth
+            {
+                get => m_depth;
+                set
+                {
+                    if (!EngineMath.EqualsWithTolerance(m_depth, value))
+                    {
+                        m_depth = value;
                         this.RaiseRecreateRequest();
                     }
                 }

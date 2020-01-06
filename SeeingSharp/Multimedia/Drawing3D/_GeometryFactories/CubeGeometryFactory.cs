@@ -27,22 +27,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var size = this.Size;
-            var halfSize = size / 2f;
-
             var result = new Geometry();
             result.CreateSurface()
                 .BuildCube24V(
-                    new Vector3(-halfSize, -halfSize, -halfSize),
-                    new Vector3(size, size, size));
+                    new Vector3(-(this.Width / 2f), -(this.Height / 2f), -(this.Depth / 2f)),
+                    new Vector3(this.Width, this.Height, this.Depth));
 
             return result;
         }
 
-        public float Size
-        {
-            get;
-            set;
-        } = 1f;
+        public float Width { get; set; } = 1f;
+
+        public float Height { get; set; } = 1f;
+
+        public float Depth { get; set; } = 1f;
     }
 }

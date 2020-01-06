@@ -40,12 +40,13 @@
     <None Remove="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\SimpleTexture.png" />
     <None Remove="Primitives3D\PrimitiveTexture.png" />
-    <None Remove="Primitives3D\_01_Cylinder\PreviewImage.png" />
-    <None Remove="Primitives3D\_02_Cone\PreviewImage.png" />
-    <None Remove="Primitives3D\_03_Sphere\PreviewImage.png" />
+    <None Remove="Primitives3D\_01_Cube\PreviewImage.png" />
+    <None Remove="Primitives3D\_02_Cylinder\PreviewImage.png" />
+    <None Remove="Primitives3D\_03_Cone\PreviewImage.png" />
+    <None Remove="Primitives3D\_04_Sphere\PreviewImage.png" />
     <None Remove="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
-    <None Remove="Primitives3D\_04_Geosphere\PreviewImage.png" />
-    <None Remove="Primitives3D\_05_Pyramid\PreviewImage.png" />
+    <None Remove="Primitives3D\_05_Geosphere\PreviewImage.png" />
+    <None Remove="Primitives3D\_06_Pyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Background.dds" />
@@ -73,12 +74,13 @@
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\SimpleTexture.png" />
     <EmbeddedResource Include="Primitives3D\PrimitiveTexture.png" />
-    <EmbeddedResource Include="Primitives3D\_01_Cylinder\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_02_Cone\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_03_Sphere\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_01_Cube\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_02_Cylinder\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_03_Cone\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_04_Sphere\PreviewImage.png" />
     <EmbeddedResource Include="Postprocessing\_01_EdgeDetect\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_04_Geosphere\PreviewImage.png" />
-    <EmbeddedResource Include="Primitives3D\_05_Pyramid\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_05_Geosphere\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\_06_Pyramid\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" Version="4.2.0" />
