@@ -65,7 +65,18 @@ namespace SeeingSharp.WpfSamples
             viewModel.ReloadRequest += this.OnViewModel_ReloadRequest;
             this.DataContext = viewModel;
 
+            // Register viewbox filter
+            this.CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
+        }
+
+        private void OnRenderLoop_ManipulateFilterList(object sender, ManipulateFilterListArgs e)
+        {
+            if (e.FilterList.Count == 0)
+            {
+                e.FilterList.Add(new SceneViewboxObjectFilter());
+            }
         }
 
         private async void OnViewModel_ReloadRequest(object sender, EventArgs e)

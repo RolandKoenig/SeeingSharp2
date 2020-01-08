@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> Filters => Owner.Filters;
+        internal List<SceneObjectFilter> FiltersInternl => Owner.FiltersInternal;
 
         /// <summary>
         /// The owner of this ViewInformation object (standard field for fast access):

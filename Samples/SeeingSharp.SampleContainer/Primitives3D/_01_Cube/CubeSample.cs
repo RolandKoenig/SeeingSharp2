@@ -28,7 +28,7 @@ using SeeingSharp.Util;
 namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
 {
     [SampleDescription(
-        "Pyramid", 1, nameof(Primitives3D),
+        "Cube", 1, nameof(Primitives3D),
         "PreviewImage.png",
         "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/_01_Cube",
         typeof(CubeSampleSettings))]

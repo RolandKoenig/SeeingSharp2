@@ -69,6 +69,9 @@ namespace SeeingSharp.WpfSamples
             }
 
             this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
+
+            // Register viewbox filter
+            this.CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
     }
 }

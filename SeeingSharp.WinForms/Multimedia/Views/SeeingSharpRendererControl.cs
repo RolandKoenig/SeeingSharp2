@@ -68,11 +68,6 @@ namespace SeeingSharp.Multimedia.Views
         private Dictionary<MouseButtons, DateTime> m_mouseButtonDownTime;
 
         /// <summary>
-        /// Raised when it is possible for the UI thread to manipulate current filter list.
-        /// </summary>
-        public event EventHandler<ManipulateFilterListArgs> ManipulateFilterList;
-
-        /// <summary>
         /// Raises when mouse was down a short amount of time.
         /// </summary>
         public event EventHandler<MouseEventArgs> MouseClickEx;
@@ -96,7 +91,6 @@ namespace SeeingSharp.Multimedia.Views
             // Create the render loop
             var backColor = this.BackColor;
             m_renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
-            m_renderLoop.ManipulateFilterList += this.OnRenderLoopManipulateFilterList;
             m_renderLoop.ClearColor = backColor.Color4FromGdiColor();
             m_renderLoop.DiscardRendering = true;
             m_renderLoop.Internals.CallPresentInUIThread = false;
@@ -395,16 +389,6 @@ namespace SeeingSharp.Multimedia.Views
                 m_renderLoop.Dispose();
                 m_renderLoop = null;
             }
-        }
-
-        /// <summary>
-        /// Called when RenderLoop allows it to manipulate current filter list.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The decimal.</param>
-        private void OnRenderLoopManipulateFilterList(object sender, ManipulateFilterListArgs e)
-        {
-            this.ManipulateFilterList?.Invoke(this, e);
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace SeeingSharp.WinFormsSamples
             }
             if (this.LblCurrentObjectCount != null)
             {
-                this.LblCurrentObjectCount.Text = m_renderControl.RenderLoop.Scene.CountObjects.ToString();
+                this.LblCurrentObjectCount.Text = m_renderControl.RenderLoop.VisibleObjectCount.ToString();
             }
             if (this.LblCurrentDevice != null)
             {

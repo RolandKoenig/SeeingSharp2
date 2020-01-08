@@ -102,11 +102,6 @@ namespace SeeingSharp.Multimedia.Core
         public event EventHandler DeviceChanged;
 
         /// <summary>
-        /// Raised when it is possible for the UI thread to manipulate current filter list.
-        /// </summary>
-        public event EventHandler<ManipulateFilterListArgs> ManipulateFilterList;
-
-        /// <summary>
         /// Raised before start rendering a frame.
         /// This event is called within the UI thread.
         /// </summary>
@@ -129,7 +124,7 @@ namespace SeeingSharp.Multimedia.Core
             this.SceneComponents = new ObservableCollection<SceneComponentBase>();
             this.SceneComponents.CollectionChanged += this.OnSceneComponents_Changed;
 
-            this.Filters = new List<SceneObjectFilter>();
+            this.FiltersInternal = new List<SceneObjectFilter>();
             m_2dDrawingLayers = new List<Custom2DDrawingLayer>();
 
             // Load DebugDrawingLayer if debug mode is enabled
@@ -907,7 +902,8 @@ namespace SeeingSharp.Multimedia.Core
                 // Let UI manipulate current filter list
                 try
                 {
-                    this.ManipulateFilterList.Raise(this, new ManipulateFilterListArgs(this.Filters));
+                    this.FiltersInternal.Clear();
+                    this.FiltersInternal.AddRange(this.Filters);
                 }
                 catch (Exception ex)
                 {
@@ -1468,9 +1464,14 @@ namespace SeeingSharp.Multimedia.Core
         internal Scene TargetScene => m_targetScene;
 
         /// <summary>
+        /// Gets a list containing all filters for this view.
+        /// </summary>
+        public List<SceneObjectFilter> Filters { get; } = new List<SceneObjectFilter>();
+
+        /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> Filters { get; }
+        internal List<SceneObjectFilter> FiltersInternal { get; }
 
         /// <summary>
         /// Internal field that is used to count visible objects.

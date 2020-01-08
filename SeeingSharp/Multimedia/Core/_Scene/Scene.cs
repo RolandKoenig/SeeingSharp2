@@ -923,7 +923,7 @@ namespace SeeingSharp.Multimedia.Core
             // Reset all filter flags before continue to next step
             foreach (var actView in m_registeredViews)
             {
-                foreach (var actFilter in actView.Filters)
+                foreach (var actFilter in actView.FiltersInternl)
                 {
                     actFilter.ConfigurationChanged = actFilter.ConfigurationChangedUI;
                     actFilter.ConfigurationChangedUI = false;

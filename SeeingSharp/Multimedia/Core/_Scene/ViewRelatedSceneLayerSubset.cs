@@ -357,7 +357,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjectsForSingleUpdateCall">A collection of scene objects for a single update call. These are normally a list of newly inserted static objects.</param>
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState, Queue<SceneObject> sceneObjectsForSingleUpdateCall)
         {
-            var filters = this.ViewInformation.Filters;
+            var filters = this.ViewInformation.FiltersInternl;
             m_tmpChangedVisibilities.Clear();
 
             // Perform some pre-logic on filters
@@ -698,8 +698,8 @@ namespace SeeingSharp.Multimedia.Core
                 lastFilterStageData = filterStageData;
 
                 // Execute filter if needed
-                if (!filterStageData.HasExecuted ||   // <-- Execute the filter if it was not executed for this object before
-                    actFilter.ConfigurationChanged || // <-- Execute the filter if its configuration has changed
+                if (!filterStageData.HasExecuted ||     // <-- Execute the filter if it was not executed for this object before
+                    actFilter.ConfigurationChanged ||   // <-- Execute the filter if its configuration has changed
                     previousFilterExecuted ||           // <-- Execute the filter if one of the previous was executed
                     actFilter.UpdateEachFrame)          // <-- Execute the filter if it requests it on each frame (e. g. clipping filter)
                 {

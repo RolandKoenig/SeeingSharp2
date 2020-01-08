@@ -41,7 +41,6 @@ namespace SeeingSharp.UwpSamples
             TextAppTitle.Text = $@"{appName} - Child window - {Assembly.GetExecutingAssembly().GetName().Version}";
             Window.Current.SetTitleBar(TextAppTitleRow);
 
-
             this.Loaded += OnLoaded;
         }
 
@@ -49,6 +48,8 @@ namespace SeeingSharp.UwpSamples
         {
             this.CtrlSwapChain.Scene = scene;
             this.CtrlSwapChain.Camera.ApplyViewPoint(viewPoint);
+
+            this.CtrlSwapChain.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         public async Task SetRenderingDataAsync(SampleBase actSample)

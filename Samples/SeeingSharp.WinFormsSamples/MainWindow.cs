@@ -58,6 +58,9 @@ namespace SeeingSharp.WinFormsSamples
 
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
+            // Register viewbox filter
+            m_ctrlRenderPanel.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+
             m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
             // AddObject all sample pages

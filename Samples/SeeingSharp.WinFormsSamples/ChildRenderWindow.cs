@@ -51,6 +51,9 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
+
+            // Register viewbox filter
+            m_ctrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
