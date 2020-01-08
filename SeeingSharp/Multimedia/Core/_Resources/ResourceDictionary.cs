@@ -482,7 +482,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets total count of resource.
         /// </summary>
-        public int Count => m_resources.Count;
+        public int ResourceCount => m_resources.Count;
 
         /// <summary>
         /// Gets the device index.

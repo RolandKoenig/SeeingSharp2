@@ -19,8 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Views;
 
 namespace SeeingSharp.WpfSamples
@@ -33,9 +38,37 @@ namespace SeeingSharp.WpfSamples
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRendererElement), typeof(StatusBarControl), new PropertyMetadata(null));
 
+        private DispatcherTimer m_refreshTimer;
+
         public StatusBarControl()
         {
             this.InitializeComponent();
+
+            if (GraphicsCore.IsLoaded)
+            {
+                this.Loaded += this.OnLoaded;
+                this.Unloaded += this.OnUnloaded;
+            }
+        }
+
+        private void OnRefreshTimer_Tick(object sender, System.EventArgs e)
+        {
+            this.TxtResourceCount.GetBindingExpression(TextBlock.TextProperty).UpdateTarget();
+            this.TxtVisibleObjectCount.GetBindingExpression(TextBlock.TextProperty).UpdateTarget();
+
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            m_refreshTimer = new DispatcherTimer();
+            m_refreshTimer.Tick += OnRefreshTimer_Tick;
+            m_refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
+            m_refreshTimer.Start();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            m_refreshTimer.Stop();
         }
 
         public SeeingSharpRendererElement CtrlRenderer

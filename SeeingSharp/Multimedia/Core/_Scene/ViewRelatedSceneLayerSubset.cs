@@ -284,7 +284,6 @@ namespace SeeingSharp.Multimedia.Core
                 var allObjects = m_sceneLayer.ObjectsInternal;
                 var allObjectsLength = allObjects.Count;
                 var visibleObjectCount = this.ViewInformation.Owner.VisibleObjectCountInternal;
-
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actSceneObject = allObjects[loop];

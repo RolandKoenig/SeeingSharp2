@@ -1409,6 +1409,22 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Gets the total count of resources on the current device.
+        /// </summary>
+        public int ResourceCount
+        {
+            get
+            {
+                var device = m_currentDevice;
+                var scene = m_currentScene;
+                if (device == null) { return 0; }
+                if (scene == null) { return 0; }
+
+                return scene.GetResourceCount(device);
+            }
+        }
+
+        /// <summary>
         /// True if the <see cref="RenderLoop"/> is connected with the main rendering loop.
         /// False if something went wrong during initialization.
         /// </summary>

@@ -96,6 +96,22 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Gets the total count of resources on the given device.
+        /// </summary>
+        /// <param name="device">The device for which to check.</param>
+        public int GetResourceCount(EngineDevice device)
+        {
+            if(m_registeredResourceDicts.HasObjectAt(device.DeviceIndex))
+            {
+                return m_registeredResourceDicts[device.DeviceIndex].ResourceCount;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Waits until the given object is visible on the given view.
         /// </summary>
         /// <param name="sceneObject">The scene object to be checked.</param>
@@ -1154,7 +1170,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if (firstResourceDict != null)
                 {
-                    return firstResourceDict.Count;
+                    return firstResourceDict.ResourceCount;
                 }
                 return 0;
             }
