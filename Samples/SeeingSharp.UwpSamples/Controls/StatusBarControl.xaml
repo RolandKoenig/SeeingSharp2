@@ -39,7 +39,17 @@
         <TextBlock Text="px" />
         <Rectangle Width="1"
                    Fill="Gray" />
-    
+
+        <TextBlock Text="# 3D-Objects:" />
+        <TextBlock Text="{x:Bind Path=CountObjects, Mode=OneWay}" />
+        <Rectangle Width="1"
+                   Fill="Gray" />
+
+        <TextBlock Text="# Resources:" />
+        <TextBlock Text="{x:Bind Path=CountResources, Mode=OneWay}" />
+        <Rectangle Width="1"
+                   Fill="Gray" />
+
         <Image Source="/Assets/Icons/Adapter16x16.png"
                Width="16" />
         <TextBlock Text="Device:" />
