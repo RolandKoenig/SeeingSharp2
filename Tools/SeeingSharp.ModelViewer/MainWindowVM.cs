@@ -32,7 +32,7 @@ namespace SeeingSharp.ModelViewer
         public Task LoadInitialScene()
         {
             m_renderLoop.SceneComponents.Add(
-                new FocusedPointCameraComponent());
+                new FreeMovingCameraComponent());
 
             return this.LoadSceneInternalAsync(null, null);
         }
@@ -68,11 +68,21 @@ namespace SeeingSharp.ModelViewer
                     importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
                 }
 
-                await m_renderLoop.Scene.ImportAsync(modelLink, importOptions);
+                try
+                {
+                    await m_renderLoop.Scene.ImportAsync(modelLink, importOptions);
+                }
+                catch (Exception)
+                {
+                    await SceneHelper.ResetScene(m_renderLoop);
+                    m_loadedFile = string.Empty;
+                    throw;
+                }
+                
                 await m_renderLoop.WaitForNextFinishedRenderAsync();
 
                 await m_renderLoop.MoveCameraToDefaultLocationAsync(
-                    -EngineMath.RAD_45DEG, 
+                    -EngineMath.RAD_45DEG,
                     EngineMath.RAD_45DEG);
             }
 
