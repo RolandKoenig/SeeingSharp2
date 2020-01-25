@@ -50,6 +50,11 @@ namespace SeeingSharp.Util
             m_mStack.Pop();
         }
 
+        public void AddCoordinate(Vector3 coordinate)
+        {
+            this.AddCoordinate(ref coordinate);
+        }
+
         public void AddCoordinate(ref Vector3 coordinate)
         {
             ref var topReference = ref m_mStack.GetTopRef();
@@ -80,7 +85,7 @@ namespace SeeingSharp.Util
             {
                 if (m_minCoord == VECTOR_MIN_INITIAL) { return false; }
                 if (m_maxCoord == VECTOR_MAX_INITIAL) { return false; }
-                if (m_minCoord == m_maxCoord) { return false; }
+                if (Vector3Ex.EqualsWithTolerance(m_minCoord, m_maxCoord)){ return false; }
 
                 return true;
             }

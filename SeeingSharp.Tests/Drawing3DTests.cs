@@ -23,7 +23,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Tests.Util;
 using System;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -73,7 +72,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -128,7 +127,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -173,7 +172,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -223,7 +222,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 1f, 0f);
                 camera.UpdateCamera();
@@ -233,7 +232,9 @@ namespace SeeingSharp.Tests
                 {
                     var cubeType = new CubeGeometryFactory
                     {
-                        Size = 0.3f
+                         Width = 0.3f,
+                         Height = 0.3f,
+                         Depth = 0.3f
                     };
                     var stackedType = new StackedGeometryFactory(cubeType, 10);
 
@@ -273,7 +274,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -366,7 +367,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-3f, -3f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();

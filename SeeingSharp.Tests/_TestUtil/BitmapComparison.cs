@@ -24,10 +24,10 @@ using System;
 using System.Drawing.Imaging;
 using GDI = System.Drawing;
 
-namespace SeeingSharp.Tests.Util
+namespace SeeingSharp.Tests
 {
     /// <summary>
-    /// This class is for comparing two pictueres and to calculate the difference between these.
+    /// This class is for comparing two pictures and to calculate the difference between these.
     /// Originally, this algorithm was based on http://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET.
     /// 
     /// In order to apply ghe GPLv3 to this project, I reimplemented this class and made following main changes:

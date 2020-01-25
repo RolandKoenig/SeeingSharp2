@@ -24,7 +24,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Views;
-using SeeingSharp.Tests.Util;
 using SeeingSharp.Util;
 using System;
 using System.Numerics;

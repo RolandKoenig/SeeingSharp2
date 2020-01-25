@@ -28,7 +28,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.Tests.Util
+namespace SeeingSharp.Tests
 {
     public static class TestUtilities
     {

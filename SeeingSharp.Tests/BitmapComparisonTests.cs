@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Tests.Util;
 
 namespace SeeingSharp.Tests
 {
