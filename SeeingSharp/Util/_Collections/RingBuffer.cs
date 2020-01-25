@@ -56,7 +56,7 @@ namespace SeeingSharp.Util
         /// if the count of items reached the maximum.
         /// </summary>
         /// <param name="newItem">The new item to be added.</param>
-        public void AddWithOverride(T newItem)
+        public void Add(T newItem)
         {
             if (m_itemLength < this.Count)
             {
@@ -71,41 +71,6 @@ namespace SeeingSharp.Util
                 if (nextIndex < 0) { nextIndex = this.Count - 1; }
                 m_buffer[nextIndex] = newItem;
             }
-        }
-
-        /// <summary>
-        /// Adds a new item to the buffer and throws an exception
-        /// if the count of items reached the maximum.
-        /// </summary>
-        /// <param name="newItem">The new item to be added.</param>
-        public void AddWithException(T newItem)
-        {
-            if (m_itemLength < this.Count)
-            {
-                m_buffer[(m_itemStart + m_itemLength) % this.Count] = newItem;
-                m_itemLength++;
-            }
-            else
-            {
-                throw new SeeingSharpException("The RingBuffer reached the maximum count of items (" + this.Count + ")!");
-            }
-        }
-
-        /// <summary>
-        /// Removes all items from the buffer and pushes them to the given observable collection.
-        /// </summary>
-        /// <param name="targetObservable">The target observable.</param>
-        public void RemoveAndPushItemsTo(CustomObservable<T> targetObservable)
-        {
-            while (m_itemLength > 0)
-            {
-                targetObservable.PushNext(m_buffer[m_itemStart]);
-                m_buffer[m_itemStart] = default;
-
-                m_itemStart = (m_itemStart + 1) % this.Count;
-                m_itemLength--;
-            }
-            m_itemLength--;
         }
 
         /// <summary>

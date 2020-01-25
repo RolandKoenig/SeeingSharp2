@@ -209,6 +209,7 @@ namespace SeeingSharp.Util
                     return simpleCollection.Count > 0;
 
                 default:
+                    // ReSharper disable once UnusedVariable
                     foreach (var actElement in collection)
                     {
                         return true;

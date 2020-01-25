@@ -61,16 +61,12 @@ namespace SeeingSharp.ModelViewer
             sceneRoot.Scaling *= scaleFactor;
 
             // Configuration object position(bottom middle of the scene)
-            boundingBox.Minimum *= scaleFactor;
-            boundingBox.Maximum *= scaleFactor;
+            //boundingBox.Minimum *= scaleFactor;
+            //boundingBox.Maximum *= scaleFactor;
             sceneRoot.Position = new Vector3(
-                (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)),
-                (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)),
-                (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)));
-
-            boundingBox.Transform(Matrix4x4.CreateTranslation(sceneRoot.Position));
-            var boundingBoxObject = new WireObject(Color4.RedColor, boundingBox);
-            modelContainer.Objects.Add(boundingBoxObject);
+                (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)) * scaleFactor,
+                (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)) * scaleFactor,
+                (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)) * scaleFactor);
 
             return modelContainer;
         }

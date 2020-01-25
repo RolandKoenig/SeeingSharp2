@@ -169,7 +169,7 @@ namespace SeeingSharp.Util
 
             while (m_taskQueue.TryDequeue(out _))
             {
-                ;
+
             }
 
             //Trigger next update
