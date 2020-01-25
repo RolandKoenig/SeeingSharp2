@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -27,6 +25,43 @@ namespace SeeingSharp.ModelViewer
                     "Assets.Background.dds");
                 var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
                 manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);
+
+                // Add bottom grid
+                var resGridGeometry = manipulator.AddResource(
+                    (device) => new GeometryResource(new Grid3DGeometryFactory()
+                    {
+                        TileWidth = 0.05f,
+                        TilesX = 50,
+                        TilesZ = 50,
+                    }));
+                var gridMesh = manipulator.AddMeshObject(resGridGeometry);
+                gridMesh.YPos = -0.5f;
+
+                // Add bounding box
+                var aBottom = new Vector3(-0.5f, -0.5f, -0.5f);
+                var bBottom = new Vector3(0.5f, -0.5f, -0.5f);
+                var cBottom = new Vector3(0.5f, -0.5f, 0.5f);
+                var dBottom = new Vector3(-0.5f, -0.5f, 0.5f);
+                var aTop = new Vector3(-0.5f, 0.5f, -0.5f);
+                var bTop = new Vector3(0.5f, 0.5f, -0.5f);
+                var cTop = new Vector3(0.5f, 0.5f, 0.5f);
+                var dTop = new Vector3(-0.5f, 0.5f, 0.5f);
+                manipulator.AddObject(new WireObject(
+                    Color4.GreenColor,
+                    new Line(aBottom, bBottom),
+                    new Line(bBottom, cBottom),
+                    new Line(cBottom, dBottom),
+                    new Line(dBottom, aBottom),
+
+                    new Line(aTop, bTop),
+                    new Line(bTop, cTop),
+                    new Line(cTop, dTop),
+                    new Line(dTop, aTop),
+                    
+                    new Line(aBottom, aTop),
+                    new Line(bBottom, bTop),
+                    new Line(cBottom, cTop),
+                    new Line(dBottom, dTop)));
             });
         }
     }

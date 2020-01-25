@@ -23,7 +23,7 @@ namespace SeeingSharp.ModelViewer
             using var assimpContext = new Assimp.AssimpContext();
             var scene = assimpContext.ImportFileFromStream(
                 sourceFile.OpenInputStream(),
-                Assimp.PostProcessPreset.TargetRealTimeFast,
+                Assimp.PostProcessPreset.TargetRealTimeFast | Assimp.PostProcessSteps.SplitLargeMeshes,
                 sourceFile.FileExtension);
 
             // Load all materials
@@ -40,6 +40,15 @@ namespace SeeingSharp.ModelViewer
                 Math.Min((1f / boundingBox.Width),
                 Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
             sceneRoot.Scaling *= scaleFactor;
+
+            // Configuration object position(bottom middle of the scene)
+            //boundingBox.Minimum *= scaleFactor;
+            //boundingBox.Maximum *= scaleFactor;
+            boundingBox.Transform(Matrix4x4.CreateScale(scaleFactor, scaleFactor, scaleFactor));
+            sceneRoot.Position = new Vector3(
+                (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)),
+                (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)),
+                (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)));
 
             return modelContainer;
         }
@@ -137,7 +146,7 @@ namespace SeeingSharp.ModelViewer
                     var newSurface = newGeometry.CreateSurface(actMesh.FaceCount * 3);
                     foreach (var actFace in actMesh.Faces)
                     {
-                        if(actFace.IndexCount != 3){ continue; }
+                        if (actFace.IndexCount != 3){ continue; }
 
                         newSurface.AddTriangle(
                             actBaseVertex + actFace.Indices[0],

@@ -144,6 +144,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var stateDesc = D3D11.RasterizerStateDescription.Default();
                 stateDesc.CullMode = D3D11.CullMode.None;
                 stateDesc.IsAntialiasedLineEnabled = true;
+                stateDesc.IsMultisampleEnabled = true;
                 stateDesc.FillMode = D3D11.FillMode.Solid;
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, stateDesc);
             });

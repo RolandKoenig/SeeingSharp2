@@ -29,17 +29,20 @@ namespace SeeingSharp.ModelViewer
             this.UpdateTitle();
         }
 
-        public Task LoadInitialScene()
+        public async Task LoadInitialScene()
         {
             m_renderLoop.SceneComponents.Add(
                 new FocusedPointCameraComponent()
                 {
-                    CameraDistanceMin = 1f,
+                    CameraDistanceMin = 0.1f,
                     CameraDistanceMax = 5f,
                     CameraHRotationInitial = 2f
                 });
 
-            return this.LoadSceneInternalAsync(null, null);
+            await m_renderLoop.Register2DDrawingLayerAsync(
+                new PerformanceMeasureDrawingLayer(10f));
+
+            await this.LoadSceneInternalAsync(null, null);
         }
 
         private async void OpenFile()

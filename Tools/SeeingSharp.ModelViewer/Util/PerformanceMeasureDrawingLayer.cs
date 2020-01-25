@@ -26,12 +26,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace SeeingSharp.SampleContainer.Util
+namespace SeeingSharp.ModelViewer.Util
 {
     public class PerformanceMeasureDrawingLayer : Custom2DDrawingLayer
     {
         // Data source
-        private PerformanceAnalyzer m_performanceAnalyzer;
         private List<TimeSpan> m_lastTimeSpans;
         private DateTime m_lastRender;
         private float m_verticalPadding;
@@ -42,9 +41,8 @@ namespace SeeingSharp.SampleContainer.Util
         private SolidBrushResource m_foreBrush;
         private SolidBrushResource m_borderBrush;
 
-        public PerformanceMeasureDrawingLayer(PerformanceAnalyzer performanceAnalyzer, float verticalPadding)
+        public PerformanceMeasureDrawingLayer(float verticalPadding)
         {
-            m_performanceAnalyzer = performanceAnalyzer;
             m_verticalPadding = verticalPadding;
 
             m_lastTimeSpans = new List<TimeSpan>();

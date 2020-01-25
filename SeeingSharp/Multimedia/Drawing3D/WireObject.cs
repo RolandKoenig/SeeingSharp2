@@ -49,6 +49,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject(params Line[] lines)
+            : this()
+        {
+            m_lineData = lines;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject(Color4 lineColor, params Line[] lines)
+            : this()
+        {
+            this.LineColor = lineColor;
+            m_lineData = lines;
+        }
+
+        /// <summary>
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>

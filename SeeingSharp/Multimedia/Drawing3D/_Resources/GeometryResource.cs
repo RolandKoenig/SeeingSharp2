@@ -175,6 +175,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Define the action which finishes current index buffer
             void FinishIndexBuffer()
             {
+                if (actIndexCount == 0) { return; }
+
                 // Create the vertex buffer
                 var indexBuffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(device, cachedIndices.ToArray());
                 cachedIndices.Clear();
