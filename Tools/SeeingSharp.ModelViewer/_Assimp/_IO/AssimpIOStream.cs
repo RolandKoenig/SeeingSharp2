@@ -1,11 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.ModelViewer
 {
     public class AssimpIOStream : Assimp.IOStream
     {
-        private Stream m_stream;
+        private const int TEMP_BUFFER_SIZE = 1024 * 1024;
+
+        private readonly Stream m_stream;
 
         public AssimpIOStream(Stream stream, string pathToFile, Assimp.FileIOMode fileMode)
             : base(pathToFile, fileMode)
@@ -13,15 +16,65 @@ namespace SeeingSharp.ModelViewer
             m_stream = stream;
         }
 
-        public override long Write(byte[] dataToWrite, long count)
+        public override long Write(byte[] sourceBuffer, long totalWriteBytesCount)
         {
-            m_stream.Write(dataToWrite, 0, (int)count);
-            return count;
+            if (totalWriteBytesCount > TEMP_BUFFER_SIZE)
+            {
+                var tempBuffer = new byte[TEMP_BUFFER_SIZE];
+                long actOffset = 0;
+
+                while (actOffset < totalWriteBytesCount)
+                {
+                    var countWrite = (int)Math.Min(totalWriteBytesCount - actOffset, TEMP_BUFFER_SIZE);
+
+                    Array.Copy(sourceBuffer, actOffset, tempBuffer, 0, countWrite);
+                    m_stream.Write(tempBuffer, 0, countWrite);
+
+                    actOffset += TEMP_BUFFER_SIZE;
+                }
+            }
+            else
+            {
+                m_stream.Write(sourceBuffer, 0, (int)totalWriteBytesCount);
+            }
+
+            return totalWriteBytesCount;
         }
 
-        public override long Read(byte[] dataRead, long count)
+        public override long Read(byte[] targetBuffer, long totalReadBytesCount)
         {
-            return m_stream.Read(dataRead, 0, (int)count);
+            if (totalReadBytesCount > TEMP_BUFFER_SIZE)
+            {
+                var tempBuffer = new byte[TEMP_BUFFER_SIZE];
+                long actOffset = 0;
+
+                while (actOffset < totalReadBytesCount)
+                {
+                    var countRead = (int) Math.Min(totalReadBytesCount - actOffset, TEMP_BUFFER_SIZE);
+
+                    var bytesRead = m_stream.Read(tempBuffer, 0, countRead);
+                    if (bytesRead == 0)
+                    {
+                        return actOffset;
+                    }
+                    else if (bytesRead != countRead)
+                    {
+                        Array.Copy(tempBuffer, 0, targetBuffer, actOffset, bytesRead);
+                        return actOffset + bytesRead;
+                    }
+                    else
+                    {
+                        Array.Copy(tempBuffer, 0, targetBuffer, actOffset, bytesRead);
+                    }
+
+                    actOffset += TEMP_BUFFER_SIZE;
+                }
+            }
+            else
+            {
+                return m_stream.Read(targetBuffer, 0, (int) totalReadBytesCount);
+            }
+            return totalReadBytesCount;
         }
 
         public override Assimp.ReturnCode Seek(long offset, Assimp.Origin seekOrigin)
@@ -66,7 +119,7 @@ namespace SeeingSharp.ModelViewer
         {
             if (disposing)
             {
-                SeeingSharpUtil.SafeDispose(ref m_stream);
+                SeeingSharpUtil.DisposeObject(m_stream);
             }
         }
 
