@@ -68,6 +68,51 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject(Color4 lineColor, BoundingBox boundingBox)
+            : this(ref lineColor, ref boundingBox)
+        {
+
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WireObject" /> class.
+        /// </summary>
+        public WireObject(ref Color4 lineColor, ref BoundingBox boundingBox)
+            : this()
+        {
+            this.LineColor = lineColor;
+
+            var aBottom = new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
+            var bBottom = new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
+            var cBottom = new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
+            var dBottom = new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z);
+            var aTop = new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
+            var bTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
+            var cTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
+            var dTop = new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
+            m_lineData = new Line[]
+            {
+                new Line(aBottom, bBottom),
+                new Line(bBottom, cBottom),
+                new Line(cBottom, dBottom),
+                new Line(dBottom, aBottom),
+
+                new Line(aTop, bTop),
+                new Line(bTop, cTop),
+                new Line(cTop, dTop),
+                new Line(dTop, aTop),
+
+                new Line(aBottom, aTop),
+                new Line(bBottom, bTop),
+                new Line(cBottom, cTop),
+                new Line(dBottom, dTop),
+            };
+        }
+
+        /// <summary>
         /// Loads all resources of the object.
         /// </summary>
         /// <param name="device">Current graphics device.</param>
