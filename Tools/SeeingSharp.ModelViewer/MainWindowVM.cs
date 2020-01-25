@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
 using SeeingSharp.ModelViewer.Util;
@@ -25,6 +24,8 @@ namespace SeeingSharp.ModelViewer
             this.Command_OpenFile = new DelegateCommand(this.OpenFile);
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
+
+            this.OptionsRendering = new RenderingOptions(renderLoop);
 
             this.UpdateTitle();
         }
@@ -117,5 +118,7 @@ namespace SeeingSharp.ModelViewer
         public DelegateCommand Command_Exit { get; }
 
         public string AppTitle { get; set; } = string.Empty;
+
+        public RenderingOptions OptionsRendering { get; }
     }
 }

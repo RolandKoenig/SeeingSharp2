@@ -23,7 +23,8 @@ namespace SeeingSharp.ModelViewer
 
         public void PushTransform(ref Matrix4x4 matrix)
         {
-            m_mStack.Push(ref matrix);
+            m_mStack.Push();
+            m_mStack.TransformLocal(ref matrix);
         }
 
         public void PopTransform()

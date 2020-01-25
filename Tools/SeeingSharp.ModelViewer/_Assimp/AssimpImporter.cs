@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using SeeingSharp.Multimedia.Core;
+﻿using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace SeeingSharp.ModelViewer
 {
@@ -36,8 +36,8 @@ namespace SeeingSharp.ModelViewer
 
             // Configure object scaling
             var boundingBox = boundBoxCalculator.CreateBoundingBox();
-            var scaleFactor = 
-                Math.Min((1f / boundingBox.Width),
+            var scaleFactor = Math.Min(
+                (1f / boundingBox.Width),
                 Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
             sceneRoot.Scaling *= scaleFactor;
 
@@ -49,9 +49,9 @@ namespace SeeingSharp.ModelViewer
                 (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)),
                 (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)));
 
+            boundingBox.Transform(Matrix4x4.CreateTranslation(sceneRoot.Position));
             var boundingBoxObject = new WireObject(Color4.RedColor, boundingBox);
             modelContainer.Objects.Add(boundingBoxObject);
-            modelContainer.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(sceneRoot, boundingBoxObject));
 
             return modelContainer;
         }

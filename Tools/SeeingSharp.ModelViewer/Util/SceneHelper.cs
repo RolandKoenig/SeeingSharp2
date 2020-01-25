@@ -4,7 +4,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp.ModelViewer.Util
 {
     public static class SceneHelper
     {
@@ -21,7 +21,7 @@ namespace SeeingSharp.ModelViewer
                 manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 1);
 
                 var sourceBackgroundTexture = new AssemblyResourceLink(
-                    typeof(SceneHelper),
+                    typeof(App),
                     "Assets.Background.dds");
                 var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
                 manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);

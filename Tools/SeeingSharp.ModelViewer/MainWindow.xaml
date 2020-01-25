@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
+        xmlns:propTools="http://propertytools.org/wpf"
         mc:Ignorable="d"
         Title="{Binding Path=AppTitle}" Height="450" Width="800"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
@@ -26,7 +27,22 @@
                                 CtrlRenderer="{Binding ElementName=CtrlRenderer}" />
 
         <!-- The 3D renderer control-->
-        <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+        <Grid>
+            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
 
+            <StackPanel Orientation="Vertical">
+                <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
+                                        Width="325" Margin="5,5,15,15"
+                                        BorderThickness="1" BorderBrush="DarkGray"
+                                        HorizontalAlignment="Left"
+                                        TabVisibility="Collapsed"
+                                        Background="#BBD3D3D3"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <propTools:PropertyGrid.ControlFactory>
+                        <local:PropertyGridControlFactory />
+                    </propTools:PropertyGrid.ControlFactory>
+                </propTools:PropertyGrid>
+            </StackPanel>
+        </Grid>
     </DockPanel>
 </Window>

@@ -430,50 +430,26 @@ namespace SeeingSharp
         /// </summary>
         public Vector3 CornerH => new Vector3(Minimum.X, Maximum.Y, Maximum.Z);
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 LowerA => Minimum;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 LowerB => this.CornerB;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 LowerC => this.CornerC;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 LowerD => this.CornerD;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 UpperA => this.CornerE;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 UpperB => this.CornerF;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 UpperC => this.CornerG;
 
-        /// <summary>
-        ///
-        /// </summary>
         public Vector3 UpperD => this.CornerH;
 
         public float Width => Maximum.X - Minimum.X;
 
         public float Height => Maximum.Y - Minimum.Y;
 
-        public float Depth => Maximum.Y - Minimum.Y;
+        public float Depth => Maximum.Z - Minimum.Z;
     }
 }

@@ -9,6 +9,12 @@
     <RootNamespace>SeeingSharp.WpfSamples</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Logo.ico" />
   </ItemGroup>
@@ -48,7 +54,9 @@
 
   <ItemGroup>
     <PackageReference Include="PropertyTools" Version="3.0.0" />
-    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0" />
+    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />

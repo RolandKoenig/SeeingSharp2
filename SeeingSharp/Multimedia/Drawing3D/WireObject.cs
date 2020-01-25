@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var bTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
             var cTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
             var dTop = new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
-            m_lineData = new Line[]
+            m_lineData = new[]
             {
                 new Line(aBottom, bBottom),
                 new Line(bBottom, cBottom),
