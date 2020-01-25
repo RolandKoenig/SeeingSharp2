@@ -147,6 +147,8 @@ namespace SeeingSharp.Util
             get;
         }
 
+        public abstract string FileNameWithExtension { get; }
+
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>

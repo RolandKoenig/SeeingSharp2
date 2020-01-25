@@ -113,6 +113,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string FileExtension => this.GetExtensionFromFileName(this.FilePath);
 
+        public override string FileNameWithExtension => Path.GetFileName(this.FilePath);
+
         /// <summary>
         /// Gets the path to the file.
         /// </summary>

@@ -11,7 +11,6 @@ namespace SeeingSharp.ModelViewer
     [SupportedFileFormat("fbx", "(*.fbx)")]
     [SupportedFileFormat("3ds", "3D Studio Max (*.3ds)")]
     [SupportedFileFormat("dae", "Collada (*.dae)")]
-    [SupportedFileFormat("c4d", "Cinema 4D (*.c4d)")]
     [SupportedFileFormat("ac", "AC3D format (*.ac)")]
     public class AssimpImporter : IModelImporter
     {
@@ -21,10 +20,10 @@ namespace SeeingSharp.ModelViewer
 
             // Load Assimp scene
             using var assimpContext = new Assimp.AssimpContext();
-            var scene = assimpContext.ImportFileFromStream(
-                sourceFile.OpenInputStream(),
-                Assimp.PostProcessPreset.TargetRealTimeFast | Assimp.PostProcessSteps.SplitLargeMeshes,
-                sourceFile.FileExtension);
+            assimpContext.SetIOSystem(new AssimpIOSystem(sourceFile));
+            var scene = assimpContext.ImportFile(
+                sourceFile.FileNameWithExtension,
+                Assimp.PostProcessPreset.TargetRealTimeFast | Assimp.PostProcessSteps.SplitLargeMeshes);
 
             // Load all materials
             ProcessMaterials(modelContainer, scene);

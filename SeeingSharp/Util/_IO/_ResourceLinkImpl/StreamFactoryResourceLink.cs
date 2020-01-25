@@ -122,6 +122,8 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string FileExtension => this.GetExtensionFromFileName(m_fileName);
 
+        public override string FileNameWithExtension => m_fileName;
+
         /// <summary>
         /// Are async operations supported on this ResourceLink?
         /// </summary>
