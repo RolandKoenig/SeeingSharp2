@@ -26,8 +26,33 @@ namespace SeeingSharp.ModelViewer
             }
             else
             {
-                // TODO: Split path to separate folders
-                var link = m_originalResource.GetForAnotherFile(pathToFile);
+                // Split all elements (directories and the file) form the given path
+                string[] pathElements;
+                if (Path.DirectorySeparatorChar == Path.AltDirectorySeparatorChar)
+                {
+                    pathElements = pathToFile.Split(Path.DirectorySeparatorChar);
+                }
+                else
+                {
+                    pathElements = pathToFile.Split(new[]
+                        {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar});
+                }
+
+                // Now get true directory path
+                var pathDirectoryBuilder = new List<string>(pathElements.Length);
+                for (var loop = 0; loop < pathElements.Length - 1; loop++)
+                {
+                    var actDirectoryName = pathElements[loop];
+                    if(string.IsNullOrEmpty(actDirectoryName)) { continue; }
+                    if(actDirectoryName == "."){ continue; }
+
+                    pathDirectoryBuilder.Add(actDirectoryName);
+                }
+
+                // Load the file
+                var link = m_originalResource.GetForAnotherFile(
+                    pathElements[^1], 
+                    pathDirectoryBuilder.ToArray());
                 var openedStream = link.OpenInputStream();
 
                 return new AssimpIOStream(openedStream, pathToFile, fileMode);
