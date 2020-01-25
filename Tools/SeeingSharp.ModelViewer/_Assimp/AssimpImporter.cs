@@ -11,7 +11,6 @@ namespace SeeingSharp.ModelViewer
     [SupportedFileFormat("fbx", "(*.fbx)")]
     [SupportedFileFormat("3ds", "3D Studio Max (*.3ds)")]
     [SupportedFileFormat("dae", "Collada (*.dae)")]
-    [SupportedFileFormat("ac", "AC3D format (*.ac)")]
     public class AssimpImporter : IModelImporter
     {
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)

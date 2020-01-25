@@ -32,7 +32,7 @@ namespace SeeingSharp.ModelViewer
     {
         public override FrameworkElement CreateControl(PropertyItem property, PropertyControlFactoryOptions options)
         {
-            if (property.ActualPropertyType.IsAssignableFrom(typeof(ICommand)))
+            if (typeof(ICommand).IsAssignableFrom(property.ActualPropertyType))
             {
                 property.HeaderPlacement = HeaderPlacement.Hidden;
 

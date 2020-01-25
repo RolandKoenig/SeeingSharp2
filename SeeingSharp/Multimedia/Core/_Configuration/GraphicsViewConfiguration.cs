@@ -78,6 +78,20 @@ namespace SeeingSharp.Multimedia.Core
             m_alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
         }
 
+        public void Reset()
+        {
+            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
+            this.WireframeEnabled = DEFAULT_WIREFRAME;
+            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
+            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
+            this.GeneratedBorderFactor= DEFAULT_BORDER_FACTOR;
+            this.GeneratedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
+            this.AccentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
+            this.AmbientFactor = DEFAULT_AMBIENT_FACTOR;
+            this.LightPower = DEFAULT_LIGHT_POWER;
+            this.StrongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
+        }
+
         public bool ViewNeedsRefresh { get; set; }
 
         /// <summary>
@@ -134,7 +148,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_generatedColorGradientFactor;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_generatedColorGradientFactor, value))
+                if (!EngineMath.EqualsWithTolerance(m_generatedColorGradientFactor, value))
                 {
                     m_generatedColorGradientFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -148,7 +162,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_generatedBorderFactor;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_generatedBorderFactor, value))
+                if (!EngineMath.EqualsWithTolerance(m_generatedBorderFactor, value))
                 {
                     m_generatedBorderFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -162,7 +176,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_accentuationFactor;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
+                if (!EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
                 {
                     m_accentuationFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -176,7 +190,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_ambientFactor;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_ambientFactor, value))
+                if (!EngineMath.EqualsWithTolerance(m_ambientFactor, value))
                 {
                     m_ambientFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -190,7 +204,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_lightPower;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_lightPower, value))
+                if (!EngineMath.EqualsWithTolerance(m_lightPower, value))
                 {
                     m_lightPower = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -204,7 +218,7 @@ namespace SeeingSharp.Multimedia.Core
             get => m_strongLightFactor;
             set
             {
-                if (EngineMath.EqualsWithTolerance(m_strongLightFactor, value))
+                if (!EngineMath.EqualsWithTolerance(m_strongLightFactor, value))
                 {
                     m_strongLightFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);

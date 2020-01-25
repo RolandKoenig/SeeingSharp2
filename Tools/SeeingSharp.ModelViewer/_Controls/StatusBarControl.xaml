@@ -44,14 +44,6 @@
         <Rectangle Width="1"
                    Fill="Gray" />
 
-        <TextBlock Text="Force composition over software: " />
-        <CheckBox x:Name="CtrlForceCompositionSoftware"
-                  IsChecked="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.ForceCompositionOverSoftware}"
-                  VerticalAlignment="Center"
-                  Margin="5,0,0,0" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
-
         <TextBlock Text="Composition:" />
         <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CompositionMode}" />
     </StackPanel>

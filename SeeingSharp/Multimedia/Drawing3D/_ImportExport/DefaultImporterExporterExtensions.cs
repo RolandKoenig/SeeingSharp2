@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public IEnumerable<IModelImporter> CreateModelImporters()
         {
-            //yield return new ACImporter();
+            yield return new ACImporter();
             yield return new StLImporter();
         }
 
