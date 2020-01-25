@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
@@ -20,13 +19,27 @@ namespace SeeingSharp.ModelViewer
         {
             var modelContainer = new ImportedModelContainer(importOptions);
 
+            // Load Assimp scene
             using var assimpContext = new Assimp.AssimpContext();
             var scene = assimpContext.ImportFileFromStream(
                 sourceFile.OpenInputStream(),
-                Assimp.PostProcessPreset.TargetRealTimeFast);
+                Assimp.PostProcessPreset.TargetRealTimeFast,
+                sourceFile.FileExtension);
 
+            // Load all materials
             ProcessMaterials(modelContainer, scene);
-            ProcessNode(modelContainer, scene, scene.RootNode, null);
+
+            // Load all scene objects
+            var sceneRoot = modelContainer.CreateAndAddRootObject();
+            var boundBoxCalculator = new ObjectTreeBoundingBoxCalculator();
+            ProcessNode(modelContainer, scene, scene.RootNode, sceneRoot, boundBoxCalculator);
+
+            // Configure object scaling
+            var boundingBox = boundBoxCalculator.CreateBoundingBox();
+            var scaleFactor = 
+                Math.Min((1f / boundingBox.Width),
+                Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
+            sceneRoot.Scaling *= scaleFactor;
 
             return modelContainer;
         }
@@ -55,11 +68,17 @@ namespace SeeingSharp.ModelViewer
 
         }
 
-        private static void ProcessNode(ImportedModelContainer modelContainer, Assimp.Scene scene, Assimp.Node actNode, SceneObject? actParent)
+        private static void ProcessNode(
+            ImportedModelContainer modelContainer,
+            Assimp.Scene scene, Assimp.Node actNode, SceneObject? actParent, 
+            ObjectTreeBoundingBoxCalculator boundingBoxCalc)
         {
             SceneObject? nextParent = null;
             if (actNode.HasMeshes)
             {
+                var actTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
+                boundingBoxCalc.PushTransform(ref actTransform);
+
                 // Count vertices
                 var fullVertexCount = 0;
                 foreach (var actMeshID in actNode.MeshIndices)
@@ -110,6 +129,8 @@ namespace SeeingSharp.ModelViewer
                         {
                             newVertex.TexCoord1 = AssimpHelper.Vector2FromAssimp(textureCoords1[actVertexID]);
                         }
+
+                        boundingBoxCalc.AddCoordinate(ref newVertex.Position);
                     }
 
                     // Create all faces
@@ -124,7 +145,7 @@ namespace SeeingSharp.ModelViewer
                             actBaseVertex + actFace.Indices[2]);
                     }
 
-                    materialKeys[meshIndex] = modelContainer.GetResourceKey("Material", meshIndex.ToString());
+                    materialKeys[meshIndex] = modelContainer.GetResourceKey("Material", actMesh.MaterialIndex.ToString());
                 }
 
                 var geometryKey = modelContainer.GetResourceKey("Geometry", actNode.Name);
@@ -133,7 +154,7 @@ namespace SeeingSharp.ModelViewer
                     (device)=> new GeometryResource(newGeometry)));
 
                 var newMesh = new Mesh(geometryKey, materialKeys);
-                newMesh.CustomTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
+                newMesh.CustomTransform = actTransform;
                 newMesh.TransformationType = SpacialTransformationType.CustomTransform;
                 modelContainer.Objects.Add(newMesh);
                 nextParent = newMesh;
@@ -145,9 +166,12 @@ namespace SeeingSharp.ModelViewer
             }
             else if(actNode.HasChildren)
             {
+                var actTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
+                boundingBoxCalc.PushTransform(ref actTransform);
+
                 // This one is just a pivot
                 var actPivotObject = new ScenePivotObject();
-                actPivotObject.CustomTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
+                actPivotObject.CustomTransform = actTransform;
                 actPivotObject.TransformationType = SpacialTransformationType.CustomTransform;
                 modelContainer.Objects.Add(actPivotObject);
                 nextParent = actPivotObject;
@@ -165,8 +189,10 @@ namespace SeeingSharp.ModelViewer
             // Process all children
             foreach (var actChildNode in actNode.Children)
             {
-                ProcessNode(modelContainer, scene, actChildNode, nextParent);
+                ProcessNode(modelContainer, scene, actChildNode, nextParent, boundingBoxCalc);
             }
+
+            boundingBoxCalc.PopTransform();
         }
 
         public ImportOptions CreateDefaultImportOptions()

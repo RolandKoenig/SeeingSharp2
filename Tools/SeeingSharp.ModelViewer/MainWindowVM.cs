@@ -32,7 +32,12 @@ namespace SeeingSharp.ModelViewer
         public Task LoadInitialScene()
         {
             m_renderLoop.SceneComponents.Add(
-                new FreeMovingCameraComponent());
+                new FocusedPointCameraComponent()
+                {
+                    CameraDistanceMin = 1f,
+                    CameraDistanceMax = 5f,
+                    CameraHRotationInitial = 2f
+                });
 
             return this.LoadSceneInternalAsync(null, null);
         }

@@ -32,7 +32,7 @@ namespace SeeingSharp
         private Matrix4x4 m_top;
 
         /// <summary>
-        /// Cretaes a new matrix stack using 4x4 matrices
+        /// Creates a new matrix stack using 4x4 matrices
         /// </summary>
         public Matrix4Stack()
         {
@@ -43,12 +43,29 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Creates a new matrix stack usin 4x4 matrices
+        /// Creates a new matrix stack using 4x4 matrices
         /// </summary>
         public Matrix4Stack(Matrix4x4 top)
             : this()
         {
             m_top = top;
+        }
+
+        /// <summary>
+        /// Creates a new matrix stack using 4x4 matrices
+        /// </summary>
+        public Matrix4Stack(ref Matrix4x4 top)
+            : this()
+        {
+            m_top = top;
+        }
+
+        /// <summary>
+        /// Gets the top matrix by reference.
+        /// </summary>
+        public ref Matrix4x4 GetTopRef()
+        {
+            return ref m_top;
         }
 
         /// <summary>
@@ -73,6 +90,14 @@ namespace SeeingSharp
         /// Performs translation on top matrix
         /// </summary>
         public void TranslateLocal(Vector3 transVector)
+        {
+            m_top = Matrix4x4.CreateTranslation(transVector) * m_top;
+        }
+
+        /// <summary>
+        /// Performs translation on top matrix
+        /// </summary>
+        public void TranslateLocal(ref Vector3 transVector)
         {
             m_top = Matrix4x4.CreateTranslation(transVector) * m_top;
         }
@@ -108,6 +133,15 @@ namespace SeeingSharp
         }
 
         /// <summary>
+        /// Performs a rotation on top matrix using horizontal and vertical rotation angles.
+        /// </summary>
+        /// <param name="rotation">Vector containing horizontal and vertical rotations.</param>
+        public void RotateHVLocal(ref Vector2 rotation)
+        {
+            m_top = Matrix4x4.CreateFromYawPitchRoll(rotation.X, rotation.Y, 0f) * m_top;
+        }
+
+        /// <summary>
         /// Performs scaling on top matrix
         /// </summary>
         public void ScaleLocal(float scaleX, float scaleY, float scaleZ)
@@ -119,6 +153,14 @@ namespace SeeingSharp
         /// Performs scaling on top matrix
         /// </summary>
         public void ScaleLocal(Vector3 scaling)
+        {
+            m_top = Matrix4x4.CreateScale(scaling) * m_top;
+        }
+
+        /// <summary>
+        /// Performs scaling on top matrix
+        /// </summary>
+        public void ScaleLocal(ref Vector3 scaling)
         {
             m_top = Matrix4x4.CreateScale(scaling) * m_top;
         }
@@ -163,14 +205,13 @@ namespace SeeingSharp
             m_top = transformMatrix * m_top;
         }
 
-        ///// <summary>
-        ///// Performs a local transformation with the given matrix.
-        ///// </summary>
-        ///// <param name="matrix3">The matrix to transform this one with.</param>
-        //public void TransformLocal(Matrix3 matrix3)
-        //{
-        //    m_top = new Matrix4(matrix3) * m_top;
-        //}
+        /// <summary>
+        /// Performs a local transformation with the given matrix.
+        /// </summary>
+        public void TransformLocal(ref Matrix4x4 transformMatrix)
+        {
+            m_top = transformMatrix * m_top;
+        }
 
         /// <summary>
         /// Clones the object
@@ -205,6 +246,16 @@ namespace SeeingSharp
         /// Inserts a new matrix on top of the collection
         /// </summary>
         public void Push(Matrix4x4 matrixToPush)
+        {
+            m_stack.Push(m_top);
+            m_top = matrixToPush;
+            m_pushTimes++;
+        }
+
+        /// <summary>
+        /// Inserts a new matrix on top of the collection
+        /// </summary>
+        public void Push(ref Matrix4x4 matrixToPush)
         {
             m_stack.Push(m_top);
             m_top = matrixToPush;

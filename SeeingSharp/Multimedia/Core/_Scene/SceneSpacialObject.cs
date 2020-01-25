@@ -389,7 +389,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Forward current transform matrix to child objects
                     var currentWorld = updateState.World;
-                    currentWorld.Push(m_transform);
+                    currentWorld.Push(ref m_transform);
 
                     try
                     {

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using SeeingSharp.Multimedia.Core;
 
@@ -17,7 +12,7 @@ namespace SeeingSharp.ModelViewer
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+            this.DispatcherUnhandledException += this.OnDispatcherUnhandledException;
 
             GraphicsCore.Loader
                 .SupportWpf()

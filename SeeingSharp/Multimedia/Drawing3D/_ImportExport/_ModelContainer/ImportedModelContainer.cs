@@ -60,29 +60,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Append an object which transform the whole coordinate system
             var rootObject = new ScenePivotObject();
+            rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
 
             // Handle base transformation
             switch (m_importOptions.ResourceCoordinateSystem)
             {
                 case CoordinateSystem.LeftHanded_UpY:
-                    rootObject.TransformationType = SpacialTransformationType.None;
                     break;
 
                 case CoordinateSystem.LeftHanded_UpZ:
                     rootObject.Scaling = new Vector3(1f, -1f, 1f);
                     rootObject.RotationEuler = new Vector3(-EngineMath.RAD_90DEG, 0f, 0f);
-                    rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
                     break;
 
                 case CoordinateSystem.RightHanded_UpY:
                     rootObject.Scaling = new Vector3(1f, 1f, -1f);
-                    rootObject.TransformationType = SpacialTransformationType.ScalingTranslation;
                     break;
 
                 case CoordinateSystem.RightHanded_UpZ:
                     rootObject.Scaling = new Vector3(-1f, 1f, -1f);
                     rootObject.RotationEuler = new Vector3(EngineMath.RAD_90DEG, 0f, 0f);
-                    rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
                     break;
             }
 
@@ -123,11 +120,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// (This property is handled by the importer)
         /// </summary>
         public bool ChangeTriangleOrder => m_importOptions.IsChangeTriangleOrderNeeded();
-
-        /// <summary>
-        /// The resize factor for imported geometry.
-        /// (This property is handled by the importer)
-        /// </summary>
-        public float ResizeFactor => m_importOptions.ResizeFactor;
     }
 }

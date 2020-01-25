@@ -32,7 +32,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ImportOptions()
         {
             this.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            this.ResizeFactor = 1f;
             this.TwoSidedSurfaces = false;
         }
 
@@ -81,17 +80,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 default:
                     throw new SeeingSharpGraphicsException($"Unknown coordinate system {this.ResourceCoordinateSystem}!");
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the resize factor.
-        /// This is needed to transform coordinate from one measure unit to another.
-        /// Default is 1.
-        /// </summary>
-        public float ResizeFactor
-        {
-            get;
-            set;
         }
 
         /// <summary>
