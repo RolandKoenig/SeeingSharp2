@@ -429,23 +429,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Generate result container
-                var result = new ImportedModelContainer(importOptions);
-                var resGeometryKey = result.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
-                var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                result.ImportedResources.Add(new ImportedResourceInfo(
+                var modelContainer = new ImportedModelContainer(importOptions);
+                var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     resGeometryKey,
                     device => new GeometryResource(newGeometry)));
-                result.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     resMaterialKey,
                     device => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                result.Objects.Add(loadedMesh);
+                modelContainer.Objects.Add(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
-                var rootObject = result.CreateAndAddRootObject();
-                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, loadedMesh));
+                modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
 
-                return result;
+                return modelContainer;
             }
         }
 
@@ -487,23 +486,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Generate result container
-                var result = new ImportedModelContainer(importOptions);
-                var resGeometryKey = result.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
-                var resMaterialKey = result.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                result.ImportedResources.Add(new ImportedResourceInfo(
+                var modelContainer = new ImportedModelContainer(importOptions);
+                var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+                var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     resGeometryKey,
                     device => new GeometryResource(newGeometry)));
-                result.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     resMaterialKey,
                     device => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                result.Objects.Add(loadedMesh);
+                modelContainer.Objects.Add(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
-                var rootObject = result.CreateAndAddRootObject();
-                result.ParentChildRelationships.Add(new Tuple<SceneObject, SceneObject>(rootObject, loadedMesh));
+                modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
 
-                return result;
+                return modelContainer;
             }
         }
     }

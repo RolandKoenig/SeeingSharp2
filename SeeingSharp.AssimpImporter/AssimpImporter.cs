@@ -22,7 +22,6 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -49,21 +48,11 @@ namespace SeeingSharp.AssimpImporter
             ProcessMaterials(modelContainer, scene);
 
             // Load all scene objects
-            var sceneRoot = modelContainer.CreateAndAddRootObject();
             var boundBoxCalculator = new ObjectTreeBoundingBoxCalculator();
-            ProcessNode(modelContainer, scene, scene.RootNode, sceneRoot, boundBoxCalculator);
+            ProcessNode(modelContainer, scene, scene.RootNode, null, boundBoxCalculator);
 
-            // Configure object scaling
-            var boundingBox = boundBoxCalculator.CreateBoundingBox();
-            var scaleFactor = Math.Min(
-                (1f / boundingBox.Width),
-                Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
-            
-            sceneRoot.Scaling *= scaleFactor;
-            sceneRoot.Position = new Vector3(
-                (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)) * scaleFactor,
-                (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)) * scaleFactor,
-                (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)) * scaleFactor);
+            // Finish loading
+            modelContainer.FinishLoading(boundBoxCalculator.CreateBoundingBox());
 
             return modelContainer;
         }
@@ -185,7 +174,7 @@ namespace SeeingSharp.AssimpImporter
 
                 if (actParent != null)
                 {
-                    modelContainer.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(actParent, newMesh));
+                    modelContainer.ParentChildRelationships.Add(new ParentChildRelationship(actParent, newMesh));
                 }
             }
             else if(actNode.HasChildren)
@@ -202,7 +191,7 @@ namespace SeeingSharp.AssimpImporter
 
                 if (actParent != null)
                 {
-                    modelContainer.ParentChildRelationships.Add(Tuple.Create<SceneObject, SceneObject>(actParent, actPivotObject));
+                    modelContainer.ParentChildRelationships.Add(new ParentChildRelationship(actParent, actPivotObject));
                 }
             }
             else

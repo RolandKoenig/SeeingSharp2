@@ -39,6 +39,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // All model data
         private int m_importID;
         private ImportOptions m_importOptions;
+        private List<SceneObject> m_objects;
+        private List<ParentChildRelationship> m_parentChildRelationships;
+        private List<ImportedResourceInfo> m_importedResources;
+
+        // State
+        private bool m_isFinished;
+        private bool m_isValid;
+        private Exception m_finishException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
@@ -46,47 +54,122 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ImportedModelContainer(ImportOptions importOptions)
         {
             m_importOptions = importOptions;
-            this.Objects = new List<SceneObject>();
-            this.ParentChildRelationships = new List<Tuple<SceneObject, SceneObject>>();
-            this.ImportedResources = new List<ImportedResourceInfo>();
-
+            m_objects = new List<SceneObject>();
+            m_parentChildRelationships = new List<ParentChildRelationship>();
+            m_importedResources = new List<ImportedResourceInfo>();
             m_importID = Interlocked.Increment(ref s_maxContainerID);
         }
 
         /// <summary>
         /// Creates and adds the root for all imported scene objects.
         /// </summary>
-        public ScenePivotObject CreateAndAddRootObject()
+        public void FinishLoading(BoundingBox boundingBox)
         {
-            // Append an object which transform the whole coordinate system
-            var rootObject = new ScenePivotObject();
-            rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
-
-            // Handle base transformation
-            switch (m_importOptions.ResourceCoordinateSystem)
+            if (m_isFinished)
             {
-                case CoordinateSystem.LeftHanded_UpY:
-                    break;
-
-                case CoordinateSystem.LeftHanded_UpZ:
-                    rootObject.Scaling = new Vector3(1f, -1f, 1f);
-                    rootObject.RotationEuler = new Vector3(-EngineMath.RAD_90DEG, 0f, 0f);
-                    break;
-
-                case CoordinateSystem.RightHanded_UpY:
-                    rootObject.Scaling = new Vector3(1f, 1f, -1f);
-                    break;
-
-                case CoordinateSystem.RightHanded_UpZ:
-                    rootObject.Scaling = new Vector3(-1f, 1f, -1f);
-                    rootObject.RotationEuler = new Vector3(EngineMath.RAD_90DEG, 0f, 0f);
-                    break;
+                throw new SeeingSharpException("ModelContainer already finished!");
             }
 
-            // AddObject the object finally
-            this.Objects.Add(rootObject);
+            try
+            {
+                // Generic checks
+                if (this.Objects.Count == 0)
+                {
+                    throw new SeeingSharpException("No objects imported");
+                }
+                if (EngineMath.EqualsWithTolerance(boundingBox.Width, 0) ||
+                    EngineMath.EqualsWithTolerance(boundingBox.Height, 0) ||
+                    EngineMath.EqualsWithTolerance(boundingBox.Depth, 0))
+                {
+                    throw new SeeingSharpException($"BoundingBox of the loaded model data seems to be empty (Width={boundingBox.Width}, Height={boundingBox.Height}, Depth={boundingBox.Height}");
+                }
 
-            return rootObject;
+                // Create root for the imported object graph
+                var rootObject = new ScenePivotObject();
+                rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
+
+                // Configure base transformation of the root object
+                switch (m_importOptions.ResourceCoordinateSystem)
+                {
+                    case CoordinateSystem.LeftHanded_UpY:
+                        break;
+
+                    case CoordinateSystem.LeftHanded_UpZ:
+                        rootObject.Scaling = new Vector3(1f, -1f, 1f);
+                        rootObject.RotationEuler = new Vector3(-EngineMath.RAD_90DEG, 0f, 0f);
+                        break;
+
+                    case CoordinateSystem.RightHanded_UpY:
+                        rootObject.Scaling = new Vector3(1f, 1f, -1f);
+                        break;
+
+                    case CoordinateSystem.RightHanded_UpZ:
+                        rootObject.Scaling = new Vector3(-1f, 1f, -1f);
+                        rootObject.RotationEuler = new Vector3(EngineMath.RAD_90DEG, 0f, 0f);
+                        break;
+                }
+
+                // Configure position and scaling of the root object
+                if (m_importOptions.FitToCube)
+                {
+                    var scaleFactor = Math.Min(
+                        (1f / boundingBox.Width),
+                        Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
+                    rootObject.Scaling *= scaleFactor;
+                    rootObject.Position = new Vector3(
+                        (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)) *
+                        scaleFactor,
+                        (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)) *
+                        scaleFactor,
+                        (0f - (boundingBox.Minimum.Z + (boundingBox.Maximum.Z - boundingBox.Minimum.Z) / 2f)) *
+                        scaleFactor);
+                }
+
+                // Find current root objects and assign them as child to the new root object
+                foreach (var actRootObject in this.FindRootObjects())
+                {
+                    this.ParentChildRelationships.Add(
+                        new ParentChildRelationship(rootObject, actRootObject));
+                }
+
+                // AddObject the object finally
+                this.Objects.Add(rootObject);
+
+                m_isValid = true;
+            }
+            catch (Exception ex)
+            {
+                m_finishException = ex;
+                m_isValid = false;
+            }
+            finally
+            {
+                m_isFinished = true;
+            }
+        }
+
+        /// <summary>
+        /// Search for root objects (objects with no parents).
+        /// </summary>
+        private IEnumerable<SceneObject> FindRootObjects()
+        {
+            foreach(var actObject in m_objects)
+            {
+                var isRoot = true;
+                foreach(var actParentChildRelationship in m_parentChildRelationships)
+                {
+                    if (actObject == actParentChildRelationship.Child)
+                    {
+                        isRoot = false;
+                        break;
+                    }
+                }
+
+                if (isRoot)
+                {
+                    yield return actObject;
+                }
+            }
         }
 
         /// <summary>
@@ -103,22 +186,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
-        public List<SceneObject> Objects { get; }
+        public IList<SceneObject> Objects => m_objects;
 
         /// <summary>
         /// Gets the hierarchy information of the imported objects.
         /// </summary>
-        public List<Tuple<SceneObject, SceneObject>> ParentChildRelationships { get; }
+        public IList<ParentChildRelationship> ParentChildRelationships => m_parentChildRelationships;
 
         /// <summary>
         /// Gets a collection containing all imported resources.
         /// </summary>
-        public List<ImportedResourceInfo> ImportedResources { get; }
+        public IList<ImportedResourceInfo> ImportedResources => m_importedResources;
 
-        /// <summary>
-        /// Should triangle order be changes by the import logic?
-        /// (This property is handled by the importer)
-        /// </summary>
-        public bool ChangeTriangleOrder => m_importOptions.IsChangeTriangleOrderNeeded();
+        public bool IsFinished => m_isFinished;
+
+        public bool IsValid => m_isValid;
+
+        public Exception FinishException => m_finishException;
     }
 }

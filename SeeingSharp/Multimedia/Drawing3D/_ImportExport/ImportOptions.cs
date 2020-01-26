@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ImportOptions()
         {
             this.ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpY;
-            this.TwoSidedSurfaces = false;
+            this.FitToCube = true;
         }
 
         /// <summary>
@@ -94,16 +94,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Needed some times. This generates a front and a back side for each loaded surface.
-        /// Default is false.
+        /// True if the model should be scaled and translated so it fits in a cube with a side with of 1.
         /// </summary>
-        public bool TwoSidedSurfaces
-        {
-            get;
-            set;
-        }
-
-        public bool ToggleTriangleIndexOrder
+        public bool FitToCube
         {
             get;
             set;

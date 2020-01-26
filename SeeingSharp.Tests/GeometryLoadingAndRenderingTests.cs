@@ -45,7 +45,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-3f, 3f, -3f);
                 camera.Target = new Vector3(2f, 0f, 2f);
                 camera.UpdateCamera();
@@ -90,7 +90,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-1.5f, 3f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();
@@ -133,7 +133,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();
@@ -178,7 +178,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-1.5f, 1.5f, -1.5f);
                 camera.Target = new Vector3(1f, 0f, 1f);
                 camera.UpdateCamera();

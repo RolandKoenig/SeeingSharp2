@@ -45,7 +45,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-4f, 4f, -4f);
                 camera.Target = new Vector3(2f, 0f, 2f);
                 camera.UpdateCamera();
@@ -53,7 +53,8 @@ namespace SeeingSharp.Tests
                 // Import Fox model
                 var importOptions = new StlImportOptions
                 {
-                    ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ
+                    ResourceCoordinateSystem = CoordinateSystem.LeftHanded_UpZ,
+                    FitToCube = false
                 };
 
                 var loadedObjects = await memRenderTarget.Scene.ImportAsync(
@@ -65,7 +66,7 @@ namespace SeeingSharp.Tests
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var isNearEqual = BitmapComparison.IsNearEqual(

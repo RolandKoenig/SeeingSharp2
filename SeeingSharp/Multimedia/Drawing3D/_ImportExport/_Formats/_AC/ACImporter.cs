@@ -40,25 +40,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Create result container
-            var result = new ImportedModelContainer(acImportOptions);
+            var modelContainer = new ImportedModelContainer(acImportOptions);
 
             // Read the AC file
             var fileInfo = ACFileLoader.LoadFile(sourceFile.OpenInputStream());
+            var geometry = ACFileLoader.GenerateGeometry(fileInfo);
 
             // Generate GeometryResource
-            var resGeometry = result.GetResourceKey("Geometry", "Main");
-            result.ImportedResources.Add(new ImportedResourceInfo(
+            var resGeometry = modelContainer.GetResourceKey("Geometry", "Main");
+            modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                 resGeometry,
-                device => new GeometryResource(ACFileLoader.GenerateGeometry(fileInfo))));
+                device => new GeometryResource(geometry)));
 
             // Generate Material resources
             var materialKeys = new NamedOrGenericKey[fileInfo.Materials.Count];
             for (var loop = 0; loop < materialKeys.Length; loop++)
             {
                 var actACMaterial = fileInfo.Materials[loop];
-                materialKeys[loop] = result.GetResourceKey("Material", actACMaterial.Name);
+                materialKeys[loop] = modelContainer.GetResourceKey("Material", actACMaterial.Name);
 
-                result.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     materialKeys[loop],
                     (device) => new StandardMaterialResource()
                     {
@@ -68,9 +69,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Create the mesh
-            result.Objects.Add(new Mesh(resGeometry, materialKeys));
+            modelContainer.Objects.Add(new Mesh(resGeometry, materialKeys));
 
-            return result;
+            modelContainer.FinishLoading(geometry.GenerateBoundingBox());
+
+            return modelContainer;
         }
 
         /// <summary>

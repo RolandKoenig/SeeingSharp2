@@ -116,8 +116,8 @@ namespace SeeingSharp.Multimedia.Core
                 foreach (var actDependencyInfo in modelContainer.ParentChildRelationships)
                 {
                     manipulator.AddChildObject(
-                        actDependencyInfo.Item1,
-                        actDependencyInfo.Item2);
+                        actDependencyInfo.Parent,
+                        actDependencyInfo.Child);
                 }
             });
 
