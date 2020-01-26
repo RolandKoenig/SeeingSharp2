@@ -22,6 +22,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Text;
+using System.Windows;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -34,6 +35,8 @@ namespace SeeingSharp.ModelViewer
     {
         private RenderLoop m_renderLoop;
         private string m_loadedFile;
+
+        private bool m_isLoading;
 
         public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequest;
 
@@ -82,38 +85,46 @@ namespace SeeingSharp.ModelViewer
 
         private async Task LoadSceneInternalAsync(ResourceLink? modelLink, ImportOptions? importOptions)
         {
-            // Reset the scene
-            await SceneHelper.ResetScene(m_renderLoop);
-
-            // Load the given model
-            if (modelLink == null)
+            this.IsLoading = true;
+            try
             {
-                m_loadedFile = string.Empty;
-            }
-            else
-            {
-                m_loadedFile = modelLink.ToString() ?? "";
-                if (importOptions == null)
-                {
-                    importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
-                }
+                // Reset the scene
+                await SceneHelper.ResetScene(m_renderLoop);
 
-                try
+                // Load the given model
+                if (modelLink == null)
                 {
-                    await m_renderLoop.Scene.ImportAsync(modelLink, importOptions);
-                }
-                catch (Exception)
-                {
-                    await SceneHelper.ResetScene(m_renderLoop);
                     m_loadedFile = string.Empty;
-                    throw;
                 }
-                
-                await m_renderLoop.WaitForNextFinishedRenderAsync();
+                else
+                {
+                    m_loadedFile = modelLink.ToString() ?? "";
+                    if (importOptions == null)
+                    {
+                        importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
+                    }
 
-                await m_renderLoop.MoveCameraToDefaultLocationAsync(
-                    -EngineMath.RAD_45DEG,
-                    EngineMath.RAD_45DEG);
+                    try
+                    {
+                        await m_renderLoop.Scene.ImportAsync(modelLink, importOptions);
+                    }
+                    catch (Exception)
+                    {
+                        await SceneHelper.ResetScene(m_renderLoop);
+                        m_loadedFile = string.Empty;
+                        throw;
+                    }
+                
+                    await m_renderLoop.WaitForNextFinishedRenderAsync();
+
+                    await m_renderLoop.MoveCameraToDefaultLocationAsync(
+                        -EngineMath.RAD_45DEG,
+                        EngineMath.RAD_45DEG);
+                }
+            }
+            finally
+            {
+                this.IsLoading = false;
             }
 
             this.UpdateTitle();
@@ -141,5 +152,30 @@ namespace SeeingSharp.ModelViewer
         public string AppTitle { get; set; } = string.Empty;
 
         public RenderingOptions OptionsRendering { get; }
+
+        public bool IsLoading
+        {
+            get => m_isLoading;
+            set
+            {
+                if (m_isLoading != value)
+                {
+                    m_isLoading = value;
+                    this.RaisePropertyChanged(nameof(this.IsLoading));
+                    this.RaisePropertyChanged(nameof(this.ControlsEnabled));
+                    this.RaisePropertyChanged(nameof(this.LoadingWindowVisibility));
+                }
+            }
+        }
+
+        public bool ControlsEnabled
+        {
+            get => !this.IsLoading;
+        }
+
+        public Visibility LoadingWindowVisibility
+        {
+            get => this.IsLoading ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

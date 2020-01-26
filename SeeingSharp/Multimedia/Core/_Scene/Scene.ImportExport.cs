@@ -88,13 +88,25 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="importOptions">All options for import logic.</param>
         public async Task<IEnumerable<SceneObject>> ImportAsync(ResourceLink objSource, ImportOptions importOptions)
         {
-            var result = new List<SceneObject>();
-
-            // Import all data
             var modelContainer = await GraphicsCore.Current.ImportersAndExporters
                 .ImportAsync(objSource, importOptions);
 
+            return await this.ImportAsync(modelContainer);
+        }
+
+        /// <summary>
+        /// Imports all objects from the given source.
+        /// </summary>
+        public async Task<IEnumerable<SceneObject>> ImportAsync(ImportedModelContainer modelContainer)
+        {
+            if ((!modelContainer.IsFinished) ||
+                (!modelContainer.IsValid))
+            {
+                throw new SeeingSharpException($"Given {nameof(ImportedModelContainer)} is not finished or valid!");
+            }
+
             // Append all data to the scene
+            var result = new List<SceneObject>(modelContainer.Objects.Count);
             await this.ManipulateSceneAsync(manipulator =>
             {
                 // AddObject all resources first
@@ -120,7 +132,6 @@ namespace SeeingSharp.Multimedia.Core
                         actDependencyInfo.Child);
                 }
             });
-
             return result;
         }
     }

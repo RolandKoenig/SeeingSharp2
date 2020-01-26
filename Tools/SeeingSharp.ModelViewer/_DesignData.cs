@@ -33,10 +33,12 @@ namespace SeeingSharp.ModelViewer
             {
                 var renderLoopHost = A.Fake<IRenderLoopHost>();
 
-                return new MainWindowVM(new RenderLoop(
+                var result = new MainWindowVM(new RenderLoop(
                     new SynchronizationContext(),
                     renderLoopHost,
                     isDesignMode: true));
+                result.IsLoading = true;
+                return result;
             }
         }
     }
