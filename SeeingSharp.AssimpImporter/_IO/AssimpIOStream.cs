@@ -23,9 +23,9 @@ using System;
 using System.IO;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp.AssimpImporter
 {
-    public class AssimpIOStream : Assimp.IOStream
+    internal class AssimpIOStream : Assimp.IOStream
     {
         private const int TEMP_BUFFER_SIZE = 1024 * 1024;
 

@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="FakeItEasy" Version="5.5.0" />
     <PackageReference Include="PropertyTools" Version="3.0.0" />
     <PackageReference Include="PropertyTools.Wpf" Version="3.0.0">
@@ -36,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj" />
     <ProjectReference Include="..\..\SeeingSharp.WpfCore\SeeingSharp.WpfCore.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
@@ -60,5 +60,4 @@
     <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
     <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
   </ItemGroup>
-
 </Project>

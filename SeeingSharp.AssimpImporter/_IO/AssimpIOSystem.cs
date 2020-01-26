@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.IO;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp.AssimpImporter
 {
-    public class AssimpIOSystem : Assimp.IOSystem
+    internal class AssimpIOSystem : Assimp.IOSystem
     {
         private ResourceLink m_originalResource;
 
@@ -69,7 +69,7 @@ namespace SeeingSharp.ModelViewer
 
                 // Load the file
                 var link = m_originalResource.GetForAnotherFile(
-                    pathElements[^1], 
+                    pathElements[pathElements.Length - 1], 
                     pathDirectoryBuilder.ToArray());
                 var openedStream = link.OpenInputStream();
 

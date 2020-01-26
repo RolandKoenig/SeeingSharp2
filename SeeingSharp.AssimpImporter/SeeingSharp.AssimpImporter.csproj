@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <RootNamespace>SeeingSharp.AssimpImporter</RootNamespace>
+    <PackageId>SeeingSharp2.AssimpImporter</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug.AnyCPU\</OutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release.AnyCPU\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj" />
+  </ItemGroup>
+
+</Project>

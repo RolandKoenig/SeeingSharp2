@@ -19,12 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Core;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp
 {
-    public class AssimpImportOptions : ImportOptions
+    public static class SeeingSharpWpfExtensionMethods
     {
-
+        public static SeeingSharpLoader RegisterAssimpImporter(this SeeingSharpLoader loader)
+        {
+            loader.RegisterModelImporter(new AssimpImporter.AssimpImporter());
+            return loader;
+        }
     }
 }

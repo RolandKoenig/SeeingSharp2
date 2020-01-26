@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp.AssimpImporter
 {
     [SupportedFileFormat("obj", "Wavefront Object format (*.obj)")]
     [SupportedFileFormat("fbx", "(*.fbx)")]
@@ -58,11 +58,8 @@ namespace SeeingSharp.ModelViewer
             var scaleFactor = Math.Min(
                 (1f / boundingBox.Width),
                 Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
+            
             sceneRoot.Scaling *= scaleFactor;
-
-            // Configuration object position(bottom middle of the scene)
-            //boundingBox.Minimum *= scaleFactor;
-            //boundingBox.Maximum *= scaleFactor;
             sceneRoot.Position = new Vector3(
                 (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)) * scaleFactor,
                 (0f - (boundingBox.Minimum.Y + (boundingBox.Maximum.Y - boundingBox.Minimum.Y) / 2f)) * scaleFactor,
@@ -97,10 +94,10 @@ namespace SeeingSharp.ModelViewer
 
         private static void ProcessNode(
             ImportedModelContainer modelContainer,
-            Assimp.Scene scene, Assimp.Node actNode, SceneObject? actParent, 
+            Assimp.Scene scene, Assimp.Node actNode, SceneObject actParent, 
             ObjectTreeBoundingBoxCalculator boundingBoxCalc)
         {
-            SceneObject? nextParent = null;
+            SceneObject nextParent = null;
             if (actNode.HasMeshes)
             {
                 var actTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
@@ -124,13 +121,13 @@ namespace SeeingSharp.ModelViewer
                     var actBaseVertex = newGeometry.CountVertices;
                     var actMesh = scene.Meshes[actMeshID];
 
-                    List<Assimp.Color4D>? vertexColors = null;
+                    List<Assimp.Color4D> vertexColors = null;
                     if (actMesh.HasVertexColors(0))
                     {
                         vertexColors = actMesh.VertexColorChannels[0];
                     }
 
-                    List<Assimp.Vector3D>? textureCoords1 = null;
+                    List<Assimp.Vector3D> textureCoords1 = null;
                     if (actMesh.TextureCoordinateChannelCount > 0)
                     {
                         textureCoords1 = actMesh.TextureCoordinateChannels[0];

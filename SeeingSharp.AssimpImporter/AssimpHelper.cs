@@ -21,7 +21,7 @@
 */
 using System.Numerics;
 
-namespace SeeingSharp.ModelViewer
+namespace SeeingSharp.AssimpImporter
 {
     internal static class AssimpHelper
     {

@@ -37,7 +37,7 @@ namespace SeeingSharp.ModelViewer
 
             GraphicsCore.Loader
                 .SupportWpf()
-                .RegisterModelImporter(new AssimpImporter())
+                .RegisterAssimpImporter()
                 .Load();
 
             base.OnStartup(e);
