@@ -58,10 +58,3 @@ cbuffer cbPerMaterial : register ( b3 )
 	float     DiffuseColorFactor;
 	float     Dummy2;
 }
-
-// Buffer with per line data
-cbuffer cbPerLine : register( b4 )
-{
-    float4x4  WorldViewProj;
-    float4    DiffuseColor;
-}

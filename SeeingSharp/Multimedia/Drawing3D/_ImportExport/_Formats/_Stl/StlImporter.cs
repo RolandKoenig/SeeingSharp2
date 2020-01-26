@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Try to read in BINARY format first
                 using (var inStream = sourceFile.OpenInputStream())
                 {
-                    result = this.TryReadBinary(inStream, stlImportOptions);
+                    result = this.TryReadBinary(sourceFile, inStream, stlImportOptions);
                 }
 
                 // Read in ASCII format (if binary did not work)
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 {
                     using (var inStream = sourceFile.OpenInputStream())
                     {
-                        result = this.TryReadAscii(inStream, stlImportOptions);
+                        result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
                     }
                 }
             }
@@ -387,7 +387,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Reads the model in ASCII format from the specified stream.
         /// </summary>
-        private ImportedModelContainer TryReadAscii(Stream stream, StlImportOptions importOptions)
+        private ImportedModelContainer TryReadAscii(ResourceLink source, Stream stream, StlImportOptions importOptions)
         {
             using (var reader = new StreamReader(stream, ENCODING, false, 128, true))
             {
@@ -429,7 +429,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Generate result container
-                var modelContainer = new ImportedModelContainer(importOptions);
+                var modelContainer = new ImportedModelContainer(source, importOptions);
                 var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 modelContainer.ImportedResources.Add(new ImportedResourceInfo(
@@ -451,7 +451,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Reads the model from the specified binary stream.
         /// </summary>
-        private ImportedModelContainer TryReadBinary(Stream stream, StlImportOptions importOptions)
+        private ImportedModelContainer TryReadBinary(ResourceLink source, Stream stream, StlImportOptions importOptions)
         {
             // Check length
             var length = stream.Length;
@@ -486,7 +486,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Generate result container
-                var modelContainer = new ImportedModelContainer(importOptions);
+                var modelContainer = new ImportedModelContainer(source, importOptions);
                 var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 modelContainer.ImportedResources.Add(new ImportedResourceInfo(

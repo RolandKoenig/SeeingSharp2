@@ -51,13 +51,35 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
         /// </summary>
-        public ImportedModelContainer(ImportOptions importOptions)
+        public ImportedModelContainer(ResourceLink source, ImportOptions importOptions)
         {
+            this.Source = source;
             m_importOptions = importOptions;
             m_objects = new List<SceneObject>();
             m_parentChildRelationships = new List<ParentChildRelationship>();
             m_importedResources = new List<ImportedResourceInfo>();
             m_importID = Interlocked.Increment(ref s_maxContainerID);
+        }
+
+        /// <summary>
+        /// Finishes loading with the given exception.
+        /// </summary>
+        public void FinishLoading(Exception ex)
+        {
+            if (m_isFinished)
+            {
+                throw new SeeingSharpException("ModelContainer already finished!");
+            }
+
+            m_isFinished = true;
+            m_finishException = ex;
+
+            m_objects.Clear();
+            m_parentChildRelationships.Clear();
+            m_importedResources.Clear();
+
+            this.RootObject = null;
+            this.BoundingBox = BoundingBox.Empty;
         }
 
         /// <summary>
@@ -134,13 +156,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // AddObject the object finally
                 this.Objects.Add(rootObject);
+                this.RootObject = rootObject;
+                this.BoundingBox = boundingBox;
 
                 m_isValid = true;
             }
             catch (Exception ex)
             {
-                m_finishException = ex;
-                m_isValid = false;
+                this.FinishLoading(ex);
             }
             finally
             {
@@ -183,6 +206,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 "Imported." + m_importID + "." + resourceClass + "." + resourceID);
         }
 
+        public ResourceLink Source { get; }
+
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
@@ -198,10 +223,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public IList<ImportedResourceInfo> ImportedResources => m_importedResources;
 
+        /// <summary>
+        /// Is loading finished?
+        /// </summary>
         public bool IsFinished => m_isFinished;
 
+        /// <summary>
+        /// Does this object contain a valid model?
+        /// </summary>
         public bool IsValid => m_isValid;
 
+        /// <summary>
+        /// An exception occurred during loading. This property may be set, when loading is finished and IsValid=false.
+        /// </summary>
         public Exception FinishException => m_finishException;
+
+        /// <summary>
+        /// The root object which gets generated when loading is finished successfully.
+        /// All objects loaded are children of this root object.
+        /// </summary>
+        public ScenePivotObject RootObject { get; private set; }
+
+        /// <summary>
+        /// The bounding volume within the space of the root object.
+        /// It is set when loading is finished successfully.
+        /// </summary>
+        public BoundingBox BoundingBox { get; private set; } = BoundingBox.Empty;
     }
 }

@@ -39,7 +39,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Resources
         private VertexShaderResource m_vertexShader;
         private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<ConstantBufferData> m_constantBuffer;
         private D3D11.InputLayout m_inputLayout;
 
         /// <summary>
@@ -53,9 +52,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_pixelShader = resources.GetResourceAndEnsureLoaded(
                 KEY_PIXEL_SHADER,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
-            m_constantBuffer = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<ConstantBufferData>());
 
             m_inputLayout = new D3D11.InputLayout(
                 device.DeviceD3D11_1,
@@ -72,35 +68,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             m_vertexShader = null;
             m_pixelShader = null;
-            m_constantBuffer = null;
-        }
-
-        /// <summary>
-        /// Renders all given lines with the given parameters.
-        /// </summary>
-        /// <param name="renderState">The render state to be used.</param>
-        /// <param name="worldViewProj">Current world-view-project transformation.</param>
-        /// <param name="lineColor">The color for the line.</param>
-        /// <param name="lineVertexBuffer">The vertex buffer containing all line vertices.</param>
-        /// <param name="vertexCount">Total count of vertices.</param>
-        internal void RenderLines(RenderState renderState, Matrix4x4 worldViewProj, Color4 lineColor, D3D11.Buffer lineVertexBuffer, int vertexCount)
-        {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-
-            //Apply constant buffer data
-            var constantData = new ConstantBufferData
-            {
-                DiffuseColor = lineColor,
-                WorldViewProj = worldViewProj
-            };
-
-            m_constantBuffer.SetData(deviceContext, constantData);
-
-            //Apply vertex buffer and draw lines
-            deviceContext.VertexShader.SetConstantBuffer(4, m_constantBuffer.ConstantBuffer);
-            deviceContext.PixelShader.SetConstantBuffer(4, m_constantBuffer.ConstantBuffer);
-            deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(lineVertexBuffer, LineVertex.Size, 0));
-            deviceContext.Draw(vertexCount, 0);
         }
 
         /// <summary>
@@ -119,23 +86,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public PixelShaderResource PixelShader => m_pixelShader;
 
         /// <summary>
-        /// Gets the constant buffer resource.
-        /// </summary>
-        public ConstantBufferResource ConstantBuffer => m_constantBuffer;
-
-        /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
         internal D3D11.InputLayout InputLayout => m_inputLayout;
-
-        //*********************************************************************
-        //*********************************************************************
-        //*********************************************************************
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ConstantBufferData
-        {
-            public Matrix4x4 WorldViewProj;
-            public Color4 DiffuseColor;
-        }
     }
 }

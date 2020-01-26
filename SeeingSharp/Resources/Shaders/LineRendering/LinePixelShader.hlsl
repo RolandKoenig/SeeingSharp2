@@ -6,5 +6,5 @@
 //PixelShader implementation for line rendering
 float4 main(PSInputLine input) : SV_Target
 {
-    return DiffuseColor;
+    return ObjectColor;
 }

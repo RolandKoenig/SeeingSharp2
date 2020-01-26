@@ -55,6 +55,8 @@ namespace SeeingSharp
 
         public void Transform(Matrix4x4 matrix)
         {
+            if(this == BoundingBox.Empty){ return; }
+
             var corners = this.GetCorners();
             for (var loop = 0; loop < corners.Length; loop++)
             {

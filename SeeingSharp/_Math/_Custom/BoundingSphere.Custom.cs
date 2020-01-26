@@ -29,6 +29,8 @@ namespace SeeingSharp
 
         public void Transform(Matrix4x4 matrix)
         {
+            if(this == BoundingSphere.Empty){ return; }
+
             var center = Center;
             var otherPoint = center + new Vector3(Radius, 0f, 0f);
 

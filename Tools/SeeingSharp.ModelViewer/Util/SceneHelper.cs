@@ -58,12 +58,12 @@ namespace SeeingSharp.ModelViewer.Util
                 var gridMesh = manipulator.AddMeshObject(resGridGeometry);
                 gridMesh.YPos = -0.5f;
 
-                //// Add bounding box
-                //manipulator.AddObject(new WireObject(
-                //    Color4.GreenColor,
-                //    new BoundingBox(
-                //        new Vector3(-0.5f, -0.5f, -0.5f),
-                //        new Vector3(0.5f, 0.5f, 0.5f))));
+                // Add bounding box
+                manipulator.AddObject(new WireObject(
+                    Color4.GreenColor,
+                    new BoundingBox(
+                        new Vector3(-0.5f, -0.5f, -0.5f),
+                        new Vector3(0.5f, 0.5f, 0.5f))));
             });
         }
     }

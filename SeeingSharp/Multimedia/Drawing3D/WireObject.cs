@@ -30,11 +30,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// This class is responsible for rendering simple lines into the 3d scene.
     /// Use the LineData property to define all points of the line.
     /// </summary>
-    public class WireObject : SceneObject
+    public class WireObject : SceneSpacialObject
     {
         // Configuration
         private bool m_forceReloadLineData;
         private Line[] m_lineData;
+        
+        // Bounding volumes
+        private BoundingBox m_boundingBox;
+        private BoundingSphere m_boundingSphere;
 
         // Direct3D resources
         private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
@@ -44,7 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public WireObject()
         {
-            this.LineColor = Color4.Black;
+            this.Color = Color4.Black;
             m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
 
@@ -55,6 +59,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             : this()
         {
             m_lineData = lines;
+
+            this.UpdateBoundingVolumes();
         }
 
         /// <summary>
@@ -63,8 +69,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public WireObject(Color4 lineColor, params Line[] lines)
             : this()
         {
-            this.LineColor = lineColor;
+            this.Color = lineColor;
             m_lineData = lines;
+
+            this.UpdateBoundingVolumes();
         }
 
         /// <summary>
@@ -83,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public WireObject(ref Color4 lineColor, ref BoundingBox boundingBox)
             : this()
         {
-            this.LineColor = lineColor;
+            this.Color = lineColor;
 
             var aBottom = new Vector3(boundingBox.Minimum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
             var bBottom = new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Minimum.Z);
@@ -110,6 +118,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 new Line(cBottom, cTop),
                 new Line(dBottom, dTop),
             };
+
+            this.UpdateBoundingVolumes();
         }
 
         /// <summary>
@@ -122,9 +132,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_localResources.AddObject(
                 new LocalResourceData
                 {
-                    LineRenderResources = resourceDictionary.GetResourceAndEnsureLoaded(
-                        LineRenderResources.RESOURCE_KEY,
-                        () => new LineRenderResources()),
                     LineVertexBuffer = null
                 },
                 device.DeviceIndex);
@@ -140,11 +147,43 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Tries to get the bounding box for the given render-loop.
+        /// Returns BoundingBox.Empty, if it is not available.
+        /// </summary>
+        /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
+        public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
+        {
+            var result = m_boundingBox;
+            result.Transform(this.Transform);
+            return result;
+        }
+
+        /// <summary>
+        /// Tries to get the bounding sphere for the given render-loop.
+        /// Returns BoundingSphere.Empty, if it is not available.
+        /// </summary>
+        /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
+        public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
+        {
+            var result = m_boundingSphere;
+            result.Transform(this.Transform);
+            return result;
+        }
+
+        /// <summary>
         /// Unloads all resources of the object.
         /// </summary>
         public override void UnloadResources()
         {
             base.UnloadResources();
+
+            // Dispose all locally created resources
+            foreach (var actLocalResource in m_localResources)
+            {
+                if (actLocalResource == null) { continue; }
+
+                SeeingSharpUtil.SafeDispose(ref actLocalResource.LineVertexBuffer);
+            }
 
             m_localResources.Clear();
         }
@@ -155,11 +194,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="updateState">Current update state.</param>
         protected override void UpdateInternal(SceneRelatedUpdateState updateState)
         {
+            base.UpdateInternal(updateState);
+
             // Handle line data reloading flag
             if (m_forceReloadLineData)
             {
                 m_localResources.ForEachInEnumeration(actItem => actItem.LineDataLoaded = false);
                 m_forceReloadLineData = false;
+
+                this.UpdateBoundingVolumes();
             }
         }
 
@@ -177,11 +220,40 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Updates bounding volumes.
+        /// </summary>
+        private void UpdateBoundingVolumes()
+        {
+            var lines = this.LineData;
+
+            var boundBoxCalc = new ObjectTreeBoundingBoxCalculator();
+            for(var loop=0; loop<lines.Length; loop++)
+            {
+                ref var actLine = ref lines[loop];
+                boundBoxCalc.AddCoordinate(ref actLine.StartPosition);
+                boundBoxCalc.AddCoordinate(ref actLine.EndPosition);
+            }
+
+            if (boundBoxCalc.CanCreateBoundingBox)
+            {
+                m_boundingBox = boundBoxCalc.CreateBoundingBox();
+                BoundingSphere.FromBox(ref m_boundingBox, out m_boundingSphere);
+            }
+            else
+            {
+                m_boundingBox = BoundingBox.Empty;
+                m_boundingSphere = BoundingSphere.Empty;
+            }
+        }
+
+        /// <summary>
         /// Main render method for the wire object.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
         private void RenderLines(RenderState renderState)
         {
+            this.UpdateAndApplyRenderParameters(renderState);
+
             var resourceData = m_localResources[renderState.DeviceIndex];
 
             // Load line data to memory if needed
@@ -199,13 +271,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 resourceData.LineDataLoaded = true;
             }
 
-            // Calculate transform matrix
-            var viewProj = Matrix4x4.Transpose(renderState.ViewProj);
-
-            // Render all lines finally
-            resourceData.LineRenderResources.RenderLines(
-                renderState, viewProj, this.LineColor,
-                resourceData.LineVertexBuffer, m_lineData.Length * 2);
+            // Apply vertex buffer and draw lines
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(resourceData.LineVertexBuffer, LineVertex.Size, 0));
+            deviceContext.Draw(m_lineData.Length * 2, 0);
         }
 
         /// <summary>
@@ -224,18 +293,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        /// <summary>
-        /// Gets or sets the line's color.
-        /// </summary>
-        public Color4 LineColor { get; set; }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         private class LocalResourceData
         {
             public bool LineDataLoaded;
-            public LineRenderResources LineRenderResources;
             public D3D11.Buffer LineVertexBuffer;
         }
     }

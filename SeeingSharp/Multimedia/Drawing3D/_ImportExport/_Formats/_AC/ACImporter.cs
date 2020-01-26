@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Create result container
-            var modelContainer = new ImportedModelContainer(acImportOptions);
+            var modelContainer = new ImportedModelContainer(sourceFile, acImportOptions);
 
             // Read the AC file
             var fileInfo = ACFileLoader.LoadFile(sourceFile.OpenInputStream());

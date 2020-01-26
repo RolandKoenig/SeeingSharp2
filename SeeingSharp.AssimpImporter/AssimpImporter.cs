@@ -35,7 +35,7 @@ namespace SeeingSharp.AssimpImporter
     {
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
-            var modelContainer = new ImportedModelContainer(importOptions);
+            var modelContainer = new ImportedModelContainer(sourceFile, importOptions);
 
             // Load Assimp scene
             using var assimpContext = new Assimp.AssimpContext();
