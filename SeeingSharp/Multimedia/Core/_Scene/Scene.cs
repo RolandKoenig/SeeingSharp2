@@ -1019,7 +1019,8 @@ namespace SeeingSharp.Multimedia.Core
             // Update render parameters
             renderParameters.UpdateValues(renderState, m_perFrameData);
 
-            using (renderState.PushScene(this, resources))
+            renderState.PushScene(this, resources);
+            try
             {
                 renderParameters.Apply(renderState);
 
@@ -1037,6 +1038,10 @@ namespace SeeingSharp.Multimedia.Core
                         actLayer.Render(renderState);
                     }
                 }
+            }
+            finally
+            {
+                renderState.PopScene();
             }
         }
 
@@ -1059,14 +1064,14 @@ namespace SeeingSharp.Multimedia.Core
             {
                 // Get current resource dictionary
                 var resources = m_registeredResourceDicts[renderState.DeviceIndex];
-
                 if (resources == null)
                 {
                     throw new SeeingSharpGraphicsException("Unable to render scene: Resource dictionary for current device not found!");
                 }
 
                 // Start rendering
-                using (renderState.PushScene(this, resources))
+                renderState.PushScene(this, resources);
+                try
                 {
                     //Render all layers in current order
                     foreach (var actLayer in m_sceneLayers)
@@ -1076,6 +1081,10 @@ namespace SeeingSharp.Multimedia.Core
                             actLayer.Render2DOverlay(renderState);
                         }
                     }
+                }
+                finally
+                {
+                    renderState.PopScene();
                 }
 
                 // Render drawing layers

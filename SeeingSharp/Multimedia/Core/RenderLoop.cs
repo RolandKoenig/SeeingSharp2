@@ -1158,7 +1158,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 m_renderState = new RenderState(
                     m_currentDevice,
-                    GraphicsCore.Current.PerformanceAnalyzer,
                     new RenderTargets(m_renderTargetView, m_renderTargetDepthView),
                     m_viewport, m_camera, this.ViewInformation);
             }
