@@ -19,11 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System.Collections.Generic;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.Util;
-using System.Collections.ObjectModel;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -40,8 +38,10 @@ namespace SeeingSharp.WpfSamples
         public void TriggerRefresh()
         {
             this.DurationResults.Clear();
-
-            m_performanceAnalyzer.FillResults(this.DurationResults);
+            foreach (var actResult in m_performanceAnalyzer.GetCurrentResults())
+            {
+                this.DurationResults.Add(actResult);
+            }
             this.DurationResults.Sort((left, right) => -left.SumAverageMSDouble.CompareTo(right.SumAverageMSDouble));
         }
 

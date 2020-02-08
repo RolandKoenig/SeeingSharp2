@@ -138,12 +138,15 @@ namespace SeeingSharp.Util
             }
         }
 
-        public void FillResults(IList<DurationPerformanceResult> resultList)
+        /// <summary>
+        /// Gets all current results.
+        /// </summary>
+        public IEnumerable<DurationPerformanceResult> GetCurrentResults()
         {
             foreach (var actCalculator in m_calculatorsBag)
             {
                 if(actCalculator.CurrentResult == null){ continue; }
-                resultList.Add(actCalculator.CurrentResult);
+                yield return actCalculator.CurrentResult;
             }
         }
 

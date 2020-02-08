@@ -33,6 +33,8 @@ namespace SeeingSharp.Tests.Util
                 ref calcResult2,
                 start.AddSeconds(1600), start.AddSeconds(1700));
 
+            Assert.IsNotNull(calcResult1);
+            Assert.IsNotNull(calcResult2);
             Assert.IsTrue(calcResult1.SumAverageMS > 99);
             Assert.IsTrue(calcResult1.SumAverageMS < 101);
             Assert.IsTrue(calcResult2.SumAverageMS > 99);
