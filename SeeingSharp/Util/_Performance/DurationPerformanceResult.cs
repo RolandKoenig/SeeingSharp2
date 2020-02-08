@@ -23,36 +23,38 @@ using System;
 
 namespace SeeingSharp.Util
 {
-    public class DurationPerformanceResult : PerformanceAnalyzeResultBase
+    public class DurationPerformanceResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceResult"/> class.
         /// </summary>
-        public DurationPerformanceResult(DurationPerformanceCalculator calculator, DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
-            : base(calculator, timestampKey)
+        public DurationPerformanceResult(string activityName, DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
         {
+            this.ActivityName = activityName;
+
+            this.Update(timestampKey, sumAvgTicks, sumMaxTicks, sumMinTicks);
+        }
+
+        public void Update(DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        {
+            this.KeyTimestamp = timestampKey;
             this.SumAverageTicks = sumAvgTicks;
             this.SumMaxTicks = sumMaxTicks;
             this.SumMinTicks = sumMinTicks;
         }
 
-        public long SumMaxTicks { get; set; }
-
-        public long SumAverageTicks { get; set; }
-
-        public long SumMinTicks { get; set; }
+        public string ActivityName { get; }
 
         /// <summary>
-        /// Gets the FPS value.
+        /// Gets the key of this kpi.
         /// </summary>
-        public int Fps
-        {
-            get
-            {
-                if (this.SumAverageTicks == 0) { return 0; }
-                return (int)(10000000L / this.SumAverageTicks);
-            }
-        }
+        public DateTime KeyTimestamp { get; private set; }
+
+        public long SumMaxTicks { get; private set; }
+
+        public long SumAverageTicks { get; private set; }
+
+        public long SumMinTicks { get; private set; }
 
         public TimeSpan SumMax => TimeSpan.FromTicks(this.SumMaxTicks);
 

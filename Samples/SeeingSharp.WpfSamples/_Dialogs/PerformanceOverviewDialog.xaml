@@ -9,15 +9,17 @@
         d:DataContext="{x:Static local:DesignData.PerformanceOverviewVM}">
     <DockPanel LastChildFill="True">
 
-        <DataGrid ItemsSource="{Binding Path=DurationKpis}"
+        <DataGrid x:Name="CtrlDataGrid"
+                  ItemsSource="{Binding Path=DurationResults}"
                   AutoGenerateColumns="False"
-                  AlternatingRowBackground="WhiteSmoke">
+                  AlternatingRowBackground="WhiteSmoke"
+                  CanUserSortColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=CalculatorName}" 
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=ActivityName, Mode=OneWay}" 
                                     Width="350"/>
                 <DataGridTextColumn Header="Time (ms)"
-                                    Binding="{Binding Path=SumAverageMSDouble, StringFormat=F3}"  
-                                    Width="100" SortDirection="Descending">
+                                    Binding="{Binding Path=SumAverageMSDouble, StringFormat=F3, Mode=OneWay}"  
+                                    Width="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Right" />

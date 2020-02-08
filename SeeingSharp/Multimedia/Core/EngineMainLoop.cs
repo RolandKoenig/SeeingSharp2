@@ -340,7 +340,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Trigger calculation of performance values
-                    m_host.PerformanceAnalyzer.CalculateValues();
+                    m_host.PerformanceAnalyzer.CalculateResults();
                 }
             });
 

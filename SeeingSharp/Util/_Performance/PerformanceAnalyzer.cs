@@ -21,11 +21,12 @@
 */
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SeeingSharp.Util
 {
-    public partial class PerformanceAnalyzer
+    public class PerformanceAnalyzer
     {
         // Members for calculators
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
@@ -53,17 +54,7 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Notifies one occurrence of the FlowRate measurement with the given name.
-        /// </summary>
-        /// <param name="calculatorName">The name of the calculator this occurrence belongs to.</param>
-        internal void NotifyFlowRateOccurrence(string calculatorName)
-        {
-            //var kpiCalculator = this.GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
-            //kpiCalculator.NotifyOccurrence();
-        }
-
-        /// <summary>
-        /// Notifies that the given activity took the given count of ticks.
+        /// Notifies that the given activityName took the given count of ticks.
         /// </summary>
         /// <param name="activity">The Activity to report to.</param>
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
@@ -95,9 +86,9 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Begins measuring the duration of the given activity (end of the duration is when Dispose gets called on the result).
+        /// Begins measuring the duration of the given activityName (end of the duration is when Dispose gets called on the result).
         /// </summary>
-        /// <param name="activity">The activity name to be measured.</param>
+        /// <param name="activity">The activityName name to be measured.</param>
         internal IDisposable BeginMeasureActivityDuration(string activity)
         {
             var stopwatch = new Stopwatch();
@@ -112,9 +103,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Triggers calculation of
         /// </summary>
-        /// <param name="timestamp"></param>
-        /// <returns></returns>
-        internal void CalculateValues()
+        internal void CalculateResults()
         {
             var utcNow = DateTime.UtcNow;
             if (utcNow - this.ValueInterval < m_lastValueTimestamp)
@@ -136,8 +125,11 @@ namespace SeeingSharp.Util
                 // Calculate reporting values
                 foreach (var actCalculatorInfo in m_calculatorsBag)
                 {
-                    var actResult = actCalculatorInfo.Calculator.Calculate(actMinTimestamp, actMaxTimestamp);
-                    actCalculatorInfo.Results.Add(actResult);
+                    ref var actResult = ref actCalculatorInfo.Results.AddByRef();
+                    actCalculatorInfo.Calculator.Calculate(ref actResult, actMinTimestamp, actMaxTimestamp);
+
+
+                    actCalculatorInfo.CurrentResult = actResult;
                 }
 
                 // Handle next value timestamp
@@ -146,20 +138,27 @@ namespace SeeingSharp.Util
             }
         }
 
+        public void FillResults(IList<DurationPerformanceResult> resultList)
+        {
+            foreach (var actCalculator in m_calculatorsBag)
+            {
+                if(actCalculator.CurrentResult == null){ continue; }
+                resultList.Add(actCalculator.CurrentResult);
+            }
+        }
+
         /// <summary>
-        /// Gets the calculator for the given activity.
+        /// Gets the calculator for the given activityName.
         /// </summary>
         /// <typeparam name="T">The type of the calculator to get.</typeparam>
-        /// <param name="activity">The name of the activity.</param>
-        private T GetKpiCalculator<T>(string activity)
-            where T : PerformanceCalculatorBase
+        /// <param name="activityName">The name of the activityName.</param>
+        private DurationPerformanceCalculator GetKpiCalculator<T>(string activityName)
         {
             var newCalculatorInfo = m_calculatorsDict.GetOrAdd(
-                activity,
+                activityName,
                 key =>
                 {
-                    var newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
-                    newCalculator.Parent = this;
+                    var newCalculator = new DurationPerformanceCalculator(activityName, 1000);
 
                     var calcInfo = new CalculatorInfo(newCalculator, this.MaxResultCountPerCalculator);
                     m_calculatorsBag.Add(calcInfo);
@@ -167,19 +166,12 @@ namespace SeeingSharp.Util
                 });
 
 
-            if (newCalculatorInfo == null ||
-                newCalculatorInfo.Calculator == null)
+            if (newCalculatorInfo?.Calculator == null)
             {
-                throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
+                throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activityName " + activityName + "!");
             }
 
-            var result = newCalculatorInfo.Calculator as T;
-            if (result == null)
-            {
-                throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
-            }
-
-            return result;
+            return newCalculatorInfo.Calculator;
         }
 
         /// <summary>
@@ -193,6 +185,9 @@ namespace SeeingSharp.Util
         /// </summary>
         public int MaxResultCountPerCalculator { get; }
 
+        /// <summary>
+        /// Accessor to internal methods/members.
+        /// </summary>
         public PerformanceAnalyzerInternals Internals { get; }
 
         //*********************************************************************
@@ -203,14 +198,15 @@ namespace SeeingSharp.Util
         /// </summary>
         private class CalculatorInfo
         {
-            public CalculatorInfo(PerformanceCalculatorBase calculator, int maxResultCount)
+            public CalculatorInfo(DurationPerformanceCalculator calculator, int maxResultCount)
             {
                 Calculator = calculator;
-                Results = new RingBuffer<PerformanceAnalyzeResultBase>(maxResultCount);
+                Results = new RingBuffer<DurationPerformanceResult>(maxResultCount);
             }
 
-            public PerformanceCalculatorBase Calculator;
-            public RingBuffer<PerformanceAnalyzeResultBase> Results;
+            public DurationPerformanceCalculator Calculator;
+            public RingBuffer<DurationPerformanceResult> Results;
+            public DurationPerformanceResult CurrentResult;
         }
 
         /// <summary>

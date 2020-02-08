@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.Util;
 using System.Collections.ObjectModel;
@@ -32,8 +34,17 @@ namespace SeeingSharp.WpfSamples
         public PerformanceOverviewViewModel(PerformanceAnalyzer performanceAnalyzer)
         {
             m_performanceAnalyzer = performanceAnalyzer;
+            this.DurationResults = new List<DurationPerformanceResult>();
         }
 
-        public ObservableCollection<DurationPerformanceResult> DurationKpis => null;
+        public void TriggerRefresh()
+        {
+            this.DurationResults.Clear();
+
+            m_performanceAnalyzer.FillResults(this.DurationResults);
+            this.DurationResults.Sort((left, right) => -left.SumAverageMSDouble.CompareTo(right.SumAverageMSDouble));
+        }
+
+        public List<DurationPerformanceResult> DurationResults { get; }
     }
 }

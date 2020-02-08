@@ -72,5 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Multimedia\Drawing3D\_Painters\" />
+    <Folder Include="Util\_Performance\_Duration\" />
   </ItemGroup>
 </Project>

@@ -23,26 +23,17 @@ using System;
 
 namespace SeeingSharp.Util
 {
-    public class DurationPerformanceCalculator : PerformanceCalculatorBase
+    public class DurationPerformanceCalculator
     {
-        // Values used for calculation
         private RingBuffer<ActivityDurationInfo> m_lastDurationItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
         /// </summary>
-        public DurationPerformanceCalculator(string calculatorName)
-            : this(calculatorName, 1000)
+        public DurationPerformanceCalculator(string activityName, int maxHistoricalItems)
         {
-            
-        }
+            this.ActivityName = activityName;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
-        /// </summary>
-        public DurationPerformanceCalculator(string calculatorName, int maxHistoricalItems)
-            : base(calculatorName)
-        {
             m_lastDurationItems = new RingBuffer<ActivityDurationInfo>(maxHistoricalItems);
         }
 
@@ -83,52 +74,58 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Calculates a new kpi value.
         /// </summary>
+        /// <param name="result">The result that should be set during calculation.</param>
         /// <param name="minTimeStamp">The timestamp which is the minimum for current calculation step.</param>
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
-        internal override PerformanceAnalyzeResultBase Calculate(DateTime minTimeStamp, DateTime maxTimeStamp)
+        internal void Calculate(ref DurationPerformanceResult result, DateTime minTimeStamp, DateTime maxTimeStamp)
         {
-            if (m_lastDurationItems.Count == 0)
-            {
-                return null;
-            }
-
             // Calculate result values
             var minValue = long.MaxValue;
             var maxValue = long.MinValue;
             long sumValue = 0;
             long itemCount = 0;
-            for (var loop = 0; loop < m_lastDurationItems.Count; loop++)
+            if (m_lastDurationItems.Count > 0)
             {
-                ref var actItem = ref m_lastDurationItems.GetByRef(loop);
-                if (actItem.TimeStamp < minTimeStamp)
+                for (var loop = 0; loop < m_lastDurationItems.Count; loop++)
                 {
+                    ref var actItem = ref m_lastDurationItems.GetByRef(loop);
+                    if (actItem.TimeStamp < minTimeStamp)
+                    {
+                        m_lastDurationItems.RemoveFirst();
+                        loop--;
+                        continue;
+                    }
+                    if(actItem.TimeStamp >= maxTimeStamp) { break; }
+
+                    if (minValue > actItem.DurationTicks) { minValue = actItem.DurationTicks; }
+                    if (maxValue < actItem.DurationTicks) { maxValue = actItem.DurationTicks; }
+                    sumValue += actItem.DurationTicks;
+                    itemCount++;
+
                     m_lastDurationItems.RemoveFirst();
                     loop--;
-                    continue;
                 }
-                if(actItem.TimeStamp >= maxTimeStamp) { break; }
-
-                if (minValue > actItem.DurationTicks) { minValue = actItem.DurationTicks; }
-                if (maxValue < actItem.DurationTicks) { maxValue = actItem.DurationTicks; }
-                sumValue += actItem.DurationTicks;
-                itemCount++;
-
-                m_lastDurationItems.RemoveFirst();
-                loop--;
-            }
-
-            // Check again weather we have any items
-            if (itemCount == 0)
-            {
-                return null;
             }
 
             // Calculate average time value
-            var avgValue = sumValue / itemCount;
+            var avgValue = 0L;
+            if (itemCount > 0)
+            {
+                avgValue = sumValue / itemCount;
+            }
 
             // Create result object
-            return new DurationPerformanceResult(this, maxTimeStamp, avgValue, maxValue, minValue);
+            if (result == null)
+            {
+                result = new DurationPerformanceResult(this.ActivityName, maxTimeStamp, avgValue, maxValue, minValue);
+            }
+            else
+            {
+                result.Update(maxTimeStamp, avgValue, maxValue, minValue);
+            }
         }
+
+        public string ActivityName { get; }
 
         public int RawDataEntries => m_lastDurationItems.Count;
 
