@@ -46,7 +46,6 @@ namespace SeeingSharp.Util
             maxItemCount.EnsureInRange(2, int.MaxValue, nameof(maxItemCount));
 
             m_buffer = new T[maxItemCount];
-            this.Count = maxItemCount;
             m_itemStart = 0;
             m_itemLength = 0;
         }
@@ -58,18 +57,68 @@ namespace SeeingSharp.Util
         /// <param name="newItem">The new item to be added.</param>
         public void Add(T newItem)
         {
-            if (m_itemLength < this.Count)
+            if (m_itemLength < m_buffer.Length)
             {
-                m_buffer[(m_itemStart + m_itemLength) % this.Count] = newItem;
+                m_buffer[(m_itemStart + m_itemLength) % m_buffer.Length] = newItem;
                 m_itemLength++;
             }
             else
             {
-                m_itemStart = (m_itemStart + 1) % this.Count;
+                m_itemStart = (m_itemStart + 1) % m_buffer.Length;
 
                 var nextIndex = m_itemStart - 1;
-                if (nextIndex < 0) { nextIndex = this.Count - 1; }
+                if (nextIndex < 0) { nextIndex = m_buffer.Length - 1; }
                 m_buffer[nextIndex] = newItem;
+            }
+        }
+
+        /// <summary>
+        /// Adds a new item and returns the reference to it.
+        /// </summary>
+        public ref T AddByRef()
+        {
+            if (m_itemLength < m_buffer.Length)
+            {
+                m_itemLength++;
+                return ref m_buffer[(m_itemStart + (m_itemLength - 1)) % m_buffer.Length];
+            }
+            else
+            {
+                m_itemStart = (m_itemStart + 1) % m_buffer.Length;
+
+                var nextIndex = m_itemStart - 1;
+                if (nextIndex < 0) { nextIndex = m_buffer.Length - 1; }
+                return ref m_buffer[nextIndex];
+            }
+        }
+
+        /// <summary>
+        /// Gets the item at the given index by ref.
+        /// </summary>
+        /// <param name="index">The index to get the item from.</param>
+        public ref T GetByRef(int index)
+        {
+            if (index < 0){ throw new IndexOutOfRangeException(); }
+            if (index >= m_itemLength) { throw new IndexOutOfRangeException(); }
+
+            return ref m_buffer[(m_itemStart + index) % m_buffer.Length];
+        }
+
+        /// <summary>
+        /// Removes the first entry.
+        /// </summary>
+        public void RemoveFirst()
+        {
+            if (m_itemLength == 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            m_itemStart++;
+            m_itemLength--;
+            if (m_itemStart == m_buffer.Length)
+            {
+                m_itemStart = 0;
             }
         }
 
@@ -78,11 +127,6 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            for (var loop = 0; loop < this.Count; loop++)
-            {
-                m_buffer[loop] = default;
-            }
-
             m_itemLength = 0;
             m_itemStart = 0;
         }
@@ -94,14 +138,19 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (index >= m_itemLength) { throw new IndexOutOfRangeException(); }
-                return m_buffer[(m_itemStart + index) % this.Count];
+                ref var result = ref this.GetByRef(index);
+                return result;
             }
         }
 
         /// <summary>
         /// Gets the total count of items.
         /// </summary>
-        public int Count { get; }
+        public int Count => m_itemLength;
+
+        /// <summary>
+        /// Gets the maximum capacity of the buffer.
+        /// </summary>
+        public int MaxCapacity => m_buffer.Length;
     }
 }

@@ -21,71 +21,45 @@
 */
 using System;
 using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Util
 {
     public partial class PerformanceAnalyzer
     {
-        private const double DEFAULT_KPI_INTERVAL_SEC = 5.0;
-        private TimeSpan m_calculationInterval;
-        private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
-
         // Members for calculators
+        private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
         private ConcurrentDictionary<string, CalculatorInfo> m_calculatorsDict;
-
-        // Members for threading
-        private volatile int m_delayTimeMS;
-        private bool m_generateCurrentValueCollection;
-        private bool m_generateHistoricalCollection;
 
         // Members for time ticks
         private DateTime m_lastValueTimestamp;
-        private int m_maxCountHistoricalEntries;
-        private Task m_runningTask;
         private DateTime m_startupTimestamp;
-
-        // Configuration
-        private TimeSpan m_valueInterval;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
         /// </summary>
-        public PerformanceAnalyzer(TimeSpan valueInterval, TimeSpan calculationInterval)
+        public PerformanceAnalyzer(TimeSpan valueInterval, int maxResultCountPerCalculator = 50)
         {
             m_lastValueTimestamp = DateTime.UtcNow;
             m_startupTimestamp = m_lastValueTimestamp;
 
-            m_valueInterval = valueInterval;
-            m_calculationInterval = calculationInterval;
-
-            m_maxCountHistoricalEntries = 50;
-            m_generateHistoricalCollection = true;
-            m_generateCurrentValueCollection = true;
-
-            this.SyncContext = SynchronizationContext.Current;
-            m_delayTimeMS = 1000;
+            this.ValueInterval = valueInterval;
+            this.MaxResultCountPerCalculator = maxResultCountPerCalculator;
 
             m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
-            this.UIDurationKpisHistorical = new ObservableCollection<DurationPerformanceResult>();
-            this.UIDurationKpisCurrents = new ObservableCollection<DurationPerformanceResult>();
-            this.UIFlowRateKpisHistorical = new ObservableCollection<FlowRatePerformanceResult>();
-            this.UIFlowRateKpisCurrents = new ObservableCollection<FlowRatePerformanceResult>();
+            this.Internals = new PerformanceAnalyzerInternals(this);
         }
 
         /// <summary>
-        /// Notifies one occurrence of the FlowRate measurenemt with the given name.
+        /// Notifies one occurrence of the FlowRate measurement with the given name.
         /// </summary>
         /// <param name="calculatorName">The name of the calculator this occurrence belongs to.</param>
-        public void NotifyFlowRateOccurrence(string calculatorName)
+        internal void NotifyFlowRateOccurrence(string calculatorName)
         {
-            var kpiCalculator = this.GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
-            kpiCalculator.NotifyOccurrence();
+            //var kpiCalculator = this.GetKpiCalculator<FlowRatePerformanceCalculator>(calculatorName);
+            //kpiCalculator.NotifyOccurrence();
         }
 
         /// <summary>
@@ -93,7 +67,7 @@ namespace SeeingSharp.Util
         /// </summary>
         /// <param name="activity">The Activity to report to.</param>
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
-        public void NotifyActivityDuration(string activity, long durationTicks)
+        internal void NotifyActivityDuration(string activity, long durationTicks)
         {
             var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
             kpiCalculator.NotifyActivityDuration(durationTicks);
@@ -104,7 +78,7 @@ namespace SeeingSharp.Util
         /// </summary>
         /// <param name="activity">The Activity to report to.</param>
         /// <param name="actionToExecute">The action to be executed and measured.</param>
-        public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
+        internal void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
             var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
             var stopwatch = new Stopwatch();
@@ -124,7 +98,7 @@ namespace SeeingSharp.Util
         /// Begins measuring the duration of the given activity (end of the duration is when Dispose gets called on the result).
         /// </summary>
         /// <param name="activity">The activity name to be measured.</param>
-        public IDisposable BeginMeasureActivityDuration(string activity)
+        internal IDisposable BeginMeasureActivityDuration(string activity)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -136,97 +110,24 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Starts the main loop of this OnlineKpiContainer.
-        /// </summary>
-        public Task RunAsync(CancellationToken cancelToken)
-        {
-            // Check for currently running task
-            if (m_runningTask != null &&
-                m_runningTask.Status == TaskStatus.Running)
-            {
-                throw new SeeingSharpException("Unable to start OnlineKpiContainer: Main loop is already running!");
-            }
-
-            // Trigger new main loop
-            m_runningTask = Task.Factory.StartNew(async () =>
-            {
-                while (!cancelToken.IsCancellationRequested)
-                {
-                    try
-                    {
-                        await Task.Delay(m_delayTimeMS);
-
-                        // Do we have anything to do?
-                        var utcNow = DateTime.UtcNow;
-
-                        if (utcNow - m_valueInterval < m_lastValueTimestamp)
-                        {
-                            continue;
-                        }
-
-                        // Calculate values now
-                        this.CalculateValuesAsync(utcNow);
-
-                        // Trigger refresh of ui collections
-                        await this.RefreshUICollectionsAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // TODO: What to do in case of an exception?
-                    }
-                }
-            });
-
-            return m_runningTask;
-        }
-
-        /// <summary>
-        /// Refreshes the gui using the configured SynchronizationContext.
-        /// </summary>
-        public async Task RefreshUICollectionsAsync()
-        {
-            // Trigger UI synchronization
-            await this.SyncContext.PostAlsoIfNullAsync(
-                () =>
-                {
-                    this.RefreshUICollections();
-                },
-                ActionIfSyncContextIsNull.InvokeSynchronous);
-        }
-
-        /// <summary>
-        /// Refreshes the gui in a sync call.
-        /// </summary>
-        public void RefreshUICollections()
-        {
-            this.UIDurationKpisCurrents.Clear();
-
-            foreach (var actCalculatorInfo in m_calculatorsBag)
-            {
-                PerformanceAnalyzeResultBase actResult = null;
-
-                while (actCalculatorInfo.Results.TryTake(out actResult))
-                {
-                    this.HandleResultForUI(actResult);
-                }
-            }
-        }
-
-        /// <summary>
         /// Triggers calculation of
         /// </summary>
         /// <param name="timestamp"></param>
         /// <returns></returns>
-        internal void CalculateValuesAsync(DateTime timestamp)
+        internal void CalculateValues()
         {
-            // Trigger kpi calculation
-            var actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+            var utcNow = DateTime.UtcNow;
+            if (utcNow - this.ValueInterval < m_lastValueTimestamp)
+            {
+                return;
+            }
 
-            while (actKeyTimestamp < timestamp)
+            // Trigger kpi calculation
+            var actKeyTimestamp = m_lastValueTimestamp + this.ValueInterval;
+            while (actKeyTimestamp < utcNow)
             {
                 var actMaxTimestamp = actKeyTimestamp;
-                var actMinTimestamp = actKeyTimestamp - m_calculationInterval;
-
+                var actMinTimestamp = actKeyTimestamp - this.ValueInterval;
                 if (actMinTimestamp < m_startupTimestamp)
                 {
                     actMinTimestamp = m_startupTimestamp;
@@ -235,16 +136,13 @@ namespace SeeingSharp.Util
                 // Calculate reporting values
                 foreach (var actCalculatorInfo in m_calculatorsBag)
                 {
-                    var actResult = actCalculatorInfo.Calculator.Calculate(
-                        actKeyTimestamp,
-                        actMinTimestamp, actMaxTimestamp,
-                        m_calculationInterval);
+                    var actResult = actCalculatorInfo.Calculator.Calculate(actMinTimestamp, actMaxTimestamp);
                     actCalculatorInfo.Results.Add(actResult);
                 }
 
                 // Handle next value timestamp
                 m_lastValueTimestamp = actKeyTimestamp;
-                actKeyTimestamp = m_lastValueTimestamp + m_valueInterval;
+                actKeyTimestamp = m_lastValueTimestamp + this.ValueInterval;
             }
         }
 
@@ -263,7 +161,7 @@ namespace SeeingSharp.Util
                     var newCalculator = Activator.CreateInstance(typeof(T), activity) as PerformanceCalculatorBase;
                     newCalculator.Parent = this;
 
-                    var calcInfo = new CalculatorInfo(newCalculator);
+                    var calcInfo = new CalculatorInfo(newCalculator, this.MaxResultCountPerCalculator);
                     m_calculatorsBag.Add(calcInfo);
                     return calcInfo;
                 });
@@ -276,7 +174,6 @@ namespace SeeingSharp.Util
             }
 
             var result = newCalculatorInfo.Calculator as T;
-
             if (result == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activity " + activity + "!");
@@ -286,134 +183,17 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Check method used for setter methods.
-        /// </summary>
-        private void EnsureNotRunning()
-        {
-            if (this.IsRunning)
-            {
-                throw new InvalidOperationException("Unable to perform this operation when OnlineKpiContainer is running!");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the delay time (milliseconds) of the kpi calculate loop.
-        /// </summary>
-        public int DelayTimeMS
-        {
-            get => m_delayTimeMS;
-            set => m_delayTimeMS = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the current SynchronizationContext object.
-        /// </summary>
-        public SynchronizationContext SyncContext { get; set; }
-
-        /// <summary>
-        /// Is the main loop currently running?
-        /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                // Check for currently running task
-                if (m_runningTask != null &&
-                    m_runningTask.Status == TaskStatus.Running)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
         /// The interval for which values are produced.
         /// (Calculating is triggered after value interval).
         /// </summary>
-        public TimeSpan ValueInterval
-        {
-            get => m_valueInterval;
-            set
-            {
-                this.EnsureNotRunning();
-                m_valueInterval = value;
-            }
-        }
-
-        /// <summary>
-        /// Values collected over this time interval are used for calculation.
-        /// (Calculation uses values of this time interval).
-        /// </summary>
-        public TimeSpan CalculationInterval
-        {
-            get => m_calculationInterval;
-            set
-            {
-                this.EnsureNotRunning();
-                m_calculationInterval = value;
-            }
-        }
+        public TimeSpan ValueInterval { get; }
 
         /// <summary>
         /// The Maximum count of historical entries.
         /// </summary>
-        public int MaxCountHistoricalEntries
-        {
-            get => m_maxCountHistoricalEntries;
-            set
-            {
-                this.EnsureNotRunning();
-                m_maxCountHistoricalEntries = value;
-            }
-        }
+        public int MaxResultCountPerCalculator { get; }
 
-        /// <summary>
-        /// Should this class fill the collection containing historical entries?
-        /// </summary>
-        public bool GenerateHistoricalCollection
-        {
-            get => m_generateHistoricalCollection;
-            set
-            {
-                this.EnsureNotRunning();
-                m_generateHistoricalCollection = value;
-            }
-        }
-
-        /// <summary>
-        /// Should this class fill the collection containing current entries?
-        /// </summary>
-        public bool GenerateCurrentValueCollection
-        {
-            get => m_generateCurrentValueCollection;
-            set
-            {
-                this.EnsureNotRunning();
-                m_generateCurrentValueCollection = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets historical duration results (if activated).
-        /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisHistorical { get; }
-
-        /// <summary>
-        /// Gets current duration results (if activated).
-        /// </summary>
-        public ObservableCollection<DurationPerformanceResult> UIDurationKpisCurrents { get; }
-
-        /// <summary>
-        /// Gets historical flowrate results (if activated).
-        /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisHistorical { get; }
-
-        /// <summary>
-        /// Gets current flowrate results (if activated).
-        /// </summary>
-        public ObservableCollection<FlowRatePerformanceResult> UIFlowRateKpisCurrents { get; }
+        public PerformanceAnalyzerInternals Internals { get; }
 
         //*********************************************************************
         //*********************************************************************
@@ -423,14 +203,42 @@ namespace SeeingSharp.Util
         /// </summary>
         private class CalculatorInfo
         {
-            public CalculatorInfo(PerformanceCalculatorBase calculator)
+            public CalculatorInfo(PerformanceCalculatorBase calculator, int maxResultCount)
             {
                 Calculator = calculator;
-                Results = new BlockingCollection<PerformanceAnalyzeResultBase>();
+                Results = new RingBuffer<PerformanceAnalyzeResultBase>(maxResultCount);
             }
 
             public PerformanceCalculatorBase Calculator;
-            public BlockingCollection<PerformanceAnalyzeResultBase> Results;
+            public RingBuffer<PerformanceAnalyzeResultBase> Results;
+        }
+
+        /// <summary>
+        /// Accessors to internal methods.
+        /// </summary>
+        public class PerformanceAnalyzerInternals
+        {
+            private PerformanceAnalyzer m_owner;
+
+            internal PerformanceAnalyzerInternals(PerformanceAnalyzer owner)
+            {
+                m_owner = owner;
+            }
+
+            public void NotifyActivityDuration(string activity, long durationTicks)
+            {
+                m_owner.NotifyActivityDuration(activity, durationTicks);
+            }
+
+            public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
+            {
+                m_owner.ExecuteAndMeasureActivityDuration(activity, actionToExecute);
+            }
+
+            public IDisposable BeginMeasureActivityDuration(string activity)
+            {
+                return m_owner.BeginMeasureActivityDuration(activity);
+            }
         }
     }
 }

@@ -338,6 +338,9 @@ namespace SeeingSharp.Multimedia.Core
                         // Wait for resuming
                         await suspendWaiter;
                     }
+
+                    // Trigger calculation of performance values
+                    m_host.PerformanceAnalyzer.CalculateValues();
                 }
             });
 

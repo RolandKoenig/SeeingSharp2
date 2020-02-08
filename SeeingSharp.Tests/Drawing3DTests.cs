@@ -97,7 +97,7 @@ namespace SeeingSharp.Tests
                                 new Vector3(-0.5f, 0f, 0.5f),
                                 new Vector3(-0.5f, 0f, -0.5f))
                         },
-                        LineColor = Color4.RedColor
+                        Color = Color4.RedColor
                     };
 
 

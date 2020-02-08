@@ -34,7 +34,6 @@ namespace SeeingSharp.WpfSamples
             m_performanceAnalyzer = performanceAnalyzer;
         }
 
-        public ObservableCollection<DurationPerformanceResult> DurationKpis =>
-            m_performanceAnalyzer.UIDurationKpisCurrents;
+        public ObservableCollection<DurationPerformanceResult> DurationKpis => null;
     }
 }

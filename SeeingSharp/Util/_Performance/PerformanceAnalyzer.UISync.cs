@@ -19,79 +19,79 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.Collections.ObjectModel;
+//using System.Collections.ObjectModel;
 
 namespace SeeingSharp.Util
 {
-    public partial class PerformanceAnalyzer
-    {
-        /// <summary>
-        /// Handles the given result object for the UI layer.
-        /// </summary>
-        /// <param name="actResult">The result to be processed.</param>
-        private void HandleResultForUI(PerformanceAnalyzeResultBase actResult)
-        {
-            // Handle duration kpi results
-            var actDurationResult = actResult as DurationPerformanceResult;
+    //public partial class PerformanceAnalyzer
+    //{
+    //    /// <summary>
+    //    /// Handles the given result object for the UI layer.
+    //    /// </summary>
+    //    /// <param name="actResult">The result to be processed.</param>
+    //    private void HandleResultForUI(PerformanceAnalyzeResultBase actResult)
+    //    {
+    //        // Handle duration kpi results
+    //        var actDurationResult = actResult as DurationPerformanceResult;
 
-            if (actDurationResult != null)
-            {
-                this.HandleResultForUIForFlowRateKpi(
-                    actDurationResult, this.UIDurationKpisHistorical, this.UIDurationKpisCurrents);
-                return;
-            }
+    //        if (actDurationResult != null)
+    //        {
+    //            this.HandleResultForUIForFlowRateKpi(
+    //                actDurationResult, this.UIDurationKpisHistorical, this.UIDurationKpisCurrents);
+    //            return;
+    //        }
 
-            // Put here other result handlers
-            var actFlowRateResult = actResult as FlowRatePerformanceResult;
+    //        // Put here other result handlers
+    //        var actFlowRateResult = actResult as FlowRatePerformanceResult;
 
-            if (actFlowRateResult != null)
-            {
-                this.HandleResultForUIForFlowRateKpi(
-                    actFlowRateResult, this.UIFlowRateKpisHistorical, this.UIFlowRateKpisCurrents);
-            }
-        }
+    //        if (actFlowRateResult != null)
+    //        {
+    //            this.HandleResultForUIForFlowRateKpi(
+    //                actFlowRateResult, this.UIFlowRateKpisHistorical, this.UIFlowRateKpisCurrents);
+    //        }
+    //    }
 
-        /// <summary>
-        /// Handles the given result object for the UI layer.
-        /// </summary>
-        private void HandleResultForUIForFlowRateKpi<T>(
-            T kpiResult,
-            ObservableCollection<T> kpisHistorical,
-            ObservableCollection<T> kpisCurrents)
-            where T : PerformanceAnalyzeResultBase
-        {
-            // Handle historical entries
-            if (m_generateHistoricalCollection)
-            {
-                var actResultCount = 1;
-                kpisHistorical.Add(kpiResult);
-                for (var loop = kpisHistorical.Count - 1; loop >= 0; loop--)
-                {
-                    if (kpisHistorical[loop].Calculator == kpiResult.Calculator)
-                    {
-                        actResultCount++;
-                    }
+    //    /// <summary>
+    //    /// Handles the given result object for the UI layer.
+    //    /// </summary>
+    //    private void HandleResultForUIForFlowRateKpi<T>(
+    //        T kpiResult,
+    //        ObservableCollection<T> kpisHistorical,
+    //        ObservableCollection<T> kpisCurrents)
+    //        where T : PerformanceAnalyzeResultBase
+    //    {
+    //        // Handle historical entries
+    //        if (m_generateHistoricalCollection)
+    //        {
+    //            var actResultCount = 1;
+    //            kpisHistorical.Add(kpiResult);
+    //            for (var loop = kpisHistorical.Count - 1; loop >= 0; loop--)
+    //            {
+    //                if (kpisHistorical[loop].Calculator == kpiResult.Calculator)
+    //                {
+    //                    actResultCount++;
+    //                }
 
-                    if (actResultCount > m_maxCountHistoricalEntries)
-                    {
-                        kpisHistorical.RemoveAt(loop);
-                    }
-                }
-            }
+    //                if (actResultCount > m_maxCountHistoricalEntries)
+    //                {
+    //                    kpisHistorical.RemoveAt(loop);
+    //                }
+    //            }
+    //        }
 
-            // Handle most current entires
-            if (m_generateCurrentValueCollection)
-            {
-                kpisCurrents.Add(kpiResult);
-                for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
-                {
-                    if (kpisCurrents[loop] != kpiResult &&
-                        kpisCurrents[loop].Calculator == kpiResult.Calculator)
-                    {
-                        kpisCurrents.RemoveAt(loop);
-                    }
-                }
-            }
-        }
-    }
+    //        // Handle most current entires
+    //        if (m_generateCurrentValueCollection)
+    //        {
+    //            kpisCurrents.Add(kpiResult);
+    //            for (var loop = kpisCurrents.Count - 1; loop >= 0; loop--)
+    //            {
+    //                if (kpisCurrents[loop] != kpiResult &&
+    //                    kpisCurrents[loop].Calculator == kpiResult.Calculator)
+    //                {
+    //                    kpisCurrents.RemoveAt(loop);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 }

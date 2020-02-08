@@ -101,12 +101,8 @@ namespace SeeingSharp.Multimedia.Core
                 m_devices = new List<EngineDevice>();
 
                 // Start performance value measuring
-                this.PerformanceAnalyzer = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0))
-                {
-                    SyncContext = SynchronizationContext.Current
-                };
-                this.PerformanceAnalyzer.RunAsync(CancellationToken.None)
-                    .FireAndForget();
+                this.PerformanceAnalyzer =
+                    new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0));
 
                 // Create CoreConfiguration object
                 this.Configuration = new GraphicsCoreConfiguration

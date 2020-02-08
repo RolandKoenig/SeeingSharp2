@@ -60,18 +60,18 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                var perfAnalyzer = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(2.0));
-                var random = new Random(Environment.TickCount);
-                for (var loop = 0; loop < 5; loop++)
-                {
-                    var calculator = new DurationPerformanceCalculator($"Test-Calculator ({loop + 1})");
+                var perfAnalyzer = new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0));
+                //var random = new Random(Environment.TickCount);
+                //for (var loop = 0; loop < 5; loop++)
+                //{
+                //    var calculator = new DurationPerformanceCalculator($"Test-Calculator ({loop + 1})");
 
-                    perfAnalyzer.UIDurationKpisCurrents.Add(new DurationPerformanceResult(
-                        calculator, DateTime.UtcNow,
-                        TimeSpan.FromMilliseconds(random.NextDouble() * 30).Ticks,
-                        TimeSpan.FromMilliseconds(31.0).Ticks,
-                        TimeSpan.FromMilliseconds(1.0).Ticks));
-                }
+                //    //perfAnalyzer.UIDurationKpisCurrents.Add(new DurationPerformanceResult(
+                //    //    calculator, DateTime.UtcNow,
+                //    //    TimeSpan.FromMilliseconds(random.NextDouble() * 30).Ticks,
+                //    //    TimeSpan.FromMilliseconds(31.0).Ticks,
+                //    //    TimeSpan.FromMilliseconds(1.0).Ticks));
+                //}
 
                 return new PerformanceOverviewViewModel(perfAnalyzer);
             }

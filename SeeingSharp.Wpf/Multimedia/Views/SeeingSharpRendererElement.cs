@@ -475,7 +475,7 @@ namespace SeeingSharp.Multimedia.Views
 
                 // Try to lock the D3DImage
                 var isLocked = false;
-                GraphicsCore.Current.PerformanceAnalyzer.ExecuteAndMeasureActivityDuration(
+                GraphicsCore.Current.PerformanceAnalyzer.Internals.ExecuteAndMeasureActivityDuration(
                     "Render.Lock",
                     () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
                 if (!isLocked)

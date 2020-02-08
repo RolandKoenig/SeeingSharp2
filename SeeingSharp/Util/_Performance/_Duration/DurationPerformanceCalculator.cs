@@ -25,16 +25,25 @@ namespace SeeingSharp.Util
 {
     public class DurationPerformanceCalculator : PerformanceCalculatorBase
     {
-        //Values used for calculation
-        private ThreadSaveQueue<Tuple<DateTime, long>> m_lastDurationItems;
+        // Values used for calculation
+        private RingBuffer<ActivityDurationInfo> m_lastDurationItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
         /// </summary>
         public DurationPerformanceCalculator(string calculatorName)
+            : this(calculatorName, 1000)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
+        /// </summary>
+        public DurationPerformanceCalculator(string calculatorName, int maxHistoricalItems)
             : base(calculatorName)
         {
-            m_lastDurationItems = new ThreadSaveQueue<Tuple<DateTime, long>>();
+            m_lastDurationItems = new RingBuffer<ActivityDurationInfo>(maxHistoricalItems);
         }
 
         /// <summary>
@@ -43,30 +52,42 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total ticks the activity took.</param>
         internal void NotifyActivityDuration(long durationTicks)
         {
-            m_lastDurationItems.Enqueue(Tuple.Create(DateTime.UtcNow, durationTicks));
+            ref var actItem = ref m_lastDurationItems.AddByRef();
+            actItem.TimeStamp = DateTime.UtcNow;
+            actItem.DurationTicks = durationTicks;
+        }
+
+        /// <summary>
+        /// Notifies the a done activity and it's duration.
+        /// </summary>
+        /// <param name="durationTicks">Total ticks the activity took.</param>
+        /// <param name="timeStamp">The timestamp when the given value was measured.</param>
+        internal void NotifyActivityDuration(long durationTicks, DateTime timeStamp)
+        {
+            if (m_lastDurationItems.Count > 0)
+            {
+                ref var lastItem = ref m_lastDurationItems.GetByRef(m_lastDurationItems.Count - 1);
+                if (lastItem.TimeStamp > timeStamp)
+                {
+                    throw new ArgumentException(
+                        $"Given timestamp {timeStamp} is smaller than last one {lastItem.TimeStamp}!",
+                        nameof(timeStamp));
+                }
+            }
+
+            ref var actItem = ref m_lastDurationItems.AddByRef();
+            actItem.TimeStamp = timeStamp;
+            actItem.DurationTicks = durationTicks;
         }
 
         /// <summary>
         /// Calculates a new kpi value.
         /// </summary>
-        /// <param name="keyTimeStamp">The timestamp which is used for the result object.</param>
         /// <param name="minTimeStamp">The timestamp which is the minimum for current calculation step.</param>
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
-        /// <param name="calculationInterval">The interval from which to take all values from.</param>
-        internal override PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp,
-            DateTime minTimeStamp, DateTime maxTimeStamp,
-            TimeSpan calculationInterval)
+        internal override PerformanceAnalyzeResultBase Calculate(DateTime minTimeStamp, DateTime maxTimeStamp)
         {
-            if (!m_lastDurationItems.HasAny())
-            {
-                return null;
-            }
-            // Throw away all items which are too old
-            foreach (var dummy in m_lastDurationItems.DequeueWhile(actItem => actItem.Item1 < minTimeStamp)) { }
-
-            // Check again wether we have any items
-            if (!m_lastDurationItems.HasAny())
+            if (m_lastDurationItems.Count == 0)
             {
                 return null;
             }
@@ -76,15 +97,27 @@ namespace SeeingSharp.Util
             var maxValue = long.MinValue;
             long sumValue = 0;
             long itemCount = 0;
-            foreach (var actItem in m_lastDurationItems.PeekWhile(actTuple => actTuple.Item1 < maxTimeStamp))
+            for (var loop = 0; loop < m_lastDurationItems.Count; loop++)
             {
-                if (minValue > actItem.Item2) { minValue = actItem.Item2; }
-                if (maxValue < actItem.Item2) { maxValue = actItem.Item2; }
-                sumValue += actItem.Item2;
+                ref var actItem = ref m_lastDurationItems.GetByRef(loop);
+                if (actItem.TimeStamp < minTimeStamp)
+                {
+                    m_lastDurationItems.RemoveFirst();
+                    loop--;
+                    continue;
+                }
+                if(actItem.TimeStamp >= maxTimeStamp) { break; }
+
+                if (minValue > actItem.DurationTicks) { minValue = actItem.DurationTicks; }
+                if (maxValue < actItem.DurationTicks) { maxValue = actItem.DurationTicks; }
+                sumValue += actItem.DurationTicks;
                 itemCount++;
+
+                m_lastDurationItems.RemoveFirst();
+                loop--;
             }
 
-            // Check again wether we have any items
+            // Check again weather we have any items
             if (itemCount == 0)
             {
                 return null;
@@ -94,7 +127,18 @@ namespace SeeingSharp.Util
             var avgValue = sumValue / itemCount;
 
             // Create result object
-            return new DurationPerformanceResult(this, keyTimeStamp, avgValue, maxValue, minValue);
+            return new DurationPerformanceResult(this, maxTimeStamp, avgValue, maxValue, minValue);
+        }
+
+        public int RawDataEntries => m_lastDurationItems.Count;
+
+        //*********************************************************************
+        //*********************************************************************
+        //*********************************************************************
+        private struct ActivityDurationInfo
+        {
+            public DateTime TimeStamp;
+            public long DurationTicks;
         }
     }
 }

@@ -37,14 +37,9 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Calculates a new kpi value based on given timestamp parameters.
         /// </summary>
-        /// <param name="keyTimeStamp">The timestamp which is used for the result object.</param>
         /// <param name="minTimeStamp">The timestamp which is the minimum for current calculation step.</param>
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
-        /// <param name="calculationInterval">The interval from which to take all values from.</param>
-        internal virtual PerformanceAnalyzeResultBase Calculate(
-            DateTime keyTimeStamp,
-            DateTime minTimeStamp, DateTime maxTimeStamp,
-            TimeSpan calculationInterval)
+        internal virtual PerformanceAnalyzeResultBase Calculate(DateTime minTimeStamp, DateTime maxTimeStamp)
         {
             return null;
         }
