@@ -29,12 +29,12 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Basics3D._07_Direct2DTextureAnimated
+namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
 {
     [SampleDescription(
-        "Direct2D Texture 2", 7, nameof(Basics3D),
+        "Direct2D Texture 2", 5, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_07_Direct2DTextureAnimated",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_05_Direct2DTextureAnimated",
         typeof(SampleSettingsWith3D))]
     public class Direct2DTextureAnimatedSample : SampleBase
     {

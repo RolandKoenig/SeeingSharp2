@@ -28,12 +28,12 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Basics3D._08_GeneratedBorder
+namespace SeeingSharp.SampleContainer.Basics3D._06_GeneratedBorder
 {
     [SampleDescription(
-        "Generated Border", 8, nameof(Basics3D),
+        "Generated Border", 6, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_08_GeneratedBorder",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_06_GeneratedBorder",
         typeof(GeneratedBorderSettings))]
     public class GeneratedBorderSample : SampleBase
     {

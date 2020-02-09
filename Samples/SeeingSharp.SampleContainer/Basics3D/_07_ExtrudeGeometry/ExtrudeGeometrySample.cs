@@ -27,12 +27,12 @@ using System.Numerics;
 using System.Threading.Tasks;
 using D2D = SharpDX.Direct2D1;
 
-namespace SeeingSharp.SampleContainer.Basics3D._09_ExtrudeGeometry
+namespace SeeingSharp.SampleContainer.Basics3D._07_ExtrudeGeometry
 {
     [SampleDescription(
-        "Extrude Geometry", 9, nameof(Basics3D),
+        "Extrude Geometry", 7, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_09_ExtrudeGeometry",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_07_ExtrudeGeometry",
         typeof(SampleSettingsWith3D))]
     public class ExtrudeGeometrySample : SampleBase
     {

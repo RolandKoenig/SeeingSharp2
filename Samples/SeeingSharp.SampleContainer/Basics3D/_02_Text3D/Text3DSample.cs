@@ -23,19 +23,18 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
 using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
+namespace SeeingSharp.SampleContainer.Basics3D._02_Text3D
 {
     [SampleDescription(
-        "Skybox", 3, nameof(Basics3D),
+        "Text 3D", 2, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_03_Skybox",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_02_Text3D",
         typeof(SampleSettingsWith3D))]
-    public class SkyboxSample : SampleBase
+    public class Text3DSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -44,34 +43,25 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
                 // Create floor
-                this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
+                this.BuildStandardFloor(
+                    manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create resources
-                var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
+                // Create text geometry
+                var textOptions = TextGeometryOptions.Default;
+                textOptions.FontSize = 50;
+                textOptions.MakeVolumetricText = true;
+                textOptions.SurfaceVertexColor = Color.Blue;
+                textOptions.VolumetricSideSurfaceVertexColor = Color4.CornflowerBlue;
+                var resGeometry = manipulator.Add3DTextGeometryResource(
+                    $"Seeing# 2 {Environment.NewLine} Text3D Sample",
+                    textOptions);
+
+                // Create material
                 var resMaterial = manipulator.AddStandardMaterialResource();
 
-                // Create cube object
-                var cubeMesh = new Mesh(resGeometry, resMaterial);
-                cubeMesh.Color = Color4.GreenColor;
-                cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
-                cubeMesh.EnableShaderGeneratedBorder();
-                cubeMesh.BuildAnimationSequence()
-                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
-                    .WaitFinished()
-                    .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_360DEG, 0f), TimeSpan.FromSeconds(2.0))
-                    .WaitFinished()
-                    .CallAction(() => cubeMesh.RotationEuler = Vector3.Zero)
-                    .ApplyAndRewind();
-                manipulator.AddObject(cubeMesh);
-
-                var resSkyboxTexture = manipulator.AddTextureResource(
-                    new AssemblyResourceLink(this.GetType(),
-                        "SkyBox.dds"));
-
-                // Create the skybox on a new layer
-                manipulator.AddLayer("Skybox");
-                var skyboxObject = new Skybox(resSkyboxTexture);
-                manipulator.AddObject(skyboxObject, "Skybox");
+                // Create text geometry and object
+                var textObject = manipulator.AddMeshObject(resGeometry, resMaterial);
+                textObject.YPos = textOptions.VolumetricTextDepth;
             });
         }
 
@@ -80,8 +70,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_Skybox
             var camera = mainOrChildRenderLoop.Camera;
 
             // ConfigureLoading camera
-            camera.Position = new Vector3(3f, 1f, 3f);
-            camera.Target = new Vector3(0f, 1.2f, 0f);
+            camera.Position = new Vector3(0.7f, 8.5f, -15f);
+            camera.RelativeTarget = new Vector3(0.44f, -0.62f, 0.64f);
             camera.UpdateCamera();
 
             // Append camera behavior

@@ -27,12 +27,12 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Basics3D._05_ParentChild
+namespace SeeingSharp.SampleContainer.Basics3D._03_ParentChild
 {
     [SampleDescription(
-        "Parent/Child", 5, nameof(Basics3D),
+        "Parent/Child", 3, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_05_ParentChild",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_03_ParentChild",
         typeof(SampleSettingsWith3D))]
     public class ParentChildSample : SampleBase
     {

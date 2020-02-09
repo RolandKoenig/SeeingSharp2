@@ -29,12 +29,12 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
+namespace SeeingSharp.SampleContainer.Basics3D._08_MultiMaterial
 {
     [SampleDescription(
-        "Multi Material", 10, nameof(Basics3D),
+        "Multi Material", 8, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_10_MultiMaterial",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_08_MultiMaterial",
         typeof(SampleSettingsWith3D))]
     public class MultiMaterialSample : SampleBase
     {
@@ -52,7 +52,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_MultiMaterial
                 var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
-                var resMaterials = new NamedOrGenericKey[]
+                var resMaterials = new[]
                 {
                     manipulator.AddStandardMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
                     manipulator.AddStandardMaterialResource(resTexture),
