@@ -28,7 +28,10 @@ namespace SeeingSharp.Util
 {
     public class PerformanceAnalyzer
     {
+        private const int INIT_COUNT_CACHED_MEASURE_TOKENS = 16;
+
         // Members for calculators
+        private ConcurrentBag<DurationMeasureToken> m_durationMeasureTokens;
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
         private ConcurrentDictionary<string, CalculatorInfo> m_calculatorsDict;
 
@@ -51,6 +54,12 @@ namespace SeeingSharp.Util
             m_calculatorsBag = new ConcurrentBag<CalculatorInfo>();
 
             this.Internals = new PerformanceAnalyzerInternals(this);
+
+            m_durationMeasureTokens = new ConcurrentBag<DurationMeasureToken>();
+            for (var loop = 0; loop < INIT_COUNT_CACHED_MEASURE_TOKENS; loop++)
+            {
+                m_durationMeasureTokens.Add(new DurationMeasureToken(this));
+            }
         }
 
         /// <summary>
@@ -89,15 +98,25 @@ namespace SeeingSharp.Util
         /// Begins measuring the duration of the given activityName (end of the duration is when Dispose gets called on the result).
         /// </summary>
         /// <param name="activity">The activityName name to be measured.</param>
-        internal IDisposable BeginMeasureActivityDuration(string activity)
+        internal DurationMeasureToken BeginMeasureActivityDuration(string activity)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            return new DummyDisposable(() =>
+            if (!m_durationMeasureTokens.TryTake(out var result))
             {
-                this.NotifyActivityDuration(activity, stopwatch.Elapsed.Ticks);
-            });
+                result = new DurationMeasureToken(this);
+            }
+            result.Activity = activity;
+            result.Start();
+
+            return result;
+        }
+
+        internal void EndMeasureActivityDuration(DurationMeasureToken measureToken)
+        {
+            measureToken.Stop();
+
+            this.NotifyActivityDuration(measureToken.Activity, measureToken.ElapsedTicks);
+
+            m_durationMeasureTokens.Add(measureToken);
         }
 
         /// <summary>
@@ -127,8 +146,6 @@ namespace SeeingSharp.Util
                 {
                     ref var actResult = ref actCalculatorInfo.Results.AddByRef();
                     actCalculatorInfo.Calculator.Calculate(ref actResult, actMinTimestamp, actMaxTimestamp);
-
-
                     actCalculatorInfo.CurrentResult = actResult;
                 }
 

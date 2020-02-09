@@ -52,15 +52,6 @@ namespace SeeingSharp
         }
 
         /// <summary>
-        /// Creates a new matrix stack using 4x4 matrices
-        /// </summary>
-        public Matrix4Stack(ref Matrix4x4 top)
-            : this()
-        {
-            m_top = top;
-        }
-
-        /// <summary>
         /// Gets the top matrix by reference.
         /// </summary>
         public ref Matrix4x4 GetTopRef()
