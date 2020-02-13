@@ -45,14 +45,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         public Matrix4x4 ViewProj;
         public Vector3 CameraPosition;
-        public float GradientFactor;
         public float BorderFactor;
         public float LightPower;
         public float StrongLightFactor;
         public float Ambient;
         public float Accentuation;
         public Vector2 ScreenPixelSize;
-        public float Dummy;
+        public Vector2 Dummy;
     }
 
     /// <summary>

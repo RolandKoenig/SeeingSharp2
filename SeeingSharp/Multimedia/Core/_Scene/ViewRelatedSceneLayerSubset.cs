@@ -480,7 +480,6 @@ namespace SeeingSharp.Multimedia.Core
             var cbPerView = new CBPerView
             {
                 Accentuation = viewConfiguration.AccentuationFactor,
-                GradientFactor = viewConfiguration.GeneratedColorGradientFactor,
                 BorderFactor = viewConfiguration.GeneratedBorderFactor,
                 Ambient = viewConfiguration.AmbientFactor,
                 CameraPosition = this.ViewInformation.Camera.Position,

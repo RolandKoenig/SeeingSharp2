@@ -1,25 +1,6 @@
 // This file contains all default functions used across all
 // object rendered with this graphics engine
 
-// A function that generate a color gradient by a given input color and texture coordinate
-float4 ApplyColorGradient(float4 inputColor, float2 texCoord)
-{
-	// Map texture coordinate to range 0..1
-	texCoord.x = clamp(texCoord.x, 0.0, 1.0);
-	texCoord.y = clamp(texCoord.y, 0.0, 1.0);
-
-	// Calculate gradient factors
-    float texCoordFactor = texCoord.x * 0.1f + texCoord.y;
-    float changeFactor = (abs((texCoordFactor % 2) - 1) / 15) * GradientFactor;
-	float4 outputColor;
-    outputColor.x = inputColor.x + changeFactor;
-    outputColor.y = inputColor.y + changeFactor;
-    outputColor.z = inputColor.z + changeFactor;
-	outputColor.w = inputColor.w;
-    
-	return outputColor;
-}
-
 // Changes the given input color so that a border will be generated based on texture coordinates
 float4 ApplyColorBorders(float4 inputColor, float distanceToCamera, float2 texCoord)
 {

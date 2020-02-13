@@ -33,7 +33,6 @@ namespace SeeingSharp.Multimedia.Core
         private const bool DEFAULT_ANTIALIASING = true;
         private const AntialiasingQualityLevel DEFAULT_ANTIALIASING_QUALITY = AntialiasingQualityLevel.Medium;
         private const float DEFAULT_BORDER_FACTOR = 1f;
-        private const float DEFAULT_GRADIENT_FACTOR = 1f;
         private const float DEFAULT_ACCENTUATION_FACTOR = 0f;
         private const float DEFAULT_AMBIENT_FACTOR = 0.2f;
         private const float DEFAULT_LIGHT_POWER = 0.8f;
@@ -45,7 +44,6 @@ namespace SeeingSharp.Multimedia.Core
         private AntialiasingQualityLevel m_antialiasingQuality;
 
         // Most view parameters (Light, Gradient, Accentuation)
-        private float m_generatedColorGradientFactor;
         private float m_generatedBorderFactor;
         private float m_accentuationFactor;
         private float m_ambientFactor;
@@ -70,7 +68,6 @@ namespace SeeingSharp.Multimedia.Core
             this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
             this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
             m_generatedBorderFactor = DEFAULT_BORDER_FACTOR;
-            m_generatedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
             m_accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
             m_ambientFactor = DEFAULT_AMBIENT_FACTOR;
             m_lightPower = DEFAULT_LIGHT_POWER;
@@ -85,7 +82,6 @@ namespace SeeingSharp.Multimedia.Core
             this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
             this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
             this.GeneratedBorderFactor= DEFAULT_BORDER_FACTOR;
-            this.GeneratedColorGradientFactor = DEFAULT_GRADIENT_FACTOR;
             this.AccentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
             this.AmbientFactor = DEFAULT_AMBIENT_FACTOR;
             this.LightPower = DEFAULT_LIGHT_POWER;
@@ -137,20 +133,6 @@ namespace SeeingSharp.Multimedia.Core
                     m_antialiasingQuality = value;
                     this.ViewNeedsRefresh = true;
 
-                    this.ConfigurationChanged.Raise(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        [DefaultValue(DEFAULT_GRADIENT_FACTOR)]
-        public float GeneratedColorGradientFactor
-        {
-            get => m_generatedColorGradientFactor;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(m_generatedColorGradientFactor, value))
-                {
-                    m_generatedColorGradientFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }

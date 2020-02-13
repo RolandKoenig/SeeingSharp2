@@ -21,14 +21,13 @@ cbuffer cbPerView : register ( b1 )
 {
     float4x4    ViewProj;
     float3      CameraPosition;
-    float       GradientFactor;
     float       BorderFactor;
     float       LightPower;
     float       StrongLightFactor;
     float       Ambient;
     float       Accentuation;
     float2      ScreenPixelSize;
-	float       Dummy;
+	float2      Dummy;
 }
 
 // Buffer with per object data

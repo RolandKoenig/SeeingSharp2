@@ -27,9 +27,6 @@ PSInputStandard main(VSInputStandard input)
 	float4 vertexColor = input.col * input.col.a + ObjectColor * (1 - input.col.a);
 	vertexColor.a = input.col.a;
 
-    // Calculate color gradient
-    vertexColor = ApplyColorGradient(vertexColor, output.tex.xy);
-
 	// Apply output color
 	output.col = (MaterialDiffuseColor * DiffuseColorFactor) + (vertexColor * (1.0 - DiffuseColorFactor));
 
