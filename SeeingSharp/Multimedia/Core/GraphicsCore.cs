@@ -502,7 +502,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all loaded devices.
         /// </summary>
-        public IEnumerable<EngineDevice> Devices => m_devices;
+        public IReadOnlyList<EngineDevice> Devices => m_devices;
 
         /// <summary>
         /// Gets the total count of loaded devices.

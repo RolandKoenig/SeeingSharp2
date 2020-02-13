@@ -60,7 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         // Common
         private GraphicsCore m_host;
 
-        // Cached strings
+        // Cached objects
+        private GenericInputEventArgs m_cachedInputEventArgs;
         private List<string> m_perfSceneUpdateBesideActivityNames;
 
         // Logic blocks
@@ -92,6 +93,7 @@ namespace SeeingSharp.Multimedia.Core
             m_scenesForUnload = new List<Scene>();
             m_scenesForUnloadLock = new object();
 
+            m_cachedInputEventArgs = new GenericInputEventArgs();
             m_perfSceneUpdateBesideActivityNames = new List<string>(16);
 
             m_logicUpdateAndPrepareRendering = new MainLoop_UpdateAndPrepareRendering(graphicsCore, this);
@@ -281,9 +283,8 @@ namespace SeeingSharp.Multimedia.Core
                             m_logicUpdateAndPrepareRendering.Reset(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
                             await m_logicUpdateAndPrepareRendering.ExecuteAsync()
                                 .ConfigureAwait(false);
-                            //await this.UpdateAndPrepareRendering(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState)
-                            //    .ConfigureAwait(false);
 
+                            // Update all cameras
                             foreach (var actCamera in camerasToUpdate)
                             {
                                 actCamera.AnimationHandler.Update(updateState);
@@ -297,7 +298,8 @@ namespace SeeingSharp.Multimedia.Core
                             this.RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
 
                             // Raise generic input event (if registered)
-                            this.GenericInput?.Raise(this, new GenericInputEventArgs(inputFrames));
+                            m_cachedInputEventArgs.NotifyNewPass(inputFrames);
+                            this.GenericInput?.Raise(this, m_cachedInputEventArgs);
 
                             // Clear unreferenced Scenes finally
                             lock (m_scenesForUnloadLock)
@@ -314,9 +316,10 @@ namespace SeeingSharp.Multimedia.Core
                             // Unload all Direct2D resources which are not needed anymore
                             while (m_drawing2DResourcesToUnload.TryDequeue(out var act2DResourceToUnload))
                             {
-                                foreach (var actDevice in m_host.Devices)
+                                var deviceCount = m_host.DeviceCount;
+                                for (var loop = 0; loop < deviceCount; loop++)
                                 {
-                                    act2DResourceToUnload.UnloadResources(actDevice);
+                                    act2DResourceToUnload.UnloadResources(m_host.Devices[loop]);
                                 }
                             }
                         }
