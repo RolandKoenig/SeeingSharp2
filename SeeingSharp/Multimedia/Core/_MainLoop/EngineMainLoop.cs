@@ -38,6 +38,9 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class EngineMainLoop
     {
+        // Common
+        private GraphicsCore m_host;
+
         // Main thread synchronization
         private Task m_suspendWaiter;
         private TaskCompletionSource<object> m_suspendWaiterSource;
@@ -57,15 +60,12 @@ namespace SeeingSharp.Multimedia.Core
         // Members regarding 2D resources
         private ConcurrentQueue<Drawing2DResourceBase> m_drawing2DResourcesToUnload;
 
-        // Common
-        private GraphicsCore m_host;
-
         // Cached objects
         private GenericInputEventArgs m_cachedInputEventArgs;
-        private List<string> m_perfSceneUpdateBesideActivityNames;
 
         // Logic blocks
         private MainLoop_UpdateAndPrepareRendering m_logicUpdateAndPrepareRendering;
+        private MainLoop_RenderAndUpdateBeside m_logicRenderAndUpdateBeside;
 
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
@@ -94,9 +94,9 @@ namespace SeeingSharp.Multimedia.Core
             m_scenesForUnloadLock = new object();
 
             m_cachedInputEventArgs = new GenericInputEventArgs();
-            m_perfSceneUpdateBesideActivityNames = new List<string>(16);
 
             m_logicUpdateAndPrepareRendering = new MainLoop_UpdateAndPrepareRendering(graphicsCore, this);
+            m_logicRenderAndUpdateBeside = new MainLoop_RenderAndUpdateBeside(m_host, this);
         }
 
         /// <summary>
@@ -280,8 +280,8 @@ namespace SeeingSharp.Multimedia.Core
                             m_host.InputGatherer.QueryForCurrentFrames(inputFrames);
 
                             // First global pass: Update scene and prepare rendering
-                            m_logicUpdateAndPrepareRendering.Reset(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
-                            await m_logicUpdateAndPrepareRendering.ExecuteAsync()
+                            m_logicUpdateAndPrepareRendering.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
+                            await m_logicUpdateAndPrepareRendering.ExecutePassAsync()
                                 .ConfigureAwait(false);
 
                             // Update all cameras
@@ -295,7 +295,8 @@ namespace SeeingSharp.Multimedia.Core
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
 
                             // Second global pass: Render scene(s) and update beside
-                            this.RenderAndUpdateBeside(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
+                            m_logicRenderAndUpdateBeside.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
+                            m_logicRenderAndUpdateBeside.ExecutePass();
 
                             // Raise generic input event (if registered)
                             m_cachedInputEventArgs.NotifyNewPass(inputFrames);
@@ -383,87 +384,6 @@ namespace SeeingSharp.Multimedia.Core
             lock (m_scenesForUnloadLock)
             {
                 while (m_scenesForUnload.Remove(scene)) { }
-            }
-        }
-        
-        /// <summary>
-        /// Renders all given scenes using the different devices and performs "UpdateBesideRendering" step.
-        /// </summary>
-        /// <param name="registeredRenderLoops">The registered render loops on the current pass.</param>
-        /// <param name="scenesToRender">All scenes to be updated / rendered.</param>
-        /// <param name="devicesInUse">The rendering devices that are in use.</param>
-        /// <param name="updateState">Current global update state.</param>
-        private void RenderAndUpdateBeside(
-            IReadOnlyList<RenderLoop> registeredRenderLoops, IReadOnlyList<Scene> scenesToRender, IReadOnlyList<EngineDevice> devicesInUse, UpdateState updateState)
-        {
-            using (m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
-            {
-                var invalidRenderLoops = new ThreadSaveQueue<RenderLoop>();
-
-                // Prepare cached activity names for measuring scene updates
-                while (scenesToRender.Count > m_perfSceneUpdateBesideActivityNames.Count)
-                {
-                    m_perfSceneUpdateBesideActivityNames.Add(
-                        string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_BESIDE, m_perfSceneUpdateBesideActivityNames.Count));
-                }
-
-                // Trigger all tasks for 'Update' pass
-                Parallel.For(0, devicesInUse.Count + scenesToRender.Count, actTaskIndex =>
-                {
-                    if (actTaskIndex < devicesInUse.Count)
-                    {
-                        // Render all targets for the current device
-                        var actDevice = devicesInUse[actTaskIndex];
-                        using (m_host.BeginMeasureActivityDuration(string.Format(SeeingSharpConstants.PERF_GLOBAL_RENDER_DEVICE, actDevice.AdapterDescription)))
-                        {
-                            for (var loop = 0; loop < registeredRenderLoops.Count; loop++)
-                            {
-                                var actRenderLoop = registeredRenderLoops[loop];
-
-                                try
-                                {
-                                    if (actRenderLoop.Device == actDevice)
-                                    {
-                                        actRenderLoop.Render();
-                                    }
-                                }
-                                catch (Exception)
-                                {
-                                    // Mark this renderloop as invalid
-                                    invalidRenderLoops.Enqueue(actRenderLoop);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Perform updates beside rendering for the current scene
-                        var sceneIndex = actTaskIndex - devicesInUse.Count;
-                        using (m_host.BeginMeasureActivityDuration(m_perfSceneUpdateBesideActivityNames[sceneIndex]))
-                        {
-                            var actScene = scenesToRender[sceneIndex];
-                            var actUpdateState = actScene.CachedUpdateState;
-
-                            actUpdateState.OnStartSceneUpdate(actScene, updateState, null);
-                            actScene.UpdateBesideRender(actUpdateState);
-                        }
-                    }
-                });
-
-                // Handle all invalid render loops
-                if (invalidRenderLoops.HasAny())
-                {
-                    foreach (var actRenderLoop in invalidRenderLoops.DequeueAll())
-                    {
-                        this.DeregisterRenderLoop(actRenderLoop);
-                    }
-                }
-
-                // Reset camera changed flags
-                foreach (var actRenderLoop in registeredRenderLoops)
-                {
-                    actRenderLoop.Camera.StateChanged = false;
-                }
             }
         }
 

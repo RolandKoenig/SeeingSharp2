@@ -43,11 +43,12 @@ namespace SeeingSharp.Multimedia.Core
         private IEnumerable<InputFrame> m_inputFrames;
         private UpdateState m_updateState;
 
-        // Local data during ExecuteAsync method
+        // Caches values and collections
         private ThreadSaveQueue<Exception> m_exceptionsDuringUpdate;
         private List<Action> m_additionalContinuationActions;
         private object m_additionalContinuationActionsLock;
         private List<Task<List<Action>>> m_prepareRenderTasks;
+        private Action<int> m_actionUpdateSingleScene;
 
         public MainLoop_UpdateAndPrepareRendering(GraphicsCore core, EngineMainLoop mainLoop)
         {
@@ -60,9 +61,11 @@ namespace SeeingSharp.Multimedia.Core
             m_additionalContinuationActionsLock = new object();
 
             m_prepareRenderTasks = new List<Task<List<Action>>>(16);
+
+            m_actionUpdateSingleScene = new Action<int>(this.UpdateSingleScene);
         }
 
-        public void Reset(
+        public void SetPassParameters(
             List<RenderLoop> renderingRenderLoops, IReadOnlyList<Scene> scenesToRender,
             IReadOnlyList<EngineDevice> devicesInUse, IEnumerable<InputFrame> inputFrames, UpdateState updateState)
         {
@@ -86,7 +89,7 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecutePassAsync()
         {
             using (m_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_UPDATE_AND_PREPARE))
             {
@@ -102,7 +105,7 @@ namespace SeeingSharp.Multimedia.Core
                 if(m_scenesToRender.Count == 1){ this.UpdateSingleScene(0); }
                 else
                 {
-                    Parallel.For(0, m_scenesToRender.Count, this.UpdateSingleScene);
+                    Parallel.For(0, m_scenesToRender.Count, m_actionUpdateSingleScene);
                 }
   
                 // Await synchronizations with the view(s)
@@ -142,7 +145,7 @@ namespace SeeingSharp.Multimedia.Core
                     actAction();
                 }
 
-                // Reset all dummy flags before rendering
+                // SetPassParameters all dummy flags before rendering
                 foreach (var actRenderLoop in m_renderingRenderLoops)
                 {
                     actRenderLoop.ResetFlagsBeforeRendering();
