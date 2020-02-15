@@ -19,9 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using Microsoft.Win32;
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
@@ -62,8 +60,6 @@ namespace SeeingSharp.Multimedia.Views
         // Some size related properties
         private int m_renderTargetHeight;
         private int m_renderTargetWidth;
-        private int m_viewportHeight;
-        private int m_viewportWidth;
         private DateTime m_lastSizeChange;
         private WpfSeeingSharpCompositionMode m_compositionMode;
         private bool m_forceCompositionOverSoftware;
@@ -114,7 +110,7 @@ namespace SeeingSharp.Multimedia.Views
             var dpiScaleFactorX = 1.0;
             var dpiScaleFactorY = 1.0;
 
-            if (source != null)
+            if (source?.CompositionTarget != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
@@ -135,7 +131,7 @@ namespace SeeingSharp.Multimedia.Views
             var source = PresentationSource.FromVisual(this);
             var dpiScaleFactorX = 1.0;
             var dpiScaleFactorY = 1.0;
-            if (source != null)
+            if (source?.CompositionTarget != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
@@ -155,7 +151,7 @@ namespace SeeingSharp.Multimedia.Views
             var source = PresentationSource.FromVisual(this);
             var dpiScaleFactorX = 1.0;
             var dpiScaleFactorY = 1.0;
-            if (source != null)
+            if (source?.CompositionTarget != null)
             {
                 dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
@@ -229,31 +225,6 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
-        /// Called when the current session was switched.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="SessionSwitchEventArgs"/> instance containing the event data.</param>
-        private void OnSystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            if (this.RenderLoop == null) { return; }
-            if (this.IsInDesignMode()) { return; }
-
-            switch (e.Reason)
-            {
-                // Handle session lock/unload events
-                //  => Force recreation of view resources in that case
-                case SessionSwitchReason.SessionUnlock:
-                case SessionSwitchReason.SessionLock:
-                case SessionSwitchReason.SessionLogon:
-                    if (this.RenderLoop.IsRegisteredOnMainLoop)
-                    {
-                        this.RenderLoop.Configuration.ViewNeedsRefresh = true;
-                    }
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Called when the image is unloaded.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -311,7 +282,6 @@ namespace SeeingSharp.Multimedia.Views
 
             // Get references to current render device
             D3D11.Device renderDevice = engineDevice.Internals.DeviceD3D11_1;
-            var renderDeviceContext = renderDevice.ImmediateContext;
             var viewPort = default(RawViewportF);
 
             var initializedSuccessfully = false;
@@ -370,11 +340,6 @@ namespace SeeingSharp.Multimedia.Views
 
                 // Define the viewport for rendering
                 viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
-
-                // Apply new width and height values of the viewport
-                m_viewportWidth = width;
-                m_viewportHeight = height;
-
                 if (m_d3dImageSource != null)
                 {
                     // Create and apply the image source object
@@ -475,9 +440,10 @@ namespace SeeingSharp.Multimedia.Views
 
                 // Try to lock the D3DImage
                 var isLocked = false;
-                GraphicsCore.Current.PerformanceAnalyzer.Internals.ExecuteAndMeasureActivityDuration(
-                    "Render.Lock",
-                    () => isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION));
+                using (GraphicsCore.Current.PerformanceAnalyzer.Internals.BeginMeasureActivityDuration("Render.Lock"))
+                {
+                    isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION);
+                }
                 if (!isLocked)
                 {
                     m_lockImageErrorCount++;
@@ -541,7 +507,7 @@ namespace SeeingSharp.Multimedia.Views
 
         private void OnD3DImageSource_IsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool)e.NewValue == true)
+            if ((bool)e.NewValue)
             {
                 // Recreate view resources if we got the frontbuffer back
                 this.RenderLoop.ForceViewReload();
