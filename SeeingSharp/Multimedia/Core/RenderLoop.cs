@@ -86,6 +86,11 @@ namespace SeeingSharp.Multimedia.Core
         private SharpDX.Mathematics.Interop.RawViewportF m_viewport;
         private int m_loadDeviceIndex;
 
+        // Cached values
+        private List<Action> m_cachedPrepareRenderContinuationActions;
+        private string m_cachedPerfRenderLoopRender;
+        private string m_cachedPerfRenderLoopRender2D;
+
         // Direct3D resources for rendertarget capturing
         // ----
         // A staging texture for reading contents by Cpu
@@ -118,6 +123,7 @@ namespace SeeingSharp.Multimedia.Core
             this.Internals = new RenderLoopInternals(this);
 
             m_afterPresentActions = new ThreadSaveQueue<Action>();
+            m_cachedPrepareRenderContinuationActions = new List<Action>();
 
             this.UISynchronizationContext = guiSyncContext;
 
@@ -688,10 +694,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Prepares rendering (refreshes view resources, post last rendered image to the view, ...)
         /// </summary>
-        internal async Task<List<Action>> PrepareRenderAsync()
+        internal async Task<IReadOnlyList<Action>> PrepareRenderAsync()
         {
-            var continuationActions = new List<Action>();
-            if (this.DiscardRendering) { return continuationActions; }
+            m_cachedPrepareRenderContinuationActions.Clear();
+            if (this.DiscardRendering) { return m_cachedPrepareRenderContinuationActions; }
 
             var writeVideoFrames = m_lastRenderSuccessfully;
 
@@ -813,7 +819,17 @@ namespace SeeingSharp.Multimedia.Core
                         throw new SeeingSharpGraphicsException("Unable to refresh view on device " + m_currentDevice + "!", ex);
                     }
 
-                    continuationActions.AddRange(refreshViewContinuationActions);
+                    if (m_nextRenderAllowed)
+                    {
+                        m_cachedPerfRenderLoopRender2D = string.Format(
+                            SeeingSharpConstants.PERF_RENDERLOOP_RENDER_2D,
+                            (m_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
+                        m_cachedPerfRenderLoopRender = string.Format(
+                            SeeingSharpConstants.PERF_RENDERLOOP_RENDER,
+                            (m_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
+                    }
+
+                    m_cachedPrepareRenderContinuationActions.AddRange(refreshViewContinuationActions);
                 }
 
                 // Check needed resources
@@ -835,7 +851,7 @@ namespace SeeingSharp.Multimedia.Core
                         if (m_currentScene != null)
                         {
                             var localScene = m_currentScene;
-                            continuationActions.Add(() => localScene.DeregisterView(this.ViewInformation));
+                            m_cachedPrepareRenderContinuationActions.Add(() => localScene.DeregisterView(this.ViewInformation));
 
                             foreach (var actComponent in this.SceneComponents)
                             {
@@ -851,11 +867,11 @@ namespace SeeingSharp.Multimedia.Core
                         if (m_currentScene != null)
                         {
                             var localScene = m_currentScene;
-                            continuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
+                            m_cachedPrepareRenderContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
 
-                            foreach (var actComponent in this.SceneComponents)
+                            for (var loop = 0; loop < this.SceneComponents.Count; loop++)
                             {
-                                localScene.AttachComponent(actComponent, this.ViewInformation);
+                                localScene.AttachComponent(this.SceneComponents[loop], this.ViewInformation);
                             }
                         }
                     }
@@ -871,7 +887,7 @@ namespace SeeingSharp.Multimedia.Core
                         !m_currentScene.IsViewRegistered(this.ViewInformation))
                 {
                     var localScene = m_currentScene;
-                    continuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
+                    m_cachedPrepareRenderContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
                 }
 
                 // Check needed resources
@@ -927,7 +943,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.DrawVideoFrames();
             }
 
-            return continuationActions;
+            return m_cachedPrepareRenderContinuationActions;
         }
 
         /// <summary>
@@ -994,8 +1010,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_currentDevice.IsLost) { return; }
             m_nextRenderAllowed = false;
 
-            var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(
-                string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER, m_currentDevice.DeviceIndex, this.ViewInformation.ViewIndex + 1));
+            var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(m_cachedPerfRenderLoopRender);
             try
             {
                 // Handle all resources within the scene
@@ -1041,8 +1056,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_d2dOverlay != null &&
                     m_d2dOverlay.IsLoaded)
                 {
-                    var d2dOverlayTime = GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(
-                        string.Format(SeeingSharpConstants.PERF_RENDERLOOP_RENDER_2D, m_currentDevice.DeviceIndex, this.ViewInformation.ViewIndex + 1));
+                    var d2dOverlayTime = GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(m_cachedPerfRenderLoopRender2D);
                     m_d2dOverlay.BeginDraw();
                     try
                     {
@@ -1053,11 +1067,11 @@ namespace SeeingSharp.Multimedia.Core
                         m_currentScene?.Render2DOverlay(m_renderState);
 
                         // Perform rendering of custom 2D drawing layers
-                        foreach (var act2DLayer in m_2dDrawingLayers)
+                        for (var loop = 0; loop < m_2dDrawingLayers.Count; loop++)
                         {
                             try
                             {
-                                act2DLayer.Draw2DInternal(m_d2dOverlay.Graphics);
+                                m_2dDrawingLayers[loop].Draw2DInternal(m_d2dOverlay.Graphics);
                             }
                             catch (Exception ex)
                             {

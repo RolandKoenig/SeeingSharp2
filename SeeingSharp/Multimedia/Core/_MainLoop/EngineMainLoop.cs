@@ -449,14 +449,12 @@ namespace SeeingSharp.Multimedia.Core
             for (var loop = 0; loop < registeredRenderLoops.Count; loop++)
             {
                 var actScene = registeredRenderLoops[loop].Scene;
-
                 if (actScene != null && !scenesToRender.Contains(actScene))
                 {
                     scenesToRender.Add(actScene);
                 }
 
                 var actCamera = registeredRenderLoops[loop].Camera;
-
                 if (actCamera != null && !camerasToUpdate.Contains(actCamera))
                 {
                     camerasToUpdate.Add(actCamera);

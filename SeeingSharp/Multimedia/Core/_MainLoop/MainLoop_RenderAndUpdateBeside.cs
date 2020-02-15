@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Core
                     m_perfDeviceRenderActivityNames.Add(string.Empty);
                 }
 
-                if (m_perfSceneUpdateBesideActivityNames[actDevice.DeviceIndex] == string.Empty)
+                if (m_perfDeviceRenderActivityNames[actDevice.DeviceIndex] == string.Empty)
                 {
                     m_perfDeviceRenderActivityNames[actDevice.DeviceIndex] =
                         string.Format(SeeingSharpConstants.PERF_GLOBAL_RENDER_DEVICE, actDevice.AdapterDescription);

@@ -175,8 +175,18 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     var currentResult = await actRenderLoop.PrepareRenderAsync();
 
-                    if (result == null) { result = currentResult; }
-                    else { result.AddRange(currentResult); }
+                    if((currentResult == null) || (currentResult.Count == 0))
+                    {
+                        // Nothing to do in this case - no continuation actions
+                    }
+                    else if (result == null)
+                    {
+                        result = new List<Action>(currentResult);
+                    }
+                    else
+                    {
+                        result.AddRange(currentResult);
+                    }
                 }
                 catch (Exception)
                 {
