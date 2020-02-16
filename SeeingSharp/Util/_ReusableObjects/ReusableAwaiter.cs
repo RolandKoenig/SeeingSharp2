@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -37,7 +36,7 @@ namespace SeeingSharp.Util
     /// </summary>
     public sealed class ReusableAwaiter : INotifyCompletion
     {
-        private static readonly ConcurrentBag<ReusableAwaiter> s_freeAwaiters = new ConcurrentBag<ReusableAwaiter>();
+        private static readonly ConcurrentObjectPool<ReusableAwaiter> s_freeAwaiters = new ConcurrentObjectPool<ReusableAwaiter>(() => new ReusableAwaiter(), 16);
 
         private WaitCallback m_triggerContinuationCallback;
         private Exception m_exception;
@@ -54,11 +53,7 @@ namespace SeeingSharp.Util
 
         public static ReusableAwaiter Take()
         {
-            if (s_freeAwaiters.TryTake(out var result))
-            {
-                return result;
-            }
-            return new ReusableAwaiter(); 
+            return s_freeAwaiters.Rent();
         }
 
         public ReusableAwaiter ConfigureAwait(bool continueOnCaptureContext)
@@ -89,7 +84,7 @@ namespace SeeingSharp.Util
                 m_continueOnCaptureContext = true;
                 this.IsCompleted = false;
 
-                s_freeAwaiters.Add(this);
+                s_freeAwaiters.Return(this);
             }
         }
 

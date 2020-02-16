@@ -28,7 +28,9 @@ namespace SeeingSharp.Util
     public static class SynchronizationContextExtensions
     {
         private static readonly SendOrPostCallback s_postAsyncCallBack = PostAsyncCallback;
-        private static readonly ConcurrentBag<PostAsyncState> s_cachedObjects = new ConcurrentBag<PostAsyncState>();
+        private static readonly ConcurrentObjectPool<PostAsyncState> s_cachedObjects = new ConcurrentObjectPool<PostAsyncState>(
+            () => new PostAsyncState(),
+            16);
 
         /// <summary>
         /// Post the given action in an async manner to the given SynchronizationContext.
@@ -76,16 +78,12 @@ namespace SeeingSharp.Util
         {
             public static PostAsyncState Take()
             {
-                if (s_cachedObjects.TryTake(out var result))
-                {
-                    return result;
-                }
-                return new PostAsyncState();
+                return s_cachedObjects.Rent();
             }
 
             public static void Return(PostAsyncState state)
             {
-                s_cachedObjects.Add(state);
+                s_cachedObjects.Return(state);
             }
 
             public Action PostAction;
