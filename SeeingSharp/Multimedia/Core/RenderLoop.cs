@@ -653,7 +653,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal async Task UnloadViewResourcesAsync()
         {
-            await this.UISynchronizationContext.PostAsync(this.UnloadViewResources);
+            await this.UISynchronizationContext.PostAsync(this.UnloadViewResources)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -717,7 +718,8 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Trigger prepare rendering on GUI thread
-            await this.UISynchronizationContext.PostAsync(m_cachedPrepareRenderOnGui);
+            await this.UISynchronizationContext.PostAsync(m_cachedPrepareRenderOnGui)
+                .ConfigureAwait(false);
 
             // Draw all frames to registered VideoWriters
             if (writeVideoFrames)

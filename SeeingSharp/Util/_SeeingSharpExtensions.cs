@@ -22,6 +22,7 @@
 using SeeingSharp.Checking;
 using SharpDX;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -392,130 +393,6 @@ namespace SeeingSharp.Util
             foreach (var actSourceItem in enumeration)
             {
                 yield return converter(actSourceItem);
-            }
-        }
-
-        public static void PostAlsoIfNull(this SynchronizationContext syncContext, Action postAction)
-        {
-            if (syncContext == null)
-            {
-                ThreadPool.QueueUserWorkItem(obj => postAction());
-            }
-            else
-            {
-                syncContext.Post(obj => postAction(), null);
-            }
-        }
-
-        /// <summary>
-        /// Posts the given action to the given synchronization context also if it is null.
-        /// If it is null, then a new task will be started.
-        /// </summary>
-        /// <param name="syncContext">The context to send the action to.</param>
-        /// <param name="actionToSend">The action to send.</param>
-        /// <param name="actionIfNull">What should we do if weg get no SyncContext?</param>
-        public static void PostAlsoIfNull(this SynchronizationContext syncContext, Action actionToSend, ActionIfSyncContextIsNull actionIfNull)
-        {
-            if (syncContext != null) { syncContext.Post(arg => actionToSend(), null); }
-            else
-            {
-                switch (actionIfNull)
-                {
-                    case ActionIfSyncContextIsNull.InvokeSynchronous:
-                        actionToSend();
-                        break;
-
-                    case ActionIfSyncContextIsNull.InvokeUsingNewTask:
-                        Task.Factory.StartNew(actionToSend);
-                        break;
-
-                    case ActionIfSyncContextIsNull.DontInvoke:
-                        break;
-
-                    default:
-                        throw new ArgumentException("actionIfNull", "Action " + actionIfNull + " unknown!");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Post the given action in an async manner to the given SynchronizationContext.
-        /// </summary>
-        /// <param name="syncContext">The target SynchronizationContext.</param>
-        /// <param name="postAction">The action to be posted.</param>
-        /// <param name="actionIfNull">What should we do if we get no SyncContext?</param>
-        public static Task PostAlsoIfNullAsync(this SynchronizationContext syncContext, Action postAction, ActionIfSyncContextIsNull actionIfNull)
-        {
-            var completionSource = new TaskCompletionSource<object>();
-            syncContext.PostAlsoIfNull(() =>
-                {
-                    try
-                    {
-                        postAction();
-                        completionSource.SetResult(null);
-                    }
-                    catch (Exception ex)
-                    {
-                        completionSource.SetException(ex);
-                    }
-                },
-                actionIfNull);
-            return completionSource.Task;
-        }
-
-        /// <summary>
-        /// Post the given action in an async manner to the given SynchronizationContext.
-        /// </summary>
-        /// <param name="syncContext">The target SynchronizationContext.</param>
-        /// <param name="postAction">The action to be posted.</param>
-        public static Task PostAsync(this SynchronizationContext syncContext, Action postAction)
-        {
-            var completionSource = new TaskCompletionSource<object>();
-            syncContext.Post(arg =>
-            {
-                try
-                {
-                    postAction();
-                    completionSource.TrySetResult(null);
-                }
-                catch (Exception ex)
-                {
-                    completionSource.TrySetException(ex);
-                }
-            }, null);
-            return completionSource.Task;
-        }
-
-        /// <summary>
-        /// Executes a delayed post to the given synchronization context.
-        /// </summary>
-        /// <param name="syncContext">The synchronization context to post to.</param>
-        /// <param name="callBack">The delegate to be called.</param>
-        /// <param name="state">The parameter of the delegate.</param>
-        /// <param name="delayTime">The total time to wait.</param>
-        public static void PostDelayed(this SynchronizationContext syncContext, SendOrPostCallback callBack, object state, TimeSpan delayTime)
-        {
-            syncContext.EnsureNotNull(nameof(syncContext));
-            callBack.EnsureNotNull(nameof(callBack));
-            delayTime.EnsureLongerThanZero(nameof(delayTime));
-
-            //Start and register timer in local timer store (ensures that no dispose gets called..)
-            lock (s_timerDictLock)
-            {
-                Timer newTimer = null;
-                newTimer = new Timer(
-                    arg =>
-                    {
-                        lock (s_timerDictLock)
-                        {
-                            s_timerDict.Remove(newTimer);
-                        }
-                        syncContext.Post(callBack, state);
-                    },
-                    null,
-                    (int)delayTime.TotalMilliseconds,
-                    Timeout.Infinite);
-                s_timerDict.Add(newTimer, null);
             }
         }
     }

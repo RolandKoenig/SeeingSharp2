@@ -28,13 +28,4 @@ namespace SeeingSharp.Util
     {
         bool IsDisposed { get; }
     }
-
-    public enum ActionIfSyncContextIsNull
-    {
-        InvokeSynchronous,
-
-        InvokeUsingNewTask,
-
-        DontInvoke
-    }
 }

@@ -47,10 +47,8 @@ namespace SeeingSharp.Multimedia.Views
         private RenderLoop m_renderLoop;
 
         // Resources for Direct3D 11
-        private Factory m_factory;
         private SwapChain1 m_swapChain;
         private D3D11.Device m_renderDevice;
-        private D3D11.DeviceContext m_renderDeviceContext;
         private D3D11.RenderTargetView m_renderTarget;
         private D3D11.DepthStencilView m_renderTargetDepth;
         private D3D11.Texture2D m_backBuffer;
@@ -401,23 +399,19 @@ namespace SeeingSharp.Multimedia.Views
             if (width <= SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
             if (height <= SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
-            //Get all factories
-            m_factory = device.Internals.FactoryDxgi;
-
-            //Get all devices
+            // Get all devices
             m_renderDevice = device.Internals.DeviceD3D11_1;
-            m_renderDeviceContext = m_renderDevice.ImmediateContext;
 
-            //Create the swap chain and the render target
+            // Create the swap chain and the render target
             m_swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, m_renderLoop.Configuration);
             m_backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(m_swapChain, 0);
             m_renderTarget = new D3D11.RenderTargetView(m_renderDevice, m_backBuffer);
 
-            //Create the depth buffer
+            // Create the depth buffer
             m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, m_renderLoop.Configuration);
             m_renderTargetDepth = new D3D11.DepthStencilView(m_renderDevice, m_depthBuffer);
 
-            //Define the viewport for rendering
+            // Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
             // Query for current dpi value
@@ -429,7 +423,7 @@ namespace SeeingSharp.Multimedia.Views
                 dpiScaling.DpiY = graphics.DpiY;
             }
 
-            //Return all generated objects
+            // Return all generated objects
             return Tuple.Create(m_backBuffer, m_renderTarget, m_depthBuffer, m_renderTargetDepth, viewPort, new Size2(width, height), dpiScaling);
         }
 
@@ -438,9 +432,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice device)
         {
-            m_factory = null;
             m_renderDevice = null;
-            m_renderDeviceContext = null;
 
             m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
             m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
