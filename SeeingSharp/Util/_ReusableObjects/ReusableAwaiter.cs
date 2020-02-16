@@ -27,23 +27,23 @@ using System.Threading;
 namespace SeeingSharp.Util
 {
     // Original code from https://stackoverflow.com/questions/11232604/efficient-signaling-tasks-for-tpl-completions-on-frequently-reoccuring-events
-    // Changed in two ways:
+    // Changed in some ways:
     //  - Constructor is private, the caller has to use the static Take method
+    //  - The awaiter is reset automatically in GetResult method (--> After await call)
+    //  - Locks are used for thread synchronization (GetResult and TrySetCompleted/TrySetException may be called from different threads)
 
+    /// <summary>
+    /// A reusable awaiter object meant for reduction object allocations on async/await.
+    /// </summary>
     public sealed class ReusableAwaiter : INotifyCompletion
     {
-        private static ConcurrentBag<ReusableAwaiter> s_freeAwaiters;
+        private static readonly ConcurrentBag<ReusableAwaiter> s_freeAwaiters = new ConcurrentBag<ReusableAwaiter>();
 
         private WaitCallback m_triggerContinuationCallback;
         private Exception m_exception;
         private bool m_continueOnCaptureContext;
         private Action m_continuation;
         private object m_stateSwitchLock;
-
-        static ReusableAwaiter()
-        {
-            s_freeAwaiters = new ConcurrentBag<ReusableAwaiter>();
-        }
 
         private ReusableAwaiter()
         {
