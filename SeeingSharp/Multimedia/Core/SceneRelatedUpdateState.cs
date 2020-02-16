@@ -35,9 +35,6 @@ namespace SeeingSharp.Multimedia.Core
         // Constants
         private static readonly InputFrame[] DUMMY_FRAME_COLLECTION = new InputFrame[0];
 
-        // parameters
-        private Scene m_owner;
-
         // parameters for single update step
         private bool m_isPaused;
         private UpdateState m_updateState;
@@ -46,9 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
         /// </summary>
-        internal SceneRelatedUpdateState(Scene owner)
+        internal SceneRelatedUpdateState()
         {
-            m_owner = owner;
             this.World = new Matrix4Stack(Matrix4x4.Identity);
             m_inputFrames = null;
         }
