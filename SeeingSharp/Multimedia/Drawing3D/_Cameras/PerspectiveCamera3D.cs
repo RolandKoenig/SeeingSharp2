@@ -34,6 +34,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
         /// </summary>
         public PerspectiveCamera3D()
+            : base(isOrthographic: false)
         {
 
         }
@@ -44,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
         public PerspectiveCamera3D(int width, int height)
-            : base(width, height)
+            : base(isOrthographic: false, width, height)
         {
 
         }

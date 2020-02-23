@@ -30,6 +30,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Resource keys
         private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_ORTHO = GraphicsCore.GetNextGenericResourceKey();
         private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         // Some configuration
@@ -47,6 +48,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private TextureResource m_textureResource;
         private VertexShaderResource m_vertexShader;
         private PixelShaderResource m_pixelShader;
+        private PixelShaderResource m_pixelShaderOrtho;
         private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
         private DefaultResources m_defaultResources;
 
@@ -98,6 +100,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_pixelShader = resources.GetResourceAndEnsureLoaded(
                 RES_KEY_PIXEL_SHADER,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "CommonPixelShader"));
+            m_pixelShaderOrtho = resources.GetResourceAndEnsureLoaded(
+                RES_KEY_PIXEL_SHADER_ORTHO,
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "CommonPixelShader.Ortho"));
             m_cbPerMaterial = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerMaterial>());
@@ -121,6 +126,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             m_vertexShader = null;
             m_pixelShader = null;
+            m_pixelShaderOrtho = null;
             m_textureResource = null;
             m_cbPerMaterial = null;
         }
@@ -190,7 +196,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (!isResourceSameType)
             {
                 deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-                deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
+
+                if(renderState.Camera.IsOrthopraphicInternal){ deviceContext.PixelShader.Set(m_pixelShaderOrtho.PixelShader); }
+                else{ deviceContext.PixelShader.Set(m_pixelShader.PixelShader); }
             }
         }
 

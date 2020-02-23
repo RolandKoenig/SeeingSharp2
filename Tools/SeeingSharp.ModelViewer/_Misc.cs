@@ -37,4 +37,11 @@ namespace SeeingSharp.ModelViewer
 
         public string SelectedFile { get; set; }
     }
+
+    public enum CameraMode
+    {
+        Perspective,
+
+        Orthographic
+    }
 }

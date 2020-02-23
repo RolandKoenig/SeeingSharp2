@@ -44,6 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     internal struct CBPerView
     {
         public Matrix4x4 ViewProj;
+        public Matrix4x4 View;
         public Vector3 CameraPosition;
         public float BorderFactor;
         public float LightPower;

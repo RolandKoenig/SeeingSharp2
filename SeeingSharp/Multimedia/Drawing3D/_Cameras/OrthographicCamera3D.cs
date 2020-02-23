@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class OrthographicCamera3D : Camera3DBase
     {
         // Constants
-        private const float ZOOM_FACTOR_MIN = 0.1f;
+        private const float ZOOM_FACTOR_MIN = 1f;
 
         // Configuration
         private float m_zoomFactor = 10f;
@@ -36,6 +36,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
         /// </summary>
         public OrthographicCamera3D()
+            : base(isOrthographic: true)
         {
         }
 
@@ -45,7 +46,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
         public OrthographicCamera3D(int width, int height)
-            : base(width, height)
+            : base(isOrthographic: true, width, height)
         {
         }
 
@@ -76,6 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="dist">The Distance you want to zoom.</param>
         public override void Zoom(float dist)
         {
+            dist = dist * 0.1f;
             while (Math.Abs(dist) > 1f)
             {
                 m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
@@ -102,9 +104,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
-            if (m_zoomFactor <= ZOOM_FACTOR_MIN) { m_zoomFactor = ZOOM_FACTOR_MIN; }
+            var zoomFactor = m_zoomFactor;
+            if (zoomFactor <= ZOOM_FACTOR_MIN) { zoomFactor = ZOOM_FACTOR_MIN; }
 
-            Matrix4x4Ex.CreateOrthoLH(this.ScreenWidth / m_zoomFactor, screenHeight / m_zoomFactor,
+            Matrix4x4Ex.CreateOrthoLH(this.ScreenWidth / zoomFactor, screenHeight / zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
                 Math.Abs(Math.Max(zNear, zFar)),
                 out projMatrix);

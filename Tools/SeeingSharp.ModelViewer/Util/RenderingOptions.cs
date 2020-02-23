@@ -21,11 +21,16 @@
 */
 using PropertyTools.DataAnnotations;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.ModelViewer.Util
 {
     public class RenderingOptions : PropertyChangedBase
     {
+        private const string CATEGORY_COMMON = "Common";
+        private const string CATEGORY_RENDERING = "Rendering";
+        private const string CATEGORY_LIGHTING = "Lighting";
+
         private readonly RenderLoop m_renderLoop;
 
         public RenderingOptions(RenderLoop renderLoop)
@@ -35,14 +40,39 @@ namespace SeeingSharp.ModelViewer.Util
             this.Reset = new DelegateCommand(() =>
             {
                 m_renderLoop.Configuration.Reset();
+
+                if (!(m_renderLoop.Camera is PerspectiveCamera3D))
+                {
+                    m_renderLoop.Camera = new PerspectiveCamera3D();
+                }
+
                 this.RaisePropertyChanged(string.Empty);
             });
         }
 
-        [Category("Common")]
+        [Category(CATEGORY_COMMON)]
         public DelegateCommand Reset { get; }
 
-        [Category("Rendering")]
+        [Category(CATEGORY_RENDERING)]
+        public CameraMode CameraMode
+        {
+            get => m_renderLoop.Camera is PerspectiveCamera3D ? CameraMode.Perspective : CameraMode.Orthographic;
+            set
+            {
+                switch (value)
+                {
+                    case CameraMode.Perspective: 
+                        m_renderLoop.Camera = new PerspectiveCamera3D();
+                        break;
+                    
+                    case CameraMode.Orthographic:
+                        m_renderLoop.Camera = new OrthographicCamera3D();
+                        break;
+                }
+            }
+        }
+
+        [Category(CATEGORY_RENDERING)]
         public bool Antialiasing
         {
             get => m_renderLoop.Configuration.AntialiasingEnabled;
@@ -53,7 +83,7 @@ namespace SeeingSharp.ModelViewer.Util
             } 
         }
 
-        [Category("Rendering")]
+        [Category(CATEGORY_RENDERING)]
         public AntialiasingQualityLevel AntialiasingQuality
         {
             get => m_renderLoop.Configuration.AntialiasingQuality;
@@ -67,7 +97,7 @@ namespace SeeingSharp.ModelViewer.Util
             }
         }
 
-        [Category("Lighting")]
+        [Category(CATEGORY_LIGHTING)]
         [Slidable(Minimum = 0, Maximum = 1, LargeChange = 0.05, SmallChange = 0.05, TickFrequency = 0.05)]
         [FormatString("N2")]
         public float AmbientFactor
@@ -80,7 +110,7 @@ namespace SeeingSharp.ModelViewer.Util
             }
         }
 
-        [Category("Lighting")]
+        [Category(CATEGORY_LIGHTING)]
         [Slidable(Minimum = 0, Maximum = 1, LargeChange = 0.05, SmallChange = 0.05, TickFrequency = 0.05)]
         [FormatString("N2")]
         public float LightPower
@@ -93,7 +123,7 @@ namespace SeeingSharp.ModelViewer.Util
             }
         }
 
-        [Category("Lighting")]
+        [Category(CATEGORY_LIGHTING)]
         [Slidable(Minimum = 0, Maximum = 3, LargeChange = 0.05, SmallChange = 0.05, TickFrequency = 0.05)]
         [FormatString("N2")]
         public float StrongLightFactor

@@ -20,6 +20,7 @@ cbuffer cbPerFrame : register( b0 )
 cbuffer cbPerView : register ( b1 )
 {
     float4x4    ViewProj;
+	float4x4    View;
     float3      CameraPosition;
     float       BorderFactor;
     float       LightPower;

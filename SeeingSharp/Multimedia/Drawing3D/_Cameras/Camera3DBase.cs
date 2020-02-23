@@ -50,8 +50,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
         /// </summary>
-        protected Camera3DBase()
-            : this(100, 100)
+        protected Camera3DBase(bool isOrthographic)
+            : this(isOrthographic, 100, 100)
         {
 
         }
@@ -61,8 +61,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
-        protected Camera3DBase(int width, int height)
+        protected Camera3DBase(bool isOrthographic, int width, int height)
         {
+            this.IsOrthopraphicInternal = isOrthographic;
             this.ScreenWidth = width;
             this.ScreenHeight = height;
 
@@ -451,5 +452,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Gets the currently associated RenderLoop object.
         /// </summary>
         public object AssociatedRenderLoop { get; internal set; }
+
+        public bool IsOrthographic => this.IsOrthopraphicInternal;
+
+        internal bool IsOrthopraphicInternal;
     }
 }

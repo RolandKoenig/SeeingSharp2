@@ -30,6 +30,9 @@ namespace SeeingSharp.Multimedia.Components
     public abstract class FocusedCameraComponent
         : SceneComponent<FocusedCameraComponent.PerSceneContext>
     {
+        private const float ORTHO_ZOOM_FACTOR_START = 1500f;
+        private const float ORTHO_ZOOM_FACTOR_PER_CAMERA_DISTANCE = 250f;
+
         // Constants
         private const float SINGLE_ROTATION_H = EngineMath.RAD_180DEG / 100f;
         private const float SINGLE_ROTATION_V = EngineMath.RAD_180DEG / 100f;
@@ -43,8 +46,8 @@ namespace SeeingSharp.Multimedia.Components
         protected FocusedCameraComponent()
         {
             this.CameraDistanceInitial = 4f;
-            this.CameraDistanceMin = 3f;
-            this.CameraDistanceMax = 10f;
+            this.CameraDistanceMin = 1f;
+            this.CameraDistanceMax = 5f;
             m_hvRotation = new Vector2(
                 EngineMath.RAD_45DEG,
                 EngineMath.RAD_45DEG);
@@ -85,7 +88,6 @@ namespace SeeingSharp.Multimedia.Components
         protected override void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView, PerSceneContext componentContext)
         {
             var actCamera = correspondingView.Camera;
-
             if (actCamera == null)
             {
                 return;
@@ -113,7 +115,7 @@ namespace SeeingSharp.Multimedia.Components
             // Ensure that our values are in allowed ranges
             const float MAX_RAD = EngineMath.RAD_90DEG * 0.99f;
             const float MIN_RAD = EngineMath.RAD_90DEG * -0.99f;
-            componentContext.CameraHVRotation.X = componentContext.CameraHVRotation.X % EngineMath.RAD_360DEG;
+            componentContext.CameraHVRotation.X %= EngineMath.RAD_360DEG;
 
             if (componentContext.CameraDistance < this.CameraDistanceMin) { componentContext.CameraDistance = this.CameraDistanceMin; }
             if (componentContext.CameraDistance > this.CameraDistanceMax) { componentContext.CameraDistance = this.CameraDistanceMax; }
@@ -132,6 +134,11 @@ namespace SeeingSharp.Multimedia.Components
             var focusedLocation = this.GetFocusedLocation();
             actCamera.Position = focusedLocation + cameraOffset * componentContext.CameraDistance;
             actCamera.Target = focusedLocation;
+
+            if(actCamera is OrthographicCamera3D orthoCamera)
+            {
+                orthoCamera.ZoomFactor = ORTHO_ZOOM_FACTOR_START - (componentContext.CameraDistance * ORTHO_ZOOM_FACTOR_PER_CAMERA_DISTANCE);
+            }
         }
 
         protected abstract Vector3 GetFocusedLocation();
@@ -139,9 +146,7 @@ namespace SeeingSharp.Multimedia.Components
         /// <summary>
         /// Update camera for keyboard input.
         /// </summary>
-        private static void UpdateForKeyboard(
-            PerSceneContext componentContext, Camera3DBase actCamera,
-            KeyboardState actKeyboardState)
+        private static void UpdateForKeyboard(PerSceneContext componentContext, Camera3DBase camera, KeyboardState actKeyboardState)
         {
             foreach (var actKey in actKeyboardState.KeysDown)
             {
@@ -150,39 +155,49 @@ namespace SeeingSharp.Multimedia.Components
                     case WinVirtualKey.Up:
                     case WinVirtualKey.W:
                     case WinVirtualKey.NumPad8:
-                        componentContext.CameraHVRotation = componentContext.CameraHVRotation +
-                            new Vector2(0f, SINGLE_ROTATION_V);
+                        componentContext.CameraHVRotation += new Vector2(0f, SINGLE_ROTATION_V);
                         break;
 
                     case WinVirtualKey.Down:
                     case WinVirtualKey.S:
                     case WinVirtualKey.NumPad2:
-                        componentContext.CameraHVRotation = componentContext.CameraHVRotation -
-                            new Vector2(0f, SINGLE_ROTATION_V);
+                        componentContext.CameraHVRotation -= new Vector2(0f, SINGLE_ROTATION_V);
                         break;
 
                     case WinVirtualKey.Left:
                     case WinVirtualKey.A:
                     case WinVirtualKey.NumPad4:
-                        componentContext.CameraHVRotation = componentContext.CameraHVRotation -
-                            new Vector2(SINGLE_ROTATION_H, 0f);
+                        componentContext.CameraHVRotation -= new Vector2(SINGLE_ROTATION_H, 0f);
                         break;
 
                     case WinVirtualKey.Right:
                     case WinVirtualKey.D:
                     case WinVirtualKey.NumPad6:
-                        componentContext.CameraHVRotation = componentContext.CameraHVRotation +
-                            new Vector2(SINGLE_ROTATION_H, 0f);
+                        componentContext.CameraHVRotation += new Vector2(SINGLE_ROTATION_H, 0f);
                         break;
 
                     case WinVirtualKey.Q:
                     case WinVirtualKey.NumPad3:
-                        componentContext.CameraDistance = componentContext.CameraDistance * 1.05f;
+                        if (camera.IsOrthographic)
+                        {
+                            componentContext.CameraDistance += 0.1f;
+                        }
+                        else
+                        {
+                            componentContext.CameraDistance *= 1.05f;
+                        }
                         break;
 
                     case WinVirtualKey.E:
                     case WinVirtualKey.NumPad9:
-                        componentContext.CameraDistance = componentContext.CameraDistance * 0.95f;
+                        if (camera.IsOrthographic)
+                        {
+                            componentContext.CameraDistance -= 0.1f;
+                        }
+                        else
+                        {
+                            componentContext.CameraDistance *= 0.95f;
+                        }
                         break;
                 }
             }
@@ -191,9 +206,7 @@ namespace SeeingSharp.Multimedia.Components
         /// <summary>
         /// Update camera for mouse input.
         /// </summary>
-        private static void UpdateForMouse(
-            PerSceneContext componentContext, Camera3DBase actCamera,
-            MouseOrPointerState mouseState)
+        private static void UpdateForMouse(PerSceneContext componentContext, Camera3DBase camera, MouseOrPointerState mouseState)
         {
             // Handle mouse move
             if (mouseState.MoveDistanceDip != Vector2.Zero)
@@ -203,34 +216,45 @@ namespace SeeingSharp.Multimedia.Components
                 if (mouseState.IsButtonDown(MouseButton.Left) &&
                     mouseState.IsButtonDown(MouseButton.Right))
                 {
-                    var multiplier = 1.05f;
-                    if (moving.Y < 0f)
+                    if (camera.IsOrthographic)
                     {
-                        multiplier = 0.95f;
+                        var multiplier = 1.05f;
+                        if (moving.Y < 0f)
+                        {
+                            multiplier = 0.95f;
+                        }
+                        componentContext.CameraDistance *= multiplier;
                     }
-
-                    componentContext.CameraDistance = componentContext.CameraDistance * multiplier;
+                    else
+                    {
+                        componentContext.CameraDistance -= (moving.Y / 100f);
+                    }
                 }
                 else if (mouseState.IsButtonDown(MouseButton.Left) ||
                          mouseState.IsButtonDown(MouseButton.Right))
                 {
-                    componentContext.CameraHVRotation = componentContext.CameraHVRotation +
-                        new Vector2(
-                            SINGLE_ROTATION_H * (moving.X / 4f),
-                            SINGLE_ROTATION_V * (moving.Y / 4f));
+                    componentContext.CameraHVRotation += new Vector2(
+                        SINGLE_ROTATION_H * (moving.X / 4f),
+                        SINGLE_ROTATION_V * (moving.Y / 4f));
                 }
             }
 
             // Handle mouse wheel
             if (mouseState.WheelDelta != 0)
             {
-                var multiplier = 0.95f - Math.Abs(mouseState.WheelDelta) / 1000f;
-                if (mouseState.WheelDelta < 0)
+                if (camera.IsOrthographic)
                 {
-                    multiplier = 1.05f + Math.Abs(mouseState.WheelDelta) / 1000f;
+                    componentContext.CameraDistance -= (mouseState.WheelDelta / 500f);
                 }
-
-                componentContext.CameraDistance = componentContext.CameraDistance * multiplier;
+                else
+                {
+                    var multiplier = 0.95f - Math.Abs(mouseState.WheelDelta) / 1000f;
+                    if (mouseState.WheelDelta < 0)
+                    {
+                        multiplier = 1.05f + Math.Abs(mouseState.WheelDelta) / 1000f;
+                    }
+                    componentContext.CameraDistance *= multiplier;
+                }
             }
         }
 

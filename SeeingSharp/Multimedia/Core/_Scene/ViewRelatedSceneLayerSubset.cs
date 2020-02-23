@@ -486,7 +486,8 @@ namespace SeeingSharp.Multimedia.Core
                 ScreenPixelSize = this.ViewInformation.Camera.GetScreenSize(),
                 LightPower = viewConfiguration.LightPower,
                 StrongLightFactor = viewConfiguration.StrongLightFactor,
-                ViewProj = Matrix4x4.Transpose(this.ViewInformation.Camera.ViewProjection)
+                ViewProj = Matrix4x4.Transpose(this.ViewInformation.Camera.ViewProjection),
+                View = Matrix4x4.Transpose(this.ViewInformation.Camera.View),
             };
 
             m_renderParameters.UpdateValues(renderState, cbPerView);

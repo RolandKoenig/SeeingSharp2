@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <None Remove="Resources\Shaders\Common\CommonPixelShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\CommonPixelShader.Ortho.hlsl" />
     <None Remove="Resources\Shaders\Common\CommonVertexShader.hlsl" />
     <None Remove="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
     <None Remove="Resources\Shaders\Common\SingleForcedColorVertexShader.hlsl" />
@@ -38,6 +39,7 @@
     <None Remove="Resources\Shaders\_mainInclude.hlsl" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.Ortho.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonVertexShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
