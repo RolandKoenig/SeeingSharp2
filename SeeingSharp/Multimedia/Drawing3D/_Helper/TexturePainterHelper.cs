@@ -117,8 +117,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderParameters.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = this.AccentuationFactor,
-                BorderMultiplier = 0f,
-                BorderPart = 0f,
                 Color = Vector4.Zero,
                 Opacity = this.Opacity,
                 SpriteScaling = this.Scaling,

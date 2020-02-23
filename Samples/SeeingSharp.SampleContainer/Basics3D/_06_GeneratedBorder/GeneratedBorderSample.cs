@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using System.Threading.Tasks;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics3D._06_GeneratedBorder
 {
@@ -39,11 +40,16 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_GeneratedBorder
     {
         private GeneratedBorderSettings m_settings;
         private List<Mesh> m_cubes = new List<Mesh>();
+        private NamedOrGenericKey m_resBorderMaterial;
+
+        private Scene m_scene;
+        private volatile bool m_isManipulatingInUpdate;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
+            m_scene = mainRenderLoop.Scene;
             m_settings = (GeneratedBorderSettings)settings;
 
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
@@ -57,21 +63,22 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_GeneratedBorder
                     device => new GeometryResource(new CubeGeometryFactory()));
                 var resMaterial = manipulator.AddStandardMaterialResource();
 
+                // Create a separate material for the cubes with borders
+                m_resBorderMaterial = manipulator.AddStandardMaterialResource();
+
                 // Create cubes with border
                 const float SPACE = 1.05f;
                 for (var loop = 0; loop < 10; loop++)
                 {
-                    var cubeMesh = new Mesh(resGeometry, resMaterial);
+                    var cubeMesh = new Mesh(resGeometry, m_resBorderMaterial);
                     cubeMesh.Color = Color4.GreenColor;
                     cubeMesh.Position = new Vector3(0f, 0.5f, loop * SPACE);
-                    cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
                     manipulator.AddObject(cubeMesh);
                     m_cubes.Add(cubeMesh);
 
-                    cubeMesh = new Mesh(resGeometry, resMaterial);
+                    cubeMesh = new Mesh(resGeometry, m_resBorderMaterial);
                     cubeMesh.Color = Color4.GreenColor;
                     cubeMesh.Position = new Vector3(-SPACE, 0.5f, loop * SPACE);
-                    cubeMesh.EnableShaderGeneratedBorder(m_settings.BorderThickness);
                     manipulator.AddObject(cubeMesh);
                     m_cubes.Add(cubeMesh);
                 }
@@ -107,19 +114,37 @@ namespace SeeingSharp.SampleContainer.Basics3D._06_GeneratedBorder
             return Task.FromResult<object>(null);
         }
 
-        public override void Update()
+        public override async void Update()
         {
-            foreach (var actCube in m_cubes)
+            // This flag is simply guarding following scene manipulation. It ensures that scene manipulation runs only ones
+            if (m_isManipulatingInUpdate) { return; }
+            m_isManipulatingInUpdate = true;
+            
+            try
             {
-                if (m_settings.BorderEnabled)
+                // Do changes on loaded materials using the scene manipulator to ensure thread safety
+                await m_scene.ManipulateSceneAsync(manipulator =>
                 {
-                    actCube.EnableShaderGeneratedBorder(
-                        m_settings.BorderThickness);
-                }
-                else
-                {
-                    actCube.DisableShaderGeneratedBorder();
-                }
+                    // Query over all loaded resources
+                    // (This single resource may be loaded on different devices)
+                    foreach (var actLoadedMaterial in manipulator.QueryResources<StandardMaterialResource>(
+                        m_resBorderMaterial))
+                    {
+                        if (m_settings.BorderEnabled)
+                        {
+                            actLoadedMaterial.EnableShaderGeneratedBorder(m_settings.BorderThickness);
+                        }
+                        else
+                        {
+                            actLoadedMaterial.DisableShaderGeneratedBorder();
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                // Reset the float so we call scene manipulate in the next update pass again
+                m_isManipulatingInUpdate = false;
             }
         }
 

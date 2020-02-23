@@ -54,9 +54,15 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_MultiMaterial
                         "SimpleTexture.png"));
                 var resMaterials = new[]
                 {
-                    manipulator.AddStandardMaterialResource(materialDiffuseColor: Color4.White, useVertexColors:false),
+                    manipulator.AddStandardMaterialResource(
+                        materialDiffuseColor: Color4.White, 
+                        useVertexColors:false, 
+                        enableShaderGeneratedBorder: true),
                     manipulator.AddStandardMaterialResource(resTexture),
-                    manipulator.AddStandardMaterialResource(materialDiffuseColor:Color4.CornflowerBlue, useVertexColors:false)
+                    manipulator.AddStandardMaterialResource(
+                        materialDiffuseColor:Color4.CornflowerBlue, 
+                        useVertexColors:false, 
+                        enableShaderGeneratedBorder: true)
                 };
 
                 // Create cube geometry resource
@@ -80,7 +86,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._08_MultiMaterial
                 foreach (var actCubeMesh in meshes)
                 {
                     var actCubeMeshInner = actCubeMesh;
-                    actCubeMeshInner.EnableShaderGeneratedBorder();
                     actCubeMeshInner.BuildAnimationSequence()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                         .WaitFinished()

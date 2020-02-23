@@ -100,7 +100,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <typeparam name="ResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <param name="resourceKey">The key for the newly generated resource.</param>
-        /// <returns></returns>
         public NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
             where ResourceType : Resource
         {
@@ -109,6 +108,18 @@ namespace SeeingSharp.Multimedia.Core
             var result = this.Owner.AddResource(resourceFactory, resourceKey);
             m_createdResources.Add(result);
             return result;
+        }
+
+        /// <summary>
+        /// Queries all resources of the given resource key.
+        /// </summary>
+        /// <param name="resourceKey">The key of the resource to get all resource instances for.</param>
+        public IEnumerable<T> QueryResources<T>(NamedOrGenericKey resourceKey)
+            where T : Resource
+        {
+            this.CheckValid();
+
+            return this.Owner.QueryResources<T>(resourceKey, this.CheckValid);
         }
 
         /// <summary>

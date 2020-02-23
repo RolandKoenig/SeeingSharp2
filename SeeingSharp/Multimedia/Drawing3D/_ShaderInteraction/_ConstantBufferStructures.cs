@@ -62,8 +62,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         public Matrix4x4 World;
         public Vector4 Color;
-        public float BorderPart;
-        public float BorderMultiplier;
         public float Opacity;
         public float AccentuationFactor;
 
@@ -77,6 +75,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// this factor.
         /// </summary>
         public float SpriteScaling;
+
+        public Vector2 Dummy;
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public float MaxClipDistance;
 
         /// <summary>
-        /// Up to an alpha value defined by this Clipfactor pixels are clipped within the pixel shader.
+        /// Up to an alpha value defined by this clip factor pixels are clipped within the pixel shader.
         /// </summary>
         public float ClipFactor;
 
@@ -124,6 +124,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public float DiffuseColorFactor;
 
-        public float Dummy;
+        public float BorderPart;
+
+        public float BorderMultiplier;
+
+        public Vector3 Dummy;
     }
 }

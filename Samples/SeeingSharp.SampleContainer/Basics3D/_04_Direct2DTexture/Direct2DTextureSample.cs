@@ -78,7 +78,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
                     device => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
-                var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
+                var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture, enableShaderGeneratedBorder: true);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
@@ -88,7 +88,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
                 cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.YPos = 0.5f;
-                cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

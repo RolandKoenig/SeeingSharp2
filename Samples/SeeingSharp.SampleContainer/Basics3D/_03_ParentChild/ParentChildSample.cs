@@ -48,14 +48,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._03_ParentChild
 
                 // Create cube geometry resource
                 var resCubeGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
-                var resMaterial = manipulator.AddStandardMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource(enableShaderGeneratedBorder: true);
 
                 //********************************
                 // Create parent object
                 var cubeMesh = new Mesh(resCubeGeometry, resMaterial);
                 cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
-                cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

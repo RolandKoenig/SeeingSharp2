@@ -93,7 +93,6 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
                 cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.YPos = 0.5f;
-                cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

@@ -59,13 +59,12 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
                 // Create resources
                 var resGeometry = manipulator.AddResource(
                     device => new GeometryResource(new CubeGeometryFactory()));
-                var resMaterial = manipulator.AddStandardMaterialResource();
+                var resMaterial = manipulator.AddStandardMaterialResource(enableShaderGeneratedBorder: true);
 
                 // Create object and put it on the EdgeDetectLayer
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
                 cubeMesh.Color = Color4.GreenColor;
                 cubeMesh.Position = new Vector3(0f, 0.5f, 0f);
-                cubeMesh.EnableShaderGeneratedBorder();
                 cubeMesh.BuildAnimationSequence()
                     .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                     .WaitFinished()

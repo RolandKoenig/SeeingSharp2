@@ -53,8 +53,6 @@ namespace SeeingSharp.Multimedia.Core
         private Color4 m_color;
         private float m_accentuationFactor;
         private float m_opacity;
-        private float m_borderPart;
-        private float m_borderMultiplier;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneSpacialObject"/> class.
@@ -69,8 +67,6 @@ namespace SeeingSharp.Multimedia.Core
             m_opacity = 1f;
             m_color = Color4.White;
             m_accentuationFactor = 0f;
-            m_borderPart = 0.01f;
-            m_borderMultiplier = 0f;
 
             m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
             m_position = Vector3.Zero;
@@ -79,24 +75,6 @@ namespace SeeingSharp.Multimedia.Core
             m_transform = Matrix4x4.Identity;
             m_rotationQuaternion = Quaternion.Identity;
             m_transformParamsChanged = true;
-        }
-
-        /// <summary>
-        /// Enables a shader generated border.
-        /// </summary>
-        public void EnableShaderGeneratedBorder(float borderThickness = 1f)
-        {
-            this.BorderMultiplier = 50f;
-            this.BorderPart = 0.01f * borderThickness;
-        }
-
-        /// <summary>
-        /// Disables shader generated border.
-        /// </summary>
-        public void DisableShaderGeneratedBorder()
-        {
-            this.BorderMultiplier = 0f;
-            this.BorderPart = 0f;
         }
 
         /// <summary>
@@ -439,9 +417,7 @@ namespace SeeingSharp.Multimedia.Core
                     Color = m_color.ToVector4(),
                     Opacity = m_opacity,
                     World = Matrix4x4.Transpose(m_transform),
-                    BorderPart = m_borderPart,
-                    BorderMultiplier = m_borderMultiplier,
-                    ObjectScaling = m_scaling
+                    ObjectScaling = m_scaling,
                 };
 
                 // Update constant buffer
@@ -708,32 +684,6 @@ namespace SeeingSharp.Multimedia.Core
                 if (m_color != value)
                 {
                     m_color = value;
-                    this.TriggerRecreateOfParameters();
-                }
-            }
-        }
-
-        public float BorderPart
-        {
-            get => m_borderPart;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(m_borderPart, value))
-                {
-                    m_borderPart = value;
-                    this.TriggerRecreateOfParameters();
-                }
-            }
-        }
-
-        public float BorderMultiplier
-        {
-            get => m_borderMultiplier;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(m_borderMultiplier, value))
-                {
-                    m_borderMultiplier = value;
                     this.TriggerRecreateOfParameters();
                 }
             }

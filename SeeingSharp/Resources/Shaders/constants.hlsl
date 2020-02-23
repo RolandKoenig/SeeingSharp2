@@ -27,7 +27,7 @@ cbuffer cbPerView : register ( b1 )
     float       Ambient;
     float       Accentuation;
     float2      ScreenPixelSize;
-	float2      Dummy;
+	float2      Dummy2;
 }
 
 // Buffer with per object data
@@ -35,12 +35,11 @@ cbuffer cbPerObject : register ( b2 )
 {
     float4x4    World;
     float4      ObjectColor;
-	float       BorderPart;
-	float       BorderMultiplyer;
     float       Opacity;
     float       ObjectAccentuationFactor;
 	float3      ObjectScaling;
     float 		SpriteScaling;
+    float2      Dummy3;
 }
 
 // Buffer with per material data
@@ -55,5 +54,7 @@ cbuffer cbPerMaterial : register ( b3 )
 	float     AddToAlpha;    // Needed for video rendering (Frames from the MF SourceReader have alpha always to zero)
 	float     FadeIntensity;
 	float     DiffuseColorFactor;
-	float     Dummy2;
+	float     BorderPart;
+	float     BorderMultiplyer;
+    float3    Dummy4;
 }

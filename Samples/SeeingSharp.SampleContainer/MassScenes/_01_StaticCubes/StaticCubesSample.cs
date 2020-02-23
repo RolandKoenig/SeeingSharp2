@@ -76,7 +76,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                 // Create resources
                 var resGeometry = manipulator.AddGeometryResource(
                     new CubeGeometryFactory());
-                var resColoredMaterial = manipulator.AddStandardMaterialResource();
+                var resColoredMaterial = manipulator.AddStandardMaterialResource(enableShaderGeneratedBorder: true);
                 var resTexture = manipulator.AddTextureResource(
                     new AssemblyResourceLink(this.GetType(),
                         "SimpleTexture.png"));
@@ -104,7 +104,6 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                             var cubeMesh = new Mesh(resGeometry, material);
                             cubeMesh.Color = Color4.GreenColor;
                             cubeMesh.Position = new Vector3(loopX * 1.5f, loopY * 1.5f, loopZ * 1.5f);
-                            cubeMesh.EnableShaderGeneratedBorder();
 
                             if (castedSettings.Animated)
                             {

@@ -112,6 +112,27 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Queries all loaded resources of the given resource key.
+        /// </summary>
+        internal IEnumerable<T> QueryResources<T>(NamedOrGenericKey resourceKey, Action checkValidAction)
+            where T : Resource
+        {
+            checkValidAction?.Invoke();
+
+            foreach (var actResourceDict in m_registeredResourceDicts)
+            {
+                if(!actResourceDict.ContainsResource(resourceKey)){ continue; }
+
+                var actResource = actResourceDict.GetResource<T>(resourceKey);
+                if(actResource == null){ continue; }
+
+                yield return actResource;
+
+                checkValidAction?.Invoke();
+            }
+        }
+
+        /// <summary>
         /// Waits until the given object is visible on the given view.
         /// </summary>
         /// <param name="sceneObject">The scene object to be checked.</param>
