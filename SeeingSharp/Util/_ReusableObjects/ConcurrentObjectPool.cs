@@ -32,7 +32,8 @@ namespace SeeingSharp.Util
     // https://github.com/dotnet/roslyn/blob/d4dab355b96955aca5b4b0ebf6282575fad78ba8/src/Dependencies/PooledObjects/ObjectPool%601.cs
 
     /// <summary>
-    /// Helper class for reusing objects. 
+    /// Helper class for reusing objects.
+    /// 
     /// </summary>
     public class ConcurrentObjectPool<T> 
         where T : class
@@ -88,7 +89,6 @@ namespace SeeingSharp.Util
                 {
                     if (inst == Interlocked.CompareExchange(ref m_items[i], null, inst))
                     {
-                        Console.WriteLine("  -");
                         return inst;
                     }
                 }

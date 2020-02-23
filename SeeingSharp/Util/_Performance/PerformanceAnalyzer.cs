@@ -31,7 +31,7 @@ namespace SeeingSharp.Util
         private const int INIT_COUNT_CACHED_MEASURE_TOKENS = 16;
 
         // Members for calculators
-        private ConcurrentBag<DurationMeasureToken> m_durationMeasureTokens;
+        private ConcurrentObjectPool<DurationMeasureToken> m_cachedMeasureTokens;
         private ConcurrentBag<CalculatorInfo> m_calculatorsBag;
         private ConcurrentDictionary<string, CalculatorInfo> m_calculatorsDict;
 
@@ -55,11 +55,9 @@ namespace SeeingSharp.Util
 
             this.Internals = new PerformanceAnalyzerInternals(this);
 
-            m_durationMeasureTokens = new ConcurrentBag<DurationMeasureToken>();
-            for (var loop = 0; loop < INIT_COUNT_CACHED_MEASURE_TOKENS; loop++)
-            {
-                m_durationMeasureTokens.Add(new DurationMeasureToken(this));
-            }
+            m_cachedMeasureTokens = new ConcurrentObjectPool<DurationMeasureToken>(
+                () => new DurationMeasureToken(this),
+                INIT_COUNT_CACHED_MEASURE_TOKENS);
         }
 
         /// <summary>
@@ -100,10 +98,7 @@ namespace SeeingSharp.Util
         /// <param name="activity">The activityName name to be measured.</param>
         internal DurationMeasureToken BeginMeasureActivityDuration(string activity)
         {
-            if (!m_durationMeasureTokens.TryTake(out var result))
-            {
-                result = new DurationMeasureToken(this);
-            }
+            var result = m_cachedMeasureTokens.Rent();
             result.Activity = activity;
             result.Start();
 
@@ -116,7 +111,7 @@ namespace SeeingSharp.Util
 
             this.NotifyActivityDuration(measureToken.Activity, measureToken.ElapsedTicks);
 
-            m_durationMeasureTokens.Add(measureToken);
+            m_cachedMeasureTokens.Return(measureToken);
         }
 
         /// <summary>

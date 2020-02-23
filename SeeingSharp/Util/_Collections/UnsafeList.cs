@@ -27,6 +27,14 @@ using System.Diagnostics;
 
 namespace SeeingSharp.Util
 {
+    // Original code from .Net Core source
+    // Changes:
+    //  - Some naming changes to meet coding style of Seeing#
+    //  - Access to the backing array through the BackingArray property
+
+    /// <summary>
+    /// A implementation of a list that allows accessing the internal array.
+    /// </summary>
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     public class UnsafeList<T> : IList<T>, ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyList<T>
     {
@@ -318,7 +326,7 @@ namespace SeeingSharp.Util
                     {
                         Array.Copy(m_backingArray, index, m_backingArray, index + count, m_size - index);
                     }
-                    if (this == collection2)
+                    if (ReferenceEquals(this, collection2))
                     {
                         Array.Copy(m_backingArray, 0, m_backingArray, index, index);
                         Array.Copy(m_backingArray, index + count, m_backingArray, index * 2, m_size - index);
@@ -461,7 +469,6 @@ namespace SeeingSharp.Util
 
             if (count > 0)
             {
-                var size = m_size;
                 m_size -= count;
                 if (index < m_size)
                 {
