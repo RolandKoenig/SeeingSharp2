@@ -313,6 +313,7 @@ namespace SeeingSharp.Util
             try { objectToDispose.Dispose(); }
             catch (Exception ex)
             {
+                // Publish exception info
                 GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.DisposeObject);
             }
             return null;

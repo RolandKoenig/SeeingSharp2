@@ -72,11 +72,11 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Calculates a new kpi value.
+        /// Calculates a new value.
         /// </summary>
         /// <param name="result">The result that should be set during calculation.</param>
         /// <param name="minTimeStamp">The timestamp which is the minimum for current calculation step.</param>
-        /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next kpi.</param>
+        /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next result value.</param>
         internal void Calculate(ref DurationPerformanceResult result, DateTime minTimeStamp, DateTime maxTimeStamp)
         {
             // Calculate result values

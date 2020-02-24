@@ -64,6 +64,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             catch (Exception ex)
             {
+                // Publish exception info
                 GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.CreateTextGeometry);
             }
         }

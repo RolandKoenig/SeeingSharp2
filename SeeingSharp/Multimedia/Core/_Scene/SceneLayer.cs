@@ -281,6 +281,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
+                    // Publish exception info
                     GraphicsCore.PublishInternalExceptionInfo(
                         ex, InternalExceptionLocation.Loading3DObject);
 
@@ -430,6 +431,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
+                    // Publish exception info
                     GraphicsCore.PublishInternalExceptionInfo(
                         ex, InternalExceptionLocation.UnloadingInvalid3DObject);
                 }

@@ -34,17 +34,27 @@ namespace SeeingSharp.Multimedia.Core
             this.Location = location;
         }
 
-        public Exception Exception
+        public override string ToString()
         {
-            get;
-            private set;
+            if (this.Exception != null)
+            {
+                return $"{this.Location}: {this.Exception.Message} ({this.Exception.GetType().FullName})";
+            }
+            else
+            {
+                return this.Location.ToString();
+            }
         }
 
-        public InternalExceptionLocation Location
-        {
-            get;
-            private set;
-        }
+        /// <summary>
+        /// The cached exception object.
+        /// </summary>
+        public Exception Exception { get; }
+
+        /// <summary>
+        /// The location inside Seeing# where the exception occurred.
+        /// </summary>
+        public InternalExceptionLocation Location { get; }
     }
 
     public enum InternalExceptionLocation
@@ -70,6 +80,12 @@ namespace SeeingSharp.Multimedia.Core
         RenderLoop_PrepareRendering,
 
         RenderLoop_Unload,
+
+        EngineMainLoop_PrepareRendering,
+
+        EngineMainLoop_Render,
+
+        EngineMainLoop_Loop,
     }
 
     public class ManipulateFilterListArgs : EventArgs
@@ -82,7 +98,6 @@ namespace SeeingSharp.Multimedia.Core
         public List<SceneObjectFilter> FilterList
         {
             get;
-            private set;
         }
     }
 

@@ -112,10 +112,13 @@ namespace SeeingSharp.Multimedia.Core
                                 actRenderLoop.Render();
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // Mark this renderloop as invalid
                             m_invalidRenderLoops.Enqueue(actRenderLoop);
+
+                            // Publish exception info
+                            GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.EngineMainLoop_Render);
                         }
                     }
                 }

@@ -188,7 +188,7 @@ namespace SeeingSharp.Multimedia.Core
                         result.AddRange(currentResult);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Deregister this RenderLoop
                     var actRenderLoopInner = actRenderLoop;
@@ -204,6 +204,9 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         additionalContinuationActions.Add(DeregisterRenderLoopAction);
                     }
+
+                    // Publish exception info
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.EngineMainLoop_PrepareRendering);
                 }
             }
             return result;

@@ -828,6 +828,7 @@ namespace SeeingSharp.Multimedia.Core
                         }
                         catch (Exception ex)
                         {
+                            // Publish exception info
                             GraphicsCore.PublishInternalExceptionInfo(
                                 ex, InternalExceptionLocation.Rendering3DObject);
 

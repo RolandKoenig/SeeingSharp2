@@ -46,7 +46,7 @@ namespace SeeingSharp.Util
         public string ActivityName { get; }
 
         /// <summary>
-        /// Gets the key of this kpi.
+        /// Gets the key of this value.
         /// </summary>
         public DateTime KeyTimestamp { get; private set; }
 

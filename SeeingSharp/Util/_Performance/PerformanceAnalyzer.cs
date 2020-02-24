@@ -22,13 +22,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SeeingSharp.Util
 {
     public class PerformanceAnalyzer
     {
-        private const int INIT_COUNT_CACHED_MEASURE_TOKENS = 16;
+        private const int INIT_COUNT_CACHED_MEASURE_TOKENS = 32;
 
         // Members for calculators
         private ConcurrentObjectPool<DurationMeasureToken> m_cachedMeasureTokens;
@@ -67,8 +66,8 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
         internal void NotifyActivityDuration(string activity, long durationTicks)
         {
-            var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
-            kpiCalculator.NotifyActivityDuration(durationTicks);
+            var calculator = this.GetCalculator<DurationPerformanceCalculator>(activity);
+            calculator.NotifyActivityDuration(durationTicks);
         }
 
         /// <summary>
@@ -78,17 +77,16 @@ namespace SeeingSharp.Util
         /// <param name="actionToExecute">The action to be executed and measured.</param>
         internal void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
-            var kpiCalculator = this.GetKpiCalculator<DurationPerformanceCalculator>(activity);
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            var calculator = this.GetCalculator<DurationPerformanceCalculator>(activity);
 
-            try
+            using (var token = m_cachedMeasureTokens.Rent())
             {
+                token.Start();
+
                 actionToExecute();
-            }
-            finally
-            {
-                kpiCalculator.NotifyActivityDuration(stopwatch.ElapsedMilliseconds);
+
+                token.Stop();
+                calculator.NotifyActivityDuration(token.ElapsedTicks);
             }
         }
 
@@ -125,7 +123,7 @@ namespace SeeingSharp.Util
                 return;
             }
 
-            // Trigger kpi calculation
+            // Trigger calculation
             var actKeyTimestamp = m_lastValueTimestamp + this.ValueInterval;
             while (actKeyTimestamp < utcNow)
             {
@@ -167,7 +165,7 @@ namespace SeeingSharp.Util
         /// </summary>
         /// <typeparam name="T">The type of the calculator to get.</typeparam>
         /// <param name="activityName">The name of the activityName.</param>
-        private DurationPerformanceCalculator GetKpiCalculator<T>(string activityName)
+        private DurationPerformanceCalculator GetCalculator<T>(string activityName)
         {
             var newCalculatorInfo = m_calculatorsDict.GetOrAdd(
                 activityName,

@@ -348,6 +348,7 @@ namespace SeeingSharp.Multimedia.Core
             Exception ex,
             InternalExceptionLocation location)
         {
+            // Get current list of event listeners
             List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
             lock (s_internalExListenersLock)
             {
@@ -359,18 +360,24 @@ namespace SeeingSharp.Multimedia.Core
             }
             if (handlers == null) { return; }
 
-            foreach (var actEventHandler in handlers)
-            {
-                try
+            // Trigger event in separate ThreadPool task to ensure that Seeing# logic runs further without interruption
+            ThreadPool.QueueUserWorkItem(
+                new WaitCallback(state =>
                 {
-                    actEventHandler(null, new InternalCatchedExceptionEventArgs(
-                        ex, location));
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+                    var exInfo = new InternalCatchedExceptionEventArgs(ex, location);
+                    foreach (var actEventHandler in handlers)
+                    {
+                        try
+                        {
+                            actEventHandler(null, exInfo);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    }
+                }),
+                null);
         }
 
         /// <summary>

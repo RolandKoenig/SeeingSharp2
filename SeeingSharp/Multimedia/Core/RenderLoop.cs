@@ -958,6 +958,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             catch (Exception ex)
             {
+                // Publish exception info
                 GraphicsCore.PublishInternalExceptionInfo(ex,
                     InternalExceptionLocation.RenderLoop_ManipulateFilterList);
             }
@@ -969,6 +970,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             catch (Exception ex)
             {
+                // Publish exception info
                 GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_PrepareRendering);
             }
         }
@@ -1102,6 +1104,7 @@ namespace SeeingSharp.Multimedia.Core
                             }
                             catch (Exception ex)
                             {
+                                // Publish exception info
                                 GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.Rendering2DDrawingLayer);
                             }
                         }

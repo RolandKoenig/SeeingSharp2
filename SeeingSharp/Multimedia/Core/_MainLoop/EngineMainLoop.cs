@@ -325,9 +325,12 @@ namespace SeeingSharp.Multimedia.Core
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         exceptionOccurred = true;
+
+                        // Publish exception info
+                        GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.EngineMainLoop_Loop);
                     }
 
                     // Execute global awaitors
@@ -429,6 +432,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
                     catch (Exception ex)
                     {
+                        // Publish exception info
                         GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_Unload);
                     }
                 }
