@@ -126,7 +126,7 @@ namespace SeeingSharp.Multimedia.Core
 
             m_afterPresentActions = new ThreadSaveQueue<Action>();
             m_cachedPrepareRenderContinuationActions = new List<Action>();
-            m_cachedPrepareRenderOnGui = new Action(this.PrepareRenderOnGui);
+            m_cachedPrepareRenderOnGui = this.PrepareRenderOnGui;
 
             this.UISynchronizationContext = guiSyncContext;
 

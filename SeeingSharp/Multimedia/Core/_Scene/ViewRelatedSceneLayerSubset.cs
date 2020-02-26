@@ -318,9 +318,7 @@ namespace SeeingSharp.Multimedia.Core
 
                     // Handle case where we have unsubscribed some
                     //  => Build new subscription list and ignore all with 'IsSubscribed' == false
-                    var newSubscriptionList = new List<RenderPassSubscription>(
-                        actPassProperties.Subscriptions.Count - actPassProperties.UnsubscribeCallCount + 128);
-
+                    var newSubscriptionList = actPassProperties.SubscriptionsTemp;
                     for (var loop = 0; loop < actPassProperties.Subscriptions.Count; loop++)
                     {
                         var actSubscription = actPassProperties.Subscriptions[loop];
@@ -338,6 +336,8 @@ namespace SeeingSharp.Multimedia.Core
 
                         actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
                     }
+                    actPassProperties.SubscriptionsTemp = actPassProperties.Subscriptions;
+                    actPassProperties.SubscriptionsTemp.Clear();
                     actPassProperties.Subscriptions = newSubscriptionList;
                     actPassProperties.UnsubscribeCallCount = 0;
 
@@ -882,6 +882,7 @@ namespace SeeingSharp.Multimedia.Core
         private class PassSubscriptionProperties
         {
             internal List<RenderPassSubscription> Subscriptions = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
+            internal List<RenderPassSubscription> SubscriptionsTemp = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
             internal int UnsubscribeCallCount;
         }
 
