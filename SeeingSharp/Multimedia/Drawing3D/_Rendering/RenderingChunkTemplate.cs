@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var result = new RenderingChunk();
             result.Template = this;
             result.Material = material;
-            result.InputLayout = material.GenerateInputLayout(device, InputElements);
+            result.InputLayout = material.GetInputLayout(device, InputElements);
 
             return result;
         }

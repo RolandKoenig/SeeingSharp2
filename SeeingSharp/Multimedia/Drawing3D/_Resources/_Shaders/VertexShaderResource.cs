@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -29,6 +31,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Resources for Direct3D 11 rendering
         private D3D11.VertexShader m_vertexShader;
+        private Dictionary<D3D11.InputElement[], D3D11.InputLayout> m_inputLayouts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
@@ -38,7 +41,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public VertexShaderResource(string shaderProfile, ResourceLink resourceLink)
             : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
         {
+            m_inputLayouts = new Dictionary<D3D11.InputElement[], D3D11.InputLayout>();
+        }
 
+        /// <summary>
+        /// Generates the requested input layout.
+        /// </summary>
+        /// <param name="device">The device on which to create the input layout.</param>
+        /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
+        internal D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        {
+            if (m_inputLayouts.TryGetValue(inputElements, out var inputLayout))
+            {
+                return inputLayout;
+            }
+
+            inputLayout = new D3D11.InputLayout(device.DeviceD3D11_1, this.ShaderBytecode, inputElements);
+            m_inputLayouts.Add(inputElements, inputLayout);
+            return inputLayout;
         }
 
         /// <summary>
@@ -57,6 +77,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
+            foreach (var actInputLayout in m_inputLayouts.Values)
+            {
+                SeeingSharpUtil.DisposeObject(actInputLayout);
+            }
+            m_inputLayouts.Clear();
+
             m_vertexShader = SeeingSharpUtil.DisposeObject(m_vertexShader);
         }
 

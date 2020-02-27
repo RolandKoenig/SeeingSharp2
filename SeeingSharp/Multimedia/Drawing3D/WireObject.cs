@@ -79,16 +79,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="WireObject" /> class.
         /// </summary>
         public WireObject(Color4 lineColor, BoundingBox boundingBox)
-            : this(ref lineColor, ref boundingBox)
-        {
-
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WireObject" /> class.
-        /// </summary>
-        public WireObject(ref Color4 lineColor, ref BoundingBox boundingBox)
             : this()
         {
             this.Color = lineColor;

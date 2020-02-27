@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal abstract D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements);
+        internal abstract D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements);
 
         public virtual bool IsExportable => false;
     }

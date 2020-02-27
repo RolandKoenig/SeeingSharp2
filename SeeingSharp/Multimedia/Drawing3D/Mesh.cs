@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         public override string ToString()
         {
-            return "GenericObject (Geometry: " + m_resGeometryKey + ")";
+            return $"GenericObject (Geometry: {m_resGeometryKey.ToString()})";
         }
 
         /// <summary>
@@ -177,7 +177,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_localResGeometry.Clear();
             m_localResMaterials.Clear();
 
-            m_localChunks.ForEachInEnumeration(SeeingSharpUtil.DisposeObjects);
             m_localChunks.Clear();
         }
 

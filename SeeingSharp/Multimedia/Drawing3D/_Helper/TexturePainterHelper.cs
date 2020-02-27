@@ -98,9 +98,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void UnloadResources()
         {
-            SeeingSharpUtil.DisposeObjects(m_renderingChunks);
             m_renderingChunks = null;
-
             m_geometryResource = null;
             m_defaultResources = null;
             m_renderParameters = null;

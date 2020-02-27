@@ -19,6 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -77,9 +79,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal override D3D11.InputLayout GenerateInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
         {
-            return new D3D11.InputLayout(device.DeviceD3D11_1, m_vertexShader.ShaderBytecode, inputElements);
+            return m_vertexShader.GetInputLayout(device, inputElements);
         }
 
         /// <summary>

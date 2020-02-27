@@ -28,17 +28,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// <summary>
     /// Describes on rendering chunk.
     /// </summary>
-    public class RenderingChunk : IDisposable, ICheckDisposed
+    public class RenderingChunk
     {
         internal RenderingChunkTemplate Template;
         internal D3D11.InputLayout InputLayout;
         internal MaterialResource Material;
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref InputLayout);
-        }
-
-        public bool IsDisposed => InputLayout != null;
     }
 }

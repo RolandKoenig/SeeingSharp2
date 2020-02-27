@@ -374,13 +374,11 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check whether we have to update all objects
-            var refreshAllObjects = this.ViewInformation.Camera.StateChanged ||
-                anyFilterChanged;
+            var refreshAllObjects = this.ViewInformation.Camera.StateChanged || anyFilterChanged;
 
             // Perform viewbox culling for all standard objects
             var allObjects = m_sceneLayer.ObjectsInternal;
             var allObjectsLength = allObjects.Count;
-
             if (allObjectsLength > 0)
             {
                 var allObjectsArray = allObjects.GetBackingArray();
@@ -397,27 +395,19 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Perform culling
-                    this.PerformViewboxCulling(
-                        actObject,
-                        filters,
-                        refreshAllObjects);
+                    this.PerformViewboxCulling(actObject, filters);
                 }
             }
 
             // Update objects which are passed for a single update call (normally newly inserted static objects)
             var singleUpdateCallCount = sceneObjectsForSingleUpdateCall.Count;
-
             if (!refreshAllObjects && singleUpdateCallCount > 0)
             {
                 var singleUpdateArray = sceneObjectsForSingleUpdateCall.GetBackingArray();
-
                 for (var loop = 0; loop < singleUpdateCallCount; loop++)
                 {
                     // Perform culling
-                    this.PerformViewboxCulling(
-                        singleUpdateArray[loop],
-                        filters,
-                        false);
+                    this.PerformViewboxCulling(singleUpdateArray[loop], filters);
                 }
             }
 
@@ -440,7 +430,6 @@ namespace SeeingSharp.Multimedia.Core
                         // Handle changed visibility
                         this.HandleObjectVisibilityChanged(
                             actChangedVisibility.Item1,
-                            actChangedVisibility.Item2,
                             actChangedVisibility.Item3);
                     }
                 };
@@ -663,15 +652,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="actObject">The object to be tested.</param>
         /// <param name="filters">All currently active filters.</param>
-        /// <param name="refreshStaticObjects">A flag indicating whether we have to update all objects.</param>
-        private void PerformViewboxCulling(SceneObject actObject, IReadOnlyList<SceneObjectFilter> filters, bool refreshStaticObjects)
+        private void PerformViewboxCulling(SceneObject actObject, IReadOnlyList<SceneObjectFilter> filters)
         {
             if (!actObject.IsLayerViewSubsetRegistered(ViewIndex)) { return; }
             if (m_invalidObjects.ContainsKey(actObject)) { return; }
 
             // Get visibility check data about current object
             var checkData = actObject.GetVisibilityCheckData(this.ViewInformation);
-
             if (checkData == null) { return; }
 
             // Execute all filters in configured order step by step
@@ -679,14 +666,12 @@ namespace SeeingSharp.Multimedia.Core
             var previousFilterExecuted = false;
             var previousFilterResult = true;
             VisibilityCheckFilterStageData lastFilterStageData = null;
-
             for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
             {
                 var actFilter = filters[actFilterIndex];
 
                 // Get data about current filter stage
                 var filterStageData = checkData.FilterStageData[actFilterIndex];
-
                 if (filterStageData == null)
                 {
                     filterStageData = checkData.FilterStageData.AddObject(
@@ -745,9 +730,8 @@ namespace SeeingSharp.Multimedia.Core
         /// This method is called from default update thread.
         /// </summary>
         /// <param name="sceneObject">The scene object to be handled.</param>
-        /// <param name="oldVisibility">Previous visibility flag value.</param>
         /// <param name="newVisibility">New visibility flag value.</param>
-        private void HandleObjectVisibilityChanged(SceneObject sceneObject, bool oldVisibility, bool newVisibility)
+        private void HandleObjectVisibilityChanged(SceneObject sceneObject, bool newVisibility)
         {
             if (!newVisibility)
             {
@@ -882,7 +866,15 @@ namespace SeeingSharp.Multimedia.Core
         private class PassSubscriptionProperties
         {
             internal List<RenderPassSubscription> Subscriptions = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
+
+            /// <summary>
+            /// A cached temporary collection which is used then updating the Subscription property
+            /// </summary>
             internal List<RenderPassSubscription> SubscriptionsTemp = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
+
+            /// <summary>
+            /// Total count of calls to Unsubscribe in this pass
+            /// </summary>
             internal int UnsubscribeCallCount;
         }
 

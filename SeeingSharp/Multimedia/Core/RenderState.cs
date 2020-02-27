@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Core
                 D3D11.InputLayout newInputLayout = null;
                 if (this.ForcedMaterial != null)
                 {
-                    newInputLayout = this.ForcedMaterial.GenerateInputLayout(
+                    newInputLayout = this.ForcedMaterial.GetInputLayout(
                         device,
                         StandardVertex.InputElements);
                     deviceContext.InputAssembler.InputLayout = newInputLayout;
