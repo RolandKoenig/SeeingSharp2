@@ -188,10 +188,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void UpdateForViewInternal(SceneRelatedUpdateState updateState, ViewRelatedSceneLayerSubset layerViewSubset)
         {
             // Subscribe to render passes
-            if (m_passRelevantValuesChanged || this.CountRenderPassSubscriptions(layerViewSubset) == 0)
+            var countSubscriptions = 0;
+            if (m_passRelevantValuesChanged || (countSubscriptions = this.CountRenderPassSubscriptions(layerViewSubset)) == 0)
             {
                 // Unsubscribe from all passes first
-                this.UnsubsribeFromAllPasses(layerViewSubset);
+                if (countSubscriptions > 0)
+                {
+                    this.UnsubsribeFromAllPasses(layerViewSubset);
+                }
 
                 // Now subscribe to needed pass
                 if (this.Opacity < 1f)
@@ -235,12 +239,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal override float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
         {
             var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
-
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
             {
                 var boundingBox = geometryResource.BoundingBox;
-
                 if (!boundingBox.IsEmpty())
                 {
                     // Transform picking ray to local space

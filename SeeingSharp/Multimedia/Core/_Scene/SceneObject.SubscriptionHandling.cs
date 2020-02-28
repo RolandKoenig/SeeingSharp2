@@ -90,7 +90,6 @@ namespace SeeingSharp.Multimedia.Core
         protected internal void UnsubsribeFromAllPasses(ViewRelatedSceneLayerSubset layerViewSubset)
         {
             var subscriptionList = m_viewRelatedSubscriptions[layerViewSubset.ViewIndex];
-
             for (var loop = 0; loop < subscriptionList.Count; loop++)
             {
                 subscriptionList[loop].Unsubscribe();
