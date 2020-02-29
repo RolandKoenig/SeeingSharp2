@@ -49,6 +49,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_Skybox
                 // Create resources
                 var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
                 var resMaterial = manipulator.AddStandardMaterialResource(enableShaderGeneratedBorder: true);
+                //var resMaterial = manipulator.AddResource(
+                //    (device) => new WireframeMaterialResource());
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resMaterial);

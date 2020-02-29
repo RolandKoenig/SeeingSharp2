@@ -441,6 +441,28 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Gets the name of the default shader model.
+        /// </summary>
+        public string DefaultGeometryShaderModel
+        {
+            get
+            {
+                switch (this.DriverLevel)
+                {
+                    case HardwareDriverLevel.Direct3D12:
+                    case HardwareDriverLevel.Direct3D11:
+                        return "gs_5_0";
+
+                    case HardwareDriverLevel.Direct3D10:
+                        return "gs_4_0";
+
+                    default:
+                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
         internal D3D11.Device1 DeviceD3D11_1 => m_handlerD3D11.Device1;

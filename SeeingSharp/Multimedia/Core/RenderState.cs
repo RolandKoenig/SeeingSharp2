@@ -323,12 +323,15 @@ namespace SeeingSharp.Multimedia.Core
             // Disable logic if given material is null
             if (resourceToApply == null)
             {
+                m_lastAppliedMaterial?.Discard(this);
                 m_lastAppliedMaterial = null;
                 return;
             }
 
             if (m_lastAppliedMaterial != resourceToApply)
             {
+                m_lastAppliedMaterial?.Discard(this);
+
                 // Apply material (material or instancing mode has changed)
                 resourceToApply.Apply(this, m_lastAppliedMaterial);
 

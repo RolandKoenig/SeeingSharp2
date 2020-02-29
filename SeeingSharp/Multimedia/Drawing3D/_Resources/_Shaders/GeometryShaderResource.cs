@@ -66,8 +66,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override bool IsLoaded => m_geometryShader != null;
 
         /// <summary>
-        /// Gets the loaded VertexShader object.
+        /// Gets the loaded GeometryShader object.
         /// </summary>
-        internal D3D11.GeometryShader PixelShader => m_geometryShader;
+        internal D3D11.GeometryShader GeometryShader => m_geometryShader;
     }
 }

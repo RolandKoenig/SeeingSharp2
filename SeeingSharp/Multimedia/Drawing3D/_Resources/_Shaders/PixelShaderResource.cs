@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override bool IsLoaded => m_pixelShader != null;
 
         /// <summary>
-        /// Gets the loaded VertexShader object.
+        /// Gets the loaded PixelShader object.
         /// </summary>
         internal D3D11.PixelShader PixelShader => m_pixelShader;
     }

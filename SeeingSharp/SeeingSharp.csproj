@@ -23,6 +23,9 @@
     <None Remove="Resources\Shaders\Common\CommonVertexShader.hlsl" />
     <None Remove="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
     <None Remove="Resources\Shaders\Common\SingleForcedColorVertexShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\WireframeGeometryShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\WireframePixelShader.hlsl" />
+    <None Remove="Resources\Shaders\Common\WireframeVertexShader.hlsl" />
     <None Remove="Resources\Shaders\constants.hlsl" />
     <None Remove="Resources\Shaders\functions.hlsl" />
     <None Remove="Resources\Shaders\LineRendering\LinePixelShader.hlsl" />
@@ -39,8 +42,11 @@
     <None Remove="Resources\Shaders\_mainInclude.hlsl" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Shaders\Common\WireframeGeometryShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Common\WireframePixelShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.Ortho.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonPixelShader.hlsl" />
+    <EmbeddedResource Include="Resources\Shaders\Common\WireframeVertexShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\CommonVertexShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\SingleForcedColorPixelShader.hlsl" />
     <EmbeddedResource Include="Resources\Shaders\Common\SingleForcedColorVertexShader.hlsl" />

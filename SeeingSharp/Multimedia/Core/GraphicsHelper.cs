@@ -931,6 +931,21 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             /// <summary>
+            /// Gets a geometry shader resource pointing to given shader file.
+            /// </summary>
+            /// <param name="device">The target device object.</param>
+            /// <param name="subdirectory">The subdirectory where the shader is located.</param>
+            /// <param name="shaderNameWithoutExt">The name of the shader without extension.</param>
+            public static GeometryShaderResource GetGeometryShaderResource(EngineDevice device, string subdirectory, string shaderNameWithoutExt)
+            {
+                device.EnsureNotNull(nameof(device));
+
+                var resourceLink = GetShaderResourceLink(subdirectory, shaderNameWithoutExt);
+
+                return new GeometryShaderResource(device.DefaultGeometryShaderModel, resourceLink);
+            }
+
+            /// <summary>
             /// Gets a pixel shader resource pointing to given shader file.
             /// </summary>
             /// <param name="device">The target device object.</param>
