@@ -120,13 +120,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Create default rasterizer state
             m_rasterStateDefault = new Lazy<D3D11.RasterizerState>(
-                () => new D3D11.RasterizerState(device.DeviceD3D11_1, D3D11.RasterizerStateDescription.Default()));
+                () =>
+                {
+                    var stateDesc = D3D11.RasterizerStateDescription.Default();
+                    stateDesc.IsAntialiasedLineEnabled = true;
+                    stateDesc.IsMultisampleEnabled = true;
+                    stateDesc.FillMode = D3D11.FillMode.Solid;
+                    return new D3D11.RasterizerState(device.DeviceD3D11_1, stateDesc);
+                });
 
             // Create a raster state with depth bias
             m_rasterStateBiased = new Lazy<D3D11.RasterizerState>(() =>
             {
                 var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.DepthBias = GraphicsHelper.Internals.GetDepthBiasValue(device, -0.00003f);
+                rasterDesc.IsAntialiasedLineEnabled = true;
+                rasterDesc.IsMultisampleEnabled = true;
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
 
@@ -135,6 +144,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.FillMode = D3D11.FillMode.Wireframe;
+                rasterDesc.IsAntialiasedLineEnabled = true;
+                rasterDesc.IsMultisampleEnabled = true;
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
 

@@ -38,6 +38,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public GeometryShaderResource(string shaderProfile, ResourceLink resourceLink)
             : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
         {
+           
         }
 
         /// <summary>
