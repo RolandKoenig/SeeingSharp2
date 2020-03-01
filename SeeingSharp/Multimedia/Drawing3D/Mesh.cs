@@ -302,5 +302,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         public override bool IsExportable => false;
+
+        public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
     }
 }

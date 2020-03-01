@@ -21,6 +21,9 @@
 */
 using System.Collections.Generic;
 using System.Numerics;
+using SharpDX;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 
 namespace SeeingSharp
 {
@@ -54,7 +57,7 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the top matrix by reference.
         /// </summary>
-        public ref Matrix4x4 GetTopRef()
+        public ref Matrix4x4 GetTopByRef()
         {
             return ref m_top;
         }

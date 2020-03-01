@@ -19,23 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
-using System;
 using System.Numerics;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Components;
 
-namespace SeeingSharp.SampleContainer.Basics3D._01_Skybox
+namespace SeeingSharp.SampleContainer.Basics3D._09_WireframeMaterial
 {
     [SampleDescription(
-        "Skybox", 1, nameof(Basics3D),
+        "Wireframe Material", 9, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_01_Skybox",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/_09_WireframeMaterial",
         typeof(SampleSettingsWith3D))]
-    public class SkyboxSample : SampleBase
+    public class WireframeMaterialSample : SampleBase
     {
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -63,14 +63,13 @@ namespace SeeingSharp.SampleContainer.Basics3D._01_Skybox
                     .ApplyAndRewind();
                 manipulator.AddObject(cubeMesh);
 
-                var resSkyboxTexture = manipulator.AddTextureResource(
-                    new AssemblyResourceLink(this.GetType(),
-                        "SkyBox.dds"));
-
-                // Create the skybox on a new layer
-                manipulator.AddLayer("Skybox");
-                var skyboxObject = new Skybox(resSkyboxTexture);
-                manipulator.AddObject(skyboxObject, "Skybox");
+                // Create cube object
+                var wireframeMaterial = manipulator.AddResource(device => new WireframeMaterialResource());
+                var wireframeCube = new Mesh(resGeometry, wireframeMaterial);
+                wireframeCube.Color = Color4.Black;
+                wireframeCube.TransformationType = SpacialTransformationType.TakeFromOtherObject;
+                wireframeCube.TransformSourceObject = cubeMesh;
+                manipulator.AddObject(wireframeCube);
             });
         }
 

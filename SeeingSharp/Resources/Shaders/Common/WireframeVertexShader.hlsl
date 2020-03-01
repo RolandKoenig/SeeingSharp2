@@ -11,7 +11,7 @@ PSInputStandard main(VSInputStandard input)
     // Calculate standard values (position and normal)
 	float4x4 localWorldViewProj = mul(World, ViewProj);
     output.pos = mul(float4(input.pos.xyz, 1.0), localWorldViewProj);
-    output.normal = normalize(mul(input.normal, (float3x3)World));
+    output.normal = normalize(mul(input.normal, localWorldViewProj));
 
 	// Interpolate texture coordinate based on xy-scaling
 	if(AdjustTextureCoordinatesFactor > 0.0)

@@ -144,6 +144,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal override void Discard(RenderState renderState)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+
             deviceContext.GeometryShader.Set(null);
         }
 

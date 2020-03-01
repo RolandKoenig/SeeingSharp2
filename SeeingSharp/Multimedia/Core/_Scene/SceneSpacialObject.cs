@@ -49,6 +49,12 @@ namespace SeeingSharp.Multimedia.Core
         private bool m_transformParamsChanged;
         private bool m_forceTransformUpdateOnChildren;
 
+        // Parameters for object hosting
+        private IEngineHostedSceneObject m_hostedObject;
+        private IEngineOpacityProvider m_hostedObjectOpacity;
+        private ObjectHostMode m_hostedObjectMode;
+        private bool m_hostedObjectChanged;
+
         // Rendering parameters
         private Color4 m_color;
         private float m_accentuationFactor;
@@ -75,6 +81,56 @@ namespace SeeingSharp.Multimedia.Core
             m_transform = Matrix4x4.Identity;
             m_rotationQuaternion = Quaternion.Identity;
             m_transformParamsChanged = true;
+        }
+
+        /// <summary>
+        /// Sets an hosted object (or null, to reset previous).
+        /// </summary>
+        /// <param name="hostedObject">The hosted object to be set.</param>
+        public void SetHostedObject(IEngineHostedSceneObject hostedObject)
+        {
+            this.SetHostedObject(hostedObject, ObjectHostMode.Default);
+        }
+
+        /// <summary>
+        /// Sets an hosted object (or null, to reset previous).
+        /// </summary>
+        /// <param name="hostedObject">The hosted object to be set.</param>
+        /// <param name="hostMode">Describes the specific host mode.</param>
+        public void SetHostedObject(IEngineHostedSceneObject hostedObject, ObjectHostMode hostMode)
+        {
+            if (hostedObject != null)
+            {
+                m_hostedObject = hostedObject;
+                m_hostedObjectOpacity = hostedObject as IEngineOpacityProvider;
+                m_hostedObjectChanged = true;
+            }
+            else
+            {
+                m_hostedObject = null;
+                m_hostedObjectOpacity = null;
+
+                // Set default parameters
+                m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
+                m_position = Vector3.Zero;
+                m_rotation = Vector3.Zero;
+                m_scaling = new Vector3(1f, 1f, 1f);
+                m_transform = Matrix4x4.Identity;
+                m_rotationQuaternion = Quaternion.Identity;
+                m_transformParamsChanged = true;
+
+                m_color = Color4.White;
+            }
+
+            m_hostedObjectMode = hostMode;
+        }
+
+        /// <summary>
+        /// Resets object hosting functionality.
+        /// </summary>
+        public void ResetHostedObject()
+        {
+            this.SetHostedObject(null, ObjectHostMode.Default);
         }
 
         /// <summary>
@@ -232,6 +288,19 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Triggers update of position/rotation/scaling data.
+        /// </summary>
+        /// <param name="forceRecreateOfParameters">Force upload of all object data to the graphics hardware?</param>
+        public void NotifyStaticObjectChanged(bool forceRecreateOfParameters = false)
+        {
+            m_hostedObjectChanged = true;
+            if (forceRecreateOfParameters)
+            {
+                this.TriggerRecreateOfParameters();
+            }
+        }
+
+        /// <summary>
         /// Unloads all resources
         /// </summary>
         public override void UnloadResources()
@@ -254,11 +323,101 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Calculates local transform matrix (transforms local space to world space)
             var doRecreateShaderParameters = false;
+            
+            if ((m_hostedObject != null) &&
+                ((!this.IsStatic) || m_hostedObjectChanged))
+            {
+                if (m_hostedObjectChanged) { doRecreateShaderParameters = true; }
+                m_hostedObjectChanged = false;
+
+                var hostedPosition = m_hostedObject.Position;
+                var hostedRotation = m_hostedObject.Rotation;
+                var hostedScaling = m_hostedObject.Scaling;
+                switch (m_hostedObjectMode)
+                {
+                    // Gather transformation values
+                    case ObjectHostMode.Default:
+                        m_transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
+                        if ((hostedPosition != m_position) ||
+                            (hostedRotation != m_rotation) ||
+                            (hostedScaling != m_scaling))
+                        {
+                            m_position = hostedPosition;
+                            m_scaling = hostedScaling;
+                            m_rotation = hostedRotation;
+                            m_transformParamsChanged = true;
+                            doRecreateShaderParameters = true;
+                        }
+                        break;
+
+                    // Discard rotation data from hosted object
+                    case ObjectHostMode.IgnoreRotation:
+                        m_rotation = Vector3.Zero;
+                        m_rotationQuaternion = Quaternion.Identity;
+                        m_transformationType = SpacialTransformationType.ScalingTranslation;
+                        if ((hostedPosition != m_position) ||
+                            (hostedScaling != m_scaling))
+                        {
+                            m_position = hostedPosition;
+                            m_scaling = hostedScaling;
+                            m_transformParamsChanged = true;
+                            doRecreateShaderParameters = true;
+                        }
+                        break;
+
+                    // Discard size data from hosted object
+                    case ObjectHostMode.IgnoreScaling:
+                        //m_scaling = Vector3.One;
+                        m_transformationType = SpacialTransformationType.TranslationEulerAngles;
+                        if ((hostedPosition != m_position) ||
+                            (hostedRotation != m_rotation))
+                        {
+                            m_position = hostedPosition;
+                            m_rotation = hostedRotation;
+                            m_transformParamsChanged = true;
+                            doRecreateShaderParameters = true;
+                        }
+                        break;
+
+                    // Discard size and rotation data from hosted object
+                    case ObjectHostMode.IgnoreRotationScaling:
+                        m_transformationType = SpacialTransformationType.TranslationEulerAngles;
+                        if (hostedPosition != m_position)
+                        {
+                            m_position = hostedPosition;
+                            m_transformParamsChanged = true;
+                            doRecreateShaderParameters = true;
+                        }
+                        break;
+                }
+
+                // Change opacity value if different
+                var localHostedOpacity = m_hostedObjectOpacity;
+                var hostedOpacity = localHostedOpacity?.Opacity ?? m_opacity;
+                if (!EngineMath.EqualsWithTolerance(m_opacity, hostedOpacity))
+                {
+                    m_opacity = hostedOpacity;
+                    doRecreateShaderParameters = true;
+                    this.OnOpacityChanged();
+                }
+
+                // Gather additional values
+                var currentDisplayColor = m_hostedObject.DisplayColor;
+                if (currentDisplayColor != m_color)
+                {
+                    m_color = currentDisplayColor;
+                    doRecreateShaderParameters = true;
+                }
+            }
+
+            // Remember current TransformationChanged flag)
             TransformationChanged =
                 m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren;
 
             // Update local transform matrix if transform values have changed
-            if (m_transformParamsChanged || updateState.ForceTransformUpdatesOnChildren)
+            if ((m_transformParamsChanged) || 
+                (updateState.ForceTransformUpdatesOnChildren) || 
+                (m_transformationType == SpacialTransformationType.TakeFromOtherObject))  // <-- Special case: We don't know weather transform has changed there
             {
                 m_transformParamsChanged = false;
                 m_forceTransformUpdateOnChildren = this.HasChildren;
@@ -332,8 +491,33 @@ namespace SeeingSharp.Multimedia.Core
                         break;
 
                     case SpacialTransformationType.TakeFromOtherObject:
-                        if (m_transformSourceObject != null) { m_transform = m_transformSourceObject.m_transform; }
-                        else { m_transform = updateState.World.Top; }
+                        if (m_transformSourceObject != null)
+                        {
+                            ref var takenTransform = ref m_transformSourceObject.m_transform;
+                            if (m_transform != takenTransform)
+                            {
+                                m_transform = takenTransform;
+                            }
+                            else
+                            {
+                                // Reset the flag to initially detected value
+                                doRecreateShaderParameters = TransformationChanged;
+                            }
+                        }
+                        else
+                        {
+                            ref var takenTransform = ref updateState.World.GetTopByRef();
+                            if (m_transform != takenTransform)
+                            {
+                                m_transform = takenTransform;
+                            }
+                            else
+                            {
+                                // Reset the flag to initially detected value
+                                doRecreateShaderParameters = TransformationChanged;
+                            }
+                        }
+
                         break;
 
                     case SpacialTransformationType.None:

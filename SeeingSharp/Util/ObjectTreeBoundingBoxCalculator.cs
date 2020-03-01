@@ -57,7 +57,7 @@ namespace SeeingSharp.Util
 
         public void AddCoordinate(ref Vector3 coordinate)
         {
-            ref var topReference = ref m_mStack.GetTopRef();
+            ref var topReference = ref m_mStack.GetTopByRef();
             var transformedCoord = Vector3.Transform(coordinate, topReference);
 
             if (m_minCoord.X > transformedCoord.X) { m_minCoord.X = transformedCoord.X; }
