@@ -60,7 +60,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setups", "Setups", "{5D6398
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ModelViewer", "Tools\SeeingSharp.ModelViewer\SeeingSharp.ModelViewer.csproj", "{42DD13E3-5595-4CB3-9314-B8AE62999C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.AssimpImporter", "SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj", "{CF98442B-2312-4520-9D94-8BFE3B90E4D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.AssimpImporter", "SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj", "{CF98442B-2312-4520-9D94-8BFE3B90E4D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.ObjectLayoutInspection", "Tools\SeeingSharp.ObjectLayoutInspection\SeeingSharp.ObjectLayoutInspection.csproj", "{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -426,6 +428,26 @@ Global
 		{CF98442B-2312-4520-9D94-8BFE3B90E4D2}.Release|x64.Build.0 = Release|Any CPU
 		{CF98442B-2312-4520-9D94-8BFE3B90E4D2}.Release|x86.ActiveCfg = Release|Any CPU
 		{CF98442B-2312-4520-9D94-8BFE3B90E4D2}.Release|x86.Build.0 = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|x64.Build.0 = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Debug|x86.Build.0 = Debug|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|ARM.Build.0 = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|ARM64.Build.0 = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|x64.ActiveCfg = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|x64.Build.0 = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -440,6 +462,7 @@ Global
 		{148352A9-17CF-486A-AB34-752070801304} = {80BD7505-6F77-4282-9B15-F7D7E9EBADB5}
 		{23DF94AA-B58B-4B2A-9AE9-3350C0C3CA9A} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 		{42DD13E3-5595-4CB3-9314-B8AE62999C58} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
+		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
