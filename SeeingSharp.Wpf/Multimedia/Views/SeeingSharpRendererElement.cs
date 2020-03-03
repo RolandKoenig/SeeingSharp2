@@ -479,14 +479,20 @@ namespace SeeingSharp.Multimedia.Views
                 // Get and read data from the gpu (create copy helper texture on demand)
                 if (this.RenderLoop.Internals.CopyHelperTextureStaging == null)
                 {
-                    this.RenderLoop.Internals.CopyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
-                    this.RenderLoop.Internals.CopyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                    this.RenderLoop.Internals.CopyHelperTextureStaging =
+                        GraphicsHelper.Internals.CreateStagingTexture(engineDevice, m_lastRecreateWidth,
+                            m_lastRecreateHeight);
+                    this.RenderLoop.Internals.CopyHelperTextureStandard =
+                        GraphicsHelper.Internals.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
                 }
 
                 // Copy resources
-                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
+                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(
+                    this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
                     GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
-                engineDevice.Internals.DeviceImmediateContextD3D11.CopyResource(this.RenderLoop.Internals.CopyHelperTextureStandard, this.RenderLoop.Internals.CopyHelperTextureStaging);
+                engineDevice.Internals.DeviceImmediateContextD3D11.CopyResource(
+                    this.RenderLoop.Internals.CopyHelperTextureStandard,
+                    this.RenderLoop.Internals.CopyHelperTextureStaging);
 
                 // Copy texture into wpf bitmap
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(

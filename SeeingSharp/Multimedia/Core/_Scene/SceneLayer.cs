@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // All generic members
         private Queue<SceneObject> m_sceneObjectsForSingleUpdateCall;
-        private List<SceneObject> m_sceneObjectsNotStatic;
+        private UnsafeList<SceneObject> m_sceneObjectsNotStatic;
         private List<SceneObject> m_sceneObjectsNotSpacial;
         private bool m_isInUpdate;
         private bool m_isInUpdateBeside;
@@ -52,13 +52,13 @@ namespace SeeingSharp.Multimedia.Core
             m_viewSubsets = new IndexBasedDynamicCollection<ViewRelatedSceneLayerSubset>();
 
             //Create standard collections
-            this.ObjectsInternal = new List<SceneObject>();
+            this.ObjectsInternal = new UnsafeList<SceneObject>();
             this.Objects = new ReadOnlyCollection<SceneObject>(this.ObjectsInternal);
 
             //Create specialized collections
             this.SpacialObjects = new List<SceneSpacialObject>(1024);
             m_sceneObjectsNotSpacial = new List<SceneObject>(1024);
-            m_sceneObjectsNotStatic = new List<SceneObject>(1024);
+            m_sceneObjectsNotStatic = new UnsafeList<SceneObject>(1024);
             m_sceneObjectsForSingleUpdateCall = new Queue<SceneObject>(1024);
 
             this.AllowPick = true;
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Core
                 newLayerViewSubset,
                 viewIndex);
 
-            newLayerViewSubset.RegisterObjectRange(this.ObjectsInternal.ToArray());
+            newLayerViewSubset.RegisterObjectRange(this.ObjectsInternal);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace SeeingSharp.Multimedia.Core
             // Register the given object on all view subsets
             foreach (var actViewSubset in m_viewSubsets)
             {
-                actViewSubset.RegisterObjectRange(sceneObject);
+                actViewSubset.RegisterObject(sceneObject);
             }
 
             return true;
@@ -265,8 +265,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Load all resources
             var sceneObjectArrayLength = this.ObjectsInternal.Count;
-            var sceneObjectArray = this.ObjectsInternal.GetBackingArray();
-
+            var sceneObjectArray = this.ObjectsInternal.BackingArray;
             for (var loop = 0; loop < sceneObjectArrayLength; loop++)
             {
                 var actObject = sceneObjectArray[loop];
@@ -325,7 +324,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Call default update method for each object
                 var updateListLength = m_sceneObjectsNotStatic.Count;
-                var updateList = m_sceneObjectsNotStatic.GetBackingArray();
+                var updateList = m_sceneObjectsNotStatic.BackingArray;
                 for (var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
                     if (!updateList[actIndex].HasParent)
@@ -521,7 +520,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all scene objects (internal accessor to the complete list).
         /// </summary>
-        internal List<SceneObject> ObjectsInternal { get; }
+        internal UnsafeList<SceneObject> ObjectsInternal { get; }
 
         /// <summary>
         /// Gets a list containing all spacial objects.

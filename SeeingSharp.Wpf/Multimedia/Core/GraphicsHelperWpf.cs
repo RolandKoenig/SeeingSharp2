@@ -22,6 +22,7 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using D3D11 = SharpDX.Direct3D11;
@@ -64,7 +65,6 @@ namespace SeeingSharp.Multimedia.Core
 
             // Prepare target bitmap
             var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
-
             try
             {
                 if (!targetBitmap.TryLock(new Duration(lockTimeout)))
@@ -76,8 +76,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Copy data row by row
                     //  => Rows from data source may have more pixels because driver changes the size of textures
-                    var rowPitch = (ulong)(pixelWidth * 4);
-
+                    var rowPitch = (uint) (pixelWidth * 4);
                     for (var loopRow = 0; loopRow < pixelHeight; loopRow++)
                     {
                         var rowPitchSource = dataBox.RowPitch;

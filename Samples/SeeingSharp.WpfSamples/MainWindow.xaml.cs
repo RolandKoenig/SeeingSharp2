@@ -195,5 +195,20 @@ namespace SeeingSharp.WpfSamples
 
             await childWindow.SetRenderingDataAsync(m_actSample);
         }
+
+        private void OnMnuCmdChangeResolution_Click(object sender, RoutedEventArgs e)
+        {
+            if(!(sender is MenuItem menuItem)){ return; }
+
+            var itemTag = (string)menuItem.Tag;
+            var parts = itemTag.Split('x');
+            var targetWith = int.Parse(parts[0]);
+            var targetHeight = int.Parse(parts[1]);
+
+            var diffToFullWidth = this.Width - this.CtrlRenderer.RenderLoop.CurrentViewSize.Width;
+            var diffToFullHeight = this.Height - this.CtrlRenderer.RenderLoop.CurrentViewSize.Height;
+            this.Width = targetWith + diffToFullWidth;
+            this.Height = targetHeight + diffToFullHeight;
+        }
     }
 }

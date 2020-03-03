@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Core
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
                             intBuffer.Pointer + loopY * rowPitchDestination,
-                            (ulong)rowPitchDestination);
+                            (uint)rowPitchDestination);
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Core
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
                             floatBuffer.Pointer + loopY * rowPitchDestination,
-                            (ulong)rowPitchDestination);
+                            (uint)rowPitchDestination);
                     }
                 }
             }

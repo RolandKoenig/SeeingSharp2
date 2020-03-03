@@ -16,6 +16,24 @@
                       Click="OnMnuCmdPerformance_ItemClick" />
             <MenuItem Header="New child window"
                       Click="OnMnuCmdNewChildWindow_Click"/>
+            <MenuItem Header="Change resolution">
+                <MenuItem Header="To 800x600"
+                          Click="OnMnuCmdChangeResolution_Click"
+                          Tag="800x600"/>
+                <MenuItem Header="To 1024x768"
+                          Click="OnMnuCmdChangeResolution_Click"
+                          Tag="1024x768"/>
+                <MenuItem Header="To 1280x1024"
+                          Click="OnMnuCmdChangeResolution_Click"
+                          Tag="1280x1024"/>
+                <MenuItem Header="To 1600x1200"
+                          Click="OnMnuCmdChangeResolution_Click"
+                          Tag="1600x1200"/>
+                <Separator />
+                <MenuItem Header="To 1024x1024"
+                          Click="OnMnuCmdChangeResolution_Click"
+                          Tag="1024x1024"/>
+            </MenuItem>
         </Menu>
 
         <!-- List of sample groups -->

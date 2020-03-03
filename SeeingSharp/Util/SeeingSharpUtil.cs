@@ -35,32 +35,6 @@ namespace SeeingSharp.Util
 {
     public static class SeeingSharpUtil
     {
-        public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
-        {
-            sourceObject.EnsureNotNull(nameof(sourceObject));
-
-            var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (fInfo != null)
-            {
-                return (T)fInfo.GetValue(sourceObject);
-            }
-            throw new SeeingSharpException($"Private member {memberName} not found in object of type {sourceObject.GetType().FullName}!");
-        }
-
-        /// <summary>
-        /// Gets the backing array of the given list.
-        /// </summary>
-        /// <param name="lst">The list from which to get the backing array for faster loop access.</param>
-        public static T[] GetBackingArray<T>(List<T> lst)
-        {
-            var fInfo = lst.GetType().GetTypeInfo().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (fInfo != null)
-            {
-                return fInfo.GetValue(lst) as T[];
-            }
-            throw new SeeingSharpException("Unable to get backing array from List<T>!");
-        }
-
         /// <summary>
         /// Gets the backing array of the given queue.
         /// </summary>
@@ -114,7 +88,7 @@ namespace SeeingSharp.Util
         /// <param name="sourcePointer">The source pointer.</param>
         /// <param name="targetPointer">The target pointer.</param>
         /// <param name="byteCount">The total count of bytes to be copied.</param>
-        public static unsafe void CopyMemory(IntPtr sourcePointer, IntPtr targetPointer, ulong byteCount)
+        public static unsafe void CopyMemory(IntPtr sourcePointer, IntPtr targetPointer, uint byteCount)
         {
             CopyMemory(sourcePointer.ToPointer(), targetPointer.ToPointer(), byteCount);
         }
@@ -125,29 +99,9 @@ namespace SeeingSharp.Util
         /// <param name="sourcePointer">The source pointer.</param>
         /// <param name="targetPointer">The target pointer.</param>
         /// <param name="byteCount">The total count of bytes to be copied.</param>
-        public static unsafe void CopyMemory(void* sourcePointer, void* targetPointer, ulong byteCount)
+        public static unsafe void CopyMemory(void* sourcePointer, void* targetPointer, uint byteCount)
         {
-            var longCount = byteCount / 8;
-            var byteScrap = byteCount % 8;
-
-            // Copy using long pointers
-            var sourcePointerLong = (ulong*)sourcePointer;
-            var targetPointerLong = (ulong*)targetPointer;
-            for (ulong actIndexLong = 0; actIndexLong < longCount; actIndexLong++)
-            {
-                targetPointerLong[actIndexLong] = sourcePointerLong[actIndexLong];
-            }
-
-            // Copy remaining bytes
-            if (byteScrap > 0)
-            {
-                var sourcePointerByte = (byte*)sourcePointer;
-                var targetPointerByte = (byte*)targetPointer;
-                for (var actIndexByte = byteCount - byteScrap; actIndexByte < byteCount; actIndexByte++)
-                {
-                    targetPointerByte[actIndexByte] = sourcePointerByte[actIndexByte];
-                }
-            }
+            System.Runtime.CompilerServices.Unsafe.CopyBlock(targetPointer, sourcePointer, byteCount);
         }
 
         /// <summary>

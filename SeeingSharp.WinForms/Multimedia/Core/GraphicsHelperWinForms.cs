@@ -171,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     //Copy data row by row
                     // => Rows form data source may have more pixels because driver changes the size of textures
-                    var rowPitch = (ulong)(width * 4);
+                    var rowPitch = (uint)(width * 4);
 
                     for (var loopRow = 0; loopRow < height; loopRow++)
                     {

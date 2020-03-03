@@ -196,15 +196,6 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Gets the backing array of the given list.
-        /// </summary>
-        /// <param name="lst">The list from which to get the backing array for faster loop access.</param>
-        public static T[] GetBackingArray<T>(this List<T> lst)
-        {
-            return SeeingSharpUtil.GetBackingArray(lst);
-        }
-
-        /// <summary>
         /// Gets the backing array of the given queue.
         /// </summary>
         /// <param name="queue">The queue from which to get the backing array for faster loop access.</param>

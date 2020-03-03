@@ -125,21 +125,44 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Registers the given collection of objects on this view subset.
+        /// Registers the given object on this view subset.
         /// </summary>
-        /// <param name="sceneObjects">The scene objects to be registered.</param>
-        internal void RegisterObjectRange(params SceneObject[] sceneObjects)
+        /// <param name="sceneObject">The scene object to be registered.</param>
+        internal void RegisterObject(SceneObject sceneObject)
         {
             if (m_disposed)
             {
                 throw new ObjectDisposedException("ViewRelatedLayerSubset");
             }
 
-            var length = sceneObjects.Length;
+            if (m_invalidObjects.ContainsKey(sceneObject))
+            {
+                return;
+            }
 
+            if ((sceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
+            {
+                sceneObject.RegisterLayerViewSubset(this);
+            }
+        }
+
+        /// <summary>
+        /// Registers the given collection of objects on this view subset.
+        /// </summary>
+        /// <param name="sceneObjects">The scene objects to be registered.</param>
+        internal void RegisterObjectRange(UnsafeList<SceneObject> sceneObjects)
+        {
+            if (m_disposed)
+            {
+                throw new ObjectDisposedException("ViewRelatedLayerSubset");
+            }
+
+            var length = sceneObjects.Count;
+            var backingArray = sceneObjects.BackingArray;
             for (var loop = 0; loop < length; loop++)
             {
-                var actSceneObject = sceneObjects[loop];
+                var actSceneObject = backingArray[loop];
+                if(actSceneObject == null){ continue; }
 
                 if (m_invalidObjects.ContainsKey(actSceneObject))
                 {
@@ -148,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 if ((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
                 {
-                    sceneObjects[loop].RegisterLayerViewSubset(this);
+                    actSceneObject.RegisterLayerViewSubset(this);
                 }
             }
         }
@@ -192,7 +215,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Clears all subscriptions
         /// </summary>
         /// <param name="allObjects">A collection containing all objects of the current layer.</param>
-        internal void ClearAllSubscriptions(List<SceneObject> allObjects)
+        internal void ClearAllSubscriptions(UnsafeList<SceneObject> allObjects)
         {
             if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
 
@@ -381,8 +404,7 @@ namespace SeeingSharp.Multimedia.Core
             var allObjectsLength = allObjects.Count;
             if (allObjectsLength > 0)
             {
-                var allObjectsArray = allObjects.GetBackingArray();
-
+                var allObjectsArray = allObjects.BackingArray;
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actObject = allObjectsArray[loop];
