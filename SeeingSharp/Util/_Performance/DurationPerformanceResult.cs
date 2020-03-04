@@ -28,16 +28,17 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceResult"/> class.
         /// </summary>
-        public DurationPerformanceResult(string activityName, DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        public DurationPerformanceResult(string activityName, DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
         {
             this.ActivityName = activityName;
 
-            this.Update(timestampKey, sumAvgTicks, sumMaxTicks, sumMinTicks);
+            this.Update(timestampKey, itemCount, sumAvgTicks, sumMaxTicks, sumMinTicks);
         }
 
-        public void Update(DateTime timestampKey, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        public void Update(DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
         {
             this.KeyTimestamp = timestampKey;
+            this.ItemCount = itemCount;
             this.SumAverageTicks = sumAvgTicks;
             this.SumMaxTicks = sumMaxTicks;
             this.SumMinTicks = sumMinTicks;
@@ -49,6 +50,8 @@ namespace SeeingSharp.Util
         /// Gets the key of this value.
         /// </summary>
         public DateTime KeyTimestamp { get; private set; }
+
+        public long ItemCount { get; private set; }
 
         public long SumMaxTicks { get; private set; }
 

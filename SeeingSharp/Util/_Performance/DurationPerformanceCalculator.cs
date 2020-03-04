@@ -26,6 +26,7 @@ namespace SeeingSharp.Util
     public class DurationPerformanceCalculator
     {
         private RingBuffer<ActivityDurationInfo> m_lastDurationItems;
+        private DateTime m_lastReportedDurationTimestamp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
@@ -43,8 +44,11 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total ticks the activity took.</param>
         internal void NotifyActivityDuration(long durationTicks)
         {
+            var currentTimestamp = DateTime.UtcNow;
+            m_lastReportedDurationTimestamp = currentTimestamp;
+
             ref var actItem = ref m_lastDurationItems.AddByRef();
-            actItem.TimeStamp = DateTime.UtcNow;
+            actItem.TimeStamp = currentTimestamp;
             actItem.DurationTicks = durationTicks;
         }
 
@@ -117,17 +121,23 @@ namespace SeeingSharp.Util
             // Create result object
             if (result == null)
             {
-                result = new DurationPerformanceResult(this.ActivityName, maxTimeStamp, avgValue, maxValue, minValue);
+                result = new DurationPerformanceResult(
+                    this.ActivityName, maxTimeStamp, itemCount, 
+                    avgValue, maxValue, minValue);
             }
             else
             {
-                result.Update(maxTimeStamp, avgValue, maxValue, minValue);
+                result.Update(
+                    maxTimeStamp, itemCount, 
+                    avgValue, maxValue, minValue);
             }
         }
 
         public string ActivityName { get; }
 
         public int RawDataEntries => m_lastDurationItems.Count;
+
+        public DateTime LastReportedDurationTimestamp => m_lastReportedDurationTimestamp;
 
         //*********************************************************************
         //*********************************************************************
