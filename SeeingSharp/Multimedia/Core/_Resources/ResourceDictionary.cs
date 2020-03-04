@@ -24,6 +24,7 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace SeeingSharp.Multimedia.Core
         private int m_lastDeviceLoadIndex;
         private List<IRenderableResource> m_renderableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> m_resources;
-        private ThreadSaveQueue<Resource> m_resourcesMarkedForUnloading;
+        private ConcurrentQueue<Resource> m_resourcesMarkedForUnloading;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
@@ -56,7 +57,7 @@ namespace SeeingSharp.Multimedia.Core
             this.RenderableResources = new ReadOnlyCollection<IRenderableResource>(m_renderableResources);
 
             m_resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
-            m_resourcesMarkedForUnloading = new ThreadSaveQueue<Resource>();
+            m_resourcesMarkedForUnloading = new ConcurrentQueue<Resource>();
         }
 
         /// <summary>
@@ -289,7 +290,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadAllMarkedResources()
         {
-            foreach (var actResource in m_resourcesMarkedForUnloading.DequeueAll())
+            while (m_resourcesMarkedForUnloading.TryDequeue(out var actResource))
             {
                 if (!actResource.IsKeyEmpty)
                 {

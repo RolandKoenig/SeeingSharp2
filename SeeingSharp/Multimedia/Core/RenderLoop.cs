@@ -27,6 +27,7 @@ using SeeingSharp.Multimedia.Input;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -49,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
         private Camera3DBase m_camera;
 
         // Async actions
-        private ThreadSaveQueue<Action> m_afterPresentActions;
+        private ConcurrentQueue<Action> m_afterPresentActions;
 
         // Target parameters for rendering
         private EngineDevice m_targetDevice;
@@ -124,7 +125,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             this.Internals = new RenderLoopInternals(this);
 
-            m_afterPresentActions = new ThreadSaveQueue<Action>();
+            m_afterPresentActions = new ConcurrentQueue<Action>();
             m_cachedPrepareRenderContinuationActions = new List<Action>();
             m_cachedPrepareRenderOnGui = this.PrepareRenderOnGui;
 
@@ -148,8 +149,6 @@ namespace SeeingSharp.Multimedia.Core
 
             this.ViewInformation = new ViewInformation(this);
             m_configuration = new GraphicsViewConfiguration();
-
-            m_afterPresentActions = new ThreadSaveQueue<Action>();
 
             m_videoWriters = new List<SeeingSharpVideoWriter>();
 
@@ -1226,7 +1225,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute all deferred actions to be called after present
-                    while (m_afterPresentActions.Dequeue(out var actAction))
+                    while (m_afterPresentActions.TryDequeue(out var actAction))
                     {
                         actAction();
                     }

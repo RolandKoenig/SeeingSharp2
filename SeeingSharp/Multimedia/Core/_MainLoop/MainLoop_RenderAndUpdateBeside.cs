@@ -1,8 +1,28 @@
-﻿using System;
+﻿/*
+    Seeing# and all applications distributed together with it. 
+	Exceptions are projects where it is noted otherwise.
+    More info at 
+     - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
+     - http://www.rolandk.de (the authors homepage, german)
+    Copyright (C) 2019 Roland König (RolandK)
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/.
+*/
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -20,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // Cached values and collections
         private Action<int> m_actionTriggerRenderOrUpdateBesideTask;
-        private ThreadSaveQueue<RenderLoop> m_invalidRenderLoops;
+        private ConcurrentQueue<RenderLoop> m_invalidRenderLoops;
         private List<string> m_perfSceneUpdateBesideActivityNames;
         private List<string> m_perfDeviceRenderActivityNames;
 
@@ -29,11 +49,11 @@ namespace SeeingSharp.Multimedia.Core
             m_core = core;
             m_mainLoop = mainLoop;
 
-            m_invalidRenderLoops = new ThreadSaveQueue<RenderLoop>();
+            m_invalidRenderLoops = new ConcurrentQueue<RenderLoop>();
             m_perfSceneUpdateBesideActivityNames = new List<string>(16);
             m_perfDeviceRenderActivityNames = new List<string>(16);
 
-            m_actionTriggerRenderOrUpdateBesideTask = new Action<int>(this.TriggerRenderOrUpdateBesideTask);
+            m_actionTriggerRenderOrUpdateBesideTask = this.TriggerRenderOrUpdateBesideTask;
         }
 
         public void SetPassParameters(
@@ -45,7 +65,8 @@ namespace SeeingSharp.Multimedia.Core
             m_devicesInUse = devicesInUse;
             m_updateState = updateState;
 
-            m_invalidRenderLoops.Clear();
+            // Clear render loop queue
+            while (m_invalidRenderLoops.TryDequeue(out _)) { }
 
             // Prepare cached activity names for measuring scene updates
             while (m_scenesToRender.Count > m_perfSceneUpdateBesideActivityNames.Count)
@@ -77,12 +98,9 @@ namespace SeeingSharp.Multimedia.Core
                 Parallel.For(0, m_devicesInUse.Count + m_scenesToRender.Count, m_actionTriggerRenderOrUpdateBesideTask);
 
                 // Handle all invalid render loops
-                if (m_invalidRenderLoops.HasAny())
+                while (m_invalidRenderLoops.TryDequeue(out var actRenderLoop))
                 {
-                    while (m_invalidRenderLoops.Dequeue(out var actRenderLoop))
-                    {
-                        m_mainLoop.DeregisterRenderLoop(actRenderLoop);
-                    }
+                    m_mainLoop.DeregisterRenderLoop(actRenderLoop);
                 }
 
                 // Reset camera changed flags

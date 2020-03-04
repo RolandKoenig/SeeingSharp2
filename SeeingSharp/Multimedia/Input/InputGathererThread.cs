@@ -23,6 +23,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Input
@@ -36,9 +37,9 @@ namespace SeeingSharp.Multimedia.Input
         private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
 
         // Synchronization
-        private ThreadSaveQueue<Action> m_commandQueue;
-        private ThreadSaveQueue<InputFrame> m_recoveredInputFrames;
-        private ThreadSaveQueue<InputFrame> m_gatheredInputFrames;
+        private ConcurrentQueue<Action> m_commandQueue;
+        private ConcurrentQueue<InputFrame> m_recoveredInputFrames;
+        private ConcurrentQueue<InputFrame> m_gatheredInputFrames;
         private InputFrame m_lastInputFrame;
 
         // Thread local state
@@ -51,9 +52,9 @@ namespace SeeingSharp.Multimedia.Input
         internal InputGathererThread()
             : base("Input Gatherer", 1000 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
         {
-            m_commandQueue = new ThreadSaveQueue<Action>();
-            m_gatheredInputFrames = new ThreadSaveQueue<InputFrame>();
-            m_recoveredInputFrames = new ThreadSaveQueue<InputFrame>();
+            m_commandQueue = new ConcurrentQueue<Action>();
+            m_gatheredInputFrames = new ConcurrentQueue<InputFrame>();
+            m_recoveredInputFrames = new ConcurrentQueue<InputFrame>();
             m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
         }
 
@@ -80,7 +81,7 @@ namespace SeeingSharp.Multimedia.Input
             // Execute all commands within the command queue
             if (m_commandQueue.Count > 0)
             {
-                while (m_commandQueue.Dequeue(out var actCommand))
+                while (m_commandQueue.TryDequeue(out var actCommand))
                 {
                     actCommand();
                 }
@@ -90,7 +91,7 @@ namespace SeeingSharp.Multimedia.Input
             var expectedStateCount = m_lastInputFrame?.CountStates ?? 6;
 
             // Create new InputFrame object or reuse an old one
-            if (m_recoveredInputFrames.Dequeue(out var newInputFrame))
+            if (m_recoveredInputFrames.TryDequeue(out var newInputFrame))
             {
                 newInputFrame.Reset(expectedStateCount, SINGLE_FRAME_DURATION);
             }
@@ -136,7 +137,7 @@ namespace SeeingSharp.Multimedia.Input
             //  (older input is obsolete)
             while (m_gatheredInputFrames.Count > SeeingSharpConstants.INPUT_FRAMES_PER_SECOND)
             {
-                m_gatheredInputFrames.Dequeue(out _);
+                m_gatheredInputFrames.TryDequeue(out _);
             }
         }
 
@@ -146,11 +147,17 @@ namespace SeeingSharp.Multimedia.Input
         internal void QueryForCurrentFrames(List<InputFrame> targetList)
         {
             // Do first recover all old frames
-            m_recoveredInputFrames.Enqueue(targetList);
+            for (var loop = 0; loop < targetList.Count; loop++)
+            {
+                m_recoveredInputFrames.Enqueue(targetList[loop]);
+            }
             targetList.Clear();
 
             // Enqueue new frames
-            m_gatheredInputFrames.DequeueAll(targetList);
+            while (m_gatheredInputFrames.TryDequeue(out var actInputFame))
+            {
+                targetList.Add(actInputFame);
+            }
         }
 
         /// <summary>
@@ -200,7 +207,6 @@ namespace SeeingSharp.Multimedia.Input
                 if (m_viewInputHandlers.ContainsKey(view))
                 {
                     var oldList = m_viewInputHandlers[view];
-
                     foreach (var actOldInputHandler in oldList)
                     {
                         actOldInputHandler.Stop();

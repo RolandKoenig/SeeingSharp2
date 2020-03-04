@@ -24,6 +24,7 @@ using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -51,8 +52,8 @@ namespace SeeingSharp.Multimedia.Core
         private SceneComponentFlyweight m_sceneComponents;
 
         // Async update actions
-        private ThreadSaveQueue<Action> m_asyncInvokesBeforeUpdate;
-        private ThreadSaveQueue<Action> m_asyncInvokesUpdateBesideRendering;
+        private ConcurrentQueue<Action> m_asyncInvokesBeforeUpdate;
+        private ConcurrentQueue<Action> m_asyncInvokesUpdateBesideRendering;
 
         // Some runtime values
         private IndexBasedDynamicCollection<ResourceDictionary> m_registeredResourceDicts;
@@ -82,8 +83,8 @@ namespace SeeingSharp.Multimedia.Core
 
             m_drawing2DLayers = new List<Custom2DDrawingLayer>();
 
-            m_asyncInvokesBeforeUpdate = new ThreadSaveQueue<Action>();
-            m_asyncInvokesUpdateBesideRendering = new ThreadSaveQueue<Action>();
+            m_asyncInvokesBeforeUpdate = new ConcurrentQueue<Action>();
+            m_asyncInvokesUpdateBesideRendering = new ConcurrentQueue<Action>();
 
             m_registeredResourceDicts = new IndexBasedDynamicCollection<ResourceDictionary>();
             m_registeredViews = new IndexBasedDynamicCollection<ViewInformation>();
@@ -169,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
                     foreach (var actSceneObject in actLayer.ObjectsInternal)
                     {
                         if (actSceneObject.HasChildren) { continue; }
-                        result.Add(new SceneObjectInfo(actSceneObject, true));
+                        result.Add(new SceneObjectInfo(actSceneObject));
                     }
                 }
             });
@@ -189,7 +190,7 @@ namespace SeeingSharp.Multimedia.Core
             SceneObjectInfo result = null;
             await this.PerformBesideRenderingAsync(() =>
             {
-                result = new SceneObjectInfo(sceneObject, true);
+                result = new SceneObjectInfo(sceneObject);
             });
 
             return result;
@@ -899,12 +900,11 @@ namespace SeeingSharp.Multimedia.Core
 
             // Invoke all async action attached to this scene
             var asyncActionsBeforeUpdateCount = m_asyncInvokesBeforeUpdate.Count;
-
             if (asyncActionsBeforeUpdateCount > 0)
             {
                 var actIndex = 0;
-                while (actIndex < asyncActionsBeforeUpdateCount &&
-                       m_asyncInvokesBeforeUpdate.Dequeue(out var actAsyncAction))
+                while ((actIndex < asyncActionsBeforeUpdateCount) &&
+                       (m_asyncInvokesBeforeUpdate.TryDequeue(out var actAsyncAction)))
                 {
                     actAsyncAction();
                     actIndex++;
@@ -936,7 +936,7 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState)
         {
             // Invoke all async action attached to this scene
-            while (m_asyncInvokesUpdateBesideRendering.Dequeue(out var actAsyncAction))
+            while (m_asyncInvokesUpdateBesideRendering.TryDequeue(out var actAsyncAction))
             {
                 actAsyncAction();
             }

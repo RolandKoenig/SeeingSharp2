@@ -20,10 +20,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         private UpdateState m_updateState;
 
         // Caches values and collections
-        private ThreadSaveQueue<Exception> m_exceptionsDuringUpdate;
+        private ConcurrentQueue<Exception> m_exceptionsDuringUpdate;
         private List<Action> m_additionalContinuationActions;
         private object m_additionalContinuationActionsLock;
         private List<Task<List<Action>>> m_prepareRenderTasks;
@@ -55,14 +55,14 @@ namespace SeeingSharp.Multimedia.Core
             m_core = core;
             m_mainLoop = mainLoop;
             m_perfSceneUpdateActivityNames = new List<string>(16);
-            m_exceptionsDuringUpdate = new ThreadSaveQueue<Exception>();
+            m_exceptionsDuringUpdate = new ConcurrentQueue<Exception>();
 
             m_additionalContinuationActions = new List<Action>(6);
             m_additionalContinuationActionsLock = new object();
 
             m_prepareRenderTasks = new List<Task<List<Action>>>(16);
 
-            m_actionUpdateSingleScene = new Action<int>(this.UpdateSingleScene);
+            m_actionUpdateSingleScene = this.UpdateSingleScene;
         }
 
         public void SetPassParameters(
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
             m_updateState = updateState; 
 
             // Clear temporary needed arrays
-            m_exceptionsDuringUpdate.Clear();
+            while (m_exceptionsDuringUpdate.TryDequeue(out _)) { }
             m_additionalContinuationActions.Clear();
             m_prepareRenderTasks.Clear();
 
@@ -123,9 +123,9 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Throw exceptions if any occurred during scene update
                 //  => This would be a fatal exception, so throw up to main loop
-                if (m_exceptionsDuringUpdate.HasAny())
+                if (m_exceptionsDuringUpdate.Count > 0)
                 {
-                    throw new AggregateException("Error(s) during Scene update!", m_exceptionsDuringUpdate.DequeueAll().ToArray());
+                    throw new AggregateException("Error(s) during Scene update!", m_exceptionsDuringUpdate.ToArray());
                 }
 
                 // Trigger all continuation actions returned by the previously executed prepare tasks

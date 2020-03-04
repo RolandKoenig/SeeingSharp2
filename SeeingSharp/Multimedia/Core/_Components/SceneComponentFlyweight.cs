@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System.Collections.Concurrent;
 using SeeingSharp.Checking;
-using SeeingSharp.Util;
 using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Main members
         private Scene m_owner;
-        private ThreadSaveQueue<SceneComponentRequest> m_componentRequests;
+        private ConcurrentQueue<SceneComponentRequest> m_componentRequests;
         private List<SceneComponentInfo> m_attachedComponents;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneComponentFlyweight(Scene owner)
         {
             m_owner = owner;
-            m_componentRequests = new ThreadSaveQueue<SceneComponentRequest>();
+            m_componentRequests = new ConcurrentQueue<SceneComponentRequest>();
             m_attachedComponents = new List<SceneComponentInfo>();
         }
 
@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Attach all components which are coming in
-            while (m_componentRequests.Dequeue(out var actRequest))
+            while (m_componentRequests.TryDequeue(out var actRequest))
             {
                 SceneComponentInfo actComponent;
                 int actComponentIndex;
