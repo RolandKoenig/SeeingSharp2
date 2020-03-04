@@ -78,8 +78,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._09_WireframeMaterial
             var camera = mainOrChildRenderLoop.Camera;
 
             // ConfigureLoading camera
-            camera.Position = new Vector3(3f, 1f, 3f);
-            camera.Target = new Vector3(0f, 1.2f, 0f);
+            camera.Position = new Vector3(3f, 3f, 3f);
+            camera.Target = new Vector3(0f, 0.5f, 0f);
             camera.UpdateCamera();
 
             // Append camera behavior
