@@ -41,6 +41,7 @@ namespace SeeingSharp.Multimedia.Input
         private ConcurrentQueue<InputFrame> m_recoveredInputFrames;
         private ConcurrentQueue<InputFrame> m_gatheredInputFrames;
         private InputFrame m_lastInputFrame;
+        private List<InputStateBase> m_cachedStates;
 
         // Thread local state
         private List<IInputHandler> m_globalInputHandlers;
@@ -56,6 +57,7 @@ namespace SeeingSharp.Multimedia.Input
             m_gatheredInputFrames = new ConcurrentQueue<InputFrame>();
             m_recoveredInputFrames = new ConcurrentQueue<InputFrame>();
             m_viewInputHandlers = new Dictionary<IInputEnabledView, List<IInputHandler>>();
+            m_cachedStates = new List<InputStateBase>(8);
         }
 
         protected override void OnTick(EventArgs eArgs)
@@ -100,20 +102,24 @@ namespace SeeingSharp.Multimedia.Input
                 newInputFrame = new InputFrame(expectedStateCount, SINGLE_FRAME_DURATION);
             }
 
-            // Gather all input states
+            // Gather all input states (without dependency to a view)
             foreach (var actInputHandler in m_globalInputHandlers)
             {
-                foreach (var actInputState in actInputHandler.GetInputStates())
+                actInputHandler.GetInputStates(m_cachedStates);
+                for (var loop = 0; loop < m_cachedStates.Count; loop++)
                 {
-                    actInputState.EnsureNotNull(nameof(actInputState));
+                    var actInputState = m_cachedStates[loop];
+                    if(actInputState == null){ continue; }
+
                     newInputFrame.AddCopyOfState(actInputState, null);
                 }
+                m_cachedStates.Clear();
             }
 
+            // Gather all input states (with view dependency)
             foreach (var actViewSpecificHandlers in m_viewInputHandlers)
             {
                 var renderLoop = actViewSpecificHandlers.Key.RenderLoop;
-
                 if (renderLoop == null)
                 {
                     continue;
@@ -121,11 +127,15 @@ namespace SeeingSharp.Multimedia.Input
 
                 foreach (var actInputHandler in actViewSpecificHandlers.Value)
                 {
-                    foreach (var actInputState in actInputHandler.GetInputStates())
+                    actInputHandler.GetInputStates(m_cachedStates);
+                    for (var loop = 0; loop < m_cachedStates.Count; loop++)
                     {
-                        actInputState.EnsureNotNull(nameof(actInputState));
+                        var actInputState = m_cachedStates[loop];
+                        if(actInputState == null){ continue; }
+
                         newInputFrame.AddCopyOfState(actInputState, renderLoop.ViewInformation);
                     }
+                    m_cachedStates.Clear();
                 }
             }
 

@@ -202,10 +202,10 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Queries all current input states.
         /// </summary>
-        public IEnumerable<InputStateBase> GetInputStates()
+        public void GetInputStates(List<InputStateBase> target)
         {
-            yield return m_stateMouseOrPointer;
-            yield return m_stateKeyboard;
+            target.Add(m_stateMouseOrPointer);
+            target.Add(m_stateKeyboard);
         }
 
         private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)

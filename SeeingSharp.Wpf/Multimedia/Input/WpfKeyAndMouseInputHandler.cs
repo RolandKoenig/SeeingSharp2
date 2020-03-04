@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Input
             if (m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             // Register all events needed for mouse camera dragging
-            m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
+            m_rendererElement.Dispatcher?.BeginInvoke(new Action(() =>
             {
                 m_rendererElement.MouseWheel += this.OnRendererElement_MouseWheel;
                 m_rendererElement.MouseDown += this.OnRendererElement_MouseDown;
@@ -95,23 +95,19 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             // Deregister all events
-            if (m_rendererElement != null)
+            var rendererElement = m_rendererElement;
+            rendererElement?.Dispatcher?.BeginInvoke(new Action(() =>
             {
-                var rendererElement = m_rendererElement;
-
-                m_rendererElement.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    rendererElement.MouseWheel -= this.OnRendererElement_MouseWheel;
-                    rendererElement.MouseDown -= this.OnRendererElement_MouseDown;
-                    rendererElement.MouseUp -= this.OnRendererElement_MouseUp;
-                    rendererElement.MouseMove -= this.OnRendererElement_MouseMove;
-                    rendererElement.MouseLeave -= this.OnRendererElement_MouseLeave;
-                    rendererElement.LostFocus -= this.OnRendererElement_LostFocus;
-                    rendererElement.LostKeyboardFocus -= this.OnRendererElement_LostKeyboardFocus;
-                    rendererElement.GotFocus -= this.OnRenderElement_GotFocus;
-                    rendererElement.PreviewMouseUp -= this.OnRendererElement_PreviewMouseUp;
-                }));
-            }
+                rendererElement.MouseWheel -= this.OnRendererElement_MouseWheel;
+                rendererElement.MouseDown -= this.OnRendererElement_MouseDown;
+                rendererElement.MouseUp -= this.OnRendererElement_MouseUp;
+                rendererElement.MouseMove -= this.OnRendererElement_MouseMove;
+                rendererElement.MouseLeave -= this.OnRendererElement_MouseLeave;
+                rendererElement.LostFocus -= this.OnRendererElement_LostFocus;
+                rendererElement.LostKeyboardFocus -= this.OnRendererElement_LostKeyboardFocus;
+                rendererElement.GotFocus -= this.OnRenderElement_GotFocus;
+                rendererElement.PreviewMouseUp -= this.OnRendererElement_PreviewMouseUp;
+            }));
 
             m_rendererElement = null;
 
@@ -122,10 +118,10 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Queries all current input states.
         /// </summary>
-        public IEnumerable<InputStateBase> GetInputStates()
+        public void GetInputStates(List<InputStateBase> target)
         {
-            yield return m_stateMouseOrPointer;
-            yield return m_stateKeyboard;
+            target.Add(m_stateMouseOrPointer);
+            target.Add(m_stateKeyboard);
         }
 
         private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
