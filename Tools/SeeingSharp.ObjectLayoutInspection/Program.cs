@@ -15,6 +15,7 @@ namespace SeeingSharp.ObjectLayoutInspection
             //TypeLayout.PrintLayout<CBPerView>();
             //TypeLayout.PrintLayout<CBPerObject>();
             //TypeLayout.PrintLayout<CBPerMaterial>();
+
         }
     }
 }
