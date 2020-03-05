@@ -315,8 +315,7 @@ namespace SeeingSharp.Util
 
                             //Get current taskqueue
                             var localTaskQueue = new List<Action>();
-                            Action dummyAction = null;
-                            while (m_taskQueue.TryDequeue(out dummyAction))
+                            while (m_taskQueue.TryDequeue(out var dummyAction))
                             {
                                 localTaskQueue.Add(dummyAction);
                             }

@@ -204,7 +204,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Reset render target (needed for all passes)
                 m_renderTarget.PopFromRenderState(renderState);
 
-                // Clear cached material resource because wie work with shaders directly here
+                // Clear cached material resource because we work with shaders directly here
                 renderState.ClearCachedAppliedMaterial();
 
                 // Render result of current pass to the main render target

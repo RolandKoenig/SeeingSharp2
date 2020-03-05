@@ -332,13 +332,13 @@ namespace SeeingSharp.Tests
                     // Define object
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
-                    var resMaterial = manipulator.AddStandardMaterialResource();
+                    var resMaterial = manipulator.AddResource(
+                        device => new StandardMaterialResource(enableShaderGeneratedBorder: true));
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
                     newMesh.Scaling = new Vector3(2f, 2f, 2f);
                     newMesh.Color = Color4.Goldenrod;
-                    newMesh.EnableShaderGeneratedBorder();
                 });
 
                 // Define 2D overlay
@@ -441,7 +441,7 @@ namespace SeeingSharp.Tests
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var isNearEqual = BitmapComparison.IsNearEqual(
@@ -477,7 +477,7 @@ namespace SeeingSharp.Tests
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var diff = BitmapComparison.CalculatePercentageDifference(

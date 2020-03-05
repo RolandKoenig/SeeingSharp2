@@ -145,6 +145,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
 
             // Clear material properties
+            m_lastAppliedMaterial?.Discard(this);
             m_lastAppliedMaterial = null;
             m_forcedMaterial = null;
 
@@ -303,7 +304,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
         internal void ForceMaterial(MaterialResource material)
         {
+            m_lastAppliedMaterial?.Discard(this);
             m_lastAppliedMaterial = null;
+
             m_forcedMaterial = material;
         }
 
@@ -347,6 +350,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ClearCachedAppliedMaterial()
         {
+            m_lastAppliedMaterial?.Discard(this);
             m_lastAppliedMaterial = null;
         }
 
@@ -546,7 +550,7 @@ namespace SeeingSharp.Multimedia.Core
                 m_targetArray[1] = RenderTargets.ObjectIDBuffer;
                 m_targetArray[2] = RenderTargets.NormalDepthBuffer;
 
-                if(m_viewports == null){ m_viewports = new RawViewportF[3]; }
+                if (m_viewports == null){ m_viewports = new RawViewportF[3]; }
                 m_viewports[0] = SingleViewport;
                 m_viewports[1] = SingleViewport;
                 m_viewports[2] = SingleViewport;

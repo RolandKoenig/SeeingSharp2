@@ -334,8 +334,11 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute global awaitors
-                    while (m_globalLoopAwaitors.Count > 0)
+                    var prevCount = m_globalLoopAwaitors.Count;
+                    var currentIndex = 0;
+                    while (currentIndex < prevCount)
                     {
+                        currentIndex++;
                         if (m_globalLoopAwaitors.TryDequeue(out var currentAction))
                         {
                             currentAction();

@@ -1225,9 +1225,14 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute all deferred actions to be called after present
-                    while (m_afterPresentActions.TryDequeue(out var actAction))
+                    var prevCount = m_afterPresentActions.Count;
+                    var currentIndex = 0;
+                    while ((currentIndex < prevCount) &&
+                           (m_afterPresentActions.TryDequeue(out var actAction)))
                     {
                         actAction();
+
+                        currentIndex++;
                     }
 
                     // Finish rendering now

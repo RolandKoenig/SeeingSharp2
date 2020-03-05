@@ -83,9 +83,13 @@ namespace SeeingSharp.Multimedia.Input
             // Execute all commands within the command queue
             if (m_commandQueue.Count > 0)
             {
-                while (m_commandQueue.TryDequeue(out var actCommand))
+                var prevCount = m_commandQueue.Count;
+                var actIndex = 0;
+                while ((actIndex < prevCount) &&
+                       (m_commandQueue.TryDequeue(out var actCommand)))
                 {
                     actCommand();
+                    actIndex++;
                 }
             }
 

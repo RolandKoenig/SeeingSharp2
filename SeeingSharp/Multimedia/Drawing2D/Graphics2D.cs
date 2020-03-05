@@ -490,13 +490,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
             else
             {
+                var nativeBitmap = bitmap.GetBitmap(this.Device);
                 var destinationRectangle = new SDXM.RawRectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
                 // Render non-tiled bitmap
                 m_renderTarget.DrawBitmap(
-                    bitmap.GetBitmap(this.Device),
+                    nativeBitmap,
                     destinationRectangle,
                     opacity,
                     (D2D.BitmapInterpolationMode)interpolationMode);

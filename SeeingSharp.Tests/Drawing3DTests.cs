@@ -379,12 +379,12 @@ namespace SeeingSharp.Tests
                     var cubeType = new CubeGeometryFactory();
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(cubeType));
-                    var resMaterial = manipulator.AddStandardMaterialResource();
+                    var resMaterial = manipulator.AddResource(
+                        device => new StandardMaterialResource(enableShaderGeneratedBorder: true));
 
                     // Create pallet object
                     var cubeMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     cubeMesh.Color = Color4.GreenColor;
-                    cubeMesh.EnableShaderGeneratedBorder();
                     cubeMesh.BuildAnimationSequence()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))
                         .WaitFinished()

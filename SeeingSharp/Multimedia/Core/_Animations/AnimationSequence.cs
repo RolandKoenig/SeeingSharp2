@@ -521,10 +521,15 @@ namespace SeeingSharp.Multimedia.Core
         private void PerformPreupdateActionsInternal(bool updateTimeTillNextTime = false)
         {
             // Walk through preupdate action queue and perform each
-            while (m_preUpdateActions.TryDequeue(out var actPreUpdateAction))
+            var prevCount = m_preUpdateActions.Count;
+            var currentIndex = 0;
+            while ((currentIndex < prevCount) &&
+                   (m_preUpdateActions.TryDequeue(out var actPreUpdateAction)))
             {
                 Interlocked.Decrement(ref m_preUpdateActionsCount);
                 actPreUpdateAction();
+
+                currentIndex++;
             }
 
             // Update the time till next sub-animation finished

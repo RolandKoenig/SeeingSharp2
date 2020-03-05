@@ -936,9 +936,13 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState)
         {
             // Invoke all async action attached to this scene
-            while (m_asyncInvokesUpdateBesideRendering.TryDequeue(out var actAsyncAction))
+            var prevCount = m_asyncInvokesUpdateBesideRendering.Count;
+            var actIndex = 0;
+            while ((actIndex < prevCount) &&
+                   (m_asyncInvokesUpdateBesideRendering.TryDequeue(out var actAsyncAction)))
             {
                 actAsyncAction();
+                actIndex++;
             }
 
             // Reset all filter flags before continue to next step
