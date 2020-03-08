@@ -63,9 +63,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Takes a color texture and uploads it to the given buffer.
         /// </summary>
-        public MemoryMappedTexture32bpp UploadToIntBuffer()
+        public MemoryMappedTexture<int> UploadToIntBuffer()
         {
-            var result = new MemoryMappedTexture32bpp(
+            var result = new MemoryMappedTexture<int>(
                 new Size2(m_width, m_height));
             this.UploadToIntBuffer(result);
             return result;
@@ -74,8 +74,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Takes a color texture and uploads it to the given buffer.
         /// </summary>
-        /// <param name="intBuffer">The target int buffer to which to copy all pixel data.</param>
-        public void UploadToIntBuffer(MemoryMappedTexture32bpp intBuffer)
+        /// <param name="targetIntBuffer">The target int buffer to which to copy all pixel data.</param>
+        public void UploadToIntBuffer(MemoryMappedTexture<int> targetIntBuffer)
         {
             // Check current format
             if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT &&
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 var rowPitchSource = dataBox.RowPitch;
-                var rowPitchDestination = intBuffer.Width * 4;
+                var rowPitchDestination = targetIntBuffer.Width * 4;
 
                 if (rowPitchSource > 0 && rowPitchSource < 20000 &&
                     rowPitchDestination > 0 && rowPitchDestination < 20000)
@@ -104,7 +104,7 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
-                            intBuffer.Pointer + loopY * rowPitchDestination,
+                            targetIntBuffer.Pointer + loopY * rowPitchDestination,
                             (uint)rowPitchDestination);
                     }
                 }
@@ -119,9 +119,9 @@ namespace SeeingSharp.Multimedia.Core
         /// Upload a floating point texture from the graphics hardware.
         /// This method is only valid for resources of type R32_Float.
         /// </summary>
-        public MemoryMappedTextureFloat UploadToFloatBuffer()
+        public MemoryMappedTexture<float> UploadToFloatBuffer()
         {
-            var result = new MemoryMappedTextureFloat(
+            var result = new MemoryMappedTexture<float>(
                 new Size2(m_width, m_height));
             this.UploadToFloatBuffer(result);
             return result;
@@ -131,8 +131,8 @@ namespace SeeingSharp.Multimedia.Core
         /// Upload a floating point texture from the graphics hardware.
         /// This method is only valid for resources of type R32_Float.
         /// </summary>
-        /// <param name="floatBuffer">The target float buffer to which to copy all ObjectIDs.</param>
-        public void UploadToFloatBuffer(MemoryMappedTextureFloat floatBuffer)
+        /// <param name="targetFloatBuffer">The target float buffer to which to copy all ObjectIDs.</param>
+        public void UploadToFloatBuffer(MemoryMappedTexture<float> targetFloatBuffer)
         {
             // Check current format
             if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_OBJECT_ID)
@@ -140,12 +140,12 @@ namespace SeeingSharp.Multimedia.Core
                 throw new SeeingSharpGraphicsException("Invalid format for texture uploading to gdi bitmap (" + m_format + ")!");
             }
 
-            if (floatBuffer.Width != m_width)
+            if (targetFloatBuffer.Width != m_width)
             {
                 throw new SeeingSharpGraphicsException("The width of the textures during texture upload does not match!");
             }
 
-            if (floatBuffer.Height != m_height)
+            if (targetFloatBuffer.Height != m_height)
             {
                 throw new SeeingSharpGraphicsException("The height of the textures during texture upload does not match!");
             }
@@ -160,7 +160,7 @@ namespace SeeingSharp.Multimedia.Core
             {
 
                 var rowPitchSource = dataBox.RowPitch;
-                var rowPitchDestination = floatBuffer.Width * 4;
+                var rowPitchDestination = targetFloatBuffer.Width * 4;
 
                 if (rowPitchSource > 0 && rowPitchSource < 20000 &&
                     rowPitchDestination > 0 && rowPitchDestination < 20000)
@@ -169,7 +169,7 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
-                            floatBuffer.Pointer + loopY * rowPitchDestination,
+                            targetFloatBuffer.Pointer + loopY * rowPitchDestination,
                             (uint)rowPitchDestination);
                     }
                 }

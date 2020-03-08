@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture32bpp m_mappedTexture)
+            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> m_mappedTexture)
             {
                 //Create the texture
                 var dataRectangle = new SharpDX.DataRectangle(
@@ -662,17 +662,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
 
                 // Set buffer format
-                switch (device.DriverLevel)
-                {
-                    case HardwareDriverLevel.Direct3D12:
-                    case HardwareDriverLevel.Direct3D11:
-                    case HardwareDriverLevel.Direct3D10:
-                        textureDescription.Format = Format.D32_Float_S8X24_UInt;
-                        break;
-
-                    default:
-                        throw new SeeingSharpGraphicsException("Unable to create depth buffer texture because of unsupported DriverLevel: " + device.DriverLevel);
-                }
+                textureDescription.Format = Format.D32_Float_S8X24_UInt;
 
                 // Create the texture finally
                 return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription);

@@ -983,7 +983,7 @@ namespace SeeingSharp.Multimedia.Core
             if (m_videoWriters.Count > 0)
             {
                 using (var texUploader = new TextureUploader(m_currentDevice, m_renderTarget))
-                using (var mappedTexture = new MemoryMappedTexture32bpp(m_currentViewSize))
+                using (var mappedTexture = new MemoryMappedTexture<int>(m_currentViewSize))
                 {
                     // Upload texture
                     texUploader.UploadToIntBuffer(mappedTexture);

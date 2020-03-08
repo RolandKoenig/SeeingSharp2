@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Configuration
         private ResourceLink m_resourceLinkHighQuality;
         private ResourceLink m_resourceLinkLowQuality;
-        private MemoryMappedTexture32bpp m_inMemoryTexture;
+        private MemoryMappedTexture<int> m_inMemoryTexture;
 
         // Loaded resources
         private D3D11.Texture2D m_texture;
@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
         /// </summary>
-        internal StandardTextureResource(MemoryMappedTexture32bpp inMemoryTexture)
+        internal StandardTextureResource(MemoryMappedTexture<int> inMemoryTexture)
         {
             inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
 

@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// </summary>
         /// <param name="device">The device on which the given framebuffer is created.</param>
         /// <param name="uploadedTexture">The texture which should be added to the video.</param>
-        public void DrawFrame(EngineDevice device, MemoryMappedTexture32bpp uploadedTexture)
+        public void DrawFrame(EngineDevice device, MemoryMappedTexture<int> uploadedTexture)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// </summary>
         /// <param name="device">The device on which the given framebuffer is created.</param>
         /// <param name="uploadedTexture">The texture which should be added to the video.</param>
-        protected abstract void DrawFrameInternal(EngineDevice device, MemoryMappedTexture32bpp uploadedTexture);
+        protected abstract void DrawFrameInternal(EngineDevice device, MemoryMappedTexture<int> uploadedTexture);
 
         /// <summary>
         /// Finishes rendering to the target (closes the video file).

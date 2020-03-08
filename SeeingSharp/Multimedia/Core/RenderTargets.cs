@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="colorBuffer">The color buffer.</param>
         /// <param name="depthStencilBuffer">The depth stencil buffer.</param>
-        public RenderTargets(D3D11.RenderTargetView colorBuffer, D3D11.DepthStencilView depthStencilBuffer)
+        public RenderTargets(in D3D11.RenderTargetView colorBuffer, in D3D11.DepthStencilView depthStencilBuffer)
         {
             ColorBuffer = colorBuffer;
             DepthStencilBuffer = depthStencilBuffer;
@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="colorBuffer">The color buffer.</param>
         /// <param name="depthStencilBuffer">The depth stencil buffer.</param>
         /// <param name="objectIDBuffer">The object identifier buffer.</param>
-        public RenderTargets(D3D11.RenderTargetView colorBuffer, D3D11.DepthStencilView depthStencilBuffer, D3D11.RenderTargetView objectIDBuffer)
+        public RenderTargets(in D3D11.RenderTargetView colorBuffer, in D3D11.DepthStencilView depthStencilBuffer, in D3D11.RenderTargetView objectIDBuffer)
         {
             ColorBuffer = colorBuffer;
             DepthStencilBuffer = depthStencilBuffer;
