@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SeeingSharp.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

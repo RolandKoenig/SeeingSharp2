@@ -19,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-using System.Collections.Generic;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;

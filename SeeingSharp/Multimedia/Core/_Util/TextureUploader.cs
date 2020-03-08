@@ -63,6 +63,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Takes a color texture and uploads it to the given buffer.
         /// </summary>
+        public MemoryMappedTexture32bpp UploadToIntBuffer()
+        {
+            var result = new MemoryMappedTexture32bpp(
+                new Size2(m_width, m_height));
+            this.UploadToIntBuffer(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Takes a color texture and uploads it to the given buffer.
+        /// </summary>
         /// <param name="intBuffer">The target int buffer to which to copy all pixel data.</param>
         public void UploadToIntBuffer(MemoryMappedTexture32bpp intBuffer)
         {

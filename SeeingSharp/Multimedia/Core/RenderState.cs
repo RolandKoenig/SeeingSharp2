@@ -36,12 +36,15 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Generic fields
         private bool m_disposed;
-        private Stack<RenderStackEntry> m_renderSettingsStack;
         private Stack<Tuple<Scene, ResourceDictionary>> m_sceneStack;
-        private RenderStackEntry m_currentRenderSettings;
         private Scene m_currentScene;
         private ResourceDictionary m_currentResourceDictionary;
         private Matrix4Stack m_world;
+
+        // Render stack
+        private RenderStackEntry m_currentRenderSettings;
+        private Stack<RenderStackEntry> m_renderSettingsStack;
+        private Stack<RenderStackEntry> m_cachedRenderStackEntries;
 
         // Current state
         private MaterialResource m_forcedMaterial;
@@ -53,14 +56,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="device">The device object.</param>
         private RenderState(EngineDevice device)
         {
-            //Set device members
+            // Set device members
             this.Device = device;
             DeviceIndex = device.DeviceIndex;
 
-            //Initialize world matrix
+            // Initialize world matrix
             m_world = new Matrix4Stack(Matrix4x4.Identity);
 
-            //Create settings stack
+            // Create settings stack
+            m_cachedRenderStackEntries = new Stack<RenderStackEntry>(8);
             m_renderSettingsStack = new Stack<RenderStackEntry>();
             m_sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
         }
@@ -82,7 +86,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Renders all given chunks.
         /// </summary>
         /// <param name="chunks">The chunks to be rendered.</param>
-        internal void RenderChunks(RenderingChunk[] chunks)
+        internal void RenderChunks(in RenderingChunk[] chunks)
         {
             var device = this.Device;
             var deviceContext = device.DeviceImmediateContextD3D11;
@@ -260,10 +264,11 @@ namespace SeeingSharp.Multimedia.Core
             if (m_disposed) { throw new ObjectDisposedException("RenderState"); }
             if (m_renderSettingsStack.Count < 1) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
 
-            // Pop last entry
-            m_currentRenderSettings = m_renderSettingsStack.Pop();
+            // Register current stack entry for reusing
+            m_cachedRenderStackEntries.Push(m_currentRenderSettings);
 
             // Apply old configuration
+            m_currentRenderSettings = m_renderSettingsStack.Pop();
             m_currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
         }
 
@@ -362,9 +367,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInformation">The view information.</param>
         /// <param name="renderTargets">The render targets used for rendering.</param>
         internal void Reset(
-            RenderTargets renderTargets,
-            RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
+            in RenderTargets renderTargets,
+            in RawViewportF viewport,
+            in Camera3DBase camera, in ViewInformation viewInformation)
         {
             m_renderSettingsStack.Clear();
             m_sceneStack.Clear();
@@ -374,22 +379,19 @@ namespace SeeingSharp.Multimedia.Core
             // Initialize current render properties
             if (m_currentRenderSettings == null)
             {
-                m_currentRenderSettings = new RenderStackEntry
+                if (m_cachedRenderStackEntries.Count > 0)
                 {
-                    Matrix4Stack = new Matrix4Stack(),
-                    RenderTargets = renderTargets,
-                    SingleViewport = viewport,
-                    Camera = camera,
-                    ViewInformation = viewInformation
-                };
+                    m_currentRenderSettings = m_cachedRenderStackEntries.Pop();
+                    m_currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
+                }
+                else
+                {
+                    m_currentRenderSettings = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
+                }
             }
             else
             {
-                m_currentRenderSettings.Matrix4Stack.ResetStackToIdentity();
-                m_currentRenderSettings.RenderTargets = renderTargets;
-                m_currentRenderSettings.SingleViewport = viewport;
-                m_currentRenderSettings.Camera = camera;
-                m_currentRenderSettings.ViewInformation = viewInformation;
+                m_currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
             }
 
             // Apply initial render properties
@@ -405,9 +407,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInformation">The view information.</param>
         /// <exception cref="System.ObjectDisposedException">RenderState</exception>
         internal void PushRenderTarget(
-            RenderTargets renderTargets,
-            RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
+            in RenderTargets renderTargets,
+            in RawViewportF viewport,
+            in Camera3DBase camera, in ViewInformation viewInformation)
         {
             if (m_disposed)
             {
@@ -415,14 +417,16 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Build new render stack entry
-            var newEntry = new RenderStackEntry
+            RenderStackEntry newEntry;
+            if (m_cachedRenderStackEntries.Count > 0)
             {
-                Matrix4Stack = new Matrix4Stack(),
-                Camera = camera,
-                RenderTargets = renderTargets,
-                SingleViewport = viewport,
-                ViewInformation = viewInformation
-            };
+                newEntry = m_cachedRenderStackEntries.Pop();
+                newEntry.Reset(camera, renderTargets, viewport, viewInformation);
+            }
+            else
+            {
+                newEntry = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
+            }
 
             // Overtake device settings
             newEntry.Apply(this.Device.DeviceImmediateContextD3D11);
@@ -538,6 +542,25 @@ namespace SeeingSharp.Multimedia.Core
             private D3D11.RenderTargetView[] m_targetArray;
             private RawViewportF[] m_viewports;
 
+            public RenderStackEntry(
+                in Camera3DBase camera, in RenderTargets renderTargets, 
+                in RawViewportF viewPort, in ViewInformation viewInfo)
+            {
+                this.Matrix4Stack = new Matrix4Stack();
+                this.Reset(camera, renderTargets, viewPort, viewInfo);
+            }
+
+            public void Reset(
+                in Camera3DBase camera, in RenderTargets renderTargets,
+                in RawViewportF viewPort, in ViewInformation viewInfo)
+            {
+                this.Camera = camera;
+                this.Matrix4Stack.ResetStackToIdentity();
+                this.RenderTargets = renderTargets;
+                this.SingleViewport = viewPort;
+                this.ViewInformation = viewInfo;
+            }
+
             /// <summary>
             /// Applies all properties.
             /// </summary>
@@ -546,30 +569,34 @@ namespace SeeingSharp.Multimedia.Core
             {
                 // Create render target array (if not done before)
                 if (m_targetArray == null) { m_targetArray = new D3D11.RenderTargetView[3]; }
-                m_targetArray[0] = RenderTargets.ColorBuffer;
-                m_targetArray[1] = RenderTargets.ObjectIDBuffer;
-                m_targetArray[2] = RenderTargets.NormalDepthBuffer;
+                m_targetArray[0] = this.RenderTargets.ColorBuffer;
+                m_targetArray[1] = this.RenderTargets.ObjectIDBuffer;
+                m_targetArray[2] = this.RenderTargets.NormalDepthBuffer;
 
                 if (m_viewports == null){ m_viewports = new RawViewportF[3]; }
-                m_viewports[0] = SingleViewport;
-                m_viewports[1] = SingleViewport;
-                m_viewports[2] = SingleViewport;
+                m_viewports[0] = this.SingleViewport;
+                m_viewports[1] = this.SingleViewport;
+                m_viewports[2] = this.SingleViewport;
 
                 // Set render targets to output merger
                 deviceContext.Rasterizer.SetViewports(m_viewports);
-                deviceContext.OutputMerger.SetTargets(RenderTargets.DepthStencilBuffer, m_targetArray);
+                deviceContext.OutputMerger.SetTargets(this.RenderTargets.DepthStencilBuffer, m_targetArray);
             }
 
             /// <summary>
             /// Gets the current view projection matrix.
             /// </summary>
-            public Matrix4x4 ViewProj => Camera.ViewProjection;
+            public Matrix4x4 ViewProj => this.Camera.ViewProjection;
 
-            public Camera3DBase Camera;
-            public Matrix4Stack Matrix4Stack;
-            public RenderTargets RenderTargets;
-            public RawViewportF SingleViewport;
-            public ViewInformation ViewInformation;
+            public Camera3DBase Camera { get; private set; }
+
+            public Matrix4Stack Matrix4Stack { get; private set; }
+
+            public RenderTargets RenderTargets { get; private set; }
+
+            public RawViewportF SingleViewport { get; private set; }
+
+            public ViewInformation ViewInformation { get; private set; }
         }
     }
 }

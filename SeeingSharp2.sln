@@ -27,8 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966
 		Directory.Build.props = Directory.Build.props
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		Resharper.DotSettings = Resharper.DotSettings
 		script-publish.ps1 = script-publish.ps1
+		SeeingSharp2.sln.DotSettings = SeeingSharp2.sln.DotSettings
 		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
@@ -62,7 +62,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ModelViewer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.AssimpImporter", "SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj", "{CF98442B-2312-4520-9D94-8BFE3B90E4D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeingSharp.ObjectLayoutInspection", "Tools\SeeingSharp.ObjectLayoutInspection\SeeingSharp.ObjectLayoutInspection.csproj", "{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ObjectLayoutInspection", "Tools\SeeingSharp.ObjectLayoutInspection\SeeingSharp.ObjectLayoutInspection.csproj", "{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
