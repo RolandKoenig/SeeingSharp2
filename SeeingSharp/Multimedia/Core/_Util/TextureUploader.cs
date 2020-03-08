@@ -100,19 +100,19 @@ namespace SeeingSharp.Multimedia.Core
             var textureDesc = textureToUpload.Description;
             if (textureDesc.Width != m_width)
             {
-                throw new SeeingSharpException($"Invalid texture: Width does not match (given: {textureDesc.Width}, expected: {m_width})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Width does not match (given: {textureDesc.Width}, expected: {m_width})!");
             }
             if (textureDesc.Height != m_height)
             {
-                throw new SeeingSharpException($"Invalid texture: Height does not match (given: {textureDesc.Height}, expected: {m_height})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Height does not match (given: {textureDesc.Height}, expected: {m_height})!");
             }
             if (textureDesc.Format != m_format)
             {
-                throw new SeeingSharpException($"Invalid texture: Format does not match (given: {textureDesc.Format}, expected: {m_format})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Format does not match (given: {textureDesc.Format}, expected: {m_format})!");
             }
             if (GraphicsHelper.IsMultisampled(textureDesc) != m_isMultisampled)
             {
-                throw new SeeingSharpException($"Invalid texture: Multisampling does not match (given: {GraphicsHelper.IsMultisampled(textureDesc)}, expected: {m_isMultisampled})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Multisampling does not match (given: {GraphicsHelper.IsMultisampled(textureDesc)}, expected: {m_isMultisampled})!");
             }
 
             // Check source and destination size

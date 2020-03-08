@@ -64,6 +64,7 @@
     <None Remove="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <None Remove="Resources\Postprocessing\PostProcess_Focus.png" />
     <None Remove="Resources\Textures\SkyBox.dds" />
+    <None Remove="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AssemblyResourcesAndShaderTests\constants.hlsl" />
@@ -114,6 +115,7 @@
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_Focus.png" />
     <EmbeddedResource Include="Resources\Textures\SkyBox.dds" />
+    <EmbeddedResource Include="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />

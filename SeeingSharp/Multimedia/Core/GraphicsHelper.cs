@@ -31,12 +31,25 @@ using System;
 using System.IO;
 using System.Linq;
 using D3D11 = SharpDX.Direct3D11;
+using SDXTK = SeeingSharp.Util.SdxTK;
 using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public static class GraphicsHelper
     {
+        /// <summary>
+        /// Creates a new texture from a bitmap.
+        /// </summary>
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, ResourceLink source)
+        {
+            using (var inStream = source.OpenInputStream())
+            using (var rawImage = SDXTK.Image.Load(inStream))
+            {
+                return GraphicsHelper.CreateTexture(device, rawImage);
+            }
+        }
+
         /// <summary>
         /// Creates a new image based on the given raw image data.
         /// </summary>

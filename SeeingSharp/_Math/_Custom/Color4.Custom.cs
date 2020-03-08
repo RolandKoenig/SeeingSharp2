@@ -68,5 +68,14 @@ namespace SeeingSharp
 
             return this;
         }
+
+        public bool EqualsWithTolerance(Color4 other)
+        {
+            return
+                EngineMath.EqualsWithTolerance(this.Red, other.Red) &&
+                EngineMath.EqualsWithTolerance(this.Green, other.Green) &&
+                EngineMath.EqualsWithTolerance(this.Blue, other.Blue) &&
+                EngineMath.EqualsWithTolerance(this.Alpha, other.Alpha);
+        }
     }
 }
