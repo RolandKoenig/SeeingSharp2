@@ -986,7 +986,7 @@ namespace SeeingSharp.Multimedia.Core
                 using (var mappedTexture = new MemoryMappedTexture<int>(m_currentViewSize))
                 {
                     // Upload texture
-                    texUploader.UploadToIntBuffer(mappedTexture);
+                    texUploader.UploadToMemoryMappedTexture(mappedTexture);
 
                     // Render the texture to all video writers
                     Parallel.For(0, m_videoWriters.Count, actIndex =>

@@ -20,21 +20,23 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Util;
-using SharpDX.DXGI;
 using System;
+using SeeingSharp.Checking;
 using D3D11 = SharpDX.Direct3D11;
+using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class TextureUploader : IDisposable
+    public class TextureUploader : IDisposable, ICheckDisposed
     {
         // Given parameters
         private EngineDevice m_device;
         private D3D11.Texture2D m_texture;
         private int m_width;
         private int m_height;
-        private Format m_format;
+        private DXGI.Format m_format;
         private bool m_isMultisampled;
+        private bool m_isDisposed;
 
         //Direct3D resources for render target capturing
         // A staging texture for reading contents by Cpu
@@ -61,95 +63,49 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Takes a color texture and uploads it to the given buffer.
+        /// Upload a texture from the graphics hardware.
         /// </summary>
-        public MemoryMappedTexture<int> UploadToIntBuffer()
+        public MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>()
+            where T : unmanaged
         {
-            var result = new MemoryMappedTexture<int>(
+            if (m_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
+
+            var result = new MemoryMappedTexture<T>(
                 new Size2(m_width, m_height));
-            this.UploadToIntBuffer(result);
+            this.UploadToMemoryMappedTexture(result);
             return result;
         }
 
         /// <summary>
-        /// Takes a color texture and uploads it to the given buffer.
+        /// Upload a texture from the graphics hardware.
         /// </summary>
-        /// <param name="targetIntBuffer">The target int buffer to which to copy all pixel data.</param>
-        public void UploadToIntBuffer(MemoryMappedTexture<int> targetIntBuffer)
+        /// <param name="targetFloatBuffer">The target buffer to which to copy all data.</param>
+        public unsafe void UploadToMemoryMappedTexture<T>(MemoryMappedTexture<T> targetFloatBuffer) 
+            where T : unmanaged
         {
-            // Check current format
-            if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT &&
-                m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_SHARING &&
-                m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_SHARING_D2D)
-            {
-                throw new SeeingSharpGraphicsException(
-                    $"Invalid format for texture uploading to a color map ({m_format})!");
-            }
+            if (m_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
+            this.EnsureNotNullOrDisposed(nameof(targetFloatBuffer));
 
-            // Upload the texture
-            this.CopyTextureToStagingResource();
-
-            // Read the data into the .Net data block
-            var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
-                m_copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
-            try
-            {
-                var rowPitchSource = dataBox.RowPitch;
-                var rowPitchDestination = targetIntBuffer.Width * 4;
-
-                if (rowPitchSource > 0 && rowPitchSource < 20000 &&
-                    rowPitchDestination > 0 && rowPitchDestination < 20000)
-                {
-                    for (var loopY = 0; loopY < m_height; loopY++)
-                    {
-                        SeeingSharpUtil.CopyMemory(
-                            dataBox.DataPointer + loopY * rowPitchSource,
-                            targetIntBuffer.Pointer + loopY * rowPitchDestination,
-                            (uint)rowPitchDestination);
-                    }
-                }
-            }
-            finally
-            {
-                m_device.DeviceImmediateContextD3D11.UnmapSubresource(m_copyHelperTextureStaging, 0);
-            }
-        }
-
-        /// <summary>
-        /// Upload a floating point texture from the graphics hardware.
-        /// This method is only valid for resources of type R32_Float.
-        /// </summary>
-        public MemoryMappedTexture<float> UploadToFloatBuffer()
-        {
-            var result = new MemoryMappedTexture<float>(
-                new Size2(m_width, m_height));
-            this.UploadToFloatBuffer(result);
-            return result;
-        }
-
-        /// <summary>
-        /// Upload a floating point texture from the graphics hardware.
-        /// This method is only valid for resources of type R32_Float.
-        /// </summary>
-        /// <param name="targetFloatBuffer">The target float buffer to which to copy all ObjectIDs.</param>
-        public void UploadToFloatBuffer(MemoryMappedTexture<float> targetFloatBuffer)
-        {
-            // Check current format
-            if (m_format != GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_OBJECT_ID)
-            {
-                throw new SeeingSharpGraphicsException("Invalid format for texture uploading to gdi bitmap (" + m_format + ")!");
-            }
-
-            if (targetFloatBuffer.Width != m_width)
+            // Check source and destination size
+            var targetPixelSize = targetFloatBuffer.PixelSize;
+            if (targetPixelSize.Width != m_width)
             {
                 throw new SeeingSharpGraphicsException("The width of the textures during texture upload does not match!");
             }
-
-            if (targetFloatBuffer.Height != m_height)
+            if (targetPixelSize.Height != m_height)
             {
                 throw new SeeingSharpGraphicsException("The height of the textures during texture upload does not match!");
             }
 
+            // Check format compatibility
+            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(m_format);
+            if (textureFormatByteSize != sizeof(T))
+            {
+                throw new SeeingSharpGraphicsException(
+                    $"Format of the texture to upload and the destination buffer does not match " +
+                    $"(source: {m_format} / {textureFormatByteSize} bytes, target: {typeof(T).Name} / {sizeof(T)} bytes)!");
+            }
+
             // Upload the texture
             this.CopyTextureToStagingResource();
 
@@ -158,12 +114,9 @@ namespace SeeingSharp.Multimedia.Core
                 m_copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
-
                 var rowPitchSource = dataBox.RowPitch;
-                var rowPitchDestination = targetFloatBuffer.Width * 4;
-
-                if (rowPitchSource > 0 && rowPitchSource < 20000 &&
-                    rowPitchDestination > 0 && rowPitchDestination < 20000)
+                var rowPitchDestination = targetFloatBuffer.Width * sizeof(T);
+                if ((rowPitchSource > 0) && (rowPitchDestination > 0))
                 {
                     for (var loopY = 0; loopY < m_height; loopY++)
                     {
@@ -172,6 +125,10 @@ namespace SeeingSharp.Multimedia.Core
                             targetFloatBuffer.Pointer + loopY * rowPitchDestination,
                             (uint)rowPitchDestination);
                     }
+                }
+                else
+                {
+                    throw new SeeingSharpGraphicsException($"Invalid row pitch (source: {rowPitchSource}, destination: {rowPitchDestination})!");
                 }
             }
             finally
@@ -184,6 +141,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
             SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
+            m_isDisposed = true;
         }
 
         /// <summary>
@@ -213,5 +171,8 @@ namespace SeeingSharp.Multimedia.Core
                 m_device.DeviceImmediateContextD3D11.CopyResource(m_texture, m_copyHelperTextureStaging);
             }
         }
+
+        /// <inheritdoc />
+        public bool IsDisposed => m_isDisposed;
     }
 }
