@@ -53,11 +53,6 @@ namespace SeeingSharp.Multimedia.Core
 
         // Global device handlers
         private Exception m_initException;
-        private FactoryHandlerWIC m_factoryHandlerWIC;
-        private FactoryHandlerD2D m_factoryHandlerD2D;
-        private FactoryHandlerDWrite m_factoryHandlerDWrite;
-        private Task m_mainLoopTask;
-        private CancellationTokenSource m_mainLoopCancelTokenSource;
 
         // Misc dependencies
         private SeeingSharpLoader m_loader;
@@ -120,7 +115,6 @@ namespace SeeingSharp.Multimedia.Core
                 this.ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
-                EngineFactory engineFactory = null;
                 try
                 {
                     if (s_throwDeviceInitError)
@@ -128,32 +122,26 @@ namespace SeeingSharp.Multimedia.Core
                         throw new SeeingSharpException("Simulated device load exception");
                     }
 
-                    engineFactory = new EngineFactory(this.Configuration);
-                    m_factoryHandlerWIC = engineFactory.WIC;
-                    m_factoryHandlerD2D = engineFactory.Direct2D;
-                    m_factoryHandlerDWrite = engineFactory.DirectWrite;
+                    this.Factory = new EngineFactory(this.Configuration);
                 }
                 catch (Exception ex)
                 {
                     m_initException = ex;
 
                     m_devices.Clear();
-                    m_factoryHandlerWIC = null;
-                    m_factoryHandlerD2D = null;
-                    m_factoryHandlerDWrite = null;
                     return;
                 }
-                FactoryD2D = m_factoryHandlerD2D.Factory;
-                this.FactoryDWrite = m_factoryHandlerDWrite.Factory;
-                FactoryWIC = m_factoryHandlerWIC.Factory;
+                FactoryD2D = this.Factory.Direct2D.Factory;
+                this.FactoryDWrite = this.Factory.DirectWrite.Factory;
+                FactoryWIC = this.Factory.WIC.Factory;
 
                 // Create the object containing all hardware information
-                this.HardwareInfo = new EngineHardwareInfo(engineFactory);
+                this.HardwareInfo = new EngineHardwareInfo(this.Factory);
                 var actIndex = 0;
 
                 foreach (var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
-                    var actEngineDevice = new EngineDevice(loader, engineFactory, this.Configuration, actAdapterInfo);
+                    var actEngineDevice = new EngineDevice(loader, this.Factory, this.Configuration, actAdapterInfo);
                     if (actEngineDevice.IsLoadedSuccessfully)
                     {
                         actEngineDevice.DeviceIndex = actIndex;
@@ -173,8 +161,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.MainLoop = new EngineMainLoop(this);
                 if (m_devices.Count > 0)
                 {
-                    m_mainLoopCancelTokenSource = new CancellationTokenSource();
-                    m_mainLoopTask = this.MainLoop.Start(m_mainLoopCancelTokenSource.Token);
+                    this.MainLoopTask = this.MainLoop.Start(CancellationToken.None);
                 }
             }
             catch (Exception ex2)
@@ -554,6 +541,16 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the current main loop object of the graphics engine.
         /// </summary>
         public EngineMainLoop MainLoop { get; }
+
+        /// <summary>
+        /// Gets the task that represents the main loop (the task should never stop)
+        /// </summary>
+        public Task MainLoopTask { get; }
+
+        /// <summary>
+        /// Gets global factories.
+        /// </summary>
+        public EngineFactory Factory { get; }
 
         public InputGathererThread InputGatherer { get; }
 
