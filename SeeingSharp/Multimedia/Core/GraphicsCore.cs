@@ -129,7 +129,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     engineFactory = new EngineFactory(this.Configuration);
-                    m_factoryHandlerWIC = engineFactory.WindowsImagingComponent;
+                    m_factoryHandlerWIC = engineFactory.WIC;
                     m_factoryHandlerD2D = engineFactory.Direct2D;
                     m_factoryHandlerDWrite = engineFactory.DirectWrite;
                 }
@@ -143,21 +143,17 @@ namespace SeeingSharp.Multimedia.Core
                     m_factoryHandlerDWrite = null;
                     return;
                 }
-                FactoryD2D = m_factoryHandlerD2D.Factory2;
+                FactoryD2D = m_factoryHandlerD2D.Factory;
                 this.FactoryDWrite = m_factoryHandlerDWrite.Factory;
                 FactoryWIC = m_factoryHandlerWIC.Factory;
 
                 // Create the object containing all hardware information
-                this.HardwareInfo = new EngineHardwareInfo();
+                this.HardwareInfo = new EngineHardwareInfo(engineFactory);
                 var actIndex = 0;
 
                 foreach (var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
-                    var actEngineDevice = new EngineDevice(
-                        loader,
-                        engineFactory, this.Configuration,
-                        this.HardwareInfo, actAdapterInfo);
-
+                    var actEngineDevice = new EngineDevice(loader, engineFactory, this.Configuration, actAdapterInfo);
                     if (actEngineDevice.IsLoadedSuccessfully)
                     {
                         actEngineDevice.DeviceIndex = actIndex;
@@ -362,7 +358,7 @@ namespace SeeingSharp.Multimedia.Core
 
             // Trigger event in separate ThreadPool task to ensure that Seeing# logic runs further without interruption
             ThreadPool.QueueUserWorkItem(
-                new WaitCallback(state =>
+                state =>
                 {
                     var exInfo = new InternalCatchedExceptionEventArgs(ex, location);
                     foreach (var actEventHandler in handlers)
@@ -376,7 +372,7 @@ namespace SeeingSharp.Multimedia.Core
                             // ignored
                         }
                     }
-                }),
+                },
                 null);
         }
 

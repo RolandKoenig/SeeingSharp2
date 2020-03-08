@@ -982,11 +982,11 @@ namespace SeeingSharp.Multimedia.Core
             // Write current frame if we have an associated video writer
             if (m_videoWriters.Count > 0)
             {
-                using (var texUploader = new TextureUploader(m_currentDevice, m_renderTarget))
+                using (var texUploader = TextureUploader.ConstructUsingPropertiesFromTexture(m_currentDevice, m_renderTarget))
                 using (var mappedTexture = new MemoryMappedTexture<int>(m_currentViewSize))
                 {
                     // Upload texture
-                    texUploader.UploadToMemoryMappedTexture(mappedTexture);
+                    texUploader.UploadToMemoryMappedTexture(m_renderTarget, mappedTexture);
 
                     // Render the texture to all video writers
                     Parallel.For(0, m_videoWriters.Count, actIndex =>

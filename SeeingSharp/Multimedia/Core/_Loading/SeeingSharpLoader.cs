@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class SeeingSharpLoader
+    public class SeeingSharpLoader : ISeeingSharpExtensionProvider
     {
         private List<ISeeingSharpExtensions> m_extensions;
 

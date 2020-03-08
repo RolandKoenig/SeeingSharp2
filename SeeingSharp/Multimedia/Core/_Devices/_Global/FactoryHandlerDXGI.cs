@@ -19,48 +19,37 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using SeeingSharp.Util;
-using DWrite = SharpDX.DirectWrite;
+using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class FactoryHandlerDWrite : IDisposable, ICheckDisposed
+    public class FactoryHandlerDXGI : IDisposable, ICheckDisposed
     {
-        private DWrite.Factory m_factory;
+        private DXGI.Factory1 m_dxgiFactory;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
-        /// </summary>
-        internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
+        internal FactoryHandlerDXGI(GraphicsCoreConfiguration coreConfiguration)
         {
-            // Create DirectWrite Factory object
-            m_factory = new DWrite.Factory(DWrite.FactoryType.Shared);
+            m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory4());
+            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory2()); }
+            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory1()); }
+            if (m_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
         }
 
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
         public void Dispose()
         {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
         }
 
-        /// <summary>
-        /// Is DirectWrite initialized successfully?
-        /// </summary>
-        public bool IsDisposed => m_factory == null;
+        public bool IsDisposed => m_dxgiFactory == null;
 
-        /// <summary>
-        /// Gets the Factory object.
-        /// </summary>
-        internal DWrite.Factory Factory
+        internal DXGI.Factory1 Factory
         {
             get
             {
-                if(m_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDWrite)); }
-                return m_factory;
+                if(m_dxgiFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDXGI)); }
+                return m_dxgiFactory;
             }
         }
     }

@@ -30,16 +30,16 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineDevice
+    public class EngineDevice : IDisposable, ICheckDisposed
     {
         // Members for antialiasing
         private SampleDescription m_sampleDescWithAntialiasing;
 
         // Main members
-        private SeeingSharpLoader m_loader;
+        private ISeeingSharpExtensionProvider m_extensionProvider;
         private EngineFactory m_engineFactory;
-        private EngineHardwareInfo m_hardwareInfo;
         private EngineAdapterInfo m_adapterInfo;
+        private bool m_isDisposed;
 
         // Some configuration
         private bool m_isDetailLevelForced;
@@ -63,13 +63,12 @@ namespace SeeingSharp.Multimedia.Core
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
         /// </summary>
         internal EngineDevice(
-            SeeingSharpLoader loader,
+            ISeeingSharpExtensionProvider extensionProvider,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
-            EngineHardwareInfo hardwareInfo, EngineAdapterInfo adapterInfo)
+            EngineAdapterInfo adapterInfo)
         {
             engineFactory.EnsureNotNull(nameof(engineFactory));
             coreConfiguration.EnsureNotNull(nameof(coreConfiguration));
-            hardwareInfo.EnsureNotNull(nameof(hardwareInfo));
             adapterInfo.EnsureNotNull(nameof(adapterInfo));
 
             this.Internals = new EngineDeviceInternals(this);
@@ -78,10 +77,9 @@ namespace SeeingSharp.Multimedia.Core
 
             m_additionalDeviceHandlers = new List<IDisposable>();
 
-            m_hardwareInfo = hardwareInfo;
             m_adapterInfo = adapterInfo;
 
-            m_loader = loader;
+            m_extensionProvider = extensionProvider;
             m_engineFactory = engineFactory;
             this.IsSoftware = adapterInfo.IsSoftwareAdapter;
 
@@ -94,18 +92,43 @@ namespace SeeingSharp.Multimedia.Core
             m_sampleDescWithAntialiasing = new SampleDescription(1, 0);
 
             // Let loaders edit the device configuration
-            foreach (var actExtension in loader.Extensions)
+            if (m_extensionProvider != null)
             {
-                actExtension.EditDeviceConfiguration(adapterInfo, this.Configuration);
+                foreach (var actExtension in m_extensionProvider.Extensions)
+                {
+                    actExtension.EditDeviceConfiguration(adapterInfo, this.Configuration);
+                }
             }
 
             // Load all resources
             this.LoadResources();
         }
 
+        /// <summary>
+        /// Creates a software based device which is not managed by Seeing#.
+        /// This method is meant to be used during unit testing.
+        /// </summary>
+        public static EngineDevice CreateSoftwareDevice(EngineFactory factory)
+        {
+            var hardwareInfo = new EngineHardwareInfo(factory);
+            var actSoftwareAdapter = hardwareInfo.SoftwareAdapter;
+            if (actSoftwareAdapter == null)
+            {
+                throw new SeeingSharpGraphicsException("Unable to find a software device!");
+            }
+
+            return new EngineDevice(
+                null, factory, new GraphicsCoreConfiguration(), actSoftwareAdapter);
+        }
+
+        /// <summary>
+        /// Tries to get a device handler which was created by an extension.
+        /// </summary>
         public T TryGetAdditionalDeviceHandler<T>()
             where T : class
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             foreach (var actAdditionalDeviceHandler in m_additionalDeviceHandlers)
             {
                 if (actAdditionalDeviceHandler is T result) { return result; }
@@ -119,6 +142,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ForceDetailLevel(DetailLevel detailLevel)
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             m_isDetailLevelForced = true;
             m_forcedDetailLevel = detailLevel;
         }
@@ -129,19 +154,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
         internal SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
         {
-            switch (qualityLevel)
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
+            return qualityLevel switch
             {
-                case AntialiasingQualityLevel.Low:
-                    return m_antialiasingConfigLow;
-
-                case AntialiasingQualityLevel.Medium:
-                    return m_antialiasingConfigMedium;
-
-                case AntialiasingQualityLevel.High:
-                    return m_antialiasingConfigHigh;
-            }
-
-            return new SampleDescription(1, 0);
+                AntialiasingQualityLevel.Low => m_antialiasingConfigLow,
+                AntialiasingQualityLevel.Medium => m_antialiasingConfigMedium,
+                AntialiasingQualityLevel.High => m_antialiasingConfigHigh,
+                _ => new SampleDescription(1, 0)
+            };
         }
 
         /// <summary>
@@ -155,18 +176,31 @@ namespace SeeingSharp.Multimedia.Core
             return this.AdapterDescription;
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.UnloadResources();
+            m_isDisposed = true;
+        }
+
         internal void RegisterDeviceResource(IEngineDeviceResource resource)
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             m_deviceResources.RegisterDeviceResource(resource);
         }
 
         internal void DeregisterDeviceResource(IEngineDeviceResource resource)
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             m_deviceResources.DeregisterDeviceResource(resource);
         }
 
         internal void CleanupDeviceResourceCollection()
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             if (m_deviceResources.CleanupNeeded)
             {
                 m_deviceResources.Cleanup();
@@ -178,6 +212,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void RecreateAfterDeviceLost()
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             this.IsLost.EnsureTrue(nameof(this.IsLost));
 
             // Unload all resources first
@@ -208,6 +244,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal SampleDescription GetSampleDescription(bool antialiasingEnabled)
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             if (antialiasingEnabled) { return m_sampleDescWithAntialiasing; }
             return new SampleDescription(1, 0);
         }
@@ -217,11 +255,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private bool LoadResources()
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             // Initialize all direct3D APIs
             this.LoadDeviceIndex++;
             try
             {
-                m_handlerDXGI = new DeviceHandlerDXGI(m_hardwareInfo, m_adapterInfo);
+                m_handlerDXGI = new DeviceHandlerDXGI(m_engineFactory, m_adapterInfo);
                 m_handlerD3D11 = new DeviceHandlerD3D11(this.Configuration, m_handlerDXGI.Adapter);
             }
             catch (Exception ex)
@@ -245,15 +285,18 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Create additional device handlers
-            foreach (var actExtension in m_loader.Extensions)
+            if (m_extensionProvider != null)
             {
-                var additionalDeviceHandlers = actExtension.CreateAdditionalDeviceHandlers(this);
-                if(additionalDeviceHandlers == null){ continue; }
-
-                foreach (var actAdditionalDeviceHandler in additionalDeviceHandlers)
+                foreach (var actExtension in m_extensionProvider.Extensions)
                 {
-                    if (actAdditionalDeviceHandler == null) { continue; }
-                    m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
+                    var additionalDeviceHandlers = actExtension.CreateAdditionalDeviceHandlers(this);
+                    if (additionalDeviceHandlers == null) { continue; }
+
+                    foreach (var actAdditionalDeviceHandler in additionalDeviceHandlers)
+                    {
+                        if (actAdditionalDeviceHandler == null) { continue; }
+                        m_additionalDeviceHandlers.Add(actAdditionalDeviceHandler);
+                    }
                 }
             }
 
@@ -287,10 +330,11 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private bool CheckIsStandardAntialiasingPossible()
         {
+            if(m_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
             // Very important to check possible antialiasing
             // More on the used technique
             //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
-
             var formatSupport = m_handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
 
             if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
@@ -403,18 +447,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch (this.DriverLevel)
+                return this.DriverLevel switch
                 {
-                    case HardwareDriverLevel.Direct3D12:
-                    case HardwareDriverLevel.Direct3D11:
-                        return "ps_5_0";
-
-                    case HardwareDriverLevel.Direct3D10:
-                        return "ps_4_0";
-
-                    default:
-                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
-                }
+                    HardwareDriverLevel.Direct3D12 => "ps_5_0",
+                    HardwareDriverLevel.Direct3D11 => "ps_5_0",
+                    HardwareDriverLevel.Direct3D10 => "ps_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
             }
         }
 
@@ -425,18 +465,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch (this.DriverLevel)
+                return this.DriverLevel switch
                 {
-                    case HardwareDriverLevel.Direct3D12:
-                    case HardwareDriverLevel.Direct3D11:
-                        return "vs_5_0";
-
-                    case HardwareDriverLevel.Direct3D10:
-                        return "vs_4_0";
-
-                    default:
-                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
-                }
+                    HardwareDriverLevel.Direct3D12 => "vs_5_0",
+                    HardwareDriverLevel.Direct3D11 => "vs_5_0",
+                    HardwareDriverLevel.Direct3D10 => "vs_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
             }
         }
 
@@ -447,18 +483,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                switch (this.DriverLevel)
+                return this.DriverLevel switch
                 {
-                    case HardwareDriverLevel.Direct3D12:
-                    case HardwareDriverLevel.Direct3D11:
-                        return "gs_5_0";
-
-                    case HardwareDriverLevel.Direct3D10:
-                        return "gs_4_0";
-
-                    default:
-                        throw new SeeingSharpGraphicsException($"Unable to get shader model for DriverLevel {this.DriverLevel}!");
-                }
+                    HardwareDriverLevel.Direct3D12 => "gs_5_0",
+                    HardwareDriverLevel.Direct3D11 => "gs_5_0",
+                    HardwareDriverLevel.Direct3D10 => "gs_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
             }
         }
 
@@ -537,6 +569,9 @@ namespace SeeingSharp.Multimedia.Core
         /// Internal members, use with care.
         /// </summary>
         public EngineDeviceInternals Internals { get; }
+
+        /// <inheritdoc />
+        public bool IsDisposed => m_isDisposed;
 
         //*********************************************************************
         //*********************************************************************

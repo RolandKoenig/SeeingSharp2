@@ -30,7 +30,6 @@ using SharpDX.WIC;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using D3D11 = SharpDX.Direct3D11;
 using PixelFormat = SharpDX.WIC.PixelFormat;
 
@@ -66,6 +65,14 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription, rawImage.ToDataBox());
+        }
+
+        /// <summary>
+        /// Is the given texture multisampled?
+        /// </summary>
+        internal static bool IsMultisampled(D3D11.Texture2DDescription textureDesc)
+        {
+            return textureDesc.SampleDescription.Count > 1 || textureDesc.SampleDescription.Quality > 0;
         }
 
         //*********************************************************************
@@ -712,15 +719,13 @@ namespace SeeingSharp.Multimedia.Core
             /// <typeparam name="T">Type of the vertices.</typeparam>
             /// <param name="device">Graphics device.</param>
             /// <param name="vertexCount">Maximum count of vertices within the buffer.</param>
-            public static D3D11.Buffer CreateDynamicVertexBuffer<T>(EngineDevice device, int vertexCount)
-                where T : struct
+            public static unsafe D3D11.Buffer CreateDynamicVertexBuffer<T>(EngineDevice device, int vertexCount)
+                where T : unmanaged
             {
                 device.EnsureNotNull(nameof(device));
                 vertexCount.EnsurePositiveOrZero(nameof(vertexCount));
 
-                var vertexType = typeof(T);
-                var vertexSize = Marshal.SizeOf<T>();
-
+                var vertexSize = sizeof(T);
                 var bufferDescription = new D3D11.BufferDescription
                 {
                     BindFlags = D3D11.BindFlags.VertexBuffer,
@@ -740,15 +745,14 @@ namespace SeeingSharp.Multimedia.Core
             /// <typeparam name="T">Type of a vertex.</typeparam>
             /// <param name="device">Graphics device.</param>
             /// <param name="vertices">The vertex array.</param>
-            public static D3D11.Buffer CreateImmutableVertexBuffer<T>(EngineDevice device, params T[][] vertices)
-                where T : struct
+            public static unsafe D3D11.Buffer CreateImmutableVertexBuffer<T>(EngineDevice device, params T[][] vertices)
+                where T : unmanaged
             {
                 device.EnsureNotNull(nameof(device));
                 vertices.EnsureNotNull(nameof(vertices));
 
-                var vertexType = typeof(T);
                 var vertexCount = vertices.Sum(actArray => actArray.Length);
-                var vertexSize = Marshal.SizeOf<T>();
+                var vertexSize = sizeof(T);
                 var outStream = new SharpDX.DataStream(
                     vertexCount * vertexSize,
                     true, true);
@@ -786,9 +790,8 @@ namespace SeeingSharp.Multimedia.Core
                 device.EnsureNotNull(nameof(device));
                 indices.EnsureNotNull(nameof(indices));
 
+                const int bytesPerIndex = sizeof(uint);
                 var countIndices = indices.Sum(actArray => actArray.Length);
-                var bytesPerIndex = Marshal.SizeOf<uint>();
-
                 var outStreamIndex = new SharpDX.DataStream(
                     countIndices *
                     bytesPerIndex, true, true);

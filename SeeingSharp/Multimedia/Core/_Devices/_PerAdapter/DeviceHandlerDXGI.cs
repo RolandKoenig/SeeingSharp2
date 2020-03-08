@@ -32,9 +32,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
         /// </summary>
-        internal DeviceHandlerDXGI(EngineHardwareInfo hardwareInfo, EngineAdapterInfo adapterInfo)
+        internal DeviceHandlerDXGI(EngineFactory factory, EngineAdapterInfo adapterInfo)
         {
-            m_adapter = hardwareInfo.DXGIFactory.GetAdapter1(adapterInfo.AdapterIndex);
+            m_adapter = factory.DXGI.Factory.GetAdapter1(adapterInfo.AdapterIndex);
             m_factory = m_adapter.GetParent<Factory2>();
         }
 

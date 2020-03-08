@@ -19,22 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class FactoryHandlerD2D
+    public class FactoryHandlerD2D : IDisposable, ICheckDisposed
     {
-        // Resources form Direct2D api
-        private D2D.Factory2 m_factory2;
+        private D2D.Factory2 m_factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerD2D"/> class.
         /// </summary>
         internal FactoryHandlerD2D(GraphicsCoreConfiguration coreConfiguration)
         {
-            m_factory2 = new D2D.Factory2(
+            m_factory = new D2D.Factory2(
                 D2D.FactoryType.SingleThreaded,
                 coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
         }
@@ -42,16 +43,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Unloads all resources.
         /// </summary>
-        internal void UnloadResources()
+        public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_factory2);
+            SeeingSharpUtil.SafeDispose(ref m_factory);
         }
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
-        public bool IsInitialized => m_factory2 != null;
+        public bool IsDisposed => m_factory == null;
 
-        internal D2D.Factory2 Factory2 => m_factory2;
+        internal D2D.Factory2 Factory
+        {
+            get
+            {
+                if(m_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerD2D)); }
+                return m_factory;
+            }
+        }
     }
 }

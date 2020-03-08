@@ -19,12 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using SeeingSharp.Util;
 using SharpDX.WIC;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class FactoryHandlerWIC
+    public class FactoryHandlerWIC : IDisposable, ICheckDisposed
     {
+        private ImagingFactory m_wicFactory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
         /// </summary>
@@ -33,11 +38,25 @@ namespace SeeingSharp.Multimedia.Core
             this.Factory = new ImagingFactory();
         }
 
-        public bool IsInitialized => this.Factory != null;
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.Factory = SeeingSharpUtil.DisposeObject(this.Factory);
+        }
+
+        public bool IsDisposed => this.Factory == null;
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal ImagingFactory Factory { get; }
+        internal ImagingFactory Factory
+        {
+            get
+            {
+                if(m_wicFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerWIC)); }
+                return m_wicFactory;
+            }
+            private set => m_wicFactory = value;
+        }
     }
 }

@@ -19,80 +19,37 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
-using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public class EngineHardwareInfo : IDisposable, ICheckDisposed
+    public class EngineHardwareInfo
     {
         private List<EngineAdapterInfo> m_adapters;
-        private Factory1 m_dxgiFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
         /// </summary>
-        public EngineHardwareInfo()
+        public EngineHardwareInfo(EngineFactory factory)
         {
-            this.CreateFactory();
-            this.LoadAdapterInformation();
-        }
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
-            m_adapters.Clear();
-        }
-
-        internal Output GetOutputByOutputInfo(EngineOutputInfo outputInfo)
-        {
-            var adapterCount = m_dxgiFactory.GetAdapterCount1();
-
-            if (outputInfo.AdapterIndex >= adapterCount)
-            {
-                throw new SeeingSharpException($"Unable to find adapter with index {outputInfo.AdapterIndex}!");
-            }
-
-            using (var adapter = m_dxgiFactory.GetAdapter1(outputInfo.AdapterIndex))
-            {
-                var outputCount = adapter.GetOutputCount();
-
-                if (outputInfo.OutputIndex >= outputCount)
-                {
-                    throw new SeeingSharpException($"Unable to find output with index {outputInfo.OutputIndex} on adapter {outputInfo.AdapterIndex}!");
-                }
-
-                return adapter.GetOutput(outputInfo.OutputIndex);
-            }
-        }
-
-        /// <summary>
-        /// Create the DXGI factory object.
-        /// </summary>
-        private void CreateFactory()
-        {
-            m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory4());
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory2()); }
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory1()); }
-            if (m_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
+            this.LoadAdapterInformation(factory);
         }
 
         /// <summary>
         /// Loads all adapter information and builds up all needed view models in a background thread.
         /// </summary>
-        private void LoadAdapterInformation()
+        private void LoadAdapterInformation(EngineFactory factory)
         {
             m_adapters = new List<EngineAdapterInfo>();
 
-            var adapterCount = m_dxgiFactory.GetAdapterCount1();
-
+            var adapterCount = factory.DXGI.Factory.GetAdapterCount1();
             for (var loop = 0; loop < adapterCount; loop++)
             {
                 try
                 {
-                    var actAdapter = m_dxgiFactory.GetAdapter1(loop);
+                    var actAdapter = factory.DXGI.Factory.GetAdapter1(loop);
                     m_adapters.Add(new EngineAdapterInfo(loop, actAdapter));
                 }
                 catch (Exception)
@@ -103,10 +60,6 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
-        public bool IsDisposed => m_dxgiFactory == null;
-
-        internal Factory1 DXGIFactory => m_dxgiFactory;
-
         /// <summary>
         /// Gets a collection containing all adapters.
         /// </summary>
@@ -116,11 +69,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                foreach (var actAdapter in m_adapters)
-                {
-                    if (actAdapter.IsSoftwareAdapter) { return actAdapter; }
-                }
-                return null;
+                return m_adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
             }
         }
     }

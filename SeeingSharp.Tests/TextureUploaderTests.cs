@@ -19,40 +19,29 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
-using System;
-using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Tests
 {
-    public class ImmutableVertexBufferResource<T> : Resource
-        where T : unmanaged
+    [TestClass]
+    [DoNotParallelize]
+    public class TextureUploaderTests
     {
-        // Direct3D resources
-        private D3D11.Buffer m_buffer;
+        public const string TEST_CATEGORY = "SeeingSharp Multimedia TextureUploader";
 
-        // Configuration
-        private Func<T[]> m_bufferDataFactory;
-
-        public ImmutableVertexBufferResource(Func<T[]> bufferDataFactory)
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public void SimpleUpload_ColorBitmap()
         {
-            m_bufferDataFactory = bufferDataFactory;
+            var coreConfig = new GraphicsCoreConfiguration();
+            coreConfig.DebugEnabled = true;
+
+            using (var engineFactory = new EngineFactory(coreConfig))
+            using (var device = EngineDevice.CreateSoftwareDevice(engineFactory))
+            {
+                
+            }
         }
-
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            m_buffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(
-                device, m_bufferDataFactory());
-        }
-
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            SeeingSharpUtil.SafeDispose(ref m_buffer);
-        }
-
-        internal D3D11.Buffer Buffer => m_buffer;
-
-        public override bool IsLoaded => m_buffer != null;
     }
 }
