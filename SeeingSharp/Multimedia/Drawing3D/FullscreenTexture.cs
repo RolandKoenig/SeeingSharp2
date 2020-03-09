@@ -118,18 +118,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="renderState">Current render state.</param>
         private void OnRenderPlain(RenderState renderState)
         {
-            if (this.Opacity >= 1f)
-            {
-                // Get and configure helper object
-                var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
-                actHelper.Scaling = this.Scaling;
-                actHelper.Opacity = this.Opacity;
-                actHelper.AccentuationFactor = this.AccentuationFactor;
-                actHelper.AlphaBlendMode = this.AlphaBlendMode;
+            if (this.Opacity < 1f) { return; }
 
-                // Render the object
-                actHelper.RenderPlain(renderState);
-            }
+            // Get and configure helper object
+            var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
+            actHelper.Scaling = this.Scaling;
+            actHelper.Opacity = this.Opacity;
+            actHelper.AccentuationFactor = this.AccentuationFactor;
+            actHelper.AlphaBlendMode = this.AlphaBlendMode;
+
+            // Render the object
+            actHelper.RenderPlain(renderState);
         }
 
         /// <summary>

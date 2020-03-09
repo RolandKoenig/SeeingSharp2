@@ -27,6 +27,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
     // Structures representing the content of ConstantBuffers on graphics hardware
     // See hlsl file "_constants.hlsl"
 
+    // See following link for packaging rules on hlsl side
+    // https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
+
     /// <summary>
     /// This buffer contains all settings which are set once per frame.
     /// </summary>
@@ -34,7 +37,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     internal struct CBPerFrame
     {
         public int Time;
-        public Vector3 Dummy;
+        public Vector3 Dummy1;
     }
 
     /// <summary>
@@ -52,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public float Ambient;
         public float Accentuation;
         public Vector2 ScreenPixelSize;
-        public Vector2 Dummy;
+        public Vector2 Dummy2;
     }
 
     /// <summary>
@@ -67,17 +70,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public float AccentuationFactor;
 
         /// <summary>
-        /// Needed to rescale texture coordinate depending on the object's scaling factors.
-        /// </summary>
-        public Vector3 ObjectScaling;
-
-        /// <summary>
         /// Only relevant for sprite rendering. Scales coordinates in VertexShader by
         /// this factor.
         /// </summary>
         public float SpriteScaling;
 
-        public Vector2 Dummy;
+        public float Dummy3;
+
+        /// <summary>
+        /// Needed to rescale texture coordinate depending on the object's scaling factors.
+        /// </summary>
+        public Vector3 ObjectScaling;
+
+        public float Dummy4;
     }
 
     /// <summary>
@@ -129,6 +134,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public float BorderMultiplier;
 
-        public Vector3 Dummy;
+        public Vector3 Dummy5;
     }
 }

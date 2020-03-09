@@ -49,6 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         // Current state
         private MaterialResource m_forcedMaterial;
         private MaterialResource m_lastAppliedMaterial;
+        private RenderPassDump m_currentTargetDump;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderState"/> class.
@@ -359,6 +360,30 @@ namespace SeeingSharp.Multimedia.Core
             m_lastAppliedMaterial = null;
         }
 
+        internal void DumpCurrentRenderTargets(string dumpKey)
+        {
+            if (m_currentTargetDump == null) { return; }
+            if (m_currentRenderSettings == null) { return; }
+
+            m_currentTargetDump.Dump(dumpKey, m_currentRenderSettings.RenderTargets);
+        }
+
+        /// <summary>
+        /// Start writing to given <see cref="RenderPassDump"/> object.
+        /// </summary>
+        internal void StartDump(RenderPassDump targetDump)
+        {
+            m_currentTargetDump = targetDump;
+        }
+
+        /// <summary>
+        /// Stop writing to dump object.
+        /// </summary>
+        internal void StopDump()
+        {
+            m_currentTargetDump = null;
+        }
+
         /// <summary>
         /// Resets the render state.
         /// </summary>
@@ -371,6 +396,7 @@ namespace SeeingSharp.Multimedia.Core
             in RawViewportF viewport,
             in Camera3DBase camera, in ViewInformation viewInformation)
         {
+            m_currentTargetDump = null;
             m_renderSettingsStack.Clear();
             m_sceneStack.Clear();
             m_currentScene = null;
@@ -481,6 +507,8 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the currently forced material.
         /// </summary>
         public MaterialResource ForcedMaterial => m_forcedMaterial;
+
+        public bool IsWritingRenderPassDump => m_currentTargetDump != null;
 
         /// <summary>
         /// Gets or sets the current object for 2D rendering.

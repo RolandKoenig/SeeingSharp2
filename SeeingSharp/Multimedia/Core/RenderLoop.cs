@@ -51,6 +51,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // Async actions
         private ConcurrentQueue<Action> m_afterPresentActions;
+        private ConcurrentQueue<TaskCompletionSource<RenderPassDump>> m_dumpRequests;
 
         // Target parameters for rendering
         private EngineDevice m_targetDevice;
@@ -126,6 +127,7 @@ namespace SeeingSharp.Multimedia.Core
             this.Internals = new RenderLoopInternals(this);
 
             m_afterPresentActions = new ConcurrentQueue<Action>();
+            m_dumpRequests = new ConcurrentQueue<TaskCompletionSource<RenderPassDump>>();
             m_cachedPrepareRenderContinuationActions = new List<Action>();
             m_cachedPrepareRenderOnGui = this.PrepareRenderOnGui;
 
@@ -172,6 +174,16 @@ namespace SeeingSharp.Multimedia.Core
 
             // Apply default rendering device for this RenderLoop
             this.SetRenderingDevice(GraphicsCore.Current.DefaultDevice);
+        }
+
+        /// <summary>
+        /// Dumps states of target buffers during rendering (like color- or depth buffer states).
+        /// </summary>
+        public Task<RenderPassDump> DumpRenderPassesAsync()
+        {
+            var taskSource = new TaskCompletionSource<RenderPassDump>();
+            m_dumpRequests.Enqueue(taskSource);
+            return taskSource.Task;
         }
 
         /// <summary>
@@ -1062,86 +1074,111 @@ namespace SeeingSharp.Multimedia.Core
                     m_viewport, m_camera, this.ViewInformation);
                 m_renderState.ApplyMaterial(null);
 
-                // Paint using Direct3D
-                m_currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(m_renderTargetView, SdxMathHelper.RawFromColor4(this.ClearColor));
-                m_currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(m_renderTargetDepthView, D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil, 1f, 0);
-
-                // Render currently configured scene
-                if (m_currentScene != null &&
-                    m_camera != null &&
-                    m_currentScene.IsViewRegistered(this.ViewInformation))
+                // Handle render pass dumps
+                m_dumpRequests.TryDequeue(out var actRenderPassDumpTaskSource);
+                RenderPassDump actRenderPassDump = null;
+                if (actRenderPassDumpTaskSource != null)
                 {
-                    // Renders current scene on this view
-                    m_currentScene.Render(m_renderState);
+                    actRenderPassDump = new RenderPassDump(m_currentDevice, m_currentViewSize, true);
+                    m_renderState.StartDump(actRenderPassDump);
                 }
 
-                // Clear current state after rendering
-                m_renderState.ClearState();
-
-                if (m_totalRenderCount < int.MaxValue) { m_totalRenderCount++; }
-
-                // Render 2D overlay if possible (may be not available on some older OS or older graphics cards)
-                if (m_d2dOverlay != null &&
-                    m_d2dOverlay.IsLoaded)
+                try
                 {
-                    var d2dOverlayTime = GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(m_cachedPerfRenderLoopRender2D);
-                    m_d2dOverlay.BeginDraw();
-                    try
+                    // Paint using Direct3D
+                    m_currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(m_renderTargetView,
+                        SdxMathHelper.RawFromColor4(this.ClearColor));
+                    m_currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(m_renderTargetDepthView,
+                        D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil, 1f, 0);
+
+                    // Render currently configured scene
+                    if (m_currentScene != null &&
+                        m_camera != null &&
+                        m_currentScene.IsViewRegistered(this.ViewInformation))
                     {
-                        m_renderState.RenderTarget2D = m_d2dOverlay.RenderTarget2D;
-                        m_renderState.Graphics2D = m_d2dOverlay.Graphics;
-
-                        // Render scene contents
-                        m_currentScene?.Render2DOverlay(m_renderState);
-
-                        // Perform rendering of custom 2D drawing layers
-                        for (var loop = 0; loop < m_2dDrawingLayers.Count; loop++)
-                        {
-                            try
-                            {
-                                m_2dDrawingLayers[loop].Draw2DInternal(m_d2dOverlay.Graphics);
-                            }
-                            catch (Exception ex)
-                            {
-                                // Publish exception info
-                                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.Rendering2DDrawingLayer);
-                            }
-                        }
-
-                        // Draw debug layer if created
-                        m_debugDrawingLayer?.Draw2DInternal(m_d2dOverlay.Graphics);
+                        // Renders current scene on this view
+                        m_currentScene.Render(m_renderState);
                     }
-                    finally
+
+                    // Clear current state after rendering
+                    m_renderState.ClearState();
+
+                    if (m_totalRenderCount < int.MaxValue) { m_totalRenderCount++; }
+
+                    // Render 2D overlay if possible (may be not available on some older OS or older graphics cards)
+                    if (m_d2dOverlay != null &&
+                        m_d2dOverlay.IsLoaded)
                     {
-                        m_renderState.RenderTarget2D = null;
-                        m_renderState.Graphics2D = null;
-
-                        d2dOverlayTime.Dispose();
-
+                        var d2dOverlayTime =
+                            GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(
+                                m_cachedPerfRenderLoopRender2D);
+                        m_d2dOverlay.BeginDraw();
                         try
                         {
-                            m_d2dOverlay.EndDraw();
-                        }
-                        catch (SharpDX.SharpDXException dxException)
-                        {
-                            if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
+                            m_renderState.RenderTarget2D = m_d2dOverlay.RenderTarget2D;
+                            m_renderState.Graphics2D = m_d2dOverlay.Graphics;
+
+                            // Render scene contents
+                            m_currentScene?.Render2DOverlay(m_renderState);
+
+                            // Perform rendering of custom 2D drawing layers
+                            for (var loop = 0; loop < m_2dDrawingLayers.Count; loop++)
                             {
-                                // Mark the device as lost
-                                m_currentDevice.IsLost = true;
+                                try
+                                {
+                                    m_2dDrawingLayers[loop].Draw2DInternal(m_d2dOverlay.Graphics);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Publish exception info
+                                    GraphicsCore.PublishInternalExceptionInfo(ex,
+                                        InternalExceptionLocation.Rendering2DDrawingLayer);
+                                }
                             }
-                            else
+
+                            // Draw debug layer if created
+                            m_debugDrawingLayer?.Draw2DInternal(m_d2dOverlay.Graphics);
+                        }
+                        finally
+                        {
+                            m_renderState.RenderTarget2D = null;
+                            m_renderState.Graphics2D = null;
+
+                            d2dOverlayTime.Dispose();
+
+                            try
                             {
-                                throw;
+                                m_d2dOverlay.EndDraw();
+                            }
+                            catch (SharpDX.SharpDXException dxException)
+                            {
+                                if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
+                                {
+                                    // Mark the device as lost
+                                    m_currentDevice.IsLost = true;
+                                }
+                                else
+                                {
+                                    throw;
+                                }
                             }
                         }
                     }
+
+                    // Send all draw calls to the device and wait until finished
+                    m_currentDevice.DeviceImmediateContextD3D11.Flush();
+
+                    // Update flag indicating that last render was successful
+                    m_lastRenderSuccessfully = true;
                 }
-
-                // Send all draw calls to the device and wait until finished
-                m_currentDevice.DeviceImmediateContextD3D11.Flush();
-
-                // Update flag indicating that last render was successful
-                m_lastRenderSuccessfully = true;
+                finally
+                {
+                    if (m_renderState.IsWritingRenderPassDump)
+                    {
+                        m_renderState.StopDump();
+                        actRenderPassDumpTaskSource?.TrySetResult(actRenderPassDump);
+                    }
+                }
             }
             finally
             {

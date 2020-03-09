@@ -22,6 +22,7 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System.Numerics;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -115,7 +116,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             m_renderParameters.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = this.AccentuationFactor,
-                Color = Vector4.Zero,
+                Color = Vector4.One,
                 Opacity = this.Opacity,
                 SpriteScaling = this.Scaling,
                 World = Matrix4x4.Identity
@@ -136,21 +137,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Apply all current rendering parameters
             m_renderParameters.Apply(renderState);
 
-            // Render the object
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
-
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
             }
 
+            // Render the object
             renderState.RenderChunks(m_renderingChunks);
 
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
             }
-
             deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
         }
 

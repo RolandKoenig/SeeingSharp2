@@ -173,10 +173,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 m_cbPerMaterialDataChanged = false;
             }
 
-            // Apply sampler and constants
+            // Set shaders, sampler and constants
             if (!isResourceSameType)
             {
                 deviceContext.PixelShader.SetSampler(0, m_defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+
+                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
+                if(renderState.Camera.IsOrthopraphicInternal){ deviceContext.PixelShader.Set(m_pixelShaderOrtho.PixelShader); }
+                else{ deviceContext.PixelShader.Set(m_pixelShader.PixelShader); }
             }
             deviceContext.PixelShader.SetConstantBuffer(3, m_cbPerMaterial.ConstantBuffer);
             deviceContext.VertexShader.SetConstantBuffer(3, m_cbPerMaterial.ConstantBuffer);
@@ -190,15 +194,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             else
             {
                 deviceContext.PixelShader.SetShaderResource(0, null);
-            }
-
-            // Set shader resources
-            if (!isResourceSameType)
-            {
-                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-
-                if(renderState.Camera.IsOrthopraphicInternal){ deviceContext.PixelShader.Set(m_pixelShaderOrtho.PixelShader); }
-                else{ deviceContext.PixelShader.Set(m_pixelShader.PixelShader); }
             }
         }
 

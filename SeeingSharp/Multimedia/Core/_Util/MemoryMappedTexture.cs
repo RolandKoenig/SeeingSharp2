@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
     public unsafe class MemoryMappedTexture<T> : IDisposable, ICheckDisposed
         where T : unmanaged
     {
-        // The native structure, where we store all ObjectIDs uploaded from graphics hardware
+        // The native structure, where we store all texture data
         private IntPtr m_pointer;
         private T* m_pointerNative;
         private Size2 m_size;

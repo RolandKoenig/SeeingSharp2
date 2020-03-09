@@ -103,10 +103,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var isResourceSameType =
                 previousMaterial != null &&
                 previousMaterial.ResourceType == this.ResourceType;
-
             if (!isResourceSameType)
             {
                 deviceContext.PixelShader.SetSampler(0, m_defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+
+                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
+                deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
             }
 
             // Set texture resource (if set)
@@ -118,10 +120,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 deviceContext.PixelShader.SetShaderResource(0, null);
             }
-
-            // Set shader resources
-            deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-            deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
         }
 
         /// <summary>

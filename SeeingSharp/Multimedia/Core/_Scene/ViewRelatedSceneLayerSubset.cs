@@ -564,7 +564,13 @@ namespace SeeingSharp.Multimedia.Core
                 renderState.ClearCurrentDepthBuffer();
             }
 
-            //RemoveObject all invalid objects
+            // Dump render state on end of the layer
+            if (renderState.IsWritingRenderPassDump)
+            {
+                renderState.DumpCurrentRenderTargets($"{m_sceneLayer.Name}.End");
+            }
+
+            // RemoveObject all invalid objects
             if (invalidObjects != null)
             {
                 this.HandleInvalidObjects(invalidObjects);

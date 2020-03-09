@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SeeingSharp.WpfCoreSamples": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
