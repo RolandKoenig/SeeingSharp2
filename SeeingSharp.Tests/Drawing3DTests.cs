@@ -26,6 +26,7 @@ using SeeingSharp.Multimedia.Views;
 using System;
 using System.Numerics;
 using System.Threading.Tasks;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Tests
 {
@@ -154,6 +155,48 @@ namespace SeeingSharp.Tests
                 // Calculate and check difference
                 var isNearEqual = BitmapComparison.IsNearEqual(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
+
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
+
+                [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task Render_FullScreenTexture()
+        {
+            await TestUtilities.InitializeWithGrahicsAsync();
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
+
+                // Get and configure the camera
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
+                camera.Position = new Vector3(0f, 5f, -7f);
+                camera.Target = new Vector3(0f, 0f, 0f);
+                camera.UpdateCamera();
+
+                // Define scene
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
+                {
+                    var sourceBackgroundTexture = new AssemblyResourceLink(
+                        typeof(Drawing3DTests),
+                        "Resources.Textures", "Background.png");
+
+                    var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
+                    manipulator.AddObject(new FullscreenTexture(resBackgroundTexture));
+                });
+                await memRenderTarget.AwaitRenderAsync();
+
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+
+                // Calculate and check difference
+                var isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "FullscreenTexture.png"));
                 Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
             }
 

@@ -43,6 +43,7 @@
     <None Remove="Resources\Drawing2D\SimpleRoundedRectFilled_RadialGradient.png" />
     <None Remove="Resources\Drawing2D\SimpleText_SingleColor.png" />
     <None Remove="Resources\Drawing3D\ClearedScreen.png" />
+    <None Remove="Resources\Drawing3D\FullscreenTexture.png" />
     <None Remove="Resources\Drawing3D\SimpleLine.png" />
     <None Remove="Resources\Drawing3D\SimpleObject.png" />
     <None Remove="Resources\Drawing3D\SimpleObject_DiffuseColorFromMaterial.png" />
@@ -63,6 +64,7 @@
     <None Remove="Resources\Models\ModelTwoSided.ac" />
     <None Remove="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <None Remove="Resources\Postprocessing\PostProcess_Focus.png" />
+    <None Remove="Resources\Textures\Background.png" />
     <None Remove="Resources\Textures\SkyBox.dds" />
     <None Remove="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
@@ -94,6 +96,7 @@
     <EmbeddedResource Include="Resources\Drawing2D\SimpleRoundedRectFilled_RadialGradient.png" />
     <EmbeddedResource Include="Resources\Drawing2D\SimpleText_SingleColor.png" />
     <EmbeddedResource Include="Resources\Drawing3D\ClearedScreen.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\FullscreenTexture.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleLine.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_DiffuseColorFromMaterial.png" />
@@ -114,6 +117,7 @@
     <EmbeddedResource Include="Resources\Models\ModelTwoSided.ac" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_Focus.png" />
+    <EmbeddedResource Include="Resources\Textures\Background.png" />
     <EmbeddedResource Include="Resources\Textures\SkyBox.dds" />
     <EmbeddedResource Include="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
