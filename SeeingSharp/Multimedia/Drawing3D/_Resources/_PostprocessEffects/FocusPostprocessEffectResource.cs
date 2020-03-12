@@ -30,11 +30,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class FocusPostprocessEffectResource : PostprocessEffectResource
     {
         // Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_01 = GraphicsCore.GetNextGenericResourceKey();
-        private NamedOrGenericKey KEY_CB_PASS_02 = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyPixelShaderBlur = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_keyMaterial = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_keyRenderTarget = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey m_keyCbPass01 = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey m_keyCbPass02 = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
         private bool m_forceSimpleMethod;
@@ -45,8 +45,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private RenderTargetTextureResource m_renderTarget;
         private DefaultResources m_defaultResources;
         private PixelShaderResource m_pixelShaderBlur;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbFirstPass;
-        private TypeSafeConstantBufferResource<CBPerObject> m_cbSecondPass;
+        private TypeSafeConstantBufferResource<CbPerObject> m_cbFirstPass;
+        private TypeSafeConstantBufferResource<CbPerObject> m_cbSecondPass;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
@@ -72,27 +72,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Load graphics resources
             m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_PIXEL_SHADER_BLUR,
+                s_resKeyPixelShaderBlur,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Postprocessing", "PostprocessBlur"));
             m_singleForcedColor = resources.GetResourceAndEnsureLoaded(
-                KEY_MATERIAL,
+                s_keyMaterial,
                 () => new SingleForcedColorMaterialResource { FadeIntensity = m_fadeIntensity });
             m_renderTarget = resources.GetResourceAndEnsureLoaded(
-                KEY_RENDER_TARGET,
+                s_keyRenderTarget,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));
             m_defaultResources = resources.DefaultResources;
 
             // Load constant buffers
             m_cbFirstPass = resources.GetResourceAndEnsureLoaded(
-                KEY_CB_PASS_01,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
+                m_keyCbPass01,
+                () => new TypeSafeConstantBufferResource<CbPerObject>(new CbPerObject
                 {
                     BlurIntensity = 0.0f,
                     BlurOpacity = 0.1f
                 }));
             m_cbSecondPass = resources.GetResourceAndEnsureLoaded(
-                KEY_CB_PASS_02,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(new CBPerObject
+                m_keyCbPass02,
+                () => new TypeSafeConstantBufferResource<CbPerObject>(new CbPerObject
                 {
                     BlurIntensity = 0.8f,
                     BlurOpacity = 0.5f
@@ -121,12 +121,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering begins.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyBeforeRender(RenderState renderState, int passID)
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
+        internal override void NotifyBeforeRender(RenderState renderState, int passId)
         {
             if (renderState.Device.IsHighDetailSupported && !m_forceSimpleMethod)
             {
-                switch (passID)
+                switch (passId)
                 {
                     //******************************
                     // 1. Pass: Draw all pixels that ly behind other already rendered elements
@@ -141,7 +141,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         // Clear current render target
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
-                        // ConfigureLoading stencil state (invert z logic, disable z writes)
+                        // ConfigureLoading stencil state(invert z logic, disable z writes)
                         renderState.Device.DeviceImmediateContextD3D11.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateInvertedZTest;
                         break;
 
@@ -176,8 +176,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering of the plain part has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyAfterRenderPlain(RenderState renderState, int passID)
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
+        internal override void NotifyAfterRenderPlain(RenderState renderState, int passId)
         {
             // Nothing to be done here
         }
@@ -186,11 +186,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
         /// <returns>
         /// True, if rendering should continue with next pass. False if postprocess effect is finished.
         /// </returns>
-        internal override bool NotifyAfterRender(RenderState renderState, int passID)
+        internal override bool NotifyAfterRender(RenderState renderState, int passId)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
@@ -208,7 +208,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 renderState.ClearCachedAppliedMaterial();
 
                 // Render result of current pass to the main render target
-                switch (passID)
+                switch (passId)
                 {
                     case 0:
                         this.ApplyAlphaBasedSpriteRendering(deviceContext);
@@ -235,6 +235,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             deviceContext.PixelShader.SetConstantBuffer(2, m_cbSecondPass.ConstantBuffer);
                             deviceContext.PixelShader.Set(m_pixelShaderBlur.PixelShader);
                             deviceContext.Draw(3, 0);
+
                         }
                         finally
                         {
@@ -268,7 +269,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //*********************************************************************
         //*********************************************************************
         [StructLayout(LayoutKind.Sequential)]
-        private struct CBPerObject
+        private struct CbPerObject
         {
             public float BlurIntensity;
 

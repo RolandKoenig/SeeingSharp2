@@ -64,7 +64,7 @@ namespace SeeingSharp.Tests
                     memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                     // Get and configure the camera
-                    var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                    var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                     camera.Position = new Vector3(0f, 5f, -7f);
                     camera.Target = new Vector3(0f, 0f, 0f);
                     camera.UpdateCamera();

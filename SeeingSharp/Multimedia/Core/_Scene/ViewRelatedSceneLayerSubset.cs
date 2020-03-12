@@ -517,24 +517,24 @@ namespace SeeingSharp.Multimedia.Core
             // Perform main render pass logic
             m_renderParameters.Apply(renderState);
 
-            var passID = 0;
+            var passId = 0;
             var continueWithNextPass = true;
-
             while (continueWithNextPass)
             {
                 // Notify state before rendering
-                postprocessEffect?.NotifyBeforeRender(renderState, passID);
+                postprocessEffect?.NotifyBeforeRender(renderState, passId);
 
                 try
                 {
                     // All following objects are build using only triangle lists
-                    m_device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;
+                    m_device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology =
+                        D3D.PrimitiveTopology.TriangleList;
 
                     // Perform all plain renderings
                     this.RenderPass(null, m_objectsPassPlainRender, renderState, ref invalidObjects);
 
                     // Notify state after plain rendering
-                    postprocessEffect?.NotifyAfterRenderPlain(renderState, passID);
+                    postprocessEffect?.NotifyAfterRenderPlain(renderState, passId);
 
                     // Render all lines
                     this.RenderPass(
@@ -550,11 +550,14 @@ namespace SeeingSharp.Multimedia.Core
                 finally
                 {
                     // Notify state after rendering
-                    if (postprocessEffect != null) { continueWithNextPass = postprocessEffect.NotifyAfterRender(renderState, passID); }
+                    if (postprocessEffect != null)
+                    {
+                        continueWithNextPass = postprocessEffect.NotifyAfterRender(renderState, passId);
+                    }
                     else { continueWithNextPass = false; }
 
                     // Increment passID value
-                    passID++;
+                    passId++;
                 }
             }
 
