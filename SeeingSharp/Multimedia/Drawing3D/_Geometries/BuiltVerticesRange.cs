@@ -118,7 +118,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             return this;
         }
 
-        public BuiltVerticesRange FlipTextureCoordinatesXY()
+        public BuiltVerticesRange FlipTextureCoordinatesXy()
         {
             var lastVertex = StartVertex + VertexCount;
 

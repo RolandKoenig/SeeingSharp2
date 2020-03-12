@@ -81,11 +81,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Adds a resource to the scene
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <returns></returns>
-        public NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory)
-            where ResourceType : Resource
+        public NamedOrGenericKey AddResource<TResourceType>(Func<EngineDevice, TResourceType> resourceFactory)
+            where TResourceType : Resource
         {
             this.CheckValid();
 
@@ -97,11 +97,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Adds a resource to the scene
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <param name="resourceKey">The key for the newly generated resource.</param>
-        public NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
-            where ResourceType : Resource
+        public NamedOrGenericKey AddResource<TResourceType>(Func<EngineDevice, TResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+            where TResourceType : Resource
         {
             this.CheckValid();
 
@@ -136,11 +136,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Adds the given resource if it was not created before.
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The resource factory.</param>
         /// <param name="resourceKey">The resource key.</param>
-        public NamedOrGenericKey AddResourceIfNotCreated<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
-            where ResourceType : Resource
+        public NamedOrGenericKey AddResourceIfNotCreated<TResourceType>(Func<EngineDevice, TResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+            where TResourceType : Resource
         {
             this.CheckValid();
 
@@ -156,11 +156,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Manipulates the resource with the given key.
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="manipulateAction">The action that manipulates the resource.</param>
         /// <param name="resourceKey">The key of the resource to be manipulated.</param>
-        public void ManipulateResource<ResourceType>(Action<ResourceType> manipulateAction, NamedOrGenericKey resourceKey)
-            where ResourceType : Resource
+        public void ManipulateResource<TResourceType>(Action<TResourceType> manipulateAction, NamedOrGenericKey resourceKey)
+            where TResourceType : Resource
         {
             this.CheckValid();
 
@@ -389,25 +389,25 @@ namespace SeeingSharp.Multimedia.Core
         /// Sets the order id of the given layer.
         /// </summary>
         /// <param name="layer">The name of the layer.</param>
-        /// <param name="oderID">The order id to set.</param>
-        public void SetLayerOrderID(string layer, int oderID)
+        /// <param name="oderId">The order id to set.</param>
+        public void SetLayerOrderId(string layer, int oderId)
         {
             this.CheckValid();
 
             var layerObject = this.Owner.GetLayer(layer);
-            this.Owner.SetLayerOrderID(layerObject, oderID);
+            this.Owner.SetLayerOrderId(layerObject, oderId);
         }
 
         /// <summary>
         /// Sets the order id of the given layer.
         /// </summary>
         /// <param name="layerObject">The layer object.</param>
-        /// <param name="oderID">The order id to set.</param>
-        public void SetLayerOrderID(SceneLayer layerObject, int oderID)
+        /// <param name="oderId">The order id to set.</param>
+        public void SetLayerOrderId(SceneLayer layerObject, int oderId)
         {
             this.CheckValid();
 
-            this.Owner.SetLayerOrderID(layerObject, oderID);
+            this.Owner.SetLayerOrderId(layerObject, oderId);
         }
 
         /// <summary>

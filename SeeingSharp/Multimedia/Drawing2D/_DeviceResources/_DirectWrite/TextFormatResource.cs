@@ -65,10 +65,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
             _fontStyle = fontStyle;
             _fontStretch = fontStretch;
 
-            _paragraphAlignment = Drawing2D.ParagraphAlignment.Near; //ParagraphAlignment.Near;
-            _textAlignment = Drawing2D.TextAlignment.Leading;
-            _wordWrapping = Drawing2D.WordWrapping.Wrap;
-            _readingDirection = Drawing2D.ReadingDirection.LeftToRight;
+            _paragraphAlignment = ParagraphAlignment.Near; //ParagraphAlignment.Near;
+            _textAlignment = TextAlignment.Leading;
+            _wordWrapping = WordWrapping.Wrap;
+            _readingDirection = ReadingDirection.LeftToRight;
         }
 
         /// <summary>

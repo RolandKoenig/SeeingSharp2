@@ -38,8 +38,7 @@ namespace SeeingSharp
         {
             yield return new DeviceHandlerD3D9(
                 device.Internals.Adapter,
-                device.IsSoftware,
-                device.DebugEnabled);
+                device.IsSoftware);
         }
 
         public IEnumerable<IModelImporter> CreateModelImporters()

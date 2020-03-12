@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
     public class PerformanceAnalyzer
     {
         private const int INIT_COUNT_CACHED_MEASURE_TOKENS = 32;
-        private static readonly TimeSpan CALCULATOR_THROWAWAY_TIMEOUT = TimeSpan.FromSeconds(5.0);
+        private static readonly TimeSpan s_calculatorThrowawayTimeout = TimeSpan.FromSeconds(5.0);
 
         // Current state
         private ConcurrentObjectPool<DurationMeasureToken> _cachedMeasureTokens;
@@ -175,7 +175,7 @@ namespace SeeingSharp.Util
 
                         // Remove this calculator if the last reported value came to long ago
                         if (utcNow - actCalculatorInfo.Calculator.LastReportedDurationTimestamp >
-                            CALCULATOR_THROWAWAY_TIMEOUT)
+                            s_calculatorThrowawayTimeout)
                         {
                             _cachedCalculators.RemoveAt(loop);
                             _calculatorsDict.TryRemove(actCalculatorInfo.Calculator.ActivityName, out _);

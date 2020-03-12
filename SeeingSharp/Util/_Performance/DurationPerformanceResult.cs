@@ -61,20 +61,20 @@ namespace SeeingSharp.Util
 
         public TimeSpan SumMax => TimeSpan.FromTicks(this.SumMaxTicks);
 
-        public long SumMaxMS => (long)Math.Round(this.SumMax.TotalMilliseconds);
+        public long SumMaxMs => (long)Math.Round(this.SumMax.TotalMilliseconds);
 
         public TimeSpan SumMin => TimeSpan.FromTicks(this.SumMinTicks);
 
-        public long SumMinMS => (long)Math.Round(this.SumMin.TotalMilliseconds);
+        public long SumMinMs => (long)Math.Round(this.SumMin.TotalMilliseconds);
 
         public TimeSpan SumAverage => TimeSpan.FromTicks(this.SumAverageTicks);
 
-        public long SumAverageMS => (long)Math.Round(this.SumAverage.TotalMilliseconds);
+        public long SumAverageMs => (long)Math.Round(this.SumAverage.TotalMilliseconds);
 
         /// <summary>
         /// Gets the average millisecond value as a double.
         /// </summary>
 
-        public double SumAverageMSDouble => this.SumAverage.TotalMilliseconds;
+        public double SumAverageMsDouble => this.SumAverage.TotalMilliseconds;
     }
 }

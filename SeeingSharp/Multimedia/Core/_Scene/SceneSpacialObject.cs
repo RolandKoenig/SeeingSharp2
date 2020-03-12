@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Core
         IAnimatableObjectOpacity, IAnimatableObjectAccentuation
     {
         // Resource keys
-        private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey _keySceneRenderParameters = GraphicsCore.GetNextGenericResourceKey();
 
         // Spacial parameters
         private SpacialTransformationType _transformationType;
@@ -587,7 +587,7 @@ namespace SeeingSharp.Multimedia.Core
             if (renderParameters == null)
             {
                 renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded(
-                    KEY_SCENE_RENDER_PARAMETERS,
+                    _keySceneRenderParameters,
                     () => new ObjectRenderParameters());
                 this.RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);
             }

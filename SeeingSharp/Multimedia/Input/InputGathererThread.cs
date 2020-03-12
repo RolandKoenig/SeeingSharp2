@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Input
     public class InputGathererThread : ObjectThread
     {
         // Constants
-        private static readonly TimeSpan SINGLE_FRAME_DURATION = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
+        private static readonly TimeSpan s_singleFrameDuration = TimeSpan.FromMilliseconds(1000.0 / SeeingSharpConstants.INPUT_FRAMES_PER_SECOND);
 
         // Synchronization
         private ConcurrentQueue<Action> _commandQueue;
@@ -99,11 +99,11 @@ namespace SeeingSharp.Multimedia.Input
             // Create new InputFrame object or reuse an old one
             if (_recoveredInputFrames.TryDequeue(out var newInputFrame))
             {
-                newInputFrame.Reset(expectedStateCount, SINGLE_FRAME_DURATION);
+                newInputFrame.Reset(expectedStateCount, s_singleFrameDuration);
             }
             else
             {
-                newInputFrame = new InputFrame(expectedStateCount, SINGLE_FRAME_DURATION);
+                newInputFrame = new InputFrame(expectedStateCount, s_singleFrameDuration);
             }
 
             // Gather all input states (without dependency to a view)

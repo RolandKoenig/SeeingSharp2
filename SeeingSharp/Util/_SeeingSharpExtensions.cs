@@ -19,16 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using SharpDX;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -39,19 +37,7 @@ namespace SeeingSharp.Util
     /// </summary>
     internal static class CommonExtensions
     {
-        private static readonly CultureInfo CULTURE_EN = new CultureInfo("en-GB");
-
-        private static Dictionary<Timer, object> s_timerDict;
-        private static object s_timerDictLock;
-
-        /// <summary>
-        /// Initializes the <see cref="CommonExtensions" /> class.
-        /// </summary>
-        static CommonExtensions()
-        {
-            s_timerDict = new Dictionary<Timer, object>();
-            s_timerDictLock = new object();
-        }
+        private static readonly CultureInfo s_cultureEn = new CultureInfo("en-GB");
 
         /// <summary>
         /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
@@ -255,7 +241,7 @@ namespace SeeingSharp.Util
         /// <param name="xmlReader">The xml reader.</param>
         public static Vector3 ReadContentAsVector3(this XmlReader xmlReader)
         {
-            return ReadContentAsVector3(xmlReader, CULTURE_EN.NumberFormat);
+            return ReadContentAsVector3(xmlReader, s_cultureEn.NumberFormat);
         }
 
         /// <summary>
@@ -288,7 +274,7 @@ namespace SeeingSharp.Util
         /// <param name="xmlReader">The xml reader.</param>
         public static Vector2 ReadContentAsVector2(this XmlReader xmlReader)
         {
-            return ReadContentAsVector2(xmlReader, CULTURE_EN.NumberFormat);
+            return ReadContentAsVector2(xmlReader, s_cultureEn.NumberFormat);
         }
 
         /// <summary>
@@ -320,7 +306,7 @@ namespace SeeingSharp.Util
         /// <param name="xmlReader">The xml reader.</param>
         public static Vector3 ReadElementContentAsVector3(this XmlReader xmlReader)
         {
-            return ReadElementContentAsVector3(xmlReader, CULTURE_EN.NumberFormat);
+            return ReadElementContentAsVector3(xmlReader, s_cultureEn.NumberFormat);
         }
 
         /// <summary>

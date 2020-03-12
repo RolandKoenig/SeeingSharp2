@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 _effectInputs[loop] = effectInputs[loop] as IImageInternal;
                 if (_effectInputs[loop] == null)
                 {
-                    throw new SeeingSharpGraphicsException("Unable to process effectinput at index " + loop + "!");
+                    throw new SeeingSharpGraphicsException("Unable to process effect input at index " + loop + "!");
                 }
             }
         }

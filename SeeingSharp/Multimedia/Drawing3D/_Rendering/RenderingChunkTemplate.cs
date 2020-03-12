@@ -29,12 +29,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class RenderingChunkTemplate : IDisposable, ICheckDisposed
     {
         internal D3D11.Buffer IndexBuffer;
-        internal int IndexBufferID;
+        internal int IndexBufferId;
         internal int IndexCount;
         internal int SizePerVertex;
         internal int StartIndex;
         internal D3D11.Buffer VertexBuffer;
-        internal int VertexBufferID;
+        internal int VertexBufferId;
         internal Geometry Geometry;
         internal D3D11.InputElement[] InputElements;
 

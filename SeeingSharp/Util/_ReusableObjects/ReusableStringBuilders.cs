@@ -27,7 +27,7 @@ namespace SeeingSharp.Util
 {
     public class ReusableStringBuilders
     {
-        private ConcurrentStack<StringBuilder> s_stringBuilders;
+        private ConcurrentStack<StringBuilder> _stringBuilders;
 
         static ReusableStringBuilders()
         {
@@ -36,7 +36,7 @@ namespace SeeingSharp.Util
 
         public ReusableStringBuilders()
         {
-            s_stringBuilders = new ConcurrentStack<StringBuilder>();
+            _stringBuilders = new ConcurrentStack<StringBuilder>();
         }
 
         public IDisposable UseStringBuilder(out StringBuilder stringBuilder, int requiredCapacity = 128)
@@ -49,7 +49,7 @@ namespace SeeingSharp.Util
 
         public StringBuilder TakeStringBuilder(int requiredCapacity = 128)
         {
-            if (!s_stringBuilders.TryPop(out var result))
+            if (!_stringBuilders.TryPop(out var result))
             {
                 result = new StringBuilder(requiredCapacity);
             }
@@ -63,15 +63,15 @@ namespace SeeingSharp.Util
         public void ReRegisterStringBuilder(StringBuilder stringBuilder)
         {
             stringBuilder.Remove(0, stringBuilder.Length);
-            s_stringBuilders.Push(stringBuilder);
+            _stringBuilders.Push(stringBuilder);
         }
 
         public void Clear()
         {
-            s_stringBuilders.Clear();
+            _stringBuilders.Clear();
         }
 
-        public int Count => s_stringBuilders.Count;
+        public int Count => _stringBuilders.Count;
 
         public static ReusableStringBuilders Current
         {

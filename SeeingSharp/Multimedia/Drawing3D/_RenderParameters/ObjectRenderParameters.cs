@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class ObjectRenderParameters : Resource
     {
         // Resource keys
-        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
         private TypeSafeConstantBufferResource<CBPerObject> _cbPerObject;
@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             _cbPerObject = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
+                _keyConstantBuffer,
                 () => new TypeSafeConstantBufferResource<CBPerObject>());
             NeedsRefresh = true;
         }

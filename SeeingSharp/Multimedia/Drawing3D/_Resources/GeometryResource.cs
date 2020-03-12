@@ -262,8 +262,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     // Create the rendering chunk
                     var newChunkTemplate = new RenderingChunkTemplate()
                     {
-                        VertexBufferID = vertexBufferId,
-                        IndexBufferID = indexBufferId,
+                        VertexBufferId = vertexBufferId,
+                        IndexBufferId = indexBufferId,
                         SizePerVertex = StandardVertex.Size,
                         Geometry = actGeometry,
                         IndexCount = indexArray.Length,

@@ -22,16 +22,15 @@
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System.Numerics;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class TexturePainterHelper
     {
         // Instance resource keys
-        private readonly NamedOrGenericKey KEY_GEOMETRY = GraphicsCore.GetNextGenericResourceKey();
-        private readonly NamedOrGenericKey KEY_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
-        private readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyGeometry = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyRenderParameters = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyMaterial = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
         private NamedOrGenericKey _texture;
@@ -63,12 +62,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Load material
             _materialResource = resources.GetResourceAndEnsureLoaded(
-                KEY_MATERIAL,
+                _keyMaterial,
                 () => new SpriteMaterialResource(_texture));
 
             // Load geometry resource
             _geometryResource = resources.GetResourceAndEnsureLoaded(
-                KEY_GEOMETRY,
+                _keyGeometry,
                 () =>
                 {
                     var geometry = new Geometry();
@@ -90,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 () => new DefaultResources());
 
             _renderParameters = resources.GetResourceAndEnsureLoaded(
-                KEY_RENDER_PARAMETERS,
+                _keyRenderParameters,
                 () => new ObjectRenderParameters());
         }
 

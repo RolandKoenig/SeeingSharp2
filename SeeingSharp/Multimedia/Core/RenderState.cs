@@ -99,17 +99,17 @@ namespace SeeingSharp.Multimedia.Core
                 var actChunk = chunks[loop];
 
                 // Apply VertexBuffer
-                if (lastVertexBufferId != actChunk.Template.VertexBufferID)
+                if (lastVertexBufferId != actChunk.Template.VertexBufferId)
                 {
-                    lastVertexBufferId = actChunk.Template.VertexBufferID;
+                    lastVertexBufferId = actChunk.Template.VertexBufferId;
                     deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
                     deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
                 }
 
                 // Apply IndexBuffer
-                if (lastIndexBufferId != actChunk.Template.IndexBufferID)
+                if (lastIndexBufferId != actChunk.Template.IndexBufferId)
                 {
-                    lastIndexBufferId = actChunk.Template.IndexBufferID;
+                    lastIndexBufferId = actChunk.Template.IndexBufferId;
                     deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
                 }
 

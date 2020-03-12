@@ -23,7 +23,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace SeeingSharp.Multimedia.Input
@@ -53,12 +52,12 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Gets all possible GraphicsInputHandlers for the given view and camera types.
         /// </summary>
-        /// <typeparam name="ViewType">Gets the type of the view.</typeparam>
+        /// <typeparam name="TViewType">Gets the type of the view.</typeparam>
         /// <param name="viewObject">The view for which to the input handlers.</param>
-        public List<IInputHandler> GetInputHandler<ViewType>(IInputEnabledView viewObject)
-            where ViewType : class
+        public List<IInputHandler> GetInputHandler<TViewType>(IInputEnabledView viewObject)
+            where TViewType : class
         {
-            var givenViewType = typeof(ViewType);
+            var givenViewType = typeof(TViewType);
 
             return this.GetInputHandler(givenViewType);
         }

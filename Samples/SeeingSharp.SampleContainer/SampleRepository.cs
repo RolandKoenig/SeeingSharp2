@@ -64,8 +64,8 @@ namespace SeeingSharp.SampleContainer
 
             int TryGetGroupOrderId(string groupName)
             {
-                groupOrder.TryGetValue(groupName, out var orderID);
-                return orderID;
+                groupOrder.TryGetValue(groupName, out var orderId);
+                return orderId;
             }
 
             this.SampleGroups.Sort((left, right) => TryGetGroupOrderId(left.GroupName).CompareTo(TryGetGroupOrderId(right.GroupName)));

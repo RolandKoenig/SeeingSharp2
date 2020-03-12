@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
@@ -51,9 +50,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private const string RES_KEY_MAT_NAME = "Main";
 
         // Static regular expressions for parsing
-        private static readonly Encoding ENCODING = Encoding.GetEncoding("us-ascii");
-        private static readonly Regex NORMAL_REGEX = new Regex(@"normal\s*(\S*)\s*(\S*)\s*(\S*)");
-        private static readonly Regex VERTEX_REGEX = new Regex(@"vertex\s*(\S*)\s*(\S*)\s*(\S*)");
+        private static readonly Encoding s_encoding = Encoding.GetEncoding("us-ascii");
+        private static readonly Regex s_normalRegex = new Regex(@"normal\s*(\S*)\s*(\S*)\s*(\S*)");
+        private static readonly Regex s_vertexRegex = new Regex(@"vertex\s*(\S*)\s*(\S*)\s*(\S*)");
 
         // Just for caching
         private List<Vector3> _cachedPoints = new List<Vector3>(3);
@@ -138,7 +137,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         private static Vector3 ParseNormal(string input)
         {
-            var match = NORMAL_REGEX.Match(input);
+            var match = s_normalRegex.Match(input);
             if (!match.Success)
             {
                 throw new SeeingSharpException($"Unexpected line while reading Stl file. Line content: {Environment.NewLine}{input}");
@@ -211,7 +210,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         private static bool TryParseVertex(string line, out Vector3 point)
         {
-            var match = VERTEX_REGEX.Match(line);
+            var match = s_vertexRegex.Match(line);
             if (!match.Success)
             {
                 point = new Vector3();
@@ -389,7 +388,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         private ImportedModelContainer TryReadAscii(ResourceLink source, Stream stream, StlImportOptions importOptions)
         {
-            using (var reader = new StreamReader(stream, ENCODING, false, 128, true))
+            using (var reader = new StreamReader(stream, s_encoding, false, 128, true))
             {
                 var newGeometry = new Geometry();
 
@@ -465,7 +464,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 // Read header (is not needed)
                 //  (solid stands for Ascii format)
-                var header = ENCODING.GetString(reader.ReadBytes(80), 0, 80).Trim();
+                var header = s_encoding.GetString(reader.ReadBytes(80), 0, 80).Trim();
 
                 if (header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
 

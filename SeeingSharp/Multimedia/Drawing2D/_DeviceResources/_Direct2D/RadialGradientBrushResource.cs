@@ -47,7 +47,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             Gamma gamma = Gamma.StandardRgb,
             float opacity = 1f)
         {
-            ;
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
             radiusX.EnsurePositiveOrZero(nameof(radiusX));

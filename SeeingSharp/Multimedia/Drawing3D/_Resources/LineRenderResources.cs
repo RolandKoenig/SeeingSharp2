@@ -27,8 +27,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class LineRenderResources : Resource
     {
+        public static readonly NamedOrGenericKey RESOURCE_KEY = GraphicsCore.GetNextGenericResourceKey();
+
         // Private constants
-        private static readonly NamedOrGenericKey s_resourceKey = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey s_keyVertexShader = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey s_keyPixelShader = GraphicsCore.GetNextGenericResourceKey();
         private static readonly NamedOrGenericKey s_keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();

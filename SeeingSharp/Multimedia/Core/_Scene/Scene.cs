@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
         public const string DEFAULT_LAYER_NAME = "Default";
 
         // Resource keys
-        private NamedOrGenericKey KEY_SCENE_RENDER_PARAMETERS = GraphicsCore.GetNextGenericResourceKey();
+        private NamedOrGenericKey _keySceneRenderParameters = GraphicsCore.GetNextGenericResourceKey();
 
         // Members for 2D rendering
         private List<Custom2DDrawingLayer> _drawing2DLayers;
@@ -364,11 +364,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Adds a resource to the scene
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="resourceFactory">The factory method which creates the resource object.</param>
         /// <param name="resourceKey">The key for the newly generated resource.</param>
-        internal NamedOrGenericKey AddResource<ResourceType>(Func<EngineDevice, ResourceType> resourceFactory, NamedOrGenericKey resourceKey)
-            where ResourceType : Resource
+        internal NamedOrGenericKey AddResource<TResourceType>(Func<EngineDevice, TResourceType> resourceFactory, NamedOrGenericKey resourceKey)
+            where TResourceType : Resource
         {
             resourceFactory.EnsureNotNull(nameof(resourceFactory));
 
@@ -412,11 +412,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Manipulates the resource with the given key.
         /// </summary>
-        /// <typeparam name="ResourceType">The type of the resource.</typeparam>
+        /// <typeparam name="TResourceType">The type of the resource.</typeparam>
         /// <param name="manipulateAction">The action that manipulates the resource.</param>
         /// <param name="resourceKey">The key of the resource to be manipulated.</param>
-        internal void ManipulateResource<ResourceType>(Action<ResourceType> manipulateAction, NamedOrGenericKey resourceKey)
-            where ResourceType : Resource
+        internal void ManipulateResource<TResourceType>(Action<TResourceType> manipulateAction, NamedOrGenericKey resourceKey)
+            where TResourceType : Resource
         {
             manipulateAction.EnsureNotNull(nameof(manipulateAction));
 
@@ -424,11 +424,11 @@ namespace SeeingSharp.Multimedia.Core
 
             foreach (var actResourceDict in _registeredResourceDicts)
             {
-                var actResource = actResourceDict.GetResource<ResourceType>(resourceKey);
+                var actResource = actResourceDict.GetResource<TResourceType>(resourceKey);
 
                 if (actResource == null)
                 {
-                    throw new SeeingSharpGraphicsException("Resource " + resourceKey + " of type " + typeof(ResourceType).FullName + " not found on device " + actResourceDict.Device.AdapterDescription + "!");
+                    throw new SeeingSharpGraphicsException("Resource " + resourceKey + " of type " + typeof(TResourceType).FullName + " not found on device " + actResourceDict.Device.AdapterDescription + "!");
                 }
 
                 manipulateAction(actResource);
@@ -654,7 +654,7 @@ namespace SeeingSharp.Multimedia.Core
             // Create the new layer
             var newLayer = new SceneLayer(name, this)
             {
-                OrderID = _sceneLayers.Max(actLayer => actLayer.OrderID) + 1
+                OrderId = _sceneLayers.Max(actLayer => actLayer.OrderId) + 1
             };
 
             _sceneLayers.Add(newLayer);
@@ -694,15 +694,15 @@ namespace SeeingSharp.Multimedia.Core
         /// Sets the order id of the given layer.
         /// </summary>
         /// <param name="layer">The layer to modify.</param>
-        /// <param name="newOrderID">the new order id.</param>
-        internal void SetLayerOrderID(SceneLayer layer, int newOrderID)
+        /// <param name="newOrderId">the new order id.</param>
+        internal void SetLayerOrderId(SceneLayer layer, int newOrderId)
         {
             layer.EnsureNotNull(nameof(layer));
 
             if (!_sceneLayers.Contains(layer)) { throw new ArgumentException("This scene does not contain the given layer!"); }
 
             // Change the order id
-            layer.OrderID = newOrderID;
+            layer.OrderId = newOrderId;
 
             // Sort local layer list
             this.SortLayers();
@@ -950,8 +950,8 @@ namespace SeeingSharp.Multimedia.Core
             {
                 foreach (var actFilter in actView.FiltersInternal)
                 {
-                    actFilter.ConfigurationChanged = actFilter.ConfigurationChangedUI;
-                    actFilter.ConfigurationChangedUI = false;
+                    actFilter.ConfigurationChanged = actFilter.ConfigurationChangedUi;
+                    actFilter.ConfigurationChangedUi = false;
                 }
             }
 
@@ -1033,7 +1033,7 @@ namespace SeeingSharp.Multimedia.Core
             if (renderParameters == null)
             {
                 renderParameters = resources.GetResourceAndEnsureLoaded(
-                    KEY_SCENE_RENDER_PARAMETERS,
+                    _keySceneRenderParameters,
                     () => new SceneRenderParameters());
                 _renderParameters.AddObject(renderParameters, renderState.DeviceIndex);
             }
@@ -1170,7 +1170,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void SortLayers()
         {
-            _sceneLayers.Sort((left, right) => left.OrderID.CompareTo(right.OrderID));
+            _sceneLayers.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
         }
 
         /// <summary>

@@ -84,14 +84,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         }
 
         /// <summary>
-        /// Disposes this object.
-        /// </summary>
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-        /// <summary>
         /// Gets the bitmap.
         /// </summary>
         /// <param name="engineDevice">The engine device.</param>

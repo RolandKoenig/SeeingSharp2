@@ -64,8 +64,8 @@ namespace SeeingSharp.SampleContainer
         protected void BuildStandardFloor(SceneManipulator manipulator, string sceneLayer)
         {
             var bgLayer = manipulator.AddLayer("BACKGROUND");
-            manipulator.SetLayerOrderID(bgLayer, 0);
-            manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 1);
+            manipulator.SetLayerOrderId(bgLayer, 0);
+            manipulator.SetLayerOrderId(Scene.DEFAULT_LAYER_NAME, 1);
             ResourceLink sourceBackgroundTexture = new AssemblyResourceLink(
                 typeof(SampleBase),
                 "Assets.Background.dds");

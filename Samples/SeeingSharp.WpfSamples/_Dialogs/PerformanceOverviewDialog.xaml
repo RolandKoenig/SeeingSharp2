@@ -18,7 +18,7 @@
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=ActivityName, Mode=OneWay}" 
                                     Width="350"/>
                 <DataGridTextColumn Header="Time (ms)"
-                                    Binding="{Binding Path=SumAverageMSDouble, StringFormat=F3, Mode=OneWay}"  
+                                    Binding="{Binding Path=SumAverageMsDouble, StringFormat=F3, Mode=OneWay}"  
                                     Width="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

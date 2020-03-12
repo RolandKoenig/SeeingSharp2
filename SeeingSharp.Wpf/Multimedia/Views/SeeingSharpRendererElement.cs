@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Views
 {
     public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
-        private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
+        private static Duration s_maxImageLockDuration = new Duration(TimeSpan.FromMilliseconds(100.0));
 
         // Some members..
         private HigherD3DImageSource _d3dImageSource;
@@ -442,7 +442,7 @@ namespace SeeingSharp.Multimedia.Views
                 var isLocked = false;
                 using (GraphicsCore.Current.PerformanceAnalyzer.Internals.BeginMeasureActivityDuration("Render.Lock"))
                 {
-                    isLocked = _d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION);
+                    isLocked = _d3dImageSource.TryLock(s_maxImageLockDuration);
                 }
                 if (!isLocked)
                 {

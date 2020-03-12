@@ -34,10 +34,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class ImportedModelContainer
     {
         // Static id counter 
-        private static int s_maxContainerID;
+        private static int s_maxContainerId;
 
         // All model data
-        private int _importID;
+        private int _importId;
         private ImportOptions _importOptions;
         private List<SceneObject> _objects;
         private List<ParentChildRelationship> _parentChildRelationships;
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _objects = new List<SceneObject>();
             _parentChildRelationships = new List<ParentChildRelationship>();
             _importedResources = new List<ImportedResourceInfo>();
-            _importID = Interlocked.Increment(ref s_maxContainerID);
+            _importId = Interlocked.Increment(ref s_maxContainerId);
         }
 
         /// <summary>
@@ -199,11 +199,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Generates a key for a resource contained in an imported object graph.
         /// </summary>
         /// <param name="resourceClass">The type of the resource (defined by importer).</param>
-        /// <param name="resourceID">The id of the resource (defined by importer)</param>
-        public NamedOrGenericKey GetResourceKey(string resourceClass, string resourceID)
+        /// <param name="resourceId">The id of the resource (defined by importer)</param>
+        public NamedOrGenericKey GetResourceKey(string resourceClass, string resourceId)
         {
             return new NamedOrGenericKey(
-                "Imported." + _importID + "." + resourceClass + "." + resourceID);
+                "Imported." + _importId + "." + resourceClass + "." + resourceId);
         }
 
         public ResourceLink Source { get; }

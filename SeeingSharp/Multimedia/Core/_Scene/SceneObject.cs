@@ -53,6 +53,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected SceneObject()
         {
+            this.IsExportable = false;
+
             _targetDetailLevel = DetailLevel.All;
 
             _children = new List<SceneObject>();

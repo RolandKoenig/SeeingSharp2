@@ -38,8 +38,8 @@ namespace SeeingSharp.ModelViewer.Util
 
                 // Build new background layer with fullscreen texture
                 var bgLayer = manipulator.AddLayer("BACKGROUND");
-                manipulator.SetLayerOrderID(bgLayer, 0);
-                manipulator.SetLayerOrderID(Scene.DEFAULT_LAYER_NAME, 1);
+                manipulator.SetLayerOrderId(bgLayer, 0);
+                manipulator.SetLayerOrderId(Scene.DEFAULT_LAYER_NAME, 1);
 
                 var sourceBackgroundTexture = new AssemblyResourceLink(
                     typeof(App),

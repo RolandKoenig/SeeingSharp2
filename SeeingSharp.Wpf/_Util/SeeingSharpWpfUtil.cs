@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
-using System.Reflection;
 using Wpf = System.Windows;
 using WpfMedia = System.Windows.Media;
 
@@ -65,18 +64,6 @@ namespace SeeingSharp.Util
             return new Wpf.Size(
                 Math.Max(uiElement.RenderSize.Width * dpiScaleFactorX, 100),
                 Math.Max(uiElement.RenderSize.Height * dpiScaleFactorY, 100));
-        }
-
-        public static T ReadPrivateMember<T, U>(U sourceObject, string memberName)
-        {
-            var fInfo = typeof(U).GetTypeInfo().GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance);
-
-            if (fInfo == null)
-            {
-                throw new SeeingSharpException($"Unable to read member {memberName} from object of type {typeof(U).FullName}!");
-            }
-
-            return (T)fInfo.GetValue(sourceObject);
         }
     }
 }

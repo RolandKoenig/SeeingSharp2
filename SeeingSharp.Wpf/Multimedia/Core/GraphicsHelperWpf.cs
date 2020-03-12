@@ -22,7 +22,6 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using D3D11 = SharpDX.Direct3D11;

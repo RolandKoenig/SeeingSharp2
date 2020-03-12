@@ -35,10 +35,10 @@ namespace SeeingSharp.Tests.Util
 
             Assert.IsNotNull(calcResult1);
             Assert.IsNotNull(calcResult2);
-            Assert.IsTrue(calcResult1.SumAverageMS > 99);
-            Assert.IsTrue(calcResult1.SumAverageMS < 101);
-            Assert.IsTrue(calcResult2.SumAverageMS > 99);
-            Assert.IsTrue(calcResult2.SumAverageMS < 101);
+            Assert.IsTrue(calcResult1.SumAverageMs > 99);
+            Assert.IsTrue(calcResult1.SumAverageMs < 101);
+            Assert.IsTrue(calcResult2.SumAverageMs > 99);
+            Assert.IsTrue(calcResult2.SumAverageMs < 101);
             Assert.IsTrue(calculator.RawDataEntries == 300);
         }
     }

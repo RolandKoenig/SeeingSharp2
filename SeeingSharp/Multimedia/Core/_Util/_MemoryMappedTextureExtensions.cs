@@ -26,7 +26,7 @@ namespace SeeingSharp.Multimedia.Core
     public static class MemoryMappedTextureExtensions
     {
         // Some query steps, relevant for QueryForObjectID method
-        private static readonly Point[] QUERY_OBJECT_ID_STEPS = {
+        private static readonly Point[] s_queryObjectIdSteps = {
             new Point(1, 0),new Point(1, 0),
             new Point(0, 1),
             new Point(-1, 0), new Point(-1, 0), new Point(-1, 0), new Point(-1, 0),
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="texture">The uploaded texture.</param>
         /// <param name="xPos">The x position where to start.</param>
         /// <param name="yPos">The y position where to start.</param>
-        public static unsafe float QueryForObjectID(this MemoryMappedTexture<float> texture, int xPos, int yPos)
+        public static unsafe float QueryForObjectId(this MemoryMappedTexture<float> texture, int xPos, int yPos)
         {
             var pixelSize = texture.PixelSize;
             if (xPos < 0) { throw new ArgumentException("xPos"); }
@@ -53,11 +53,11 @@ namespace SeeingSharp.Multimedia.Core
             var pointerNative = texture.GetNativePointer();
             var currentX = xPos;
             var currentY = yPos;
-            var lastObjID = pointerNative[currentY * pixelSize.Width + currentX];
-            for (var loopActQueryStep = 0; loopActQueryStep < QUERY_OBJECT_ID_STEPS.Length; loopActQueryStep++)
+            var lastObjId = pointerNative[currentY * pixelSize.Width + currentX];
+            for (var loopActQueryStep = 0; loopActQueryStep < s_queryObjectIdSteps.Length; loopActQueryStep++)
             {
                 // Calculate current query location
-                var currentStep = QUERY_OBJECT_ID_STEPS[loopActQueryStep];
+                var currentStep = s_queryObjectIdSteps[loopActQueryStep];
                 currentX += currentStep.X;
                 currentY += currentStep.Y;
 
@@ -69,11 +69,11 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Read current value and compare with last one
                 //  (If equal, than at least two pixels are the same => Return this ObjectID)
-                var currObjID = pointerNative[currentY * pixelSize.Width + currentX];
-                if (EngineMath.EqualsWithTolerance(currObjID, lastObjID)) { return currObjID; }
+                var currObjId = pointerNative[currentY * pixelSize.Width + currentX];
+                if (EngineMath.EqualsWithTolerance(currObjId, lastObjId)) { return currObjId; }
 
                 // No match found, continue with next one
-                lastObjID = currObjID;
+                lastObjId = currObjId;
             }
 
             // No clear match found

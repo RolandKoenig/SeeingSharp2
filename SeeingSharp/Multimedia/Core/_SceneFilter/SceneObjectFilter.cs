@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected void RaiseFilterConfigurationChanged()
         {
-            ConfigurationChangedUI = true;
+            ConfigurationChangedUi = true;
             this.FilterConfigurationChanged.Raise(this, EventArgs.Empty);
         }
 
@@ -70,6 +70,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
         /// </summary>
-        internal bool ConfigurationChangedUI;
+        internal bool ConfigurationChangedUi;
     }
 }

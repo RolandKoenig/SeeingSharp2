@@ -25,8 +25,8 @@ namespace SeeingSharp.Util
 {
     public class ObjectTreeBoundingBoxCalculator
     {
-        private static readonly Vector3 VECTOR_MIN_INITIAL = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-        private static readonly Vector3 VECTOR_MAX_INITIAL = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        private static readonly Vector3 s_vectorMinInitial = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+        private static readonly Vector3 s_vectorMaxInitial = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
         private Matrix4Stack _mStack;
         private Vector3 _minCoord;
@@ -35,8 +35,8 @@ namespace SeeingSharp.Util
         public ObjectTreeBoundingBoxCalculator()
         {
             _mStack = new Matrix4Stack();
-            _minCoord = VECTOR_MIN_INITIAL;
-            _maxCoord = VECTOR_MAX_INITIAL;
+            _minCoord = s_vectorMinInitial;
+            _maxCoord = s_vectorMaxInitial;
         }
 
         public void PushTransform(ref Matrix4x4 matrix)
@@ -83,8 +83,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                if (_minCoord == VECTOR_MIN_INITIAL) { return false; }
-                if (_maxCoord == VECTOR_MAX_INITIAL) { return false; }
+                if (_minCoord == s_vectorMinInitial) { return false; }
+                if (_maxCoord == s_vectorMaxInitial) { return false; }
                 if (Vector3Ex.EqualsWithTolerance(_minCoord, _maxCoord)){ return false; }
 
                 return true;

@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this.GroupTileCount = 5;
             this.BuildBackFaces = true;
 
-            this.HighlightXZLines = false;
+            this.HighlightXzLines = false;
             this.ZLineHighlightColor = Color4.BlueColor;
             this.XLineHighlightColor = Color4.GreenColor;
 
@@ -62,8 +62,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var tileWidthX = this.TileWidth;
             var tileWidthZ = this.TileWidth;
 
-            var tileMiddleX = this.TilesX % 2 == 0 && this.HighlightXZLines ? this.TilesX / 2 : 1;
-            var tileMiddleZ = this.TilesZ % 2 == 0 && this.HighlightXZLines ? this.TilesZ / 2 : 1;
+            var tileMiddleX = this.TilesX % 2 == 0 && this.HighlightXzLines ? this.TilesX / 2 : 1;
+            var tileMiddleZ = this.TilesZ % 2 == 0 && this.HighlightXzLines ? this.TilesZ / 2 : 1;
 
             // Define line geometry
             var genSurfaceDefaultLine = result.CreateSurface();
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var actLineColor = this.LineColor;
                 var divider = actTileX % this.GroupTileCount == 0 ? this.LineSmallDivider : this.LineBigDivider;
 
-                if (this.HighlightXZLines && actTileX == tileMiddleX)
+                if (this.HighlightXzLines && actTileX == tileMiddleX)
                 {
                     actLineColor = this.ZLineHighlightColor;
                     divider = this.LineSmallDivider;
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var actLineColor = this.LineColor;
                 var divider = actTileZ % this.GroupTileCount == 0 ? this.LineSmallDivider : this.LineBigDivider;
 
-                if (this.HighlightXZLines && actTileZ == tileMiddleZ)
+                if (this.HighlightXzLines && actTileZ == tileMiddleZ)
                 {
                     actLineColor = this.XLineHighlightColor;
                     divider = this.LineSmallDivider;
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             set;
         }
 
-        public bool HighlightXZLines
+        public bool HighlightXzLines
         {
             get;
             set;

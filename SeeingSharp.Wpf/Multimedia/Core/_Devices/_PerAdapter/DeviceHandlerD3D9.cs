@@ -37,8 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="dxgiAdapter">The target adapter.</param>
         /// <param name="isSoftwareAdapter">Are we in software mode?</param>
-        /// <param name="debugEnabled">Is debug mode enabled?</param>
-        internal DeviceHandlerD3D9(Adapter1 dxgiAdapter, bool isSoftwareAdapter, bool debugEnabled)
+        internal DeviceHandlerD3D9(Adapter1 dxgiAdapter, bool isSoftwareAdapter)
         {
             try
             {

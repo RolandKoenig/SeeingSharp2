@@ -59,6 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
         /// </summary>
+        /// <param name="isOrthographic">Is this camera an orthographic camera?</param>
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
         protected Camera3DBase(bool isOrthographic, int width, int height)

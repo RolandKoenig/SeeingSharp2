@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Views
             set => this.RenderLoop.ClearColor = value;
         }
 
-        public SynchronizationContext UISynchronizationContext => this.RenderLoop.UiSynchronizationContext;
+        public SynchronizationContext UiSynchronizationContext => this.RenderLoop.UiSynchronizationContext;
 
         public bool IsOperational => this.RenderLoop.IsOperational;
     }

@@ -42,7 +42,7 @@ namespace SeeingSharp.WpfSamples
             {
                 this.DurationResults.Add(actResult);
             }
-            this.DurationResults.Sort((left, right) => -left.SumAverageMSDouble.CompareTo(right.SumAverageMSDouble));
+            this.DurationResults.Sort((left, right) => -left.SumAverageMsDouble.CompareTo(right.SumAverageMsDouble));
         }
 
         public List<DurationPerformanceResult> DurationResults { get; }

@@ -34,29 +34,20 @@ namespace SeeingSharp.Multimedia.Views
 {
     public class HigherD3DImageSource : D3DImage, IDisposable
     {
-        private static volatile int s_activeClients;
-        private D3D9.Direct3DEx _d3dContext;
         private D3D9.DeviceEx _d3dDevice;
         private D3D9.Texture _d3dRenderTarget;
-
-        private EngineDevice _device;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
         /// </summary>
         public HigherD3DImageSource(EngineDevice device, DeviceHandlerD3D9 deviceHandlerD3D9)
         {
-            _device = device;
-
-            _d3dContext = deviceHandlerD3D9.Context;
             _d3dDevice = deviceHandlerD3D9.Device;
 
             if (_d3dDevice == null)
             {
                 throw new SeeingSharpException("Unable to create Wpf image source: No Direct3D 9 device available on " + device);
             }
-
-            s_activeClients++;
         }
 
         /// <summary>
@@ -106,9 +97,6 @@ namespace SeeingSharp.Multimedia.Views
             }
 
             //Map the texture to the D3DImage base class
-            var tDisposed = renderTarget.IsDisposed;
-            float tWidth = renderTarget.Description.Width;
-            float tHeight = renderTarget.Description.Height;
             _d3dRenderTarget = new D3D9.Texture(
                 _d3dDevice,
                 renderTarget.Description.Width,
@@ -131,7 +119,6 @@ namespace SeeingSharp.Multimedia.Views
             this.SetRenderTarget(null);
 
             _d3dRenderTarget = SeeingSharpUtil.DisposeObject(_d3dRenderTarget);
-            s_activeClients--;
         }
 
         /// <summary>

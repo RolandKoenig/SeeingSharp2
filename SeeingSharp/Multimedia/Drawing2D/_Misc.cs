@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// Represents enum from Direct2D.
     /// </summary>
     [Flags]
-    public enum DrawTextOptions : int
+    public enum DrawTextOptions
     {
         /// <summary>
         /// Text is vertically snapped to pixel boundaries and is not clipped to the layout rectangle.
@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from Direct2D.
     /// </summary>
-    public enum MeasuringMode : int
+    public enum MeasuringMode
     {
         /// <summary>
         /// Specifies that text is measured using glyph ideal metrics whose values are
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontStyle : int
+    public enum FontStyle
     {
         Normal = 0,
         Oblique = 1,
@@ -99,7 +99,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontWeight : int
+    public enum FontWeight
     {
         Thin = 100,
         ExtraLight = 200,
@@ -122,7 +122,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum FontStretch : int
+    public enum FontStretch
     {
         Undefined = 0,
         UltraCondensed = 1,
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum ParagraphAlignment : int
+    public enum ParagraphAlignment
     {
         Near = 0,
         Far = 1,
@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum TextAlignment : int
+    public enum TextAlignment
     {
         Leading = 0,
         Trailing = 1,
@@ -160,7 +160,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum WordWrapping : int
+    public enum WordWrapping
     {
         Wrap = 0,
         NoWrap = 1,
@@ -169,7 +169,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from DirectWrite.
     /// </summary>
-    public enum ReadingDirection : int
+    public enum ReadingDirection
     {
         LeftToRight = 0,
         RightToLeft = 1,
@@ -214,7 +214,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// <summary>
     /// Represents enum from Direct2D.
     /// </summary>
-    public enum BitmapInterpolationMode : int
+    public enum BitmapInterpolationMode
     {
         NearestNeighbor = 0,
         Linear = 1,
@@ -224,7 +224,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     /// Represents enum from Direct2D.
     /// Specifies how a brush paints areas outside of its normal content area.
     /// </summary>
-    public enum ExtendMode : int
+    public enum ExtendMode
     {
         /// <summary>
         /// Repeat the edge pixels of the brush's content for all regions outside the normal
