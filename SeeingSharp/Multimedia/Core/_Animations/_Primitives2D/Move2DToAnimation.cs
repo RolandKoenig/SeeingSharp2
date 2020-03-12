@@ -27,14 +27,14 @@ namespace SeeingSharp.Multimedia.Core
     public class Move2DToAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectPosition2D m_targetObject;
-        private Vector2 m_targetVector;
-        private TimeSpan m_paramDuration;
-        private MovementSpeed m_paramMoveSpeed;
+        private IAnimatableObjectPosition2D _targetObject;
+        private Vector2 _targetVector;
+        private TimeSpan _paramDuration;
+        private MovementSpeed _paramMoveSpeed;
 
         // Runtime values
-        private MovementAnimationHelper m_moveHelper;
-        private Vector2 m_startVector;
+        private MovementAnimationHelper _moveHelper;
+        private Vector2 _startVector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Move2DByAnimation" /> class.
@@ -45,9 +45,9 @@ namespace SeeingSharp.Multimedia.Core
         public Move2DToAnimation(IAnimatableObjectPosition2D targetObject, Vector2 targetVector, TimeSpan duration)
             : base(targetObject)
         {
-            m_targetObject = targetObject;
-            m_targetVector = targetVector;
-            m_paramDuration = duration;
+            _targetObject = targetObject;
+            _targetVector = targetVector;
+            _paramDuration = duration;
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace SeeingSharp.Multimedia.Core
         public Move2DToAnimation(IAnimatableObjectPosition2D targetObject, Vector2 targetVector, MovementSpeed speed)
             : base(targetObject)
         {
-            m_targetObject = targetObject;
-            m_targetVector = targetVector;
-            m_paramMoveSpeed = speed;
+            _targetObject = targetObject;
+            _targetVector = targetVector;
+            _paramMoveSpeed = speed;
         }
 
         /// <summary>
@@ -78,29 +78,29 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startVector = m_targetObject.Position;
-            var moveVector = new Vector3(m_targetVector - m_startVector, 0f);
+            _startVector = _targetObject.Position;
+            var moveVector = new Vector3(_targetVector - _startVector, 0f);
 
             // Create move-helper individually
-            if (m_paramDuration > TimeSpan.Zero)
+            if (_paramDuration > TimeSpan.Zero)
             {
-                m_moveHelper = new MovementAnimationHelper(
-                    new MovementSpeed(moveVector, m_paramDuration),
+                _moveHelper = new MovementAnimationHelper(
+                    new MovementSpeed(moveVector, _paramDuration),
                     moveVector);
             }
-            else if (m_paramMoveSpeed != MovementSpeed.Empty)
+            else if (_paramMoveSpeed != MovementSpeed.Empty)
             {
-                m_moveHelper = new MovementAnimationHelper(m_paramMoveSpeed, moveVector);
+                _moveHelper = new MovementAnimationHelper(_paramMoveSpeed, moveVector);
             }
             else
             {
-                m_moveHelper = new MovementAnimationHelper(
+                _moveHelper = new MovementAnimationHelper(
                     new MovementSpeed(moveVector, TimeSpan.FromMilliseconds(1.0)),
                     moveVector);
             }
 
             // Change the type of this animation in the base class
-            this.ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            m_targetObject.Position = m_startVector + Vector3Ex.GetXY(m_moveHelper.GetPartialMoveDistance(this.CurrentTime));
+            _targetObject.Position = _startVector + Vector3Ex.GetXY(_moveHelper.GetPartialMoveDistance(this.CurrentTime));
         }
 
         /// <summary>
@@ -117,9 +117,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.Position = m_targetVector;
-            m_startVector = Vector2.Zero;
-            m_moveHelper = null;
+            _targetObject.Position = _targetVector;
+            _startVector = Vector2.Zero;
+            _moveHelper = null;
         }
     }
 }

@@ -28,26 +28,26 @@ namespace SeeingSharp.Util
         private static readonly Vector3 VECTOR_MIN_INITIAL = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         private static readonly Vector3 VECTOR_MAX_INITIAL = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-        private Matrix4Stack m_mStack;
-        private Vector3 m_minCoord;
-        private Vector3 m_maxCoord;
+        private Matrix4Stack _mStack;
+        private Vector3 _minCoord;
+        private Vector3 _maxCoord;
 
         public ObjectTreeBoundingBoxCalculator()
         {
-            m_mStack = new Matrix4Stack();
-            m_minCoord = VECTOR_MIN_INITIAL;
-            m_maxCoord = VECTOR_MAX_INITIAL;
+            _mStack = new Matrix4Stack();
+            _minCoord = VECTOR_MIN_INITIAL;
+            _maxCoord = VECTOR_MAX_INITIAL;
         }
 
         public void PushTransform(ref Matrix4x4 matrix)
         {
-            m_mStack.Push();
-            m_mStack.TransformLocal(ref matrix);
+            _mStack.Push();
+            _mStack.TransformLocal(ref matrix);
         }
 
         public void PopTransform()
         {
-            m_mStack.Pop();
+            _mStack.Pop();
         }
 
         public void AddCoordinate(Vector3 coordinate)
@@ -57,16 +57,16 @@ namespace SeeingSharp.Util
 
         public void AddCoordinate(ref Vector3 coordinate)
         {
-            ref var topReference = ref m_mStack.GetTopByRef();
+            ref var topReference = ref _mStack.GetTopByRef();
             var transformedCoord = Vector3.Transform(coordinate, topReference);
 
-            if (m_minCoord.X > transformedCoord.X) { m_minCoord.X = transformedCoord.X; }
-            if (m_minCoord.Y > transformedCoord.Y) { m_minCoord.Y = transformedCoord.Y; }
-            if (m_minCoord.Z > transformedCoord.Z) { m_minCoord.Z = transformedCoord.Z; }
+            if (_minCoord.X > transformedCoord.X) { _minCoord.X = transformedCoord.X; }
+            if (_minCoord.Y > transformedCoord.Y) { _minCoord.Y = transformedCoord.Y; }
+            if (_minCoord.Z > transformedCoord.Z) { _minCoord.Z = transformedCoord.Z; }
 
-            if (m_maxCoord.X < transformedCoord.X) { m_maxCoord.X = transformedCoord.X; }
-            if (m_maxCoord.Y < transformedCoord.Y) { m_maxCoord.Y = transformedCoord.Y; }
-            if (m_maxCoord.Z < transformedCoord.Z) { m_maxCoord.Z = transformedCoord.Z; }
+            if (_maxCoord.X < transformedCoord.X) { _maxCoord.X = transformedCoord.X; }
+            if (_maxCoord.Y < transformedCoord.Y) { _maxCoord.Y = transformedCoord.Y; }
+            if (_maxCoord.Z < transformedCoord.Z) { _maxCoord.Z = transformedCoord.Z; }
         }
 
         public BoundingBox CreateBoundingBox()
@@ -76,16 +76,16 @@ namespace SeeingSharp.Util
                 throw new SeeingSharpException($"Unable to create {nameof(BoundingBox)}: Not enough coordinates given!");
             }
 
-            return new BoundingBox(m_minCoord, m_maxCoord);
+            return new BoundingBox(_minCoord, _maxCoord);
         }
 
         public bool CanCreateBoundingBox
         {
             get
             {
-                if (m_minCoord == VECTOR_MIN_INITIAL) { return false; }
-                if (m_maxCoord == VECTOR_MAX_INITIAL) { return false; }
-                if (Vector3Ex.EqualsWithTolerance(m_minCoord, m_maxCoord)){ return false; }
+                if (_minCoord == VECTOR_MIN_INITIAL) { return false; }
+                if (_maxCoord == VECTOR_MAX_INITIAL) { return false; }
+                if (Vector3Ex.EqualsWithTolerance(_minCoord, _maxCoord)){ return false; }
 
                 return true;
             }

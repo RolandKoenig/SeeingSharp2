@@ -29,12 +29,12 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class SeeingSharpLoader : ISeeingSharpExtensionProvider
     {
-        private List<ISeeingSharpExtensions> m_extensions;
+        private List<ISeeingSharpExtensions> _extensions;
 
         internal SeeingSharpLoader()
         {
-            m_extensions = new List<ISeeingSharpExtensions>();
-            m_extensions.Add(new DefaultImporterExporterExtensions());
+            _extensions = new List<ISeeingSharpExtensions>();
+            _extensions.Add(new DefaultImporterExporterExtensions());
 
             this.LoadSettings = new SeeingSharpLoadSettings();
         }
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             extensions.EnsureNotNull(nameof(extensions));
 
-            m_extensions.Add(extensions);
+            _extensions.Add(extensions);
 
             return this;
         }
@@ -122,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
                 loadSettings => loadSettings.DebugEnabled = true);
         }
 
-        public IEnumerable<ISeeingSharpExtensions> Extensions => m_extensions;
+        public IEnumerable<ISeeingSharpExtensions> Extensions => _extensions;
 
         public SeeingSharpLoadSettings LoadSettings
         {

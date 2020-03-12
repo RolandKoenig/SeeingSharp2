@@ -35,19 +35,19 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         typeof(RectangleSampleSettings))]
     public class RectangleSample : SampleBase
     {
-        private RectangleSampleSettings m_castedSettings;
+        private RectangleSampleSettings _castedSettings;
 
-        private SolidBrushResource m_fillBrush;
-        private SolidBrushResource m_fillBrushTransparent;
+        private SolidBrushResource _fillBrush;
+        private SolidBrushResource _fillBrushTransparent;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            m_castedSettings = (RectangleSampleSettings)settings;
+            _castedSettings = (RectangleSampleSettings)settings;
 
-            m_fillBrush = new SolidBrushResource(Color4.Gray);
-            m_fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
+            _fillBrush = new SolidBrushResource(Color4.Gray);
+            _fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
 
             return Task.FromResult<object>(null);
         }
@@ -60,26 +60,26 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
                 base.Draw2DBackground(graphics);
 
                 // Calculate rectangle location
-                var width = m_castedSettings.Width;
-                var height = m_castedSettings.Height;
+                var width = _castedSettings.Width;
+                var height = _castedSettings.Height;
                 var rectToDraw = new RectangleF(
                     graphics.ScreenWidth / 2f - width / 2f,
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
 
                 // Draw the rectangle
-                if (m_castedSettings.Rounded)
+                if (_castedSettings.Rounded)
                 {
                     graphics.FillRoundedRectangle(
                         rectToDraw,
-                        m_castedSettings.RoundedRadius, m_castedSettings.RoundedRadius,
-                        m_castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
+                        _castedSettings.RoundedRadius, _castedSettings.RoundedRadius,
+                        _castedSettings.Transparent ? _fillBrushTransparent : _fillBrush);
                 }
                 else
                 {
                     graphics.FillRectangle(
                         rectToDraw,
-                        m_castedSettings.Transparent ? m_fillBrushTransparent : m_fillBrush);
+                        _castedSettings.Transparent ? _fillBrushTransparent : _fillBrush);
                 }
             });
         }
@@ -88,8 +88,8 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
         {
             base.OnClosed();
 
-            SeeingSharpUtil.SafeDispose(ref m_fillBrush);
-            SeeingSharpUtil.SafeDispose(ref m_fillBrushTransparent);
+            SeeingSharpUtil.SafeDispose(ref _fillBrush);
+            SeeingSharpUtil.SafeDispose(ref _fillBrushTransparent);
         }
 
         //*********************************************************************

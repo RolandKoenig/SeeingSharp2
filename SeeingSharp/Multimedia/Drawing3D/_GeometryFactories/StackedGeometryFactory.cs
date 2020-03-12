@@ -27,16 +27,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class StackedGeometryFactory : GeometryFactory
     {
         // Main parameters
-        private GeometryFactory m_geometryToStack;
-        private int m_stackSize;
+        private GeometryFactory _geometryToStack;
+        private int _stackSize;
 
         public StackedGeometryFactory(GeometryFactory geometryToStack, int stackSize)
         {
             geometryToStack.EnsureNotNull(nameof(geometryToStack));
             stackSize.EnsurePositiveAndNotZero(nameof(stackSize));
 
-            m_geometryToStack = geometryToStack;
-            m_stackSize = stackSize;
+            _geometryToStack = geometryToStack;
+            _stackSize = stackSize;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="buildOptions">Some generic options for geometry building</param>
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
-            var geometryFromChild = m_geometryToStack.BuildGeometry(buildOptions);
+            var geometryFromChild = _geometryToStack.BuildGeometry(buildOptions);
             geometryFromChild.EnsureNotNull(nameof(geometryFromChild));
 
             var childStructBox = geometryFromChild.GenerateBoundingBox();
@@ -54,10 +54,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Copy metadata information of the Geometry
             var result = geometryFromChild.Clone(
                 false,
-                m_stackSize);
+                _stackSize);
 
             // Build geometry
-            for (var loop = 0; loop < m_stackSize; loop++)
+            for (var loop = 0; loop < _stackSize; loop++)
             {
                 var actYCorrection = childStructBox.Height * loop;
                 var localCorrection = new Vector3(correctionVector.X, correctionVector.Y + actYCorrection, correctionVector.Z);

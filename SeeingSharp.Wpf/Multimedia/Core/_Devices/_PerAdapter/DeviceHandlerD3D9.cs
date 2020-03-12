@@ -29,8 +29,8 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private D3D9.DeviceEx m_deviceEx;
-        private D3D9.Direct3DEx m_direct3DEx;
+        private D3D9.DeviceEx _deviceEx;
+        private D3D9.Direct3DEx _direct3DEx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
@@ -61,13 +61,13 @@ namespace SeeingSharp.Multimedia.Core
                     };
 
                     //Create the device finally
-                    m_direct3DEx = new D3D9.Direct3DEx();
+                    _direct3DEx = new D3D9.Direct3DEx();
 
                     // Try to find the Direct3D9 adapter that matches given DXGI adapter
                     var adapterIndex = -1;
-                    for (var loop = 0; loop < m_direct3DEx.AdapterCount; loop++)
+                    for (var loop = 0; loop < _direct3DEx.AdapterCount; loop++)
                     {
-                        var d3d9AdapterInfo = m_direct3DEx.GetAdapterIdentifier(loop);
+                        var d3d9AdapterInfo = _direct3DEx.GetAdapterIdentifier(loop);
                         if (d3d9AdapterInfo.DeviceId == dxgiAdapter.Description1.DeviceId)
                         {
                             adapterIndex = loop;
@@ -79,14 +79,14 @@ namespace SeeingSharp.Multimedia.Core
                     if (adapterIndex < 0) { return; }
 
                     // Try to create the device
-                    m_deviceEx = new D3D9.DeviceEx(m_direct3DEx, adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, CREATE_FLAGS, presentparams);
+                    _deviceEx = new D3D9.DeviceEx(_direct3DEx, adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, CREATE_FLAGS, presentparams);
                 }
             }
             catch (Exception)
             {
                 // No direct3d 9 interface support
-                SeeingSharpUtil.SafeDispose(ref m_direct3DEx);
-                SeeingSharpUtil.SafeDispose(ref m_deviceEx);
+                SeeingSharpUtil.SafeDispose(ref _direct3DEx);
+                SeeingSharpUtil.SafeDispose(ref _deviceEx);
             }
         }
 
@@ -95,8 +95,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            m_deviceEx = SeeingSharpUtil.DisposeObject(m_deviceEx);
-            m_direct3DEx = SeeingSharpUtil.DisposeObject(m_direct3DEx);
+            _deviceEx = SeeingSharpUtil.DisposeObject(_deviceEx);
+            _direct3DEx = SeeingSharpUtil.DisposeObject(_direct3DEx);
         }
 
         /// <summary>
@@ -108,16 +108,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the device successfully initialized?
         /// </summary>
-        public bool IsInitialized => m_deviceEx != null;
+        public bool IsInitialized => _deviceEx != null;
 
         /// <summary>
         /// Gets the initialized device.
         /// </summary>
-        internal D3D9.DeviceEx Device => m_deviceEx;
+        internal D3D9.DeviceEx Device => _deviceEx;
 
         /// <summary>
         /// Gets current DirectX context.
         /// </summary>
-        internal D3D9.Direct3DEx Context => m_direct3DEx;
+        internal D3D9.Direct3DEx Context => _direct3DEx;
     }
 }

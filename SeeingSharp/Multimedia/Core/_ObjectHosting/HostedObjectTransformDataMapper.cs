@@ -26,14 +26,14 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class HostedObjectTransformDataMapper : IEngineHostedSceneObject, IEngineOpacityProvider
     {
-        private IEngineHostedSceneObject m_original;
+        private IEngineHostedSceneObject _original;
 
-        private Func<Vector3, Vector3> m_funcPositionMapper;
-        private Func<Vector3, Vector3> m_funcRotationMapper;
-        private Func<Vector3, Vector3> m_funcScalingMapper;
-        private Func<AnimationHandler, AnimationHandler> m_funcGetAnimationHandler;
-        private Func<Color4, Color4> m_funcGetDisplayColor;
-        private IEngineOpacityProvider m_opacityObject;
+        private Func<Vector3, Vector3> _funcPositionMapper;
+        private Func<Vector3, Vector3> _funcRotationMapper;
+        private Func<Vector3, Vector3> _funcScalingMapper;
+        private Func<AnimationHandler, AnimationHandler> _funcGetAnimationHandler;
+        private Func<Color4, Color4> _funcGetDisplayColor;
+        private IEngineOpacityProvider _opacityObject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HostedObjectTransformDataMapper"/> class.
@@ -48,13 +48,13 @@ namespace SeeingSharp.Multimedia.Core
             Func<Vector3, Vector3> funcRotationMapper,
             Func<Vector3, Vector3> funcScalingMapper)
         {
-            m_original = originalObject;
-            m_funcPositionMapper = funcPositionMapper;
-            m_funcRotationMapper = funcRotationMapper;
-            m_funcScalingMapper = funcScalingMapper;
-            m_funcGetAnimationHandler = null;
-            m_funcGetDisplayColor = null;
-            m_opacityObject = originalObject as IEngineOpacityProvider;
+            _original = originalObject;
+            _funcPositionMapper = funcPositionMapper;
+            _funcRotationMapper = funcRotationMapper;
+            _funcScalingMapper = funcScalingMapper;
+            _funcGetAnimationHandler = null;
+            _funcGetDisplayColor = null;
+            _opacityObject = originalObject as IEngineOpacityProvider;
         }
 
         public HostedObjectTransformDataMapper(
@@ -64,12 +64,12 @@ namespace SeeingSharp.Multimedia.Core
             Func<Vector3, Vector3> funcScalingMapper,
             Func<Color4, Color4> funcColorMapper)
         {
-            m_original = originalObject;
-            m_funcPositionMapper = funcPositionMapper;
-            m_funcRotationMapper = funcRotationMapper;
-            m_funcScalingMapper = funcScalingMapper;
-            m_funcGetDisplayColor = funcColorMapper;
-            m_opacityObject = originalObject as IEngineOpacityProvider;
+            _original = originalObject;
+            _funcPositionMapper = funcPositionMapper;
+            _funcRotationMapper = funcRotationMapper;
+            _funcScalingMapper = funcScalingMapper;
+            _funcGetDisplayColor = funcColorMapper;
+            _opacityObject = originalObject as IEngineOpacityProvider;
         }
 
         public HostedObjectTransformDataMapper(
@@ -80,12 +80,12 @@ namespace SeeingSharp.Multimedia.Core
             Func<Color4, Color4> funcColorMapper,
             IEngineOpacityProvider opacityProvider)
         {
-            m_original = originalObject;
-            m_funcPositionMapper = funcPositionMapper;
-            m_funcRotationMapper = funcRotationMapper;
-            m_funcScalingMapper = funcScalingMapper;
-            m_funcGetDisplayColor = funcColorMapper;
-            m_opacityObject = opacityProvider;
+            _original = originalObject;
+            _funcPositionMapper = funcPositionMapper;
+            _funcRotationMapper = funcRotationMapper;
+            _funcScalingMapper = funcScalingMapper;
+            _funcGetDisplayColor = funcColorMapper;
+            _opacityObject = opacityProvider;
         }
 
         public HostedObjectTransformDataMapper(
@@ -102,25 +102,25 @@ namespace SeeingSharp.Multimedia.Core
 
         public Vector3 Position
         {
-            get { return m_funcPositionMapper(m_original.Position); }
+            get { return _funcPositionMapper(_original.Position); }
         }
 
         public Vector3 Rotation
         {
-            get { return m_funcRotationMapper(m_original.Rotation); }
+            get { return _funcRotationMapper(_original.Rotation); }
         }
 
         public Vector3 Scaling
         {
-            get { return m_funcScalingMapper(m_original.Scaling); }
+            get { return _funcScalingMapper(_original.Scaling); }
         }
 
         public AnimationHandler AnimationHandler
         {
             get
             {
-                if (m_funcGetAnimationHandler != null) { return m_funcGetAnimationHandler(m_original.AnimationHandler); }
-                else { return m_original.AnimationHandler; }
+                if (_funcGetAnimationHandler != null) { return _funcGetAnimationHandler(_original.AnimationHandler); }
+                else { return _original.AnimationHandler; }
             }
         }
 
@@ -128,8 +128,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_funcGetDisplayColor != null) { return m_funcGetDisplayColor(m_original.DisplayColor); }
-                else { return m_original.DisplayColor; }
+                if (_funcGetDisplayColor != null) { return _funcGetDisplayColor(_original.DisplayColor); }
+                else { return _original.DisplayColor; }
             }
         }
 
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                return m_opacityObject?.Opacity ?? 1f;
+                return _opacityObject?.Opacity ?? 1f;
             }
         }
     }

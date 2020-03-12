@@ -56,18 +56,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D._05_Geosphere
         //*********************************************************************
         private class GeosphereSampleSettings : Primitive3DSampleSettings
         {
-            private int m_countSubdivisions = 3;
-            private float m_radius = 0.5f;
+            private int _countSubdivisions = 3;
+            private float _radius = 0.5f;
 
             [Category(CATEGORY_NAME)]
             public int CountSubdivisions
             {
-                get => m_countSubdivisions;
+                get => _countSubdivisions;
                 set
                 {
-                    if (m_countSubdivisions != value)
+                    if (_countSubdivisions != value)
                     {
-                        m_countSubdivisions = value;
+                        _countSubdivisions = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -76,12 +76,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._05_Geosphere
             [Category(CATEGORY_NAME)]
             public float Radius
             {
-                get => m_radius;
+                get => _radius;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_radius, value))
+                    if (!EngineMath.EqualsWithTolerance(_radius, value))
                     {
-                        m_radius = value;
+                        _radius = value;
                         this.RaiseRecreateRequest();
                     }
                 }

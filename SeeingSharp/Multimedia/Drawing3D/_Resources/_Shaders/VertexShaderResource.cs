@@ -30,8 +30,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class VertexShaderResource : ShaderResource
     {
         // Resources for Direct3D 11 rendering
-        private D3D11.VertexShader m_vertexShader;
-        private Dictionary<D3D11.InputElement[], D3D11.InputLayout> m_inputLayouts;
+        private D3D11.VertexShader _vertexShader;
+        private Dictionary<D3D11.InputElement[], D3D11.InputLayout> _inputLayouts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public VertexShaderResource(string shaderProfile, ResourceLink resourceLink)
             : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
         {
-            m_inputLayouts = new Dictionary<D3D11.InputElement[], D3D11.InputLayout>();
+            _inputLayouts = new Dictionary<D3D11.InputElement[], D3D11.InputLayout>();
         }
 
         /// <summary>
@@ -51,13 +51,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
         internal D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
         {
-            if (m_inputLayouts.TryGetValue(inputElements, out var inputLayout))
+            if (_inputLayouts.TryGetValue(inputElements, out var inputLayout))
             {
                 return inputLayout;
             }
 
             inputLayout = new D3D11.InputLayout(device.DeviceD3D11_1, this.ShaderBytecode, inputElements);
-            m_inputLayouts.Add(inputElements, inputLayout);
+            _inputLayouts.Add(inputElements, inputLayout);
             return inputLayout;
         }
 
@@ -66,9 +66,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
         {
-            if (m_vertexShader == null)
+            if (_vertexShader == null)
             {
-                m_vertexShader = new D3D11.VertexShader(device.DeviceD3D11_1, shaderBytecode);
+                _vertexShader = new D3D11.VertexShader(device.DeviceD3D11_1, shaderBytecode);
             }
         }
 
@@ -77,23 +77,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            foreach (var actInputLayout in m_inputLayouts.Values)
+            foreach (var actInputLayout in _inputLayouts.Values)
             {
                 SeeingSharpUtil.DisposeObject(actInputLayout);
             }
-            m_inputLayouts.Clear();
+            _inputLayouts.Clear();
 
-            m_vertexShader = SeeingSharpUtil.DisposeObject(m_vertexShader);
+            _vertexShader = SeeingSharpUtil.DisposeObject(_vertexShader);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_vertexShader != null;
+        public override bool IsLoaded => _vertexShader != null;
 
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        internal D3D11.VertexShader VertexShader => m_vertexShader;
+        internal D3D11.VertexShader VertexShader => _vertexShader;
     }
 }

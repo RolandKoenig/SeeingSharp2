@@ -33,81 +33,81 @@ namespace SeeingSharp.Multimedia.Core
         private const int DEFAULT_PASS_SUBSCRIPTION_LENGTH = 1024;
 
         // State members
-        private bool m_disposed;
+        private bool _disposed;
 
         // Temporary collections
-        private List<Tuple<SceneObject, bool, bool>> m_tmpChangedVisibilities;
+        private List<Tuple<SceneObject, bool, bool>> _tmpChangedVisibilities;
 
         // Configuration member
-        private Scene m_scene;
-        private SceneLayer m_sceneLayer;
-        private EngineDevice m_device;
-        private ResourceDictionary m_resources;
+        private Scene _scene;
+        private SceneLayer _sceneLayer;
+        private EngineDevice _device;
+        private ResourceDictionary _resources;
 
         // Special members for subscribe/unsubscribe pass logic
-        private bool m_isSubscribeUnsubscribeAllowed;
-        private Action m_changedVisibilitiesAction;
+        private bool _isSubscribeUnsubscribeAllowed;
+        private Action _changedVisibilitiesAction;
 
         // Objects that raises exceptions during render
-        private Dictionary<SceneObject, object> m_invalidObjects;
-        private Queue<SceneObject> m_invalidObjectsToDeregister;
+        private Dictionary<SceneObject, object> _invalidObjects;
+        private Queue<SceneObject> _invalidObjectsToDeregister;
 
         // Resources for rendering
-        private RenderPassLineRender m_renderPassLineRender;
-        private RenderPassDefaultTransparent m_renderPassTransparent;
-        private RenderPass2DOverlay m_renderPass2DOverlay;
-        private ViewRenderParameters m_renderParameters;
+        private RenderPassLineRender _renderPassLineRender;
+        private RenderPassDefaultTransparent _renderPassTransparent;
+        private RenderPass2DOverlay _renderPass2DOverlay;
+        private ViewRenderParameters _renderParameters;
 
         // Subscription collections
         // All collections needed to link all scene objects to corresponding render passes
         // => This collections are updated using UpdateForView logic
-        private Dictionary<RenderPassInfo, PassSubscriptionProperties> m_objectsPerPassDict;
-        private List<PassSubscriptionProperties> m_objectsPerPass;
-        private PassSubscriptionProperties m_objectsPassPlainRender;
-        private PassSubscriptionProperties m_objectsPassLineRender;
-        private PassSubscriptionProperties m_objectsPassTransparentRender;
-        private PassSubscriptionProperties m_objectsPassSpriteBatchRender;
-        private PassSubscriptionProperties m_objectsPass2DOverlay;
-        private bool m_anythingUnsubscribed;
+        private Dictionary<RenderPassInfo, PassSubscriptionProperties> _objectsPerPassDict;
+        private List<PassSubscriptionProperties> _objectsPerPass;
+        private PassSubscriptionProperties _objectsPassPlainRender;
+        private PassSubscriptionProperties _objectsPassLineRender;
+        private PassSubscriptionProperties _objectsPassTransparentRender;
+        private PassSubscriptionProperties _objectsPassSpriteBatchRender;
+        private PassSubscriptionProperties _objectsPass2DOverlay;
+        private bool _anythingUnsubscribed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewRelatedSceneLayerSubset" /> class.
         /// </summary>
         internal ViewRelatedSceneLayerSubset(SceneLayer sceneLayer, ViewInformation viewInformation, ResourceDictionary resources, int viewIndex)
         {
-            m_scene = sceneLayer.Scene;
-            m_sceneLayer = sceneLayer;
+            _scene = sceneLayer.Scene;
+            _sceneLayer = sceneLayer;
             this.ViewInformation = viewInformation;
-            m_device = this.ViewInformation.Device;
-            m_resources = resources;
+            _device = this.ViewInformation.Device;
+            _resources = resources;
             ViewIndex = viewIndex;
 
-            m_invalidObjects = new Dictionary<SceneObject, object>();
-            m_invalidObjectsToDeregister = new Queue<SceneObject>();
+            _invalidObjects = new Dictionary<SceneObject, object>();
+            _invalidObjectsToDeregister = new Queue<SceneObject>();
 
             // Create temporary collections
-            m_tmpChangedVisibilities = new List<Tuple<SceneObject, bool, bool>>();
+            _tmpChangedVisibilities = new List<Tuple<SceneObject, bool, bool>>();
 
             // Create all specialized render pass lists
-            m_objectsPassPlainRender = new PassSubscriptionProperties();
-            m_objectsPassLineRender = new PassSubscriptionProperties();
-            m_objectsPassTransparentRender = new PassSubscriptionProperties();
-            m_objectsPassSpriteBatchRender = new PassSubscriptionProperties();
-            m_objectsPass2DOverlay = new PassSubscriptionProperties();
+            _objectsPassPlainRender = new PassSubscriptionProperties();
+            _objectsPassLineRender = new PassSubscriptionProperties();
+            _objectsPassTransparentRender = new PassSubscriptionProperties();
+            _objectsPassSpriteBatchRender = new PassSubscriptionProperties();
+            _objectsPass2DOverlay = new PassSubscriptionProperties();
 
             // Create dictionary for fast access to all render pass list
-            m_objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscriptionProperties>
+            _objectsPerPassDict = new Dictionary<RenderPassInfo, PassSubscriptionProperties>
             {
-                [RenderPassInfo.PASS_PLAIN_RENDER] = m_objectsPassPlainRender,
-                [RenderPassInfo.PASS_LINE_RENDER] = m_objectsPassLineRender,
-                [RenderPassInfo.PASS_TRANSPARENT_RENDER] = m_objectsPassTransparentRender,
-                [RenderPassInfo.PASS_SPRITE_BATCH] = m_objectsPassSpriteBatchRender,
-                [RenderPassInfo.PASS_2D_OVERLAY] = m_objectsPass2DOverlay
+                [RenderPassInfo.PASS_PLAIN_RENDER] = _objectsPassPlainRender,
+                [RenderPassInfo.PASS_LINE_RENDER] = _objectsPassLineRender,
+                [RenderPassInfo.PASS_TRANSPARENT_RENDER] = _objectsPassTransparentRender,
+                [RenderPassInfo.PASS_SPRITE_BATCH] = _objectsPassSpriteBatchRender,
+                [RenderPassInfo.PASS_2D_OVERLAY] = _objectsPass2DOverlay
             };
 
-            m_objectsPerPass = new List<PassSubscriptionProperties>(m_objectsPerPassDict.Values);
+            _objectsPerPass = new List<PassSubscriptionProperties>(_objectsPerPassDict.Values);
 
-            m_anythingUnsubscribed = false;
+            _anythingUnsubscribed = false;
 
             // Create and load all render pass relevant resources
             this.RefreshDeviceDependentResources();
@@ -115,13 +115,13 @@ namespace SeeingSharp.Multimedia.Core
 
         public void Dispose()
         {
-            if (m_disposed) { return; }
+            if (_disposed) { return; }
 
-            m_renderParameters = null;
-            m_renderPassLineRender = null;
-            m_renderPassTransparent = null;
+            _renderParameters = null;
+            _renderPassLineRender = null;
+            _renderPassTransparent = null;
 
-            m_disposed = true;
+            _disposed = true;
         }
 
         /// <summary>
@@ -130,17 +130,17 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">The scene object to be registered.</param>
         internal void RegisterObject(SceneObject sceneObject)
         {
-            if (m_disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("ViewRelatedLayerSubset");
             }
 
-            if (m_invalidObjects.ContainsKey(sceneObject))
+            if (_invalidObjects.ContainsKey(sceneObject))
             {
                 return;
             }
 
-            if ((sceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
+            if ((sceneObject.TargetDetailLevel & _device.SupportedDetailLevel) == _device.SupportedDetailLevel)
             {
                 sceneObject.RegisterLayerViewSubset(this);
             }
@@ -152,7 +152,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjects">The scene objects to be registered.</param>
         internal void RegisterObjectRange(UnsafeList<SceneObject> sceneObjects)
         {
-            if (m_disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("ViewRelatedLayerSubset");
             }
@@ -164,12 +164,12 @@ namespace SeeingSharp.Multimedia.Core
                 var actSceneObject = backingArray[loop];
                 if(actSceneObject == null){ continue; }
 
-                if (m_invalidObjects.ContainsKey(actSceneObject))
+                if (_invalidObjects.ContainsKey(actSceneObject))
                 {
                     continue;
                 }
 
-                if ((actSceneObject.TargetDetailLevel & m_device.SupportedDetailLevel) == m_device.SupportedDetailLevel)
+                if ((actSceneObject.TargetDetailLevel & _device.SupportedDetailLevel) == _device.SupportedDetailLevel)
                 {
                     actSceneObject.RegisterLayerViewSubset(this);
                 }
@@ -181,10 +181,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ClearResources()
         {
-            m_renderParameters = null;
-            m_renderPass2DOverlay = null;
-            m_renderPassLineRender = null;
-            m_renderPassTransparent = null;
+            _renderParameters = null;
+            _renderPass2DOverlay = null;
+            _renderPassLineRender = null;
+            _renderPassTransparent = null;
         }
 
         /// <summary>
@@ -193,10 +193,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObject">The object to be removed.</param>
         internal void DeregisterObject(SceneObject sceneObject)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
 
             // Perform unsubscription here (allowed because this call comes from update process)
-            m_isSubscribeUnsubscribeAllowed = true;
+            _isSubscribeUnsubscribeAllowed = true;
             try
             {
                 if (sceneObject.IsLayerViewSubsetRegistered(ViewIndex))
@@ -207,7 +207,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                m_isSubscribeUnsubscribeAllowed = false;
+                _isSubscribeUnsubscribeAllowed = false;
             }
         }
 
@@ -217,7 +217,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="allObjects">A collection containing all objects of the current layer.</param>
         internal void ClearAllSubscriptions(UnsafeList<SceneObject> allObjects)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
 
             // Clear all subscriptions on the SceneObject instances
             var length = allObjects.Count;
@@ -228,7 +228,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Clear local subscription information
-            foreach (var actSubscriptionList in m_objectsPerPassDict.Values)
+            foreach (var actSubscriptionList in _objectsPerPassDict.Values)
             {
                 actSubscriptionList.Subscriptions.Clear();
             }
@@ -240,14 +240,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateState">The update state.</param>
         internal void UpdateForView(SceneRelatedUpdateState updateState)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
 
-            // TODO: Trigger some other logic to update transparent object order
-            // TODO: Performance improvement!!!
             var anyOrderChanges = false;
             var camera = this.ViewInformation.Camera;
-
-            m_objectsPassTransparentRender.Subscriptions.Sort((left, right) =>
+            _objectsPassTransparentRender.Subscriptions.Sort((left, right) =>
             {
                 var leftSpacial = left.SceneObject as SceneSpacialObject;
                 var rightSpacial = right.SceneObject as SceneSpacialObject;
@@ -275,43 +272,43 @@ namespace SeeingSharp.Multimedia.Core
             if (anyOrderChanges)
             {
                 // Synchronize ordering changes with corresponding scene object
-                for (var loop = 0; loop < m_objectsPassTransparentRender.Subscriptions.Count; loop++)
+                for (var loop = 0; loop < _objectsPassTransparentRender.Subscriptions.Count; loop++)
                 {
-                    var actSubscription = m_objectsPassTransparentRender.Subscriptions[loop];
+                    var actSubscription = _objectsPassTransparentRender.Subscriptions[loop];
                     actSubscription.SubscriptionIndex = loop;
                     actSubscription.SceneObject.UpdateSubscription(actSubscription, this);
-                    m_objectsPassTransparentRender.Subscriptions[loop] = actSubscription;
+                    _objectsPassTransparentRender.Subscriptions[loop] = actSubscription;
                 }
             }
 
             // Update all objects related to this view
-            m_isSubscribeUnsubscribeAllowed = true;
+            _isSubscribeUnsubscribeAllowed = true;
 
             try
             {
                 // Update subscriptions based on visibility check result
-                if (m_changedVisibilitiesAction != null)
+                if (_changedVisibilitiesAction != null)
                 {
-                    m_changedVisibilitiesAction();
-                    m_changedVisibilitiesAction = null;
+                    _changedVisibilitiesAction();
+                    _changedVisibilitiesAction = null;
                 }
 
                 // Unsubscribe all invalid objects
-                while (m_invalidObjectsToDeregister.Count > 0)
+                while (_invalidObjectsToDeregister.Count > 0)
                 {
-                    var actInvalidObject = m_invalidObjectsToDeregister.Dequeue();
+                    var actInvalidObject = _invalidObjectsToDeregister.Dequeue();
                     actInvalidObject.UnsubsribeFromAllPasses(this);
                 }
 
                 // Update subscriptions based on object state
-                var allObjects = m_sceneLayer.ObjectsInternal;
+                var allObjects = _sceneLayer.ObjectsInternal;
                 var allObjectsLength = allObjects.Count;
                 var visibleObjectCount = this.ViewInformation.Owner.VisibleObjectCountInternal;
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actSceneObject = allObjects[loop];
 
-                    if (m_invalidObjects.ContainsKey(actSceneObject)) { continue; }
+                    if (_invalidObjects.ContainsKey(actSceneObject)) { continue; }
 
                     if (actSceneObject.IsLayerViewSubsetRegistered(ViewIndex) &&
                         actSceneObject.IsVisible(this.ViewInformation))
@@ -324,14 +321,14 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                m_isSubscribeUnsubscribeAllowed = false;
+                _isSubscribeUnsubscribeAllowed = false;
             }
 
             // Reorganize subscriptions if there is anything unsubscribed
-            if (m_anythingUnsubscribed)
+            if (_anythingUnsubscribed)
             {
-                m_anythingUnsubscribed = false;
-                foreach (var actPassProperties in m_objectsPerPass)
+                _anythingUnsubscribed = false;
+                foreach (var actPassProperties in _objectsPerPass)
                 {
                     if (actPassProperties.UnsubscribeCallCount <= 0) { continue; }
 
@@ -380,15 +377,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="sceneObjectsForSingleUpdateCall">A collection of scene objects for a single update call. These are normally a list of newly inserted static objects.</param>
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState, Queue<SceneObject> sceneObjectsForSingleUpdateCall)
         {
-            var filters = this.ViewInformation.FiltersInternl;
-            m_tmpChangedVisibilities.Clear();
+            var filters = this.ViewInformation.FiltersInternal;
+            _tmpChangedVisibilities.Clear();
 
             // Perform some pre-logic on filters
             var anyFilterChanged = false;
 
             foreach (var actFilter in filters)
             {
-                actFilter.SetEnvironmentData(m_sceneLayer, this.ViewInformation);
+                actFilter.SetEnvironmentData(_sceneLayer, this.ViewInformation);
 
                 if (actFilter.ConfigurationChanged)
                 {
@@ -400,7 +397,7 @@ namespace SeeingSharp.Multimedia.Core
             var refreshAllObjects = this.ViewInformation.Camera.StateChanged || anyFilterChanged;
 
             // Perform viewbox culling for all standard objects
-            var allObjects = m_sceneLayer.ObjectsInternal;
+            var allObjects = _sceneLayer.ObjectsInternal;
             var allObjectsLength = allObjects.Count;
             if (allObjectsLength > 0)
             {
@@ -434,20 +431,20 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Handle changed visibility in standard update logic
-            if (m_tmpChangedVisibilities.Count > 0)
+            if (_tmpChangedVisibilities.Count > 0)
             {
-                var startingScene = m_scene;
+                var startingScene = _scene;
 
-                m_changedVisibilitiesAction = () =>
+                _changedVisibilitiesAction = () =>
                 {
-                    if (m_disposed) { return; }
-                    if (startingScene != m_scene) { return; }
+                    if (_disposed) { return; }
+                    if (startingScene != _scene) { return; }
 
-                    foreach (var actChangedVisibility in m_tmpChangedVisibilities)
+                    foreach (var actChangedVisibility in _tmpChangedVisibilities)
                     {
                         // Check whether this object is still here..
-                        if (actChangedVisibility.Item1.Scene != m_scene) { continue; }
-                        if (actChangedVisibility.Item1.SceneLayer != m_sceneLayer) { continue; }
+                        if (actChangedVisibility.Item1.Scene != _scene) { continue; }
+                        if (actChangedVisibility.Item1.SceneLayer != _sceneLayer) { continue; }
 
                         // Handle changed visibility
                         this.HandleObjectVisibilityChanged(
@@ -464,13 +461,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The RenderState object holding all relevant data for current render pass</param>
         internal void Render(RenderState renderState)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
 
             // Skip rendering if there is nothing to do..
-            if (m_objectsPassLineRender.Subscriptions.Count == 0 &&
-               m_objectsPassPlainRender.Subscriptions.Count == 0 &&
-               m_objectsPassSpriteBatchRender.Subscriptions.Count == 0 &&
-               m_objectsPassTransparentRender.Subscriptions.Count == 0)
+            if (_objectsPassLineRender.Subscriptions.Count == 0 &&
+               _objectsPassPlainRender.Subscriptions.Count == 0 &&
+               _objectsPassSpriteBatchRender.Subscriptions.Count == 0 &&
+               _objectsPassTransparentRender.Subscriptions.Count == 0)
             {
                 return;
             }
@@ -478,8 +475,8 @@ namespace SeeingSharp.Multimedia.Core
             List<SceneObject> invalidObjects = null;
             var resources = renderState.CurrentResources;
 
-            if (renderState.Device != m_device) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong device object!"); }
-            if (renderState.CurrentResources != m_resources) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong ResourceDictionary object!"); }
+            if (renderState.Device != _device) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong device object!"); }
+            if (renderState.CurrentResources != _resources) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong ResourceDictionary object!"); }
 
             // Get current view configuration
             var viewConfiguration = this.ViewInformation.ViewConfiguration;
@@ -501,21 +498,21 @@ namespace SeeingSharp.Multimedia.Core
                 View = Matrix4x4.Transpose(this.ViewInformation.Camera.View),
             };
 
-            m_renderParameters.UpdateValues(renderState, cbPerView);
+            _renderParameters.UpdateValues(renderState, cbPerView);
 
             // Query for postprocess effect
-            var postprocessEffect = m_renderParameters.GetPostprocessEffect(
-                m_sceneLayer.PostprocessEffectKey,
+            var postprocessEffect = _renderParameters.GetPostprocessEffect(
+                _sceneLayer.PostprocessEffectKey,
                 resources);
 
             // Clear current depth buffer
-            if (m_sceneLayer.ClearDepthBufferBeforeRendering)
+            if (_sceneLayer.ClearDepthBufferBeforeRendering)
             {
                 renderState.ClearCurrentDepthBuffer();
             }
 
             // Perform main render pass logic
-            m_renderParameters.Apply(renderState);
+            _renderParameters.Apply(renderState);
 
             var passId = 0;
             var continueWithNextPass = true;
@@ -527,24 +524,24 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     // All following objects are build using only triangle lists
-                    m_device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology =
+                    _device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology =
                         D3D.PrimitiveTopology.TriangleList;
 
                     // Perform all plain renderings
-                    this.RenderPass(null, m_objectsPassPlainRender, renderState, ref invalidObjects);
+                    this.RenderPass(null, _objectsPassPlainRender, renderState, ref invalidObjects);
 
                     // Notify state after plain rendering
                     postprocessEffect?.NotifyAfterRenderPlain(renderState, passId);
 
                     // Render all lines
                     this.RenderPass(
-                        m_renderPassLineRender, m_objectsPassLineRender,
+                        _renderPassLineRender, _objectsPassLineRender,
                         renderState, ref invalidObjects);
                     renderState.ApplyMaterial(null);
 
                     // Perform all transparent renderings
                     this.RenderPass(
-                        m_renderPassTransparent, m_objectsPassTransparentRender,
+                        _renderPassTransparent, _objectsPassTransparentRender,
                         renderState, ref invalidObjects);
                 }
                 finally
@@ -562,7 +559,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Clear current depth buffer
-            if (m_sceneLayer.ClearDepthBufferAfterRendering)
+            if (_sceneLayer.ClearDepthBufferAfterRendering)
             {
                 renderState.ClearCurrentDepthBuffer();
             }
@@ -570,7 +567,7 @@ namespace SeeingSharp.Multimedia.Core
             // Dump render state on end of the layer
             if (renderState.IsWritingRenderPassDump)
             {
-                renderState.DumpCurrentRenderTargets($"{m_sceneLayer.Name}.End");
+                renderState.DumpCurrentRenderTargets($"{_sceneLayer.Name}.End");
             }
 
             // RemoveObject all invalid objects
@@ -588,12 +585,12 @@ namespace SeeingSharp.Multimedia.Core
             SceneObject sceneObject, Action<RenderState> renderMethod,
             int zOrder)
         {
-            if (!m_isSubscribeUnsubscribeAllowed)
+            if (!_isSubscribeUnsubscribeAllowed)
             {
                 throw new SeeingSharpException("Subscription is not allowed currently!");
             }
 
-            var subscriptionProperties = m_objectsPerPassDict[passInfo];
+            var subscriptionProperties = _objectsPerPassDict[passInfo];
 
             // Append new subscription to subscription list
             var subscriptions = subscriptionProperties.Subscriptions;
@@ -635,15 +632,15 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnsubscribeForPass(RenderPassSubscription subscription)
         {
-            if (!m_isSubscribeUnsubscribeAllowed) { throw new SeeingSharpException("Subscription is not allowed currently!"); }
+            if (!_isSubscribeUnsubscribeAllowed) { throw new SeeingSharpException("Subscription is not allowed currently!"); }
 
             if (subscription.IsSubscribed)
             {
                 // Set unsubscribed flag
-                m_anythingUnsubscribed = true;
+                _anythingUnsubscribed = true;
 
                 // Register unsubscription call
-                var subscriptionInfo = m_objectsPerPassDict[subscription.RenderPass];
+                var subscriptionInfo = _objectsPerPassDict[subscription.RenderPass];
 
                 subscriptionInfo.UnsubscribeCallCount++;
 
@@ -662,13 +659,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">The RenderState object holding all relevant data for current render pass</param>
         internal void Render2DOverlay(RenderState renderState)
         {
-            if (m_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
-            if (m_objectsPass2DOverlay.Subscriptions.Count == 0) { return; }
+            if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+            if (_objectsPass2DOverlay.Subscriptions.Count == 0) { return; }
 
             // Render all 2D objects
             List<SceneObject> invalidObjects = null;
             this.RenderPass(
-                m_renderPass2DOverlay, m_objectsPass2DOverlay,
+                _renderPass2DOverlay, _objectsPass2DOverlay,
                 renderState, ref invalidObjects);
 
             // RemoveObject all invalid objects
@@ -686,7 +683,7 @@ namespace SeeingSharp.Multimedia.Core
         private void PerformViewboxCulling(SceneObject actObject, IReadOnlyList<SceneObjectFilter> filters)
         {
             if (!actObject.IsLayerViewSubsetRegistered(ViewIndex)) { return; }
-            if (m_invalidObjects.ContainsKey(actObject)) { return; }
+            if (_invalidObjects.ContainsKey(actObject)) { return; }
 
             // Get visibility check data about current object
             var checkData = actObject.GetVisibilityCheckData(this.ViewInformation);
@@ -752,7 +749,7 @@ namespace SeeingSharp.Multimedia.Core
             if (oldVisible != newVisible)
             {
                 checkData.IsVisible = newVisible;
-                m_tmpChangedVisibilities.Add(Tuple.Create(actObject, oldVisible, newVisible));
+                _tmpChangedVisibilities.Add(Tuple.Create(actObject, oldVisible, newVisible));
             }
         }
 
@@ -776,34 +773,34 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void RefreshDeviceDependentResources()
         {
-            if (m_renderParameters == null ||
-                !m_renderParameters.IsLoaded)
+            if (_renderParameters == null ||
+                !_renderParameters.IsLoaded)
             {
-                m_renderParameters = m_resources.AddAndLoadResource(
+                _renderParameters = _resources.AddAndLoadResource(
                     GraphicsCore.GetNextGenericResourceKey(),
                     new ViewRenderParameters());
             }
 
-            if (m_renderPassTransparent == null ||
-                !m_renderPassTransparent.IsLoaded)
+            if (_renderPassTransparent == null ||
+                !_renderPassTransparent.IsLoaded)
             {
-                m_renderPassTransparent = m_resources.GetResourceAndEnsureLoaded(
+                _renderPassTransparent = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPassDefaultTransparent)),
                     () => new RenderPassDefaultTransparent());
             }
 
-            if (m_renderPassLineRender == null ||
-                !m_renderPassLineRender.IsLoaded)
+            if (_renderPassLineRender == null ||
+                !_renderPassLineRender.IsLoaded)
             {
-                m_renderPassLineRender = m_resources.GetResourceAndEnsureLoaded(
+                _renderPassLineRender = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPassLineRender)),
                     () => new RenderPassLineRender());
             }
 
-            if (m_renderPass2DOverlay == null ||
-                !m_renderPass2DOverlay.IsLoaded)
+            if (_renderPass2DOverlay == null ||
+                !_renderPass2DOverlay.IsLoaded)
             {
-                m_renderPass2DOverlay = m_resources.GetResourceAndEnsureLoaded(
+                _renderPass2DOverlay = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPass2DOverlay)),
                     () => new RenderPass2DOverlay());
             }
@@ -873,8 +870,8 @@ namespace SeeingSharp.Multimedia.Core
             // Register the given objects as invalid
             foreach (var actInvalidObject in invalidObjects)
             {
-                m_invalidObjects.Add(actInvalidObject, null);
-                m_invalidObjectsToDeregister.Enqueue(actInvalidObject);
+                _invalidObjects.Add(actInvalidObject, null);
+                _invalidObjectsToDeregister.Enqueue(actInvalidObject);
             }
         }
 

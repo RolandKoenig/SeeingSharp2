@@ -29,21 +29,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class EdgeDetectPostprocessEffectResource : PostprocessEffectResource
     {
         // Static resource keys
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER_BLUR = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyPixelShaderBlur = GraphicsCore.GetNextGenericResourceKey();
 
         // Instance resource keys
-        private readonly NamedOrGenericKey KEY_RENDER_TARGET = GraphicsCore.GetNextGenericResourceKey();
-        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyRenderTarget = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
-        private Color4 m_borderColor;
+        private Color4 _borderColor;
 
         // Resources
-        private RenderTargetTextureResource m_renderTarget;
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShaderBlur;
-        private CBPerObject m_constantBufferData;
-        private TypeSafeConstantBufferResource<CBPerObject> m_constantBuffer;
+        private RenderTargetTextureResource _renderTarget;
+        private DefaultResources _defaultResources;
+        private PixelShaderResource _pixelShaderBlur;
+        private CBPerObject _constantBufferData;
+        private TypeSafeConstantBufferResource<CBPerObject> _constantBuffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public EdgeDetectPostprocessEffectResource()
         {
             this.Thickness = 2f;
-            m_borderColor = Color4.BlueColor;
+            _borderColor = Color4.BlueColor;
             this.DrawOriginalObject = true;
         }
 
@@ -65,19 +65,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.LoadResourceInternal(device, resources);
 
             // Load graphics resources
-            m_pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_PIXEL_SHADER_BLUR,
+            _pixelShaderBlur = resources.GetResourceAndEnsureLoaded(
+                s_resKeyPixelShaderBlur,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Postprocessing", "PostprocessEdgeDetect"));
-            m_renderTarget = resources.GetResourceAndEnsureLoaded(
-                KEY_RENDER_TARGET,
+            _renderTarget = resources.GetResourceAndEnsureLoaded(
+                _keyRenderTarget,
                 () => new RenderTargetTextureResource(RenderTargetCreationMode.Color));
-            m_defaultResources = resources.DefaultResources;
+            _defaultResources = resources.DefaultResources;
 
             // Load constant buffer
-            m_constantBufferData = new CBPerObject();
-            m_constantBuffer = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
-                () => new TypeSafeConstantBufferResource<CBPerObject>(m_constantBufferData));
+            _constantBufferData = new CBPerObject();
+            _constantBuffer = resources.GetResourceAndEnsureLoaded(
+                _keyConstantBuffer,
+                () => new TypeSafeConstantBufferResource<CBPerObject>(_constantBufferData));
         }
 
         /// <summary>
@@ -90,27 +90,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.UnloadResourceInternal(device, resources);
 
-            m_pixelShaderBlur = null;
-            m_renderTarget = null;
-            m_defaultResources = null;
-            m_constantBuffer = null;
+            _pixelShaderBlur = null;
+            _renderTarget = null;
+            _defaultResources = null;
+            _constantBuffer = null;
         }
 
         /// <summary>
         /// Notifies that rendering begins.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyBeforeRender(RenderState renderState, int passID)
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
+        internal override void NotifyBeforeRender(RenderState renderState, int passId)
         {
-            switch (passID)
+            switch (passId)
             {
                 //******************************
                 // 1. Pass: Draw all pixels that ly behind other already rendered elements
                 case 0:
                     // Apply current render target size an push render target texture on current rendering stack
-                    m_renderTarget.ApplySize(renderState);
-                    m_renderTarget.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIDNormalDepth);
+                    _renderTarget.ApplySize(renderState);
+                    _renderTarget.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
 
                     // Clear current render target
                     renderState.ClearCurrentColorBuffer(new Color(0f, 0f, 0f, 0f));
@@ -122,8 +122,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering of the plain part has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyAfterRenderPlain(RenderState renderState, int passID)
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
+        internal override void NotifyAfterRenderPlain(RenderState renderState, int passId)
         {
             // Nothing to be done here
         }
@@ -132,41 +132,41 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
         /// <returns>
         /// True, if rendering should continue with next pass. False if postprocess effect is finished.
         /// </returns>
-        internal override bool NotifyAfterRender(RenderState renderState, int passID)
+        internal override bool NotifyAfterRender(RenderState renderState, int passId)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Reset settings made on render state (needed for all passes)
-            deviceContext.Rasterizer.State = m_defaultResources.RasterStateDefault;
+            deviceContext.Rasterizer.State = _defaultResources.RasterStateDefault;
 
             // Reset render target (needed for all passes)
-            m_renderTarget.PopFromRenderState(renderState);
+            _renderTarget.PopFromRenderState(renderState);
 
             // Update constant buffer data
             var currentViewSize = renderState.ViewInformation.CurrentViewSize;
-            m_constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
-            m_constantBufferData.Opacity = 0.9f;
-            m_constantBufferData.Threshold = 0.2f;
-            m_constantBufferData.Thickness = this.Thickness;
-            m_constantBufferData.BorderColor = m_borderColor.ToVector3();
-            m_constantBufferData.OriginalColorAlpha = this.DrawOriginalObject ? 1f : 0f;
-            m_constantBuffer.SetData(deviceContext, m_constantBufferData);
+            _constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
+            _constantBufferData.Opacity = 0.9f;
+            _constantBufferData.Threshold = 0.2f;
+            _constantBufferData.Thickness = this.Thickness;
+            _constantBufferData.BorderColor = _borderColor.ToVector3();
+            _constantBufferData.OriginalColorAlpha = this.DrawOriginalObject ? 1f : 0f;
+            _constantBuffer.SetData(deviceContext, _constantBufferData);
 
             // Render result of current pass to the main render target
-            switch (passID)
+            switch (passId)
             {
                 case 0:
                     this.ApplyAlphaBasedSpriteRendering(deviceContext);
                     try
                     {
-                        deviceContext.PixelShader.SetShaderResource(0, m_renderTarget.TextureView);
-                        deviceContext.PixelShader.SetSampler(0, m_defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                        deviceContext.PixelShader.SetConstantBuffer(2, m_constantBuffer.ConstantBuffer);
-                        deviceContext.PixelShader.Set(m_pixelShaderBlur.PixelShader);
+                        deviceContext.PixelShader.SetShaderResource(0, _renderTarget.TextureView);
+                        deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                        deviceContext.PixelShader.SetConstantBuffer(2, _constantBuffer.ConstantBuffer);
+                        deviceContext.PixelShader.Set(_pixelShaderBlur.PixelShader);
                         deviceContext.Draw(3, 0);
                     }
                     finally
@@ -183,15 +183,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Is the resource loaded?
         /// </summary>
         public override bool IsLoaded =>
-            m_renderTarget != null &&
-            m_renderTarget.IsLoaded;
+            _renderTarget != null &&
+            _renderTarget.IsLoaded;
 
         public float Thickness { get; set; }
 
         public Color4 BorderColor
         {
-            get => m_borderColor;
-            set => m_borderColor = value;
+            get => _borderColor;
+            set => _borderColor = value;
         }
 
         public bool DrawOriginalObject { get; set; }

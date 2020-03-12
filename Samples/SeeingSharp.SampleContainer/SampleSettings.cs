@@ -33,7 +33,7 @@ namespace SeeingSharp.SampleContainer
     {
         public event EventHandler RecreateRequest;
 
-        private int m_lastRecreateRequestID;
+        private int _lastRecreateRequestID;
 
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
@@ -56,11 +56,11 @@ namespace SeeingSharp.SampleContainer
         {
             if (this.ThrottleRecreateRequest)
             {
-                var myID = Interlocked.Increment(ref m_lastRecreateRequestID);
+                var myID = Interlocked.Increment(ref _lastRecreateRequestID);
 
                 await Task.Delay(2000);
 
-                if (m_lastRecreateRequestID == myID)
+                if (_lastRecreateRequestID == myID)
                 {
                     this.RecreateRequest?.Invoke(this, EventArgs.Empty);
                 }

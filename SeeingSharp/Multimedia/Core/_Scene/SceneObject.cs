@@ -33,33 +33,33 @@ namespace SeeingSharp.Multimedia.Core
     public abstract partial class SceneObject : IDisposable, IAnimatableObject
     {
         // Generic members
-        private IndexBasedDynamicCollection<VisibilityCheckData> m_visibilityData;
-        private DetailLevel m_targetDetailLevel;
-        private bool m_isStatic;
+        private IndexBasedDynamicCollection<VisibilityCheckData> _visibilityData;
+        private DetailLevel _targetDetailLevel;
+        private bool _isStatic;
 
         // Some information about parent containers
-        private Scene m_scene;
-        private SceneLayer m_sceneLayer;
+        private Scene _scene;
+        private SceneLayer _sceneLayer;
 
         // Collections for describing object hierarchies
-        private List<SceneObject> m_children;
-        private SceneObject m_parent;
+        private List<SceneObject> _children;
+        private SceneObject _parent;
 
         // Members for animations
-        private AnimationHandler m_animationHandler;
+        private AnimationHandler _animationHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObject"/> class.
         /// </summary>
         protected SceneObject()
         {
-            m_targetDetailLevel = DetailLevel.All;
+            _targetDetailLevel = DetailLevel.All;
 
-            m_children = new List<SceneObject>();
-            m_parent = null;
+            _children = new List<SceneObject>();
+            _parent = null;
 
-            m_animationHandler = new AnimationHandler(this);
-            m_visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
+            _animationHandler = new AnimationHandler(this);
+            _visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
 
             //Create a dynamic container for custom data
             this.CustomData = new ExpandoObject();
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Core
             // Caution: This method must be thread safe because
             //          it is callable on the SceneObject class directly
 
-            var actParent = other.m_parent;
+            var actParent = other._parent;
 
             while (actParent != null)
             {
@@ -89,7 +89,7 @@ namespace SeeingSharp.Multimedia.Core
                     return true;
                 }
 
-                actParent = actParent.m_parent;
+                actParent = actParent._parent;
             }
 
             return false;
@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Core
             // Caution: This method must be thread safe because
             //          it is callable on the SceneObject class directly
 
-            return objectToCheck.m_parent == this;
+            return objectToCheck._parent == this;
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Core
             if (viewInfo.Scene == null) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to any scene!"); }
             if (viewInfo.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
-            var checkData = m_visibilityData[viewInfo.ViewIndex];
+            var checkData = _visibilityData[viewInfo.ViewIndex];
 
             if (checkData == null)
             {
@@ -232,7 +232,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (var actDependency in m_children)
+            foreach (var actDependency in _children)
             {
                 actDependency.Update(updateState);
             }
@@ -246,7 +246,7 @@ namespace SeeingSharp.Multimedia.Core
         protected virtual void UpdateChildrenOverallInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
         {
             // Trigger updates of all dependencies
-            foreach (var actDependency in m_children)
+            foreach (var actDependency in _children)
             {
                 actDependency.UpdateOverall(updateState);
             }
@@ -283,14 +283,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             scene.EnsureNotNull(nameof(scene));
             sceneLayer.EnsureNotNull(nameof(sceneLayer));
-            m_scene.EnsureNull(nameof(m_scene));
-            m_sceneLayer.EnsureNull(nameof(m_sceneLayer));
+            _scene.EnsureNull(nameof(_scene));
+            _sceneLayer.EnsureNull(nameof(_sceneLayer));
 
-            m_scene = scene;
-            m_sceneLayer = sceneLayer;
+            _scene = scene;
+            _sceneLayer = sceneLayer;
 
             // Call virtual event
-            this.OnAddedToScene(m_scene);
+            this.OnAddedToScene(_scene);
         }
 
         /// <summary>
@@ -298,15 +298,15 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ResetSceneAndLayer()
         {
-            m_scene.EnsureNotNull(nameof(m_scene));
-            m_sceneLayer.EnsureNotNull(nameof(m_sceneLayer));
+            _scene.EnsureNotNull(nameof(_scene));
+            _sceneLayer.EnsureNotNull(nameof(_sceneLayer));
 
             // Remember old scene
-            var oldScene = m_scene;
+            var oldScene = _scene;
 
             // Clear references
-            m_scene = null;
-            m_sceneLayer = null;
+            _scene = null;
+            _sceneLayer = null;
 
             // Call virtual event
             this.OnRemovedFromScene(oldScene);
@@ -317,7 +317,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal IEnumerable<SceneObject> GetAllChildrenInternal()
         {
-            foreach (var actChild in m_children)
+            foreach (var actChild in _children)
             {
                 yield return actChild;
 
@@ -336,13 +336,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (childToAdd == this) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
             if (childToAdd.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Child must have the same scene!"); }
-            if (childToAdd.m_parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
+            if (childToAdd._parent != null) { throw new SeeingSharpGraphicsException("Child has already an owner!"); }
             if (childToAdd.IsParentOf(this)) { throw new SeeingSharpGraphicsException("Cyclic parent/child relationship detected!"); }
-            if (m_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
+            if (_children.Contains(childToAdd)) { throw new SeeingSharpGraphicsException("Child is already added!"); }
 
             // Create parent/child relation
-            m_children.Add(childToAdd);
-            childToAdd.m_parent = this;
+            _children.Add(childToAdd);
+            childToAdd._parent = this;
         }
 
         /// <summary>
@@ -354,8 +354,8 @@ namespace SeeingSharp.Multimedia.Core
             if (childToRemove.Scene != this.Scene) { throw new ArgumentException("Child must have the same scene!"); }
 
             // Destroy parent/child relation
-            m_children.Remove(childToRemove);
-            if (childToRemove.m_parent == this) { childToRemove.m_parent = this; }
+            _children.Remove(childToRemove);
+            if (childToRemove._parent == this) { childToRemove._parent = this; }
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ClearVisibilityStageData()
         {
-            foreach (var actCheckData in m_visibilityData)
+            foreach (var actCheckData in _visibilityData)
             {
                 actCheckData.FilterStageData.Clear();
             }
@@ -375,10 +375,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The VisibilityCheckData for this object for the given view.</param>
         internal VisibilityCheckData GetVisibilityCheckData(ViewInformation viewInfo)
         {
-            var checkData = m_visibilityData[viewInfo.ViewIndex];
+            var checkData = _visibilityData[viewInfo.ViewIndex];
             if (checkData == null)
             {
-                checkData = m_visibilityData.AddObject(
+                checkData = _visibilityData.AddObject(
                     new VisibilityCheckData(),
                     viewInfo.ViewIndex);
             }
@@ -415,7 +415,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The layer view subset to register.</param>
         internal void RegisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            m_viewRelatedSubscriptions.AddObject(new List<RenderPassSubscription>(), layerViewSubset.ViewIndex);
+            _viewRelatedSubscriptions.AddObject(new List<RenderPassSubscription>(), layerViewSubset.ViewIndex);
         }
 
         /// <summary>
@@ -424,9 +424,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="layerViewSubset">The layer view subset to deregister.</param>
         internal void DeregisterLayerViewSubset(ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            if (m_viewRelatedSubscriptions.HasObjectAt(layerViewSubset.ViewIndex))
+            if (_viewRelatedSubscriptions.HasObjectAt(layerViewSubset.ViewIndex))
             {
-                m_viewRelatedSubscriptions.RemoveObject(layerViewSubset.ViewIndex);
+                _viewRelatedSubscriptions.RemoveObject(layerViewSubset.ViewIndex);
             }
         }
 
@@ -436,7 +436,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewIndex">The index to check for.</param>
         internal bool IsLayerViewSubsetRegistered(int viewIndex)
         {
-            return m_viewRelatedSubscriptions.HasObjectAt(viewIndex);
+            return _viewRelatedSubscriptions.HasObjectAt(viewIndex);
         }
 
         /// <summary>
@@ -455,15 +455,15 @@ namespace SeeingSharp.Multimedia.Core
         internal void Update(SceneRelatedUpdateState updateState)
         {
             // Update current animation state
-            m_animationHandler?.Update(updateState);
+            _animationHandler?.Update(updateState);
 
             // Update the object
             this.UpdateInternal(updateState);
 
             // Update all dependencies finally
-            if (m_children.Count > 0)
+            if (_children.Count > 0)
             {
-                this.UpdateChildrenInternal(updateState, m_children);
+                this.UpdateChildrenInternal(updateState, _children);
             }
         }
 
@@ -476,9 +476,9 @@ namespace SeeingSharp.Multimedia.Core
         internal void UpdateOverall(SceneRelatedUpdateState updateState)
         {
             // Update all dependencies finally
-            if (m_children.Count > 0)
+            if (_children.Count > 0)
             {
-                this.UpdateChildrenOverallInternal(updateState, m_children);
+                this.UpdateChildrenOverallInternal(updateState, _children);
             }
         }
 
@@ -495,7 +495,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current AnimationHandler object.
         /// </summary>
-        public virtual AnimationHandler AnimationHandler => m_animationHandler;
+        public virtual AnimationHandler AnimationHandler => _animationHandler;
 
         /// <summary>
         /// Gets a dynamic container for custom data.
@@ -524,23 +524,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current scene.
         /// </summary>
-        public Scene Scene => m_scene;
+        public Scene Scene => _scene;
 
         /// <summary>
         /// Gets or sets the scene layer.
         /// </summary>
-        public SceneLayer SceneLayer => m_sceneLayer;
+        public SceneLayer SceneLayer => _sceneLayer;
 
         /// <summary>
         /// Is this object a static object?
         /// </summary>
         public bool IsStatic
         {
-            get => m_isStatic;
+            get => _isStatic;
             set
             {
                 if (this.Scene != null) { throw new SeeingSharpException("Unable to change IsStatic state when the object is already assigned to a scene!"); }
-                m_isStatic = value;
+                _isStatic = value;
             }
         }
 
@@ -549,23 +549,23 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public DetailLevel TargetDetailLevel
         {
-            get => m_targetDetailLevel;
+            get => _targetDetailLevel;
             set
             {
                 if (this.Scene != null) { throw new SeeingSharpGraphicsException("Unable to change TargetDetailLevel when object is already added to a scene!"); }
-                m_targetDetailLevel = value;
+                _targetDetailLevel = value;
             }
         }
 
         /// <summary>
         /// Does this object have a parent?
         /// </summary>
-        public bool HasParent => m_parent != null;
+        public bool HasParent => _parent != null;
 
         /// <summary>
         /// Gets the parent object.
         /// </summary>
-        public SceneObject Parent => m_parent;
+        public SceneObject Parent => _parent;
 
         /// <summary>
         /// Does this object have any child?
@@ -574,7 +574,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                var children = m_children;
+                var children = _children;
                 return children != null && children.Count > 0;
             }
         }
@@ -582,7 +582,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the total count of direct children of this object.
         /// </summary>
-        public int CountChildren => m_children.Count;
+        public int CountChildren => _children.Count;
 
         /// <summary>
         /// Is it possible to export this object?

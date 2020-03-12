@@ -38,20 +38,20 @@ namespace SeeingSharp.UwpSamples
 {
     public sealed partial class MainPage : Page
     {
-        private SampleBase m_actSample;
-        private SampleSettings m_actSampleSettings;
-        private SampleMetadata m_actSampleInfo;
-        private bool m_isChangingSample;
+        private SampleBase _actSample;
+        private SampleSettings _actSampleSettings;
+        private SampleMetadata _actSampleInfo;
+        private bool _isChangingSample;
 
-        private List<ChildRenderPage> m_childPages;
-        private object m_childPagesLock;
+        private List<ChildRenderPage> _childPages;
+        private object _childPagesLock;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            m_childPages = new List<ChildRenderPage>();
-            m_childPagesLock = new object();
+            _childPages = new List<ChildRenderPage>();
+            _childPagesLock = new object();
 
             // Manipulate titlebar
             //  see https://social.msdn.microsoft.com/Forums/windows/en-US/08462adc-a7ba-459f-9d2b-32a14c7a7de1/uwp-how-to-change-the-text-of-the-application-title-bar?forum=wpdevelop
@@ -69,15 +69,15 @@ namespace SeeingSharp.UwpSamples
         private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
             if (DesignMode.DesignModeEnabled) { return; }
-            if (m_isChangingSample) { return; }
+            if (_isChangingSample) { return; }
 
-            m_isChangingSample = true;
+            _isChangingSample = true;
             try
             {
-                if (m_actSampleInfo == sampleInfo) { return; }
+                if (_actSampleInfo == sampleInfo) { return; }
 
                 // Clear previous sample
-                if (m_actSampleInfo != null)
+                if (_actSampleInfo != null)
                 {
                     await CtrlSwapChain.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
                     {
@@ -85,22 +85,22 @@ namespace SeeingSharp.UwpSamples
                     });
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
 
-                    foreach (var actChildWindow in m_childPages)
+                    foreach (var actChildWindow in _childPages)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    m_actSample.OnClosed();
+                    _actSample.OnClosed();
                 }
-                if (m_actSampleSettings != null)
+                if (_actSampleSettings != null)
                 {
-                    m_actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                    _actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
                 }
 
                 // Reset members
-                m_actSample = null;
-                m_actSampleSettings = null;
-                m_actSampleInfo = null;
+                _actSample = null;
+                _actSampleSettings = null;
+                _actSampleInfo = null;
 
                 // Apply new sample
                 if (sampleInfo != null)
@@ -110,18 +110,18 @@ namespace SeeingSharp.UwpSamples
                     await sampleObject.OnInitRenderingWindowAsync(CtrlSwapChain.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
                     
-                    foreach (var actChildWindow in m_childPages)
+                    foreach (var actChildWindow in _childPages)
                     {
                         await actChildWindow.SetRenderingDataAsync(sampleObject);
                     }
 
-                    m_actSample = sampleObject;
-                    m_actSampleSettings = sampleSettings;
-                    m_actSampleInfo = sampleInfo;
+                    _actSample = sampleObject;
+                    _actSampleSettings = sampleSettings;
+                    _actSampleInfo = sampleInfo;
 
-                    if (m_actSampleSettings != null)
+                    if (_actSampleSettings != null)
                     {
-                        m_actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
+                        _actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
                     }
 
                     await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
@@ -135,14 +135,14 @@ namespace SeeingSharp.UwpSamples
             }
             finally
             {
-                m_isChangingSample = false;
+                _isChangingSample = false;
             }
         }
 
         private async void OnSampleSettings_RecreateRequest(object sender, System.EventArgs e)
         {
-            var sample = m_actSample;
-            var sampleSettings = m_actSampleSettings;
+            var sample = _actSample;
+            var sampleSettings = _actSampleSettings;
             if (sample == null)
             {
                 return;
@@ -171,7 +171,7 @@ namespace SeeingSharp.UwpSamples
             CtrlSwapChain.RenderLoop.Configuration.AlphaEnabledSwapChain = true;
             CtrlSwapChain.RenderLoop.PrepareRender += (innerSender, eArgs) =>
             {
-                var actSample = m_actSample;
+                var actSample = _actSample;
                 actSample?.Update();
             };
         }
@@ -221,7 +221,7 @@ namespace SeeingSharp.UwpSamples
                         // Notify the host that the ChildRenderPage was removed
                         await hostDispatcher.RunAsync(
                             CoreDispatcherPriority.Normal,
-                            () => m_childPages.Remove(childPage));
+                            () => _childPages.Remove(childPage));
 
                         // Wait some loop passes to ensure that all references to this additional view are cleared
                         await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
@@ -241,11 +241,11 @@ namespace SeeingSharp.UwpSamples
             if (viewShown)
             {
                 // Register the child page
-                m_childPages.Add(childPage);
+                _childPages.Add(childPage);
 
                 // We can call this one in the current thread
                 // Should be thread save
-                await childPage.SetRenderingDataAsync(m_actSample);
+                await childPage.SetRenderingDataAsync(_actSample);
             }
         }
     }

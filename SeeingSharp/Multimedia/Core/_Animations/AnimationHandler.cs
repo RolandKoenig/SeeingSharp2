@@ -47,20 +47,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Starts building an animation sequence for the current target object.
         /// </summary>
-        internal IAnimationSequenceBuilder<TargetObject> BuildAnimationSequence<TargetObject>()
-            where TargetObject : class, IAnimatableObject
+        internal IAnimationSequenceBuilder<TTargetObject> BuildAnimationSequence<TTargetObject>()
+            where TTargetObject : class, IAnimatableObject
         {
-            return new AnimationSequenceBuilder<TargetObject>(this);
+            return new AnimationSequenceBuilder<TTargetObject>(this);
         }
 
         /// <summary>
         /// Starts building an animation sequence for the current target object.
         /// </summary>
         /// <param name="animatedObject">The target object which is to be animated.</param>
-        internal IAnimationSequenceBuilder<TargetObject> BuildAnimationSequence<TargetObject>(TargetObject animatedObject)
-            where TargetObject : class
+        internal IAnimationSequenceBuilder<TTargetObject> BuildAnimationSequence<TTargetObject>(TTargetObject animatedObject)
+            where TTargetObject : class
         {
-            return new AnimationSequenceBuilder<TargetObject>(this, animatedObject);
+            return new AnimationSequenceBuilder<TTargetObject>(this, animatedObject);
         }
 
         /// <summary>

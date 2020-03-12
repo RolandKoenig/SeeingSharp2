@@ -28,8 +28,8 @@ namespace SeeingSharp
 {
     public class Polygon
     {
-        private Vector3[] m_vertices;
-        private Lazy<Vector3> m_normal;
+        private Vector3[] _vertices;
+        private Lazy<Vector3> _normal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Polygon" /> class.
@@ -38,11 +38,11 @@ namespace SeeingSharp
         {
             if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
-            m_vertices = vertices;
-            this.Vertices = new ReadOnlyCollection<Vector3>(m_vertices);
+            _vertices = vertices;
+            this.Vertices = new ReadOnlyCollection<Vector3>(_vertices);
 
             //Define normal calculation method
-            m_normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(m_vertices[0], m_vertices[1], m_vertices[2]));
+            _normal = new Lazy<Vector3>(() => Vector3Ex.CalculateTriangleNormal(_vertices[0], _vertices[1], _vertices[2]));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace SeeingSharp
             // http://stackoverflow.com/questions/1023948/rotate-normal-vector-onto-axis-plane
 
             //Calculate transform matrix
-            var upVector = m_normal.Value;
+            var upVector = _normal.Value;
             var right = Vector3.Cross(
                 upVector, Math.Abs(upVector.X) > Math.Abs(upVector.Z) ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0));
             var backward = Vector3.Cross(right, upVector);
@@ -64,15 +64,15 @@ namespace SeeingSharp
                 backward.X, right.X, upVector.X, 0, backward.Y, right.Y, upVector.Y, 0, backward.Z, right.Z, upVector.Z, 0, 0, 0, 0, 1);
 
             //Make first point origin
-            var offs = Vector3.Transform(m_vertices[0], m);
+            var offs = Vector3.Transform(_vertices[0], m);
             m.M41 = -offs.X;
             m.M42 = -offs.Y;
 
             //Calculate 2D surface
-            var resultVertices = new Vector2[m_vertices.Length];
-            for (var loopVertex = 0; loopVertex < m_vertices.Length; loopVertex++)
+            var resultVertices = new Vector2[_vertices.Length];
+            for (var loopVertex = 0; loopVertex < _vertices.Length; loopVertex++)
             {
-                var pp = Vector3.Transform(m_vertices[loopVertex], m);
+                var pp = Vector3.Transform(_vertices[loopVertex], m);
                 resultVertices[loopVertex] = new Vector2(pp.X, pp.Y);
             }
 
@@ -96,6 +96,6 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the normal of this polygon.
         /// </summary>
-        public Vector3 Normal => m_normal.Value;
+        public Vector3 Normal => _normal.Value;
     }
 }

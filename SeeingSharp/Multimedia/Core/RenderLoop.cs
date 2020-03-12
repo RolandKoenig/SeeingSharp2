@@ -46,62 +46,62 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderLoop : IDisposable
     {
         // Configuration values
-        private GraphicsViewConfiguration m_configuration;
-        private Camera3DBase m_camera;
+        private GraphicsViewConfiguration _configuration;
+        private Camera3DBase _camera;
 
         // Async actions
-        private ConcurrentQueue<Action> m_afterPresentActions;
-        private ConcurrentQueue<TaskCompletionSource<RenderPassDump>> m_dumpRequests;
+        private ConcurrentQueue<Action> _afterPresentActions;
+        private ConcurrentQueue<TaskCompletionSource<RenderPassDump>> _dumpRequests;
 
         // Target parameters for rendering
-        private EngineDevice m_targetDevice;
-        private Size2 m_targetSize;
-        private DpiScaling m_currentDpiScaling;
-        private Scene m_targetScene;
-        private bool m_viewRefreshForced;
-        private bool m_reregisterViewOnSceneForced;
+        private EngineDevice _targetDevice;
+        private Size2 _targetSize;
+        private DpiScaling _currentDpiScaling;
+        private Scene _targetScene;
+        private bool _viewRefreshForced;
+        private bool _reregisterViewOnSceneForced;
 
         // Callback methods for current host object
-        private IRenderLoopHost m_renderLoopHost;
+        private IRenderLoopHost _renderLoopHost;
 
         // Values needed for runtime
-        private bool m_loadCalled;
-        private bool m_lastRenderSuccessfully;
-        private bool m_nextRenderAllowed;
-        private int m_totalRenderCount;
-        private RenderState m_renderState;
-        private List<SeeingSharpVideoWriter> m_videoWriters;
-        private bool m_callPresentInUiThread;
+        private bool _loadCalled;
+        private bool _lastRenderSuccessfully;
+        private bool _nextRenderAllowed;
+        private int _totalRenderCount;
+        private RenderState _renderState;
+        private List<SeeingSharpVideoWriter> _videoWriters;
+        private bool _callPresentInUiThread;
 
         // Direct3D resources and other values gathered during graphics loading
-        private List<Custom2DDrawingLayer> m_2dDrawingLayers;
-        private DebugDrawingLayer m_debugDrawingLayer;
-        private EngineDevice m_currentDevice;
-        private Size2 m_currentViewSize;
+        private List<Custom2DDrawingLayer> _2dDrawingLayers;
+        private DebugDrawingLayer _debugDrawingLayer;
+        private EngineDevice _currentDevice;
+        private Size2 _currentViewSize;
 
-        private Scene m_currentScene;
-        private Direct2DOverlayRenderer m_d2dOverlay;
-        private D3D11.Texture2D m_renderTarget;
-        private D3D11.Texture2D m_renderTargetDepth;
-        private D3D11.RenderTargetView m_renderTargetView;
-        private D3D11.DepthStencilView m_renderTargetDepthView;
-        private SharpDX.Mathematics.Interop.RawViewportF m_viewport;
-        private int m_loadDeviceIndex;
+        private Scene _currentScene;
+        private Direct2DOverlayRenderer _d2dOverlay;
+        private D3D11.Texture2D _renderTarget;
+        private D3D11.Texture2D _renderTargetDepth;
+        private D3D11.RenderTargetView _renderTargetView;
+        private D3D11.DepthStencilView _renderTargetDepthView;
+        private SharpDX.Mathematics.Interop.RawViewportF _viewport;
+        private int _loadDeviceIndex;
 
         // Cached values
-        private Action m_cachedPrepareRenderOnGui;
-        private List<Action> m_cachedPrepareRenderContinuationActions;
-        private string m_cachedPerfRenderLoopRender;
-        private string m_cachedPerfRenderLoopRender2D;
-        private string m_cachedPerfRenderLoopPresent;
+        private Action _cachedPrepareRenderOnGui;
+        private List<Action> _cachedPrepareRenderContinuationActions;
+        private string _cachedPerfRenderLoopRender;
+        private string _cachedPerfRenderLoopRender2D;
+        private string _cachedPerfRenderLoopPresent;
 
         // Direct3D resources for rendertarget capturing
         // ----
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-        private D3D11.Texture2D m_copyHelperTextureStaging;
-        private D3D11.Texture2D m_copyHelperTextureStandard;
+        private D3D11.Texture2D _copyHelperTextureStaging;
+        private D3D11.Texture2D _copyHelperTextureStandard;
 
         public event EventHandler CurrentViewSizeChanged;
 
@@ -126,18 +126,18 @@ namespace SeeingSharp.Multimedia.Core
         {
             this.Internals = new RenderLoopInternals(this);
 
-            m_afterPresentActions = new ConcurrentQueue<Action>();
-            m_dumpRequests = new ConcurrentQueue<TaskCompletionSource<RenderPassDump>>();
-            m_cachedPrepareRenderContinuationActions = new List<Action>();
-            m_cachedPrepareRenderOnGui = this.PrepareRenderOnGui;
+            _afterPresentActions = new ConcurrentQueue<Action>();
+            _dumpRequests = new ConcurrentQueue<TaskCompletionSource<RenderPassDump>>();
+            _cachedPrepareRenderContinuationActions = new List<Action>();
+            _cachedPrepareRenderOnGui = this.PrepareRenderOnGui;
 
-            this.UISynchronizationContext = guiSyncContext;
+            this.UiSynchronizationContext = guiSyncContext;
 
             this.SceneComponents = new ObservableCollection<SceneComponentBase>();
             this.SceneComponents.CollectionChanged += this.OnSceneComponents_Changed;
 
             this.FiltersInternal = new List<SceneObjectFilter>();
-            m_2dDrawingLayers = new List<Custom2DDrawingLayer>();
+            _2dDrawingLayers = new List<Custom2DDrawingLayer>();
 
             // Load DebugDrawingLayer if debug mode is enabled
             if (!isDesignMode)
@@ -145,25 +145,25 @@ namespace SeeingSharp.Multimedia.Core
                 if (GraphicsCore.IsLoaded &&
                     GraphicsCore.Current.IsDebugEnabled)
                 {
-                    m_debugDrawingLayer = new DebugDrawingLayer();
+                    _debugDrawingLayer = new DebugDrawingLayer();
                 }
             }
 
             this.ViewInformation = new ViewInformation(this);
-            m_configuration = new GraphicsViewConfiguration();
+            _configuration = new GraphicsViewConfiguration();
 
-            m_videoWriters = new List<SeeingSharpVideoWriter>();
+            _videoWriters = new List<SeeingSharpVideoWriter>();
 
             // Assign all given actions
-            m_renderLoopHost = renderLoopHost;
+            _renderLoopHost = renderLoopHost;
 
             // Create default objects
             this.ClearColor = Color4.White;
 
             // Set initial target parameters
-            m_targetDevice = null;
-            m_targetSize = new Size2(0, 0);
-            m_loadDeviceIndex = -1;
+            _targetDevice = null;
+            _targetSize = new Size2(0, 0);
+            _loadDeviceIndex = -1;
 
             // Create default scene and camera
             this.Camera = new PerspectiveCamera3D();
@@ -182,7 +182,7 @@ namespace SeeingSharp.Multimedia.Core
         public Task<RenderPassDump> DumpRenderPassesAsync()
         {
             var taskSource = new TaskCompletionSource<RenderPassDump>();
-            m_dumpRequests.Enqueue(taskSource);
+            _dumpRequests.Enqueue(taskSource);
             return taskSource.Task;
         }
 
@@ -200,7 +200,7 @@ namespace SeeingSharp.Multimedia.Core
             if (width < SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
             if (height < SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
-            m_targetSize = new Size2(width, height);
+            _targetSize = new Size2(width, height);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace SeeingSharp.Multimedia.Core
             device.EnsureNotNull(nameof(device));
 
             // Only set state values here. All logic is triggered during render process
-            m_targetDevice = device;
+            _targetDevice = device;
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             scene.EnsureNotNull(nameof(scene));
 
-            m_targetScene = scene;
+            _targetScene = scene;
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ForceViewReload()
         {
-            m_configuration.ViewNeedsRefresh = true;
+            _configuration.ViewNeedsRefresh = true;
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="action">The action to be called.</param>
         public void EnqueueAfterPresentAction(Action action)
         {
-            m_afterPresentActions.Enqueue(action);
+            _afterPresentActions.Enqueue(action);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var result = new TaskCompletionSource<object>();
 
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 result.TrySetResult(null);
             });
@@ -292,18 +292,18 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="verticalRotation">The vertical rotation seen from the middle point of the scene.</param>
         public async Task MoveCameraToDefaultLocationAsync(float horizontalRotation, float verticalRotation)
         {
-            if (m_currentScene == null) { return; }
-            if (m_currentDevice == null) { return; }
+            if (_currentScene == null) { return; }
+            if (_currentDevice == null) { return; }
 
             var sceneBox = await this.CalculateSceneBoxAsync();
 
             if (sceneBox.IsEmpty()) { return; }
-            if (m_currentScene == null) { return; }
-            if (m_currentDevice == null) { return; }
+            if (_currentScene == null) { return; }
+            if (_currentDevice == null) { return; }
 
-            if (m_camera != null)
+            if (_camera != null)
             {
-                await m_currentScene.PerformBeforeUpdateAsync(() =>
+                await _currentScene.PerformBeforeUpdateAsync(() =>
                 {
                     var bottomCenter = sceneBox.GetBottomCenter();
                     var anyEdge = sceneBox.GetTopFrontMiddleCoordinate();
@@ -314,9 +314,9 @@ namespace SeeingSharp.Multimedia.Core
                         new Vector3(0f, 0f, -1f),
                         Matrix4x4.CreateFromYawPitchRoll(horizontalRotation, verticalRotation, 0f));
 
-                    m_camera.Position = bottomCenter + direction * (centerToEdgeDistance * 2f);
-                    m_camera.Target = bottomCenter;
-                    m_camera.UpdateCamera();
+                    _camera.Position = bottomCenter + direction * (centerToEdgeDistance * 2f);
+                    _camera.Target = bottomCenter;
+                    _camera.UpdateCamera();
                 });
             }
         }
@@ -328,12 +328,12 @@ namespace SeeingSharp.Multimedia.Core
         {
             var result = default(BoundingBox);
 
-            if (m_currentScene == null) { return result; }
-            if (m_currentDevice == null) { return result; }
+            if (_currentScene == null) { return result; }
+            if (_currentDevice == null) { return result; }
 
-            await m_currentScene.PerformBesideRenderingAsync(() =>
+            await _currentScene.PerformBesideRenderingAsync(() =>
             {
-                foreach (var actLayer in m_currentScene.Layers)
+                foreach (var actLayer in _currentScene.Layers)
                 {
                     foreach (var actSpacialObject in actLayer.SpacialObjects)
                     {
@@ -373,7 +373,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             var result = new TaskCompletionSource<object>();
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 try
                 {
@@ -386,7 +386,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Remote the VideoWriter from this RenderLoop
-                    m_videoWriters.Remove(videoWriter);
+                    _videoWriters.Remove(videoWriter);
                     videoWriter.AssociatedRenderLoop = null;
 
                     result.SetResult(null);
@@ -408,12 +408,12 @@ namespace SeeingSharp.Multimedia.Core
         {
             videoWriter.EnsureNotNull(nameof(videoWriter));
 
-            if (m_currentScene == null) { throw new SeeingSharpGraphicsException("No scene set to RenderLoop!"); }
-            if (m_currentDevice == null) { throw new SeeingSharpGraphicsException("No device associated to RenderLoop!"); }
+            if (_currentScene == null) { throw new SeeingSharpGraphicsException("No scene set to RenderLoop!"); }
+            if (_currentDevice == null) { throw new SeeingSharpGraphicsException("No device associated to RenderLoop!"); }
             if (videoWriter.AssociatedRenderLoop != null) { throw new SeeingSharpGraphicsException("Given VideoWriter is associated to another RenderLoop!"); }
 
             var result = new TaskCompletionSource<object>();
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 try
                 {
@@ -421,7 +421,7 @@ namespace SeeingSharp.Multimedia.Core
                     if (videoWriter.AssociatedRenderLoop != null) { throw new SeeingSharpGraphicsException("Given VideoWriter is associated to another RenderLoop!"); }
 
                     // Apply the VideoWriter to this RenderLoop
-                    m_videoWriters.Add(videoWriter);
+                    _videoWriters.Add(videoWriter);
                     videoWriter.AssociatedRenderLoop = this;
 
                     result.SetResult(null);
@@ -445,13 +445,13 @@ namespace SeeingSharp.Multimedia.Core
 
             var result = new TaskCompletionSource<object>();
 
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 try
                 {
-                    if (!m_2dDrawingLayers.Contains(drawingLayer))
+                    if (!_2dDrawingLayers.Contains(drawingLayer))
                     {
-                        m_2dDrawingLayers.Add(drawingLayer);
+                        _2dDrawingLayers.Add(drawingLayer);
 
                         result.SetResult(null);
                     }
@@ -472,11 +472,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             var result = new TaskCompletionSource<object>();
 
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 try
                 {
-                    m_2dDrawingLayers.Clear();
+                    _2dDrawingLayers.Clear();
                     result.SetResult(null);
                 }
                 catch (Exception ex)
@@ -498,11 +498,11 @@ namespace SeeingSharp.Multimedia.Core
 
             var result = new TaskCompletionSource<object>();
 
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
                 try
                 {
-                    m_2dDrawingLayers.Remove(drawingLayer);
+                    _2dDrawingLayers.Remove(drawingLayer);
                 }
                 catch (Exception ex)
                 {
@@ -522,18 +522,18 @@ namespace SeeingSharp.Multimedia.Core
         {
             List<SceneObject> result = null;
 
-            if (m_currentScene != null &&
-                m_camera != null)
+            if (_currentScene != null &&
+                _camera != null)
             {
-                var projectionMatrix = m_camera.Projection;
+                var projectionMatrix = _camera.Projection;
 
                 Vector3 pickingVector;
-                pickingVector.X = (2.0f * pixelLocation.X / m_currentViewSize.Width - 1) / projectionMatrix.M11;
-                pickingVector.Y = -(2.0f * pixelLocation.Y / m_currentViewSize.Height - 1) / projectionMatrix.M22;
+                pickingVector.X = (2.0f * pixelLocation.X / _currentViewSize.Width - 1) / projectionMatrix.M11;
+                pickingVector.Y = -(2.0f * pixelLocation.Y / _currentViewSize.Height - 1) / projectionMatrix.M22;
                 pickingVector.Z = 1f;
 
                 var worldMatrix = Matrix4x4.Identity;
-                var viewWorld = m_camera.View * worldMatrix;
+                var viewWorld = _camera.View * worldMatrix;
                 Matrix4x4.Invert(viewWorld, out var inversionViewWorld);
 
                 var rayDirection = Vector3.Normalize(new Vector3(
@@ -546,12 +546,12 @@ namespace SeeingSharp.Multimedia.Core
                     inversionViewWorld.M43);
 
                 // Pick objects async in update thread
-                await m_currentScene.PerformBesideRenderingAsync(() =>
+                await _currentScene.PerformBesideRenderingAsync(() =>
                 {
-                    if (m_currentScene != null && this.ViewInformation != null &&
-                        m_currentScene.IsViewRegistered(this.ViewInformation))
+                    if (_currentScene != null && this.ViewInformation != null &&
+                        _currentScene.IsViewRegistered(this.ViewInformation))
                     {
-                        result = m_currentScene.Pick(rayStart, rayDirection, this.ViewInformation, pickingOptions);
+                        result = _currentScene.Pick(rayStart, rayDirection, this.ViewInformation, pickingOptions);
                     }
                     else
                     {
@@ -573,13 +573,13 @@ namespace SeeingSharp.Multimedia.Core
 
             var result = new TaskCompletionSource<object>();
 
-            m_afterPresentActions.Enqueue(() =>
+            _afterPresentActions.Enqueue(() =>
             {
-                var deviceConfig = m_configuration.DeviceConfiguration;
+                var deviceConfig = _configuration.DeviceConfiguration;
 
-                m_configuration = newViewConfiguration;
-                m_configuration.DeviceConfiguration = deviceConfig;
-                m_configuration.ViewNeedsRefresh = true;
+                _configuration = newViewConfiguration;
+                _configuration.DeviceConfiguration = deviceConfig;
+                _configuration.ViewNeedsRefresh = true;
 
                 result.TrySetResult(null);
             });
@@ -592,7 +592,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ResetRenderCounter()
         {
-            m_totalRenderCount = 0;
+            _totalRenderCount = 0;
         }
 
         /// <summary>
@@ -607,7 +607,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
 
-                if (m_renderLoopHost is IInputEnabledView inputInterface)
+                if (_renderLoopHost is IInputEnabledView inputInterface)
                 {
                     GraphicsCore.Current.InputGatherer.DeregisterView(inputInterface);
                 }
@@ -626,7 +626,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 GraphicsCore.Current.MainLoop.RegisterRenderLoop(this);
 
-                if (m_renderLoopHost is IInputEnabledView inputInterface)
+                if (_renderLoopHost is IInputEnabledView inputInterface)
                 {
                     GraphicsCore.Current.InputGatherer.RegisterView(inputInterface);
                 }
@@ -643,7 +643,7 @@ namespace SeeingSharp.Multimedia.Core
             // Deregister this Renderloop object
             GraphicsCore.Current.MainLoop.DeregisterRenderLoop(this);
 
-            SeeingSharpUtil.SafeDispose(ref m_debugDrawingLayer);
+            SeeingSharpUtil.SafeDispose(ref _debugDrawingLayer);
 
             // Assign new dummy camera
             //  (this call detaches the previous camera from this renderloop)
@@ -655,7 +655,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void ForceViewRefresh()
         {
-            m_viewRefreshForced = true;
+            _viewRefreshForced = true;
         }
 
         /// <summary>
@@ -664,7 +664,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal async Task UnloadViewResourcesAsync()
         {
-            await this.UISynchronizationContext.PostAsync(this.UnloadViewResources)
+            await this.UiSynchronizationContext.PostAsync(this.UnloadViewResources)
                 .ConfigureAwait(false);
         }
 
@@ -673,27 +673,27 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadViewResources()
         {
-            m_lastRenderSuccessfully = false;
+            _lastRenderSuccessfully = false;
 
-            if (m_currentDevice == null) { return; }
+            if (_currentDevice == null) { return; }
 
             // Dispose resources of parent object first
-            m_renderLoopHost.OnRenderLoop_DisposeViewResources(m_currentDevice);
+            _renderLoopHost.OnRenderLoop_DisposeViewResources(_currentDevice);
 
             // Free direct2d render target (if created)
-            SeeingSharpUtil.SafeDispose(ref m_d2dOverlay);
+            SeeingSharpUtil.SafeDispose(ref _d2dOverlay);
 
             // Set values to initial
-            m_renderTarget = null;
-            m_renderTargetView = null;
-            m_renderTargetDepth = null;
-            m_renderTargetDepthView = null;
-            m_viewport = new SharpDX.Mathematics.Interop.RawViewportF();
-            m_currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
+            _renderTarget = null;
+            _renderTargetView = null;
+            _renderTargetDepth = null;
+            _renderTargetDepthView = null;
+            _viewport = new SharpDX.Mathematics.Interop.RawViewportF();
+            _currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
+            SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStaging);
+            SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStandard);
         }
 
         /// <summary>
@@ -711,25 +711,25 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal async Task<IReadOnlyList<Action>> PrepareRenderAsync()
         {
-            m_cachedPrepareRenderContinuationActions.Clear();
-            if (this.DiscardRendering) { return m_cachedPrepareRenderContinuationActions; }
+            _cachedPrepareRenderContinuationActions.Clear();
+            if (this.DiscardRendering) { return _cachedPrepareRenderContinuationActions; }
 
-            var writeVideoFrames = m_lastRenderSuccessfully;
+            var writeVideoFrames = _lastRenderSuccessfully;
 
             // Call present from ThreadPool (if configured)
-            if ((!m_callPresentInUiThread) &&
-                (m_currentDevice != null) &&
-                (m_loadDeviceIndex == m_currentDevice.LoadDeviceIndex))
+            if ((!_callPresentInUiThread) &&
+                (_currentDevice != null) &&
+                (_loadDeviceIndex == _currentDevice.LoadDeviceIndex))
             {
                 if (!this.DiscardPresent)
                 {
                     this.PresentFrameInternal();
                 }
-                m_lastRenderSuccessfully = false;
+                _lastRenderSuccessfully = false;
             }
 
             // Trigger prepare rendering on GUI thread
-            await this.UISynchronizationContext.PostAsync(m_cachedPrepareRenderOnGui)
+            await this.UiSynchronizationContext.PostAsync(_cachedPrepareRenderOnGui)
                 .ConfigureAwait(false);
 
             // Draw all frames to registered VideoWriters
@@ -738,7 +738,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.DrawVideoFrames();
             }
 
-            return m_cachedPrepareRenderContinuationActions;
+            return _cachedPrepareRenderContinuationActions;
         }
 
         /// <summary>
@@ -752,15 +752,15 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Call present from UI thread (if configured)
-            if (m_callPresentInUiThread)
+            if (_callPresentInUiThread)
             {
                 if ((!this.DiscardPresent) &&
-                    (m_currentDevice != null) &&
-                    (m_loadDeviceIndex == m_currentDevice.LoadDeviceIndex))
+                    (_currentDevice != null) &&
+                    (_loadDeviceIndex == _currentDevice.LoadDeviceIndex))
                 {
                     this.PresentFrameInternal();
                 }
-                m_lastRenderSuccessfully = false;
+                _lastRenderSuccessfully = false;
             }
 
             if (this.DiscardRendering)
@@ -773,33 +773,33 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Update view frustum
-            this.ViewInformation.UpdateFrustum(m_camera.ViewProjection);
+            this.ViewInformation.UpdateFrustum(_camera.ViewProjection);
 
             // Allow next rendering by default
-            m_nextRenderAllowed = true;
+            _nextRenderAllowed = true;
 
             // Need to update view parameters?              (=> Later: Render Thread)
-            var viewSizeChanged = m_targetSize != m_currentViewSize;
-            if (m_renderTargetView == null ||
+            var viewSizeChanged = _targetSize != _currentViewSize;
+            if (_renderTargetView == null ||
                 viewSizeChanged ||
-                m_targetDevice != null && m_targetDevice != m_currentDevice ||
-                m_configuration.ViewNeedsRefresh ||
-                (m_loadDeviceIndex != m_currentDevice?.LoadDeviceIndex) ||
-                m_viewRefreshForced || m_reregisterViewOnSceneForced)
+                _targetDevice != null && _targetDevice != _currentDevice ||
+                _configuration.ViewNeedsRefresh ||
+                (_loadDeviceIndex != _currentDevice?.LoadDeviceIndex) ||
+                _viewRefreshForced || _reregisterViewOnSceneForced)
             {
-                m_viewRefreshForced = false;
+                _viewRefreshForced = false;
 
                 var refreshViewContinuationActions = new List<Action>(2);
                 try
                 {
                     // Trigger deregister on scene if needed
-                    var reregisterOnScene = (m_targetDevice != null) &&
-                                            (m_targetDevice != m_currentDevice) &&
-                                            (m_currentScene != null) ||
-                                            m_reregisterViewOnSceneForced;
+                    var reregisterOnScene = (_targetDevice != null) &&
+                                            (_targetDevice != _currentDevice) &&
+                                            (_currentScene != null) ||
+                                            _reregisterViewOnSceneForced;
                     if (reregisterOnScene)
                     {
-                        var localScene = m_currentScene;
+                        var localScene = _currentScene;
                         refreshViewContinuationActions.Add(() => localScene?.DeregisterView(this.ViewInformation));
                     }
 
@@ -807,10 +807,10 @@ namespace SeeingSharp.Multimedia.Core
                     this.UnloadViewResources();
 
                     // Update device ob object (size is updated in RefreshViewResources)
-                    if (m_targetDevice != null)
+                    if (_targetDevice != null)
                     {
-                        m_currentDevice = m_targetDevice;
-                        m_targetDevice = null;
+                        _currentDevice = _targetDevice;
+                        _targetDevice = null;
 
                         this.DeviceChanged.Raise(this, EventArgs.Empty);
                     }
@@ -826,10 +826,10 @@ namespace SeeingSharp.Multimedia.Core
                             dxException.ResultCode == ResultCode.DeviceReset)
                         {
                             // Mark the device as lost
-                            m_currentDevice.IsLost = true;
-                            m_viewRefreshForced = true;
-                            m_nextRenderAllowed = false;
-                            m_reregisterViewOnSceneForced = true;
+                            _currentDevice.IsLost = true;
+                            _viewRefreshForced = true;
+                            _nextRenderAllowed = false;
+                            _reregisterViewOnSceneForced = true;
                             return;
                         }
                         else
@@ -841,9 +841,9 @@ namespace SeeingSharp.Multimedia.Core
                     // Trigger reregister on scene if needed
                     if (reregisterOnScene)
                     {
-                        m_reregisterViewOnSceneForced = false;
+                        _reregisterViewOnSceneForced = false;
 
-                        var localScene = m_currentScene;
+                        var localScene = _currentScene;
                         refreshViewContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
                     }
 
@@ -854,48 +854,48 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    m_nextRenderAllowed = false;
+                    _nextRenderAllowed = false;
 
-                    throw new SeeingSharpGraphicsException("Unable to refresh view on device " + m_currentDevice + "!",
+                    throw new SeeingSharpGraphicsException("Unable to refresh view on device " + _currentDevice + "!",
                         ex);
                 }
 
-                if (m_nextRenderAllowed)
+                if (_nextRenderAllowed)
                 {
-                    m_cachedPerfRenderLoopRender2D = string.Format(
+                    _cachedPerfRenderLoopRender2D = string.Format(
                         SeeingSharpConstants.PERF_RENDERLOOP_RENDER_2D,
-                        (m_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
-                    m_cachedPerfRenderLoopRender = string.Format(
+                        (_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
+                    _cachedPerfRenderLoopRender = string.Format(
                         SeeingSharpConstants.PERF_RENDERLOOP_RENDER,
-                        (m_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
-                    m_cachedPerfRenderLoopPresent = string.Format(
+                        (_currentDevice.DeviceIndex).ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
+                    _cachedPerfRenderLoopPresent = string.Format(
                         SeeingSharpConstants.PERF_RENDERLOOP_PRESENT,
-                        m_currentDevice.DeviceIndex.ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
+                        _currentDevice.DeviceIndex.ToString(), (this.ViewInformation.ViewIndex + 1).ToString());
                 }
 
-                m_cachedPrepareRenderContinuationActions.AddRange(refreshViewContinuationActions);
+                _cachedPrepareRenderContinuationActions.AddRange(refreshViewContinuationActions);
             }
 
             // Check needed resources
-            if (m_currentDevice == null ||
-                m_renderTargetView == null ||
-                m_renderTargetDepthView == null)
+            if (_currentDevice == null ||
+                _renderTargetView == null ||
+                _renderTargetDepthView == null)
             {
-                m_nextRenderAllowed = false;
+                _nextRenderAllowed = false;
                 return;
             }
 
             // Handle changed scene
-            if (m_targetScene != null &&
-                m_currentScene != m_targetScene)
+            if (_targetScene != null &&
+                _currentScene != _targetScene)
             {
                 try
                 {
                     // Trigger deregister on the current scene
-                    if (m_currentScene != null)
+                    if (_currentScene != null)
                     {
-                        var localScene = m_currentScene;
-                        m_cachedPrepareRenderContinuationActions.Add(() =>
+                        var localScene = _currentScene;
+                        _cachedPrepareRenderContinuationActions.Add(() =>
                             localScene.DeregisterView(this.ViewInformation));
 
                         foreach (var actComponent in this.SceneComponents)
@@ -905,14 +905,14 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Change scene property
-                    m_currentScene = m_targetScene;
-                    m_targetScene = null;
+                    _currentScene = _targetScene;
+                    _targetScene = null;
 
                     // Trigger reregister on the new scene
-                    if (m_currentScene != null)
+                    if (_currentScene != null)
                     {
-                        var localScene = m_currentScene;
-                        m_cachedPrepareRenderContinuationActions.Add(
+                        var localScene = _currentScene;
+                        _cachedPrepareRenderContinuationActions.Add(
                             () => localScene.RegisterView(this.ViewInformation));
 
                         for (var loop = 0; loop < this.SceneComponents.Count; loop++)
@@ -923,41 +923,41 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    m_nextRenderAllowed = false;
+                    _nextRenderAllowed = false;
 
                     throw new SeeingSharpGraphicsException("Unable to change the scene!", ex);
                 }
             }
             // Ensure that this loop is registered on the current view
-            else if (m_currentScene != null &&
-                     !m_currentScene.IsViewRegistered(this.ViewInformation))
+            else if (_currentScene != null &&
+                     !_currentScene.IsViewRegistered(this.ViewInformation))
             {
-                var localScene = m_currentScene;
-                m_cachedPrepareRenderContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
+                var localScene = _currentScene;
+                _cachedPrepareRenderContinuationActions.Add(() => localScene.RegisterView(this.ViewInformation));
             }
 
             // Check needed resources
-            if (m_currentScene == null)
+            if (_currentScene == null)
             {
-                m_nextRenderAllowed = false;
+                _nextRenderAllowed = false;
                 return;
             }
 
             try
             {
                 // Check here whether we can render or not
-                if (!m_renderLoopHost.OnRenderLoop_CheckCanRender(m_currentDevice))
+                if (!_renderLoopHost.OnRenderLoop_CheckCanRender(_currentDevice))
                 {
-                    m_nextRenderAllowed = false;
+                    _nextRenderAllowed = false;
                     return;
                 }
 
                 // Perform some preparation for rendering
-                m_renderLoopHost.OnRenderLoop_PrepareRendering(m_currentDevice);
+                _renderLoopHost.OnRenderLoop_PrepareRendering(_currentDevice);
             }
             catch (Exception ex)
             {
-                m_nextRenderAllowed = false;
+                _nextRenderAllowed = false;
                 throw new SeeingSharpGraphicsException("Unable to prepare rendering", ex);
             }
 
@@ -992,37 +992,37 @@ namespace SeeingSharp.Multimedia.Core
         internal void DrawVideoFrames()
         {
             // Write current frame if we have an associated video writer
-            if (m_videoWriters.Count > 0)
+            if (_videoWriters.Count > 0)
             {
-                using (var texUploader = TextureUploader.ConstructUsingPropertiesFromTexture(m_currentDevice, m_renderTarget))
-                using (var mappedTexture = new MemoryMappedTexture<int>(m_currentViewSize))
+                using (var texUploader = TextureUploader.ConstructUsingPropertiesFromTexture(_currentDevice, _renderTarget))
+                using (var mappedTexture = new MemoryMappedTexture<int>(_currentViewSize))
                 {
                     // Upload texture
-                    texUploader.UploadToMemoryMappedTexture(m_renderTarget, mappedTexture);
+                    texUploader.UploadToMemoryMappedTexture(_renderTarget, mappedTexture);
 
                     // Render the texture to all video writers
-                    Parallel.For(0, m_videoWriters.Count, actIndex =>
+                    Parallel.For(0, _videoWriters.Count, actIndex =>
                     {
-                        var actVideoWriter = m_videoWriters[actIndex];
+                        var actVideoWriter = _videoWriters[actIndex];
 
                         // Start video rendering if not done so before
                         if (!actVideoWriter.HasStarted)
                         {
-                            actVideoWriter.StartRendering(m_currentViewSize);
+                            actVideoWriter.StartRendering(_currentViewSize);
                         }
 
                         // Render current frame
                         if (actVideoWriter.HasStarted)
                         {
-                            actVideoWriter.DrawFrame(m_currentDevice, mappedTexture);
+                            actVideoWriter.DrawFrame(_currentDevice, mappedTexture);
                         }
                     });
                 }
 
                 // Check for occurred errors (Cancel writing if there was any)
-                for (var loop = 0; loop < m_videoWriters.Count; loop++)
+                for (var loop = 0; loop < _videoWriters.Count; loop++)
                 {
-                    var actWriter = m_videoWriters[loop];
+                    var actWriter = _videoWriters[loop];
 
                     if (actWriter.LastDrawException != null ||
                         actWriter.LastStartException != null ||
@@ -1032,7 +1032,7 @@ namespace SeeingSharp.Multimedia.Core
                         actWriter.FinishRendering();
 
                         // Remote the VideoWriter from this RenderLoop
-                        m_videoWriters.RemoveAt(loop);
+                        _videoWriters.RemoveAt(loop);
                         actWriter.AssociatedRenderLoop = null;
                         loop--;
                     }
@@ -1046,87 +1046,87 @@ namespace SeeingSharp.Multimedia.Core
         internal void Render()
         {
             if (this.DiscardRendering) { return; }
-            if (!m_nextRenderAllowed) { return; }
-            if (m_currentDevice.IsLost) { return; }
-            m_nextRenderAllowed = false;
+            if (!_nextRenderAllowed) { return; }
+            if (_currentDevice.IsLost) { return; }
+            _nextRenderAllowed = false;
 
-            var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(m_cachedPerfRenderLoopRender);
+            var renderTimeMeasurement = GraphicsCore.Current.BeginMeasureActivityDuration(_cachedPerfRenderLoopRender);
             try
             {
                 // Handle all resources within the scene
-                if ((m_currentScene != null) &&
-                    (m_camera != null) &&
-                    (m_currentScene.IsViewRegistered(this.ViewInformation)))
+                if ((_currentScene != null) &&
+                    (_camera != null) &&
+                    (_currentScene.IsViewRegistered(this.ViewInformation)))
                 {
                     // Renders current scene on this view
-                    m_currentScene.HandleRenderResources(m_renderState);
+                    _currentScene.HandleRenderResources(_renderState);
                 }
 
                 // Cancel here if a device lost occurred
-                if (m_currentDevice.IsLost)
+                if (_currentDevice.IsLost)
                 {
                     return;
                 }
 
                 // Update render state
-                m_renderState.Reset(
-                    new RenderTargets(m_renderTargetView, m_renderTargetDepthView),
-                    m_viewport, m_camera, this.ViewInformation);
-                m_renderState.ApplyMaterial(null);
+                _renderState.Reset(
+                    new RenderTargets(_renderTargetView, _renderTargetDepthView),
+                    _viewport, _camera, this.ViewInformation);
+                _renderState.ApplyMaterial(null);
 
                 // Handle render pass dumps
-                m_dumpRequests.TryDequeue(out var actRenderPassDumpTaskSource);
+                _dumpRequests.TryDequeue(out var actRenderPassDumpTaskSource);
                 RenderPassDump actRenderPassDump = null;
                 if (actRenderPassDumpTaskSource != null)
                 {
-                    actRenderPassDump = new RenderPassDump(m_currentDevice, m_currentViewSize, true);
-                    m_renderState.StartDump(actRenderPassDump);
+                    actRenderPassDump = new RenderPassDump(_currentDevice, _currentViewSize, true);
+                    _renderState.StartDump(actRenderPassDump);
                 }
 
                 try
                 {
                     // Paint using Direct3D
-                    m_currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(m_renderTargetView,
+                    _currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(_renderTargetView,
                         SdxMathHelper.RawFromColor4(this.ClearColor));
-                    m_currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(m_renderTargetDepthView,
+                    _currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(_renderTargetDepthView,
                         D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil, 1f, 0);
 
                     // Render currently configured scene
-                    if (m_currentScene != null &&
-                        m_camera != null &&
-                        m_currentScene.IsViewRegistered(this.ViewInformation))
+                    if (_currentScene != null &&
+                        _camera != null &&
+                        _currentScene.IsViewRegistered(this.ViewInformation))
                     {
                         // Renders current scene on this view
-                        m_currentScene.Render(m_renderState);
+                        _currentScene.Render(_renderState);
                     }
 
                     // Clear current state after rendering
-                    m_renderState.ClearState();
+                    _renderState.ClearState();
 
-                    if (m_totalRenderCount < int.MaxValue) { m_totalRenderCount++; }
+                    if (_totalRenderCount < int.MaxValue) { _totalRenderCount++; }
 
                     // Render 2D overlay if possible (may be not available on some older OS or older graphics cards)
-                    if (m_d2dOverlay != null &&
-                        m_d2dOverlay.IsLoaded)
+                    if (_d2dOverlay != null &&
+                        _d2dOverlay.IsLoaded)
                     {
                         var d2dOverlayTime =
                             GraphicsCore.Current.PerformanceAnalyzer.BeginMeasureActivityDuration(
-                                m_cachedPerfRenderLoopRender2D);
-                        m_d2dOverlay.BeginDraw();
+                                _cachedPerfRenderLoopRender2D);
+                        _d2dOverlay.BeginDraw();
                         try
                         {
-                            m_renderState.RenderTarget2D = m_d2dOverlay.RenderTarget2D;
-                            m_renderState.Graphics2D = m_d2dOverlay.Graphics;
+                            _renderState.RenderTarget2D = _d2dOverlay.RenderTarget2D;
+                            _renderState.Graphics2D = _d2dOverlay.Graphics;
 
                             // Render scene contents
-                            m_currentScene?.Render2DOverlay(m_renderState);
+                            _currentScene?.Render2DOverlay(_renderState);
 
                             // Perform rendering of custom 2D drawing layers
-                            for (var loop = 0; loop < m_2dDrawingLayers.Count; loop++)
+                            for (var loop = 0; loop < _2dDrawingLayers.Count; loop++)
                             {
                                 try
                                 {
-                                    m_2dDrawingLayers[loop].Draw2DInternal(m_d2dOverlay.Graphics);
+                                    _2dDrawingLayers[loop].Draw2DInternal(_d2dOverlay.Graphics);
                                 }
                                 catch (Exception ex)
                                 {
@@ -1137,25 +1137,25 @@ namespace SeeingSharp.Multimedia.Core
                             }
 
                             // Draw debug layer if created
-                            m_debugDrawingLayer?.Draw2DInternal(m_d2dOverlay.Graphics);
+                            _debugDrawingLayer?.Draw2DInternal(_d2dOverlay.Graphics);
                         }
                         finally
                         {
-                            m_renderState.RenderTarget2D = null;
-                            m_renderState.Graphics2D = null;
+                            _renderState.RenderTarget2D = null;
+                            _renderState.Graphics2D = null;
 
                             d2dOverlayTime.Dispose();
 
                             try
                             {
-                                m_d2dOverlay.EndDraw();
+                                _d2dOverlay.EndDraw();
                             }
                             catch (SharpDX.SharpDXException dxException)
                             {
                                 if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                                 {
                                     // Mark the device as lost
-                                    m_currentDevice.IsLost = true;
+                                    _currentDevice.IsLost = true;
                                 }
                                 else
                                 {
@@ -1166,16 +1166,16 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Send all draw calls to the device and wait until finished
-                    m_currentDevice.DeviceImmediateContextD3D11.Flush();
+                    _currentDevice.DeviceImmediateContextD3D11.Flush();
 
                     // Update flag indicating that last render was successful
-                    m_lastRenderSuccessfully = true;
+                    _lastRenderSuccessfully = true;
                 }
                 finally
                 {
-                    if (m_renderState.IsWritingRenderPassDump)
+                    if (_renderState.IsWritingRenderPassDump)
                     {
-                        m_renderState.StopDump();
+                        _renderState.StopDump();
                         actRenderPassDumpTaskSource?.TrySetResult(actRenderPassDump);
                     }
                 }
@@ -1191,55 +1191,55 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void RefreshViewResources()
         {
-            if (m_currentDevice == null) { return; }
+            if (_currentDevice == null) { return; }
 
             // Unload current view resources first
             this.UnloadViewResources();
 
             // Return here if the current device is marked as lost
-            if (m_currentDevice.IsLost) { return; }
+            if (_currentDevice.IsLost) { return; }
 
             // Initialize view configuration on the first load
-            if (!m_loadCalled)
+            if (!_loadCalled)
             {
                 GraphicsCore.Current.InitializeViewConfiguration(this, this.Configuration);
-                m_loadCalled = true;
+                _loadCalled = true;
             }
 
             // Recreate view resources
-            var generatedViewResources = m_renderLoopHost.OnRenderLoop_CreateViewResources(m_currentDevice);
+            var generatedViewResources = _renderLoopHost.OnRenderLoop_CreateViewResources(_currentDevice);
             if (generatedViewResources == null) { return; }
-            m_renderTarget = generatedViewResources.Item1;
-            m_renderTargetView = generatedViewResources.Item2;
-            m_renderTargetDepth = generatedViewResources.Item3;
-            m_renderTargetDepthView = generatedViewResources.Item4;
-            m_viewport = generatedViewResources.Item5;
-            m_currentViewSize = generatedViewResources.Item6;
-            m_targetSize = m_currentViewSize;
-            m_currentDpiScaling = generatedViewResources.Item7;
+            _renderTarget = generatedViewResources.Item1;
+            _renderTargetView = generatedViewResources.Item2;
+            _renderTargetDepth = generatedViewResources.Item3;
+            _renderTargetDepthView = generatedViewResources.Item4;
+            _viewport = generatedViewResources.Item5;
+            _currentViewSize = generatedViewResources.Item6;
+            _targetSize = _currentViewSize;
+            _currentDpiScaling = generatedViewResources.Item7;
 
-            m_loadDeviceIndex = m_currentDevice.LoadDeviceIndex;
+            _loadDeviceIndex = _currentDevice.LoadDeviceIndex;
 
             // Update view size on camera
-            m_camera?.SetScreenSize(m_currentViewSize.Width, m_currentViewSize.Height);
+            _camera?.SetScreenSize(_currentViewSize.Width, _currentViewSize.Height);
 
-            m_configuration.ViewNeedsRefresh = false;
+            _configuration.ViewNeedsRefresh = false;
 
             // Try to create a Direct2D overlay
-            m_d2dOverlay = new Direct2DOverlayRenderer(
-                m_currentDevice,
-                m_renderTarget,
-                m_currentViewSize.Width, m_currentViewSize.Height,
-                m_currentDpiScaling);
+            _d2dOverlay = new Direct2DOverlayRenderer(
+                _currentDevice,
+                _renderTarget,
+                _currentViewSize.Width, _currentViewSize.Height,
+                _currentDpiScaling);
 
             // Create or update current renderstate
-            if (m_renderState == null ||
-                m_renderState.Device != m_currentDevice)
+            if (_renderState == null ||
+                _renderState.Device != _currentDevice)
             {
-                m_renderState = new RenderState(
-                    m_currentDevice,
-                    new RenderTargets(m_renderTargetView, m_renderTargetDepthView),
-                    m_viewport, m_camera, this.ViewInformation);
+                _renderState = new RenderState(
+                    _currentDevice,
+                    new RenderTargets(_renderTargetView, _renderTargetDepthView),
+                    _viewport, _camera, this.ViewInformation);
             }
         }
 
@@ -1251,21 +1251,21 @@ namespace SeeingSharp.Multimedia.Core
             // Post last frame to the screen if rendering was successful.
             //  For now: Do this in render thread. This should be possible
             //  see: http://msdn.microsoft.com/en-us/library/windows/desktop/bb205075(v=vs.85).aspx#Multithread_Considerations
-            if (m_lastRenderSuccessfully)
+            if (_lastRenderSuccessfully)
             {
                 try
                 {
                     // Presents all contents on the screen
-                    using (GraphicsCore.Current.BeginMeasureActivityDuration(m_cachedPerfRenderLoopPresent))
+                    using (GraphicsCore.Current.BeginMeasureActivityDuration(_cachedPerfRenderLoopPresent))
                     {
-                        m_renderLoopHost.OnRenderLoop_Present(m_currentDevice);
+                        _renderLoopHost.OnRenderLoop_Present(_currentDevice);
                     }
 
                     // Execute all deferred actions to be called after present
-                    var prevCount = m_afterPresentActions.Count;
+                    var prevCount = _afterPresentActions.Count;
                     var currentIndex = 0;
                     while ((currentIndex < prevCount) &&
-                           (m_afterPresentActions.TryDequeue(out var actAction)))
+                           (_afterPresentActions.TryDequeue(out var actAction)))
                     {
                         actAction();
 
@@ -1273,7 +1273,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Finish rendering now
-                    m_renderLoopHost.OnRenderLoop_AfterRendering(m_currentDevice);
+                    _renderLoopHost.OnRenderLoop_AfterRendering(_currentDevice);
                 }
                 catch (SharpDX.SharpDXException dxException)
                 {
@@ -1281,7 +1281,7 @@ namespace SeeingSharp.Multimedia.Core
                         dxException.ResultCode == ResultCode.DeviceReset)
                     {
                         // Mark the device as lost
-                        m_currentDevice.IsLost = true;
+                        _currentDevice.IsLost = true;
                     }
                     else
                     {
@@ -1290,7 +1290,7 @@ namespace SeeingSharp.Multimedia.Core
                 }
                 catch (Exception ex)
                 {
-                    throw new SeeingSharpGraphicsException("Unable to present a view with device " + m_currentDevice + "!", ex);
+                    throw new SeeingSharpGraphicsException("Unable to present a view with device " + _currentDevice + "!", ex);
                 }
             }
         }
@@ -1300,7 +1300,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void CleanSceneComponentList()
         {
-            if (m_currentScene != null)
+            if (_currentScene != null)
             {
                 throw new SeeingSharpException("Internal error: CleanSceneComponentList must only be called when current scene = null!");
             }
@@ -1331,7 +1331,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         private void OnSceneComponents_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var actScene = m_currentScene;
+            var actScene = _currentScene;
 
             var componentsToRemove = new List<SceneComponentBase>();
             switch (e.Action)
@@ -1391,7 +1391,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current view configuration.
         /// </summary>
-        public GraphicsViewConfiguration Configuration => m_configuration;
+        public GraphicsViewConfiguration Configuration => _configuration;
 
         /// <summary>
         /// Gets the current scene object.
@@ -1400,19 +1400,19 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_targetScene != null) { return m_targetScene; }
-                return m_currentScene;
+                if (_targetScene != null) { return _targetScene; }
+                return _currentScene;
             }
         }
 
         public ObservableCollection<SceneComponentBase> SceneComponents { get; }
 
-        public int TotalRenderCount => m_totalRenderCount;
+        public int TotalRenderCount => _totalRenderCount;
 
         /// <summary>
         /// Are view resources loaded?
         /// </summary>
-        public bool ViewResourcesLoaded => m_renderTarget != null;
+        public bool ViewResourcesLoaded => _renderTarget != null;
 
         /// <summary>
         /// Discard rendering?
@@ -1424,7 +1424,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current SynchronizationContext.
         /// </summary>
-        public SynchronizationContext UISynchronizationContext { get; }
+        public SynchronizationContext UiSynchronizationContext { get; }
 
         /// <summary>
         /// Gets or sets the current clear color.
@@ -1434,22 +1434,22 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Counts the currently applied video writers.
         /// </summary>
-        public int CountVideoWriters => m_videoWriters.Count;
+        public int CountVideoWriters => _videoWriters.Count;
 
         /// <summary>
         /// Gets or sets current camera object.
         /// </summary>
         public Camera3DBase Camera
         {
-            get => m_camera;
+            get => _camera;
             set
             {
-                if (m_camera != value)
+                if (_camera != value)
                 {
                     // Reset AssociatedRenderLoop flag on previous one
-                    if (m_camera != null)
+                    if (_camera != null)
                     {
-                        m_camera.AssociatedRenderLoop = null;
+                        _camera.AssociatedRenderLoop = null;
                     }
 
                     // Change the current camera reference
@@ -1459,13 +1459,13 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         throw new SeeingSharpGraphicsException("Unable to change camera: The given one is already associated to another RenderLoop!");
                     }
-                    m_camera = newCamera;
+                    _camera = newCamera;
 
                     // Set AssociatedRenderLoop flag on new one
-                    if (m_camera != null)
+                    if (_camera != null)
                     {
-                        m_camera.SetScreenSize(this.CurrentViewSize.Width, this.CurrentViewSize.Height);
-                        m_camera.AssociatedRenderLoop = this;
+                        _camera.SetScreenSize(this.CurrentViewSize.Width, this.CurrentViewSize.Height);
+                        _camera.AssociatedRenderLoop = this;
                     }
                 }
             }
@@ -1474,12 +1474,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current view size in pixels.
         /// </summary>
-        public Size2 CurrentViewSize => m_currentViewSize;
+        public Size2 CurrentViewSize => _currentViewSize;
 
         /// <summary>
         /// Gets the device this renderloop is using.
         /// </summary>
-        public EngineDevice Device => m_currentDevice;
+        public EngineDevice Device => _currentDevice;
 
 
 
@@ -1499,8 +1499,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                var device = m_currentDevice;
-                var scene = m_currentScene;
+                var device = _currentDevice;
+                var scene = _currentScene;
                 if (device == null) { return 0; }
                 if (scene == null) { return 0; }
 
@@ -1534,12 +1534,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// The control which hosts this RenderLoop instance.
         /// </summary>
-        public object RenderLoopHost => m_renderLoopHost;
+        public object RenderLoopHost => _renderLoopHost;
 
         /// <summary>
         /// Is the current device in DeviceLost state?
         /// </summary>
-        public bool IsDeviceLost => m_currentDevice?.IsLost == true;
+        public bool IsDeviceLost => _currentDevice?.IsLost == true;
 
         /// <summary>
         /// Internal properties and methods that should be used with care.
@@ -1549,7 +1549,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the current target scene.
         /// </summary>
-        internal Scene TargetScene => m_targetScene;
+        internal Scene TargetScene => _targetScene;
 
         /// <summary>
         /// Gets a list containing all filters for this view.
@@ -1575,41 +1575,41 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public class RenderLoopInternals
         {
-            private RenderLoop m_target;
+            private RenderLoop _target;
 
             public RenderLoopInternals(RenderLoop target)
             {
-                m_target = target;
+                _target = target;
             }
 
             public void UnloadViewResources()
             {
-                m_target.UnloadViewResources();
+                _target.UnloadViewResources();
             }
 
-            public D3D11.Texture2D RenderTarget => m_target.m_renderTarget;
+            public D3D11.Texture2D RenderTarget => _target._renderTarget;
 
-            public D3D11.Texture2D RenderTargetDepth => m_target.m_renderTargetDepth;
+            public D3D11.Texture2D RenderTargetDepth => _target._renderTargetDepth;
 
             public D3D11.Texture2D CopyHelperTextureStaging
             {
-                get => m_target.m_copyHelperTextureStaging;
-                set => m_target.m_copyHelperTextureStaging = value;
+                get => _target._copyHelperTextureStaging;
+                set => _target._copyHelperTextureStaging = value;
             }
 
             public D3D11.Texture2D CopyHelperTextureStandard
             {
-                get => m_target.m_copyHelperTextureStandard;
-                set => m_target.m_copyHelperTextureStandard = value;
+                get => _target._copyHelperTextureStandard;
+                set => _target._copyHelperTextureStandard = value;
             }
 
             public bool CallPresentInUIThread
             {
-                get => m_target.m_callPresentInUiThread;
-                set => m_target.m_callPresentInUiThread = value;
+                get => _target._callPresentInUiThread;
+                set => _target._callPresentInUiThread = value;
             }
 
-            public EngineDevice TargetDevice => m_target.m_targetDevice;
+            public EngineDevice TargetDevice => _target._targetDevice;
         }
     }
 }

@@ -30,19 +30,19 @@ namespace SeeingSharp.Multimedia.Core
     public class TextureUploader : IDisposable, ICheckDisposed
     {
         // Given parameters
-        private EngineDevice m_device;
-        private int m_width;
-        private int m_height;
-        private DXGI.Format m_format;
-        private bool m_isMultisampled;
-        private bool m_isDisposed;
+        private EngineDevice _device;
+        private int _width;
+        private int _height;
+        private DXGI.Format _format;
+        private bool _isMultisampled;
+        private bool _isDisposed;
 
         //Direct3D resources for render target capturing
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-        private D3D11.Texture2D m_copyHelperTextureStaging;
-        private D3D11.Texture2D m_copyHelperTextureStandard;
+        private D3D11.Texture2D _copyHelperTextureStaging;
+        private D3D11.Texture2D _copyHelperTextureStandard;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureUploader"/> class.
@@ -54,11 +54,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="isMultisampled">True if this uploader expects multisampled textures.</param>
         internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, DXGI.Format format, bool isMultisampled)
         {
-            m_device = device;
-            m_width = pixelWidth;
-            m_height = pixelHeight;
-            m_format = format;
-            m_isMultisampled = isMultisampled; 
+            _device = device;
+            _width = pixelWidth;
+            _height = pixelHeight;
+            _format = format;
+            _isMultisampled = isMultisampled; 
         }
 
         internal static TextureUploader ConstructUsingPropertiesFromTexture(EngineDevice device, D3D11.Texture2D texture)
@@ -77,10 +77,10 @@ namespace SeeingSharp.Multimedia.Core
         public MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload)
             where T : unmanaged
         {
-            if (m_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
+            if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
 
             var result = new MemoryMappedTexture<T>(
-                new Size2(m_width, m_height));
+                new Size2(_width, _height));
             this.UploadToMemoryMappedTexture(textureToUpload, result);
             return result;
         }
@@ -93,61 +93,61 @@ namespace SeeingSharp.Multimedia.Core
         public unsafe void UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload, MemoryMappedTexture<T> targetFloatBuffer) 
             where T : unmanaged
         {
-            if (m_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
+            if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
             this.EnsureNotNullOrDisposed(nameof(targetFloatBuffer));
 
             // Check input texture
             var textureDesc = textureToUpload.Description;
-            if (textureDesc.Width != m_width)
+            if (textureDesc.Width != _width)
             {
-                throw new SeeingSharpGraphicsException($"Invalid texture: Width does not match (given: {textureDesc.Width}, expected: {m_width})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Width does not match (given: {textureDesc.Width}, expected: {_width})!");
             }
-            if (textureDesc.Height != m_height)
+            if (textureDesc.Height != _height)
             {
-                throw new SeeingSharpGraphicsException($"Invalid texture: Height does not match (given: {textureDesc.Height}, expected: {m_height})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Height does not match (given: {textureDesc.Height}, expected: {_height})!");
             }
-            if (textureDesc.Format != m_format)
+            if (textureDesc.Format != _format)
             {
-                throw new SeeingSharpGraphicsException($"Invalid texture: Format does not match (given: {textureDesc.Format}, expected: {m_format})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Format does not match (given: {textureDesc.Format}, expected: {_format})!");
             }
-            if (GraphicsHelper.IsMultisampled(textureDesc) != m_isMultisampled)
+            if (GraphicsHelper.IsMultisampled(textureDesc) != _isMultisampled)
             {
-                throw new SeeingSharpGraphicsException($"Invalid texture: Multisampling does not match (given: {GraphicsHelper.IsMultisampled(textureDesc)}, expected: {m_isMultisampled})!");
+                throw new SeeingSharpGraphicsException($"Invalid texture: Multisampling does not match (given: {GraphicsHelper.IsMultisampled(textureDesc)}, expected: {_isMultisampled})!");
             }
 
             // Check source and destination size
             var targetPixelSize = targetFloatBuffer.PixelSize;
-            if (targetPixelSize.Width != m_width)
+            if (targetPixelSize.Width != _width)
             {
                 throw new SeeingSharpGraphicsException("The width of the textures during texture upload does not match!");
             }
-            if (targetPixelSize.Height != m_height)
+            if (targetPixelSize.Height != _height)
             {
                 throw new SeeingSharpGraphicsException("The height of the textures during texture upload does not match!");
             }
 
             // Check format compatibility
-            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(m_format);
+            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(_format);
             if (textureFormatByteSize != sizeof(T))
             {
                 throw new SeeingSharpGraphicsException(
                     "Format of the texture to upload and the destination buffer does not match " +
-                    $"(source: {m_format} / {textureFormatByteSize} bytes, target: {typeof(T).Name} / {sizeof(T)} bytes)!");
+                    $"(source: {_format} / {textureFormatByteSize} bytes, target: {typeof(T).Name} / {sizeof(T)} bytes)!");
             }
 
             // Upload the texture
             this.CopyTextureToStagingResource(textureToUpload);
 
             // Read the data into the .Net data block
-            var dataBox = m_device.DeviceImmediateContextD3D11.MapSubresource(
-                m_copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = _device.DeviceImmediateContextD3D11.MapSubresource(
+                _copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
                 var rowPitchSource = dataBox.RowPitch;
                 var rowPitchDestination = targetFloatBuffer.Width * sizeof(T);
                 if ((rowPitchSource > 0) && (rowPitchDestination > 0))
                 {
-                    for (var loopY = 0; loopY < m_height; loopY++)
+                    for (var loopY = 0; loopY < _height; loopY++)
                     {
                         SeeingSharpUtil.CopyMemory(
                             dataBox.DataPointer + loopY * rowPitchSource,
@@ -162,15 +162,15 @@ namespace SeeingSharp.Multimedia.Core
             }
             finally
             {
-                m_device.DeviceImmediateContextD3D11.UnmapSubresource(m_copyHelperTextureStaging, 0);
+                _device.DeviceImmediateContextD3D11.UnmapSubresource(_copyHelperTextureStaging, 0);
             }
         }
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStaging);
-            SeeingSharpUtil.SafeDispose(ref m_copyHelperTextureStandard);
-            m_isDisposed = true;
+            SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStaging);
+            SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStandard);
+            _isDisposed = true;
         }
 
         /// <summary>
@@ -179,29 +179,29 @@ namespace SeeingSharp.Multimedia.Core
         private void CopyTextureToStagingResource(D3D11.Texture2D textureToUpload)
         {
             // Prepare needed textures
-            if (m_copyHelperTextureStaging == null)
+            if (_copyHelperTextureStaging == null)
             {
-                m_copyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(m_device, m_width, m_height, m_format);
-                if (m_isMultisampled)
+                _copyHelperTextureStaging = GraphicsHelper.Internals.CreateStagingTexture(_device, _width, _height, _format);
+                if (_isMultisampled)
                 {
-                    m_copyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(m_device, m_width, m_height, m_format);
+                    _copyHelperTextureStandard = GraphicsHelper.Internals.CreateTexture(_device, _width, _height, _format);
                 }
             }
 
             // Copy contents of the texture
             //  .. execute a ResolveSubresource before if the source texture is multisampled
-            if (m_isMultisampled)
+            if (_isMultisampled)
             {
-                m_device.DeviceImmediateContextD3D11.ResolveSubresource(textureToUpload, 0, m_copyHelperTextureStandard, 0, m_format);
-                m_device.DeviceImmediateContextD3D11.CopyResource(m_copyHelperTextureStandard, m_copyHelperTextureStaging);
+                _device.DeviceImmediateContextD3D11.ResolveSubresource(textureToUpload, 0, _copyHelperTextureStandard, 0, _format);
+                _device.DeviceImmediateContextD3D11.CopyResource(_copyHelperTextureStandard, _copyHelperTextureStaging);
             }
             else
             {
-                m_device.DeviceImmediateContextD3D11.CopyResource(textureToUpload, m_copyHelperTextureStaging);
+                _device.DeviceImmediateContextD3D11.CopyResource(textureToUpload, _copyHelperTextureStaging);
             }
         }
 
         /// <inheritdoc />
-        public bool IsDisposed => m_isDisposed;
+        public bool IsDisposed => _isDisposed;
     }
 }

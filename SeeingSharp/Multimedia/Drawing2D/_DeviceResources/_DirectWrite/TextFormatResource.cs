@@ -29,19 +29,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class TextFormatResource : Drawing2DResourceBase
     {
         // Fixed resource parameters (passed on constructor)
-        private DWrite.TextFormat[] m_loadedTextFormats;
-        private string m_fontFamilyName;
-        private float m_fontSize;
-        private FontWeight m_fontWeight;
-        private FontStyle m_fontStyle;
-        private FontStretch m_fontStretch;
+        private DWrite.TextFormat[] _loadedTextFormats;
+        private string _fontFamilyName;
+        private float _fontSize;
+        private FontWeight _fontWeight;
+        private FontStyle _fontStyle;
+        private FontStretch _fontStretch;
 
         // Dynamic runtime parameters (possible to pass on each render call)
-        private bool[] m_runtimeDataChangedFlags;
-        private ParagraphAlignment m_paragraphAlignment;
-        private TextAlignment m_textAlignment;
-        private WordWrapping m_wordWrapping;
-        private ReadingDirection m_readingDirection;
+        private bool[] _runtimeDataChangedFlags;
+        private ParagraphAlignment _paragraphAlignment;
+        private TextAlignment _textAlignment;
+        private WordWrapping _wordWrapping;
+        private ReadingDirection _readingDirection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
@@ -57,18 +57,18 @@ namespace SeeingSharp.Multimedia.Drawing2D
             FontStyle fontStyle = FontStyle.Normal,
             FontStretch fontStretch = FontStretch.Normal)
         {
-            m_loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
-            m_runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
-            m_fontFamilyName = fontFamilyName;
-            m_fontSize = fontSize;
-            m_fontWeight = fontWeight;
-            m_fontStyle = fontStyle;
-            m_fontStretch = fontStretch;
+            _loadedTextFormats = new DWrite.TextFormat[GraphicsCore.Current.DeviceCount];
+            _runtimeDataChangedFlags = new bool[GraphicsCore.Current.DeviceCount];
+            _fontFamilyName = fontFamilyName;
+            _fontSize = fontSize;
+            _fontWeight = fontWeight;
+            _fontStyle = fontStyle;
+            _fontStretch = fontStretch;
 
-            m_paragraphAlignment = Drawing2D.ParagraphAlignment.Near; //ParagraphAlignment.Near;
-            m_textAlignment = Drawing2D.TextAlignment.Leading;
-            m_wordWrapping = Drawing2D.WordWrapping.Wrap;
-            m_readingDirection = Drawing2D.ReadingDirection.LeftToRight;
+            _paragraphAlignment = Drawing2D.ParagraphAlignment.Near; //ParagraphAlignment.Near;
+            _textAlignment = Drawing2D.TextAlignment.Leading;
+            _wordWrapping = Drawing2D.WordWrapping.Wrap;
+            _readingDirection = Drawing2D.ReadingDirection.LeftToRight;
         }
 
         /// <summary>
@@ -77,14 +77,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var textFormat = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var textFormat = _loadedTextFormats[engineDevice.DeviceIndex];
 
             if (textFormat != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
 
                 SeeingSharpUtil.DisposeObject(textFormat);
-                m_loadedTextFormats[engineDevice.DeviceIndex] = null;
+                _loadedTextFormats[engineDevice.DeviceIndex] = null;
             }
         }
 
@@ -100,30 +100,30 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            var result = m_loadedTextFormats[engineDevice.DeviceIndex];
+            var result = _loadedTextFormats[engineDevice.DeviceIndex];
             if (result == null)
             {
                 // Load the TextFormat object
                 result = new DWrite.TextFormat(
                     GraphicsCore.Current.FactoryDWrite,
-                    m_fontFamilyName,
-                    (DWrite.FontWeight)m_fontWeight, (DWrite.FontStyle)m_fontStyle, (DWrite.FontStretch)m_fontStretch, m_fontSize);
-                m_loadedTextFormats[engineDevice.DeviceIndex] = result;
+                    _fontFamilyName,
+                    (DWrite.FontWeight)_fontWeight, (DWrite.FontStyle)_fontStyle, (DWrite.FontStretch)_fontStretch, _fontSize);
+                _loadedTextFormats[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);
             }
 
             // Update runtime values on demand
-            if (m_runtimeDataChangedFlags[engineDevice.DeviceIndex])
+            if (_runtimeDataChangedFlags[engineDevice.DeviceIndex])
             {
-                m_runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
+                _runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
 
                 SeeingSharpUtil.DisposeObject(result);
                 result = new DWrite.TextFormat(
                     GraphicsCore.Current.FactoryDWrite,
-                    m_fontFamilyName,
-                    (DWrite.FontWeight)m_fontWeight, (DWrite.FontStyle)m_fontStyle, (DWrite.FontStretch)m_fontStretch, m_fontSize);
-                result.TextAlignment = (DWrite.TextAlignment)m_textAlignment;
-                m_loadedTextFormats[engineDevice.DeviceIndex] = result;
+                    _fontFamilyName,
+                    (DWrite.FontWeight)_fontWeight, (DWrite.FontStyle)_fontStyle, (DWrite.FontStretch)_fontStretch, _fontSize);
+                result.TextAlignment = (DWrite.TextAlignment)_textAlignment;
+                _loadedTextFormats[engineDevice.DeviceIndex] = result;
             }
 
             return result;
@@ -134,15 +134,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public ParagraphAlignment ParagraphAlignment
         {
-            get => m_paragraphAlignment;
+            get => _paragraphAlignment;
             set
             {
                 var castedValue = value;
 
-                if (castedValue != m_paragraphAlignment)
+                if (castedValue != _paragraphAlignment)
                 {
-                    m_paragraphAlignment = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    _paragraphAlignment = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
                 }
             }
         }
@@ -152,15 +152,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public TextAlignment TextAlignment
         {
-            get => m_textAlignment;
+            get => _textAlignment;
             set
             {
                 var castedValue = value;
 
-                if (castedValue != m_textAlignment)
+                if (castedValue != _textAlignment)
                 {
-                    m_textAlignment = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    _textAlignment = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
                 }
             }
         }
@@ -170,15 +170,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public WordWrapping WordWrapping
         {
-            get => m_wordWrapping;
+            get => _wordWrapping;
             set
             {
                 var castedValue = value;
 
-                if (castedValue != m_wordWrapping)
+                if (castedValue != _wordWrapping)
                 {
-                    m_wordWrapping = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    _wordWrapping = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
                 }
             }
         }
@@ -188,15 +188,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public ReadingDirection ReadingDirection
         {
-            get => m_readingDirection;
+            get => _readingDirection;
             set
             {
                 var castedValue = value;
 
-                if (castedValue != m_readingDirection)
+                if (castedValue != _readingDirection)
                 {
-                    m_readingDirection = castedValue;
-                    m_runtimeDataChangedFlags.SetAllValuesTo(true);
+                    _readingDirection = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
                 }
             }
         }

@@ -27,18 +27,18 @@ namespace SeeingSharp.AssimpImporter
 {
     internal class AssimpIOSystem : Assimp.IOSystem
     {
-        private ResourceLink m_originalResource;
+        private ResourceLink _originalResource;
 
         public AssimpIOSystem(ResourceLink originalResource)
         {
-            m_originalResource = originalResource;
+            _originalResource = originalResource;
         }
 
         public override Assimp.IOStream OpenFile(string pathToFile, Assimp.FileIOMode fileMode)
         {
-            if (pathToFile == m_originalResource.FileNameWithExtension)
+            if (pathToFile == _originalResource.FileNameWithExtension)
             {
-                var openedStream = m_originalResource.OpenInputStream();
+                var openedStream = _originalResource.OpenInputStream();
 
                 return new AssimpIOStream(openedStream, pathToFile, fileMode);
             }
@@ -68,7 +68,7 @@ namespace SeeingSharp.AssimpImporter
                 }
 
                 // Load the file
-                var link = m_originalResource.GetForAnotherFile(
+                var link = _originalResource.GetForAnotherFile(
                     pathElements[pathElements.Length - 1], 
                     pathDirectoryBuilder.ToArray());
                 var openedStream = link.OpenInputStream();

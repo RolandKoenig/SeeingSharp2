@@ -27,10 +27,10 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class EngineFactory : IDisposable, ICheckDisposed
     {
-        private FactoryHandlerDXGI m_handlerDXGI;
-        private FactoryHandlerD2D m_handlerDirect2D;
-        private FactoryHandlerDWrite m_handlerDirectWrite;
-        private FactoryHandlerWIC m_handlerWIC;
+        private FactoryHandlerDXGI _handlerDXGI;
+        private FactoryHandlerD2D _handlerDirect2D;
+        private FactoryHandlerDWrite _handlerDirectWrite;
+        private FactoryHandlerWIC _handlerWIC;
 
         internal EngineFactory(GraphicsCoreConfiguration coreConfiguration)
         {
@@ -57,9 +57,9 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return m_handlerDXGI;
+                return _handlerDXGI;
             }
-            private set => m_handlerDXGI = value;
+            private set => _handlerDXGI = value;
         }
 
         public FactoryHandlerD2D Direct2D
@@ -67,9 +67,9 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return m_handlerDirect2D;
+                return _handlerDirect2D;
             }
-            private set => m_handlerDirect2D = value;
+            private set => _handlerDirect2D = value;
         }
 
         public FactoryHandlerDWrite DirectWrite
@@ -77,9 +77,9 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return m_handlerDirectWrite;
+                return _handlerDirectWrite;
             }
-            private set => m_handlerDirectWrite = value;
+            private set => _handlerDirectWrite = value;
         }
 
         public FactoryHandlerWIC WIC
@@ -87,9 +87,9 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return m_handlerWIC;
+                return _handlerWIC;
             }
-            private set => m_handlerWIC = value;
+            private set => _handlerWIC = value;
         }
 
         internal D2D.Factory2 FactoryD2D_2

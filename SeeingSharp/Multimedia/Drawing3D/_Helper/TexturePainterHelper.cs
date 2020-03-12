@@ -34,14 +34,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private readonly NamedOrGenericKey KEY_MATERIAL = GraphicsCore.GetNextGenericResourceKey();
 
         // Configuration
-        private NamedOrGenericKey m_texture;
+        private NamedOrGenericKey _texture;
 
         // Used resources
-        private GeometryResource m_geometryResource;
-        private SpriteMaterialResource m_materialResource;
-        private DefaultResources m_defaultResources;
-        private ObjectRenderParameters m_renderParameters;
-        private RenderingChunk[] m_renderingChunks;
+        private GeometryResource _geometryResource;
+        private SpriteMaterialResource _materialResource;
+        private DefaultResources _defaultResources;
+        private ObjectRenderParameters _renderParameters;
+        private RenderingChunk[] _renderingChunks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="textureKey">The texture key.</param>
         internal TexturePainterHelper(NamedOrGenericKey textureKey)
         {
-            m_texture = textureKey;
+            _texture = textureKey;
             this.Scaling = 1f;
             this.Opacity = 1f;
             this.AccentuationFactor = 0f;
@@ -62,12 +62,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void LoadResources(ResourceDictionary resources)
         {
             // Load material
-            m_materialResource = resources.GetResourceAndEnsureLoaded(
+            _materialResource = resources.GetResourceAndEnsureLoaded(
                 KEY_MATERIAL,
-                () => new SpriteMaterialResource(m_texture));
+                () => new SpriteMaterialResource(_texture));
 
             // Load geometry resource
-            m_geometryResource = resources.GetResourceAndEnsureLoaded(
+            _geometryResource = resources.GetResourceAndEnsureLoaded(
                 KEY_GEOMETRY,
                 () =>
                 {
@@ -81,15 +81,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 });
 
             // Generate rendering chunks
-            m_renderingChunks = m_geometryResource.BuildRenderingChunks(
-                resources.Device, new MaterialResource[] { m_materialResource });
+            _renderingChunks = _geometryResource.BuildRenderingChunks(
+                resources.Device, new MaterialResource[] { _materialResource });
 
             // Get default resources
-            m_defaultResources = resources.GetResourceAndEnsureLoaded(
+            _defaultResources = resources.GetResourceAndEnsureLoaded(
                 DefaultResources.RESOURCE_KEY,
                 () => new DefaultResources());
 
-            m_renderParameters = resources.GetResourceAndEnsureLoaded(
+            _renderParameters = resources.GetResourceAndEnsureLoaded(
                 KEY_RENDER_PARAMETERS,
                 () => new ObjectRenderParameters());
         }
@@ -99,11 +99,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void UnloadResources()
         {
-            m_renderingChunks = null;
-            m_geometryResource = null;
-            m_defaultResources = null;
-            m_renderParameters = null;
-            m_materialResource = null;
+            _renderingChunks = null;
+            _geometryResource = null;
+            _defaultResources = null;
+            _renderParameters = null;
+            _materialResource = null;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void RenderPlain(RenderState renderState)
         {
             // Apply rendering parameters
-            m_renderParameters.UpdateValues(renderState, new CBPerObject
+            _renderParameters.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = this.AccentuationFactor,
                 Color = Vector4.One,
@@ -135,22 +135,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply all current rendering parameters
-            m_renderParameters.Apply(renderState);
+            _renderParameters.Apply(renderState);
 
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDisableZWrites;
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
-                deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
+                deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
             }
 
             // Render the object
-            renderState.RenderChunks(m_renderingChunks);
+            renderState.RenderChunks(_renderingChunks);
 
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
-                deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
+                deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
             }
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Are resources loaded?
         /// </summary>
-        public bool IsLoaded => m_geometryResource != null;
+        public bool IsLoaded => _geometryResource != null;
 
         /// <summary>
         /// Gets or sets the alpha blend mode.

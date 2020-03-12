@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class SceneObjectInfo
     {
-        private List<SceneObjectInfo> m_children;
+        private List<SceneObjectInfo> _children;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectInfo"/> class.
@@ -42,13 +42,13 @@ namespace SeeingSharp.Multimedia.Core
             this.OriginalObject = obj;
 
             // Build child list
-            m_children = new List<SceneObjectInfo>(obj.CountChildren);
+            _children = new List<SceneObjectInfo>(obj.CountChildren);
 
             if (buildFullChildTree)
             {
                 foreach (var actChildObject in obj.GetAllChildrenInternal())
                 {
-                    m_children.Add(new SceneObjectInfo(actChildObject));
+                    _children.Add(new SceneObjectInfo(actChildObject));
                 }
             }
 
@@ -75,6 +75,6 @@ namespace SeeingSharp.Multimedia.Core
 
         public SceneObjectInfoType Type { get; }
 
-        public IReadOnlyList<SceneObjectInfo> Children => m_children;
+        public IReadOnlyList<SceneObjectInfo> Children => _children;
     }
 }

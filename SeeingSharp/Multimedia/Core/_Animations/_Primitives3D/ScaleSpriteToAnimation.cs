@@ -26,13 +26,12 @@ namespace SeeingSharp.Multimedia.Core
     public class ScaleSpriteToAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectSprite m_targetObject;
-        private TimeSpan m_duration;
-        private float m_targetScaling;
+        private IAnimatableObjectSprite _targetObject;
+        private float _targetScaling;
 
         // Runtime
-        private float m_startScaling;
-        private float m_moveScaling;
+        private float _startScaling;
+        private float _moveScaling;
 
         /// <summary>
         /// Initialize a new Instance of the <see cref="ScaleSpriteToAnimation" /> class.
@@ -44,9 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         public ScaleSpriteToAnimation(IAnimatableObjectSprite targetObject, float targetScaling, TimeSpan duration)
             : base(targetObject, AnimationType.FixedTime, duration)
         {
-            m_targetObject = targetObject;
-            m_duration = duration;
-            m_targetScaling = targetScaling;
+            _targetObject = targetObject;
+            _targetScaling = targetScaling;
 
             if (targetScaling < 0f)
             {
@@ -59,8 +57,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startScaling = m_targetObject.Scaling;
-            m_moveScaling = m_targetScaling - m_startScaling;
+            _startScaling = _targetObject.Scaling;
+            _moveScaling = _targetScaling - _startScaling;
         }
 
         /// <summary>
@@ -69,7 +67,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             var changeFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
-            m_targetObject.Scaling = m_startScaling + m_moveScaling * changeFactor;
+            _targetObject.Scaling = _startScaling + _moveScaling * changeFactor;
         }
 
         /// <summary>
@@ -78,10 +76,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.Scaling = m_targetScaling;
+            _targetObject.Scaling = _targetScaling;
 
-            m_moveScaling = 0;
-            m_startScaling = 1;
+            _moveScaling = 0;
+            _startScaling = 1;
         }
     }
 }

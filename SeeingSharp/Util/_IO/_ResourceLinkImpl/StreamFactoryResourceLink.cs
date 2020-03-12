@@ -28,8 +28,8 @@ namespace SeeingSharp.Util
 {
     public class StreamFactoryResourceLink : ResourceLink
     {
-        private string m_fileName;
-        private Func<Stream> m_streamFactory;
+        private string _fileName;
+        private Func<Stream> _streamFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamFactoryResourceLink" /> class.
@@ -42,8 +42,8 @@ namespace SeeingSharp.Util
         {
             streamFactory.EnsureNotNull(nameof(streamFactory));
 
-            m_streamFactory = streamFactory;
-            m_fileName = fileName;
+            _streamFactory = streamFactory;
+            _fileName = fileName;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "Factory-Resource: " + m_fileName;
+            return "Factory-Resource: " + _fileName;
         }
 
         public override bool Exists()
@@ -82,7 +82,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenOutputStream()
         {
-            var result = m_streamFactory();
+            var result = _streamFactory();
 
             if (!result.CanWrite)
             {
@@ -106,7 +106,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            var result = m_streamFactory();
+            var result = _streamFactory();
 
             if (!result.CanRead)
             {
@@ -120,9 +120,9 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension => this.GetExtensionFromFileName(m_fileName);
+        public override string FileExtension => this.GetExtensionFromFileName(_fileName);
 
-        public override string FileNameWithExtension => m_fileName;
+        public override string FileNameWithExtension => _fileName;
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?

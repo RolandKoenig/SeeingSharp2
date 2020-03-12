@@ -37,16 +37,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private static int s_maxContainerID;
 
         // All model data
-        private int m_importID;
-        private ImportOptions m_importOptions;
-        private List<SceneObject> m_objects;
-        private List<ParentChildRelationship> m_parentChildRelationships;
-        private List<ImportedResourceInfo> m_importedResources;
+        private int _importID;
+        private ImportOptions _importOptions;
+        private List<SceneObject> _objects;
+        private List<ParentChildRelationship> _parentChildRelationships;
+        private List<ImportedResourceInfo> _importedResources;
 
         // State
-        private bool m_isFinished;
-        private bool m_isValid;
-        private Exception m_finishException;
+        private bool _isFinished;
+        private bool _isValid;
+        private Exception _finishException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
@@ -54,11 +54,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ImportedModelContainer(ResourceLink source, ImportOptions importOptions)
         {
             this.Source = source;
-            m_importOptions = importOptions;
-            m_objects = new List<SceneObject>();
-            m_parentChildRelationships = new List<ParentChildRelationship>();
-            m_importedResources = new List<ImportedResourceInfo>();
-            m_importID = Interlocked.Increment(ref s_maxContainerID);
+            _importOptions = importOptions;
+            _objects = new List<SceneObject>();
+            _parentChildRelationships = new List<ParentChildRelationship>();
+            _importedResources = new List<ImportedResourceInfo>();
+            _importID = Interlocked.Increment(ref s_maxContainerID);
         }
 
         /// <summary>
@@ -66,17 +66,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void FinishLoading(Exception ex)
         {
-            if (m_isFinished)
+            if (_isFinished)
             {
                 throw new SeeingSharpException("ModelContainer already finished!");
             }
 
-            m_isFinished = true;
-            m_finishException = ex;
+            _isFinished = true;
+            _finishException = ex;
 
-            m_objects.Clear();
-            m_parentChildRelationships.Clear();
-            m_importedResources.Clear();
+            _objects.Clear();
+            _parentChildRelationships.Clear();
+            _importedResources.Clear();
 
             this.RootObject = null;
             this.BoundingBox = BoundingBox.Empty;
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void FinishLoading(BoundingBox boundingBox)
         {
-            if (m_isFinished)
+            if (_isFinished)
             {
                 throw new SeeingSharpException("ModelContainer already finished!");
             }
@@ -111,7 +111,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
 
                 // Configure base transformation of the root object
-                switch (m_importOptions.ResourceCoordinateSystem)
+                switch (_importOptions.ResourceCoordinateSystem)
                 {
                     case CoordinateSystem.LeftHanded_UpY:
                         break;
@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Configure position and scaling of the root object
-                if (m_importOptions.FitToCube)
+                if (_importOptions.FitToCube)
                 {
                     var scaleFactor = Math.Min(
                         (1f / boundingBox.Width),
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 this.RootObject = rootObject;
                 this.BoundingBox = boundingBox;
 
-                m_isValid = true;
+                _isValid = true;
             }
             catch (Exception ex)
             {
@@ -167,7 +167,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             finally
             {
-                m_isFinished = true;
+                _isFinished = true;
             }
         }
 
@@ -176,10 +176,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         private IEnumerable<SceneObject> FindRootObjects()
         {
-            foreach(var actObject in m_objects)
+            foreach(var actObject in _objects)
             {
                 var isRoot = true;
-                foreach(var actParentChildRelationship in m_parentChildRelationships)
+                foreach(var actParentChildRelationship in _parentChildRelationships)
                 {
                     if (actObject == actParentChildRelationship.Child)
                     {
@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public NamedOrGenericKey GetResourceKey(string resourceClass, string resourceID)
         {
             return new NamedOrGenericKey(
-                "Imported." + m_importID + "." + resourceClass + "." + resourceID);
+                "Imported." + _importID + "." + resourceClass + "." + resourceID);
         }
 
         public ResourceLink Source { get; }
@@ -211,32 +211,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
-        public IList<SceneObject> Objects => m_objects;
+        public IList<SceneObject> Objects => _objects;
 
         /// <summary>
         /// Gets the hierarchy information of the imported objects.
         /// </summary>
-        public IList<ParentChildRelationship> ParentChildRelationships => m_parentChildRelationships;
+        public IList<ParentChildRelationship> ParentChildRelationships => _parentChildRelationships;
 
         /// <summary>
         /// Gets a collection containing all imported resources.
         /// </summary>
-        public IList<ImportedResourceInfo> ImportedResources => m_importedResources;
+        public IList<ImportedResourceInfo> ImportedResources => _importedResources;
 
         /// <summary>
         /// Is loading finished?
         /// </summary>
-        public bool IsFinished => m_isFinished;
+        public bool IsFinished => _isFinished;
 
         /// <summary>
         /// Does this object contain a valid model?
         /// </summary>
-        public bool IsValid => m_isValid;
+        public bool IsValid => _isValid;
 
         /// <summary>
         /// An exception occurred during loading. This property may be set, when loading is finished and IsValid=false.
         /// </summary>
-        public Exception FinishException => m_finishException;
+        public Exception FinishException => _finishException;
 
         /// <summary>
         /// The root object which gets generated when loading is finished successfully.

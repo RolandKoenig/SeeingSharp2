@@ -30,25 +30,25 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class StandardTextureResource : TextureResource
     {
         // Configuration
-        private ResourceLink m_resourceLinkHighQuality;
-        private ResourceLink m_resourceLinkLowQuality;
-        private MemoryMappedTexture<int> m_inMemoryTexture;
+        private ResourceLink _resourceLinkHighQuality;
+        private ResourceLink _resourceLinkLowQuality;
+        private MemoryMappedTexture<int> _inMemoryTexture;
 
         // Loaded resources
-        private D3D11.Texture2D m_texture;
-        private D3D11.ShaderResourceView m_textureView;
+        private D3D11.Texture2D _texture;
+        private D3D11.ShaderResourceView _textureView;
 
         // Runtime
-        private bool m_isCubeTexture;
-        private bool m_isRenderTarget;
+        private bool _isCubeTexture;
+        private bool _isRenderTarget;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
         /// </summary>
         public StandardTextureResource(ResourceLink textureSource)
         {
-            m_resourceLinkHighQuality = textureSource;
-            m_resourceLinkLowQuality = textureSource;
+            _resourceLinkHighQuality = textureSource;
+            _resourceLinkLowQuality = textureSource;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             inMemoryTexture.EnsureNotNull(nameof(inMemoryTexture));
 
-            m_inMemoryTexture = inMemoryTexture;
+            _inMemoryTexture = inMemoryTexture;
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="lowQualityTextureSource">Low quality version of the texture.</param>
         public StandardTextureResource(ResourceLink highQualityTextureSource, ResourceLink lowQualityTextureSource)
         {
-            m_resourceLinkHighQuality = highQualityTextureSource;
-            m_resourceLinkLowQuality = lowQualityTextureSource;
+            _resourceLinkHighQuality = highQualityTextureSource;
+            _resourceLinkLowQuality = lowQualityTextureSource;
         }
 
         /// <summary>
@@ -78,31 +78,31 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Select source texture
-            var source = m_resourceLinkLowQuality;
+            var source = _resourceLinkLowQuality;
             if (device.Configuration.TextureQuality == TextureQuality.High)
             {
-                source = m_resourceLinkHighQuality;
+                source = _resourceLinkHighQuality;
             }
 
             // Load the texture
             if (source != null)
             {
-                m_texture = GraphicsHelper.CreateTexture(device, source);
+                _texture = GraphicsHelper.CreateTexture(device, source);
             }
-            else if (m_inMemoryTexture != null)
+            else if (_inMemoryTexture != null)
             {
-                m_texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, m_inMemoryTexture);
+                _texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, _inMemoryTexture);
             }
 
             // Create view for shaders
-            m_textureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_texture);
+            _textureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, _texture);
 
             // Some checking..
-            m_isCubeTexture =
-                m_texture.Description.ArraySize == 6 &&
-                (m_texture.Description.OptionFlags & D3D11.ResourceOptionFlags.TextureCube) == D3D11.ResourceOptionFlags.TextureCube;
-            m_isRenderTarget =
-                (m_texture.Description.BindFlags & D3D11.BindFlags.RenderTarget) == D3D11.BindFlags.RenderTarget;
+            _isCubeTexture =
+                _texture.Description.ArraySize == 6 &&
+                (_texture.Description.OptionFlags & D3D11.ResourceOptionFlags.TextureCube) == D3D11.ResourceOptionFlags.TextureCube;
+            _isRenderTarget =
+                (_texture.Description.BindFlags & D3D11.BindFlags.RenderTarget) == D3D11.BindFlags.RenderTarget;
         }
 
         /// <summary>
@@ -110,44 +110,44 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_textureView = SeeingSharpUtil.DisposeObject(m_textureView);
-            m_texture = SeeingSharpUtil.DisposeObject(m_texture);
+            _textureView = SeeingSharpUtil.DisposeObject(_textureView);
+            _texture = SeeingSharpUtil.DisposeObject(_texture);
 
-            m_isCubeTexture = false;
-            m_isRenderTarget = false;
+            _isCubeTexture = false;
+            _isRenderTarget = false;
         }
 
         /// <summary>
         /// Gets the texture object.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal override D3D11.Texture2D Texture => m_texture;
+        internal override D3D11.Texture2D Texture => _texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => m_textureView;
+        internal override D3D11.ShaderResourceView TextureView => _textureView;
 
         /// <summary>
         /// Is the object loaded correctly?
         /// </summary>
-        public override bool IsLoaded => m_textureView != null;
+        public override bool IsLoaded => _textureView != null;
 
         /// <summary>
         /// Is this texture a cube texture?
         /// </summary>
-        public bool IsCubeTexture => m_isCubeTexture;
+        public bool IsCubeTexture => _isCubeTexture;
 
         /// <summary>
         /// Is this texture a render target texture?
         /// </summary>
-        public bool IsRenderTargetTexture => m_isRenderTarget;
+        public bool IsRenderTargetTexture => _isRenderTarget;
 
         /// <summary>
         /// Gets the size of the texture array.
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize => m_texture.Description.ArraySize;
+        public override int ArraySize => _texture.Description.ArraySize;
     }
 }

@@ -28,10 +28,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class CameraStraightMoveAnimation : AnimationBase
     {
         // Configuration
-        private Camera3DBase m_camera;
-        private OrthographicCamera3D m_cameraOrthographic;
-        private Camera3DViewPoint m_viewPointSource;
-        private Camera3DViewPoint m_viewPointTarget;
+        private Camera3DBase _camera;
+        private OrthographicCamera3D _cameraOrthographic;
+        private Camera3DViewPoint _viewPointSource;
+        private Camera3DViewPoint _viewPointTarget;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraStraightMoveAnimation"/> class.
@@ -45,11 +45,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             targetCamera.EnsureNotNull(nameof(targetCamera));
             targetViewPoint.EnsureNotNull(nameof(targetViewPoint));
 
-            m_camera = targetCamera;
-            m_cameraOrthographic = m_camera as OrthographicCamera3D;
+            _camera = targetCamera;
+            _cameraOrthographic = _camera as OrthographicCamera3D;
 
-            m_viewPointSource = m_camera.GetViewPoint();
-            m_viewPointTarget = targetViewPoint;
+            _viewPointSource = _camera.GetViewPoint();
+            _viewPointTarget = targetViewPoint;
         }
 
         /// <summary>
@@ -67,16 +67,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var actFrameFactor = (float)(currentMillis / maxMilliseconds);
 
             // Transform position and rotation
-            var moveVector = m_viewPointTarget.Position - m_viewPointSource.Position;
-            var rotationVector = m_viewPointTarget.Rotation - m_viewPointSource.Rotation;
-            m_camera.Position = m_viewPointSource.Position + moveVector * actFrameFactor;
-            m_camera.TargetRotation = m_viewPointSource.Rotation + rotationVector * actFrameFactor;
+            var moveVector = _viewPointTarget.Position - _viewPointSource.Position;
+            var rotationVector = _viewPointTarget.Rotation - _viewPointSource.Rotation;
+            _camera.Position = _viewPointSource.Position + moveVector * actFrameFactor;
+            _camera.TargetRotation = _viewPointSource.Rotation + rotationVector * actFrameFactor;
 
             // Special handling for orthographic cameras
-            if (m_cameraOrthographic != null)
+            if (_cameraOrthographic != null)
             {
-                var zoomValue = m_viewPointTarget.OrthographicZoomFactor - m_viewPointSource.OrthographicZoomFactor;
-                m_cameraOrthographic.ZoomFactor = m_viewPointSource.OrthographicZoomFactor + zoomValue * actFrameFactor;
+                var zoomValue = _viewPointTarget.OrthographicZoomFactor - _viewPointSource.OrthographicZoomFactor;
+                _cameraOrthographic.ZoomFactor = _viewPointSource.OrthographicZoomFactor + zoomValue * actFrameFactor;
             }
         }
 
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.OnFixedTimeAnimationFinished();
 
-            m_camera.ApplyViewPoint(m_viewPointTarget);
+            _camera.ApplyViewPoint(_viewPointTarget);
         }
     }
 }

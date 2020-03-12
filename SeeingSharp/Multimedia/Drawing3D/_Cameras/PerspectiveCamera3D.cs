@@ -27,8 +27,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PerspectiveCamera3D : Camera3DBase
     {
         // Configuration
-        private float m_fov = (float)Math.PI / 4.0f;
-        private float m_aspectRatio;
+        private float _fov = (float)Math.PI / 4.0f;
+        private float _aspectRatio;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
@@ -66,13 +66,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
-            m_aspectRatio = screenWidth / (float)screenHeight;
+            _aspectRatio = screenWidth / (float)screenHeight;
             Matrix4x4Ex.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             Matrix4x4Ex.CreatePerspectiveFovLH(
-                m_fov,
-                m_aspectRatio,
+                _fov,
+                _aspectRatio,
                 zNear, zFar, out projMatrix);
         }
 
@@ -81,10 +81,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float FieldOfView
         {
-            get => m_fov;
+            get => _fov;
             set
             {
-                m_fov = value;
+                _fov = value;
                 this.UpdateCamera();
             }
         }
@@ -92,6 +92,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the current aspect ratio.
         /// </summary>
-        public float AspectRatio => m_aspectRatio;
+        public float AspectRatio => _aspectRatio;
     }
 }

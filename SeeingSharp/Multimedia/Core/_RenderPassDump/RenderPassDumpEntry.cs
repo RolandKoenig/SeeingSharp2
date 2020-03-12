@@ -28,23 +28,23 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class RenderPassDumpEntry : IDisposable, ICheckDisposed
     {
-        private MemoryMappedTexture<int> m_bufferColor;
+        private MemoryMappedTexture<int> _bufferColor;
 
         internal RenderPassDumpEntry(string dumpKey, Size2 size)
         {
             this.Key = dumpKey;
-            m_bufferColor = new MemoryMappedTexture<int>(size);
+            _bufferColor = new MemoryMappedTexture<int>(size);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_bufferColor);
+            SeeingSharpUtil.SafeDispose(ref _bufferColor);
         }
 
         public string Key { get; }
 
         /// <inheritdoc />
-        public bool IsDisposed => m_bufferColor == null;
+        public bool IsDisposed => _bufferColor == null;
     }
 }

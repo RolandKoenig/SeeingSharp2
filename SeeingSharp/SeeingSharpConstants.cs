@@ -29,8 +29,8 @@ namespace SeeingSharp
         public const string COMPONENT_GROUP_CAMERA = "Camera";
 
         // Rendering constants
-        public const double MINIMUM_FRAME_TIME_MS = 1000.0 / 60.0;
-        public const double MINIMUM_DELAY_TIME_MS = 0.0;
+        public const double MINIMU_FRAME_TIME_MS = 1000.0 / 60.0;
+        public const double MINIMU_DELAY_TIME_MS = 0.0;
         public const int INPUT_FRAMES_PER_SECOND = 60;
         public const int MAX_PER_FRAME_TIME_VALUE = 10000;
 

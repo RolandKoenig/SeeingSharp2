@@ -43,26 +43,26 @@ namespace SeeingSharp.Multimedia.Views
         private static Duration MAX_IMAGE_LOCK_DURATION = new Duration(TimeSpan.FromMilliseconds(100.0));
 
         // Some members..
-        private HigherD3DImageSource m_d3dImageSource;
-        private WriteableBitmap m_fallbackWpfImageSource;
-        private int m_lastRecreateWidth;
-        private int m_lastRecreateHeight;
-        private int m_lockImageErrorCount;
+        private HigherD3DImageSource _d3dImageSource;
+        private WriteableBitmap _fallbackWpfImageSource;
+        private int _lastRecreateWidth;
+        private int _lastRecreateHeight;
+        private int _lockImageErrorCount;
 
         // All needed direct3d resources
-        private D3D11.Texture2D m_backBufferForWpf;
-        private D3D11.Texture2D m_backBufferD3D11;
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.RenderTargetView m_renderTarget;
-        private D3D11.DepthStencilView m_renderTargetDepth;
-        private Surface m_renderTarget2DDxgi;
+        private D3D11.Texture2D _backBufferForWpf;
+        private D3D11.Texture2D _backBufferD3D11;
+        private D3D11.Texture2D _depthBuffer;
+        private D3D11.RenderTargetView _renderTarget;
+        private D3D11.DepthStencilView _renderTargetDepth;
+        private Surface _renderTarget2DDxgi;
 
         // Some size related properties
-        private int m_renderTargetHeight;
-        private int m_renderTargetWidth;
-        private DateTime m_lastSizeChange;
-        private WpfSeeingSharpCompositionMode m_compositionMode;
-        private bool m_forceCompositionOverSoftware;
+        private int _renderTargetHeight;
+        private int _renderTargetWidth;
+        private DateTime _lastSizeChange;
+        private WpfSeeingSharpCompositionMode _compositionMode;
+        private bool _forceCompositionOverSoftware;
 
         // State members for handling rendering problems
         public event PropertyChangedEventHandler PropertyChanged;
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Views
             this.Loaded += this.OnLoaded;
             this.Unloaded += this.OnUnloaded;
 
-            m_compositionMode = WpfSeeingSharpCompositionMode.None;
+            _compositionMode = WpfSeeingSharpCompositionMode.None;
 
             // Basic configuration
             this.Focusable = true;
@@ -179,14 +179,14 @@ namespace SeeingSharp.Multimedia.Views
             this.RenderLoop.Camera.SetScreenSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
 
             //Resize render target only on greater size changes
-            var resizeFactorWidth = sizeInfo.NewSize.Width > m_renderTargetWidth ? sizeInfo.NewSize.Width / m_renderTargetWidth : m_renderTargetWidth / sizeInfo.NewSize.Width;
-            var resizeFactorHeight = sizeInfo.NewSize.Height > m_renderTargetHeight ? sizeInfo.NewSize.Height / m_renderTargetHeight : m_renderTargetHeight / sizeInfo.NewSize.Height;
+            var resizeFactorWidth = sizeInfo.NewSize.Width > _renderTargetWidth ? sizeInfo.NewSize.Width / _renderTargetWidth : _renderTargetWidth / sizeInfo.NewSize.Width;
+            var resizeFactorHeight = sizeInfo.NewSize.Height > _renderTargetHeight ? sizeInfo.NewSize.Height / _renderTargetHeight : _renderTargetHeight / sizeInfo.NewSize.Height;
             if (resizeFactorWidth > 1.3 || resizeFactorHeight > 1.3)
             {
                 this.RenderLoop.SetCurrentViewSize((int)this.RenderSize.Width, (int)this.RenderSize.Height);
             }
 
-            m_lastSizeChange = DateTime.UtcNow;
+            _lastSizeChange = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -243,22 +243,22 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice engineDevice)
         {
             this.Source = null;
-            if (m_d3dImageSource != null)
+            if (_d3dImageSource != null)
             {
                 // Dispose the render target
-                m_d3dImageSource.SetRenderTarget(null);
-                m_d3dImageSource.IsFrontBufferAvailableChanged -= this.OnD3DImageSource_IsFrontBufferAvailableChanged;
-                m_d3dImageSource.Dispose();
-                m_d3dImageSource = null;
+                _d3dImageSource.SetRenderTarget(null);
+                _d3dImageSource.IsFrontBufferAvailableChanged -= this.OnD3DImageSource_IsFrontBufferAvailableChanged;
+                _d3dImageSource.Dispose();
+                _d3dImageSource = null;
             }
 
             // Dispose all other resources
-            m_renderTarget2DDxgi = SeeingSharpUtil.DisposeObject(m_renderTarget2DDxgi);
-            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
-            m_depthBuffer = SeeingSharpUtil.DisposeObject(m_depthBuffer);
-            m_renderTarget = SeeingSharpUtil.DisposeObject(m_renderTarget);
-            m_backBufferForWpf = SeeingSharpUtil.DisposeObject(m_backBufferForWpf);
-            m_backBufferD3D11 = SeeingSharpUtil.DisposeObject(m_backBufferD3D11);
+            _renderTarget2DDxgi = SeeingSharpUtil.DisposeObject(_renderTarget2DDxgi);
+            _renderTargetDepth = SeeingSharpUtil.DisposeObject(_renderTargetDepth);
+            _depthBuffer = SeeingSharpUtil.DisposeObject(_depthBuffer);
+            _renderTarget = SeeingSharpUtil.DisposeObject(_renderTarget);
+            _backBufferForWpf = SeeingSharpUtil.DisposeObject(_backBufferForWpf);
+            _backBufferD3D11 = SeeingSharpUtil.DisposeObject(_backBufferD3D11);
 
             // Reset composition mode
             this.CompositionMode = WpfSeeingSharpCompositionMode.None;
@@ -271,7 +271,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
-            m_lockImageErrorCount = 0;
+            _lockImageErrorCount = 0;
 
             // Calculate pixel with and high of this visual
             var pixelSize = new Size(
@@ -285,7 +285,7 @@ namespace SeeingSharp.Multimedia.Views
             var viewPort = default(RawViewportF);
 
             var initializedSuccessfully = false;
-            var forceFallbackSolution = m_forceCompositionOverSoftware;
+            var forceFallbackSolution = _forceCompositionOverSoftware;
             var tryCount = 0;
 
             do
@@ -309,8 +309,8 @@ namespace SeeingSharp.Multimedia.Views
                     {
                         try
                         {
-                            m_d3dImageSource = new HigherD3DImageSource(engineDevice, handlerD3D9);
-                            m_d3dImageSource.IsFrontBufferAvailableChanged += this.OnD3DImageSource_IsFrontBufferAvailableChanged;
+                            _d3dImageSource = new HigherD3DImageSource(engineDevice, handlerD3D9);
+                            _d3dImageSource.IsFrontBufferAvailableChanged += this.OnD3DImageSource_IsFrontBufferAvailableChanged;
                         }
                         catch (Exception)
                         {
@@ -320,33 +320,33 @@ namespace SeeingSharp.Multimedia.Views
                 }
 
                 // Switch to fallback method if we can't create the HigherD3DImageSource
-                if (m_d3dImageSource == null)
+                if (_d3dImageSource == null)
                 {
-                    m_fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
+                    _fallbackWpfImageSource = new WriteableBitmap(width, height, 96.0 * dpiScaleFactorX, 96.0 * dpiScaleFactorY, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent);
                 }
 
                 // Create the swap chain and the render target
-                m_backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.Configuration);
-                m_backBufferForWpf = GraphicsHelper.Internals.CreateSharedTexture(engineDevice, width, height);
-                m_renderTarget = new D3D11.RenderTargetView(renderDevice, m_backBufferD3D11);
+                _backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.Configuration);
+                _backBufferForWpf = GraphicsHelper.Internals.CreateSharedTexture(engineDevice, width, height);
+                _renderTarget = new D3D11.RenderTargetView(renderDevice, _backBufferD3D11);
 
                 // Create the depth buffer
-                m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.Configuration);
-                m_renderTargetDepth = new D3D11.DepthStencilView(renderDevice, m_depthBuffer);
+                _depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.Configuration);
+                _renderTargetDepth = new D3D11.DepthStencilView(renderDevice, _depthBuffer);
 
                 // Apply render target size values
-                m_renderTargetWidth = width;
-                m_renderTargetHeight = height;
+                _renderTargetWidth = width;
+                _renderTargetHeight = height;
 
                 // Define the viewport for rendering
                 viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
-                if (m_d3dImageSource != null)
+                if (_d3dImageSource != null)
                 {
                     // Create and apply the image source object
                     try
                     {
-                        m_d3dImageSource.SetRenderTarget(m_backBufferForWpf);
-                        this.Source = m_d3dImageSource;
+                        _d3dImageSource.SetRenderTarget(_backBufferForWpf);
+                        this.Source = _d3dImageSource;
                         initializedSuccessfully = true;
                         this.CompositionMode = WpfSeeingSharpCompositionMode.OverHardware;
                     }
@@ -355,29 +355,29 @@ namespace SeeingSharp.Multimedia.Views
                         initializedSuccessfully = false;
                         forceFallbackSolution = true;
 
-                        SeeingSharpUtil.SafeDispose(ref m_d3dImageSource);
-                        SeeingSharpUtil.SafeDispose(ref m_renderTargetDepth);
-                        SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
-                        SeeingSharpUtil.SafeDispose(ref m_renderTarget);
-                        SeeingSharpUtil.SafeDispose(ref m_backBufferForWpf);
-                        SeeingSharpUtil.SafeDispose(ref m_backBufferD3D11);
+                        SeeingSharpUtil.SafeDispose(ref _d3dImageSource);
+                        SeeingSharpUtil.SafeDispose(ref _renderTargetDepth);
+                        SeeingSharpUtil.SafeDispose(ref _depthBuffer);
+                        SeeingSharpUtil.SafeDispose(ref _renderTarget);
+                        SeeingSharpUtil.SafeDispose(ref _backBufferForWpf);
+                        SeeingSharpUtil.SafeDispose(ref _backBufferD3D11);
                     }
                 }
                 else
                 {
                     // Set a dummy image source
-                    this.Source = m_fallbackWpfImageSource;
+                    this.Source = _fallbackWpfImageSource;
                     initializedSuccessfully = true;
                     this.CompositionMode = WpfSeeingSharpCompositionMode.FallbackOverSoftware;
                 }
             }
             while (!initializedSuccessfully);
 
-            m_lastRecreateWidth = width;
-            m_lastRecreateHeight = height;
+            _lastRecreateWidth = width;
+            _lastRecreateHeight = height;
 
             // Return all generated objects
-            return Tuple.Create(m_backBufferD3D11, m_renderTarget, m_depthBuffer, m_renderTargetDepth, viewPort, new Size2(width, height), this.GetDpiScaling());
+            return Tuple.Create(_backBufferD3D11, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new Size2(width, height), this.GetDpiScaling());
         }
 
         /// <summary>
@@ -385,12 +385,12 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice engineDevice)
         {
-            if (m_d3dImageSource != null)
+            if (_d3dImageSource != null)
             {
-                if (!m_d3dImageSource.IsFrontBufferAvailable) { return false; }
-                if (!m_d3dImageSource.HasRenderTarget) { return false; }
+                if (!_d3dImageSource.IsFrontBufferAvailable) { return false; }
+                if (!_d3dImageSource.HasRenderTarget) { return false; }
             }
-            else if (m_fallbackWpfImageSource == null) { return false; }
+            else if (_fallbackWpfImageSource == null) { return false; }
 
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
@@ -404,10 +404,10 @@ namespace SeeingSharp.Multimedia.Views
         /// <param name="engineDevice">The engine device.</param>
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
-            if (m_lastSizeChange != DateTime.MinValue &&
-                DateTime.UtcNow - m_lastSizeChange > SeeingSharpConstantsWinWpf.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
+            if (_lastSizeChange != DateTime.MinValue &&
+                DateTime.UtcNow - _lastSizeChange > SeeingSharpConstantsWinWpf.THROTTLED_VIEW_RECREATION_TIME_ON_RESIZE)
             {
-                m_lastSizeChange = DateTime.MinValue;
+                _lastSizeChange = DateTime.MinValue;
 
                 SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
@@ -432,58 +432,58 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (!this.IsLoaded) { return; }
 
-            if (m_d3dImageSource != null)
+            if (_d3dImageSource != null)
             {
                 // Final checks
-                if (!m_d3dImageSource.IsFrontBufferAvailable) { return; }
-                if (!m_d3dImageSource.HasRenderTarget) { return; }
+                if (!_d3dImageSource.IsFrontBufferAvailable) { return; }
+                if (!_d3dImageSource.HasRenderTarget) { return; }
 
                 // Try to lock the D3DImage
                 var isLocked = false;
                 using (GraphicsCore.Current.PerformanceAnalyzer.Internals.BeginMeasureActivityDuration("Render.Lock"))
                 {
-                    isLocked = m_d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION);
+                    isLocked = _d3dImageSource.TryLock(MAX_IMAGE_LOCK_DURATION);
                 }
                 if (!isLocked)
                 {
-                    m_lockImageErrorCount++;
-                    if (m_lockImageErrorCount > 5) { this.RenderLoop.ForceViewReload(); }
+                    _lockImageErrorCount++;
+                    if (_lockImageErrorCount > 5) { this.RenderLoop.ForceViewReload(); }
                     return;
                 }
-                m_lockImageErrorCount = 0;
+                _lockImageErrorCount = 0;
 
                 try
                 {
                     // Draw current 3d scene to wpf
                     var deviceContext = engineDevice.Internals.DeviceImmediateContextD3D11;
-                    deviceContext.ResolveSubresource(m_backBufferD3D11, 0, m_backBufferForWpf, 0, Format.B8G8R8A8_UNorm);
+                    deviceContext.ResolveSubresource(_backBufferD3D11, 0, _backBufferForWpf, 0, Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
 
                     // Apply true background texture if a cached bitmap was applied before
-                    if (this.Source != m_d3dImageSource)
+                    if (this.Source != _d3dImageSource)
                     {
-                        this.Source = m_d3dImageSource;
+                        this.Source = _d3dImageSource;
                     }
 
                     // Invalidate the D3D image
-                    m_d3dImageSource.InvalidateD3DImage();
+                    _d3dImageSource.InvalidateD3DImage();
                 }
                 finally
                 {
-                    m_d3dImageSource.Unlock();
+                    _d3dImageSource.Unlock();
                 }
             }
-            else if (m_fallbackWpfImageSource != null)
+            else if (_fallbackWpfImageSource != null)
             {
                 // Get and read data from the gpu (create copy helper texture on demand)
                 if (this.RenderLoop.Internals.CopyHelperTextureStaging == null)
                 {
                     this.RenderLoop.Internals.CopyHelperTextureStaging =
-                        GraphicsHelper.Internals.CreateStagingTexture(engineDevice, m_lastRecreateWidth,
-                            m_lastRecreateHeight);
+                        GraphicsHelper.Internals.CreateStagingTexture(engineDevice, _lastRecreateWidth,
+                            _lastRecreateHeight);
                     this.RenderLoop.Internals.CopyHelperTextureStandard =
-                        GraphicsHelper.Internals.CreateTexture(engineDevice, m_lastRecreateWidth, m_lastRecreateHeight);
+                        GraphicsHelper.Internals.CreateTexture(engineDevice, _lastRecreateWidth, _lastRecreateHeight);
                 }
 
                 // Copy resources
@@ -497,8 +497,8 @@ namespace SeeingSharp.Multimedia.Views
                 // Copy texture into wpf bitmap
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(
                     engineDevice, this.RenderLoop.Internals.CopyHelperTextureStaging,
-                    m_fallbackWpfImageSource,
-                    m_lastRecreateWidth, m_lastRecreateHeight,
+                    _fallbackWpfImageSource,
+                    _lastRecreateWidth, _lastRecreateHeight,
                     TimeSpan.FromMilliseconds(500.0));
             }
         }
@@ -624,12 +624,12 @@ namespace SeeingSharp.Multimedia.Views
 
         public WpfSeeingSharpCompositionMode CompositionMode
         {
-            get => m_compositionMode;
+            get => _compositionMode;
             private set
             {
-                if (m_compositionMode != value)
+                if (_compositionMode != value)
                 {
-                    m_compositionMode = value;
+                    _compositionMode = value;
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CompositionMode)));
                 }
             }
@@ -637,12 +637,12 @@ namespace SeeingSharp.Multimedia.Views
 
         public bool ForceCompositionOverSoftware
         {
-            get => m_forceCompositionOverSoftware;
+            get => _forceCompositionOverSoftware;
             set
             {
-                if (m_forceCompositionOverSoftware != value)
+                if (_forceCompositionOverSoftware != value)
                 {
-                    m_forceCompositionOverSoftware = value;
+                    _forceCompositionOverSoftware = value;
                     this.RenderLoop.ForceViewReload();
 
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.ForceCompositionOverSoftware)));

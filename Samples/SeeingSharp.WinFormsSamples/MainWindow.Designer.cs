@@ -28,81 +28,81 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.m_ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
-            this.m_refreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.m_barStatus = new System.Windows.Forms.StatusStrip();
-            this.m_lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
+            this._ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
+            this._refreshTimer = new System.Windows.Forms.Timer(this.components);
+            this._barStatus = new System.Windows.Forms.StatusStrip();
+            this._lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_lblDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.m_barTools = new System.Windows.Forms.ToolStrip();
-            this.m_cmdScreenshot = new System.Windows.Forms.ToolStripButton();
-            this.m_cmdNewChildWindow = new System.Windows.Forms.ToolStripButton();
+            this._lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblDevice = new System.Windows.Forms.ToolStripStatusLabel();
+            this._barTools = new System.Windows.Forms.ToolStrip();
+            this._cmdScreenshot = new System.Windows.Forms.ToolStripButton();
+            this._cmdNewChildWindow = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.m_mnuChangeResolution = new System.Windows.Forms.ToolStripDropDownButton();
+            this._mnuChangeResolution = new System.Windows.Forms.ToolStripDropDownButton();
             this.x600ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x768ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x1024ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.to1024x1024ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_mnuChangeDevice = new System.Windows.Forms.ToolStripDropDownButton();
-            this.m_tabControlSamples = new System.Windows.Forms.TabControl();
-            this.m_images = new System.Windows.Forms.ImageList(this.components);
-            this.m_propertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.m_splitter = new System.Windows.Forms.SplitContainer();
-            this.m_renderWindowControlsComponent = new SeeingSharp.WinFormsSamples.RenderWindowControlsComponent();
-            this.m_barStatus.SuspendLayout();
-            this.m_barTools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).BeginInit();
-            this.m_splitter.Panel1.SuspendLayout();
-            this.m_splitter.Panel2.SuspendLayout();
-            this.m_splitter.SuspendLayout();
+            this._mnuChangeDevice = new System.Windows.Forms.ToolStripDropDownButton();
+            this._tabControlSamples = new System.Windows.Forms.TabControl();
+            this._images = new System.Windows.Forms.ImageList(this.components);
+            this._propertyGrid = new System.Windows.Forms.PropertyGrid();
+            this._splitter = new System.Windows.Forms.SplitContainer();
+            this._renderWindowControlsComponent = new SeeingSharp.WinFormsSamples.RenderWindowControlsComponent();
+            this._barStatus.SuspendLayout();
+            this._barTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._splitter)).BeginInit();
+            this._splitter.Panel1.SuspendLayout();
+            this._splitter.Panel2.SuspendLayout();
+            this._splitter.SuspendLayout();
             this.SuspendLayout();
             // 
-            // m_ctrlRenderPanel
+            // _ctrlRenderPanel
             // 
-            this.m_ctrlRenderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_ctrlRenderPanel.Location = new System.Drawing.Point(0, 0);
-            this.m_ctrlRenderPanel.Name = "m_ctrlRenderPanel";
-            this.m_ctrlRenderPanel.Size = new System.Drawing.Size(671, 431);
-            this.m_ctrlRenderPanel.TabIndex = 0;
+            this._ctrlRenderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._ctrlRenderPanel.Location = new System.Drawing.Point(0, 0);
+            this._ctrlRenderPanel.Name = "_ctrlRenderPanel";
+            this._ctrlRenderPanel.Size = new System.Drawing.Size(671, 431);
+            this._ctrlRenderPanel.TabIndex = 0;
             // 
-            // m_refreshTimer
+            // _refreshTimer
             // 
-            this.m_refreshTimer.Enabled = true;
-            this.m_refreshTimer.Tick += new System.EventHandler(this.OnRefreshTimer_Tick);
+            this._refreshTimer.Enabled = true;
+            this._refreshTimer.Tick += new System.EventHandler(this.OnRefreshTimer_Tick);
             // 
-            // m_barStatus
+            // _barStatus
             // 
-            this.m_barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_lblResolutionDesc,
-            this.m_lblResolution,
+            this._barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._lblResolutionDesc,
+            this._lblResolution,
             this.toolStripStatusLabel1,
-            this.m_lblObjectCountDesc,
-            this.m_lblObjectCount,
-            this.m_lblDeviceDesc,
-            this.m_lblDevice});
-            this.m_barStatus.Location = new System.Drawing.Point(0, 576);
-            this.m_barStatus.Name = "m_barStatus";
-            this.m_barStatus.Size = new System.Drawing.Size(843, 24);
-            this.m_barStatus.TabIndex = 2;
-            this.m_barStatus.Text = "statusStrip1";
+            this._lblObjectCountDesc,
+            this._lblObjectCount,
+            this._lblDeviceDesc,
+            this._lblDevice});
+            this._barStatus.Location = new System.Drawing.Point(0, 576);
+            this._barStatus.Name = "_barStatus";
+            this._barStatus.Size = new System.Drawing.Size(843, 24);
+            this._barStatus.TabIndex = 2;
+            this._barStatus.Text = "statusStrip1";
             // 
-            // m_lblResolutionDesc
+            // _lblResolutionDesc
             // 
-            this.m_lblResolutionDesc.Name = "m_lblResolutionDesc";
-            this.m_lblResolutionDesc.Size = new System.Drawing.Size(66, 19);
-            this.m_lblResolutionDesc.Text = "Resolution:";
+            this._lblResolutionDesc.Name = "_lblResolutionDesc";
+            this._lblResolutionDesc.Size = new System.Drawing.Size(66, 19);
+            this._lblResolutionDesc.Text = "Resolution:";
             // 
-            // m_lblResolution
+            // _lblResolution
             // 
-            this.m_lblResolution.Name = "m_lblResolution";
-            this.m_lblResolution.Size = new System.Drawing.Size(92, 19);
-            this.m_lblResolution.Text = "<widthxheight>";
+            this._lblResolution.Name = "_lblResolution";
+            this._lblResolution.Size = new System.Drawing.Size(92, 19);
+            this._lblResolution.Text = "<widthxheight>";
             // 
             // toolStripStatusLabel1
             // 
@@ -110,85 +110,85 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(19, 19);
             this.toolStripStatusLabel1.Text = "px";
             // 
-            // m_lblObjectCountDesc
+            // _lblObjectCountDesc
             // 
-            this.m_lblObjectCountDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.m_lblObjectCountDesc.Name = "m_lblObjectCountDesc";
-            this.m_lblObjectCountDesc.Size = new System.Drawing.Size(64, 19);
-            this.m_lblObjectCountDesc.Text = "# Objects:";
+            this._lblObjectCountDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this._lblObjectCountDesc.Name = "_lblObjectCountDesc";
+            this._lblObjectCountDesc.Size = new System.Drawing.Size(64, 19);
+            this._lblObjectCountDesc.Text = "# Objects:";
             // 
-            // m_lblObjectCount
+            // _lblObjectCount
             // 
-            this.m_lblObjectCount.Name = "m_lblObjectCount";
-            this.m_lblObjectCount.Size = new System.Drawing.Size(54, 19);
-            this.m_lblObjectCount.Text = "<count>";
+            this._lblObjectCount.Name = "_lblObjectCount";
+            this._lblObjectCount.Size = new System.Drawing.Size(54, 19);
+            this._lblObjectCount.Text = "<count>";
             // 
-            // m_lblDeviceDesc
+            // _lblDeviceDesc
             // 
-            this.m_lblDeviceDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.m_lblDeviceDesc.Name = "m_lblDeviceDesc";
-            this.m_lblDeviceDesc.Size = new System.Drawing.Size(49, 19);
-            this.m_lblDeviceDesc.Text = "Device:";
+            this._lblDeviceDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this._lblDeviceDesc.Name = "_lblDeviceDesc";
+            this._lblDeviceDesc.Size = new System.Drawing.Size(49, 19);
+            this._lblDeviceDesc.Text = "Device:";
             // 
-            // m_lblDevice
+            // _lblDevice
             // 
-            this.m_lblDevice.Name = "m_lblDevice";
-            this.m_lblDevice.Size = new System.Drawing.Size(57, 19);
-            this.m_lblDevice.Text = "<device>";
+            this._lblDevice.Name = "_lblDevice";
+            this._lblDevice.Size = new System.Drawing.Size(57, 19);
+            this._lblDevice.Text = "<device>";
             // 
-            // m_barTools
+            // _barTools
             // 
-            this.m_barTools.AllowMerge = false;
-            this.m_barTools.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.m_barTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_cmdScreenshot,
+            this._barTools.AllowMerge = false;
+            this._barTools.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this._barTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._cmdScreenshot,
             this.toolStripSeparator1,
-            this.m_mnuChangeResolution,
-            this.m_mnuChangeDevice,
-            m_cmdNewChildWindow});
-            this.m_barTools.Location = new System.Drawing.Point(0, 0);
-            this.m_barTools.Name = "m_barTools";
-            this.m_barTools.Size = new System.Drawing.Size(843, 25);
-            this.m_barTools.TabIndex = 3;
-            this.m_barTools.Text = "toolStrip1";
+            this._mnuChangeResolution,
+            this._mnuChangeDevice,
+            _cmdNewChildWindow});
+            this._barTools.Location = new System.Drawing.Point(0, 0);
+            this._barTools.Name = "_barTools";
+            this._barTools.Size = new System.Drawing.Size(843, 25);
+            this._barTools.TabIndex = 3;
+            this._barTools.Text = "toolStrip1";
             // 
-            // m_cmdScreenshot
+            // _cmdScreenshot
             // 
-            this.m_cmdScreenshot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.m_cmdScreenshot.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Camera16x16;
-            this.m_cmdScreenshot.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_cmdScreenshot.Name = "m_cmdScreenshot";
-            this.m_cmdScreenshot.Size = new System.Drawing.Size(23, 22);
-            this.m_cmdScreenshot.Text = "Copy Screenshot to Clipboard";
-            this.m_cmdScreenshot.Click += new System.EventHandler(this.OnCmdCopyScreenshot_Click);
+            this._cmdScreenshot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._cmdScreenshot.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Camera16x16;
+            this._cmdScreenshot.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._cmdScreenshot.Name = "_cmdScreenshot";
+            this._cmdScreenshot.Size = new System.Drawing.Size(23, 22);
+            this._cmdScreenshot.Text = "Copy Screenshot to Clipboard";
+            this._cmdScreenshot.Click += new System.EventHandler(this.OnCmdCopyScreenshot_Click);
             // 
-            // m_cmdNewChildWindow
+            // _cmdNewChildWindow
             // 
-            this.m_cmdNewChildWindow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.m_cmdNewChildWindow.Name = "m_cmdNewChildWindow";
-            this.m_cmdNewChildWindow.Size = new System.Drawing.Size(23, 22);
-            this.m_cmdNewChildWindow.Text = "New child window";
-            this.m_cmdNewChildWindow.Click += new System.EventHandler(this.OnCmdNewChildWindow_Click);
+            this._cmdNewChildWindow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this._cmdNewChildWindow.Name = "_cmdNewChildWindow";
+            this._cmdNewChildWindow.Size = new System.Drawing.Size(23, 22);
+            this._cmdNewChildWindow.Text = "New child window";
+            this._cmdNewChildWindow.Click += new System.EventHandler(this.OnCmdNewChildWindow_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // m_mnuChangeResolution
+            // _mnuChangeResolution
             // 
-            this.m_mnuChangeResolution.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuChangeResolution.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.x600ToolStripMenuItem,
             this.x768ToolStripMenuItem,
             this.x1024ToolStripMenuItem,
             this.x1080ToolStripMenuItem,
             this.toolStripSeparator2,
             this.to1024x1024ToolStripMenuItem});
-            this.m_mnuChangeResolution.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Output16x16;
-            this.m_mnuChangeResolution.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_mnuChangeResolution.Name = "m_mnuChangeResolution";
-            this.m_mnuChangeResolution.Size = new System.Drawing.Size(133, 22);
-            this.m_mnuChangeResolution.Text = "Change resolution";
+            this._mnuChangeResolution.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Output16x16;
+            this._mnuChangeResolution.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._mnuChangeResolution.Name = "_mnuChangeResolution";
+            this._mnuChangeResolution.Size = new System.Drawing.Size(133, 22);
+            this._mnuChangeResolution.Text = "Change resolution";
             // 
             // x600ToolStripMenuItem
             // 
@@ -230,89 +230,89 @@
             this.to1024x1024ToolStripMenuItem.Tag = "1024x1024";
             this.to1024x1024ToolStripMenuItem.Text = "to 1024x1024";
             // 
-            // m_mnuChangeDevice
+            // _mnuChangeDevice
             // 
-            this.m_mnuChangeDevice.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Adapter16x16;
-            this.m_mnuChangeDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_mnuChangeDevice.Name = "m_mnuChangeDevice";
-            this.m_mnuChangeDevice.Size = new System.Drawing.Size(114, 22);
-            this.m_mnuChangeDevice.Text = "Change device";
+            this._mnuChangeDevice.Image = global::SeeingSharp.WinFormsSamples.Properties.Resources.Adapter16x16;
+            this._mnuChangeDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._mnuChangeDevice.Name = "_mnuChangeDevice";
+            this._mnuChangeDevice.Size = new System.Drawing.Size(114, 22);
+            this._mnuChangeDevice.Text = "Change device";
             // 
-            // m_tabControlSamples
+            // _tabControlSamples
             // 
-            this.m_tabControlSamples.Dock = System.Windows.Forms.DockStyle.Top;
-            this.m_tabControlSamples.Location = new System.Drawing.Point(0, 25);
-            this.m_tabControlSamples.Name = "m_tabControlSamples";
-            this.m_tabControlSamples.SelectedIndex = 0;
-            this.m_tabControlSamples.Size = new System.Drawing.Size(843, 120);
-            this.m_tabControlSamples.TabIndex = 4;
+            this._tabControlSamples.Dock = System.Windows.Forms.DockStyle.Top;
+            this._tabControlSamples.Location = new System.Drawing.Point(0, 25);
+            this._tabControlSamples.Name = "_tabControlSamples";
+            this._tabControlSamples.SelectedIndex = 0;
+            this._tabControlSamples.Size = new System.Drawing.Size(843, 120);
+            this._tabControlSamples.TabIndex = 4;
             // 
-            // m_images
+            // _images
             // 
-            this.m_images.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.m_images.ImageSize = new System.Drawing.Size(64, 64);
-            this.m_images.TransparentColor = System.Drawing.Color.Transparent;
+            this._images.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this._images.ImageSize = new System.Drawing.Size(64, 64);
+            this._images.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // m_propertyGrid
+            // _propertyGrid
             // 
-            this.m_propertyGrid.CanShowVisualStyleGlyphs = false;
-            this.m_propertyGrid.CommandsVisibleIfAvailable = false;
-            this.m_propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_propertyGrid.HelpVisible = false;
-            this.m_propertyGrid.Location = new System.Drawing.Point(0, 0);
-            this.m_propertyGrid.Name = "m_propertyGrid";
-            this.m_propertyGrid.Size = new System.Drawing.Size(168, 431);
-            this.m_propertyGrid.TabIndex = 5;
-            this.m_propertyGrid.ToolbarVisible = false;
+            this._propertyGrid.CanShowVisualStyleGlyphs = false;
+            this._propertyGrid.CommandsVisibleIfAvailable = false;
+            this._propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._propertyGrid.HelpVisible = false;
+            this._propertyGrid.Location = new System.Drawing.Point(0, 0);
+            this._propertyGrid.Name = "_propertyGrid";
+            this._propertyGrid.Size = new System.Drawing.Size(168, 431);
+            this._propertyGrid.TabIndex = 5;
+            this._propertyGrid.ToolbarVisible = false;
             // 
-            // m_splitter
+            // _splitter
             // 
-            this.m_splitter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.m_splitter.Location = new System.Drawing.Point(0, 145);
-            this.m_splitter.Name = "m_splitter";
+            this._splitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this._splitter.Location = new System.Drawing.Point(0, 145);
+            this._splitter.Name = "_splitter";
             // 
-            // m_splitter.Panel1
+            // _splitter.Panel1
             // 
-            this.m_splitter.Panel1.Controls.Add(this.m_propertyGrid);
+            this._splitter.Panel1.Controls.Add(this._propertyGrid);
             // 
-            // m_splitter.Panel2
+            // _splitter.Panel2
             // 
-            this.m_splitter.Panel2.Controls.Add(this.m_ctrlRenderPanel);
-            this.m_splitter.Size = new System.Drawing.Size(843, 431);
-            this.m_splitter.SplitterDistance = 168;
-            this.m_splitter.TabIndex = 6;
+            this._splitter.Panel2.Controls.Add(this._ctrlRenderPanel);
+            this._splitter.Size = new System.Drawing.Size(843, 431);
+            this._splitter.SplitterDistance = 168;
+            this._splitter.TabIndex = 6;
             // 
-            // m_renderWindowControlsComponent
+            // _renderWindowControlsComponent
             // 
-            this.m_renderWindowControlsComponent.LblCurrentDevice = this.m_lblDevice;
-            this.m_renderWindowControlsComponent.LblCurrentObjectCount = this.m_lblObjectCount;
-            this.m_renderWindowControlsComponent.LblCurrentResolution = this.m_lblResolution;
-            this.m_renderWindowControlsComponent.RenderControl = this.m_ctrlRenderPanel;
-            this.m_renderWindowControlsComponent.MnuChooseDevice = this.m_mnuChangeDevice;
-            this.m_renderWindowControlsComponent.TargetWindow = this;
-            this.m_renderWindowControlsComponent.MnuChangeResolution = this.m_mnuChangeResolution;
+            this._renderWindowControlsComponent.LblCurrentDevice = this._lblDevice;
+            this._renderWindowControlsComponent.LblCurrentObjectCount = this._lblObjectCount;
+            this._renderWindowControlsComponent.LblCurrentResolution = this._lblResolution;
+            this._renderWindowControlsComponent.RenderControl = this._ctrlRenderPanel;
+            this._renderWindowControlsComponent.MnuChooseDevice = this._mnuChangeDevice;
+            this._renderWindowControlsComponent.TargetWindow = this;
+            this._renderWindowControlsComponent.MnuChangeResolution = this._mnuChangeResolution;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 600);
-            this.Controls.Add(this.m_splitter);
-            this.Controls.Add(this.m_tabControlSamples);
-            this.Controls.Add(this.m_barTools);
-            this.Controls.Add(this.m_barStatus);
+            this.Controls.Add(this._splitter);
+            this.Controls.Add(this._tabControlSamples);
+            this.Controls.Add(this._barTools);
+            this.Controls.Add(this._barStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "Seeing# 2 - Windows.Forms samples - Main window";
-            this.m_barStatus.ResumeLayout(false);
-            this.m_barStatus.PerformLayout();
-            this.m_barTools.ResumeLayout(false);
-            this.m_barTools.PerformLayout();
-            this.m_splitter.Panel1.ResumeLayout(false);
-            this.m_splitter.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).EndInit();
-            this.m_splitter.ResumeLayout(false);
+            this._barStatus.ResumeLayout(false);
+            this._barStatus.PerformLayout();
+            this._barTools.ResumeLayout(false);
+            this._barTools.PerformLayout();
+            this._splitter.Panel1.ResumeLayout(false);
+            this._splitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._splitter)).EndInit();
+            this._splitter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -320,33 +320,33 @@
 
         
 
-        private Multimedia.Views.SeeingSharpRendererControl m_ctrlRenderPanel;
-        private System.Windows.Forms.Timer m_refreshTimer;
-        private System.Windows.Forms.StatusStrip m_barStatus;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblResolutionDesc;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblResolution;
-        private System.Windows.Forms.ToolStrip m_barTools;
-        private System.Windows.Forms.ToolStripDropDownButton m_mnuChangeResolution;
+        private Multimedia.Views.SeeingSharpRendererControl _ctrlRenderPanel;
+        private System.Windows.Forms.Timer _refreshTimer;
+        private System.Windows.Forms.StatusStrip _barStatus;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResolutionDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResolution;
+        private System.Windows.Forms.ToolStrip _barTools;
+        private System.Windows.Forms.ToolStripDropDownButton _mnuChangeResolution;
         private System.Windows.Forms.ToolStripMenuItem x600ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x768ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x1024ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x1080ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton m_cmdScreenshot;
-        private System.Windows.Forms.ToolStripButton m_cmdNewChildWindow;
+        private System.Windows.Forms.ToolStripButton _cmdScreenshot;
+        private System.Windows.Forms.ToolStripButton _cmdNewChildWindow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblObjectCountDesc;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblObjectCount;
-        private System.Windows.Forms.ToolStripDropDownButton m_mnuChangeDevice;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblDeviceDesc;
-        private System.Windows.Forms.ToolStripStatusLabel m_lblDevice;
-        private System.Windows.Forms.TabControl m_tabControlSamples;
-        private System.Windows.Forms.ImageList m_images;
+        private System.Windows.Forms.ToolStripStatusLabel _lblObjectCountDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblObjectCount;
+        private System.Windows.Forms.ToolStripDropDownButton _mnuChangeDevice;
+        private System.Windows.Forms.ToolStripStatusLabel _lblDeviceDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblDevice;
+        private System.Windows.Forms.TabControl _tabControlSamples;
+        private System.Windows.Forms.ImageList _images;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem to1024x1024ToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.PropertyGrid m_propertyGrid;
-        private System.Windows.Forms.SplitContainer m_splitter;
-        private RenderWindowControlsComponent m_renderWindowControlsComponent;
+        private System.Windows.Forms.PropertyGrid _propertyGrid;
+        private System.Windows.Forms.SplitContainer _splitter;
+        private RenderWindowControlsComponent _renderWindowControlsComponent;
     }
 }
 

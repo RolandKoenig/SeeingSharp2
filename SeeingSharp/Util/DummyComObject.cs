@@ -26,7 +26,7 @@ namespace SeeingSharp.Util
 {
     internal class DummyComObject : IUnknown, ICallbackable, IDisposable
     {
-        private int m_referenceCounter;
+        private int _referenceCounter;
 
         /// <inheritdoc />
         public virtual void Dispose()
@@ -44,15 +44,15 @@ namespace SeeingSharp.Util
         /// <inheritdoc />
         public int AddReference()
         {
-            m_referenceCounter++;
-            return m_referenceCounter;
+            _referenceCounter++;
+            return _referenceCounter;
         }
 
         /// <inheritdoc />
         public int Release()
         {
-            m_referenceCounter--;
-            return m_referenceCounter;
+            _referenceCounter--;
+            return _referenceCounter;
         }
 
         /// <inheritdoc />

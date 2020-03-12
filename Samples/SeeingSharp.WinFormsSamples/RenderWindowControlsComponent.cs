@@ -10,9 +10,9 @@ namespace SeeingSharp.WinFormsSamples
     [SuppressMessage("ReSharper", "LocalizableElement")]
     public class RenderWindowControlsComponent : Component
     {
-        private SeeingSharpRendererControl m_renderControl;
-        private ToolStripDropDownButton m_mnuChooseDevice;
-        private ToolStripDropDownButton m_mnuChangeResolution;
+        private SeeingSharpRendererControl _renderControl;
+        private ToolStripDropDownButton _mnuChooseDevice;
+        private ToolStripDropDownButton _mnuChangeResolution;
 
         public void UpdateTargetControlStates()
         {
@@ -21,22 +21,22 @@ namespace SeeingSharp.WinFormsSamples
             // Update all status labels
             if (this.LblCurrentResolution != null)
             {
-                var viewSize = m_renderControl.RenderLoop.ViewInformation.CurrentViewSize;
+                var viewSize = _renderControl.RenderLoop.ViewInformation.CurrentViewSize;
                 this.LblCurrentResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
             }
             if (this.LblCurrentObjectCount != null)
             {
-                this.LblCurrentObjectCount.Text = m_renderControl.RenderLoop.VisibleObjectCount.ToString();
+                this.LblCurrentObjectCount.Text = _renderControl.RenderLoop.VisibleObjectCount.ToString();
             }
             if (this.LblCurrentDevice != null)
             {
-                this.LblCurrentDevice.Text = m_renderControl.RenderLoop.Device?.AdapterDescription ?? "-";
+                this.LblCurrentDevice.Text = _renderControl.RenderLoop.Device?.AdapterDescription ?? "-";
             }
         }
 
         public void ChangeRenderResolution(int width, int height)
         {
-            var renderControl = m_renderControl;
+            var renderControl = _renderControl;
             if (renderControl == null) { return; }
 
             var targetWindow = this.TargetWindow;
@@ -56,11 +56,11 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnCmdChangeDevice_Click(object sender, EventArgs eArgs)
         {
-            if (m_renderControl == null) { return; }
+            if (_renderControl == null) { return; }
             if (!(sender is ToolStripButton changeButton)) { return; }
             if (!(changeButton.Tag is EngineDevice device)) { return; }
 
-            m_renderControl.RenderLoop.SetRenderingDevice(device);
+            _renderControl.RenderLoop.SetRenderingDevice(device);
         }
 
         private void OnCmdChangeResolution_Click(object sender, EventArgs e)
@@ -80,13 +80,13 @@ namespace SeeingSharp.WinFormsSamples
 
         public SeeingSharpRendererControl RenderControl
         {
-            get => m_renderControl;
+            get => _renderControl;
             set
             {
-                if (m_renderControl != value)
+                if (_renderControl != value)
                 {
-                    m_renderControl = value;
-                    if (m_renderControl != null)
+                    _renderControl = value;
+                    if (_renderControl != null)
                     {
                         this.UpdateTargetControlStates();
                     }
@@ -114,16 +114,16 @@ namespace SeeingSharp.WinFormsSamples
 
         public ToolStripDropDownButton MnuChooseDevice
         {
-            get => m_mnuChooseDevice;
+            get => _mnuChooseDevice;
             set
             {
-                if (m_mnuChooseDevice != value)
+                if (_mnuChooseDevice != value)
                 {
                     // Clear previously generated menu buttons
-                    m_mnuChooseDevice?.DropDownItems.Clear();
+                    _mnuChooseDevice?.DropDownItems.Clear();
          
                     // Update member
-                    m_mnuChooseDevice = value;
+                    _mnuChooseDevice = value;
 
                     // Generate one menu button per device
                     if (GraphicsCore.IsLoaded)
@@ -136,7 +136,7 @@ namespace SeeingSharp.WinFormsSamples
                             };
 
                             newButton.Click += this.OnCmdChangeDevice_Click;
-                            m_mnuChooseDevice.DropDownItems.Add(newButton);
+                            _mnuChooseDevice.DropDownItems.Add(newButton);
                         }
                     }
                 }
@@ -145,15 +145,15 @@ namespace SeeingSharp.WinFormsSamples
 
         public ToolStripDropDownButton MnuChangeResolution
         {
-            get => m_mnuChangeResolution;
+            get => _mnuChangeResolution;
             set
             {
-                if (m_mnuChangeResolution != value)
+                if (_mnuChangeResolution != value)
                 {
                     // Deregister from old menu
-                    if (m_mnuChangeResolution != null)
+                    if (_mnuChangeResolution != null)
                     {
-                        foreach (var actItem in m_mnuChangeResolution.DropDownItems)
+                        foreach (var actItem in _mnuChangeResolution.DropDownItems)
                         {
                             if (!(actItem is ToolStripMenuItem actDropDownButton)) { continue; }
                             if (!(actDropDownButton.Tag is string actTag)){ continue; }
@@ -164,12 +164,12 @@ namespace SeeingSharp.WinFormsSamples
                     }
 
                     // Update member
-                    m_mnuChangeResolution = value;
+                    _mnuChangeResolution = value;
 
                     // Register on new menu
                     if(GraphicsCore.IsLoaded)
                     {
-                        foreach (var actItem in m_mnuChangeResolution.DropDownItems)
+                        foreach (var actItem in _mnuChangeResolution.DropDownItems)
                         {
                             if (!(actItem is ToolStripMenuItem actDropDownButton)) { continue; }
                             if (!(actDropDownButton.Tag is string actTag)){ continue; }

@@ -35,14 +35,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class Direct2DOneTimeRenderTextureResource : TextureResource
     {
         // Configuration
-        private Custom2DDrawingLayer m_drawingLayer;
-        private BrushResource m_fillBrush;
-        private int m_width;
-        private int m_height;
+        private Custom2DDrawingLayer _drawingLayer;
+        private BrushResource _fillBrush;
+        private int _width;
+        private int _height;
 
         // Resources for Direct3D
-        private D3D11.Texture2D m_renderTargetTexture;
-        private D3D11.ShaderResourceView m_renderTargetTextureView;
+        private D3D11.Texture2D _renderTargetTexture;
+        private D3D11.ShaderResourceView _renderTargetTextureView;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOneTimeRenderTextureResource"/> class.
@@ -56,9 +56,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             width.EnsurePositiveOrZero(nameof(width));
             height.EnsurePositiveOrZero(nameof(height));
 
-            m_drawingLayer = drawingLayer;
-            m_width = width;
-            m_height = height;
+            _drawingLayer = drawingLayer;
+            _width = width;
+            _height = height;
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             width.EnsurePositiveOrZero(nameof(width));
             height.EnsurePositiveOrZero(nameof(height));
 
-            m_fillBrush = fillBrush;
-            m_width = width;
-            m_height = height;
+            _fillBrush = fillBrush;
+            _width = width;
+            _height = height;
         }
 
         /// <summary>
@@ -85,32 +85,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_renderTargetTexture = GraphicsHelper.Internals.CreateRenderTargetTexture(
-                device, m_width, m_height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
-            m_renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, m_renderTargetTexture);
+            _renderTargetTexture = GraphicsHelper.Internals.CreateRenderTargetTexture(
+                device, _width, _height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
+            _renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, _renderTargetTexture);
 
             // Create resources for rendering on the texture
             using (var overlayRenderer = new Direct2DOverlayRenderer(
                 device,
-                m_renderTargetTexture,
-                m_width, m_height,
+                _renderTargetTexture,
+                _width, _height,
                 DpiScaling.Default))
             {
-                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(m_width, m_height));
+                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(_width, _height));
 
                 // Start drawing
                 overlayRenderer.BeginDraw();
                 try
                 {
-                    if (m_drawingLayer != null)
+                    if (_drawingLayer != null)
                     {
-                        m_drawingLayer.Draw2DInternal(graphics2D);
+                        _drawingLayer.Draw2DInternal(graphics2D);
                     }
-                    else if (m_fillBrush != null)
+                    else if (_fillBrush != null)
                     {
                         graphics2D.FillRectangle(
-                            new RectangleF(0f, 0f, m_width, m_height),
-                            m_fillBrush);
+                            new RectangleF(0f, 0f, _width, _height),
+                            _fillBrush);
                     }
                 }
                 finally
@@ -127,24 +127,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpUtil.SafeDispose(ref m_renderTargetTextureView);
-            SeeingSharpUtil.SafeDispose(ref m_renderTargetTexture);
+            SeeingSharpUtil.SafeDispose(ref _renderTargetTextureView);
+            SeeingSharpUtil.SafeDispose(ref _renderTargetTexture);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_renderTargetTexture != null;
+        public override bool IsLoaded => _renderTargetTexture != null;
 
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal override D3D11.Texture2D Texture => m_renderTargetTexture;
+        internal override D3D11.Texture2D Texture => _renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => m_renderTargetTextureView;
+        internal override D3D11.ShaderResourceView TextureView => _renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.

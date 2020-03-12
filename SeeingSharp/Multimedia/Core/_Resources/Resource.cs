@@ -26,10 +26,10 @@ namespace SeeingSharp.Multimedia.Core
 {
     public abstract class Resource : IDisposable
     {
-        private EngineDevice m_device;
-        private NamedOrGenericKey m_key;
-        private bool m_markedForReloading;
-        private ResourceDictionary m_resourceDictionary;
+        private EngineDevice _device;
+        private NamedOrGenericKey _key;
+        private bool _markedForReloading;
+        private ResourceDictionary _resourceDictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Resource"/> class.
@@ -37,7 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         protected Resource()
         {
             this.ResourceType = this.GetType();
-            m_key = new NamedOrGenericKey();
+            _key = new NamedOrGenericKey();
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected void ReloadResource()
         {
-            m_markedForReloading = true;
+            _markedForReloading = true;
         }
 
         /// <summary>
@@ -84,16 +84,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void LoadResource()
         {
-            if (m_resourceDictionary == null) { throw new SeeingSharpGraphicsException("Unable to load resource: Resource " + m_key + " hos no registered ResourceDictionary!"); }
-            if (m_device == null) { throw new SeeingSharpGraphicsException("Unable to load resource: Resource " + m_key + " hos no registered Device!"); }
+            if (_resourceDictionary == null) { throw new SeeingSharpGraphicsException("Unable to load resource: Resource " + _key + " hos no registered ResourceDictionary!"); }
+            if (_device == null) { throw new SeeingSharpGraphicsException("Unable to load resource: Resource " + _key + " hos no registered Device!"); }
 
             try
             {
-                this.LoadResourceInternal(m_device, m_resourceDictionary);
+                this.LoadResourceInternal(_device, _resourceDictionary);
             }
             finally
             {
-                m_markedForReloading = false;
+                _markedForReloading = false;
             }
         }
 
@@ -102,10 +102,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal void UnloadResource()
         {
-            if (m_resourceDictionary == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + m_key + " hos no registered ResourceDictionary!"); }
-            if (m_device == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + m_key + " hos no registered Device!"); }
+            if (_resourceDictionary == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + _key + " hos no registered ResourceDictionary!"); }
+            if (_device == null) { throw new SeeingSharpGraphicsException("Unable to unload resource: Resource " + _key + " hos no registered Device!"); }
 
-            this.UnloadResourceInternal(m_device, m_resourceDictionary);
+            this.UnloadResourceInternal(_device, _resourceDictionary);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (!this.IsLoaded) { return false; }
-                return m_markedForReloading;
+                return _markedForReloading;
             }
         }
 
@@ -133,30 +133,30 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public NamedOrGenericKey Key
         {
-            get => m_key;
+            get => _key;
             internal set
             {
-                if (!m_key.IsEmpty) { throw new SeeingSharpGraphicsException("Unable to change key because there is already a valid key set!"); }
-                m_key = value;
+                if (!_key.IsEmpty) { throw new SeeingSharpGraphicsException("Unable to change key because there is already a valid key set!"); }
+                _key = value;
             }
         }
 
         /// <summary>
         /// Is the resource key empty?
         /// </summary>
-        public bool IsKeyEmpty => m_key.IsEmpty;
+        public bool IsKeyEmpty => _key.IsEmpty;
 
         /// <summary>
         /// Gets the parent ResourceDictionary object.
         /// </summary>
         public ResourceDictionary Dictionary
         {
-            get => m_resourceDictionary;
+            get => _resourceDictionary;
             internal set
             {
-                m_resourceDictionary = value;
-                if (m_resourceDictionary != null) { m_device = m_resourceDictionary.Device; }
-                else { m_device = null; }
+                _resourceDictionary = value;
+                if (_resourceDictionary != null) { _device = _resourceDictionary.Device; }
+                else { _device = null; }
             }
         }
 

@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Do create the object-id buffer.
         /// </summary>
-        ObjectID = 4,
+        ObjectId = 4,
 
         /// <summary>
         /// Do create the normal-depth buffer.
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Create all textures.
         /// </summary>
-        All = Color | Depth | ObjectID | NormalDepth
+        All = Color | Depth | ObjectId | NormalDepth
     }
 
     /// <summary>
@@ -87,13 +87,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Use all buffers from this RenderTargetTexture.
         /// </summary>
-        Default_OwnAll = UseOwnColorBuffer | UseOwnDepthBuffer | UseOwnObjectIDBuffer | UseOwnNormalDepthBuffer,
+        Default_OwnAll = UseOwnColorBuffer | UseOwnDepthBuffer | UseOwnObjectIdBuffer | UseOwnNormalDepthBuffer,
 
-        Default_OwnColorDepth_PrevObjectIDNormalDepth = UseOwnColorBuffer | UseOwnDepthBuffer | OvertakeObjectIDBuffer | OvertakeNormalDepthBuffer,
+        Default_OwnColorDepth_PrevObjectIdNormalDepth = UseOwnColorBuffer | UseOwnDepthBuffer | OvertakeObjectIdBuffer | OvertakeNormalDepthBuffer,
 
-        Default_OwnColor_PrevDepthObjectIDNormalDepth = UseOwnColorBuffer | OvertakeDepthBuffer | OvertakeObjectIDBuffer | OvertakeNormalDepthBuffer,
+        Default_OwnColor_PrevDepthObjectIdNormalDepth = UseOwnColorBuffer | OvertakeDepthBuffer | OvertakeObjectIdBuffer | OvertakeNormalDepthBuffer,
 
-        Default_OwnColorNormalDepth_PrevDepthObjectID = UseOwnColorBuffer | OvertakeDepthBuffer | OvertakeObjectIDBuffer | UseOwnNormalDepthBuffer,
+        Default_OwnColorNormalDepth_PrevDepthObjectId = UseOwnColorBuffer | OvertakeDepthBuffer | OvertakeObjectIdBuffer | UseOwnNormalDepthBuffer,
 
         /// <summary>
         /// Use the color buffer defined by this render-target texture.
@@ -102,7 +102,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         UseOwnDepthBuffer = 2,
 
-        UseOwnObjectIDBuffer = 4,
+        UseOwnObjectIdBuffer = 4,
 
         UseOwnNormalDepthBuffer = 8,
 
@@ -110,7 +110,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         OvertakeDepthBuffer = 32,
 
-        OvertakeObjectIDBuffer = 64,
+        OvertakeObjectIdBuffer = 64,
 
         OvertakeNormalDepthBuffer = 128
     }

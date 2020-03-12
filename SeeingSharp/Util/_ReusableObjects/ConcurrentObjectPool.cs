@@ -38,14 +38,14 @@ namespace SeeingSharp.Util
     public class ConcurrentObjectPool<T> 
         where T : class
     {
-        private T m_firstItem;
-        private readonly T[] m_items;
-        private readonly Func<T> m_generator;
+        private T _firstItem;
+        private readonly T[] _items;
+        private readonly Func<T> _generator;
 
         public ConcurrentObjectPool(Func<T> generator, int size)
         {
-            m_generator = generator ?? throw new ArgumentNullException(nameof(generator));
-            m_items = new T[size - 1];
+            _generator = generator ?? throw new ArgumentNullException(nameof(generator));
+            _items = new T[size - 1];
         }
 
         public T Rent()
@@ -54,8 +54,8 @@ namespace SeeingSharp.Util
             // Note that the initial read is optimistically not synchronized. That is intentional. 
             // We will interlock only when we have a candidate. in a worst case we may miss some
             // recently returned objects. Not a big deal.
-            var inst = m_firstItem;
-            if (inst == null || inst != Interlocked.CompareExchange(ref m_firstItem, null, inst))
+            var inst = _firstItem;
+            if (inst == null || inst != Interlocked.CompareExchange(ref _firstItem, null, inst))
             {
                 inst = this.RentSlow();
             }
@@ -64,12 +64,12 @@ namespace SeeingSharp.Util
 
         public void Return(T item)
         {
-            if (m_firstItem == null)
+            if (_firstItem == null)
             {
                 // Intentionally not using interlocked here. 
                 // In a worst case scenario two objects may be stored into same slot.
                 // It is very unlikely to happen and will only mean that one of the objects will get collected.
-                m_firstItem = item;
+                _firstItem = item;
             }
             else
             {
@@ -79,33 +79,33 @@ namespace SeeingSharp.Util
 
         private T RentSlow()
         {
-            for (var i = 0; i < m_items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 // Note that the initial read is optimistically not synchronized. That is intentional. 
                 // We will interlock only when we have a candidate. in a worst case we may miss some
                 // recently returned objects. Not a big deal.
-                var inst = m_items[i];
+                var inst = _items[i];
                 if (inst != null)
                 {
-                    if (inst == Interlocked.CompareExchange(ref m_items[i], null, inst))
+                    if (inst == Interlocked.CompareExchange(ref _items[i], null, inst))
                     {
                         return inst;
                     }
                 }
             }
-            return m_generator();
+            return _generator();
         }
 
         private void ReturnSlow(T obj)
         {
-            for (var i = 0; i < m_items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
-                if (m_items[i] == null)
+                if (_items[i] == null)
                 {
                     // Intentionally not using interlocked here. 
                     // In a worst case scenario two objects may be stored into same slot.
                     // It is very unlikely to happen and will only mean that one of the objects will get collected.
-                    m_items[i] = obj;
+                    _items[i] = obj;
                     break;
                 }
             }

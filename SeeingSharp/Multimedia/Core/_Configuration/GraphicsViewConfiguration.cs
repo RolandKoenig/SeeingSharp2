@@ -40,16 +40,16 @@ namespace SeeingSharp.Multimedia.Core
         private const bool DEFAULT_SWAP_CHAIN_WIDTH_ALPHA = false;
 
         // Antialiasing configuration
-        private bool m_antialiasingEnabled;
-        private AntialiasingQualityLevel m_antialiasingQuality;
+        private bool _antialiasingEnabled;
+        private AntialiasingQualityLevel _antialiasingQuality;
 
         // Most view parameters (Light, Gradient, Accentuation)
-        private float m_generatedBorderFactor;
-        private float m_accentuationFactor;
-        private float m_ambientFactor;
-        private float m_lightPower;
-        private float m_strongLightFactor;
-        private bool m_alphaEnabledSwapChain;
+        private float _generatedBorderFactor;
+        private float _accentuationFactor;
+        private float _ambientFactor;
+        private float _lightPower;
+        private float _strongLightFactor;
+        private bool _alphaEnabledSwapChain;
 
         /// <summary>
         /// Occurs when any configuration flag has changed.
@@ -67,12 +67,12 @@ namespace SeeingSharp.Multimedia.Core
             this.WireframeEnabled = DEFAULT_WIREFRAME;
             this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
             this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
-            m_generatedBorderFactor = DEFAULT_BORDER_FACTOR;
-            m_accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
-            m_ambientFactor = DEFAULT_AMBIENT_FACTOR;
-            m_lightPower = DEFAULT_LIGHT_POWER;
-            m_strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
-            m_alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
+            _generatedBorderFactor = DEFAULT_BORDER_FACTOR;
+            _accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
+            _ambientFactor = DEFAULT_AMBIENT_FACTOR;
+            _lightPower = DEFAULT_LIGHT_POWER;
+            _strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
+            _alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
         }
 
         public void Reset()
@@ -106,12 +106,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ANTIALIASING)]
         public bool AntialiasingEnabled
         {
-            get => m_antialiasingEnabled;
+            get => _antialiasingEnabled;
             set
             {
-                if (m_antialiasingEnabled != value)
+                if (_antialiasingEnabled != value)
                 {
-                    m_antialiasingEnabled = value;
+                    _antialiasingEnabled = value;
                     this.ViewNeedsRefresh = true;
 
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -125,12 +125,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ANTIALIASING_QUALITY)]
         public AntialiasingQualityLevel AntialiasingQuality
         {
-            get => m_antialiasingQuality;
+            get => _antialiasingQuality;
             set
             {
-                if (m_antialiasingQuality != value)
+                if (_antialiasingQuality != value)
                 {
-                    m_antialiasingQuality = value;
+                    _antialiasingQuality = value;
                     this.ViewNeedsRefresh = true;
 
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
@@ -141,12 +141,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_BORDER_FACTOR)]
         public float GeneratedBorderFactor
         {
-            get => m_generatedBorderFactor;
+            get => _generatedBorderFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_generatedBorderFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_generatedBorderFactor, value))
                 {
-                    m_generatedBorderFactor = value;
+                    _generatedBorderFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -155,12 +155,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_ACCENTUATION_FACTOR)]
         public float AccentuationFactor
         {
-            get => m_accentuationFactor;
+            get => _accentuationFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_accentuationFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_accentuationFactor, value))
                 {
-                    m_accentuationFactor = value;
+                    _accentuationFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -169,12 +169,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_AMBIENT_FACTOR)]
         public float AmbientFactor
         {
-            get => m_ambientFactor;
+            get => _ambientFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_ambientFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_ambientFactor, value))
                 {
-                    m_ambientFactor = value;
+                    _ambientFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -183,12 +183,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_LIGHT_POWER)]
         public float LightPower
         {
-            get => m_lightPower;
+            get => _lightPower;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_lightPower, value))
+                if (!EngineMath.EqualsWithTolerance(_lightPower, value))
                 {
-                    m_lightPower = value;
+                    _lightPower = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -197,12 +197,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_STRONG_LIGHT_FACTOR)]
         public float StrongLightFactor
         {
-            get => m_strongLightFactor;
+            get => _strongLightFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_strongLightFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_strongLightFactor, value))
                 {
-                    m_strongLightFactor = value;
+                    _strongLightFactor = value;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }
             }
@@ -230,12 +230,12 @@ namespace SeeingSharp.Multimedia.Core
         [DefaultValue(DEFAULT_SWAP_CHAIN_WIDTH_ALPHA)]
         public bool AlphaEnabledSwapChain
         {
-            get => m_alphaEnabledSwapChain;
+            get => _alphaEnabledSwapChain;
             set
             {
-                if (m_alphaEnabledSwapChain != value)
+                if (_alphaEnabledSwapChain != value)
                 {
-                    m_alphaEnabledSwapChain = value;
+                    _alphaEnabledSwapChain = value;
                     this.ViewNeedsRefresh = true;
                     this.ConfigurationChanged.Raise(this, EventArgs.Empty);
                 }

@@ -29,26 +29,26 @@ namespace SeeingSharp.Multimedia.Core
 {
     internal class PipelineStatisticsQueryHelper : IDisposable, ICheckDisposed
     {
-        private D3D11.DeviceContext m_deviceContext;
-        private D3D11.Query m_query;
-        private D3D11.QueryDataPipelineStatistics m_result;
-        private bool m_resultGot;
+        private D3D11.DeviceContext _deviceContext;
+        private D3D11.Query _query;
+        private D3D11.QueryDataPipelineStatistics _result;
+        private bool _resultGot;
 
         public PipelineStatisticsQueryHelper(EngineDevice device)
         {
             var deviceD3D11 = device.DeviceD3D11_1;
-            m_deviceContext = device.DeviceImmediateContextD3D11;
+            _deviceContext = device.DeviceImmediateContextD3D11;
 
             var queryDesc = new D3D11.QueryDescription();
             queryDesc.Type = D3D11.QueryType.PipelineStatistics;
-            m_query = new D3D11.Query(deviceD3D11, queryDesc);
-            m_deviceContext.Begin(m_query);
+            _query = new D3D11.Query(deviceD3D11, queryDesc);
+            _deviceContext.Begin(_query);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_query);
+            SeeingSharpUtil.SafeDispose(ref _query);
         }
 
         public void PrintPipelineStatisticsToDebug(string header)
@@ -69,17 +69,17 @@ namespace SeeingSharp.Multimedia.Core
 
         public D3D11.QueryDataPipelineStatistics GetPipelineStatistics()
         {
-            if (m_query == null) { throw new ObjectDisposedException(nameof(PipelineStatisticsQueryHelper)); }
-            if (m_resultGot) { return m_result; }
+            if (_query == null) { throw new ObjectDisposedException(nameof(PipelineStatisticsQueryHelper)); }
+            if (_resultGot) { return _result; }
 
-            m_deviceContext.End(m_query);
-            while (!m_deviceContext.GetData(m_query, out m_result)) { }
-            m_resultGot = true;
+            _deviceContext.End(_query);
+            while (!_deviceContext.GetData(_query, out _result)) { }
+            _resultGot = true;
 
-            return m_result;
+            return _result;
         }
 
         /// <inheritdoc />
-        public bool IsDisposed => m_query == null;
+        public bool IsDisposed => _query == null;
     }
 }

@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerD2D : IDisposable, ICheckDisposed
     {
-        private D2D.Factory2 m_factory;
+        private D2D.Factory2 _factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerD2D"/> class.
         /// </summary>
         internal FactoryHandlerD2D(GraphicsCoreConfiguration coreConfiguration)
         {
-            m_factory = new D2D.Factory2(
+            _factory = new D2D.Factory2(
                 D2D.FactoryType.SingleThreaded,
                 coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
         }
@@ -45,20 +45,20 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_factory);
+            SeeingSharpUtil.SafeDispose(ref _factory);
         }
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
-        public bool IsDisposed => m_factory == null;
+        public bool IsDisposed => _factory == null;
 
         internal D2D.Factory2 Factory
         {
             get
             {
-                if(m_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerD2D)); }
-                return m_factory;
+                if(_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerD2D)); }
+                return _factory;
             }
         }
     }

@@ -62,16 +62,16 @@ namespace SeeingSharp.Multimedia.Core
         //*********************************************************************
         public class WicBitmapSourceInternalInternals
         {
-            private WicBitmapSourceInternal m_owner;
+            private WicBitmapSourceInternal _owner;
 
             public WicBitmapSourceInternalInternals(WicBitmapSourceInternal owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
-            public BitmapDecoder Decoder => m_owner.Decoder;
+            public BitmapDecoder Decoder => _owner.Decoder;
 
-            public FormatConverter Converter => m_owner.Converter;
+            public FormatConverter Converter => _owner.Converter;
         }
     }
 }

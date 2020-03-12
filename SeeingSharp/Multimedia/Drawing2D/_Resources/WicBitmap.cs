@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class WicBitmap : IDisposable
     {
         // Native resource
-        private Bitmap m_wicBitmap;
+        private Bitmap _wicBitmap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmap"/> class.
@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="wicBitmap">The unmanaged bitmap data object.</param>
         private WicBitmap(Bitmap wicBitmap)
         {
-            m_wicBitmap = wicBitmap;
+            _wicBitmap = wicBitmap;
         }
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
@@ -79,24 +79,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public byte[] GetPixelsAsBgra()
         {
-            if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+            if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
 
-            var result = new byte[m_wicBitmap.Size.Width * m_wicBitmap.Size.Height * 4];
-            m_wicBitmap.CopyPixels(result, m_wicBitmap.Size.Width * 4);
+            var result = new byte[_wicBitmap.Size.Width * _wicBitmap.Size.Height * 4];
+            _wicBitmap.CopyPixels(result, _wicBitmap.Size.Width * 4);
             return result;
         }
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_wicBitmap);
+            SeeingSharpUtil.SafeDispose(ref _wicBitmap);
         }
 
         public int Width
         {
             get
             {
-                if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return m_wicBitmap.Size.Width;
+                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                return _wicBitmap.Size.Width;
             }
         }
 
@@ -104,8 +104,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                if (m_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return m_wicBitmap.Size.Height;
+                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                return _wicBitmap.Size.Height;
             }
         }
     }

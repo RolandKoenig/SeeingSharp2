@@ -28,10 +28,7 @@ namespace SeeingSharp.Multimedia.Core
     public class ViewInformation
     {
         // Runtime values
-        private BoundingFrustum m_cameraFrustum;
-
-        // Object filters for the scene model
-        private List<SceneObjectFilter> m_sceneObjectFilters;
+        private BoundingFrustum _cameraFrustum;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewInformation" /> class.
@@ -39,9 +36,6 @@ namespace SeeingSharp.Multimedia.Core
         internal ViewInformation(RenderLoop owner)
         {
             Owner = owner;
-
-            //Initialize scene object filter
-            m_sceneObjectFilters = new List<SceneObjectFilter>();
 
             ViewIndex = -1;
         }
@@ -57,7 +51,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewProjectionMatrix"></param>
         internal void UpdateFrustum(Matrix4x4 viewProjectionMatrix)
         {
-            m_cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
+            _cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
         }
 
         /// <summary>
@@ -83,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the bounding frustum defining the area the camera sees in the 3D world.
         /// </summary>
-        public BoundingFrustum CameraBoundingFrustum => m_cameraFrustum;
+        public BoundingFrustum CameraBoundingFrustum => _cameraFrustum;
 
         /// <summary>
         /// Gets the configuration that belongs to this view.
@@ -93,7 +87,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the collection containing all filters.
         /// </summary>
-        internal List<SceneObjectFilter> FiltersInternl => Owner.FiltersInternal;
+        internal List<SceneObjectFilter> FiltersInternal => Owner.FiltersInternal;
 
         /// <summary>
         /// The owner of this ViewInformation object (standard field for fast access):

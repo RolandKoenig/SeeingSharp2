@@ -25,22 +25,22 @@ namespace SeeingSharp.Util
 {
     public class MultiDisposable : IDisposable
     {
-        private IDisposable[] m_collection;
+        private IDisposable[] _collection;
 
         public MultiDisposable(params IDisposable[] collection)
         {
-            m_collection = collection;
+            _collection = collection;
         }
 
         public void Dispose()
         {
-            if (m_collection == null) { return; }
+            if (_collection == null) { return; }
 
-            foreach (var actDisposable in m_collection)
+            foreach (var actDisposable in _collection)
             {
                 actDisposable.Dispose();
             }
-            m_collection = null;
+            _collection = null;
         }
     }
 }

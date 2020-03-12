@@ -9,18 +9,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D
     {
         public const string CATEGORY_NAME = "Primitive";
 
-        private bool m_textured = false;
-        private bool m_animated = true;
+        private bool _textured = false;
+        private bool _animated = true;
 
         [Category(CATEGORY_NAME)]
         public bool Textured
         {
-            get => m_textured;
+            get => _textured;
             set
             {
-                if (m_textured != value)
+                if (_textured != value)
                 {
-                    m_textured = value;
+                    _textured = value;
                     base.RaiseRecreateRequest();
                 }
             }
@@ -29,12 +29,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D
         [Category(CATEGORY_NAME)]
         public bool Animated
         {
-            get => m_animated;
+            get => _animated;
             set
             {
-                if (m_animated != value)
+                if (_animated != value)
                 {
-                    m_animated = value;
+                    _animated = value;
                     base.RaiseRecreateRequest();
                 }
             }

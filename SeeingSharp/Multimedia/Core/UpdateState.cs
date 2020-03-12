@@ -30,8 +30,8 @@ namespace SeeingSharp.Multimedia.Core
     public class UpdateState : IAnimationUpdateState
     {
         // Parameters passed by global loop
-        private int m_updateTimeMilliseconds;
-        private TimeSpan m_updateTime;
+        private int _updateTimeMilliseconds;
+        private TimeSpan _updateTime;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
@@ -47,8 +47,8 @@ namespace SeeingSharp.Multimedia.Core
         public UpdateState(TimeSpan updateTime)
             : this()
         {
-            m_updateTime = updateTime;
-            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+            _updateTime = updateTime;
+            _updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             var result = new UpdateState
             {
-                m_updateTime = m_updateTime,
-                m_updateTimeMilliseconds = m_updateTimeMilliseconds
+                _updateTime = _updateTime,
+                _updateTimeMilliseconds = _updateTimeMilliseconds
             };
 
             return result;
@@ -72,19 +72,19 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="updateTime">The update time.</param>
         internal void Reset(TimeSpan updateTime)
         {
-            m_updateTime = updateTime;
-            m_updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+            _updateTime = updateTime;
+            _updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
         }
 
         /// <summary>
         /// Gets current update time.
         /// </summary>
-        public TimeSpan UpdateTime => m_updateTime;
+        public TimeSpan UpdateTime => _updateTime;
 
         /// <summary>
         /// Gets the current update time in milliseconds.
         /// </summary>
-        public int UpdateTimeMilliseconds => m_updateTimeMilliseconds;
+        public int UpdateTimeMilliseconds => _updateTimeMilliseconds;
 
         public bool IgnorePauseState
         {

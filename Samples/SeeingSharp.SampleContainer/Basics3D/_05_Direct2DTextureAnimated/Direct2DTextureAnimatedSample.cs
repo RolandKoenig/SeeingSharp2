@@ -38,9 +38,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
         typeof(SampleSettingsWith3D))]
     public class Direct2DTextureAnimatedSample : SampleBase
     {
-        private SolidBrushResource m_animatedRectBrush;
-        private SolidBrushResource m_solidBrush;
-        private TextFormatResource m_textFormat;
+        private SolidBrushResource _animatedRectBrush;
+        private SolidBrushResource _solidBrush;
+        private TextFormatResource _textFormat;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -50,8 +50,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
             var animationMillis = 3000f;
 
             // 2D rendering is made here
-            m_solidBrush = new SolidBrushResource(Color4.Gray);
-            m_animatedRectBrush = new SolidBrushResource(Color4.RedColor);
+            _solidBrush = new SolidBrushResource(Color4.Gray);
+            _animatedRectBrush = new SolidBrushResource(Color4.RedColor);
 
             var d2DDrawingLayer = new Custom2DDrawingLayer(graphics =>
             {
@@ -60,7 +60,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
                 graphics.Clear(Color4.LightBlue);
                 graphics.FillRoundedRectangle(
                     d2DRectangle, 30, 30,
-                    m_solidBrush);
+                    _solidBrush);
 
                 // Recalculate current location of the red rectangle on each frame
                 var currentLocation = (float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis / animationMillis;
@@ -70,7 +70,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
                         20f + rectPos.x,
                         20f + rectPos.y,
                         50f, 50f),
-                    m_animatedRectBrush);
+                    _animatedRectBrush);
             });
 
             // Build 3D scene
@@ -123,9 +123,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
         {
             base.OnClosed();
 
-            SeeingSharpUtil.SafeDispose(ref m_solidBrush);
-            SeeingSharpUtil.SafeDispose(ref m_animatedRectBrush);
-            SeeingSharpUtil.SafeDispose(ref m_textFormat);
+            SeeingSharpUtil.SafeDispose(ref _solidBrush);
+            SeeingSharpUtil.SafeDispose(ref _animatedRectBrush);
+            SeeingSharpUtil.SafeDispose(ref _textFormat);
         }
 
         public (float x, float y) GetAnimationLocation(float procentualLoc, float maxWidth, float maxHeight)

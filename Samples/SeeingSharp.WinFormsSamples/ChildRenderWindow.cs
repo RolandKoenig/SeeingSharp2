@@ -24,21 +24,21 @@ namespace SeeingSharp.WinFormsSamples
 
         public void InitializeChildWindow(Scene scene, Camera3DViewPoint viewPoint)
         {
-            m_ctrlRenderer.Scene = scene;
-            m_ctrlRenderer.Camera.ApplyViewPoint(viewPoint);
+            _ctrlRenderer.Scene = scene;
+            _ctrlRenderer.Camera.ApplyViewPoint(viewPoint);
         }
 
         public async Task SetRenderingDataAsync(SampleBase actSample)
         {
-            await actSample.OnInitRenderingWindowAsync(m_ctrlRenderer.RenderLoop);
+            await actSample.OnInitRenderingWindowAsync(_ctrlRenderer.RenderLoop);
 
-            await m_ctrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
+            await _ctrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
                 new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 10f));
         }
 
         public async Task ClearAsync()
         {
-            await m_ctrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+            await _ctrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -53,12 +53,12 @@ namespace SeeingSharp.WinFormsSamples
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             // Register viewbox filter
-            m_ctrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            _ctrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            this.m_renderWindowControlsComponent.UpdateTargetControlStates();
+            this._renderWindowControlsComponent.UpdateTargetControlStates();
         }
     }
 }

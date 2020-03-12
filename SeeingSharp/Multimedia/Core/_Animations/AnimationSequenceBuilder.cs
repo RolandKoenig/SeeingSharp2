@@ -25,11 +25,11 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    internal class AnimationSequenceBuilder<TargetType> : IAnimationSequenceBuilder<TargetType>
-        where TargetType : class
+    internal class AnimationSequenceBuilder<TTargetType> : IAnimationSequenceBuilder<TTargetType>
+        where TTargetType : class
     {
-        private bool m_applied;
-        private List<IAnimation> m_sequenceList;
+        private bool _applied;
+        private List<IAnimation> _sequenceList;
 
         /// <summary>
         /// Initializes a new instance of the AnimationSequenceBuilder class.
@@ -40,7 +40,7 @@ namespace SeeingSharp.Multimedia.Core
             : this()
         {
             this.AnimationHandler = owner;
-            this.TargetObject = owner.Owner as TargetType;
+            this.TargetObject = owner.Owner as TTargetType;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="owner">The owner object.</param>
         /// <param name="animatedObject">The object which gets animated.</param>
         /// <exception cref="System.ArgumentException">Unable to cast target object of this AnimationSequenceBuilder to the generic type parameter!</exception>
-        internal AnimationSequenceBuilder(AnimationHandler owner, TargetType animatedObject)
+        internal AnimationSequenceBuilder(AnimationHandler owner, TTargetType animatedObject)
             : this()
         {
             this.AnimationHandler = owner;
@@ -61,16 +61,16 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private AnimationSequenceBuilder()
         {
-            m_sequenceList = new List<IAnimation>();
+            _sequenceList = new List<IAnimation>();
         }
 
         /// <summary>
         /// Adds an AnimationSequence to the builder.
         /// </summary>
-        public IAnimationSequenceBuilder<TargetType> Add(IAnimation animationSequence)
+        public IAnimationSequenceBuilder<TTargetType> Add(IAnimation animationSequence)
         {
-            if (m_applied) { throw new SeeingSharpGraphicsException("Unable to add a new AnimationSequence to a finished AnimationSequenceBuilder!"); }
-            m_sequenceList.Add(animationSequence);
+            if (_applied) { throw new SeeingSharpGraphicsException("Unable to add a new AnimationSequence to a finished AnimationSequenceBuilder!"); }
+            _sequenceList.Add(animationSequence);
 
             return this;
         }
@@ -98,14 +98,14 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if (ignorePause != null)
             {
-                foreach (var actAnimation in m_sequenceList)
+                foreach (var actAnimation in _sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }
             }
 
-            this.AnimationHandler.BeginAnimation(m_sequenceList);
-            m_applied = true;
+            this.AnimationHandler.BeginAnimation(_sequenceList);
+            _applied = true;
         }
 
         /// <summary>
@@ -128,14 +128,14 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if (ignorePause != null)
             {
-                foreach (var actAnimation in m_sequenceList)
+                foreach (var actAnimation in _sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }
             }
 
-            this.AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
-            m_applied = true;
+            this.AnimationHandler.BeginSecondaryAnimation(_sequenceList);
+            _applied = true;
         }
 
         /// <summary>
@@ -180,8 +180,8 @@ namespace SeeingSharp.Multimedia.Core
             //  a bit complicated because there a problems with the finished flag
             void RewindAction()
             {
-                var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
-                foreach (var actAnimationStep in m_sequenceList)
+                var newAnimationList = new List<IAnimation>(_sequenceList.Count);
+                foreach (var actAnimationStep in _sequenceList)
                 {
                     actAnimationStep.Reset();
                     newAnimationList.Add(actAnimationStep);
@@ -197,15 +197,15 @@ namespace SeeingSharp.Multimedia.Core
             // Change the 'Ignore pause state'
             if (ignorePause != null)
             {
-                foreach (var actAnimation in m_sequenceList)
+                foreach (var actAnimation in _sequenceList)
                 {
                     actAnimation.IgnorePauseState = ignorePause.Value;
                 }
             }
 
             // Start the animation
-            this.AnimationHandler.BeginAnimation(m_sequenceList);
-            m_applied = true;
+            this.AnimationHandler.BeginAnimation(_sequenceList);
+            _applied = true;
         }
 
         /// <summary>
@@ -219,8 +219,8 @@ namespace SeeingSharp.Multimedia.Core
             //  a bit complicated because there a problems with the finished flag
             void RewindAction()
             {
-                var newAnimationList = new List<IAnimation>(m_sequenceList.Count);
-                foreach (var actAnimationStep in m_sequenceList)
+                var newAnimationList = new List<IAnimation>(_sequenceList.Count);
+                foreach (var actAnimationStep in _sequenceList)
                 {
                     actAnimationStep.Reset();
                     newAnimationList.Add(actAnimationStep);
@@ -234,8 +234,8 @@ namespace SeeingSharp.Multimedia.Core
                 .CallAction(RewindAction);
 
             // Start the animation
-            this.AnimationHandler.BeginSecondaryAnimation(m_sequenceList);
-            m_applied = true;
+            this.AnimationHandler.BeginSecondaryAnimation(_sequenceList);
+            _applied = true;
         }
 
         /// <summary>
@@ -246,16 +246,16 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the target object of this animation
         /// </summary>
-        public TargetType TargetObject { get; }
+        public TTargetType TargetObject { get; }
 
         /// <summary>
         /// Gets the item count.
         /// </summary>
-        public int ItemCount => m_sequenceList.Count;
+        public int ItemCount => _sequenceList.Count;
 
         /// <summary>
         /// Was apply called already?
         /// </summary>
-        public bool Applied => m_applied;
+        public bool Applied => _applied;
     }
 }

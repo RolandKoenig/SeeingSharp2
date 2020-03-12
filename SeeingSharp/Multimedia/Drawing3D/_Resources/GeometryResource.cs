@@ -34,20 +34,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private const int MAX_INDEX_COUNT_PER_BUFFER = 1000000000;
 
         // Misc
-        private BoundingBox m_boundingBox;
-        private GeometryFactory m_geometry;
+        private BoundingBox _boundingBox;
+        private GeometryFactory _geometry;
 
         // Loaded resources
-        private RenderingChunkTemplate[] m_chunkTemplates;
+        private RenderingChunkTemplate[] _chunkTemplates;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
         /// </summary>
         public GeometryResource(GeometryFactory geometry)
         {
-            m_geometry = geometry;
+            _geometry = geometry;
 
-            m_chunkTemplates = new RenderingChunkTemplate[0];
+            _chunkTemplates = new RenderingChunkTemplate[0];
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < m_chunkTemplates.Length; loop++)
+            for (var loop = 0; loop < _chunkTemplates.Length; loop++)
             {
-                var actLoadedGeometry = m_chunkTemplates[loop].Geometry;
+                var actLoadedGeometry = _chunkTemplates[loop].Geometry;
                 if (actLoadedGeometry.Intersects(pickingRay, pickingOptions, out var currentDistance))
                 {
                     result = true;
@@ -104,10 +104,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             materials.EnsureNotNullOrEmpty(nameof(materials));
 
-            var result = new RenderingChunk[m_chunkTemplates.Length];
+            var result = new RenderingChunk[_chunkTemplates.Length];
             for (var loop = 0; loop < result.Length; loop++)
             {
-                result[loop] = m_chunkTemplates[loop].CreateChunk(
+                result[loop] = _chunkTemplates[loop].CreateChunk(
                     device,
                     materials[loop % materials.Length]);
             }
@@ -120,7 +120,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Build geometries
             Geometry[] geometries = {
-                m_geometry.BuildGeometry(new GeometryBuildOptions(device.SupportedDetailLevel))
+                _geometry.BuildGeometry(new GeometryBuildOptions(device.SupportedDetailLevel))
             };
 
             // Build BoundingBox around all vertices
@@ -133,10 +133,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
 
-            m_boundingBox = new BoundingBox(vertexLocations);
+            _boundingBox = new BoundingBox(vertexLocations);
 
             // Build geometry
-            m_chunkTemplates = BuildBuffers(device, geometries, resources);
+            _chunkTemplates = BuildBuffers(device, geometries);
         }
 
         /// <inheritdoc />
@@ -144,11 +144,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             device.EnsureNotNull(nameof(device));
 
-            for (var loop = 0; loop < m_chunkTemplates.Length; loop++)
+            for (var loop = 0; loop < _chunkTemplates.Length; loop++)
             {
-                SeeingSharpUtil.DisposeObject(m_chunkTemplates[loop]);
+                SeeingSharpUtil.DisposeObject(_chunkTemplates[loop]);
             }
-            m_chunkTemplates = new RenderingChunkTemplate[0];
+            _chunkTemplates = new RenderingChunkTemplate[0];
         }
 
         /// <summary>
@@ -156,8 +156,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to build all buffers.</param>
         /// <param name="geometries">All geometries to be loaded.</param>
-        /// <param name="resources">The current resource dictionary</param>
-        private static RenderingChunkTemplate[] BuildBuffers(EngineDevice device, Geometry[] geometries, ResourceDictionary resources)
+        private static RenderingChunkTemplate[] BuildBuffers(EngineDevice device, Geometry[] geometries)
         {
             var resultTemplates = new List<RenderingChunkTemplate>(geometries.Length * 2);
 
@@ -169,8 +168,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var actIndexCount = 0;
             var lastFinishedVertexBufferResultIndex = -1;
             var lastFinishedIndexBufferResultIndex = -1;
-            var vertexBufferID = 0;
-            var indexBufferID = 0;
+            var vertexBufferId = 0;
+            var indexBufferId = 0;
 
             // Define the action which finishes current index buffer
             void FinishIndexBuffer()
@@ -181,7 +180,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var indexBuffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(device, cachedIndices.ToArray());
                 cachedIndices.Clear();
                 actIndexCount = 0;
-                indexBufferID++;
+                indexBufferId++;
 
                 // Do also create index buffer
                 for (var loop = lastFinishedIndexBufferResultIndex + 1; loop < resultTemplates.Count; loop++)
@@ -199,7 +198,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var vertexBuffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(device, cachedVertices.ToArray());
                 cachedVertices.Clear();
                 actVertexCount = 0;
-                vertexBufferID++;
+                vertexBufferId++;
 
                 // Do also finish index buffers in this case
                 FinishIndexBuffer();
@@ -263,8 +262,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     // Create the rendering chunk
                     var newChunkTemplate = new RenderingChunkTemplate()
                     {
-                        VertexBufferID = vertexBufferID,
-                        IndexBufferID = indexBufferID,
+                        VertexBufferID = vertexBufferId,
+                        IndexBufferID = indexBufferId,
                         SizePerVertex = StandardVertex.Size,
                         Geometry = actGeometry,
                         IndexCount = indexArray.Length,
@@ -286,16 +285,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <inheritdoc />
-        public override bool IsLoaded => m_chunkTemplates.Length > 0;
+        public override bool IsLoaded => _chunkTemplates.Length > 0;
 
         /// <summary>
         /// Gets the source of geometry data.
         /// </summary>
-        public GeometryFactory Geometry => m_geometry;
+        public GeometryFactory Geometry => _geometry;
 
         /// <summary>
         /// Gets the bounding box surrounding this object.
         /// </summary>
-        public BoundingBox BoundingBox => m_boundingBox;
+        public BoundingBox BoundingBox => _boundingBox;
     }
 }

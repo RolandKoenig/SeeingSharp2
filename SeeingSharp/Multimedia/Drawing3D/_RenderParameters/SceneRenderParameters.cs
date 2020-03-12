@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private TypeSafeConstantBufferResource<CBPerFrame> m_cbPerFrame;
+        private TypeSafeConstantBufferResource<CBPerFrame> _cbPerFrame;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneRenderParameters" /> class.
@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_cbPerFrame = resources.GetResourceAndEnsureLoaded(
+            _cbPerFrame = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerFrame>());
         }
@@ -55,7 +55,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_cbPerFrame = null;
+            _cbPerFrame = null;
 
             //resources.RemoveResource(KEY_CONSTANT_BUFFER);
         }
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="cbPerFrame">Per frame data.</param>
         internal void UpdateValues(RenderState renderState, CBPerFrame cbPerFrame)
         {
-            m_cbPerFrame.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerFrame);
+            _cbPerFrame.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerFrame);
         }
 
         /// <summary>
@@ -79,13 +79,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
-            deviceContext.VertexShader.SetConstantBuffer(0, m_cbPerFrame.ConstantBuffer);
-            deviceContext.PixelShader.SetConstantBuffer(0, m_cbPerFrame.ConstantBuffer);
+            deviceContext.VertexShader.SetConstantBuffer(0, _cbPerFrame.ConstantBuffer);
+            deviceContext.PixelShader.SetConstantBuffer(0, _cbPerFrame.ConstantBuffer);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_cbPerFrame != null;
+        public override bool IsLoaded => _cbPerFrame != null;
     }
 }

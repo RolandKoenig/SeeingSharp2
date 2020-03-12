@@ -30,8 +30,8 @@ namespace SeeingSharp.UwpSamples
 {
     public class SampleViewModel : ViewModelBase
     {
-        private BitmapSource m_bitmapSource;
-        private Task m_bitmapSourceTask;
+        private BitmapSource _bitmapSource;
+        private Task _bitmapSourceTask;
 
         public SampleViewModel(SampleMetadata sample)
         {
@@ -47,7 +47,7 @@ namespace SeeingSharp.UwpSamples
                 await source.SetSourceAsync(randomAccessStream);
             }
 
-            m_bitmapSource = source;
+            _bitmapSource = source;
 
             this.RaisePropertyChanged(nameof(this.BitmapSource));
         }
@@ -62,14 +62,14 @@ namespace SeeingSharp.UwpSamples
         {
             get
             {
-                if (m_bitmapSource == null && m_bitmapSourceTask == null)
+                if (_bitmapSource == null && _bitmapSourceTask == null)
                 {
                     var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
                     if (sourceLink == null) { return null; }
 
-                    m_bitmapSourceTask = this.LoadSampleImageAsync(sourceLink);
+                    _bitmapSourceTask = this.LoadSampleImageAsync(sourceLink);
                 }
-                return m_bitmapSource;
+                return _bitmapSource;
             }
         }
     }

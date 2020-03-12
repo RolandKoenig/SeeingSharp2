@@ -31,8 +31,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ImporterExporterRepository
     {
-        private Dictionary<string, IModelImporter> m_importersByFileType;
-        private Dictionary<string, SupportedFileFormatAttribute> m_infoByFileType;
+        private Dictionary<string, IModelImporter> _importersByFileType;
+        private Dictionary<string, SupportedFileFormatAttribute> _infoByFileType;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="ImporterExporterRepository"/> class from being created.
@@ -56,10 +56,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
 
-            m_infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
+            _infoByFileType = new Dictionary<string, SupportedFileFormatAttribute>();
 
             // Get format support on each importer
-            m_importersByFileType = new Dictionary<string, IModelImporter>();
+            _importersByFileType = new Dictionary<string, IModelImporter>();
             foreach (var actImporter in importers)
             {
                 foreach (var actSupportedFile in actImporter
@@ -67,8 +67,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     .GetCustomAttributes<SupportedFileFormatAttribute>())
                 {
                     var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
-                    m_importersByFileType[actFileFormat] = actImporter;
-                    m_infoByFileType[actFileFormat] = actSupportedFile;
+                    _importersByFileType[actFileFormat] = actImporter;
+                    _infoByFileType[actFileFormat] = actSupportedFile;
                 }
             }
 
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 {
                     var actFileFormat = actSupportedFile.ShortFormatName.ToLower();
                     exportersByFileType[actFileFormat] = actExporter;
-                    m_infoByFileType[actFileFormat] = actSupportedFile;
+                    _infoByFileType[actFileFormat] = actSupportedFile;
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public IEnumerable<SupportedFileFormatAttribute> GetSupportedImportFormats()
         {
-            return m_infoByFileType.Values;
+            return _infoByFileType.Values;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public string GetOpenFileDialogFilter()
         {
-            if (m_infoByFileType.Count <= 0)
+            if (_infoByFileType.Count <= 0)
             {
                 return string.Empty;
             }
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             fileExtension = fileExtension.ToLower().Replace(".", "");
 
             // Query for importer object
-            if (!m_importersByFileType.TryGetValue(fileExtension, out var importer))
+            if (!_importersByFileType.TryGetValue(fileExtension, out var importer))
             {
                 throw new SeeingSharpGraphicsException($"No importer found for file type {fileExtension}");
             }

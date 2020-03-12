@@ -27,11 +27,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public abstract class ShaderEffectResourceBase : Resource
     {
-        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyVertexShader = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private VertexShaderResource m_vertexShader;
-        private DefaultResources m_defaultResources;
+        private VertexShaderResource _vertexShader;
+        private DefaultResources _defaultResources;
 
         /// <summary>
         /// Applies alpha based sprite rendering.
@@ -39,9 +39,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="deviceContext">The target device context.</param>
         protected void ApplySpriteRendering(D3D11.DeviceContext deviceContext)
         {
-            deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
+            deviceContext.VertexShader.Set(_vertexShader.VertexShader);
 
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAlwaysPassDepth;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateAlwaysPassDepth;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="deviceContext">The target device context.</param>
         protected void DiscardSpriteRendering(D3D11.DeviceContext deviceContext)
         {
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="deviceContext">The target device context.</param>
         protected void ApplyAlphaBasedSpriteRendering(D3D11.DeviceContext deviceContext)
         {
-            deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
+            deviceContext.VertexShader.Set(_vertexShader.VertexShader);
 
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateAlwaysPassDepth;
-            deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateAlwaysPassDepth;
+            deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="deviceContext">The target device context.</param>
         protected void DiscardAlphaBasedSpriteRendering(D3D11.DeviceContext deviceContext)
         {
-            deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
+            deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = resources.DefaultResources;
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_VERTEX_SHADER,
+            _defaultResources = resources.DefaultResources;
+            _vertexShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyVertexShader,
                 () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Postprocessing", "PostprocessVertexShader"));
         }
 
@@ -95,8 +95,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = null;
-            m_vertexShader = null;
+            _defaultResources = null;
+            _vertexShader = null;
         }
     }
 }

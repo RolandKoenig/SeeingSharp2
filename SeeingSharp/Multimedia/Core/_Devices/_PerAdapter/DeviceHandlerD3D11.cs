@@ -40,22 +40,22 @@ namespace SeeingSharp.Multimedia.Core
     public class DeviceHandlerD3D11
     {
         // Resources from Direct3D11 api
-        private Adapter1 m_dxgiAdapter;
-        private D3D11.Device1 m_device1;
-        private D3D11.Device3 m_device3;
-        private D3D11.DeviceContext m_immediateContext;
-        private D3D11.DeviceContext3 m_immediateContext3;
+        private Adapter1 _dxgiAdapter;
+        private D3D11.Device1 _device1;
+        private D3D11.Device3 _device3;
+        private D3D11.DeviceContext _immediateContext;
+        private D3D11.DeviceContext3 _immediateContext3;
 
         // Parameters of created device
-        private D3D11.DeviceCreationFlags m_creationFlags;
-        private D3D.FeatureLevel m_featureLevel;
+        private D3D11.DeviceCreationFlags _creationFlags;
+        private D3D.FeatureLevel _featureLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
         internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, Adapter1 dxgiAdapter)
         {
-            m_dxgiAdapter = dxgiAdapter;
+            _dxgiAdapter = dxgiAdapter;
 
             // Define possible create flags
             var createFlags = D3D11.DeviceCreationFlags.BgraSupport;
@@ -84,18 +84,18 @@ namespace SeeingSharp.Multimedia.Core
                     // Try to create the device using current parameters
                     using (var device = new D3D11.Device(dxgiAdapter, actCreateFlags, actFeatureLevel))
                     {
-                        m_device1 = device.QueryInterface<D3D11.Device1>();
-                        m_device3 = SeeingSharpUtil.TryExecute(() => m_device1.QueryInterface<D3D11.Device3>());
+                        _device1 = device.QueryInterface<D3D11.Device1>();
+                        _device3 = SeeingSharpUtil.TryExecute(() => _device1.QueryInterface<D3D11.Device3>());
 
-                        if (m_device3 != null)
+                        if (_device3 != null)
                         {
-                            m_immediateContext3 = m_device3.ImmediateContext3;
+                            _immediateContext3 = _device3.ImmediateContext3;
                         }
                     }
 
                     // Device successfully created, save all parameters and break this loop
-                    m_featureLevel = actFeatureLevel;
-                    m_creationFlags = actCreateFlags;
+                    _featureLevel = actFeatureLevel;
+                    _creationFlags = actCreateFlags;
                     this.DriverLevel = actDriverLevel;
                     break;
                 }
@@ -106,13 +106,13 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Throw exception on failure
-            if (m_device1 == null)
+            if (_device1 == null)
             {
                 throw new SeeingSharpGraphicsException("Unable to initialize d3d11 device!");
             }
 
             // Get immediate context from the device
-            m_immediateContext = m_device1.ImmediateContext;
+            _immediateContext = _device1.ImmediateContext;
         }
 
         /// <summary>
@@ -120,26 +120,26 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void UnloadResources()
         {
-            m_immediateContext = SeeingSharpUtil.DisposeObject(m_immediateContext);
-            m_immediateContext3 = SeeingSharpUtil.DisposeObject(m_immediateContext3);
-            m_device1 = SeeingSharpUtil.DisposeObject(m_device1);
-            m_device3 = SeeingSharpUtil.DisposeObject(m_device3);
+            _immediateContext = SeeingSharpUtil.DisposeObject(_immediateContext);
+            _immediateContext3 = SeeingSharpUtil.DisposeObject(_immediateContext3);
+            _device1 = SeeingSharpUtil.DisposeObject(_device1);
+            _device3 = SeeingSharpUtil.DisposeObject(_device3);
 
-            m_creationFlags = D3D11.DeviceCreationFlags.None;
-            m_featureLevel = D3D.FeatureLevel.Level_11_0;
+            _creationFlags = D3D11.DeviceCreationFlags.None;
+            _featureLevel = D3D.FeatureLevel.Level_11_0;
         }
 
         /// <summary>
         /// Is the hardware Direct3D 11 or upper?
         /// </summary>
         public bool IsDirect3D11OrUpperHardware =>
-            m_featureLevel == D3D.FeatureLevel.Level_11_0 ||
-            m_featureLevel == D3D.FeatureLevel.Level_11_1;
+            _featureLevel == D3D.FeatureLevel.Level_11_0 ||
+            _featureLevel == D3D.FeatureLevel.Level_11_1;
 
         /// <summary>
         /// Is device successfully initialized?
         /// </summary>
-        public bool IsInitialized => m_device1 != null;
+        public bool IsInitialized => _device1 != null;
 
         /// <summary>
         /// Gets a short description containing info about the created device.
@@ -148,9 +148,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_device1 == null) { return "None"; }
+                if (_device1 == null) { return "None"; }
 
-                return m_dxgiAdapter + " - " + m_featureLevel;
+                return _dxgiAdapter + " - " + _featureLevel;
             }
         }
 
@@ -162,23 +162,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets current feature level.
         /// </summary>
-        internal D3D.FeatureLevel FeatureLevel => m_featureLevel;
+        internal D3D.FeatureLevel FeatureLevel => _featureLevel;
 
         /// <summary>
         /// Gets the Direct3D 11 device.
         /// </summary>
-        internal D3D11.Device1 Device1 => m_device1;
+        internal D3D11.Device1 Device1 => _device1;
 
-        internal D3D11.Device3 Device3 => m_device3;
-
-        /// <summary>
-        /// Gets the immediate context.
-        /// </summary>
-        internal D3D11.DeviceContext ImmediateContext => m_immediateContext;
+        internal D3D11.Device3 Device3 => _device3;
 
         /// <summary>
         /// Gets the immediate context.
         /// </summary>
-        internal D3D11.DeviceContext3 ImmediateContext3 => m_immediateContext3;
+        internal D3D11.DeviceContext ImmediateContext => _immediateContext;
+
+        /// <summary>
+        /// Gets the immediate context.
+        /// </summary>
+        internal D3D11.DeviceContext3 ImmediateContext3 => _immediateContext3;
     }
 }

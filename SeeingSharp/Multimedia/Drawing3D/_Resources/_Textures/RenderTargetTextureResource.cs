@@ -29,36 +29,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
     internal class RenderTargetTextureResource : TextureResource
     {
         // Runtime variables
-        private bool m_shaderResourceCreated;
+        private bool _shaderResourceCreated;
 
         // Configuration
-        private RenderTargetCreationMode m_creationMode;
-        private int m_width;
-        private int m_height;
-        private bool m_antialiasingEnabled;
-        private AntialiasingQualityLevel m_antialiasingQuality;
-        private RawViewportF m_viewportF;
-        private bool m_forceRecreateResources;
+        private RenderTargetCreationMode _creationMode;
+        private int _width;
+        private int _height;
+        private bool _antialiasingEnabled;
+        private AntialiasingQualityLevel _antialiasingQuality;
+        private RawViewportF _viewportF;
+        private bool _forceRecreateResources;
 
         // Resources for depth buffer
-        private D3D11.Texture2D m_depthBuffer;
-        private D3D11.DepthStencilView m_depthBufferView;
+        private D3D11.Texture2D _depthBuffer;
+        private D3D11.DepthStencilView _depthBufferView;
 
         // Resources for color buffer
-        private D3D11.Texture2D m_colorBuffer;
-        private D3D11.RenderTargetView m_colorBufferRenderTargetView;
-        private D3D11.Texture2D m_colorBufferShaderResource;
-        private D3D11.ShaderResourceView m_colorBufferShaderResourceView;
+        private D3D11.Texture2D _colorBuffer;
+        private D3D11.RenderTargetView _colorBufferRenderTargetView;
+        private D3D11.Texture2D _colorBufferShaderResource;
+        private D3D11.ShaderResourceView _colorBufferShaderResourceView;
 
         // Resources for ObjectID buffer
-        private D3D11.Texture2D m_objectIDBuffer;
-        private D3D11.RenderTargetView m_objectIDBufferRenderTargetView;
+        private D3D11.Texture2D _objectIdBuffer;
+        private D3D11.RenderTargetView _objectIdBufferRenderTargetView;
 
         // Resources for normal/depth buffer
-        private D3D11.Texture2D m_normalDepthBuffer;
-        private D3D11.RenderTargetView m_normalDepthBufferRenderTargetView;
-        private D3D11.Texture2D m_normalDepthBufferShaderResource;
-        private D3D11.ShaderResourceView m_normalDepthBufferShaderResourceView;
+        private D3D11.Texture2D _normalDepthBuffer;
+        private D3D11.RenderTargetView _normalDepthBufferRenderTargetView;
+        private D3D11.Texture2D _normalDepthBufferShaderResource;
+        private D3D11.ShaderResourceView _normalDepthBufferShaderResourceView;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
@@ -66,11 +66,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="creationMode">Tells this object which texture to create.</param>
         public RenderTargetTextureResource(RenderTargetCreationMode creationMode)
         {
-            m_creationMode = creationMode;
-            m_width = -1;
-            m_height = -1;
-            m_viewportF = new RawViewportF();
-            m_shaderResourceCreated = false;
+            _creationMode = creationMode;
+            _width = -1;
+            _height = -1;
+            _viewportF = new RawViewportF();
+            _shaderResourceCreated = false;
         }
 
         /// <summary>
@@ -87,90 +87,90 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
             var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
-            if ((m_width != currentViewSize.Width) ||
-                (m_height != currentViewSize.Height) ||
-                (m_antialiasingEnabled != currentAntialiasingEnabled) ||
-                (m_antialiasingQuality != currentAntialiasingQuality) ||
-                (m_forceRecreateResources))
+            if ((_width != currentViewSize.Width) ||
+                (_height != currentViewSize.Height) ||
+                (_antialiasingEnabled != currentAntialiasingEnabled) ||
+                (_antialiasingQuality != currentAntialiasingQuality) ||
+                (_forceRecreateResources))
             {
-                m_forceRecreateResources = false;
+                _forceRecreateResources = false;
 
                 // Dispose color-buffer resources
-                SeeingSharpUtil.SafeDispose(ref m_colorBuffer);
-                SeeingSharpUtil.SafeDispose(ref m_colorBufferRenderTargetView);
-                SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResourceView);
-                if (m_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResource); }
+                SeeingSharpUtil.SafeDispose(ref _colorBuffer);
+                SeeingSharpUtil.SafeDispose(ref _colorBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref _colorBufferShaderResourceView);
+                if (_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref _colorBufferShaderResource); }
 
                 // Dispose depth-buffer resources
-                SeeingSharpUtil.SafeDispose(ref m_depthBufferView);
-                SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
+                SeeingSharpUtil.SafeDispose(ref _depthBufferView);
+                SeeingSharpUtil.SafeDispose(ref _depthBuffer);
 
                 // Dispose object-id buffer
-                SeeingSharpUtil.SafeDispose(ref m_objectIDBufferRenderTargetView);
-                SeeingSharpUtil.SafeDispose(ref m_objectIDBuffer);
+                SeeingSharpUtil.SafeDispose(ref _objectIdBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref _objectIdBuffer);
 
                 // Dispose normal-depth resources
-                SeeingSharpUtil.SafeDispose(ref m_normalDepthBuffer);
-                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferRenderTargetView);
-                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResourceView);
-                if (m_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResource); }
+                SeeingSharpUtil.SafeDispose(ref _normalDepthBuffer);
+                SeeingSharpUtil.SafeDispose(ref _normalDepthBufferRenderTargetView);
+                SeeingSharpUtil.SafeDispose(ref _normalDepthBufferShaderResourceView);
+                if (_shaderResourceCreated) { SeeingSharpUtil.SafeDispose(ref _normalDepthBufferShaderResource); }
 
                 // Create color-buffer resources
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.Color))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.Color))
                 {
-                    m_colorBuffer = GraphicsHelper.Internals.CreateRenderTargetTexture(
+                    _colorBuffer = GraphicsHelper.Internals.CreateRenderTargetTexture(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
-                    m_colorBufferShaderResource = m_colorBuffer;
+                    _colorBufferShaderResource = _colorBuffer;
                     if (renderState.ViewInformation.ViewConfiguration.AntialiasingEnabled)
                     {
-                        m_colorBufferShaderResource = GraphicsHelper.Internals.CreateTexture(renderState.Device, currentViewSize.Width, currentViewSize.Height);
-                        m_shaderResourceCreated = true;
+                        _colorBufferShaderResource = GraphicsHelper.Internals.CreateTexture(renderState.Device, currentViewSize.Width, currentViewSize.Height);
+                        _shaderResourceCreated = true;
                     }
                     else
                     {
-                        m_shaderResourceCreated = false;
+                        _shaderResourceCreated = false;
                     }
-                    m_colorBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, m_colorBuffer);
-                    m_colorBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, m_colorBufferShaderResource);
+                    _colorBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _colorBuffer);
+                    _colorBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, _colorBufferShaderResource);
                 }
 
                 // Create depth-buffer resources
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.Depth))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.Depth))
                 {
-                    m_depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(
+                    _depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
-                    m_depthBufferView = GraphicsHelper.Internals.CreateDepthBufferView(renderState.Device, m_depthBuffer);
+                    _depthBufferView = GraphicsHelper.Internals.CreateDepthBufferView(renderState.Device, _depthBuffer);
                 }
 
                 // Create object-id resources
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.ObjectID))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.ObjectId))
                 {
-                    m_objectIDBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureObjectIDs(
+                    _objectIdBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureObjectIDs(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
-                    m_objectIDBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, m_objectIDBuffer);
+                    _objectIdBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _objectIdBuffer);
                 }
 
                 // Create normal-depth buffer resources
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.NormalDepth))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.NormalDepth))
                 {
-                    m_normalDepthBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureNormalDepth(
+                    _normalDepthBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureNormalDepth(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
-                    m_normalDepthBufferShaderResource = m_normalDepthBuffer;
-                    if (m_shaderResourceCreated)
+                    _normalDepthBufferShaderResource = _normalDepthBuffer;
+                    if (_shaderResourceCreated)
                     {
-                        m_normalDepthBufferShaderResource = GraphicsHelper.Internals.CreateTexture(
+                        _normalDepthBufferShaderResource = GraphicsHelper.Internals.CreateTexture(
                             renderState.Device, currentViewSize.Width, currentViewSize.Height, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
                     }
-                    m_normalDepthBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, m_normalDepthBuffer);
-                    m_normalDepthBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, m_normalDepthBufferShaderResource);
+                    _normalDepthBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _normalDepthBuffer);
+                    _normalDepthBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, _normalDepthBufferShaderResource);
                 }
 
                 // Remember values
-                m_width = currentViewSize.Width;
-                m_height = currentViewSize.Height;
-                m_antialiasingEnabled = currentAntialiasingEnabled;
-                m_antialiasingQuality = currentAntialiasingQuality;
-                m_viewportF = renderState.Viewport;
+                _width = currentViewSize.Width;
+                _height = currentViewSize.Height;
+                _antialiasingEnabled = currentAntialiasingEnabled;
+                _antialiasingQuality = currentAntialiasingQuality;
+                _viewportF = renderState.Viewport;
             }
         }
 
@@ -181,7 +181,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_forceRecreateResources = true;
+            _forceRecreateResources = true;
         }
 
         /// <summary>
@@ -191,21 +191,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpUtil.SafeDispose(ref m_depthBufferView);
-            SeeingSharpUtil.SafeDispose(ref m_colorBufferRenderTargetView);
-            SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResourceView);
-            SeeingSharpUtil.SafeDispose(ref m_depthBuffer);
-            SeeingSharpUtil.SafeDispose(ref m_colorBuffer);
-            SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferRenderTargetView);
-            SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResourceView);
-            SeeingSharpUtil.SafeDispose(ref m_normalDepthBuffer);
+            SeeingSharpUtil.SafeDispose(ref _depthBufferView);
+            SeeingSharpUtil.SafeDispose(ref _colorBufferRenderTargetView);
+            SeeingSharpUtil.SafeDispose(ref _colorBufferShaderResourceView);
+            SeeingSharpUtil.SafeDispose(ref _depthBuffer);
+            SeeingSharpUtil.SafeDispose(ref _colorBuffer);
+            SeeingSharpUtil.SafeDispose(ref _normalDepthBufferRenderTargetView);
+            SeeingSharpUtil.SafeDispose(ref _normalDepthBufferShaderResourceView);
+            SeeingSharpUtil.SafeDispose(ref _normalDepthBuffer);
 
             // Unload shader resource if it was created explicitly
-            if (m_shaderResourceCreated)
+            if (_shaderResourceCreated)
             {
-                SeeingSharpUtil.SafeDispose(ref m_colorBufferShaderResource);
-                SeeingSharpUtil.SafeDispose(ref m_normalDepthBufferShaderResource);
-                m_shaderResourceCreated = false;
+                SeeingSharpUtil.SafeDispose(ref _colorBufferShaderResource);
+                SeeingSharpUtil.SafeDispose(ref _normalDepthBufferShaderResource);
+                _shaderResourceCreated = false;
             }
         }
 
@@ -223,7 +223,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Handle color buffer
             if (mode.HasFlag(PushRenderTargetMode.UseOwnColorBuffer))
             {
-                newRenderTargets.ColorBuffer = m_colorBufferRenderTargetView;
+                newRenderTargets.ColorBuffer = _colorBufferRenderTargetView;
             }
             else if (mode.HasFlag(PushRenderTargetMode.OvertakeColorBuffer))
             {
@@ -233,7 +233,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Handle depth-stencil buffer
             if (mode.HasFlag(PushRenderTargetMode.UseOwnDepthBuffer))
             {
-                newRenderTargets.DepthStencilBuffer = m_depthBufferView;
+                newRenderTargets.DepthStencilBuffer = _depthBufferView;
             }
             else if (mode.HasFlag(PushRenderTargetMode.OvertakeDepthBuffer))
             {
@@ -241,11 +241,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Handle object-id buffer
-            if (mode.HasFlag(PushRenderTargetMode.UseOwnObjectIDBuffer))
+            if (mode.HasFlag(PushRenderTargetMode.UseOwnObjectIdBuffer))
             {
-                newRenderTargets.ObjectIDBuffer = m_objectIDBufferRenderTargetView;
+                newRenderTargets.ObjectIDBuffer = _objectIdBufferRenderTargetView;
             }
-            else if (mode.HasFlag(PushRenderTargetMode.OvertakeObjectIDBuffer))
+            else if (mode.HasFlag(PushRenderTargetMode.OvertakeObjectIdBuffer))
             {
                 newRenderTargets.ObjectIDBuffer = prevRenderTargets.ObjectIDBuffer;
             }
@@ -253,7 +253,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Handle normal-depth buffer
             if (mode.HasFlag(PushRenderTargetMode.UseOwnNormalDepthBuffer))
             {
-                newRenderTargets.NormalDepthBuffer = m_normalDepthBufferRenderTargetView;
+                newRenderTargets.NormalDepthBuffer = _normalDepthBufferRenderTargetView;
             }
             else if (mode.HasFlag(PushRenderTargetMode.OvertakeNormalDepthBuffer))
             {
@@ -263,7 +263,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Push new RenderTargets structure onto the rendering stack
             renderState.PushRenderTarget(
                 newRenderTargets,
-                m_viewportF, renderState.Camera, renderState.ViewInformation);
+                _viewportF, renderState.Camera, renderState.ViewInformation);
         }
 
         /// <summary>
@@ -275,20 +275,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
             renderState.PopRenderTarget();
 
             // Copy texture data when in antialiasing ode
-            if (m_antialiasingEnabled)
+            if (_antialiasingEnabled)
             {
                 // Resolve color buffer
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.Color))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.Color))
                 {
                     renderState.Device.DeviceImmediateContextD3D11.ResolveSubresource(
-                        m_colorBuffer, 0, m_colorBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
+                        _colorBuffer, 0, _colorBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
                 }
 
                 // Resolve normal-depth buffer
-                if (m_creationMode.HasFlag(RenderTargetCreationMode.NormalDepth))
+                if (_creationMode.HasFlag(RenderTargetCreationMode.NormalDepth))
                 {
                     renderState.Device.DeviceImmediateContextD3D11.ResolveSubresource(
-                        m_normalDepthBuffer, 0, m_normalDepthBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
+                        _normalDepthBuffer, 0, _normalDepthBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
                 }
             }
         }
@@ -301,22 +301,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the texture itself.
         /// </summary>
-        internal override D3D11.Texture2D Texture => m_colorBuffer;
+        internal override D3D11.Texture2D Texture => _colorBuffer;
 
         /// <summary>
         /// Gets the shader resource view to the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => m_colorBufferShaderResourceView;
+        internal override D3D11.ShaderResourceView TextureView => _colorBufferShaderResourceView;
 
         public override int ArraySize => 1;
 
-        internal D3D11.Texture2D TextureColor => m_colorBuffer;
+        internal D3D11.Texture2D TextureColor => _colorBuffer;
 
-        internal D3D11.ShaderResourceView TextureViewColor => m_colorBufferShaderResourceView;
+        internal D3D11.ShaderResourceView TextureViewColor => _colorBufferShaderResourceView;
 
         /// <summary>
         /// Gets the shader resource view to the normal-depth texture.
         /// </summary>
-        internal D3D11.ShaderResourceView TextureViewNormalDepth => m_normalDepthBufferShaderResourceView;
+        internal D3D11.ShaderResourceView TextureViewNormalDepth => _normalDepthBufferShaderResourceView;
     }
 }

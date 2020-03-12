@@ -28,22 +28,22 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class RenderPassDump : IDisposable, ICheckDisposed
     {
-        private bool m_isDisposed;
-        private TextureUploader m_uploaderColor;
+        private bool _isDisposed;
+        private TextureUploader _uploaderColor;
 
-        private List<RenderPassDumpEntry> m_dumpResults;
+        private List<RenderPassDumpEntry> _dumpResults;
 
         internal RenderPassDump(EngineDevice device, Size2 size2, bool isMultisampled)
         {
-            m_dumpResults = new List<RenderPassDumpEntry>(8);
+            _dumpResults = new List<RenderPassDumpEntry>(8);
 
-            m_uploaderColor = new TextureUploader(
+            _uploaderColor = new TextureUploader(
                 device, size2.Width, size2.Height, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, isMultisampled);
         }
 
         internal void Dump(string dumpKey, RenderTargets renderTargets)
         {
-            if(m_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
+            if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
 
             
         }
@@ -51,20 +51,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <inheritdoc />
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_uploaderColor);
+            SeeingSharpUtil.SafeDispose(ref _uploaderColor);
 
-            foreach (var actDumpResult in m_dumpResults)
+            foreach (var actDumpResult in _dumpResults)
             {
                 SeeingSharpUtil.DisposeObject(actDumpResult);
             }
-            m_dumpResults.Clear();
+            _dumpResults.Clear();
 
-            m_isDisposed = true;
+            _isDisposed = true;
         }
 
-        public IReadOnlyList<RenderPassDumpEntry> DumpResults => m_dumpResults;
+        public IReadOnlyList<RenderPassDumpEntry> DumpResults => _dumpResults;
 
         /// <inheritdoc />
-        public bool IsDisposed => m_isDisposed;
+        public bool IsDisposed => _isDisposed;
     }
 }

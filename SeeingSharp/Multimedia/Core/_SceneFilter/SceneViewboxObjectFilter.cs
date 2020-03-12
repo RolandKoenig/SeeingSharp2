@@ -27,13 +27,13 @@ namespace SeeingSharp.Multimedia.Core
     public class SceneViewboxObjectFilter : SceneObjectFilter
     {
         // Values for viewbox clipping
-        private ViewInformation m_viewInfo;
-        private BoundingFrustum m_boundingFrustum;
+        private ViewInformation _viewInfo;
+        private BoundingFrustum _boundingFrustum;
 
         // Values for y-filter
-        private bool m_enableYFilter;
-        private float m_yFilterMin;
-        private float m_yFilterMax;
+        private bool _enableYFilter;
+        private float _yFilterMin;
+        private float _yFilterMax;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
@@ -41,9 +41,9 @@ namespace SeeingSharp.Multimedia.Core
         public SceneViewboxObjectFilter()
         {
             // Default configuration of the y-filter
-            m_enableYFilter = false;
-            m_yFilterMin = 0f;
-            m_yFilterMax = 10f;
+            _enableYFilter = false;
+            _yFilterMin = 0f;
+            _yFilterMax = 10f;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInformation">The information object of the corresponding view.</param>
         public override void SetEnvironmentData(SceneLayer layerToFilter, ViewInformation viewInformation)
         {
-            m_viewInfo = viewInformation;
-            m_boundingFrustum = viewInformation.CameraBoundingFrustum;
+            _viewInfo = viewInformation;
+            _boundingFrustum = viewInformation.CameraBoundingFrustum;
         }
 
         /// <summary>
@@ -64,22 +64,22 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="viewInfo">The view on which to check for visibility.</param>
         public override bool IsObjectVisible(SceneObject input, ViewInformation viewInfo)
         {
-            if (m_viewInfo == null)
+            if (_viewInfo == null)
             {
                 return true;
             }
 
             // Perform viewbox clipping
-            if (!input.IsInBoundingFrustum(m_viewInfo, ref m_boundingFrustum))
+            if (!input.IsInBoundingFrustum(_viewInfo, ref _boundingFrustum))
             {
                 return false;
             }
 
             // Handle Y-Filter
-            if (m_enableYFilter &&
-                !EngineMath.EqualsWithTolerance(m_yFilterMin, m_yFilterMax) &&
-                m_yFilterMax > m_yFilterMin &&
-                m_yFilterMax - m_yFilterMin > 0.1f)
+            if (_enableYFilter &&
+                !EngineMath.EqualsWithTolerance(_yFilterMin, _yFilterMax) &&
+                _yFilterMax > _yFilterMin &&
+                _yFilterMax - _yFilterMin > 0.1f)
             {
                 if (input is SceneSpacialObject spacialObject)
                 {
@@ -92,12 +92,12 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Perform some checks based on the bounding box
-                    if (boundingBox.Maximum.Y < m_yFilterMin)
+                    if (boundingBox.Maximum.Y < _yFilterMin)
                     {
                         return false;
                     }
 
-                    if (boundingBox.Minimum.Y > m_yFilterMax)
+                    if (boundingBox.Minimum.Y > _yFilterMax)
                     {
                         return false;
                     }
@@ -113,12 +113,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool EnableYFilter
         {
-            get => m_enableYFilter;
+            get => _enableYFilter;
             set
             {
-                if (m_enableYFilter != value)
+                if (_enableYFilter != value)
                 {
-                    m_enableYFilter = value;
+                    _enableYFilter = value;
                     this.RaiseFilterConfigurationChanged();
                 }
             }
@@ -129,12 +129,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMin
         {
-            get => m_yFilterMin;
+            get => _yFilterMin;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_yFilterMin, value))
+                if (!EngineMath.EqualsWithTolerance(_yFilterMin, value))
                 {
-                    m_yFilterMin = value;
+                    _yFilterMin = value;
                     this.RaiseFilterConfigurationChanged();
                 }
             }
@@ -145,12 +145,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public float YFilterMax
         {
-            get => m_yFilterMax;
+            get => _yFilterMax;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_yFilterMax, value))
+                if (!EngineMath.EqualsWithTolerance(_yFilterMax, value))
                 {
-                    m_yFilterMax = value;
+                    _yFilterMax = value;
                     this.RaiseFilterConfigurationChanged();
                 }
             }

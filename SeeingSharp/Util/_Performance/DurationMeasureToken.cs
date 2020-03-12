@@ -26,33 +26,33 @@ namespace SeeingSharp.Util
 {
     public class DurationMeasureToken : IDisposable
     {
-        private PerformanceAnalyzer m_owner;
-        private Stopwatch m_stopwatch;
+        private PerformanceAnalyzer _owner;
+        private Stopwatch _stopwatch;
 
         public DurationMeasureToken(PerformanceAnalyzer owner)
         {
-            m_owner = owner;
-            m_stopwatch = new Stopwatch();
+            _owner = owner;
+            _stopwatch = new Stopwatch();
         }
 
         internal void Start()
         {
-            m_stopwatch.Reset();
-            m_stopwatch.Start();
+            _stopwatch.Reset();
+            _stopwatch.Start();
         }
 
         internal void Stop()
         {
-            m_stopwatch.Stop();
+            _stopwatch.Stop();
         }
 
         public void Dispose()
         {
-            m_owner.EndMeasureActivityDuration(this);
+            _owner.EndMeasureActivityDuration(this);
         }
 
         public string Activity { get; internal set; }
 
-        public long ElapsedTicks => m_stopwatch.Elapsed.Ticks;
+        public long ElapsedTicks => _stopwatch.Elapsed.Ticks;
     }
 }

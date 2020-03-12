@@ -24,14 +24,14 @@ using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public interface IAnimationSequenceBuilder<out TargetType>
-        where TargetType : class
+    public interface IAnimationSequenceBuilder<out TTargetType>
+        where TTargetType : class
     {
         /// <summary>
         /// Adds an AnimationSequence to this builder.
         /// </summary>
         /// <param name="animationSequence">The animation sequence to be added.</param>
-        IAnimationSequenceBuilder<TargetType> Add(IAnimation animationSequence);
+        IAnimationSequenceBuilder<TTargetType> Add(IAnimation animationSequence);
 
         /// <summary>
         /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
@@ -75,7 +75,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the target object.
         /// </summary>
-        TargetType TargetObject
+        TTargetType TargetObject
         {
             get;
         }

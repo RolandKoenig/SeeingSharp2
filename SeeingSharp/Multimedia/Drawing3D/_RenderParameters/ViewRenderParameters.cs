@@ -30,8 +30,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private TypeSafeConstantBufferResource<CBPerView> m_cbPerView;
-        private PostprocessEffectResource m_postprocessEffect;
+        private TypeSafeConstantBufferResource<CBPerView> _cbPerView;
+        private PostprocessEffectResource _postprocessEffect;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
@@ -46,7 +46,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_cbPerView = resources.GetResourceAndEnsureLoaded(
+            _cbPerView = resources.GetResourceAndEnsureLoaded(
                 KEY_CONSTANT_BUFFER,
                 () => new TypeSafeConstantBufferResource<CBPerView>());
         }
@@ -56,8 +56,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_cbPerView = null;
-            m_postprocessEffect = null;
+            _cbPerView = null;
+            _postprocessEffect = null;
         }
 
         /// <summary>
@@ -72,23 +72,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Handle empty key
             if (namedOrGenericKey.IsEmpty)
             {
-                m_postprocessEffect = null;
+                _postprocessEffect = null;
                 return null;
             }
 
             // Check for current effect object
-            if (m_postprocessEffect != null)
+            if (_postprocessEffect != null)
             {
                 // Good case, return current one
-                if (m_postprocessEffect.Key == namedOrGenericKey) { return m_postprocessEffect; }
+                if (_postprocessEffect.Key == namedOrGenericKey) { return _postprocessEffect; }
 
                 // Bad case, effect has changed
-                m_postprocessEffect = null;
+                _postprocessEffect = null;
             }
 
-            m_postprocessEffect = resourceDictionary.GetResourceAndEnsureLoaded<PostprocessEffectResource>(namedOrGenericKey);
+            _postprocessEffect = resourceDictionary.GetResourceAndEnsureLoaded<PostprocessEffectResource>(namedOrGenericKey);
             this.PostprocessEffectKey = namedOrGenericKey;
-            return m_postprocessEffect;
+            return _postprocessEffect;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         internal void UpdateValues(RenderState renderState, CBPerView cbPerView)
         {
-            m_cbPerView.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerView);
+            _cbPerView.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerView);
         }
 
         /// <summary>
@@ -108,14 +108,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
-            deviceContext.VertexShader.SetConstantBuffer(1, m_cbPerView.ConstantBuffer);
-            deviceContext.PixelShader.SetConstantBuffer(1, m_cbPerView.ConstantBuffer);
+            deviceContext.VertexShader.SetConstantBuffer(1, _cbPerView.ConstantBuffer);
+            deviceContext.PixelShader.SetConstantBuffer(1, _cbPerView.ConstantBuffer);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_cbPerView != null;
+        public override bool IsLoaded => _cbPerView != null;
 
         /// <summary>
         /// Gets or sets the key of the postprocess effect.

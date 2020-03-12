@@ -26,7 +26,7 @@ namespace SeeingSharp.UwpSamples.Controls
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRenderPanel), typeof(StatusBarControl), new PropertyMetadata(null));
 
-        private DispatcherTimer m_refreshTimer;
+        private DispatcherTimer _refreshTimer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -42,20 +42,20 @@ namespace SeeingSharp.UwpSamples.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if(m_refreshTimer != null){ return; }
+            if(_refreshTimer != null){ return; }
 
-            m_refreshTimer = new DispatcherTimer();
-            m_refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
-            m_refreshTimer.Tick += this.OnRefreshTimer_Tick;
-            m_refreshTimer.Start();
+            _refreshTimer = new DispatcherTimer();
+            _refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
+            _refreshTimer.Tick += this.OnRefreshTimer_Tick;
+            _refreshTimer.Start();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if(m_refreshTimer == null){ return; }
+            if(_refreshTimer == null){ return; }
 
-            m_refreshTimer.Stop();
-            m_refreshTimer = null;
+            _refreshTimer.Stop();
+            _refreshTimer = null;
         }
 
         private void OnRefreshTimer_Tick(object sender, object e)

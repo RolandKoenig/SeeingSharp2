@@ -30,14 +30,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class Skybox : SceneObject
     {
         // Resources
-        private IndexBasedDynamicCollection<SkyboxLocalResources> m_localResources;
+        private IndexBasedDynamicCollection<SkyboxLocalResources> _localResources;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Skybox"/> class.
         /// </summary>
         public Skybox(NamedOrGenericKey cubeTextureKey)
         {
-            m_localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
+            _localResources = new IndexBasedDynamicCollection<SkyboxLocalResources>();
             this.CubeTextureKey = cubeTextureKey;
         }
 
@@ -123,7 +123,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             };
 
             // Store resource container object
-            m_localResources.AddObject(localResources, device.DeviceIndex);
+            _localResources.AddObject(localResources, device.DeviceIndex);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.UnloadResources();
 
             // Dispose all locally created resources
-            foreach (var actLocalResource in m_localResources)
+            foreach (var actLocalResource in _localResources)
             {
                 if (actLocalResource == null) { continue; }
 
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Clear local resource container
-            m_localResources.Clear();
+            _localResources.Clear();
         }
 
         /// <summary>
@@ -152,12 +152,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device for which to check.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            if (!m_localResources.HasObjectAt(device.DeviceIndex))
+            if (!_localResources.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }
 
-            var geoResource = m_localResources[device.DeviceIndex];
+            var geoResource = _localResources[device.DeviceIndex];
             if (geoResource.CubeTexture == null)
             {
                 return false;
@@ -202,7 +202,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             renderState.ClearCachedAppliedMaterial();
 
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            var localResources = m_localResources[renderState.DeviceIndex];
+            var localResources = _localResources[renderState.DeviceIndex];
 
             // Apply constants and shader resources
             deviceContext.VertexShader.Set(localResources.VertexShader.VertexShader);

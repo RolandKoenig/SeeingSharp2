@@ -56,7 +56,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private static readonly Regex VERTEX_REGEX = new Regex(@"vertex\s*(\S*)\s*(\S*)\s*(\S*)");
 
         // Just for caching
-        private List<Vector3> m_cachedPoints = new List<Vector3>(3);
+        private List<Vector3> _cachedPoints = new List<Vector3>(3);
 
         /// <summary>
         /// Imports a model from the given file.
@@ -231,7 +231,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         private void ReadFacet(StreamReader reader, string normalString, Geometry newGeometry, StlImportOptions importOptions)
         {
-            m_cachedPoints.Clear();
+            _cachedPoints.Clear();
 
             // Read all geometry
             var normal = ParseNormal(normalString);
@@ -243,7 +243,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 if (TryParseVertex(line, out var point))
                 {
-                    m_cachedPoints.Add(point);
+                    _cachedPoints.Add(point);
                     continue;
                 }
 
@@ -260,9 +260,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Overtake geometry data
             var targetSurface = newGeometry.FirstSurface;
-            var pointCount = m_cachedPoints.Count;
+            var pointCount = _cachedPoints.Count;
 
-            switch (m_cachedPoints.Count)
+            switch (_cachedPoints.Count)
             {
                 case 0:
                 case 1:
@@ -273,16 +273,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     if (importOptions.IsChangeTriangleOrderNeeded())
                     {
                         targetSurface.AddTriangle(
-                            new VertexBasic(m_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal),
-                            new VertexBasic(m_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
-                            new VertexBasic(m_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal));
+                            new VertexBasic(_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal),
+                            new VertexBasic(_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
+                            new VertexBasic(_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal));
                     }
                     else
                     {
                         targetSurface.AddTriangle(
-                            new VertexBasic(m_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal),
-                            new VertexBasic(m_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
-                            new VertexBasic(m_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal));
+                            new VertexBasic(_cachedPoints[0], Color4.Transparent, Vector2.Zero, normal),
+                            new VertexBasic(_cachedPoints[1], Color4.Transparent, Vector2.Zero, normal),
+                            new VertexBasic(_cachedPoints[2], Color4.Transparent, Vector2.Zero, normal));
                     }
                     break;
 
@@ -293,7 +293,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         for (var loop = pointCount - 1; loop > -1; loop--)
                         {
                             indices[loop] = newGeometry.AddVertex(
-                                new VertexBasic(m_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
+                                new VertexBasic(_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
                         }
                     }
                     else
@@ -301,7 +301,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         for (var loop = 0; loop < pointCount; loop++)
                         {
                             indices[loop] = newGeometry.AddVertex(
-                                new VertexBasic(m_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
+                                new VertexBasic(_cachedPoints[loop], Color4.Transparent, Vector2.Zero, normal));
                         }
                     }
 

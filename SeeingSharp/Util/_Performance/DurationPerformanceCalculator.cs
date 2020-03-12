@@ -25,8 +25,8 @@ namespace SeeingSharp.Util
 {
     public class DurationPerformanceCalculator
     {
-        private RingBuffer<ActivityDurationInfo> m_lastDurationItems;
-        private DateTime m_lastReportedDurationTimestamp;
+        private RingBuffer<ActivityDurationInfo> _lastDurationItems;
+        private DateTime _lastReportedDurationTimestamp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
@@ -35,7 +35,7 @@ namespace SeeingSharp.Util
         {
             this.ActivityName = activityName;
 
-            m_lastDurationItems = new RingBuffer<ActivityDurationInfo>(maxHistoricalItems);
+            _lastDurationItems = new RingBuffer<ActivityDurationInfo>(maxHistoricalItems);
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace SeeingSharp.Util
         internal void NotifyActivityDuration(long durationTicks)
         {
             var currentTimestamp = DateTime.UtcNow;
-            m_lastReportedDurationTimestamp = currentTimestamp;
+            _lastReportedDurationTimestamp = currentTimestamp;
 
-            ref var actItem = ref m_lastDurationItems.AddByRef();
+            ref var actItem = ref _lastDurationItems.AddByRef();
             actItem.TimeStamp = currentTimestamp;
             actItem.DurationTicks = durationTicks;
         }
@@ -59,9 +59,9 @@ namespace SeeingSharp.Util
         /// <param name="timeStamp">The timestamp when the given value was measured.</param>
         internal void NotifyActivityDuration(long durationTicks, DateTime timeStamp)
         {
-            if (m_lastDurationItems.Count > 0)
+            if (_lastDurationItems.Count > 0)
             {
-                ref var lastItem = ref m_lastDurationItems.GetByRef(m_lastDurationItems.Count - 1);
+                ref var lastItem = ref _lastDurationItems.GetByRef(_lastDurationItems.Count - 1);
                 if (lastItem.TimeStamp > timeStamp)
                 {
                     throw new ArgumentException(
@@ -70,7 +70,7 @@ namespace SeeingSharp.Util
                 }
             }
 
-            ref var actItem = ref m_lastDurationItems.AddByRef();
+            ref var actItem = ref _lastDurationItems.AddByRef();
             actItem.TimeStamp = timeStamp;
             actItem.DurationTicks = durationTicks;
         }
@@ -88,14 +88,14 @@ namespace SeeingSharp.Util
             var maxValue = long.MinValue;
             long sumValue = 0;
             long itemCount = 0;
-            if (m_lastDurationItems.Count > 0)
+            if (_lastDurationItems.Count > 0)
             {
-                for (var loop = 0; loop < m_lastDurationItems.Count; loop++)
+                for (var loop = 0; loop < _lastDurationItems.Count; loop++)
                 {
-                    ref var actItem = ref m_lastDurationItems.GetByRef(loop);
+                    ref var actItem = ref _lastDurationItems.GetByRef(loop);
                     if (actItem.TimeStamp < minTimeStamp)
                     {
-                        m_lastDurationItems.RemoveFirst();
+                        _lastDurationItems.RemoveFirst();
                         loop--;
                         continue;
                     }
@@ -106,7 +106,7 @@ namespace SeeingSharp.Util
                     sumValue += actItem.DurationTicks;
                     itemCount++;
 
-                    m_lastDurationItems.RemoveFirst();
+                    _lastDurationItems.RemoveFirst();
                     loop--;
                 }
             }
@@ -135,9 +135,9 @@ namespace SeeingSharp.Util
 
         public string ActivityName { get; }
 
-        public int RawDataEntries => m_lastDurationItems.Count;
+        public int RawDataEntries => _lastDurationItems.Count;
 
-        public DateTime LastReportedDurationTimestamp => m_lastReportedDurationTimestamp;
+        public DateTime LastReportedDurationTimestamp => _lastReportedDurationTimestamp;
 
         //*********************************************************************
         //*********************************************************************

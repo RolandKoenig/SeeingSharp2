@@ -32,32 +32,32 @@ namespace SeeingSharp.Util
         private static readonly TimeSpan CALCULATOR_THROWAWAY_TIMEOUT = TimeSpan.FromSeconds(5.0);
 
         // Current state
-        private ConcurrentObjectPool<DurationMeasureToken> m_cachedMeasureTokens;
-        private UnsafeList<CalculatorInfo> m_cachedCalculators;
-        private ConcurrentDictionary<string, CalculatorInfo> m_calculatorsDict;
-        private int m_isCalculating;
+        private ConcurrentObjectPool<DurationMeasureToken> _cachedMeasureTokens;
+        private UnsafeList<CalculatorInfo> _cachedCalculators;
+        private ConcurrentDictionary<string, CalculatorInfo> _calculatorsDict;
+        private int _isCalculating;
 
         // Members for time ticks
-        private DateTime m_lastValueTimestamp;
-        private DateTime m_startupTimestamp;
+        private DateTime _lastValueTimestamp;
+        private DateTime _startupTimestamp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
         /// </summary>
         public PerformanceAnalyzer(TimeSpan valueInterval, int maxResultCountPerCalculator = 50)
         {
-            m_lastValueTimestamp = DateTime.UtcNow;
-            m_startupTimestamp = m_lastValueTimestamp;
+            _lastValueTimestamp = DateTime.UtcNow;
+            _startupTimestamp = _lastValueTimestamp;
 
             this.ValueInterval = valueInterval;
             this.MaxResultCountPerCalculator = maxResultCountPerCalculator;
 
-            m_calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
-            m_cachedCalculators = new UnsafeList<CalculatorInfo>(16);
+            _calculatorsDict = new ConcurrentDictionary<string, CalculatorInfo>();
+            _cachedCalculators = new UnsafeList<CalculatorInfo>(16);
 
             this.Internals = new PerformanceAnalyzerInternals(this);
 
-            m_cachedMeasureTokens = new ConcurrentObjectPool<DurationMeasureToken>(
+            _cachedMeasureTokens = new ConcurrentObjectPool<DurationMeasureToken>(
                 () => new DurationMeasureToken(this),
                 INIT_COUNT_CACHED_MEASURE_TOKENS);
         }
@@ -69,7 +69,7 @@ namespace SeeingSharp.Util
         /// <param name="durationTicks">Total count of ticks to be notified.</param>
         internal void NotifyActivityDuration(string activity, long durationTicks)
         {
-            if (m_isCalculating != 0)
+            if (_isCalculating != 0)
             {
                 throw new InvalidOperationException($"{nameof(PerformanceAnalyzer)} is calculating currently, call to {nameof(this.NotifyActivityDuration)} not allowed!");
             }
@@ -85,13 +85,13 @@ namespace SeeingSharp.Util
         /// <param name="actionToExecute">The action to be executed and measured.</param>
         internal void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
         {
-            if (m_isCalculating != 0)
+            if (_isCalculating != 0)
             {
                 throw new InvalidOperationException($"{nameof(PerformanceAnalyzer)} is calculating currently, call to {nameof(this.ExecuteAndMeasureActivityDuration)} not allowed!");
             }
 
             var calculator = this.GetCalculator<DurationPerformanceCalculator>(activity);
-            using (var token = m_cachedMeasureTokens.Rent())
+            using (var token = _cachedMeasureTokens.Rent())
             {
                 token.Start();
 
@@ -108,12 +108,12 @@ namespace SeeingSharp.Util
         /// <param name="activity">The activityName name to be measured.</param>
         internal DurationMeasureToken BeginMeasureActivityDuration(string activity)
         {
-            if (m_isCalculating != 0)
+            if (_isCalculating != 0)
             {
                 throw new InvalidOperationException($"{nameof(PerformanceAnalyzer)} is calculating currently, call to {nameof(this.BeginMeasureActivityDuration)} not allowed!");
             }
 
-            var result = m_cachedMeasureTokens.Rent();
+            var result = _cachedMeasureTokens.Rent();
             result.Activity = activity;
             result.Start();
 
@@ -122,7 +122,7 @@ namespace SeeingSharp.Util
 
         internal void EndMeasureActivityDuration(DurationMeasureToken measureToken)
         {
-            if (m_isCalculating != 0)
+            if (_isCalculating != 0)
             {
                 throw new InvalidOperationException($"{nameof(PerformanceAnalyzer)} is calculating currently, call to {nameof(this.EndMeasureActivityDuration)} not allowed!");
             }
@@ -131,7 +131,7 @@ namespace SeeingSharp.Util
 
             this.NotifyActivityDuration(measureToken.Activity, measureToken.ElapsedTicks);
 
-            m_cachedMeasureTokens.Return(measureToken);
+            _cachedMeasureTokens.Return(measureToken);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace SeeingSharp.Util
         {
             // Guard this object for changes during calculation
             // Reason is because we may delete some calculator objects when they are outdated
-            if (Interlocked.Exchange(ref m_isCalculating, 1) != 0)
+            if (Interlocked.Exchange(ref _isCalculating, 1) != 0)
             {
                 throw new InvalidOperationException($"{nameof(PerformanceAnalyzer)} is already calculating!");
             }
@@ -149,25 +149,25 @@ namespace SeeingSharp.Util
             try
             {
                 var utcNow = DateTime.UtcNow;
-                if (utcNow - this.ValueInterval < m_lastValueTimestamp)
+                if (utcNow - this.ValueInterval < _lastValueTimestamp)
                 {
                     return;
                 }
 
                 // Trigger calculation
-                var actKeyTimestamp = m_lastValueTimestamp + this.ValueInterval;
+                var actKeyTimestamp = _lastValueTimestamp + this.ValueInterval;
                 while (actKeyTimestamp < utcNow)
                 {
                     var actMaxTimestamp = actKeyTimestamp;
                     var actMinTimestamp = actKeyTimestamp - this.ValueInterval;
-                    if (actMinTimestamp < m_startupTimestamp)
+                    if (actMinTimestamp < _startupTimestamp)
                     {
-                        actMinTimestamp = m_startupTimestamp;
+                        actMinTimestamp = _startupTimestamp;
                     }
 
                     // Calculate reporting values
-                    var calculatorsLength = m_cachedCalculators.Count;
-                    var calculatorsArray = m_cachedCalculators.BackingArray;
+                    var calculatorsLength = _cachedCalculators.Count;
+                    var calculatorsArray = _cachedCalculators.BackingArray;
                     for (var loop = 0; loop < calculatorsLength; loop++)
                     {
                         var actCalculatorInfo = calculatorsArray[loop];
@@ -177,8 +177,8 @@ namespace SeeingSharp.Util
                         if (utcNow - actCalculatorInfo.Calculator.LastReportedDurationTimestamp >
                             CALCULATOR_THROWAWAY_TIMEOUT)
                         {
-                            m_cachedCalculators.RemoveAt(loop);
-                            m_calculatorsDict.TryRemove(actCalculatorInfo.Calculator.ActivityName, out _);
+                            _cachedCalculators.RemoveAt(loop);
+                            _calculatorsDict.TryRemove(actCalculatorInfo.Calculator.ActivityName, out _);
                             loop--;
                             continue;
                         }
@@ -190,13 +190,13 @@ namespace SeeingSharp.Util
                     }
 
                     // Handle next value timestamp
-                    m_lastValueTimestamp = actKeyTimestamp;
-                    actKeyTimestamp = m_lastValueTimestamp + this.ValueInterval;
+                    _lastValueTimestamp = actKeyTimestamp;
+                    actKeyTimestamp = _lastValueTimestamp + this.ValueInterval;
                 }
             }
             finally
             {
-                Interlocked.Exchange(ref m_isCalculating, 0);
+                Interlocked.Exchange(ref _isCalculating, 0);
             }
         }
 
@@ -205,14 +205,14 @@ namespace SeeingSharp.Util
         /// </summary>
         public IEnumerable<DurationPerformanceResult> GetCurrentResults()
         {
-            // This call is not synchronized and may be called at any time (even when m_isCalculating is set)
+            // This call is not synchronized and may be called at any time (even when _isCalculating is set)
             // Worst cases are that we
             //  a) miss new new calculation result
             //  b) get a result which was deleted from the list before
             // No real problem actually...
 
-            var calculatorsLength = m_cachedCalculators.Count;
-            var calculatorsArray = m_cachedCalculators.BackingArray;
+            var calculatorsLength = _cachedCalculators.Count;
+            var calculatorsArray = _cachedCalculators.BackingArray;
             for (var loop = 0; loop < calculatorsLength; loop++)
             {
                 var actCalculatorInfo = calculatorsArray[loop];
@@ -234,11 +234,11 @@ namespace SeeingSharp.Util
                 var newCalculator = new DurationPerformanceCalculator(activityName, 1000);
 
                 var calcInfo = new CalculatorInfo(newCalculator, this.MaxResultCountPerCalculator);
-                m_cachedCalculators.Add(calcInfo);
+                _cachedCalculators.Add(calcInfo);
                 return calcInfo;
             }
 
-            var newCalculatorInfo = m_calculatorsDict.GetOrAdd(activityName, CreateCalculator);
+            var newCalculatorInfo = _calculatorsDict.GetOrAdd(activityName, CreateCalculator);
             if (newCalculatorInfo?.Calculator == null)
             {
                 throw new SeeingSharpException("Unable to create a calculator of type " + typeof(T) + " for activityName " + activityName + "!");
@@ -287,26 +287,26 @@ namespace SeeingSharp.Util
         /// </summary>
         public class PerformanceAnalyzerInternals
         {
-            private PerformanceAnalyzer m_owner;
+            private PerformanceAnalyzer _owner;
 
             internal PerformanceAnalyzerInternals(PerformanceAnalyzer owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
             public void NotifyActivityDuration(string activity, long durationTicks)
             {
-                m_owner.NotifyActivityDuration(activity, durationTicks);
+                _owner.NotifyActivityDuration(activity, durationTicks);
             }
 
             public void ExecuteAndMeasureActivityDuration(string activity, Action actionToExecute)
             {
-                m_owner.ExecuteAndMeasureActivityDuration(activity, actionToExecute);
+                _owner.ExecuteAndMeasureActivityDuration(activity, actionToExecute);
             }
 
             public IDisposable BeginMeasureActivityDuration(string activity)
             {
-                return m_owner.BeginMeasureActivityDuration(activity);
+                return _owner.BeginMeasureActivityDuration(activity);
             }
         }
     }

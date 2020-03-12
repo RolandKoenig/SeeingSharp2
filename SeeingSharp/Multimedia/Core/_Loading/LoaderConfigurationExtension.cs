@@ -28,18 +28,18 @@ namespace SeeingSharp.Multimedia.Core
 {
     internal class LoaderConfigurationExtension : ISeeingSharpExtensions
     {
-        private Action<GraphicsCoreConfiguration> m_manipulateCoreConfig;
-        private Action<EngineAdapterInfo, GraphicsDeviceConfiguration> m_manipulateDeviceConfig;
-        private Action<RenderLoop, GraphicsViewConfiguration> m_manipulateViewConfig;
+        private Action<GraphicsCoreConfiguration> _manipulateCoreConfig;
+        private Action<EngineAdapterInfo, GraphicsDeviceConfiguration> _manipulateDeviceConfig;
+        private Action<RenderLoop, GraphicsViewConfiguration> _manipulateViewConfig;
 
         public LoaderConfigurationExtension(
             Action<GraphicsCoreConfiguration> manipulateCoreConfig,
             Action<EngineAdapterInfo, GraphicsDeviceConfiguration> manipulateDeviceConfig,
             Action<RenderLoop, GraphicsViewConfiguration> manipulateViewConfig)
         {
-            m_manipulateCoreConfig = manipulateCoreConfig;
-            m_manipulateDeviceConfig = manipulateDeviceConfig;
-            m_manipulateViewConfig = manipulateViewConfig;
+            _manipulateCoreConfig = manipulateCoreConfig;
+            _manipulateDeviceConfig = manipulateDeviceConfig;
+            _manipulateViewConfig = manipulateViewConfig;
         }
 
         public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
@@ -64,17 +64,17 @@ namespace SeeingSharp.Multimedia.Core
 
         public void EditCoreConfiguration(GraphicsCoreConfiguration coreConfig)
         {
-            m_manipulateCoreConfig?.Invoke(coreConfig);
+            _manipulateCoreConfig?.Invoke(coreConfig);
         }
 
         public void EditDeviceConfiguration(EngineAdapterInfo adapterInfo, GraphicsDeviceConfiguration deviceConfig)
         {
-            m_manipulateDeviceConfig?.Invoke(adapterInfo, deviceConfig);
+            _manipulateDeviceConfig?.Invoke(adapterInfo, deviceConfig);
         }
 
         public void EditViewConfiguration(RenderLoop renderLoop, GraphicsViewConfiguration viewConfig)
         {
-            m_manipulateViewConfig?.Invoke(renderLoop, viewConfig);
+            _manipulateViewConfig?.Invoke(renderLoop, viewConfig);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class WaitForConditionPassedAnimation : AnimationBase
     {
-        private Func<bool> m_checkFunction;
+        private Func<bool> _checkFunction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaitForConditionPassedAnimation" /> class.
@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             checkFunction.EnsureNotNull(nameof(checkFunction));
 
-            m_checkFunction = checkFunction;
+            _checkFunction = checkFunction;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState"></param>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (m_checkFunction())
+            if (_checkFunction())
             {
                 this.NotifyAnimationFinished();
             }

@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public partial class GeometrySurface
     {
         // Members for build-time transform
-        private Vector2 m_tileSize = Vector2.Zero;
+        private Vector2 _tileSize = Vector2.Zero;
 
         /// <summary>
         /// Enables texture tile mode.
         /// </summary>
         public void EnableTextureTileMode(Vector2 tileSize)
         {
-            m_tileSize = tileSize;
+            _tileSize = tileSize;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void DisableTextureTileMode()
         {
-            m_tileSize = Vector2.Zero;
+            _tileSize = Vector2.Zero;
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             distance = float.MaxValue;
             var result = false;
 
-            for (var loop = 0; loop < m_corners.Count; loop += 3)
+            for (var loop = 0; loop < _corners.Count; loop += 3)
             {
-                ref var vertex1 = ref this.Owner.GetVertexBasicRef(m_corners[loop].Index);
-                ref var vertex2 = ref this.Owner.GetVertexBasicRef(m_corners[loop + 1].Index);
-                ref var vertex3 = ref this.Owner.GetVertexBasicRef(m_corners[loop + 2].Index);
+                ref var vertex1 = ref this.Owner.GetVertexBasicRef(_corners[loop].Index);
+                ref var vertex2 = ref this.Owner.GetVertexBasicRef(_corners[loop + 1].Index);
+                ref var vertex3 = ref this.Owner.GetVertexBasicRef(_corners[loop + 2].Index);
 
                 if (pickingRay.Intersects(ref vertex1.Position, ref vertex2.Position, ref vertex3.Position, out float currentDistance))
                 {
@@ -297,10 +297,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texX = 1f;
             var texY = 1f;
 
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = (pointB - pointA).Length() / m_tileSize.X;
-                texY = (pointC - pointB).Length() / m_tileSize.Y;
+                texX = (pointB - pointA).Length() / _tileSize.X;
+                texY = (pointC - pointB).Length() / _tileSize.Y;
             }
 
             var vertex = new VertexBasic(pointA, new Vector2(0f, texY));
@@ -333,10 +333,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Get texture offsets
             var texX = 1f;
             var texY = 1f;
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = diameter / m_tileSize.X;
-                texY = diameter / m_tileSize.Y;
+                texX = diameter / _tileSize.X;
+                texY = diameter / _tileSize.Y;
             }
 
             // Specify bottom and top middle coordinates
@@ -471,12 +471,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texY = 1f;
             var texSegmentY = 1f;
             var texSegmentX = 1f;
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = diameter / m_tileSize.X;
-                texY = diameter / m_tileSize.Y;
-                texSegmentY = height / m_tileSize.Y;
-                texSegmentX = EngineMath.RAD_180DEG * diameter / m_tileSize.X;
+                texX = diameter / _tileSize.X;
+                texY = diameter / _tileSize.Y;
+                texSegmentY = height / _tileSize.Y;
+                texSegmentX = EngineMath.RAD_180DEG * diameter / _tileSize.X;
             }
 
             // Specify bottom and top middle coordinates
@@ -674,7 +674,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 actVertex.Normal = Vector3.Normalize(actVertex.Position);
                 actVertex.Position = actVertex.Normal * radius;
 
-                var theta = EngineMath.AngleFromXY(actVertex.Position.X, actVertex.Position.Z);
+                var theta = EngineMath.AngleFromXy(actVertex.Position.X, actVertex.Position.Z);
                 var phi = (float)Math.Acos(actVertex.Position.Y / radius);
                 actVertex.TexCoord1 = new Vector2(
                     theta / EngineMath.PI_2,
@@ -758,11 +758,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texY = 1f;
             var texZ = 1f;
 
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = size.X / m_tileSize.X;
-                texY = size.Y / m_tileSize.Y;
-                texZ = size.Z / m_tileSize.X;
+                texX = size.X / _tileSize.X;
+                texY = size.Y / _tileSize.Y;
+                texZ = size.Z / _tileSize.X;
             }
 
             // Calculate bottom vectors
@@ -968,11 +968,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texY = 1f;
             var texZ = 1f;
 
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = size.X / m_tileSize.X;
-                texY = size.Y / m_tileSize.Y;
-                texZ = size.Z / m_tileSize.X;
+                texX = size.X / _tileSize.X;
+                texY = size.Y / _tileSize.Y;
+                texZ = size.Z / _tileSize.X;
             }
 
             //Front side
@@ -1020,10 +1020,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texX = 1f;
             var texY = 1f;
 
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = (pointB - pointA).Length() / m_tileSize.X;
-                texY = (pointC - pointB).Length() / m_tileSize.Y;
+                texX = (pointB - pointA).Length() / _tileSize.X;
+                texY = (pointC - pointB).Length() / _tileSize.Y;
             }
 
             var vertex = new VertexBasic(pointA, new Vector2(0f, texY));
@@ -1047,10 +1047,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var texX = 1f;
             var texY = 1f;
 
-            if (m_tileSize != Vector2.Zero)
+            if (_tileSize != Vector2.Zero)
             {
-                texX = (pointB - pointA).Length() / m_tileSize.X;
-                texY = (pointC - pointB).Length() / m_tileSize.Y;
+                texX = (pointB - pointA).Length() / _tileSize.X;
+                texY = (pointC - pointB).Length() / _tileSize.Y;
             }
 
             var vertex = new VertexBasic(pointA, new Vector2(0f, texY), normal);
@@ -1089,14 +1089,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for (var loop = 2; loop < m_corners.Count; loop += 3)
+            for (var loop = 2; loop < _corners.Count; loop += 3)
             {
-                var edge1 = m_corners[loop - 2];
-                var edge2 = m_corners[loop - 1];
-                var edge3 = m_corners[loop];
-                m_corners[loop] = edge1;
-                m_corners[loop - 1] = edge2;
-                m_corners[loop - 2] = edge3;
+                var edge1 = _corners[loop - 2];
+                var edge2 = _corners[loop - 1];
+                var edge3 = _corners[loop];
+                _corners[loop] = edge1;
+                _corners[loop - 1] = edge2;
+                _corners[loop - 2] = edge3;
             }
         }
     }

@@ -28,74 +28,70 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class WireframeMaterialResource : MaterialResource
     {
         // Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey RES_KEY_GEO_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyVertexShader = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyPixelShader = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyGeoShader = GraphicsCore.GetNextGenericResourceKey();
+        private readonly NamedOrGenericKey _keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Some configuration
-        private Color4 m_materialDiffuseColor;
-        private float m_clipFactor;
-        private float m_maxClipDistance;
-        private float m_addToAlpha;
-        private bool m_adjustTextureCoordinates;
-        private bool m_cbPerMaterialDataChanged;
-        private bool m_useVertexColors;
+        private Color4 _materialDiffuseColor;
+        private float _clipFactor;
+        private float _maxClipDistance;
+        private float _addToAlpha;
+        private bool _adjustTextureCoordinates;
+        private bool _cbPerMaterialDataChanged;
+        private bool _useVertexColors;
 
         // Resource members
-        private VertexShaderResource m_vertexShader;
-        private GeometryShaderResource m_geoShader;
-        private PixelShaderResource m_pixelShader;
-        private TypeSafeConstantBufferResource<CBPerMaterial> m_cbPerMaterial;
-        private DefaultResources m_defaultResources;
+        private VertexShaderResource _vertexShader;
+        private GeometryShaderResource _geoShader;
+        private PixelShaderResource _pixelShader;
+        private TypeSafeConstantBufferResource<CBPerMaterial> _cbPerMaterial;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardMaterialResource"/> class.
         /// </summary>
         public WireframeMaterialResource()
         {
-            m_maxClipDistance = 1000f;
-            m_adjustTextureCoordinates = false;
-            m_addToAlpha = 0f;
-            m_materialDiffuseColor = Color4.White;
-            m_useVertexColors = true;
+            _maxClipDistance = 1000f;
+            _adjustTextureCoordinates = false;
+            _addToAlpha = 0f;
+            _materialDiffuseColor = Color4.White;
+            _useVertexColors = true;
         }
 
         /// <inheritdoc />
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Load all required shaders and constant buffers
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_VERTEX_SHADER,
+            _vertexShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyVertexShader,
                 () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Common", "WireframeVertexShader"));
-            m_geoShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_GEO_SHADER,
+            _geoShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyGeoShader,
                 () => GraphicsHelper.Internals.GetGeometryShaderResource(device, "Common", "WireframeGeometryShader"));
-            m_pixelShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_PIXEL_SHADER,
+            _pixelShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyPixelShader,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "WireframePixelShader"));
-            m_cbPerMaterial = resources.GetResourceAndEnsureLoaded(
-                KEY_CONSTANT_BUFFER,
+            _cbPerMaterial = resources.GetResourceAndEnsureLoaded(
+                _keyConstantBuffer,
                 () => new TypeSafeConstantBufferResource<CBPerMaterial>());
-            m_cbPerMaterialDataChanged = true;
-
-            // Get a reference to default resource object
-            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
+            _cbPerMaterialDataChanged = true;
         }
 
         /// <inheritdoc />
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_vertexShader = null;
-            m_geoShader = null;
-            m_pixelShader = null;
-            m_cbPerMaterial = null;
+            _vertexShader = null;
+            _geoShader = null;
+            _pixelShader = null;
+            _cbPerMaterial = null;
         }
 
         /// <inheritdoc />
         internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
         {
-            return m_vertexShader.GetInputLayout(device, inputElements);
+            return _vertexShader.GetInputLayout(device, inputElements);
         }
 
         /// <inheritdoc />
@@ -107,26 +103,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 previousMaterial.ResourceType == this.ResourceType;
 
             // Apply local shader configuration
-            if (m_cbPerMaterialDataChanged)
+            if (_cbPerMaterialDataChanged)
             {
-                m_cbPerMaterial.SetData(
+                _cbPerMaterial.SetData(
                     deviceContext,
                     new CBPerMaterial
                     {
-                        ClipFactor = m_clipFactor,
-                        MaxClipDistance = m_maxClipDistance,
+                        ClipFactor = _clipFactor,
+                        MaxClipDistance = _maxClipDistance,
                         Texture0Factor = 0f,
-                        AdjustTextureCoordinates = m_adjustTextureCoordinates ? 1f : 0f,
-                        AddToAlpha = m_addToAlpha,
-                        MaterialDiffuseColor = m_materialDiffuseColor,
-                        DiffuseColorFactor = m_useVertexColors ? 0f : 1f,
+                        AdjustTextureCoordinates = _adjustTextureCoordinates ? 1f : 0f,
+                        AddToAlpha = _addToAlpha,
+                        MaterialDiffuseColor = _materialDiffuseColor,
+                        DiffuseColorFactor = _useVertexColors ? 0f : 1f,
                     });
-                m_cbPerMaterialDataChanged = false;
+                _cbPerMaterialDataChanged = false;
             }
 
             // Apply sampler and constants
-            deviceContext.PixelShader.SetConstantBuffer(3, m_cbPerMaterial.ConstantBuffer);
-            deviceContext.VertexShader.SetConstantBuffer(3, m_cbPerMaterial.ConstantBuffer);
+            deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
 
             // Set texture resource (if set)
             deviceContext.PixelShader.SetShaderResource(0, null);
@@ -134,9 +130,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Set shader resources
             if (!isResourceSameType)
             {
-                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-                deviceContext.GeometryShader.Set(m_geoShader.GeometryShader);
-                deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
+                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
+                deviceContext.GeometryShader.Set(_geoShader.GeometryShader);
+                deviceContext.PixelShader.Set(_pixelShader.PixelShader);
             }
         }
 
@@ -149,7 +145,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <inheritdoc />
-        public override bool IsLoaded => m_vertexShader != null;
+        public override bool IsLoaded => _vertexShader != null;
 
         /// <summary>
         /// Gets or sets the ClipFactor.
@@ -157,13 +153,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ClipFactor
         {
-            get => m_clipFactor;
+            get => _clipFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_clipFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_clipFactor, value))
                 {
-                    m_clipFactor = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _clipFactor = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }
@@ -173,13 +169,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float MaxClipDistance
         {
-            get => m_maxClipDistance;
+            get => _maxClipDistance;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_maxClipDistance, value))
+                if (!EngineMath.EqualsWithTolerance(_maxClipDistance, value))
                 {
-                    m_maxClipDistance = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _maxClipDistance = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }
@@ -189,13 +185,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public bool AdjustTextureCoordinates
         {
-            get => m_adjustTextureCoordinates;
+            get => _adjustTextureCoordinates;
             set
             {
-                if (m_adjustTextureCoordinates != value)
+                if (_adjustTextureCoordinates != value)
                 {
-                    m_adjustTextureCoordinates = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _adjustTextureCoordinates = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }
@@ -205,39 +201,39 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float AddToAlpha
         {
-            get => m_addToAlpha;
+            get => _addToAlpha;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_addToAlpha, value))
+                if (!EngineMath.EqualsWithTolerance(_addToAlpha, value))
                 {
-                    m_addToAlpha = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _addToAlpha = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }
 
         public Color4 MaterialDiffuseColor
         {
-            get => m_materialDiffuseColor;
+            get => _materialDiffuseColor;
             set
             {
-                if (m_materialDiffuseColor != value)
+                if (_materialDiffuseColor != value)
                 {
-                    m_materialDiffuseColor = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _materialDiffuseColor = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }
 
         public bool UseVertexColors
         {
-            get => m_useVertexColors;
+            get => _useVertexColors;
             set
             {
-                if (m_useVertexColors != value)
+                if (_useVertexColors != value)
                 {
-                    m_useVertexColors = value;
-                    m_cbPerMaterialDataChanged = true;
+                    _useVertexColors = value;
+                    _cbPerMaterialDataChanged = true;
                 }
             }
         }

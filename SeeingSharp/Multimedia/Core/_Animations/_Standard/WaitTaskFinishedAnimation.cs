@@ -25,7 +25,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class WaitTaskFinishedAnimation : AnimationBase
     {
-        private Task m_taskToWaitFor;
+        private Task _taskToWaitFor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaitTaskFinishedAnimation" /> class.
@@ -33,16 +33,16 @@ namespace SeeingSharp.Multimedia.Core
         public WaitTaskFinishedAnimation(Task taskToWaitFor)
             : base(null, AnimationType.FinishedByEvent)
         {
-            m_taskToWaitFor = taskToWaitFor;
+            _taskToWaitFor = taskToWaitFor;
         }
 
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             base.OnCurrentTimeUpdated(updateState, animationState);
 
-            if (m_taskToWaitFor.IsCanceled ||
-               m_taskToWaitFor.IsCompleted ||
-               m_taskToWaitFor.IsFaulted)
+            if (_taskToWaitFor.IsCanceled ||
+               _taskToWaitFor.IsCompleted ||
+               _taskToWaitFor.IsFaulted)
             {
                 this.NotifyAnimationFinished();
             }

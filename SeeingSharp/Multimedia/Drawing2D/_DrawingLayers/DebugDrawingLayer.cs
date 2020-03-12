@@ -27,16 +27,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class DebugDrawingLayer : Custom2DDrawingLayer, IDisposable
     {
         // Drawing resources
-        private TextFormatResource m_textFormat;
-        private SolidBrushResource m_solidBrushForeground;
-        private SolidBrushResource m_solidBrushBackground;
+        private TextFormatResource _textFormat;
+        private SolidBrushResource _solidBrushForeground;
+        private SolidBrushResource _solidBrushBackground;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugDrawingLayer"/> class.
         /// </summary>
         public DebugDrawingLayer()
         {
-            m_textFormat = new TextFormatResource("Arial", 30f)
+            _textFormat = new TextFormatResource("Arial", 30f)
             {
                 TextAlignment = TextAlignment.Center,
                 ParagraphAlignment = ParagraphAlignment.Center
@@ -44,15 +44,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             var grayColor = Color4.LightGray;
             grayColor.ChangeAlphaTo(0.8f);
-            m_solidBrushBackground = new SolidBrushResource(grayColor);
-            m_solidBrushForeground = new SolidBrushResource(Color4.RedColor);
+            _solidBrushBackground = new SolidBrushResource(grayColor);
+            _solidBrushForeground = new SolidBrushResource(Color4.RedColor);
         }
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_textFormat);
-            SeeingSharpUtil.SafeDispose(ref m_solidBrushBackground);
-            SeeingSharpUtil.SafeDispose(ref m_solidBrushForeground);
+            SeeingSharpUtil.SafeDispose(ref _textFormat);
+            SeeingSharpUtil.SafeDispose(ref _solidBrushBackground);
+            SeeingSharpUtil.SafeDispose(ref _solidBrushForeground);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="graphics">The graphics object used for drawing.</param>
         protected override void Draw2D(Graphics2D graphics)
         {
-            if (m_textFormat == null) { return; }
+            if (_textFormat == null) { return; }
 
             // Check for minimum screen size
             var screenSize = graphics.ScreenSize;
@@ -77,8 +77,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
             var targetRect = new RectangleF(
                 10f, 10f,
                 280f, 80f);
-            graphics.FillRoundedRectangle(targetRect, 10f, 10f, m_solidBrushBackground);
-            graphics.DrawText("! Debug-Mode !", m_textFormat, targetRect, m_solidBrushForeground);
+            graphics.FillRoundedRectangle(targetRect, 10f, 10f, _solidBrushBackground);
+            graphics.DrawText("! Debug-Mode !", _textFormat, targetRect, _solidBrushForeground);
         }
     }
 }

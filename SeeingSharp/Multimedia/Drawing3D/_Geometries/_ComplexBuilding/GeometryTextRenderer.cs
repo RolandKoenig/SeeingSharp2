@@ -31,16 +31,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class GeometryTextRenderer : TextRendererBase
     {
-        private TextGeometryOptions m_geometryOptions;
-        private GeometrySurface m_targetSurface;
+        private TextGeometryOptions _geometryOptions;
+        private GeometrySurface _targetSurface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryTextRenderer" /> class.
         /// </summary>
         public GeometryTextRenderer(GeometrySurface targetSurface, TextGeometryOptions textGeometryOptions)
         {
-            m_targetSurface = targetSurface;
-            m_geometryOptions = textGeometryOptions;
+            _targetSurface = targetSurface;
+            _geometryOptions = textGeometryOptions;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Simplify written geometry and write it into own structure
-                pathGeometry.Simplify(GeometrySimplificationOption.Lines, m_geometryOptions.SimplificationFlatternTolerance, geometryExtruder);
+                pathGeometry.Simplify(GeometrySimplificationOption.Lines, _geometryOptions.SimplificationFlatternTolerance, geometryExtruder);
             }
 
             // Geometry for caching the result
@@ -101,7 +101,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var tempSurface = tempGeometry.CreateSurface();
 
             // Create the text surface
-            if (m_geometryOptions.MakeSurface)
+            if (_geometryOptions.MakeSurface)
             {
                 // Separate polygons by clock direction
                 // Order polygons as needed for further hole finding algorithm
@@ -132,7 +132,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     foreach (var actHole in correspondingHoles)
                     {
                         holePolygons.Remove(actHole);
-                        polygonForRendering = polygonForRendering.MergeWithHole(actHole, Polygon2DMergeOptions.Default, cutPoints);
+                        polygonForRendering = polygonForRendering.MergeWithHole(actHole, Polygon2DMergeOptions.DEFAULT, cutPoints);
                         polygonForTriangulation = polygonForTriangulation.MergeWithHole(actHole, new Polygon2DMergeOptions { MakeMergepointSpaceForTriangulation = true });
                     }
 
@@ -164,13 +164,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
                         tempGeometry.AddVertex(
                             new VertexBasic(
                                 actVertexLocation,
-                                m_geometryOptions.SurfaceVertexColor,
+                                _geometryOptions.SurfaceVertexColor,
                                 actTexCoord,
                                 new Vector3(0f, 1f, 0f)));
                     }
 
                     // Generate cubes on each vertex if requested
-                    if (m_geometryOptions.GenerateCubesOnVertices)
+                    if (_geometryOptions.GenerateCubesOnVertices)
                     {
                         for (var loop = 0; loop < polygonForRendering.Vertices.Count; loop++)
                         {
@@ -219,13 +219,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Make volumetric outlines
             var triangleCountWithoutSide = tempSurface.CountTriangles;
 
-            if (m_geometryOptions.MakeVolumetricText)
+            if (_geometryOptions.MakeVolumetricText)
             {
-                var volumetricTextDepth = m_geometryOptions.VolumetricTextDepth;
+                var volumetricTextDepth = _geometryOptions.VolumetricTextDepth;
 
-                if (m_geometryOptions.VerticesScaleFactor > 0f)
+                if (_geometryOptions.VerticesScaleFactor > 0f)
                 {
-                    volumetricTextDepth = volumetricTextDepth / m_geometryOptions.VerticesScaleFactor;
+                    volumetricTextDepth = volumetricTextDepth / _geometryOptions.VerticesScaleFactor;
                 }
 
                 // AddObject all side surfaces
@@ -238,13 +238,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             new Vector3(actLine.EndPosition.X, -volumetricTextDepth, actLine.EndPosition.Y),
                             new Vector3(actLine.EndPosition.X, 0f, actLine.EndPosition.Y),
                             new Vector3(actLine.StartPosition.X, 0f, actLine.StartPosition.Y))
-                            .SetVertexColor(m_geometryOptions.VolumetricSideSurfaceVertexColor);
+                            .SetVertexColor(_geometryOptions.VolumetricSideSurfaceVertexColor);
                     }
                 }
             }
 
             // Do also make back surface?
-            if (m_geometryOptions.MakeBackSurface)
+            if (_geometryOptions.MakeBackSurface)
             {
                 for (var loop = 0; loop < triangleCountWithoutSide; loop++)
                 {
@@ -252,7 +252,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     var vertex0 = tempGeometry.Vertices[triangle.Index1];
                     var vertex1 = tempGeometry.Vertices[triangle.Index2];
                     var vertex2 = tempGeometry.Vertices[triangle.Index3];
-                    var changeVector = new Vector3(0f, -m_geometryOptions.VolumetricTextDepth, 0f);
+                    var changeVector = new Vector3(0f, -_geometryOptions.VolumetricTextDepth, 0f);
 
                     tempSurface.AddTriangle(
                         vertex2.Copy(vertex2.Position - changeVector, Vector3.Negate(vertex2.Normal)),
@@ -265,27 +265,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
             tempGeometry.ToggleCoordinateSystem();
 
             // Scale the text using given scale factor
-            if (m_geometryOptions.VerticesScaleFactor > 0f)
+            if (_geometryOptions.VerticesScaleFactor > 0f)
             {
                 var scaleMatrix = Matrix4x4.CreateScale(
-                    m_geometryOptions.VerticesScaleFactor,
-                    m_geometryOptions.VerticesScaleFactor,
-                    m_geometryOptions.VerticesScaleFactor);
+                    _geometryOptions.VerticesScaleFactor,
+                    _geometryOptions.VerticesScaleFactor,
+                    _geometryOptions.VerticesScaleFactor);
 
                 var transformMatrix = new Matrix4Stack(scaleMatrix);
-                transformMatrix.TransformLocal(m_geometryOptions.VertexTransform);
+                transformMatrix.TransformLocal(_geometryOptions.VertexTransform);
 
                 tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => Vector3.Transform(actVector, transformMatrix.Top));
             }
 
             // Calculate all normals before adding to target geometry
-            if (m_geometryOptions.CalculateNormals)
+            if (_geometryOptions.CalculateNormals)
             {
                 tempGeometry.CalculateNormalsFlat();
             }
 
             // Merge temporary geometry to target geometry
-            m_targetSurface.AddGeometry(tempGeometry);
+            _targetSurface.AddGeometry(tempGeometry);
 
             return SDX.Result.Ok;
         }

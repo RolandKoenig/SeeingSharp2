@@ -28,10 +28,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public abstract class ShaderResource : Resource
     {
         // Generic members
-        private string m_shaderProfile;
-        private byte[] m_shaderBytecode;
-        private ResourceLink m_resourceLink;
-        private ShaderResourceKind m_resourceKind;
+        private string _shaderProfile;
+        private byte[] _shaderBytecode;
+        private ResourceLink _resourceLink;
+        private ShaderResourceKind _resourceKind;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShaderResource"/> class.
@@ -41,9 +41,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resourceKind">Kind of the shader resource.</param>
         protected ShaderResource(string shaderProfile, ResourceLink resourceLink, ShaderResourceKind resourceKind)
         {
-            m_resourceKind = resourceKind;
-            m_shaderProfile = shaderProfile;
-            m_resourceLink = resourceLink;
+            _resourceKind = resourceKind;
+            _shaderProfile = shaderProfile;
+            _resourceLink = resourceLink;
         }
 
         /// <summary>
@@ -61,12 +61,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            if (m_shaderBytecode == null)
+            if (_shaderBytecode == null)
             {
-                m_shaderBytecode = GetShaderBytecode(device, m_resourceLink, m_resourceKind, m_shaderProfile);
+                _shaderBytecode = GetShaderBytecode(device, _resourceLink, _resourceKind, _shaderProfile);
             }
 
-            this.LoadShader(device, m_shaderBytecode);
+            this.LoadShader(device, _shaderBytecode);
         }
 
         /// <summary>
@@ -116,6 +116,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the shaders raw bytecode.
         /// </summary>
-        public byte[] ShaderBytecode => m_shaderBytecode;
+        public byte[] ShaderBytecode => _shaderBytecode;
     }
 }

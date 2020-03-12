@@ -43,7 +43,7 @@ namespace SeeingSharp.ModelViewer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowVM? m_viewModel;
+        private MainWindowVM? _viewModel;
 
         public MainWindow()
         {
@@ -52,9 +52,9 @@ namespace SeeingSharp.ModelViewer
             // Initialize Viewmodel
             if (GraphicsCore.IsLoaded)
             {
-                m_viewModel = new MainWindowVM(this.CtrlRenderer.RenderLoop);
-                m_viewModel.OpenFileDialogRequest += this.OnViewModelOpenFileDialogRequest;
-                this.DataContext = m_viewModel;
+                _viewModel = new MainWindowVM(this.CtrlRenderer.RenderLoop);
+                _viewModel.OpenFileDialogRequest += this.OnViewModelOpenFileDialogRequest;
+                this.DataContext = _viewModel;
 
                 this.Loaded += this.OnLoaded;
             }
@@ -76,9 +76,9 @@ namespace SeeingSharp.ModelViewer
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (m_viewModel == null) { return; }
+            if (_viewModel == null) { return; }
 
-            await m_viewModel.LoadInitialScene();
+            await _viewModel.LoadInitialScene();
         }
     }
 }

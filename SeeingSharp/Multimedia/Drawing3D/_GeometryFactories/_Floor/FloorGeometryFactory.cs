@@ -30,20 +30,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public const float DEFAULT_HEIGHT = 0.1f;
 
         //Properties
-        private List<FloorTile> m_groundTiles;
-        private Vector2 m_tileSize;
-        private int m_tilesX;
-        private int m_tilesY;
+        private List<FloorTile> _groundTiles;
+        private Vector2 _tileSize;
+        private int _tilesX;
+        private int _tilesY;
 
-        private Vector2 m_totalSizeWithoutBorder;
+        private Vector2 _totalSizeWithoutBorder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FloorGeometryFactory"/> class.
         /// </summary>
         public FloorGeometryFactory(Vector2 tileSize)
         {
-            m_groundTiles = new List<FloorTile>();
-            m_tileSize = tileSize;
+            _groundTiles = new List<FloorTile>();
+            _tileSize = tileSize;
         }
 
         /// <summary>
@@ -63,16 +63,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap));
             }
-            m_tilesX = tilesX;
-            m_tilesY = tilesY;
+            _tilesX = tilesX;
+            _tilesY = tilesY;
 
             //Update total size
-            m_totalSizeWithoutBorder = new Vector2(
-                tilesX * m_tileSize.X,
-                tilesY * m_tileSize.Y);
+            _totalSizeWithoutBorder = new Vector2(
+                tilesX * _tileSize.X,
+                tilesY * _tileSize.Y);
 
             //Generate all tiles
-            m_groundTiles.Clear();
+            _groundTiles.Clear();
             for (var loopX = 0; loopX < tilesX; loopX++)
             {
                 for (var loopY = 0; loopY < tilesY; loopY++)
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     if (tileMap[loopX, loopY] != null)
                     {
                         var newTile = new FloorTile(loopX, loopY, tileMap[loopX, loopY]);
-                        m_groundTiles.Add(newTile);
+                        _groundTiles.Add(newTile);
                     }
                 }
             }
@@ -121,16 +121,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 throw new ArgumentException("Height of tilemap <= 0!", nameof(tileMap));
             }
-            m_tilesX = tilesX;
-            m_tilesY = tilesY;
+            _tilesX = tilesX;
+            _tilesY = tilesY;
 
             // Update total size
-            m_totalSizeWithoutBorder = new Vector2(
-                tilesX * m_tileSize.X,
-                tilesY * m_tileSize.Y);
+            _totalSizeWithoutBorder = new Vector2(
+                tilesX * _tileSize.X,
+                tilesY * _tileSize.Y);
 
             // Generate all tiles
-            m_groundTiles.Clear();
+            _groundTiles.Clear();
 
             for (var loopX = 0; loopX < tilesX; loopX++)
             {
@@ -139,7 +139,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     if (tileMap[loopX, loopY])
                     {
                         var newTile = new FloorTile(loopX, loopY);
-                        m_groundTiles.Add(newTile);
+                        _groundTiles.Add(newTile);
                     }
                 }
             }
@@ -153,24 +153,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public Vector3 GetTilePosition(int xPos, int yPos)
         {
             //Check parameters
-            if (xPos < 0 || xPos >= m_tilesX)
+            if (xPos < 0 || xPos >= _tilesX)
             {
                 throw new ArgumentException("Invalid x position!", nameof(xPos));
             }
-            if (yPos < 0 || yPos >= m_tilesY)
+            if (yPos < 0 || yPos >= _tilesY)
             {
                 throw new ArgumentException("Invalid y position!", nameof(yPos));
             }
 
             //Calculate half sizes
-            var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
-            var tileHalfSize = new Vector2(m_tileSize.X / 2f, m_tileSize.Y / 2f);
+            var totalHalfSize = new Vector2(_totalSizeWithoutBorder.X / 2f, _totalSizeWithoutBorder.Y / 2f);
+            var tileHalfSize = new Vector2(_tileSize.X / 2f, _tileSize.Y / 2f);
 
             //Get position of the tile
             return new Vector3(
-                xPos * m_tileSize.X - totalHalfSize.X + tileHalfSize.X,
+                xPos * _tileSize.X - totalHalfSize.X + tileHalfSize.X,
                 0f,
-                yPos * m_tileSize.Y - totalHalfSize.Y + tileHalfSize.Y);
+                yPos * _tileSize.Y - totalHalfSize.Y + tileHalfSize.Y);
         }
 
         /// <summary>
@@ -181,10 +181,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var result = new Geometry();
 
             // Calculate half vector of total ground size.
-            var totalHalfSize = new Vector2(m_totalSizeWithoutBorder.X / 2f, m_totalSizeWithoutBorder.Y / 2f);
+            var totalHalfSize = new Vector2(_totalSizeWithoutBorder.X / 2f, _totalSizeWithoutBorder.Y / 2f);
 
             // Build all tiles
-            foreach (var actTile in m_groundTiles)
+            foreach (var actTile in _groundTiles)
             {
                 // Get the material of the tile
                 var actMaterialIndex = actTile.MaterialIndex;
@@ -203,14 +203,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 // Get position of the tile
                 var tilePosition = new Vector3(
-                    actTile.XPos * m_tileSize.X - totalHalfSize.X,
+                    actTile.XPos * _tileSize.X - totalHalfSize.X,
                     0f,
-                    actTile.YPos * m_tileSize.Y - totalHalfSize.Y);
+                    actTile.YPos * _tileSize.Y - totalHalfSize.Y);
 
                 // AddObject tile information to current Geometry
                 actSurface.BuildCubeTop4V(
                     new Vector3(tilePosition.X, 0, tilePosition.Z),
-                    new Vector3(m_tileSize.X, 0, m_tileSize.Y));
+                    new Vector3(_tileSize.X, 0, _tileSize.Y));
             }
 
             // Return all generated Geometry

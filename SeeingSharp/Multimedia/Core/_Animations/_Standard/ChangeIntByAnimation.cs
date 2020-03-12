@@ -26,13 +26,12 @@ namespace SeeingSharp.Multimedia.Core
     public class ChangeIntByAnimation : AnimationBase
     {
         // Members for running animation
-        private int m_alreadyIncreased;
+        private int _alreadyIncreased;
 
         // Configuration members
-        private Func<int> m_getValueFunc;
-        private Action<int> m_setValueAction;
-        private int m_increaseTotal;
-        private TimeSpan m_timeSpan;
+        private Func<int> _getValueFunc;
+        private Action<int> _setValueAction;
+        private int _increaseTotal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeIntByAnimation" /> class.
@@ -45,10 +44,9 @@ namespace SeeingSharp.Multimedia.Core
         public ChangeIntByAnimation(object targetObject, Func<int> getValueFunc, Action<int> setValueAction, int increaseTotal, TimeSpan timeSpan)
             : base(targetObject, AnimationType.FixedTime, timeSpan)
         {
-            m_getValueFunc = getValueFunc;
-            m_setValueAction = setValueAction;
-            m_increaseTotal = increaseTotal;
-            m_timeSpan = timeSpan;
+            _getValueFunc = getValueFunc;
+            _setValueAction = setValueAction;
+            _increaseTotal = increaseTotal;
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_alreadyIncreased = 0;
+            _alreadyIncreased = 0;
         }
 
         /// <summary>
@@ -65,12 +63,12 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             var currentLocationPercent = (float)(this.CurrentTime.TotalMilliseconds / this.FixedTime.TotalMilliseconds);
-            var toIncreaseTotal = (int)(m_increaseTotal * currentLocationPercent);
-            var toIncrease = toIncreaseTotal - m_alreadyIncreased;
+            var toIncreaseTotal = (int)(_increaseTotal * currentLocationPercent);
+            var toIncrease = toIncreaseTotal - _alreadyIncreased;
 
-            m_setValueAction(m_getValueFunc() + toIncrease);
+            _setValueAction(_getValueFunc() + toIncrease);
 
-            m_alreadyIncreased = toIncreaseTotal;
+            _alreadyIncreased = toIncreaseTotal;
         }
 
         /// <summary>

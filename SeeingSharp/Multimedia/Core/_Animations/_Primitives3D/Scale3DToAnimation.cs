@@ -27,13 +27,12 @@ namespace SeeingSharp.Multimedia.Core
     public class Scale3DToAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectScaling m_targetObject;
-        private Vector3 m_targetScaleVector;
-        private TimeSpan m_duration;
+        private IAnimatableObjectScaling _targetObject;
+        private Vector3 _targetScaleVector;
 
         // Runtime values
-        private Vector3 m_startScaleVector;
-        private Vector3 m_differenceVector;
+        private Vector3 _startScaleVector;
+        private Vector3 _differenceVector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
@@ -44,9 +43,8 @@ namespace SeeingSharp.Multimedia.Core
         public Scale3DToAnimation(IAnimatableObjectScaling targetObject, Vector3 scaleVector, TimeSpan duration)
             : base(targetObject, AnimationType.FixedTime, duration)
         {
-            m_targetObject = targetObject;
-            m_targetScaleVector = scaleVector;
-            m_duration = duration;
+            _targetObject = targetObject;
+            _targetScaleVector = scaleVector;
         }
 
         /// <summary>
@@ -54,9 +52,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startScaleVector = m_targetObject.Scaling;
+            _startScaleVector = _targetObject.Scaling;
 
-            m_differenceVector = m_targetScaleVector - m_startScaleVector;
+            _differenceVector = _targetScaleVector - _startScaleVector;
         }
 
         /// <summary>
@@ -66,7 +64,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var scaleFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
 
-            m_targetObject.Scaling = m_startScaleVector + m_differenceVector * scaleFactor;
+            _targetObject.Scaling = _startScaleVector + _differenceVector * scaleFactor;
         }
 
         /// <summary>
@@ -74,9 +72,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.Scaling = m_targetScaleVector;
-            m_startScaleVector = Vector3.Zero;
-            m_differenceVector = Vector3.Zero;
+            _targetObject.Scaling = _targetScaleVector;
+            _startScaleVector = Vector3.Zero;
+            _differenceVector = Vector3.Zero;
         }
     }
 }

@@ -27,8 +27,8 @@ namespace SeeingSharp.UwpSamples.Controls
 {
     public class PropertyGridViewModel : ViewModelBase
     {
-        private List<ConfigurablePropertyMetadata> m_propertyMetadata;
-        private object m_selectedObject;
+        private List<ConfigurablePropertyMetadata> _propertyMetadata;
+        private object _selectedObject;
 
         private void UpdatePropertyCollection()
         {
@@ -61,12 +61,12 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public object SelectedObject
         {
-            get => m_selectedObject;
+            get => _selectedObject;
             set
             {
-                if (m_selectedObject != value)
+                if (_selectedObject != value)
                 {
-                    m_selectedObject = value;
+                    _selectedObject = value;
                     this.RaisePropertyChanged();
 
                     this.UpdatePropertyCollection();
@@ -76,12 +76,12 @@ namespace SeeingSharp.UwpSamples.Controls
 
         public List<ConfigurablePropertyMetadata> PropertyMetadata
         {
-            get => m_propertyMetadata;
+            get => _propertyMetadata;
             set
             {
-                if (m_propertyMetadata != value)
+                if (_propertyMetadata != value)
                 {
-                    m_propertyMetadata = value;
+                    _propertyMetadata = value;
                     this.RaisePropertyChanged();
                 }
             }

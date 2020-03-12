@@ -35,16 +35,16 @@ namespace SeeingSharp.Util
         private const int STANDARD_HEARTBEAT = 500;
 
         // Members for thread runtime
-        private volatile ObjectThreadState m_currentState;
-        private Thread m_mainThread;
-        private CultureInfo m_culture;
-        private CultureInfo m_uiCulture;
+        private volatile ObjectThreadState _currentState;
+        private Thread _mainThread;
+        private CultureInfo _culture;
+        private CultureInfo _uiCulture;
 
         // Threading resources
-        private ObjectThreadSynchronizationContext m_syncContext;
-        private ConcurrentQueue<Action> m_taskQueue;
-        private SemaphoreSlim m_mainLoopSynchronizeObject;
-        private SemaphoreSlim m_threadStopSynchronizeObject;
+        private ObjectThreadSynchronizationContext _syncContext;
+        private ConcurrentQueue<Action> _taskQueue;
+        private SemaphoreSlim _mainLoopSynchronizeObject;
+        private SemaphoreSlim _threadStopSynchronizeObject;
 
         /// <summary>
         /// Called when the thread ist starting.
@@ -81,14 +81,14 @@ namespace SeeingSharp.Util
         /// <param name="heartBeat">The initial heartbeat of the ObjectThread.</param>
         public ObjectThread(string name, int heartBeat)
         {
-            m_taskQueue = new ConcurrentQueue<Action>();
-            m_mainLoopSynchronizeObject = new SemaphoreSlim(1);
+            _taskQueue = new ConcurrentQueue<Action>();
+            _mainLoopSynchronizeObject = new SemaphoreSlim(1);
 
             this.Name = name;
             this.HeartBeat = heartBeat;
 
-            m_culture = Thread.CurrentThread.CurrentCulture;
-            m_uiCulture = Thread.CurrentThread.CurrentUICulture;
+            _culture = Thread.CurrentThread.CurrentCulture;
+            _uiCulture = Thread.CurrentThread.CurrentUICulture;
 
             this.Timer = new ObjectThreadTimer();
         }
@@ -98,30 +98,30 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Start()
         {
-            if (m_currentState != ObjectThreadState.None) { throw new InvalidOperationException("Unable to start thread: Illegal state: " + m_currentState + "!"); }
+            if (_currentState != ObjectThreadState.None) { throw new InvalidOperationException("Unable to start thread: Illegal state: " + _currentState + "!"); }
 
             //Ensure that one single pass of the main loop is made at once
-            m_mainLoopSynchronizeObject.Release();
+            _mainLoopSynchronizeObject.Release();
 
             // Create stop semaphore
-            if (m_threadStopSynchronizeObject != null)
+            if (_threadStopSynchronizeObject != null)
             {
-                m_threadStopSynchronizeObject.Dispose();
-                m_threadStopSynchronizeObject = null;
+                _threadStopSynchronizeObject.Dispose();
+                _threadStopSynchronizeObject = null;
             }
 
-            m_threadStopSynchronizeObject = new SemaphoreSlim(0);
+            _threadStopSynchronizeObject = new SemaphoreSlim(0);
 
             //Go into starting state
-            m_currentState = ObjectThreadState.Starting;
+            _currentState = ObjectThreadState.Starting;
 
-            m_mainThread = new Thread(this.ObjectThreadMainMethod)
+            _mainThread = new Thread(this.ObjectThreadMainMethod)
             {
                 IsBackground = true,
                 Name = this.Name
             };
 
-            m_mainThread.Start();
+            _mainThread.Start();
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public Task WaitUntilSoppedAsync()
         {
-            switch (m_currentState)
+            switch (_currentState)
             {
                 case ObjectThreadState.None:
                 case ObjectThreadState.Stopping:
@@ -145,7 +145,7 @@ namespace SeeingSharp.Util
                     return taskSource.Task;
 
                 default:
-                    throw new SeeingSharpException($"Unhandled {nameof(ObjectThreadState)} {m_currentState}!");
+                    throw new SeeingSharpException($"Unhandled {nameof(ObjectThreadState)} {_currentState}!");
             }
         }
 
@@ -164,10 +164,10 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Stop()
         {
-            if (m_currentState != ObjectThreadState.Running) { throw new InvalidOperationException($"Unable to stop thread: Illegal state: {m_currentState}!"); }
-            m_currentState = ObjectThreadState.Stopping;
+            if (_currentState != ObjectThreadState.Running) { throw new InvalidOperationException($"Unable to stop thread: Illegal state: {_currentState}!"); }
+            _currentState = ObjectThreadState.Stopping;
 
-            while (m_taskQueue.TryDequeue(out _))
+            while (_taskQueue.TryDequeue(out _))
             {
 
             }
@@ -183,12 +183,12 @@ namespace SeeingSharp.Util
         {
             this.Stop();
 
-            if (m_threadStopSynchronizeObject != null)
+            if (_threadStopSynchronizeObject != null)
             {
-                await m_threadStopSynchronizeObject.WaitAsync(timeout);
+                await _threadStopSynchronizeObject.WaitAsync(timeout);
 
-                m_threadStopSynchronizeObject.Dispose();
-                m_threadStopSynchronizeObject = null;
+                _threadStopSynchronizeObject.Dispose();
+                _threadStopSynchronizeObject = null;
             }
         }
 
@@ -197,7 +197,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public virtual void Trigger()
         {
-            var synchronizationObject = m_mainLoopSynchronizeObject;
+            var synchronizationObject = _mainLoopSynchronizeObject;
 
             synchronizationObject?.Release();
         }
@@ -213,7 +213,7 @@ namespace SeeingSharp.Util
             // Enqueue the given action
             var taskCompletionSource = new TaskCompletionSource<object>();
 
-            m_taskQueue.Enqueue(() =>
+            _taskQueue.Enqueue(() =>
             {
                 try
                 {
@@ -274,15 +274,15 @@ namespace SeeingSharp.Util
         {
             try
             {
-                m_mainThread.CurrentCulture = m_culture;
-                m_mainThread.CurrentUICulture = m_uiCulture;
+                _mainThread.CurrentCulture = _culture;
+                _mainThread.CurrentUICulture = _uiCulture;
 
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
                 //Set synchronization context for this thread
-                m_syncContext = new ObjectThreadSynchronizationContext(this);
-                SynchronizationContext.SetSynchronizationContext(m_syncContext);
+                _syncContext = new ObjectThreadSynchronizationContext(this);
+                SynchronizationContext.SetSynchronizationContext(_syncContext);
 
                 //Notify start process
                 try
@@ -291,21 +291,21 @@ namespace SeeingSharp.Util
                 }
                 catch (Exception ex)
                 {
-                    this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
-                    m_currentState = ObjectThreadState.None;
+                    this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
+                    _currentState = ObjectThreadState.None;
                     return;
                 }
 
                 //Run main-thread
-                if (m_currentState != ObjectThreadState.None)
+                if (_currentState != ObjectThreadState.None)
                 {
-                    m_currentState = ObjectThreadState.Running;
-                    while (m_currentState == ObjectThreadState.Running)
+                    _currentState = ObjectThreadState.Running;
+                    while (_currentState == ObjectThreadState.Running)
                     {
                         try
                         {
                             //Wait for next action to perform
-                            m_mainLoopSynchronizeObject.Wait(this.HeartBeat);
+                            _mainLoopSynchronizeObject.Wait(this.HeartBeat);
 
                             //Measure current time
                             stopWatch.Stop();
@@ -315,7 +315,7 @@ namespace SeeingSharp.Util
 
                             //Get current taskqueue
                             var localTaskQueue = new List<Action>();
-                            while (m_taskQueue.TryDequeue(out var dummyAction))
+                            while (_taskQueue.TryDequeue(out var dummyAction))
                             {
                                 localTaskQueue.Add(dummyAction);
                             }
@@ -329,7 +329,7 @@ namespace SeeingSharp.Util
                                 }
                                 catch (Exception ex)
                                 {
-                                    this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                                    this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
                                 }
                             }
 
@@ -338,7 +338,7 @@ namespace SeeingSharp.Util
                         }
                         catch (Exception ex)
                         {
-                            this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                            this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
                         }
                     }
 
@@ -349,24 +349,24 @@ namespace SeeingSharp.Util
                     }
                     catch (Exception ex)
                     {
-                        this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
+                        this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
                     }
                 }
 
                 //Reset state to none
-                m_currentState = ObjectThreadState.None;
+                _currentState = ObjectThreadState.None;
 
                 stopWatch.Stop();
                 stopWatch = null;
             }
             catch (Exception ex)
             {
-                this.OnThreadException(new ObjectThreadExceptionEventArgs(m_currentState, ex));
-                m_currentState = ObjectThreadState.None;
+                this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
+                _currentState = ObjectThreadState.None;
             }
 
             // Notify thread stop event
-            try { m_threadStopSynchronizeObject.Release(); }
+            try { _threadStopSynchronizeObject.Release(); }
             catch (Exception)
             {
                 // ignored
@@ -386,7 +386,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext => m_syncContext;
+        public SynchronizationContext SyncContext => _syncContext;
 
         /// <summary>
         /// Gets the name of this thread.
@@ -406,7 +406,7 @@ namespace SeeingSharp.Util
         /// </summary>
         private class ObjectThreadSynchronizationContext : SynchronizationContext
         {
-            private ObjectThread m_owner;
+            private ObjectThread _owner;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ObjectThreadSynchronizationContext"/> class.
@@ -414,7 +414,7 @@ namespace SeeingSharp.Util
             /// <param name="owner">The owner of this context.</param>
             public ObjectThreadSynchronizationContext(ObjectThread owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
             /// <summary>
@@ -424,7 +424,7 @@ namespace SeeingSharp.Util
             /// <param name="state">The object passed to the delegate.</param>
             public override void Post(SendOrPostCallback d, object state)
             {
-                m_owner.InvokeAsync(() => d(state));
+                _owner.InvokeAsync(() => d(state));
             }
 
             /// <summary>

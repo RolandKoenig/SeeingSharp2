@@ -21,41 +21,38 @@
 */
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class LineRenderResources : Resource
     {
-        internal static readonly NamedOrGenericKey RESOURCE_KEY = GraphicsCore.GetNextGenericResourceKey();
-
         // Private constants
-        private static readonly NamedOrGenericKey KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey KEY_CONSTANT_BUFFER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resourceKey = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_keyVertexShader = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_keyPixelShader = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private VertexShaderResource m_vertexShader;
-        private PixelShaderResource m_pixelShader;
-        private D3D11.InputLayout m_inputLayout;
+        private VertexShaderResource _vertexShader;
+        private PixelShaderResource _pixelShader;
+        private D3D11.InputLayout _inputLayout;
 
         /// <summary>
         /// Loads the resource.
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
-                KEY_VERTEX_SHADER,
+            _vertexShader = resources.GetResourceAndEnsureLoaded(
+                s_keyVertexShader,
                 () => GraphicsHelper.Internals.GetVertexShaderResource(device, "LineRendering", "LineVertexShader"));
-            m_pixelShader = resources.GetResourceAndEnsureLoaded(
-                KEY_PIXEL_SHADER,
+            _pixelShader = resources.GetResourceAndEnsureLoaded(
+                s_keyPixelShader,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
 
-            m_inputLayout = new D3D11.InputLayout(
+            _inputLayout = new D3D11.InputLayout(
                 device.DeviceD3D11_1,
-                m_vertexShader.ShaderBytecode,
+                _vertexShader.ShaderBytecode,
                 LineVertex.InputElements);
         }
 
@@ -64,30 +61,30 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpUtil.SafeDispose(ref m_inputLayout);
+            SeeingSharpUtil.SafeDispose(ref _inputLayout);
 
-            m_vertexShader = null;
-            m_pixelShader = null;
+            _vertexShader = null;
+            _pixelShader = null;
         }
 
         /// <summary>
         /// Is the resource loaded correctly?
         /// </summary>
-        public override bool IsLoaded => m_pixelShader != null;
+        public override bool IsLoaded => _pixelShader != null;
 
         /// <summary>
         /// Gets the vertex shader resource.
         /// </summary>
-        public VertexShaderResource VertexShader => m_vertexShader;
+        public VertexShaderResource VertexShader => _vertexShader;
 
         /// <summary>
         /// Gets the pixel shader resource.
         /// </summary>
-        public PixelShaderResource PixelShader => m_pixelShader;
+        public PixelShaderResource PixelShader => _pixelShader;
 
         /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
-        internal D3D11.InputLayout InputLayout => m_inputLayout;
+        internal D3D11.InputLayout InputLayout => _inputLayout;
     }
 }

@@ -28,24 +28,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public abstract class Camera3DBase : IAnimatableObject
     {
         // Configuration
-        private Vector3 m_position = new Vector3(0, 0, 0);
-        private Vector3 m_relativeTarget = new Vector3(0, 0, 1);
-        private Vector3 m_upVector = new Vector3(0, 1, 0);
-        private float m_hRotation;
-        private float m_vRotation;
+        private Vector3 _position = new Vector3(0, 0, 0);
+        private Vector3 _relativeTarget = new Vector3(0, 0, 1);
+        private Vector3 _upVector = new Vector3(0, 1, 0);
+        private float _hRotation;
+        private float _vRotation;
 
         // State
-        private Vector3 m_lastBigStepPos = new Vector3(0, 0, 0);
-        private Vector3 m_up;
-        private Vector3 m_right;
-        private Vector3 m_look;
-        private Matrix4x4 m_view;
-        private Matrix4x4 m_project;
-        private Matrix4x4 m_viewProj;
+        private Vector3 _lastBigStepPos = new Vector3(0, 0, 0);
+        private Vector3 _up;
+        private Vector3 _right;
+        private Vector3 _look;
+        private Matrix4x4 _view;
+        private Matrix4x4 _project;
+        private Matrix4x4 _viewProj;
 
         // Additional parameters
-        private float m_zNear = 0.1f;
-        private float m_zFar = 500f;
+        private float _zNear = 0.1f;
+        private float _zFar = 500f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
@@ -101,8 +101,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpdateCamera()
         {
-            var newTarget = m_relativeTarget;
-            newTarget = Vector3.Add(newTarget, m_position);
+            var newTarget = _relativeTarget;
+            newTarget = Vector3.Add(newTarget, _position);
 
             if (EngineMath.EqualsWithTolerance(this.ScreenHeight, 0f))
             {
@@ -111,20 +111,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Calculate matrices
             this.CalculateViewProjectionMatrices(
-                m_position, newTarget, m_upVector, m_zNear, m_zFar, this.ScreenWidth, this.ScreenHeight,
-                out m_view, out m_project);
-            m_viewProj = m_view * m_project;
+                _position, newTarget, _upVector, _zNear, _zFar, this.ScreenWidth, this.ScreenHeight,
+                out _view, out _project);
+            _viewProj = _view * _project;
 
             // Calculate right, up and look vectors
-            m_right.X = m_view.M11;
-            m_right.Y = m_view.M21;
-            m_right.Z = m_view.M31;
-            m_up.X = m_view.M12;
-            m_up.Y = m_view.M22;
-            m_up.Z = m_view.M32;
-            m_look.X = m_view.M13;
-            m_look.Y = m_view.M23;
-            m_look.Z = m_view.M33;
+            _right.X = _view.M11;
+            _right.Y = _view.M21;
+            _right.Z = _view.M31;
+            _up.X = _view.M12;
+            _up.Y = _view.M22;
+            _up.Z = _view.M32;
+            _look.X = _view.M13;
+            _look.Y = _view.M23;
+            _look.Z = _view.M33;
 
             this.StateChanged = true;
         }
@@ -157,15 +157,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vRot">vertical rotation.</param>
         public void Rotate(float hRot, float vRot)
         {
-            m_hRotation += hRot;
-            m_vRotation += vRot;
+            _hRotation += hRot;
+            _vRotation += vRot;
 
-            if (m_vRotation >= (float)Math.PI / 2f) { m_vRotation = (float)Math.PI / 2f - 0.001f; }
-            if (m_vRotation <= -(float)Math.PI / 2f) { m_vRotation = -(float)Math.PI / 2f + 0.001f; }
+            if (_vRotation >= (float)Math.PI / 2f) { _vRotation = (float)Math.PI / 2f - 0.001f; }
+            if (_vRotation <= -(float)Math.PI / 2f) { _vRotation = -(float)Math.PI / 2f + 0.001f; }
 
-            m_relativeTarget.X = (float)(1f * Math.Cos(m_vRotation) * Math.Cos(m_hRotation));
-            m_relativeTarget.Y = (float)(1f * Math.Sin(m_vRotation));
-            m_relativeTarget.Z = (float)(1f * Math.Cos(m_vRotation) * Math.Sin(m_hRotation));
+            _relativeTarget.X = (float)(1f * Math.Cos(_vRotation) * Math.Cos(_hRotation));
+            _relativeTarget.Y = (float)(1f * Math.Sin(_vRotation));
+            _relativeTarget.Z = (float)(1f * Math.Cos(_vRotation) * Math.Sin(_hRotation));
 
             this.UpdateCamera();
         }
@@ -176,9 +176,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="dist">The Distance you want to zoom.</param>
         public virtual void Zoom(float dist)
         {
-            m_position.X += dist * m_relativeTarget.X;
-            m_position.Y += dist * m_relativeTarget.Y;
-            m_position.Z += dist * m_relativeTarget.Z;
+            _position.X += dist * _relativeTarget.X;
+            _position.Y += dist * _relativeTarget.Y;
+            _position.Z += dist * _relativeTarget.Z;
 
             this.UpdateCamera();
         }
@@ -190,15 +190,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="z">moving in z direction.</param>
         public void Move(float x, float z)
         {
-            m_position.X += x;
-            m_position.Z += z;
+            _position.X += x;
+            _position.Z += z;
 
             this.UpdateCamera();
         }
 
         public void Move(Vector3 moveVector)
         {
-            m_position = m_position + moveVector;
+            _position = _position + moveVector;
 
             this.UpdateCamera();
         }
@@ -210,15 +210,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             if (!this.InvertScreenMove)
             {
-                m_position.X = m_position.X + m_up.X * points;
-                m_position.Y = m_position.Y + m_up.Y * points;
-                m_position.Z = m_position.Z + m_up.Z * points;
+                _position.X = _position.X + _up.X * points;
+                _position.Y = _position.Y + _up.Y * points;
+                _position.Z = _position.Z + _up.Z * points;
             }
             else
             {
-                m_position.X = m_position.X - m_up.X * points;
-                m_position.Y = m_position.Y - m_up.Y * points;
-                m_position.Z = m_position.Z - m_up.Z * points;
+                _position.X = _position.X - _up.X * points;
+                _position.Y = _position.Y - _up.Y * points;
+                _position.Z = _position.Z - _up.Z * points;
             }
 
             this.UpdateCamera();
@@ -229,7 +229,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpDownWithoutMoving(float points)
         {
-            m_position.Y = m_position.Y + m_up.Y * points;
+            _position.Y = _position.Y + _up.Y * points;
 
             this.UpdateCamera();
         }
@@ -241,15 +241,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             if (!this.InvertScreenMove)
             {
-                m_position.X = m_position.X + m_right.X * points;
-                m_position.Y = m_position.Y + m_right.Y * points;
-                m_position.Z = m_position.Z + m_right.Z * points;
+                _position.X = _position.X + _right.X * points;
+                _position.Y = _position.Y + _right.Y * points;
+                _position.Z = _position.Z + _right.Z * points;
             }
             else
             {
-                m_position.X = m_position.X - m_right.X * points;
-                m_position.Y = m_position.Y - m_right.Y * points;
-                m_position.Z = m_position.Z - m_right.Z * points;
+                _position.X = _position.X - _right.X * points;
+                _position.Y = _position.Y - _right.Y * points;
+                _position.Z = _position.Z - _right.Z * points;
             }
 
             this.UpdateCamera();
@@ -260,8 +260,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void StraveAtPlane(float points)
         {
-            m_position.X = m_position.X + m_right.X * points;
-            m_position.Z = m_position.Z + m_right.Z * points;
+            _position.X = _position.X + _right.X * points;
+            _position.Z = _position.Z + _right.Z * points;
 
             this.UpdateCamera();
         }
@@ -292,39 +292,39 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves the view-matrix.
         /// </summary>
-        public Matrix4x4 View => m_view;
+        public Matrix4x4 View => _view;
 
         /// <summary>
         /// Gets the view-projection matrix.
         /// </summary>
-        public Matrix4x4 ViewProjection => m_viewProj;
+        public Matrix4x4 ViewProjection => _viewProj;
 
         /// <summary>
         /// Retrieves or sets the direction / target.
         /// </summary>
-        public Vector3 Direction => m_look;
+        public Vector3 Direction => _look;
 
         /// <summary>
         /// Retrieves a vector, which is targeting right.
         /// </summary>
-        public Vector3 Right => m_right;
+        public Vector3 Right => _right;
 
         /// <summary>
         /// Retrieves a vector, which is targeting upwards.
         /// </summary>
-        public Vector3 Up => m_up;
+        public Vector3 Up => _up;
 
         /// <summary>
         /// Gets or sets the vector that points up.
         /// </summary>
         public Vector3 UpVector
         {
-            get => m_upVector;
+            get => _upVector;
             set
             {
-                if (m_upVector != value)
+                if (_upVector != value)
                 {
-                    m_upVector = value;
+                    _upVector = value;
                     this.UpdateCamera();
                 }
             }
@@ -338,20 +338,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector2 TargetRotation
         {
-            get => new Vector2(m_hRotation, m_vRotation);
+            get => new Vector2(_hRotation, _vRotation);
             set
             {
                 var v = value;
 
-                m_hRotation = v.X;
-                m_vRotation = v.Y;
+                _hRotation = v.X;
+                _vRotation = v.Y;
 
-                if (m_vRotation >= (float)Math.PI / 2f) { m_vRotation = (float)Math.PI / 2f - 0.001f; }
-                if (m_vRotation <= -(float)Math.PI / 2f) { m_vRotation = -(float)Math.PI / 2f + 0.001f; }
+                if (_vRotation >= (float)Math.PI / 2f) { _vRotation = (float)Math.PI / 2f - 0.001f; }
+                if (_vRotation <= -(float)Math.PI / 2f) { _vRotation = -(float)Math.PI / 2f + 0.001f; }
 
-                m_relativeTarget.X = (float)(1f * Math.Cos(m_vRotation) * Math.Cos(m_hRotation));
-                m_relativeTarget.Y = (float)(1f * Math.Sin(m_vRotation));
-                m_relativeTarget.Z = (float)(1f * Math.Cos(m_vRotation) * Math.Sin(m_hRotation));
+                _relativeTarget.X = (float)(1f * Math.Cos(_vRotation) * Math.Cos(_hRotation));
+                _relativeTarget.Y = (float)(1f * Math.Sin(_vRotation));
+                _relativeTarget.Z = (float)(1f * Math.Cos(_vRotation) * Math.Sin(_hRotation));
 
                 this.UpdateCamera();
             }
@@ -362,8 +362,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 Target
         {
-            get => m_relativeTarget + m_position;
-            set => this.RelativeTarget = value - m_position;
+            get => _relativeTarget + _position;
+            set => this.RelativeTarget = value - _position;
         }
 
         /// <summary>
@@ -371,13 +371,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 RelativeTarget
         {
-            get => m_relativeTarget;
+            get => _relativeTarget;
             set
             {
-                m_relativeTarget = Vector3.Normalize(value);
+                _relativeTarget = Vector3.Normalize(value);
 
                 // Update horizontal and vertical rotation
-                Vector3Ex.ToHVRotation(m_relativeTarget, out m_hRotation, out m_vRotation);
+                Vector3Ex.ToHVRotation(_relativeTarget, out _hRotation, out _vRotation);
 
                 this.UpdateCamera();
             }
@@ -388,10 +388,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZNear
         {
-            get => m_zNear;
+            get => _zNear;
             set
             {
-                m_zNear = value;
+                _zNear = value;
                 this.UpdateCamera();
             }
         }
@@ -401,10 +401,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZFar
         {
-            get => m_zFar;
+            get => _zFar;
             set
             {
-                m_zFar = value;
+                _zFar = value;
                 this.UpdateCamera();
             }
         }
@@ -414,10 +414,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Vector3 Position
         {
-            get => m_position;
+            get => _position;
             set
             {
-                m_position = value;
+                _position = value;
 
                 this.UpdateCamera();
             }
@@ -426,7 +426,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Retrieves projection-matrix.
         /// </summary>
-        public Matrix4x4 Projection => m_project;
+        public Matrix4x4 Projection => _project;
 
         /// <summary>
         /// Width of the screen.

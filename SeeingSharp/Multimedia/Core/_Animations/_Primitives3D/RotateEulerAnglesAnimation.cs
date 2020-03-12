@@ -27,16 +27,16 @@ namespace SeeingSharp.Multimedia.Core
     public class RotateEulerAnglesAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectEulerRotation m_targetObject;
-        private RotationCalculationComponent m_calculationComponents;
-        private AnimationStateChangeMode m_stateChangeMode;
-        private Vector3 m_paramRotation;
-        private TimeSpan m_duration;
+        private IAnimatableObjectEulerRotation _targetObject;
+        private RotationCalculationComponent _calculationComponents;
+        private AnimationStateChangeMode _stateChangeMode;
+        private Vector3 _paramRotation;
+        private TimeSpan _duration;
 
         // Runtime values
-        private Vector3 m_startRotation;
-        private Vector3 m_targetRotation;
-        private Vector3 m_changeRotation;
+        private Vector3 _startRotation;
+        private Vector3 _targetRotation;
+        private Vector3 _changeRotation;
 
         /// <summary>
         /// Rotates the object to the target rotation vector.
@@ -52,11 +52,11 @@ namespace SeeingSharp.Multimedia.Core
             AnimationStateChangeMode stateChangeMode = AnimationStateChangeMode.ChangeStateTo)
             : base(targetObject, AnimationType.FixedTime, duration)
         {
-            m_targetObject = targetObject;
-            m_paramRotation = targetVector;
-            m_duration = duration;
-            m_calculationComponents = calculationComponent;
-            m_stateChangeMode = stateChangeMode;
+            _targetObject = targetObject;
+            _paramRotation = targetVector;
+            _duration = duration;
+            _calculationComponents = calculationComponent;
+            _stateChangeMode = stateChangeMode;
         }
 
         /// <summary>
@@ -65,45 +65,45 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnStartAnimation()
         {
             // Prepare this animation
-            m_startRotation = m_targetObject.RotationEuler;
-            switch (m_stateChangeMode)
+            _startRotation = _targetObject.RotationEuler;
+            switch (_stateChangeMode)
             {
                 case AnimationStateChangeMode.ChangeStateTo:
-                    m_changeRotation = m_paramRotation - m_startRotation;
-                    m_targetRotation = m_paramRotation;
+                    _changeRotation = _paramRotation - _startRotation;
+                    _targetRotation = _paramRotation;
                     break;
 
                 case AnimationStateChangeMode.ChangeStateBy:
-                    m_changeRotation = m_paramRotation;
-                    m_targetRotation = m_startRotation + m_changeRotation;
+                    _changeRotation = _paramRotation;
+                    _targetRotation = _startRotation + _changeRotation;
                     break;
 
                 default:
-                    throw new SeeingSharpGraphicsException("Unknown AnimationStateChangeMode in RotateEulerAnglesAnimation: " + m_stateChangeMode + "!");
+                    throw new SeeingSharpGraphicsException("Unknown AnimationStateChangeMode in RotateEulerAnglesAnimation: " + _stateChangeMode + "!");
             }
 
 
             // Some optimization logic to take the shortest way
             //  => e. g. object rotation 45° instead of 315°
-            if (m_changeRotation.X > EngineMath.RAD_180DEG) { m_changeRotation.X = -(m_changeRotation.X - EngineMath.RAD_180DEG); }
-            if (m_changeRotation.Y > EngineMath.RAD_180DEG) { m_changeRotation.Y = -(m_changeRotation.Y - EngineMath.RAD_180DEG); }
-            if (m_changeRotation.Z > EngineMath.RAD_180DEG) { m_changeRotation.Z = -(m_changeRotation.Z - EngineMath.RAD_180DEG); }
-            if (m_changeRotation.X < -EngineMath.RAD_180DEG) { m_changeRotation.X = -(m_changeRotation.X + EngineMath.RAD_180DEG); }
-            if (m_changeRotation.Y < -EngineMath.RAD_180DEG) { m_changeRotation.Y = -(m_changeRotation.Y + EngineMath.RAD_180DEG); }
-            if (m_changeRotation.Z < -EngineMath.RAD_180DEG) { m_changeRotation.Z = -(m_changeRotation.Z + EngineMath.RAD_180DEG); }
+            if (_changeRotation.X > EngineMath.RAD_180DEG) { _changeRotation.X = -(_changeRotation.X - EngineMath.RAD_180DEG); }
+            if (_changeRotation.Y > EngineMath.RAD_180DEG) { _changeRotation.Y = -(_changeRotation.Y - EngineMath.RAD_180DEG); }
+            if (_changeRotation.Z > EngineMath.RAD_180DEG) { _changeRotation.Z = -(_changeRotation.Z - EngineMath.RAD_180DEG); }
+            if (_changeRotation.X < -EngineMath.RAD_180DEG) { _changeRotation.X = -(_changeRotation.X + EngineMath.RAD_180DEG); }
+            if (_changeRotation.Y < -EngineMath.RAD_180DEG) { _changeRotation.Y = -(_changeRotation.Y + EngineMath.RAD_180DEG); }
+            if (_changeRotation.Z < -EngineMath.RAD_180DEG) { _changeRotation.Z = -(_changeRotation.Z + EngineMath.RAD_180DEG); }
 
             // Set components to zero which should not not be changed using this animation
-            if (!m_calculationComponents.HasFlag(RotationCalculationComponent.Pitch))
+            if (!_calculationComponents.HasFlag(RotationCalculationComponent.Pitch))
             {
-                m_changeRotation.X = 0f;
+                _changeRotation.X = 0f;
             }
-            if (!m_calculationComponents.HasFlag(RotationCalculationComponent.Yaw))
+            if (!_calculationComponents.HasFlag(RotationCalculationComponent.Yaw))
             {
-                m_changeRotation.Y = 0f;
+                _changeRotation.Y = 0f;
             }
-            if (!m_calculationComponents.HasFlag(RotationCalculationComponent.Roll))
+            if (!_calculationComponents.HasFlag(RotationCalculationComponent.Roll))
             {
-                m_changeRotation.Z = 0f;
+                _changeRotation.Z = 0f;
             }
         }
 
@@ -112,8 +112,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            var percentagePassed = this.CurrentTime.Ticks / (float)m_duration.Ticks;
-            m_targetObject.RotationEuler = m_startRotation + m_changeRotation * percentagePassed;
+            var percentagePassed = this.CurrentTime.Ticks / (float)_duration.Ticks;
+            _targetObject.RotationEuler = _startRotation + _changeRotation * percentagePassed;
         }
 
         /// <summary>
@@ -121,10 +121,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.RotationEuler = m_targetRotation;
-            m_startRotation = Vector3.Zero;
-            m_changeRotation = Vector3.Zero;
-            m_targetRotation = Vector3.Zero;
+            _targetObject.RotationEuler = _targetRotation;
+            _startRotation = Vector3.Zero;
+            _changeRotation = Vector3.Zero;
+            _targetRotation = Vector3.Zero;
         }
     }
 }

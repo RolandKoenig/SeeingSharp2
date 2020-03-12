@@ -32,11 +32,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class Graphics2D
     {
         // Transform settings
-        private Graphics2DTransformSettings m_transformSettings;
+        private Graphics2DTransformSettings _transformSettings;
 
         // Main view related properties
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.DeviceContext m_deviceContext;
+        private D2D.RenderTarget _renderTarget;
+        private D2D.DeviceContext _deviceContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Graphics2D"/> class.
@@ -46,13 +46,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="screenSize">The size of the screen in device independent pixels.</param>
         internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
         {
-            m_transformSettings = Graphics2DTransformSettings.Default;
+            _transformSettings = Graphics2DTransformSettings.Default;
             this.TransformStack = new Matrix3x2Stack();
 
             this.Device = device;
-            m_renderTarget = renderTarget;
+            _renderTarget = renderTarget;
             this.ScreenPixelSize = screenSize;
-            m_deviceContext = m_renderTarget as D2D.DeviceContext;
+            _deviceContext = _renderTarget as D2D.DeviceContext;
 
             this.Internals = new Graphics2DInternals(this);
         }
@@ -62,13 +62,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public unsafe void ApplyTransformStack()
         {
-            if (m_renderTarget == null)
+            if (_renderTarget == null)
             {
                 return;
             }
 
             var top = this.TransformStack.Top;
-            m_renderTarget.Transform =
+            _renderTarget.Transform =
                 *(SDXM.RawMatrix3x2*)&top;
         }
 
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// been called on the result object.
         /// </summary>
         /// <param name="customTransform">The custom transform matrix.</param>
-        public IDisposable BlockForLocalTransform_ReplacePrevious(Matrix3x2 customTransform)
+        public IDisposable BlockForLocalTransfor_ReplacePrevious(Matrix3x2 customTransform)
         {
             this.TransformStack.Push(customTransform);
             this.ApplyTransformStack();
@@ -93,7 +93,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Transform current matrix locally with the given matrix.
         /// </summary>
         /// <param name="customTransform">The custom transform matrix.</param>
-        public IDisposable BlockForLocalTransform_TransformLocal(Matrix3x2 customTransform)
+        public IDisposable BlockForLocalTransfor_TransformLocal(Matrix3x2 customTransform)
         {
             this.TransformStack.Push();
             this.TransformStack.TransformLocal(customTransform);
@@ -112,7 +112,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="clearColor">Color of the clear.</param>
         public void Clear(Color4 clearColor)
         {
-            m_renderTarget?.Clear(SdxMathHelper.RawFromColor4(clearColor));
+            _renderTarget?.Clear(SdxMathHelper.RawFromColor4(clearColor));
         }
 
         /// <summary>
@@ -120,13 +120,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawGeometry(Geometry2DResourceBase geometry, BrushResource brush, float strokeWidth = 1f)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             geometry.EnsureNotNullOrDisposed(nameof(geometry));
             brush.EnsureNotNull(nameof(brush));
             strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
-            m_renderTarget.DrawGeometry(
+            _renderTarget.DrawGeometry(
                 geometry.GetGeometry(),
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -137,13 +137,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawRectangle(RectangleF rectangle, BrushResource brush, float strokeWidth = 1f)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             brush.EnsureNotNull(nameof(brush));
             rectangle.EnsureNotEmpty(nameof(rectangle));
             strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
-            m_renderTarget.DrawRectangle(
+            _renderTarget.DrawRectangle(
                 SdxMathHelper.RawFromRectangleF(rectangle),
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -154,7 +154,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawRoundedRectangle(RectangleF rectangle, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
         {
-            if (m_renderTarget == null)
+            if (_renderTarget == null)
             {
                 return;
             }
@@ -172,7 +172,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 RadiusY = radiusY
             };
 
-            m_renderTarget.DrawRoundedRectangle(
+            _renderTarget.DrawRoundedRectangle(
                 roundedRect,
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -185,7 +185,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
-            m_renderTarget.DrawEllipse(
+            _renderTarget.DrawEllipse(
                 ellipse,
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 rectangle.Y + radiusY);
             var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
-            m_renderTarget.DrawEllipse(
+            _renderTarget.DrawEllipse(
                 ellipse,
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -224,12 +224,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void DrawLine(Vector2 start, Vector2 end, BrushResource brush, float strokeWidth = 1f)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             brush.EnsureNotNull(nameof(brush));
             strokeWidth.EnsurePositiveAndNotZero(nameof(strokeWidth));
 
-            m_renderTarget.DrawLine(
+            _renderTarget.DrawLine(
                 SdxMathHelper.RawFromVector2(start), SdxMathHelper.RawFromVector2(end),
                 brush.GetBrush(this.Device),
                 strokeWidth);
@@ -242,12 +242,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="brush">The brush to be used.</param>
         public void FillRectangle(RectangleF rectangle, BrushResource brush)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             rectangle.EnsureNotEmpty(nameof(rectangle));
             brush.EnsureNotNull(nameof(brush));
 
-            m_renderTarget.FillRectangle(
+            _renderTarget.FillRectangle(
                 SdxMathHelper.RawFromRectangleF(rectangle),
                 brush.GetBrush(this.Device));
         }
@@ -257,12 +257,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void FillGeometry(Geometry2DResourceBase geometry, BrushResource brush)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             geometry.EnsureNotNullOrDisposed(nameof(geometry));
             brush.EnsureNotNull(nameof(brush));
 
-            m_renderTarget.FillGeometry(
+            _renderTarget.FillGeometry(
                 geometry.GetGeometry(),
                 brush.GetBrush(this.Device));
         }
@@ -272,12 +272,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public void FillGeometry(Geometry2DResourceBase geometry, BrushResource brush, BrushResource opacityBrush)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             geometry.EnsureNotNullOrDisposed(nameof(geometry));
             brush.EnsureNotNull(nameof(brush));
 
-            m_renderTarget.FillGeometry(
+            _renderTarget.FillGeometry(
                 geometry.GetGeometry(),
                 brush.GetBrush(this.Device),
                 opacityBrush.GetBrush(this.Device));
@@ -292,7 +292,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="brush">The brush to be used.</param>
         public void FillRoundedRectangle(RectangleF rectangle, float radiusX, float radiusY, BrushResource brush)
         {
-            if (m_renderTarget == null)
+            if (_renderTarget == null)
             {
                 return;
             }
@@ -309,7 +309,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 RadiusY = radiusY
             };
 
-            m_renderTarget.FillRoundedRectangle(
+            _renderTarget.FillRoundedRectangle(
                 roundedRect,
                 brush.GetBrush(this.Device));
         }
@@ -321,7 +321,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
-            m_renderTarget.FillEllipse(
+            _renderTarget.FillEllipse(
                 ellipse,
                 brush.GetBrush(this.Device));
         }
@@ -338,7 +338,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 rectangle.Y + radiusY);
             var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
 
-            m_renderTarget.FillEllipse(
+            _renderTarget.FillEllipse(
                 ellipse,
                 brush.GetBrush(this.Device));
         }
@@ -357,13 +357,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
             DrawTextOptions drawOptions = DrawTextOptions.None,
             MeasuringMode measuringMode = MeasuringMode.Natural)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             textToDraw.EnsureNotNull(nameof(textToDraw));
             targetRectangle.EnsureNotEmpty(nameof(targetRectangle));
             brush.EnsureNotNull(nameof(brush));
 
-            m_renderTarget.DrawText(
+            _renderTarget.DrawText(
                 textToDraw,
                 textFormat.GetTextFormat(this.Device),
                 SdxMathHelper.RawFromRectangleF(targetRectangle),
@@ -386,7 +386,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor,
             int frameIndex = 0)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             bitmap.EnsureNotNull(nameof(bitmap));
             destinationRectangle.EnsureNotEmpty(nameof(destinationRectangle));
@@ -415,7 +415,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     singleFrameWidth, singleFrameHeight);
 
                 // Render tiled bitmap
-                m_renderTarget.DrawBitmap(
+                _renderTarget.DrawBitmap(
                     nativeBitmap,
                     SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
@@ -425,7 +425,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             else
             {
                 // Render non-tiled bitmap
-                m_renderTarget.DrawBitmap(
+                _renderTarget.DrawBitmap(
                     bitmap.GetBitmap(this.Device),
                     SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
@@ -448,7 +448,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.NearestNeighbor,
             int frameIndex = 0)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             bitmap.EnsureNotNull(nameof(bitmap));
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
@@ -481,7 +481,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     singleFrameWidth, singleFrameHeight);
 
                 // Render tiled bitmap
-                m_renderTarget.DrawBitmap(
+                _renderTarget.DrawBitmap(
                     nativeBitmap,
                     SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
@@ -496,7 +496,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
                 // Render non-tiled bitmap
-                m_renderTarget.DrawBitmap(
+                _renderTarget.DrawBitmap(
                     nativeBitmap,
                     destinationRectangle,
                     opacity,
@@ -513,19 +513,19 @@ namespace SeeingSharp.Multimedia.Drawing2D
             IImage image,
             Vector2 destinationOrigin)
         {
-            if (m_renderTarget == null) { return; }
+            if (_renderTarget == null) { return; }
 
             image.EnsureNotNull(nameof(image));
 
             var internalImage = (IImageInternal)image;
             internalImage.EnsureNotNull(nameof(internalImage));
 
-            if (m_deviceContext != null)
+            if (_deviceContext != null)
             {
                 var d2dImage = internalImage.GetImageObject(this.Device) as D2D.Image;
                 d2dImage.EnsureNotNull(nameof(d2dImage));
 
-                m_deviceContext.DrawImage(
+                _deviceContext.DrawImage(
                     d2dImage,
                     SdxMathHelper.RawFromVector2(destinationOrigin),
                     null,
@@ -550,7 +550,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="transformSettings">The settings to be set.</param>
         internal void PushTransformSettings(Graphics2DTransformSettings transformSettings)
         {
-            m_transformSettings = transformSettings;
+            _transformSettings = transformSettings;
 
             switch (transformSettings.TransformMode)
             {
@@ -561,8 +561,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
                 // Calculate scaling matrix here
                 case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                    var virtualWidth = m_transformSettings.VirtualScreenSize.Width;
-                    var virtualHeight = m_transformSettings.VirtualScreenSize.Height;
+                    var virtualWidth = _transformSettings.VirtualScreenSize.Width;
+                    var virtualHeight = _transformSettings.VirtualScreenSize.Height;
                     if (EngineMath.EqualsWithTolerance(virtualWidth, 0f)) { virtualWidth = this.ScreenPixelSize.Width; }
                     if (EngineMath.EqualsWithTolerance(virtualHeight, 0f)) { virtualHeight = this.ScreenPixelSize.Height; }
 
@@ -629,10 +629,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                switch (m_transformSettings.TransformMode)
+                switch (_transformSettings.TransformMode)
                 {
                     case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return m_transformSettings.VirtualScreenSize;
+                        return _transformSettings.VirtualScreenSize;
 
                     default:
                         return this.ScreenPixelSize;
@@ -649,10 +649,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                switch (m_transformSettings.TransformMode)
+                switch (_transformSettings.TransformMode)
                 {
                     case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return m_transformSettings.VirtualScreenSize.Width;
+                        return _transformSettings.VirtualScreenSize.Width;
 
                     default:
                         return this.ScreenPixelSize.Width;
@@ -668,10 +668,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                switch (m_transformSettings.TransformMode)
+                switch (_transformSettings.TransformMode)
                 {
                     case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return m_transformSettings.VirtualScreenSize.Height;
+                        return _transformSettings.VirtualScreenSize.Height;
 
                     default:
                         return this.ScreenPixelSize.Height;
@@ -690,13 +690,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                if (m_renderTarget == null) { return Matrix3x2.Identity; }
-                return SdxMathHelper.Matrix3x2FromRaw(m_renderTarget.Transform);
+                if (_renderTarget == null) { return Matrix3x2.Identity; }
+                return SdxMathHelper.Matrix3x2FromRaw(_renderTarget.Transform);
             }
             set
             {
-                if (m_renderTarget == null) { return; }
-                m_renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
+                if (_renderTarget == null) { return; }
+                _renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
             }
         }
 
@@ -707,16 +707,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
         //*********************************************************************
         public class Graphics2DInternals
         {
-            private Graphics2D m_owner;
+            private Graphics2D _owner;
 
             internal Graphics2DInternals(Graphics2D owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
-            public D2D.RenderTarget RenderTarget => m_owner.m_renderTarget;
+            public D2D.RenderTarget RenderTarget => _owner._renderTarget;
 
-            public D2D.DeviceContext DeviceContext => m_owner.m_deviceContext;
+            public D2D.DeviceContext DeviceContext => _owner._deviceContext;
         }
     }
 }

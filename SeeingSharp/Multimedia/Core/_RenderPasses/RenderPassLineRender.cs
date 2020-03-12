@@ -26,8 +26,8 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class RenderPassLineRender : RenderPassBase
     {
-        private DefaultResources m_defaultResources;
-        private LineRenderResources m_lineRenderResources;
+        private DefaultResources _defaultResources;
+        private LineRenderResources _lineRenderResources;
 
         /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
@@ -37,12 +37,12 @@ namespace SeeingSharp.Multimedia.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.Rasterizer.State = m_defaultResources.RasterStateLines;
+            device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateLines;
             device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.LineList;
-            device.DeviceImmediateContextD3D11.InputAssembler.InputLayout = m_lineRenderResources.InputLayout;
+            device.DeviceImmediateContextD3D11.InputAssembler.InputLayout = _lineRenderResources.InputLayout;
 
-            device.DeviceImmediateContextD3D11.VertexShader.Set(m_lineRenderResources.VertexShader.VertexShader);
-            device.DeviceImmediateContextD3D11.PixelShader.Set(m_lineRenderResources.PixelShader.PixelShader);
+            device.DeviceImmediateContextD3D11.VertexShader.Set(_lineRenderResources.VertexShader.VertexShader);
+            device.DeviceImmediateContextD3D11.PixelShader.Set(_lineRenderResources.PixelShader.PixelShader);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.Rasterizer.State = m_defaultResources.RasterStateDefault;
+            device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateDefault;
             device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;
         }
 
@@ -64,8 +64,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
-            m_lineRenderResources = resources.GetResourceAndEnsureLoaded<LineRenderResources>(LineRenderResources.RESOURCE_KEY);
+            _defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
+            _lineRenderResources = resources.GetResourceAndEnsureLoaded<LineRenderResources>(LineRenderResources.RESOURCE_KEY);
         }
 
         /// <summary>
@@ -75,14 +75,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = null;
-            m_lineRenderResources = null;
+            _defaultResources = null;
+            _lineRenderResources = null;
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override bool IsLoaded => m_defaultResources != null;
+        public override bool IsLoaded => _defaultResources != null;
     }
 }

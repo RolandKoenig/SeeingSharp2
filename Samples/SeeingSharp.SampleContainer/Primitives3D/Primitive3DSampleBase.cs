@@ -13,13 +13,13 @@ namespace SeeingSharp.SampleContainer.Primitives3D
 {
     public abstract class Primitive3DSampleBase : SampleBase
     {
-        private Primitive3DSampleSettings m_sampleSettings;
+        private Primitive3DSampleSettings _sampleSettings;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            m_sampleSettings = (Primitive3DSampleSettings) settings;
+            _sampleSettings = (Primitive3DSampleSettings) settings;
 
             return Task.FromResult<object>(null);
         }
@@ -39,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
 
                 // Create material resource
                 NamedOrGenericKey resMaterial;
-                if (m_sampleSettings.Textured)
+                if (_sampleSettings.Textured)
                 {
                     var resTexture = manipulator.AddTextureResource(
                         new AssemblyResourceLink(
@@ -55,7 +55,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
                 // Create Sphere object
                 var sphereMesh = this.CreateMesh(manipulator, settings, resMaterial);
                 sphereMesh.Color = Color4.GreenColor;
-                if (m_sampleSettings.Animated)
+                if (_sampleSettings.Animated)
                 {
                     sphereMesh.BuildAnimationSequence()
                         .RotateEulerAnglesTo(new Vector3(0f, EngineMath.RAD_180DEG, 0f), TimeSpan.FromSeconds(2.0))

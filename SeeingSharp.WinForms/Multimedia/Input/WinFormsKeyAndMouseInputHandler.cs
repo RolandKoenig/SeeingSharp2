@@ -36,17 +36,17 @@ namespace SeeingSharp.Multimedia.Input
         private static readonly Dictionary<WinForms.Keys, WinVirtualKey> s_keyMappingDict;
 
         // References to the view
-        private WinForms.Control m_currentControl;
-        private RenderLoop m_renderLoop;
-        private IInputEnabledView m_focusHandler;
+        private WinForms.Control _currentControl;
+        private RenderLoop _renderLoop;
+        private IInputEnabledView _focusHandler;
 
         // Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
+        private MouseOrPointerState _stateMouseOrPointer;
+        private KeyboardState _stateKeyboard;
 
         // Some helper variables
-        private GDI.Point m_lastMousePoint;
-        private bool m_isMouseInside;
+        private GDI.Point _lastMousePoint;
+        private bool _isMouseInside;
 
         /// <summary>
         /// Initializes the <see cref="WinFormsKeyAndMouseInputHandler"/> class.
@@ -81,10 +81,10 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         public WinFormsKeyAndMouseInputHandler()
         {
-            m_stateMouseOrPointer = new MouseOrPointerState();
-            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
+            _stateMouseOrPointer = new MouseOrPointerState();
+            _stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
 
-            m_stateKeyboard = new KeyboardState();
+            _stateKeyboard = new KeyboardState();
         }
 
         /// <summary>
@@ -101,57 +101,57 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
         public void Start(IInputEnabledView viewObject)
         {
-            m_currentControl = viewObject as WinForms.Control;
+            _currentControl = viewObject as WinForms.Control;
 
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 var inputControlHost = viewObject as IInputControlHost;
-                m_currentControl = inputControlHost?.GetWinFormsInputControl();
+                _currentControl = inputControlHost?.GetWinFormsInputControl();
 
-                if (m_currentControl == null)
+                if (_currentControl == null)
                 {
                     throw new ArgumentException("Unable to handle given view object!");
                 }
             }
 
-            m_focusHandler = viewObject;
+            _focusHandler = viewObject;
 
-            if (m_focusHandler == null)
+            if (_focusHandler == null)
             {
                 throw new ArgumentException("Unable to handle given view object!");
             }
 
-            m_renderLoop = m_focusHandler.RenderLoop;
+            _renderLoop = _focusHandler.RenderLoop;
 
-            if (m_renderLoop == null)
+            if (_renderLoop == null)
             {
                 throw new ArgumentException("Unable to handle given view object!");
             }
 
             // Perform event registrations on UI thread
-            viewObject.RenderLoop.UISynchronizationContext.Post(arg =>
+            viewObject.RenderLoop.UiSynchronizationContext.Post(arg =>
             {
-                if (m_currentControl == null)
+                if (_currentControl == null)
                 {
                     return;
                 }
 
-                m_currentControl.MouseEnter += this.OnMouseEnter;
-                m_currentControl.MouseClick += this.OnMouseClick;
-                m_currentControl.MouseUp += this.OnMouseUp;
-                m_currentControl.MouseDown += this.OnMouseDown;
-                m_currentControl.MouseLeave += this.OnMouseLeave;
-                m_currentControl.MouseMove += this.OnMouseMove;
-                m_currentControl.MouseWheel += this.OnMouseWheel;
-                m_currentControl.KeyUp += this.OnKeyUp;
-                m_currentControl.KeyDown += this.OnKeyDown;
-                m_currentControl.LostFocus += this.OnLostFocus;
-                m_currentControl.GotFocus += this.OnGotFocus;
+                _currentControl.MouseEnter += this.OnMouseEnter;
+                _currentControl.MouseClick += this.OnMouseClick;
+                _currentControl.MouseUp += this.OnMouseUp;
+                _currentControl.MouseDown += this.OnMouseDown;
+                _currentControl.MouseLeave += this.OnMouseLeave;
+                _currentControl.MouseMove += this.OnMouseMove;
+                _currentControl.MouseWheel += this.OnMouseWheel;
+                _currentControl.KeyUp += this.OnKeyUp;
+                _currentControl.KeyDown += this.OnKeyDown;
+                _currentControl.LostFocus += this.OnLostFocus;
+                _currentControl.GotFocus += this.OnGotFocus;
 
                 // Handle initial focus state
-                if (m_currentControl.Focused || m_currentControl.ContainsFocus)
+                if (_currentControl.Focused || _currentControl.ContainsFocus)
                 {
-                    m_stateKeyboard.Internals.NotifyFocusGot();
+                    _stateKeyboard.Internals.NotifyFocusGot();
                 }
             }, null);
         }
@@ -162,9 +162,9 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             // Perform event deregistrations on UI thread
-            if (m_currentControl != null)
+            if (_currentControl != null)
             {
-                var currentControl = m_currentControl;
+                var currentControl = _currentControl;
 
                 var removeEventRegistrationsAction = new Action(() =>
                 {
@@ -183,14 +183,14 @@ namespace SeeingSharp.Multimedia.Input
                     currentControl.GotFocus -= this.OnGotFocus;
                 });
 
-                if (m_currentControl.IsHandleCreated) { m_currentControl.BeginInvoke(removeEventRegistrationsAction); }
+                if (_currentControl.IsHandleCreated) { _currentControl.BeginInvoke(removeEventRegistrationsAction); }
                 else { removeEventRegistrationsAction(); }
             }
 
             // Set local references to zero
-            m_currentControl = null;
-            m_focusHandler = null;
-            m_renderLoop = null;
+            _currentControl = null;
+            _focusHandler = null;
+            _renderLoop = null;
         }
 
         /// <summary>
@@ -198,8 +198,8 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         public void GetInputStates(List<InputStateBase> target)
         {
-            target.Add(m_stateMouseOrPointer);
-            target.Add(m_stateKeyboard);
+            target.Add(_stateMouseOrPointer);
+            target.Add(_stateKeyboard);
         }
 
         /// <summary>
@@ -207,12 +207,12 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseEnter(object sender, EventArgs e)
         {
-            if (m_currentControl == null) { return; }
+            if (_currentControl == null) { return; }
 
-            m_lastMousePoint = m_currentControl.PointToClient(WinForms.Cursor.Position);
-            m_isMouseInside = true;
+            _lastMousePoint = _currentControl.PointToClient(WinForms.Cursor.Position);
+            _isMouseInside = true;
 
-            m_stateMouseOrPointer.Internals.NotifyInside(true);
+            _stateMouseOrPointer.Internals.NotifyInside(true);
         }
 
         /// <summary>
@@ -220,61 +220,61 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseClick(object sender, WinForms.MouseEventArgs e)
         {
-            m_currentControl?.Focus();
+            _currentControl?.Focus();
         }
 
         private void OnMouseDown(object sender, WinForms.MouseEventArgs e)
         {
-            if (m_currentControl == null) { return; }
+            if (_currentControl == null) { return; }
 
             switch (e.Button)
             {
                 case WinForms.MouseButtons.Left:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Left);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Left);
                     break;
 
                 case WinForms.MouseButtons.Middle:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Middle);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Middle);
                     break;
 
                 case WinForms.MouseButtons.Right:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Right);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Right);
                     break;
 
                 case WinForms.MouseButtons.XButton1:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended1);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended1);
                     break;
 
                 case WinForms.MouseButtons.XButton2:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended2);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended2);
                     break;
             }
         }
 
         private void OnMouseUp(object sender, WinForms.MouseEventArgs e)
         {
-            if (m_currentControl == null) { return; }
+            if (_currentControl == null) { return; }
 
             switch (e.Button)
             {
                 case WinForms.MouseButtons.Left:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
                     break;
 
                 case WinForms.MouseButtons.Middle:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
                     break;
 
                 case WinForms.MouseButtons.Right:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
                     break;
 
                 case WinForms.MouseButtons.XButton1:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
                     break;
 
                 case WinForms.MouseButtons.XButton2:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
                     break;
             }
         }
@@ -284,15 +284,15 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseLeave(object sender, EventArgs e)
         {
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 return;
             }
 
-            m_lastMousePoint = GDI.Point.Empty;
-            m_isMouseInside = false;
+            _lastMousePoint = GDI.Point.Empty;
+            _isMouseInside = false;
 
-            m_stateMouseOrPointer.Internals.NotifyInside(false);
+            _stateMouseOrPointer.Internals.NotifyInside(false);
         }
 
         /// <summary>
@@ -300,20 +300,20 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseMove(object sender, WinForms.MouseEventArgs e)
         {
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 return;
             }
 
-            if (m_isMouseInside)
+            if (_isMouseInside)
             {
-                var moving = new GDI.Point(e.X - m_lastMousePoint.X, e.Y - m_lastMousePoint.Y);
-                m_lastMousePoint = e.Location;
+                var moving = new GDI.Point(e.X - _lastMousePoint.X, e.Y - _lastMousePoint.Y);
+                _lastMousePoint = e.Location;
 
-                m_stateMouseOrPointer.Internals.NotifyMouseLocation(
+                _stateMouseOrPointer.Internals.NotifyMouseLocation(
                     new Vector2(e.X, e.Y),
                     new Vector2(moving.X, moving.Y),
-                    Vector2Ex.FromSize2(m_renderLoop.ViewInformation.CurrentViewSize));
+                    Vector2Ex.FromSize2(_renderLoop.ViewInformation.CurrentViewSize));
             }
         }
 
@@ -322,14 +322,14 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnMouseWheel(object sender, WinForms.MouseEventArgs e)
         {
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 return;
             }
 
-            if (m_isMouseInside)
+            if (_isMouseInside)
             {
-                m_stateMouseOrPointer.Internals.NotifyMouseWheel(e.Delta);
+                _stateMouseOrPointer.Internals.NotifyMouseWheel(e.Delta);
             }
         }
 
@@ -338,7 +338,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnKeyUp(object sender, WinForms.KeyEventArgs e)
         {
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 return;
             }
@@ -348,7 +348,7 @@ namespace SeeingSharp.Multimedia.Input
 
             if (actKeyCode != WinVirtualKey.None)
             {
-                m_stateKeyboard.Internals.NotifyKeyUp(actKeyCode);
+                _stateKeyboard.Internals.NotifyKeyUp(actKeyCode);
             }
         }
 
@@ -357,7 +357,7 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnKeyDown(object sender, WinForms.KeyEventArgs e)
         {
-            if (m_currentControl == null)
+            if (_currentControl == null)
             {
                 return;
             }
@@ -367,7 +367,7 @@ namespace SeeingSharp.Multimedia.Input
 
             if (actKeyCode != WinVirtualKey.None)
             {
-                m_stateKeyboard.Internals.NotifyKeyDown(actKeyCode);
+                _stateKeyboard.Internals.NotifyKeyDown(actKeyCode);
             }
         }
 
@@ -376,16 +376,16 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         private void OnLostFocus(object sender, EventArgs e)
         {
-            if (m_currentControl == null) { return; }
+            if (_currentControl == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyFocusLost();
+            _stateKeyboard.Internals.NotifyFocusLost();
         }
 
         private void OnGotFocus(object sender, EventArgs e)
         {
-            if (m_currentControl == null) { return; }
+            if (_currentControl == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyFocusGot();
+            _stateKeyboard.Internals.NotifyFocusGot();
         }
     }
 }

@@ -32,11 +32,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class LinearGradientBrushResource : BrushResource
     {
         // Configuration
-        private GradientStop[] m_gradientStops;
-        private float m_opacity;
+        private GradientStop[] _gradientStops;
+        private float _opacity;
 
         // Resources
-        private LoadedBrushResources[] m_loadedBrushes;
+        private LoadedBrushResources[] _loadedBrushes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
@@ -57,14 +57,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
             startPoint.EnsureNotEqual(endPoint, nameof(startPoint), nameof(endPoint));
             gradientStops.EnsureNotNullOrEmpty(nameof(gradientStops));
 
-            m_gradientStops = gradientStops;
+            _gradientStops = gradientStops;
             this.StartPoint = startPoint;
             this.EndPoint = endPoint;
             this.ExtendMode = extendMode;
             this.Gamma = gamma;
-            m_opacity = opacity;
+            _opacity = opacity;
 
-            m_loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
+            _loadedBrushes = new LoadedBrushResources[GraphicsCore.Current.DeviceCount];
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var loadedBrush = m_loadedBrushes[engineDevice.DeviceIndex];
+            var loadedBrush = _loadedBrushes[engineDevice.DeviceIndex];
 
             if (loadedBrush.Brush != null)
             {
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 loadedBrush.Brush = SeeingSharpUtil.DisposeObject(loadedBrush.Brush);
                 loadedBrush.GradientStops = SeeingSharpUtil.DisposeObject(loadedBrush.GradientStops);
 
-                m_loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
+                _loadedBrushes[engineDevice.DeviceIndex] = loadedBrush;
             }
         }
 
@@ -98,17 +98,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+            var result = _loadedBrushes[engineDevice.DeviceIndex];
             if (result.Brush == null)
             {
                 // Convert gradient stops to structure from SharpDX
-                var d2dGradientStops = new D2D.GradientStop[m_gradientStops.Length];
+                var d2dGradientStops = new D2D.GradientStop[_gradientStops.Length];
                 for (var loop = 0; loop < d2dGradientStops.Length; loop++)
                 {
                     d2dGradientStops[loop] = new D2D.GradientStop()
                     {
-                        Color = SdxMathHelper.RawFromColor4(m_gradientStops[loop].Color),
-                        Position = m_gradientStops[loop].Position
+                        Color = SdxMathHelper.RawFromColor4(_gradientStops[loop].Color),
+                        Position = _gradientStops[loop].Position
                     };
                 }
 
@@ -133,13 +133,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         },
                         new D2D.BrushProperties
                         {
-                            Opacity = m_opacity,
+                            Opacity = _opacity,
                             Transform = *(RawMatrix3x2*)&identityMatrix
                         },
                         result.GradientStops);
                 }
 
-                m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                _loadedBrushes[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);
             }
 

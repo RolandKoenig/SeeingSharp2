@@ -35,14 +35,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class Geometry
     {
         // Geometry
-        private List<GeometrySurface> m_surfaces;
-        private UnsafeList<VertexBasic> m_verticesBasic;
-        private UnsafeList<VertexBinormalTangent> m_verticesBinormalTangents;
+        private List<GeometrySurface> _surfaces;
+        private UnsafeList<VertexBasic> _verticesBasic;
+        private UnsafeList<VertexBinormalTangent> _verticesBinormalTangents;
 
         // Members for build time transform
-        private bool m_buildTimeTransformEnabled;
-        private Matrix4x4 m_buildTransformMatrix;
-        private Func<VertexBasic, VertexBasic> m_buildTimeTransformFunc;
+        private bool _buildTimeTransformEnabled;
+        private Matrix4x4 _buildTransformMatrix;
+        private Func<VertexBasic, VertexBasic> _buildTimeTransformFunc;
 
         /// <summary>
         /// Creates a new <see cref="Geometry"/> object
@@ -60,11 +60,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this.Description = string.Empty;
 
             // Vertex data
-            m_verticesBasic = new UnsafeList<VertexBasic>(verticesCapacity);
-            if (hasBinormalsTangents) { m_verticesBinormalTangents = new UnsafeList<VertexBinormalTangent>(verticesCapacity); }
+            _verticesBasic = new UnsafeList<VertexBasic>(verticesCapacity);
+            if (hasBinormalsTangents) { _verticesBinormalTangents = new UnsafeList<VertexBinormalTangent>(verticesCapacity); }
 
             // Triangle data
-            m_surfaces = new List<GeometrySurface>();
+            _surfaces = new List<GeometrySurface>();
 
             // Public accessors
             this.Vertices = new VertexCollection(this);
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public GeometrySurface CreateSurface(int triangleCapacity = 512)
         {
             var newSurface = new GeometrySurface(this, triangleCapacity);
-            m_surfaces.Add(newSurface);
+            _surfaces.Add(newSurface);
             return newSurface;
         }
 
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertexIndex">The index of the vertex.</param>
         public ref VertexBasic GetVertexBasicRef(int vertexIndex)
         {
-            return ref m_verticesBasic.BackingArray[vertexIndex];
+            return ref _verticesBasic.BackingArray[vertexIndex];
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertexIndex">The index of the vertex.</param>
         public ref VertexBinormalTangent GetVertexBinormalTangentRef(int vertexIndex)
         {
-            if(m_verticesBinormalTangents == null){ throw new SeeingSharpException("Unable to get binormal/tangent information: This geometry doesn't provide them!");}
-            return ref m_verticesBinormalTangents.BackingArray[vertexIndex];
+            if(_verticesBinormalTangents == null){ throw new SeeingSharpException("Unable to get binormal/tangent information: This geometry doesn't provide them!");}
+            return ref _verticesBinormalTangents.BackingArray[vertexIndex];
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public void RemoveSurface(GeometrySurface surface)
         {
-            m_surfaces.Remove(surface);
+            _surfaces.Remove(surface);
         }
 
         /// <summary>
@@ -217,9 +217,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="transformMatrix">Transform matrix.</param>
         public void EnableBuildTimeTransform(Matrix4x4 transformMatrix)
         {
-            m_buildTimeTransformEnabled = true;
-            m_buildTransformMatrix = transformMatrix;
-            m_buildTimeTransformFunc = null;
+            _buildTimeTransformEnabled = true;
+            _buildTransformMatrix = transformMatrix;
+            _buildTimeTransformFunc = null;
         }
 
         /// <summary>
@@ -227,9 +227,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void EnableBuildTimeTransform(Func<VertexBasic, VertexBasic> transformFunc)
         {
-            m_buildTimeTransformEnabled = true;
-            m_buildTransformMatrix = Matrix4x4.Identity;
-            m_buildTimeTransformFunc = transformFunc;
+            _buildTimeTransformEnabled = true;
+            _buildTransformMatrix = Matrix4x4.Identity;
+            _buildTimeTransformFunc = transformFunc;
         }
 
         /// <summary>
@@ -237,8 +237,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void DisableBuildTimeTransform()
         {
-            m_buildTimeTransformEnabled = false;
-            m_buildTransformMatrix = Matrix4x4.Identity;
+            _buildTimeTransformEnabled = false;
+            _buildTransformMatrix = Matrix4x4.Identity;
         }
 
         /// <summary>
@@ -249,10 +249,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="pickingOptions">The distance if picking succeeds.</param>
         public bool Intersects(Ray pickingRay, PickingOptions pickingOptions, out float distance)
         {
-            var surfaceCount = m_surfaces.Count;
+            var surfaceCount = _surfaces.Count;
             for (var loop = 0; loop < surfaceCount; loop++)
             {
-                if (m_surfaces[loop].Intersects(pickingRay, pickingOptions, out distance))
+                if (_surfaces[loop].Intersects(pickingRay, pickingOptions, out distance))
                 {
                     return true;
                 }
@@ -308,14 +308,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="otherGeometry">The geometry to add to this one.</param>
         public void AddGeometry(Geometry otherGeometry)
         {
-            var baseIndex = m_verticesBasic.Count;
+            var baseIndex = _verticesBasic.Count;
 
             this.AddVertices(otherGeometry);
-            var otherGeometrySurfaceCount = otherGeometry.m_surfaces.Count;
+            var otherGeometrySurfaceCount = otherGeometry._surfaces.Count;
 
             for (var loopSurface = 0; loopSurface < otherGeometrySurfaceCount; loopSurface++)
             {
-                m_surfaces.Add(otherGeometry.m_surfaces[loopSurface].Clone(
+                _surfaces.Add(otherGeometry._surfaces[loopSurface].Clone(
                     this,
                     baseIndex: baseIndex));
             }
@@ -327,10 +327,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="otherGeometry">The Geometry from which to copy all vertices.</param>
         public BuiltVerticesRange AddVertices(Geometry otherGeometry)
         {
-            var startVertex = m_verticesBasic.Count;
+            var startVertex = _verticesBasic.Count;
 
             // Prepare vertex array for new capacity
-            m_verticesBasic.Capacity = startVertex + otherGeometry.CountVertices;
+            _verticesBasic.Capacity = startVertex + otherGeometry.CountVertices;
 
             // Copy all vertices
             var otherGeometryVertexCount = otherGeometry.CountVertices;
@@ -357,20 +357,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public int AddVertex(VertexBasic vertex)
         {
             // Transform vertex on build-time
-            if (m_buildTimeTransformEnabled)
+            if (_buildTimeTransformEnabled)
             {
-                if (m_buildTimeTransformFunc != null) { vertex = m_buildTimeTransformFunc(vertex); }
+                if (_buildTimeTransformFunc != null) { vertex = _buildTimeTransformFunc(vertex); }
                 else
                 {
-                    vertex.Position = Vector3.Transform(vertex.Position, m_buildTransformMatrix);
-                    vertex.Normal = Vector3.TransformNormal(vertex.Normal, m_buildTransformMatrix);
+                    vertex.Position = Vector3.Transform(vertex.Position, _buildTransformMatrix);
+                    vertex.Normal = Vector3.TransformNormal(vertex.Normal, _buildTransformMatrix);
                 }
             }
 
             // AddObject the vertex and return the index
-            m_verticesBasic.Add(vertex);
-            m_verticesBinormalTangents?.Add(new VertexBinormalTangent());
-            return m_verticesBasic.Count - 1;
+            _verticesBasic.Add(vertex);
+            _verticesBinormalTangents?.Add(new VertexBinormalTangent());
+            return _verticesBasic.Count - 1;
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void CalculateTangentsAndBinormals()
         {
-            foreach (var actSurface in m_surfaces)
+            foreach (var actSurface in _surfaces)
             {
                 actSurface.CalculateTangentsAndBinormals();
             }
@@ -389,7 +389,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void CalculateNormalsFlat()
         {
-            foreach (var actSurface in m_surfaces)
+            foreach (var actSurface in _surfaces)
             {
                 actSurface.CalculateNormalsFlat();
             }
@@ -400,7 +400,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void CalculateNormals()
         {
-            this.CalculateNormals(0, m_verticesBasic.Count);
+            this.CalculateNormals(0, _verticesBasic.Count);
         }
 
         /// <summary>
@@ -410,8 +410,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="vertexCount">Total count of vertices to be updated.</param>
         public void CalculateNormals(int startVertex, int vertexCount)
         {
-            if (startVertex < 0 || startVertex >= m_verticesBasic.Count) { throw new ArgumentException("startVertex"); }
-            if (vertexCount + startVertex > m_verticesBasic.Count) { throw new ArgumentException("vertexCount"); }
+            if (startVertex < 0 || startVertex >= _verticesBasic.Count) { throw new ArgumentException("startVertex"); }
+            if (vertexCount + startVertex > _verticesBasic.Count) { throw new ArgumentException("vertexCount"); }
 
             for (var actVertexIndex = startVertex; actVertexIndex < startVertex + vertexCount; actVertexIndex++)
             {
@@ -419,11 +419,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var finalNormalHelper = Vector3.Zero;
                 var normalCount = 0;
 
-                var surfaceCount = m_surfaces.Count;
+                var surfaceCount = _surfaces.Count;
 
                 for (var actSurfaceIndex = 0; actSurfaceIndex < surfaceCount; actSurfaceIndex++)
                 {
-                    var actSurface = m_surfaces[actSurfaceIndex];
+                    var actSurface = _surfaces[actSurfaceIndex];
                     var triangleCount = actSurface.CountTriangles;
 
                     for (var loopTriangle = 0; loopTriangle < triangleCount; loopTriangle++)
@@ -434,9 +434,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                             actSurface.Indices[triangleStartIndex + 1] == actVertexIndex ||
                             actSurface.Indices[triangleStartIndex + 2] == actVertexIndex)
                         {
-                            ref var v1 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex]];
-                            ref var v2 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 1]];
-                            ref var v3 = ref m_verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 2]];
+                            ref var v1 = ref _verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex]];
+                            ref var v2 = ref _verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 1]];
+                            ref var v3 = ref _verticesBasic.BackingArray[actSurface.Indices[triangleStartIndex + 2]];
 
                             finalNormalHelper += Vector3Ex.CalculateTriangleNormal(v1.Position, v2.Position, v3.Position, false);
 
@@ -448,7 +448,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Calculate final normal
                 if (normalCount > 0)
                 {
-                    ref var actVertex = ref m_verticesBasic.BackingArray[actVertexIndex];
+                    ref var actVertex = ref _verticesBasic.BackingArray[actVertexIndex];
                     actVertex.Normal = finalNormalHelper / finalNormalHelper.Length();
                 }
             }
@@ -462,7 +462,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             capacityMultiplier.EnsurePositiveAndNotZero(nameof(capacityMultiplier));
 
             // Create new Geometry object
-            var vertexCount = m_verticesBasic.Count;
+            var vertexCount = _verticesBasic.Count;
             var hasBinormalsTangents = this.HasBinormalsTangents;
             var result = new Geometry(
                 verticesCapacity: vertexCount * capacityMultiplier,
@@ -473,15 +473,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 for (var loop = 0; loop < vertexCount; loop++)
                 {
-                    result.m_verticesBasic.Add(m_verticesBasic[loop]);
-                    if(hasBinormalsTangents){ result.m_verticesBinormalTangents.Add(m_verticesBinormalTangents[loop]); }
+                    result._verticesBasic.Add(_verticesBasic[loop]);
+                    if(hasBinormalsTangents){ result._verticesBinormalTangents.Add(_verticesBinormalTangents[loop]); }
                 }
             }
 
             // Copy surfaces
-            foreach (var actSurface in m_surfaces)
+            foreach (var actSurface in _surfaces)
             {
-                result.m_surfaces.Add(actSurface.Clone(result, copyGeometryData, capacityMultiplier));
+                result._surfaces.Add(actSurface.Clone(result, copyGeometryData, capacityMultiplier));
             }
 
             // Copy metadata
@@ -498,7 +498,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var maximum = Vector3Ex.MinValue;
             var minimum = Vector3Ex.MaxValue;
 
-            foreach (var actVertex in m_verticesBasic)
+            foreach (var actVertex in _verticesBasic)
             {
                 var actPosition = actVertex.Position;
 
@@ -521,9 +521,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void ToggleTriangleIndexOrder()
         {
-            for (var loop = 0; loop < m_surfaces.Count; loop++)
+            for (var loop = 0; loop < _surfaces.Count; loop++)
             {
-                m_surfaces[loop].ToggleTriangleIndexOrder();
+                _surfaces[loop].ToggleTriangleIndexOrder();
             }
         }
 
@@ -542,7 +542,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 centerCoord.Z + (centerCoord.Z - givenVector.Z)));
 
             // Now change index ordering
-            foreach (var actSurface in m_surfaces)
+            foreach (var actSurface in _surfaces)
             {
                 actSurface.ToggleCoordinateSystemInternal();
             }
@@ -553,10 +553,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void TransformVertices(Matrix4x4 transformMatrix)
         {
-            var length = m_verticesBasic.Count;
+            var length = _verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                ref var actVertex = ref _verticesBasic.BackingArray[loop];
                 actVertex.Position = Vector3.Transform(actVertex.Position, transformMatrix);
                 actVertex.Normal = Vector3.TransformNormal(actVertex.Normal, transformMatrix);
             }
@@ -567,10 +567,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void UpdateVerticesUsingRelocationBy(Vector3 relocateVector)
         {
-            var length = m_verticesBasic.Count;
+            var length = _verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                ref var actVertex = ref _verticesBasic.BackingArray[loop];
                 actVertex.Position += relocateVector;
             }
         }
@@ -581,10 +581,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="calculatePositionFunc">The function to be applied to each coordinate.</param>
         public void UpdateVerticesUsingRelocationFunc(Func<Vector3, Vector3> calculatePositionFunc)
         {
-            var length = m_verticesBasic.Count;
+            var length = _verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
             {
-                ref var actVertex = ref m_verticesBasic.BackingArray[loop];
+                ref var actVertex = ref _verticesBasic.BackingArray[loop];
                 actVertex.Position = calculatePositionFunc(actVertex.Position);
             }
         }
@@ -597,18 +597,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get
             {
-                if (m_surfaces.Count == 0)
+                if (_surfaces.Count == 0)
                 {
                     this.CreateSurface();
                 }
-                return m_surfaces[0];
+                return _surfaces[0];
             }
         }
 
         /// <summary>
         /// Retrieves total count of all vertices within this geometry
         /// </summary>
-        public int CountVertices => m_verticesBasic.Count;
+        public int CountVertices => _verticesBasic.Count;
 
         /// <summary>
         /// A short description for the use of this geometry
@@ -618,7 +618,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is this geometry empty?
         /// </summary>
-        public bool IsEmpty => m_verticesBasic.Count == 0 && m_surfaces.Count == 0;
+        public bool IsEmpty => _verticesBasic.Count == 0 && _surfaces.Count == 0;
 
         /// <summary>
         /// Gets a collection of vertices.
@@ -627,16 +627,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         public SurfaceCollection Surfaces { get; }
 
-        public int CountSurfaces => m_surfaces.Count;
+        public int CountSurfaces => _surfaces.Count;
 
         public int CountTriangles
         {
             get
             {
                 var sum = 0;
-                for (var loop = 0; loop < m_surfaces.Count; loop++)
+                for (var loop = 0; loop < _surfaces.Count; loop++)
                 {
-                    sum += m_surfaces[loop].CountTriangles;
+                    sum += _surfaces[loop].CountTriangles;
                 }
                 return sum;
             }
@@ -647,15 +647,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get
             {
                 var sum = 0;
-                for (var loop = 0; loop < m_surfaces.Count; loop++)
+                for (var loop = 0; loop < _surfaces.Count; loop++)
                 {
-                    sum += m_surfaces[loop].CountIndices;
+                    sum += _surfaces[loop].CountIndices;
                 }
                 return sum;
             }
         }
 
-        public bool HasBinormalsTangents => m_verticesBinormalTangents != null;
+        public bool HasBinormalsTangents => _verticesBinormalTangents != null;
 
         //*********************************************************************
         //*********************************************************************
@@ -665,11 +665,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public class VertexCollection : IEnumerable<VertexBasic>
         {
-            private Geometry m_owner;
+            private Geometry _owner;
 
             internal VertexCollection(Geometry owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
             /// <summary>
@@ -677,17 +677,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
             /// </summary>
             public void Add(VertexBasic vertex)
             {
-                m_owner.AddVertex(vertex);
+                _owner.AddVertex(vertex);
             }
 
             public IEnumerator<VertexBasic> GetEnumerator()
             {
-                return m_owner.m_verticesBasic.GetEnumerator();
+                return _owner._verticesBasic.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_owner.m_verticesBasic.GetEnumerator();
+                return _owner._verticesBasic.GetEnumerator();
             }
 
             /// <summary>
@@ -695,7 +695,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             /// </summary>
             public VertexBasic this[int index]
             {
-                get => m_owner.m_verticesBasic[index];
+                get => _owner._verticesBasic[index];
             }
         }
 
@@ -707,26 +707,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public class SurfaceCollection : IEnumerable<GeometrySurface>
         {
-            private Geometry m_owner;
+            private Geometry _owner;
 
             internal SurfaceCollection(Geometry owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
             public void Add(GeometrySurface surface)
             {
-                m_owner.m_surfaces.Add(surface);
+                _owner._surfaces.Add(surface);
             }
 
             public IEnumerator<GeometrySurface> GetEnumerator()
             {
-                return m_owner.m_surfaces.GetEnumerator();
+                return _owner._surfaces.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return m_owner.m_surfaces.GetEnumerator();
+                return _owner._surfaces.GetEnumerator();
             }
 
             /// <summary>
@@ -734,8 +734,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             /// </summary>
             public GeometrySurface this[int index]
             {
-                get => m_owner.m_surfaces[index];
-                internal set => m_owner.m_surfaces[index] = value;
+                get => _owner._surfaces[index];
+                internal set => _owner._surfaces[index] = value;
             }
         }
     }

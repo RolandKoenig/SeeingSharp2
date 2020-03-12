@@ -38,17 +38,17 @@ namespace SeeingSharp.Util
     {
         private static readonly ConcurrentObjectPool<ReusableAwaiter> s_freeAwaiters = new ConcurrentObjectPool<ReusableAwaiter>(() => new ReusableAwaiter(), 16);
 
-        private WaitCallback m_triggerContinuationCallback;
-        private Exception m_exception;
-        private bool m_continueOnCaptureContext;
-        private Action m_continuation;
-        private object m_stateSwitchLock;
+        private WaitCallback _triggerContinuationCallback;
+        private Exception _exception;
+        private bool _continueOnCaptureContext;
+        private Action _continuation;
+        private object _stateSwitchLock;
 
         private ReusableAwaiter()
         {
-            m_continueOnCaptureContext = true;
-            m_triggerContinuationCallback = this.TriggerContinuation;
-            m_stateSwitchLock = new object();
+            _continueOnCaptureContext = true;
+            _triggerContinuationCallback = this.TriggerContinuation;
+            _stateSwitchLock = new object();
         }
 
         public static ReusableAwaiter Take()
@@ -58,7 +58,7 @@ namespace SeeingSharp.Util
 
         public ReusableAwaiter ConfigureAwait(bool continueOnCaptureContext)
         {
-            m_continueOnCaptureContext = continueOnCaptureContext;
+            _continueOnCaptureContext = continueOnCaptureContext;
             return this;
         }
 
@@ -71,17 +71,17 @@ namespace SeeingSharp.Util
         {
             try
             {
-                if (m_exception != null)
+                if (_exception != null)
                 {
-                    throw m_exception;
+                    throw _exception;
                 }
             }
             finally
             {
                 // Reset the awaiter finally
-                m_continuation = null;
-                m_exception = null;
-                m_continueOnCaptureContext = true;
+                _continuation = null;
+                _exception = null;
+                _continueOnCaptureContext = true;
                 this.IsCompleted = false;
 
                 s_freeAwaiters.Return(this);
@@ -92,13 +92,13 @@ namespace SeeingSharp.Util
         {
             // Set continuation action and read IsCompleted flag
             var isCompleted = false;
-            lock (m_stateSwitchLock)
+            lock (_stateSwitchLock)
             {
-                if (m_continuation != null)
+                if (_continuation != null)
                 {
                     throw new InvalidOperationException("This ReusableAwaiter instance has already been listened");
                 }
-                m_continuation = continuation;
+                _continuation = continuation;
 
                 isCompleted = this.IsCompleted;
             }
@@ -106,8 +106,8 @@ namespace SeeingSharp.Util
             // Call the continuation directly if the awaiter was completed before
             if (isCompleted)
             {
-                if (m_continueOnCaptureContext){ m_continuation?.Invoke(); }
-                else{ ThreadPool.QueueUserWorkItem(m_triggerContinuationCallback); }
+                if (_continueOnCaptureContext){ _continuation?.Invoke(); }
+                else{ ThreadPool.QueueUserWorkItem(_triggerContinuationCallback); }
             }
         }
 
@@ -117,18 +117,18 @@ namespace SeeingSharp.Util
         public bool TrySetCompleted()
         {
             Action continuation = null;
-            lock (m_stateSwitchLock)
+            lock (_stateSwitchLock)
             {
                 if (this.IsCompleted) { return false; }
 
                 this.IsCompleted = true;
-                continuation = m_continuation;
+                continuation = _continuation;
             }
 
             if (continuation != null)
             {
-                if (m_continueOnCaptureContext){ m_continuation?.Invoke(); }
-                else{ ThreadPool.QueueUserWorkItem(m_triggerContinuationCallback); }
+                if (_continueOnCaptureContext){ _continuation?.Invoke(); }
+                else{ ThreadPool.QueueUserWorkItem(_triggerContinuationCallback); }
             }
 
             return true;
@@ -140,19 +140,19 @@ namespace SeeingSharp.Util
         public bool TrySetException(Exception exception)
         {
             Action continuation = null;
-            lock (m_stateSwitchLock)
+            lock (_stateSwitchLock)
             {
                 if (this.IsCompleted) { return false; }
 
                 this.IsCompleted = true;
-                m_exception = exception;
-                continuation = m_continuation;
+                _exception = exception;
+                continuation = _continuation;
             }
 
             if (continuation != null)
             {
-                if (m_continueOnCaptureContext){ m_continuation?.Invoke(); }
-                else{ ThreadPool.QueueUserWorkItem(m_triggerContinuationCallback); }
+                if (_continueOnCaptureContext){ _continuation?.Invoke(); }
+                else{ ThreadPool.QueueUserWorkItem(_triggerContinuationCallback); }
             }
 
             return true;
@@ -160,7 +160,7 @@ namespace SeeingSharp.Util
 
         private void TriggerContinuation(object state)
         {
-            var continueAction = m_continuation;
+            var continueAction = _continuation;
             continueAction?.Invoke();
         }
 

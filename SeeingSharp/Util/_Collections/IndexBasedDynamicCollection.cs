@@ -28,20 +28,20 @@ namespace SeeingSharp.Util
     public class IndexBasedDynamicCollection<T> : IEnumerable<T>
         where T : class
     {
-        private List<T> m_list;
-        private int m_listCount;
-        private object m_lockObject;
-        private Dictionary<T, int> m_objectIndices;
+        private List<T> _list;
+        private int _listCount;
+        private object _lockObject;
+        private Dictionary<T, int> _objectIndices;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
         /// </summary>
         public IndexBasedDynamicCollection()
         {
-            m_list = new List<T>(10);
-            m_listCount = 0;
-            m_objectIndices = new Dictionary<T, int>();
-            m_lockObject = new object();
+            _list = new List<T>(10);
+            _listCount = 0;
+            _objectIndices = new Dictionary<T, int>();
+            _lockObject = new object();
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace SeeingSharp.Util
         /// <param name="index">The index to check.</param>
         public bool HasObjectAt(int index)
         {
-            var objectList = m_list;
+            var objectList = _list;
 
-            if (m_listCount <= index) { return false; }
+            if (_listCount <= index) { return false; }
             if (index < 0) { return false; }
 
             return objectList[index] != null;
@@ -64,28 +64,28 @@ namespace SeeingSharp.Util
         /// <param name="objectToAdd">The object to be added to the collection.</param>
         public int AddObject(T objectToAdd)
         {
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                if (m_objectIndices.ContainsKey(objectToAdd)) { throw new SeeingSharpException("This object is already added!"); }
+                if (_objectIndices.ContainsKey(objectToAdd)) { throw new SeeingSharpException("This object is already added!"); }
 
                 var lastValidIndex = -1;
-                for (var loop = m_list.Count - 1; loop >= 0; loop--)
+                for (var loop = _list.Count - 1; loop >= 0; loop--)
                 {
-                    if (m_list[loop] == null) { lastValidIndex = loop; }
+                    if (_list[loop] == null) { lastValidIndex = loop; }
                     else { break; }
                 }
 
                 if (lastValidIndex > -1)
                 {
-                    m_list[lastValidIndex] = objectToAdd;
-                    m_objectIndices.Add(objectToAdd, lastValidIndex);
-                    m_listCount = m_list.Count;
+                    _list[lastValidIndex] = objectToAdd;
+                    _objectIndices.Add(objectToAdd, lastValidIndex);
+                    _listCount = _list.Count;
                     return lastValidIndex;
                 }
-                m_list.Add(objectToAdd);
-                m_objectIndices.Add(objectToAdd, m_list.Count - 1);
-                m_listCount = m_list.Count;
-                return m_list.Count - 1;
+                _list.Add(objectToAdd);
+                _objectIndices.Add(objectToAdd, _list.Count - 1);
+                _listCount = _list.Count;
+                return _list.Count - 1;
             }
         }
 
@@ -121,21 +121,21 @@ namespace SeeingSharp.Util
             }
 
             // Perform all operations for adding this object
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                if (m_objectIndices.ContainsKey(objectToAdd))
+                if (_objectIndices.ContainsKey(objectToAdd))
                 {
                     throw new SeeingSharpException("This object is already added!");
                 }
 
-                while (m_list.Count <= index)
+                while (_list.Count <= index)
                 {
-                    m_list.Add(null);
+                    _list.Add(null);
                 }
 
-                m_list[index] = objectToAdd;
-                m_objectIndices[objectToAdd] = index;
-                m_listCount = m_list.Count;
+                _list[index] = objectToAdd;
+                _objectIndices[objectToAdd] = index;
+                _listCount = _list.Count;
             }
         }
 
@@ -145,9 +145,9 @@ namespace SeeingSharp.Util
         /// <param name="objectToCheckFor">The object to check for.</param>
         public bool Contains(T objectToCheckFor)
         {
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                return m_objectIndices.ContainsKey(objectToCheckFor);
+                return _objectIndices.ContainsKey(objectToCheckFor);
             }
         }
 
@@ -157,9 +157,9 @@ namespace SeeingSharp.Util
         /// <param name="objectToCheckFor">The object to check for.</param>
         public int IndexOf(T objectToCheckFor)
         {
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                return m_objectIndices[objectToCheckFor];
+                return _objectIndices[objectToCheckFor];
             }
         }
 
@@ -168,15 +168,15 @@ namespace SeeingSharp.Util
         /// </summary>
         public void RemoveObject(T objectToRemove)
         {
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                if (m_objectIndices.ContainsKey(objectToRemove))
+                if (_objectIndices.ContainsKey(objectToRemove))
                 {
-                    var objectIndex = m_objectIndices[objectToRemove];
+                    var objectIndex = _objectIndices[objectToRemove];
 
-                    m_objectIndices.Remove(objectToRemove);
-                    m_list[objectIndex] = null;
-                    m_listCount = m_list.Count;
+                    _objectIndices.Remove(objectToRemove);
+                    _list[objectIndex] = null;
+                    _listCount = _list.Count;
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace SeeingSharp.Util
         /// <param name="index">The index of the object to remove.</param>
         public void RemoveObject(int index)
         {
-            var objectToRemove = m_list[index];
+            var objectToRemove = _list[index];
             this.RemoveObject(objectToRemove);
         }
 
@@ -196,11 +196,11 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            lock (m_lockObject)
+            lock (_lockObject)
             {
-                m_list.Clear();
-                m_objectIndices.Clear();
-                m_listCount = m_list.Count;
+                _list.Clear();
+                _objectIndices.Clear();
+                _listCount = _list.Count;
             }
         }
 
@@ -210,16 +210,16 @@ namespace SeeingSharp.Util
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            var max = m_list.Count;
+            var max = _list.Count;
 
             for (var loop = 0; loop < max; loop++)
             {
-                if (m_list.Count != max)
+                if (_list.Count != max)
                 {
                     throw new InvalidOperationException("Collection was modified!");
                 }
 
-                var actObject = m_list[loop];
+                var actObject = _list[loop];
 
                 if (actObject != null)
                 {
@@ -247,8 +247,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                var objectList = m_list;
-                if (index >= m_listCount) { return null; }
+                var objectList = _list;
+                if (index >= _listCount) { return null; }
                 return objectList[index];
             }
         }
@@ -260,7 +260,7 @@ namespace SeeingSharp.Util
         {
             get
             {
-                var objectList = m_list;
+                var objectList = _list;
                 for (var loop = 0; loop < objectList.Count; loop++)
                 {
                     if (objectList[loop] != null) { return objectList[loop]; }
@@ -276,9 +276,9 @@ namespace SeeingSharp.Util
         {
             get
             {
-                lock (m_lockObject)
+                lock (_lockObject)
                 {
-                    return m_objectIndices.Count;
+                    return _objectIndices.Count;
                 }
             }
         }

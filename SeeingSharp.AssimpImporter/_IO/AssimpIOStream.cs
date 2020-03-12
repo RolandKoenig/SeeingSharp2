@@ -29,12 +29,12 @@ namespace SeeingSharp.AssimpImporter
     {
         private const int TEMP_BUFFER_SIZE = 1024 * 1024;
 
-        private readonly Stream m_stream;
+        private readonly Stream _stream;
 
         public AssimpIOStream(Stream stream, string pathToFile, Assimp.FileIOMode fileMode)
             : base(pathToFile, fileMode)
         {
-            m_stream = stream;
+            _stream = stream;
         }
 
         public override long Write(byte[] sourceBuffer, long totalWriteBytesCount)
@@ -49,14 +49,14 @@ namespace SeeingSharp.AssimpImporter
                     var countWrite = (int)Math.Min(totalWriteBytesCount - actOffset, TEMP_BUFFER_SIZE);
 
                     Array.Copy(sourceBuffer, actOffset, tempBuffer, 0, countWrite);
-                    m_stream.Write(tempBuffer, 0, countWrite);
+                    _stream.Write(tempBuffer, 0, countWrite);
 
                     actOffset += TEMP_BUFFER_SIZE;
                 }
             }
             else
             {
-                m_stream.Write(sourceBuffer, 0, (int)totalWriteBytesCount);
+                _stream.Write(sourceBuffer, 0, (int)totalWriteBytesCount);
             }
 
             return totalWriteBytesCount;
@@ -73,7 +73,7 @@ namespace SeeingSharp.AssimpImporter
                 {
                     var countRead = (int) Math.Min(totalReadBytesCount - actOffset, TEMP_BUFFER_SIZE);
 
-                    var bytesRead = m_stream.Read(tempBuffer, 0, countRead);
+                    var bytesRead = _stream.Read(tempBuffer, 0, countRead);
                     if (bytesRead == 0)
                     {
                         return actOffset;
@@ -93,7 +93,7 @@ namespace SeeingSharp.AssimpImporter
             }
             else
             {
-                return m_stream.Read(targetBuffer, 0, (int) totalReadBytesCount);
+                return _stream.Read(targetBuffer, 0, (int) totalReadBytesCount);
             }
             return totalReadBytesCount;
         }
@@ -116,31 +116,31 @@ namespace SeeingSharp.AssimpImporter
                     break;
             }
 
-            m_stream.Seek(offset, netOrigin);
+            _stream.Seek(offset, netOrigin);
 
             return Assimp.ReturnCode.Success;
         }
 
         public override long GetPosition()
         {
-            return m_stream.Position;
+            return _stream.Position;
         }
 
         public override long GetFileSize()
         {
-            return m_stream.Length;
+            return _stream.Length;
         }
 
         public override void Flush()
         {
-            m_stream.Flush();
+            _stream.Flush();
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                SeeingSharpUtil.DisposeObject(m_stream);
+                SeeingSharpUtil.DisposeObject(_stream);
             }
         }
 

@@ -30,24 +30,24 @@ namespace SeeingSharp.WpfSamples
 {
     public class MainWindowViewModel : PropertyChangedBase
     {
-        private RenderLoop m_renderLoop;
-        private SampleRepository m_sampleRepo;
-        private SampleSettings m_sampleSettings;
-        private string m_selectedGroup;
-        private SampleViewModel m_selectedSample;
+        private RenderLoop _renderLoop;
+        private SampleRepository _sampleRepo;
+        private SampleSettings _sampleSettings;
+        private string _selectedGroup;
+        private SampleViewModel _selectedSample;
 
         public EventHandler ReloadRequest;
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
-            m_selectedGroup = string.Empty;
+            _selectedGroup = string.Empty;
 
-            m_sampleSettings = null;
-            m_renderLoop = renderLoop;
+            _sampleSettings = null;
+            _renderLoop = renderLoop;
 
             // Load samples
-            m_sampleRepo = sampleRepo;
-            foreach (var actSampleGroupName in m_sampleRepo.SampleGroups
+            _sampleRepo = sampleRepo;
+            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
                 .Select(actGroup => actGroup.GroupName))
             {
                 this.SampleGroups.Add(actSampleGroupName);
@@ -57,8 +57,8 @@ namespace SeeingSharp.WpfSamples
 
         private void UpdateSampleCollection()
         {
-            var sampleGroup = m_sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == m_selectedGroup);
+            var sampleGroup = _sampleRepo.SampleGroups
+                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();
@@ -81,12 +81,12 @@ namespace SeeingSharp.WpfSamples
 
         public string SelectedGroup
         {
-            get => m_selectedGroup;
+            get => _selectedGroup;
             set
             {
-                if (m_selectedGroup != value)
+                if (_selectedGroup != value)
                 {
-                    m_selectedGroup = value;
+                    _selectedGroup = value;
                     this.RaisePropertyChanged(nameof(this.SelectedGroup));
 
                     this.UpdateSampleCollection();
@@ -101,33 +101,33 @@ namespace SeeingSharp.WpfSamples
 
         public SampleViewModel SelectedSample
         {
-            get => m_selectedSample;
+            get => _selectedSample;
             set
             {
-                if (m_selectedSample != value)
+                if (_selectedSample != value)
                 {
-                    if (m_sampleSettings != null)
+                    if (_sampleSettings != null)
                     {
-                        m_sampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                        _sampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
                     }
 
-                    m_selectedSample = value;
+                    _selectedSample = value;
 
-                    if (m_selectedSample == null) { m_sampleSettings = null; }
+                    if (_selectedSample == null) { _sampleSettings = null; }
                     else
                     {
-                        m_sampleSettings = m_selectedSample.SampleMetadata.CreateSampleSettingsObject();
-                        m_sampleSettings.SetEnvironment(m_renderLoop, m_selectedSample.SampleMetadata);
-                        m_sampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
+                        _sampleSettings = _selectedSample.SampleMetadata.CreateSampleSettingsObject();
+                        _sampleSettings.SetEnvironment(_renderLoop, _selectedSample.SampleMetadata);
+                        _sampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
                     }
 
                     this.RaisePropertyChanged(nameof(this.SelectedSample));
                     this.RaisePropertyChanged(nameof(this.SampleSettings));
 
                     this.SampleCommands.Clear();
-                    if (m_sampleSettings != null)
+                    if (_sampleSettings != null)
                     {
-                        foreach (var actSampleCommand in m_sampleSettings.GetCommands())
+                        foreach (var actSampleCommand in _sampleSettings.GetCommands())
                         {
                             this.SampleCommands.Add(actSampleCommand);
                         }
@@ -141,6 +141,6 @@ namespace SeeingSharp.WpfSamples
             get;
         } = new ObservableCollection<SampleCommand>();
 
-        public SampleSettings SampleSettings => m_sampleSettings;
+        public SampleSettings SampleSettings => _sampleSettings;
     }
 }

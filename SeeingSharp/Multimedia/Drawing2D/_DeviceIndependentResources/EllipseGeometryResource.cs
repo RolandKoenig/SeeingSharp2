@@ -31,12 +31,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class EllipseGeometryResource : Geometry2DResourceBase
     {
         // Configuration
-        private Vector2 m_center;
-        private float m_radiusX;
-        private float m_radiusY;
+        private Vector2 _center;
+        private float _radiusX;
+        private float _radiusY;
 
         // Resources
-        private D2D.EllipseGeometry m_geometry;
+        private D2D.EllipseGeometry _geometry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
@@ -60,12 +60,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
             radiusX.EnsurePositiveOrZero(nameof(radiusX));
             radiusY.EnsurePositiveOrZero(nameof(radiusY));
 
-            m_center = center;
-            m_radiusX = radiusX;
-            m_radiusY = radiusY;
+            _center = center;
+            _radiusX = radiusX;
+            _radiusY = radiusY;
 
-            SeeingSharpUtil.SafeDispose(ref m_geometry);
-            m_geometry = new D2D.EllipseGeometry(
+            SeeingSharpUtil.SafeDispose(ref _geometry);
+            _geometry = new D2D.EllipseGeometry(
                 GraphicsCore.Current.FactoryD2D,
                 new D2D.Ellipse(
                     *(SDXM.RawVector2*)&center,
@@ -74,7 +74,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public override void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_geometry);
+            SeeingSharpUtil.SafeDispose(ref _geometry);
         }
 
         /// <summary>
@@ -82,17 +82,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         internal override D2D.Geometry GetGeometry()
         {
-            this.EnsureNotNullOrDisposed(nameof(m_geometry));
+            this.EnsureNotNullOrDisposed(nameof(_geometry));
 
-            return m_geometry;
+            return _geometry;
         }
 
-        public override bool IsDisposed => m_geometry == null;
+        public override bool IsDisposed => _geometry == null;
 
-        public Vector2 Center => m_center;
+        public Vector2 Center => _center;
 
-        public float RadiusX => m_radiusX;
+        public float RadiusX => _radiusX;
 
-        public float RadiusY => m_radiusY;
+        public float RadiusY => _radiusY;
     }
 }

@@ -39,33 +39,33 @@ namespace SeeingSharp.Multimedia.Core
     public class EngineMainLoop
     {
         // Common
-        private GraphicsCore m_host;
+        private GraphicsCore _host;
 
         // Main thread synchronization
-        private Task m_suspendWaiter;
-        private TaskCompletionSource<object> m_suspendWaiterSource;
-        private TaskCompletionSource<object> m_suspendCallWaiterSource;
-        private Task m_runningTask;
-        private ConcurrentQueue<Action> m_globalLoopAwaitors;
+        private Task _suspendWaiter;
+        private TaskCompletionSource<object> _suspendWaiterSource;
+        private TaskCompletionSource<object> _suspendCallWaiterSource;
+        private Task _runningTask;
+        private ConcurrentQueue<Action> _globalLoopAwaitors;
 
         // RenderLoop collections
-        private List<RenderLoop> m_registeredRenderLoops;
-        private List<RenderLoop> m_unregisteredRenderLoops;
-        private object m_registeredRenderLoopsLock;
+        private List<RenderLoop> _registeredRenderLoops;
+        private List<RenderLoop> _unregisteredRenderLoops;
+        private object _registeredRenderLoopsLock;
 
         // Scene collections
-        private List<Scene> m_scenesForUnload;
-        private object m_scenesForUnloadLock;
+        private List<Scene> _scenesForUnload;
+        private object _scenesForUnloadLock;
 
         // Members regarding 2D resources
-        private ConcurrentQueue<Drawing2DResourceBase> m_drawing2DResourcesToUnload;
+        private ConcurrentQueue<Drawing2DResourceBase> _drawing2DResourcesToUnload;
 
         // Cached objects
-        private GenericInputEventArgs m_cachedInputEventArgs;
+        private GenericInputEventArgs _cachedInputEventArgs;
 
         // Logic blocks
-        private MainLoop_UpdateAndPrepareRendering m_logicUpdateAndPrepareRendering;
-        private MainLoop_RenderAndUpdateBeside m_logicRenderAndUpdateBeside;
+        private MainLoop_UpdateAndPrepareRendering _logicUpdateAndPrepareRendering;
+        private MainLoop_RenderAndUpdateBeside _logicRenderAndUpdateBeside;
 
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
@@ -81,22 +81,22 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal EngineMainLoop(GraphicsCore graphicsCore)
         {
-            m_host = graphicsCore;
+            _host = graphicsCore;
 
-            m_globalLoopAwaitors = new ConcurrentQueue<Action>();
-            m_registeredRenderLoops = new List<RenderLoop>();
-            m_unregisteredRenderLoops = new List<RenderLoop>();
-            m_registeredRenderLoopsLock = new object();
+            _globalLoopAwaitors = new ConcurrentQueue<Action>();
+            _registeredRenderLoops = new List<RenderLoop>();
+            _unregisteredRenderLoops = new List<RenderLoop>();
+            _registeredRenderLoopsLock = new object();
 
-            m_drawing2DResourcesToUnload = new ConcurrentQueue<Drawing2DResourceBase>();
+            _drawing2DResourcesToUnload = new ConcurrentQueue<Drawing2DResourceBase>();
 
-            m_scenesForUnload = new List<Scene>();
-            m_scenesForUnloadLock = new object();
+            _scenesForUnload = new List<Scene>();
+            _scenesForUnloadLock = new object();
 
-            m_cachedInputEventArgs = new GenericInputEventArgs();
+            _cachedInputEventArgs = new GenericInputEventArgs();
 
-            m_logicUpdateAndPrepareRendering = new MainLoop_UpdateAndPrepareRendering(graphicsCore, this);
-            m_logicRenderAndUpdateBeside = new MainLoop_RenderAndUpdateBeside(m_host, this);
+            _logicUpdateAndPrepareRendering = new MainLoop_UpdateAndPrepareRendering(graphicsCore, this);
+            _logicRenderAndUpdateBeside = new MainLoop_RenderAndUpdateBeside(_host, this);
         }
 
         /// <summary>
@@ -104,14 +104,14 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task SuspendAsync()
         {
-            if (m_suspendWaiter == null)
+            if (_suspendWaiter == null)
             {
-                m_suspendCallWaiterSource = new TaskCompletionSource<object>();
-                m_suspendWaiterSource = new TaskCompletionSource<object>();
-                m_suspendWaiter = m_suspendWaiterSource.Task;
+                _suspendCallWaiterSource = new TaskCompletionSource<object>();
+                _suspendWaiterSource = new TaskCompletionSource<object>();
+                _suspendWaiter = _suspendWaiterSource.Task;
             }
 
-            return m_suspendCallWaiterSource.Task;
+            return _suspendCallWaiterSource.Task;
         }
 
         /// <summary>
@@ -119,13 +119,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Resume()
         {
-            if (m_suspendWaiter != null)
+            if (_suspendWaiter != null)
             {
-                if (!m_suspendCallWaiterSource.Task.IsCompleted) { m_suspendCallWaiterSource.TrySetResult(null); }
+                if (!_suspendCallWaiterSource.Task.IsCompleted) { _suspendCallWaiterSource.TrySetResult(null); }
 
-                m_suspendWaiterSource.TrySetResult(null);
-                m_suspendWaiterSource = null;
-                m_suspendWaiter = null;
+                _suspendWaiterSource.TrySetResult(null);
+                _suspendWaiterSource = null;
+                _suspendWaiter = null;
             }
         }
 
@@ -135,7 +135,7 @@ namespace SeeingSharp.Multimedia.Core
         public Task WaitForNextPassedLoopAsync()
         {
             var result = new TaskCompletionSource<object>();
-            m_globalLoopAwaitors.Enqueue(() =>
+            _globalLoopAwaitors.Enqueue(() =>
             {
                 result.SetResult(null);
             });
@@ -147,9 +147,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public IEnumerable<RenderLoop> GetRegisteredRenderLoops()
         {
-            lock (m_registeredRenderLoopsLock)
+            lock (_registeredRenderLoopsLock)
             {
-                return new List<RenderLoop>(m_registeredRenderLoops);
+                return new List<RenderLoop>(_registeredRenderLoops);
             }
         }
 
@@ -159,7 +159,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="drawing2DResourceBase">The resource to be unloaded.</param>
         internal void RegisterForUnload(Drawing2DResourceBase drawing2DResourceBase)
         {
-            m_drawing2DResourcesToUnload.Enqueue(drawing2DResourceBase);
+            _drawing2DResourcesToUnload.Enqueue(drawing2DResourceBase);
         }
 
         /// <summary>
@@ -168,11 +168,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderLoop">The RenderLoop to be registered.</param>
         internal void RegisterRenderLoop(RenderLoop renderLoop)
         {
-            lock (m_registeredRenderLoopsLock)
+            lock (_registeredRenderLoopsLock)
             {
-                if (!m_registeredRenderLoops.Contains(renderLoop))
+                if (!_registeredRenderLoops.Contains(renderLoop))
                 {
-                    m_registeredRenderLoops.Add(renderLoop);
+                    _registeredRenderLoops.Add(renderLoop);
                     renderLoop.IsRegisteredOnMainLoop = true;
                 }
             }
@@ -184,14 +184,14 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderLoop">The render loop to be deregistered.</param>
         internal void DeregisterRenderLoop(RenderLoop renderLoop)
         {
-            lock (m_registeredRenderLoopsLock)
+            lock (_registeredRenderLoopsLock)
             {
-                m_registeredRenderLoops.Remove(renderLoop);
+                _registeredRenderLoops.Remove(renderLoop);
                 renderLoop.IsRegisteredOnMainLoop = false;
 
-                if (!m_unregisteredRenderLoops.Contains(renderLoop))
+                if (!_unregisteredRenderLoops.Contains(renderLoop))
                 {
-                    m_unregisteredRenderLoops.Add(renderLoop);
+                    _unregisteredRenderLoops.Add(renderLoop);
                 }
             }
         }
@@ -203,9 +203,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <returns></returns>
         internal Task Start(CancellationToken cancelToken)
         {
-            if (m_runningTask != null) { throw new SeeingSharpGraphicsException("Unable to start engine's main loop: Loop has already started!"); }
+            if (_runningTask != null) { throw new SeeingSharpGraphicsException("Unable to start engine's main loop: Loop has already started!"); }
 
-            m_runningTask = Task.Factory.StartNew(async () =>
+            _runningTask = Task.Factory.StartNew(async () =>
             {
                 var renderStopWatch = new Stopwatch();
                 renderStopWatch.Start();
@@ -223,26 +223,26 @@ namespace SeeingSharp.Multimedia.Core
 
                     try
                     {
-                        using (m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_PER_FRAME))
+                        using (_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_PER_FRAME))
                         {
                             // Wait some time before doing anything..
                             var lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
-                            var delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
-                            if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS)
+                            var delayTime = SeeingSharpConstants.MINIMU_FRAME_TIME_MS - lastRenderMilliseconds;
+                            if (delayTime < SeeingSharpConstants.MINIMU_DELAY_TIME_MS)
                             {
-                                delayTime = SeeingSharpConstants.MINIMUM_DELAY_TIME_MS;
+                                delayTime = SeeingSharpConstants.MINIMU_DELAY_TIME_MS;
                             }
 
-                            using (m_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_WAIT_TIME))
+                            using (_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_WAIT_TIME))
                             {
                                 SeeingSharpUtil.MaximumDelay(delayTime);
                             }
 
                             // Get all render loops
                             renderingRenderLoops.Clear();
-                            lock (m_registeredRenderLoopsLock)
+                            lock (_registeredRenderLoopsLock)
                             {
-                                renderingRenderLoops.AddRange(m_registeredRenderLoops);
+                                renderingRenderLoops.AddRange(_registeredRenderLoops);
                             }
 
                             // Queries for devices / scenes in use
@@ -277,11 +277,11 @@ namespace SeeingSharp.Multimedia.Core
                             renderStopWatch.Restart();
 
                             // Get all input frames
-                            m_host.InputGatherer.QueryForCurrentFrames(inputFrames);
+                            _host.InputGatherer.QueryForCurrentFrames(inputFrames);
 
                             // First global pass: Update scene and prepare rendering
-                            m_logicUpdateAndPrepareRendering.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
-                            await m_logicUpdateAndPrepareRendering.ExecutePassAsync()
+                            _logicUpdateAndPrepareRendering.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
+                            await _logicUpdateAndPrepareRendering.ExecutePassAsync()
                                 .ConfigureAwait(false);
 
                             // Update all cameras
@@ -295,32 +295,32 @@ namespace SeeingSharp.Multimedia.Core
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
 
                             // Second global pass: Render scene(s) and update beside
-                            m_logicRenderAndUpdateBeside.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
-                            m_logicRenderAndUpdateBeside.ExecutePass();
+                            _logicRenderAndUpdateBeside.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
+                            _logicRenderAndUpdateBeside.ExecutePass();
 
                             // Raise generic input event (if registered)
-                            m_cachedInputEventArgs.NotifyNewPass(inputFrames);
-                            this.GenericInput?.Raise(this, m_cachedInputEventArgs);
+                            _cachedInputEventArgs.NotifyNewPass(inputFrames);
+                            this.GenericInput?.Raise(this, _cachedInputEventArgs);
 
                             // Clear unreferenced Scenes finally
-                            lock (m_scenesForUnloadLock)
+                            lock (_scenesForUnloadLock)
                             {
-                                foreach (var actScene in m_scenesForUnload)
+                                foreach (var actScene in _scenesForUnload)
                                 {
                                     actScene.UnloadResources();
                                     actScene.Clear(true);
                                 }
 
-                                m_scenesForUnload.Clear();
+                                _scenesForUnload.Clear();
                             }
 
                             // Unload all Direct2D resources which are not needed anymore
-                            while (m_drawing2DResourcesToUnload.TryDequeue(out var act2DResourceToUnload))
+                            while (_drawing2DResourcesToUnload.TryDequeue(out var act2DResourceToUnload))
                             {
-                                var deviceCount = m_host.DeviceCount;
+                                var deviceCount = _host.DeviceCount;
                                 for (var loop = 0; loop < deviceCount; loop++)
                                 {
-                                    act2DResourceToUnload.UnloadResources(m_host.Devices[loop]);
+                                    act2DResourceToUnload.UnloadResources(_host.Devices[loop]);
                                 }
                             }
                         }
@@ -334,12 +334,12 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Execute global awaitors
-                    var prevCount = m_globalLoopAwaitors.Count;
+                    var prevCount = _globalLoopAwaitors.Count;
                     var currentIndex = 0;
                     while (currentIndex < prevCount)
                     {
                         currentIndex++;
-                        if (m_globalLoopAwaitors.TryDequeue(out var currentAction))
+                        if (_globalLoopAwaitors.TryDequeue(out var currentAction))
                         {
                             currentAction();
                         }
@@ -352,22 +352,22 @@ namespace SeeingSharp.Multimedia.Core
                     }
 
                     // Handle suspend / resume
-                    var suspendWaiter = m_suspendWaiter;
+                    var suspendWaiter = _suspendWaiter;
 
                     if (suspendWaiter != null)
                     {
-                        m_suspendCallWaiterSource.TrySetResult(null);
+                        _suspendCallWaiterSource.TrySetResult(null);
 
                         // Wait for resuming
                         await suspendWaiter;
                     }
 
                     // Trigger calculation of performance values
-                    m_host.PerformanceAnalyzer.CalculateResults();
+                    _host.PerformanceAnalyzer.CalculateResults();
                 }
             });
 
-            return m_runningTask;
+            return _runningTask;
         }
 
         /// <summary>
@@ -376,20 +376,20 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="scene">The scene to be registered.</param>
         internal void RegisterSceneForUnload(Scene scene)
         {
-            lock (m_scenesForUnloadLock)
+            lock (_scenesForUnloadLock)
             {
-                if (!m_scenesForUnload.Contains(scene))
+                if (!_scenesForUnload.Contains(scene))
                 {
-                    m_scenesForUnload.Add(scene);
+                    _scenesForUnload.Add(scene);
                 }
             }
         }
 
         internal void DeregisterSceneForUnload(Scene scene)
         {
-            lock (m_scenesForUnloadLock)
+            lock (_scenesForUnloadLock)
             {
-                while (m_scenesForUnload.Remove(scene)) { }
+                while (_scenesForUnload.Remove(scene)) { }
             }
         }
 
@@ -400,15 +400,15 @@ namespace SeeingSharp.Multimedia.Core
         internal async Task UpdateRenderLoopRegistrationsAsync(ICollection<RenderLoop> renderingRenderLoops)
         {
             // Unload all deregistered RenderLoops
-            if (m_unregisteredRenderLoops.Count > 0)
+            if (_unregisteredRenderLoops.Count > 0)
             {
                 // Handle global and local RenderLoop collections
                 List<RenderLoop> copiedUnregisteredRenderLoops = null;
 
-                lock (m_registeredRenderLoopsLock)
+                lock (_registeredRenderLoopsLock)
                 {
-                    copiedUnregisteredRenderLoops = new List<RenderLoop>(m_unregisteredRenderLoops);
-                    m_unregisteredRenderLoops.Clear();
+                    copiedUnregisteredRenderLoops = new List<RenderLoop>(_unregisteredRenderLoops);
+                    _unregisteredRenderLoops.Clear();
 
                     foreach (var actRenderLoop in copiedUnregisteredRenderLoops)
                     {
@@ -492,11 +492,11 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Is the MainLoop running?
         /// </summary>
-        public bool IsRunning => m_runningTask != null;
+        public bool IsRunning => _runningTask != null;
 
         /// <summary>
         /// Gets the total count of registered RenderLoop objects.
         /// </summary>
-        public int RegisteredRenderLoopCount => m_registeredRenderLoops.Count;
+        public int RegisteredRenderLoopCount => _registeredRenderLoops.Count;
     }
 }

@@ -42,13 +42,13 @@ namespace SeeingSharp.Util
 
         private static readonly T[] s_emptyArray = new T[0];
 
-        private T[] m_backingArray;
-        private int m_size;
-        private int m_version;
+        private T[] _backingArray;
+        private int _size;
+        private int _version;
 
         public UnsafeList()
         {
-            m_backingArray = s_emptyArray;
+            _backingArray = s_emptyArray;
         }
 
         public UnsafeList(int capacity)
@@ -57,11 +57,11 @@ namespace SeeingSharp.Util
 
             if (capacity == 0)
             {
-                m_backingArray = s_emptyArray;
+                _backingArray = s_emptyArray;
             }
             else
             {
-                m_backingArray = new T[capacity];
+                _backingArray = new T[capacity];
             }
         }
 
@@ -77,19 +77,19 @@ namespace SeeingSharp.Util
                         var count = collection2.Count;
                         if (count == 0)
                         {
-                            m_backingArray = s_emptyArray;
+                            _backingArray = s_emptyArray;
                             return;
                         }
-                        m_backingArray = new T[count];
-                        collection2.CopyTo(m_backingArray, 0);
-                        m_size = count;
+                        _backingArray = new T[count];
+                        collection2.CopyTo(_backingArray, 0);
+                        _size = count;
                         break;
                     }
 
                 default:
                     {
-                        m_size = 0;
-                        m_backingArray = s_emptyArray;
+                        _size = 0;
+                        _backingArray = s_emptyArray;
                         foreach (var item in collection)
                         {
                             this.Add(item);
@@ -101,37 +101,37 @@ namespace SeeingSharp.Util
 
         public void Add(T item)
         {
-            if (m_size == m_backingArray.Length)
+            if (_size == _backingArray.Length)
             {
-                this.ApplyCapacity(m_size + 1);
+                this.ApplyCapacity(_size + 1);
             }
 
-            m_backingArray[m_size++] = item;
-            m_version++;
+            _backingArray[_size++] = item;
+            _version++;
         }
 
         public void AddRange(IEnumerable<T> collection)
         {
-            this.InsertRange(m_size, collection);
+            this.InsertRange(_size, collection);
         }
 
         public void Clear()
         {
-            if (m_size > 0)
+            if (_size > 0)
             {
-                Array.Clear(m_backingArray, 0, m_size);
-                m_size = 0;
+                Array.Clear(_backingArray, 0, _size);
+                _size = 0;
             }
-            m_version++;
+            _version++;
         }
 
         public bool Contains(T item)
         {
             if (item == null)
             {
-                for (var i = 0; i < m_size; i++)
+                for (var i = 0; i < _size; i++)
                 {
-                    if (m_backingArray[i] == null)
+                    if (_backingArray[i] == null)
                     {
                         return true;
                     }
@@ -140,9 +140,9 @@ namespace SeeingSharp.Util
             }
 
             var @default = EqualityComparer<T>.Default;
-            for (var j = 0; j < m_size; j++)
+            for (var j = 0; j < _size; j++)
             {
-                if (@default.Equals(m_backingArray[j], item))
+                if (@default.Equals(_backingArray[j], item))
                 {
                     return true;
                 }
@@ -152,18 +152,18 @@ namespace SeeingSharp.Util
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            Array.Copy(m_backingArray, 0, array, arrayIndex, m_size);
+            Array.Copy(_backingArray, 0, array, arrayIndex, _size);
         }
 
         public T Find(Predicate<T> match)
         {
             match.EnsureNotNull(nameof(match));
 
-            for (var i = 0; i < m_size; i++)
+            for (var i = 0; i < _size; i++)
             {
-                if (match(m_backingArray[i]))
+                if (match(_backingArray[i]))
                 {
-                    return m_backingArray[i];
+                    return _backingArray[i];
                 }
             }
             return default;
@@ -174,11 +174,11 @@ namespace SeeingSharp.Util
             match.EnsureNotNull(nameof(match));
 
             var customList = new UnsafeList<T>();
-            for (var i = 0; i < m_size; i++)
+            for (var i = 0; i < _size; i++)
             {
-                if (match(m_backingArray[i]))
+                if (match(_backingArray[i]))
                 {
-                    customList.Add(m_backingArray[i]);
+                    customList.Add(_backingArray[i]);
                 }
             }
             return customList;
@@ -186,11 +186,11 @@ namespace SeeingSharp.Util
 
         public int FindIndex(int startIndex, int count, Predicate<T> match)
         {
-            if ((uint)startIndex > (uint)m_size)
+            if ((uint)startIndex > (uint)_size)
             {
                 throw new ArgumentOutOfRangeException();
             }
-            if (count < 0 || startIndex > m_size - count)
+            if (count < 0 || startIndex > _size - count)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -199,7 +199,7 @@ namespace SeeingSharp.Util
             var num = startIndex + count;
             for (var i = startIndex; i < num; i++)
             {
-                if (match(m_backingArray[i]))
+                if (match(_backingArray[i]))
                 {
                     return i;
                 }
@@ -211,14 +211,14 @@ namespace SeeingSharp.Util
         {
             match.EnsureNotNull(nameof(match));
 
-            if (m_size == 0)
+            if (_size == 0)
             {
                 if (startIndex != -1)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
             }
-            else if ((uint)startIndex >= (uint)m_size)
+            else if ((uint)startIndex >= (uint)_size)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -229,7 +229,7 @@ namespace SeeingSharp.Util
             var num = startIndex - count;
             for (var num2 = startIndex; num2 > num; num2--)
             {
-                if (match(m_backingArray[num2]))
+                if (match(_backingArray[num2]))
                 {
                     return num2;
                 }
@@ -241,16 +241,16 @@ namespace SeeingSharp.Util
         {
             action.EnsureNotNull(nameof(action));
 
-            var version = m_version;
-            for (var i = 0; i < m_size; i++)
+            var version = _version;
+            for (var i = 0; i < _size; i++)
             {
-                if (version != m_version)
+                if (version != _version)
                 {
                     break;
                 }
-                action(m_backingArray[i]);
+                action(_backingArray[i]);
             }
-            if (version != m_version)
+            if (version != _version)
             {
                 throw new InvalidOperationException($"Enumeration has changed during the foreach loop!");
             }
@@ -263,55 +263,55 @@ namespace SeeingSharp.Util
 
         public int IndexOf(T item)
         {
-            return Array.IndexOf(m_backingArray, item, 0, m_size);
+            return Array.IndexOf(_backingArray, item, 0, _size);
         }
 
         public int IndexOf(T item, int index)
         {
-            if (index > m_size)
+            if (index > _size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            return Array.IndexOf(m_backingArray, item, index, m_size - index);
+            return Array.IndexOf(_backingArray, item, index, _size - index);
         }
 
         public int IndexOf(T item, int index, int count)
         {
-            if (index > m_size)
+            if (index > _size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            if (count < 0 || index > m_size - count)
+            if (count < 0 || index > _size - count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            return Array.IndexOf(m_backingArray, item, index, count);
+            return Array.IndexOf(_backingArray, item, index, count);
         }
 
         public void Insert(int index, T item)
         {
-            if ((uint)index > (uint)m_size)
+            if ((uint)index > (uint)_size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            if (m_size == m_backingArray.Length)
+            if (_size == _backingArray.Length)
             {
-                this.ApplyCapacity(m_size + 1);
+                this.ApplyCapacity(_size + 1);
             }
-            if (index < m_size)
+            if (index < _size)
             {
-                Array.Copy(m_backingArray, index, m_backingArray, index + 1, m_size - index);
+                Array.Copy(_backingArray, index, _backingArray, index + 1, _size - index);
             }
-            m_backingArray[index] = item;
-            m_size++;
-            m_version++;
+            _backingArray[index] = item;
+            _size++;
+            _version++;
         }
 
         public void InsertRange(int index, IEnumerable<T> collection)
         {
             collection.EnsureNotNull(nameof(collection));
 
-            if ((uint)index > (uint)m_size)
+            if ((uint)index > (uint)_size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -321,23 +321,23 @@ namespace SeeingSharp.Util
                 var count = collection2.Count;
                 if (count > 0)
                 {
-                    this.ApplyCapacity(m_size + count);
-                    if (index < m_size)
+                    this.ApplyCapacity(_size + count);
+                    if (index < _size)
                     {
-                        Array.Copy(m_backingArray, index, m_backingArray, index + count, m_size - index);
+                        Array.Copy(_backingArray, index, _backingArray, index + count, _size - index);
                     }
                     if (ReferenceEquals(this, collection2))
                     {
-                        Array.Copy(m_backingArray, 0, m_backingArray, index, index);
-                        Array.Copy(m_backingArray, index + count, m_backingArray, index * 2, m_size - index);
+                        Array.Copy(_backingArray, 0, _backingArray, index, index);
+                        Array.Copy(_backingArray, index + count, _backingArray, index * 2, _size - index);
                     }
                     else
                     {
                         var array = new T[count];
                         collection2.CopyTo(array, 0);
-                        array.CopyTo(m_backingArray, index);
+                        array.CopyTo(_backingArray, index);
                     }
-                    m_size += count;
+                    _size += count;
                 }
             }
             else
@@ -350,21 +350,21 @@ namespace SeeingSharp.Util
                     }
                 }
             }
-            m_version++;
+            _version++;
         }
 
         public int LastIndexOf(T item)
         {
-            if (m_size == 0)
+            if (_size == 0)
             {
                 return -1;
             }
-            return this.LastIndexOf(item, m_size - 1, m_size);
+            return this.LastIndexOf(item, _size - 1, _size);
         }
 
         public int LastIndexOf(T item, int index)
         {
-            if (index >= m_size)
+            if (index >= _size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -381,11 +381,11 @@ namespace SeeingSharp.Util
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            if (m_size == 0)
+            if (_size == 0)
             {
                 return -1;
             }
-            if (index >= m_size)
+            if (index >= _size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -393,7 +393,7 @@ namespace SeeingSharp.Util
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            return Array.LastIndexOf(m_backingArray, item, index, count);
+            return Array.LastIndexOf(_backingArray, item, index, count);
         }
 
         public bool Remove(T item)
@@ -412,44 +412,44 @@ namespace SeeingSharp.Util
             match.EnsureNotNull(nameof(match));
 
             int i;
-            for (i = 0; i < m_size && !match(m_backingArray[i]); i++)
+            for (i = 0; i < _size && !match(_backingArray[i]); i++)
             {
             }
-            if (i >= m_size)
+            if (i >= _size)
             {
                 return 0;
             }
             var j = i + 1;
-            while (j < m_size)
+            while (j < _size)
             {
-                for (; j < m_size && match(m_backingArray[j]); j++)
+                for (; j < _size && match(_backingArray[j]); j++)
                 {
                 }
-                if (j < m_size)
+                if (j < _size)
                 {
-                    m_backingArray[i++] = m_backingArray[j++];
+                    _backingArray[i++] = _backingArray[j++];
                 }
             }
-            Array.Clear(m_backingArray, i, m_size - i);
-            var result = m_size - i;
-            m_size = i;
-            m_version++;
+            Array.Clear(_backingArray, i, _size - i);
+            var result = _size - i;
+            _size = i;
+            _version++;
             return result;
         }
 
         public void RemoveAt(int index)
         {
-            if ((uint)index >= (uint)m_size)
+            if ((uint)index >= (uint)_size)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            m_size--;
-            if (index < m_size)
+            _size--;
+            if (index < _size)
             {
-                Array.Copy(m_backingArray, index + 1, m_backingArray, index, m_size - index);
+                Array.Copy(_backingArray, index + 1, _backingArray, index, _size - index);
             }
-            m_backingArray[m_size] = default;
-            m_version++;
+            _backingArray[_size] = default;
+            _version++;
         }
 
         public void RemoveRange(int index, int count)
@@ -462,20 +462,20 @@ namespace SeeingSharp.Util
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            if (m_size - index < count)
+            if (_size - index < count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             if (count > 0)
             {
-                m_size -= count;
-                if (index < m_size)
+                _size -= count;
+                if (index < _size)
                 {
-                    Array.Copy(m_backingArray, index + count, m_backingArray, index, m_size - index);
+                    Array.Copy(_backingArray, index + count, _backingArray, index, _size - index);
                 }
-                Array.Clear(m_backingArray, m_size, count);
-                m_version++;
+                Array.Clear(_backingArray, _size, count);
+                _version++;
             }
         }
 
@@ -499,30 +499,30 @@ namespace SeeingSharp.Util
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            if (m_size - index < count)
+            if (_size - index < count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            Array.Sort(m_backingArray, index, count, comparer);
-            m_version++;
+            Array.Sort(_backingArray, index, count, comparer);
+            _version++;
         }
 
         public void Sort(Comparison<T> comparison)
         {
             comparison.EnsureNotNull(nameof(comparison));
 
-            if (m_size > 0)
+            if (_size > 0)
             {
                 IComparer<T> comparer = new FunctionComparer(comparison);
-                Array.Sort(m_backingArray, 0, m_size, comparer);
+                Array.Sort(_backingArray, 0, _size, comparer);
             }
         }
 
         private void ApplyCapacity(int min)
         {
-            if (m_backingArray.Length < min)
+            if (_backingArray.Length < min)
             {
-                var num = m_backingArray.Length == 0 ? 4 : m_backingArray.Length * 2;
+                var num = _backingArray.Length == 0 ? 4 : _backingArray.Length * 2;
                 if ((uint)num > 2146435071u)
                 {
                     num = 2146435071;
@@ -547,14 +547,14 @@ namespace SeeingSharp.Util
 
         public int Capacity
         {
-            get => m_backingArray.Length;
+            get => _backingArray.Length;
             set
             {
-                if (value < m_size)
+                if (value < _size)
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
-                if (value == m_backingArray.Length)
+                if (value == _backingArray.Length)
                 {
                     return;
                 }
@@ -562,45 +562,45 @@ namespace SeeingSharp.Util
                 if (value > 0)
                 {
                     var array = new T[value];
-                    if (m_size > 0)
+                    if (_size > 0)
                     {
-                        Array.Copy(m_backingArray, 0, array, 0, m_size);
+                        Array.Copy(_backingArray, 0, array, 0, _size);
                     }
-                    m_backingArray = array;
+                    _backingArray = array;
                 }
                 else
                 {
-                    m_backingArray = s_emptyArray;
+                    _backingArray = s_emptyArray;
                 }
             }
         }
 
-        public int Count => m_size;
+        public int Count => _size;
 
         public T this[int index]
         {
             get
             {
-                if ((uint)index >= (uint)m_size)
+                if ((uint)index >= (uint)_size)
                 {
                     throw new ArgumentOutOfRangeException(nameof(index));
                 }
-                return m_backingArray[index];
+                return _backingArray[index];
             }
             set
             {
-                if ((uint)index >= (uint)m_size)
+                if ((uint)index >= (uint)_size)
                 {
                     throw new ArgumentOutOfRangeException(nameof(index));
                 }
-                m_backingArray[index] = value;
-                m_version++;
+                _backingArray[index] = value;
+                _version++;
             }
         }
 
         bool ICollection<T>.IsReadOnly => false;
 
-        public T[] BackingArray => m_backingArray;
+        public T[] BackingArray => _backingArray;
 
         //*********************************************************************
         //*********************************************************************
@@ -608,16 +608,16 @@ namespace SeeingSharp.Util
         public struct Enumerator : IEnumerator<T>, IDisposable, IEnumerator
         {
             private UnsafeList<T> _mUnsafeList;
-            private int m_index;
-            private int m_version;
-            private T m_current;
+            private int _index;
+            private int _version;
+            private T _current;
 
             internal Enumerator(UnsafeList<T> mUnsafeList)
             {
                 _mUnsafeList = mUnsafeList;
-                m_index = 0;
-                m_version = mUnsafeList.m_version;
-                m_current = default;
+                _index = 0;
+                _version = mUnsafeList._version;
+                _current = default;
             }
 
             public void Dispose()
@@ -627,10 +627,10 @@ namespace SeeingSharp.Util
             public bool MoveNext()
             {
                 var customList = _mUnsafeList;
-                if (m_version == customList.m_version && (uint)m_index < (uint)customList.m_size)
+                if (_version == customList._version && (uint)_index < (uint)customList._size)
                 {
-                    m_current = customList.m_backingArray[m_index];
-                    m_index++;
+                    _current = customList._backingArray[_index];
+                    _index++;
                     return true;
                 }
                 return this.MoveNextRare();
@@ -638,33 +638,33 @@ namespace SeeingSharp.Util
 
             private bool MoveNextRare()
             {
-                if (m_version != _mUnsafeList.m_version)
+                if (_version != _mUnsafeList._version)
                 {
                     throw new InvalidOperationException($"Collection was modified while enumerating");
 
                 }
-                m_index = _mUnsafeList.m_size + 1;
-                m_current = default;
+                _index = _mUnsafeList._size + 1;
+                _current = default;
                 return false;
             }
 
             void IEnumerator.Reset()
             {
-                if (m_version != _mUnsafeList.m_version)
+                if (_version != _mUnsafeList._version)
                 {
                     throw new InvalidOperationException($"Collection was modified while enumerating");
                 }
-                m_index = 0;
-                m_current = default;
+                _index = 0;
+                _current = default;
             }
 
-            public T Current => m_current;
+            public T Current => _current;
 
             object IEnumerator.Current
             {
                 get
                 {
-                    if (m_index == 0 || m_index == _mUnsafeList.m_size + 1)
+                    if (_index == 0 || _index == _mUnsafeList._size + 1)
                     {
                         throw new InvalidOperationException();
                     }
@@ -678,16 +678,16 @@ namespace SeeingSharp.Util
         //*********************************************************************
         private class FunctionComparer : IComparer<T>
         {
-            private Comparison<T> m_comparison;
+            private Comparison<T> _comparison;
 
             public FunctionComparer(Comparison<T> comparison)
             {
-                m_comparison = comparison;
+                _comparison = comparison;
             }
 
             public int Compare(T x, T y)
             {
-                return m_comparison(x, y);
+                return _comparison(x, y);
             }
         }
     }

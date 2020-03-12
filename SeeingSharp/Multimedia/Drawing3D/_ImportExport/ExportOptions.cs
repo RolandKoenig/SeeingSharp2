@@ -26,21 +26,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public abstract class ExportOptions
     {
-        private EngineDevice m_device;
+        private EngineDevice _device;
 
         protected ExportOptions()
         {
-            m_device = GraphicsCore.Current.DefaultDevice;
+            _device = GraphicsCore.Current.DefaultDevice;
 
         }
 
         public EngineDevice ExportDevice
         {
-            get => m_device;
+            get => _device;
             set
             {
                 value.EnsureNotNull(nameof(value));
-                m_device = value;
+                _device = value;
             }
         }
     }

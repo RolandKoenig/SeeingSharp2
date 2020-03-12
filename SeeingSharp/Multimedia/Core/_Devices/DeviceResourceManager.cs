@@ -26,23 +26,23 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class DeviceResourceManager
     {
-        private EngineDevice m_device;
-        private List<IEngineDeviceResource> m_deviceResources;
-        private List<IEngineDeviceResource> m_deviceResourcesPrev;
-        private bool m_cleanupNeeded;
+        private EngineDevice _device;
+        private List<IEngineDeviceResource> _deviceResources;
+        private List<IEngineDeviceResource> _deviceResourcesPrev;
+        private bool _cleanupNeeded;
 
         internal DeviceResourceManager(EngineDevice device)
         {
-            m_device = device;
-            m_deviceResources = new List<IEngineDeviceResource>(1024);
-            m_deviceResourcesPrev = new List<IEngineDeviceResource>(1024);
-            m_cleanupNeeded = false;
+            _device = device;
+            _deviceResources = new List<IEngineDeviceResource>(1024);
+            _deviceResourcesPrev = new List<IEngineDeviceResource>(1024);
+            _cleanupNeeded = false;
         }
 
         internal void Cleanup()
         {
-            var newResourceList = m_deviceResourcesPrev;
-            var oldResourceList = m_deviceResources;
+            var newResourceList = _deviceResourcesPrev;
+            var oldResourceList = _deviceResources;
 
             var anyNullDiscovered = false;
             for (var loop = 0; loop < oldResourceList.Count; loop++)
@@ -57,46 +57,46 @@ namespace SeeingSharp.Multimedia.Core
                 newResourceList.Add(actOldResource);
                 if (anyNullDiscovered)
                 {
-                    actOldResource.SetDeviceResourceIndex(m_device, newResourceList.Count - 1);
+                    actOldResource.SetDeviceResourceIndex(_device, newResourceList.Count - 1);
                 }
             }
 
-            m_deviceResources = newResourceList;
-            m_deviceResourcesPrev = oldResourceList;
-            m_deviceResourcesPrev.Clear();
+            _deviceResources = newResourceList;
+            _deviceResourcesPrev = oldResourceList;
+            _deviceResourcesPrev.Clear();
 
-            m_cleanupNeeded = false;
+            _cleanupNeeded = false;
         }
 
         internal void UnloadResources()
         {
-            for (var loop = 0; loop < m_deviceResources.Count; loop++)
+            for (var loop = 0; loop < _deviceResources.Count; loop++)
             {
-                var actDeviceResource = m_deviceResources[loop];
-                actDeviceResource?.UnloadResources(m_device);
+                var actDeviceResource = _deviceResources[loop];
+                actDeviceResource?.UnloadResources(_device);
             }
         }
 
         internal void RegisterDeviceResource(IEngineDeviceResource resource)
         {
-            var currentDeviceResourceIndex = resource.GetDeviceResourceIndex(m_device);
+            var currentDeviceResourceIndex = resource.GetDeviceResourceIndex(_device);
             currentDeviceResourceIndex.EnsureNegativeAndNotZero(nameof(currentDeviceResourceIndex));
 
-            m_deviceResources.Add(resource);
-            resource.SetDeviceResourceIndex(m_device, m_deviceResources.Count - 1);
+            _deviceResources.Add(resource);
+            resource.SetDeviceResourceIndex(_device, _deviceResources.Count - 1);
         }
 
         internal void DeregisterDeviceResource(IEngineDeviceResource resource)
         {
-            var currentDeviceResourceIndex = resource.GetDeviceResourceIndex(m_device);
+            var currentDeviceResourceIndex = resource.GetDeviceResourceIndex(_device);
             currentDeviceResourceIndex.EnsurePositiveOrZero(nameof(currentDeviceResourceIndex));
 
-            m_deviceResources[currentDeviceResourceIndex] = null;
-            resource.SetDeviceResourceIndex(m_device, -1);
+            _deviceResources[currentDeviceResourceIndex] = null;
+            resource.SetDeviceResourceIndex(_device, -1);
 
-            m_cleanupNeeded = true;
+            _cleanupNeeded = true;
         }
 
-        internal bool CleanupNeeded => m_cleanupNeeded;
+        internal bool CleanupNeeded => _cleanupNeeded;
     }
 }

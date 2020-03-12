@@ -27,10 +27,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class FullscreenTexture : SceneObject, IAnimatableObjectAccentuation, IAnimatableObjectOpacity
     {
         // Configuration
-        private NamedOrGenericKey m_resTexture;
+        private NamedOrGenericKey _resTexture;
 
         // Device dependent resources
-        private IndexBasedDynamicCollection<TexturePainterHelper> m_texturePainterHelpers;
+        private IndexBasedDynamicCollection<TexturePainterHelper> _texturePainterHelpers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FullscreenTexture"/> class.
@@ -38,13 +38,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="texture">The texture.</param>
         public FullscreenTexture(NamedOrGenericKey texture)
         {
-            m_resTexture = texture;
+            _resTexture = texture;
             this.Scaling = 1f;
             this.Opacity = 1f;
             this.AccentuationFactor = 0f;
             this.AlphaBlendMode = TexturePainterAlphaBlendMode.AlphaBlend;
 
-            m_texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
+            _texturePainterHelpers = new IndexBasedDynamicCollection<TexturePainterHelper>();
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
-            var newHelper = new TexturePainterHelper(m_resTexture);
+            var newHelper = new TexturePainterHelper(_resTexture);
 
-            m_texturePainterHelpers.AddObject(
+            _texturePainterHelpers.AddObject(
                 newHelper,
                 device.DeviceIndex);
 
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device"></param>
         public override bool IsLoaded(EngineDevice device)
         {
-            return m_texturePainterHelpers.HasObjectAt(device.DeviceIndex);
+            return _texturePainterHelpers.HasObjectAt(device.DeviceIndex);
         }
 
         /// <summary>
@@ -77,12 +77,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.UnloadResources();
 
-            foreach (var actHelper in m_texturePainterHelpers)
+            foreach (var actHelper in _texturePainterHelpers)
             {
                 actHelper.UnloadResources();
             }
 
-            m_texturePainterHelpers.Clear();
+            _texturePainterHelpers.Clear();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (this.Opacity < 1f) { return; }
 
             // Get and configure helper object
-            var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
+            var actHelper = _texturePainterHelpers[renderState.DeviceIndex];
             actHelper.Scaling = this.Scaling;
             actHelper.Opacity = this.Opacity;
             actHelper.AccentuationFactor = this.AccentuationFactor;
@@ -140,7 +140,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (this.Opacity < 1f)
             {
                 // Get and configure helper object
-                var actHelper = m_texturePainterHelpers[renderState.DeviceIndex];
+                var actHelper = _texturePainterHelpers[renderState.DeviceIndex];
                 actHelper.Scaling = this.Scaling;
                 actHelper.Opacity = this.Opacity;
                 actHelper.AccentuationFactor = this.AccentuationFactor;

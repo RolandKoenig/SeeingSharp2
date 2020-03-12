@@ -27,8 +27,8 @@ namespace SeeingSharp.Util
     {
         public static readonly NamedOrGenericKey Empty = new NamedOrGenericKey();
 
-        private string m_hint;
-        private readonly int m_hashCode;
+        private string _hint;
+        private readonly int _hashCode;
 
         /// <summary>
         /// Private constructor - Just to be used for generated keys.
@@ -40,8 +40,8 @@ namespace SeeingSharp.Util
 
             this.GenericKey = keyValue;
             this.NameKey = null;
-            m_hashCode = keyValue.GetHashCode();
-            m_hint = null;
+            _hashCode = keyValue.GetHashCode();
+            _hint = null;
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace SeeingSharp.Util
 
             this.GenericKey = 0;
             this.NameKey = nameKey;
-            m_hashCode = nameKey.GetHashCode();
-            m_hint = null;
+            _hashCode = nameKey.GetHashCode();
+            _hint = null;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace SeeingSharp.Util
         /// <param name="other"></param>
         public int CompareTo(NamedOrGenericKey other)
         {
-            var result = m_hashCode.CompareTo(other.m_hashCode);
+            var result = _hashCode.CompareTo(other._hashCode);
             if (result == 0)
             {
                 if (this.NameKey != null)
@@ -142,7 +142,7 @@ namespace SeeingSharp.Util
         /// </returns>
         public override int GetHashCode()
         {
-            return m_hashCode;
+            return _hashCode;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace SeeingSharp.Util
         {
             get
             {
-                var result = m_hint;
+                var result = _hint;
 
                 if (string.IsNullOrEmpty(result))
                 {
@@ -193,7 +193,7 @@ namespace SeeingSharp.Util
 
                 return result;
             }
-            set => m_hint = value;
+            set => _hint = value;
         }
 
         /// <summary>

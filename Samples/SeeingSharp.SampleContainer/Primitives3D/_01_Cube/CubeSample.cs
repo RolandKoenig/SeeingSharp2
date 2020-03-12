@@ -57,19 +57,19 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
         //*********************************************************************
         private class CubeSampleSettings : Primitive3DSampleSettings
         {
-            private float m_width = 1f;
-            private float m_height = 1f;
-            private float m_depth = 1f;
+            private float _width = 1f;
+            private float _height = 1f;
+            private float _depth = 1f;
 
             [Category(CATEGORY_NAME)]
             public float Width
             {
-                get => m_width;
+                get => _width;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_width, value))
+                    if (!EngineMath.EqualsWithTolerance(_width, value))
                     {
-                        m_width = value;
+                        _width = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -78,12 +78,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
             [Category(CATEGORY_NAME)]
             public float Height
             {
-                get => m_height;
+                get => _height;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_height, value))
+                    if (!EngineMath.EqualsWithTolerance(_height, value))
                     {
-                        m_height = value;
+                        _height = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -92,12 +92,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
             [Category(CATEGORY_NAME)]
             public float Depth
             {
-                get => m_depth;
+                get => _depth;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_depth, value))
+                    if (!EngineMath.EqualsWithTolerance(_depth, value))
                     {
-                        m_depth = value;
+                        _depth = value;
                         this.RaiseRecreateRequest();
                     }
                 }

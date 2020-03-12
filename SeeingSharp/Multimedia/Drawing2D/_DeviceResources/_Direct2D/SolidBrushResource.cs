@@ -31,7 +31,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class SolidBrushResource : BrushResource
     {
         // Resources
-        private D2D.SolidColorBrush[] m_loadedBrushes;
+        private D2D.SolidColorBrush[] _loadedBrushes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
@@ -44,7 +44,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
 
-            m_loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
+            _loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
 
             this.Opacity = opacity;
             this.Color = singleColor;
@@ -56,13 +56,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Brush brush = m_loadedBrushes[engineDevice.DeviceIndex];
+            D2D.Brush brush = _loadedBrushes[engineDevice.DeviceIndex];
             if (brush != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
 
                 SeeingSharpUtil.DisposeObject(brush);
-                m_loadedBrushes[engineDevice.DeviceIndex] = null;
+                _loadedBrushes[engineDevice.DeviceIndex] = null;
             }
         }
 
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            var result = m_loadedBrushes[engineDevice.DeviceIndex];
+            var result = _loadedBrushes[engineDevice.DeviceIndex];
 
             if (result == null)
             {
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                         Opacity = this.Opacity,
                         Transform = SdxMathHelper.RawFromMatrix3x2(Matrix3x2.Identity)
                     });
-                m_loadedBrushes[engineDevice.DeviceIndex] = result;
+                _loadedBrushes[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);
             }
 

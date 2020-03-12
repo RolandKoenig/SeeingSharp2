@@ -30,14 +30,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class PolygonGeometryResource : Geometry2DResourceBase
     {
         // resources
-        private D2D.PathGeometry m_d2dGeometry;
+        private D2D.PathGeometry _d2dGeometry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
         /// </summary>
         public PolygonGeometryResource()
         {
-            m_d2dGeometry = new D2D.PathGeometry(
+            _d2dGeometry = new D2D.PathGeometry(
                 GraphicsCore.Current.FactoryD2D);
         }
 
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             polygon.EnsureNotNull(nameof(polygon));
             polygon.Vertices.EnsureMoreThanZeroElements($"{nameof(polygon)}.{nameof(polygon.Vertices)}");
 
-            using (var geoSink = m_d2dGeometry.Open())
+            using (var geoSink = _d2dGeometry.Open())
             {
                 var vertices = polygon.Vertices;
 
@@ -94,7 +94,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             otherGeometry.EnsureNotNullOrDisposed(nameof(otherGeometry));
 
-            var relation = m_d2dGeometry.Compare(otherGeometry.m_d2dGeometry);
+            var relation = _d2dGeometry.Compare(otherGeometry._d2dGeometry);
 
             return
                 relation != D2D.GeometryRelation.Unknown &&
@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public override void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_d2dGeometry);
+            SeeingSharpUtil.SafeDispose(ref _d2dGeometry);
         }
 
         /// <summary>
@@ -114,9 +114,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         internal override D2D.Geometry GetGeometry()
         {
-            return m_d2dGeometry;
+            return _d2dGeometry;
         }
 
-        public override bool IsDisposed => m_d2dGeometry == null;
+        public override bool IsDisposed => _d2dGeometry == null;
     }
 }

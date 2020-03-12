@@ -68,11 +68,6 @@ namespace SeeingSharp.UwpSamples
                 rootFrame = new Frame();
                 rootFrame.NavigationFailed += this.OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: load previous state
-                }
-
                 Window.Current.Content = rootFrame;
             }
 

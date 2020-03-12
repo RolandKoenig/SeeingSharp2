@@ -57,19 +57,19 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_Sphere
         //*********************************************************************
         private class SphereSampleSettings : Primitive3DSampleSettings
         {
-            private int m_tDiv = 30;
-            private int m_pDiv = 30;
-            private float m_radius = 0.5f;
+            private int _tDiv = 30;
+            private int _pDiv = 30;
+            private float _radius = 0.5f;
 
             [Category(CATEGORY_NAME)]
             public int TDiv
             {
-                get => m_tDiv;
+                get => _tDiv;
                 set
                 {
-                    if (m_tDiv != value)
+                    if (_tDiv != value)
                     {
-                        m_tDiv= value;
+                        _tDiv= value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -78,12 +78,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_Sphere
             [Category(CATEGORY_NAME)]
             public int PDiv
             {
-                get => m_pDiv;
+                get => _pDiv;
                 set
                 {
-                    if (m_pDiv != value)
+                    if (_pDiv != value)
                     {
-                        m_pDiv= value;
+                        _pDiv= value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -92,12 +92,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._04_Sphere
             [Category(CATEGORY_NAME)]
             public float Radius
             {
-                get => m_radius;
+                get => _radius;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_radius, value))
+                    if (!EngineMath.EqualsWithTolerance(_radius, value))
                     {
-                        m_radius = value;
+                        _radius = value;
                         this.RaiseRecreateRequest();
                     }
                 }

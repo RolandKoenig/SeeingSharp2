@@ -25,8 +25,8 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class CallActionAnimation : AnimationBase
     {
-        private Action m_actionToCall;
-        private Action m_cancelAction;
+        private Action _actionToCall;
+        private Action _cancelAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CallActionAnimation" /> class.
@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Core
         public CallActionAnimation(Action actionToCall)
             : base(null, AnimationType.FixedTime, TimeSpan.Zero)
         {
-            m_actionToCall = actionToCall;
+            _actionToCall = actionToCall;
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace SeeingSharp.Multimedia.Core
         public CallActionAnimation(Action actionToCall, Action cancelAction)
             : base(null, AnimationType.FixedTime, TimeSpan.Zero)
         {
-            m_actionToCall = actionToCall;
-            m_cancelAction = cancelAction;
+            _actionToCall = actionToCall;
+            _cancelAction = cancelAction;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public override void OnCanceled()
         {
-            m_cancelAction?.Invoke();
+            _cancelAction?.Invoke();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_actionToCall?.Invoke();
+            _actionToCall?.Invoke();
         }
     }
 }

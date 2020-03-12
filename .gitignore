@@ -177,7 +177,7 @@ UpgradeLog*.htm
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
-*.bim_*.settings
+*.bi_*.settings
 
 # Microsoft Fakes
 FakesAssemblies/

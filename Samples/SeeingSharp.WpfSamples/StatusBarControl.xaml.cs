@@ -38,7 +38,7 @@ namespace SeeingSharp.WpfSamples
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRendererElement), typeof(StatusBarControl), new PropertyMetadata(null));
 
-        private DispatcherTimer m_refreshTimer;
+        private DispatcherTimer _refreshTimer;
 
         public StatusBarControl()
         {
@@ -60,15 +60,15 @@ namespace SeeingSharp.WpfSamples
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            m_refreshTimer = new DispatcherTimer();
-            m_refreshTimer.Tick += OnRefreshTimer_Tick;
-            m_refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
-            m_refreshTimer.Start();
+            _refreshTimer = new DispatcherTimer();
+            _refreshTimer.Tick += OnRefreshTimer_Tick;
+            _refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
+            _refreshTimer.Start();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            m_refreshTimer.Stop();
+            _refreshTimer.Stop();
         }
 
         public SeeingSharpRendererElement CtrlRenderer

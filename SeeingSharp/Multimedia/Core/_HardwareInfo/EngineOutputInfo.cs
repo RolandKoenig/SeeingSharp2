@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
-        private OutputDescription m_outputDescription;
+        private OutputDescription _outputDescription;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             this.AdapterIndex = adapterIndex;
             this.OutputIndex = outputIndex;
-            m_outputDescription = output.Description;
+            _outputDescription = output.Description;
 
             // Get all supported modes
             var modes = output.GetDisplayModeList(
@@ -78,36 +78,36 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the name of the output device.
         /// </summary>
-        public string DeviceName => m_outputDescription.DeviceName;
+        public string DeviceName => _outputDescription.DeviceName;
 
         public int AdapterIndex { get; }
 
         public int OutputIndex { get; }
 
-        public bool IsAttachedToDesktop => m_outputDescription.IsAttachedToDesktop;
+        public bool IsAttachedToDesktop => _outputDescription.IsAttachedToDesktop;
 
         /// <summary>
         /// Gets the total count of pixels on X axis.
         /// </summary>
-        public int DesktopWidth => m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left;
+        public int DesktopWidth => _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left;
 
         /// <summary>
         /// Gets the total count of pixels on Y axis.
         /// </summary>
-        public int DesktopHeight => m_outputDescription.DesktopBounds.Bottom - m_outputDescription.DesktopBounds.Top;
+        public int DesktopHeight => _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top;
 
-        public int DesktopXPos => m_outputDescription.DesktopBounds.Left;
+        public int DesktopXPos => _outputDescription.DesktopBounds.Left;
 
-        public int DesktopYPos => m_outputDescription.DesktopBounds.Top;
+        public int DesktopYPos => _outputDescription.DesktopBounds.Top;
 
         public string DesktopResolution =>
-            m_outputDescription.DesktopBounds.Right - m_outputDescription.DesktopBounds.Left +
+            _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left +
             "x" +
-            (m_outputDescription.DesktopBounds.Bottom - m_outputDescription.DesktopBounds.Top);
+            (_outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top);
 
-        public string DesktopLocation => "X = " + m_outputDescription.DesktopBounds.Left + ", Y = " + m_outputDescription.DesktopBounds.Top;
+        public string DesktopLocation => "X = " + _outputDescription.DesktopBounds.Left + ", Y = " + _outputDescription.DesktopBounds.Top;
 
-        public string Rotation => m_outputDescription.Rotation.ToString();
+        public string Rotation => _outputDescription.Rotation.ToString();
 
         public EngineOutputModeInfo DefaultMode => this.SupportedModes[0];
 

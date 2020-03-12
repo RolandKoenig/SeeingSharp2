@@ -38,17 +38,17 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
         private const float IMAGE_WIDTH = 64;
         private const float IMAGE_HEIGHT = 64;
 
-        private ImageSampleSettings m_castedSettings; 
+        private ImageSampleSettings _castedSettings; 
 
-        private StandardBitmapResource m_bitmap;
+        private StandardBitmapResource _bitmap;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            m_castedSettings = (ImageSampleSettings)settings;
+            _castedSettings = (ImageSampleSettings)settings;
 
-            m_bitmap = new StandardBitmapResource(
+            _bitmap = new StandardBitmapResource(
                 new AssemblyResourceLink(
                     this.GetType(),
                     "SimpleImage.png"));
@@ -63,17 +63,17 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
                 // Clear the screen
                 base.Draw2DBackground(graphics);
 
-                var width = IMAGE_WIDTH * EngineMath.Clamp(m_castedSettings.Scaling, 0f, 100f);
-                var height = IMAGE_HEIGHT * EngineMath.Clamp(m_castedSettings.Scaling, 0f, 100f);
+                var width = IMAGE_WIDTH * EngineMath.Clamp(_castedSettings.Scaling, 0f, 100f);
+                var height = IMAGE_HEIGHT * EngineMath.Clamp(_castedSettings.Scaling, 0f, 100f);
                 var bitmapRect = new RectangleF(
                     graphics.ScreenWidth / 2f - width / 2f,
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
 
                 graphics.DrawBitmap(
-                    m_bitmap,
+                    _bitmap,
                     bitmapRect,
-                    m_castedSettings.Transparent ? 0.5f : 1f,
+                    _castedSettings.Transparent ? 0.5f : 1f,
                     BitmapInterpolationMode.Linear);
             });
         }
@@ -82,7 +82,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
         {
             base.OnClosed();
 
-            SeeingSharpUtil.SafeDispose(ref m_bitmap);
+            SeeingSharpUtil.SafeDispose(ref _bitmap);
         }
 
         //*********************************************************************

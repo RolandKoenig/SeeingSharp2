@@ -27,11 +27,10 @@ namespace SeeingSharp.Multimedia.Core
     public class ChangeOpacityToAnimation : AnimationBase
     {
         // Parameters
-        private float m_startOpacity;
-        private TimeSpan m_duration;
-        private float m_moveOpacity;
-        private float m_targetOpacity;
-        private IAnimatableObjectOpacity m_targetObject;
+        private float _startOpacity;
+        private float _moveOpacity;
+        private float _targetOpacity;
+        private IAnimatableObjectOpacity _targetObject;
 
         /// <summary>
         /// Initialize a new Instance of the <see cref="Move3DByAnimation" /> class.
@@ -47,9 +46,8 @@ namespace SeeingSharp.Multimedia.Core
             targetOpacity.EnsureInRange(0f, 1f, nameof(targetOpacity));
             duration.EnsureLongerThanZero(nameof(duration));
 
-            m_targetObject = targetObject;
-            m_duration = duration;
-            m_targetOpacity = targetOpacity;
+            _targetObject = targetObject;
+            _targetOpacity = targetOpacity;
 
             if (targetOpacity < 0f || targetOpacity > 1f)
             {
@@ -62,8 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startOpacity = m_targetObject.Opacity;
-            m_moveOpacity = m_targetOpacity - m_startOpacity;
+            _startOpacity = _targetObject.Opacity;
+            _moveOpacity = _targetOpacity - _startOpacity;
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             var changeFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
-            m_targetObject.Opacity = m_startOpacity + m_moveOpacity * changeFactor;
+            _targetObject.Opacity = _startOpacity + _moveOpacity * changeFactor;
         }
 
         /// <summary>
@@ -81,10 +79,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.Opacity = m_targetOpacity;
+            _targetObject.Opacity = _targetOpacity;
 
-            m_moveOpacity = 0;
-            m_startOpacity = 1;
+            _moveOpacity = 0;
+            _startOpacity = 1;
         }
     }
 }

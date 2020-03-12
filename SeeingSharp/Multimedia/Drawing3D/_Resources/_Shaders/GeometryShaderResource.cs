@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class GeometryShaderResource : ShaderResource
     {
         // Resources for Direct3D 11 rendering
-        private D3D11.GeometryShader m_geometryShader;
+        private D3D11.GeometryShader _geometryShader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
@@ -46,9 +46,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
         {
-            if (m_geometryShader == null)
+            if (_geometryShader == null)
             {
-                m_geometryShader = new D3D11.GeometryShader(device.DeviceD3D11_1, shaderBytecode);
+                _geometryShader = new D3D11.GeometryShader(device.DeviceD3D11_1, shaderBytecode);
             }
         }
 
@@ -57,17 +57,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            SeeingSharpUtil.SafeDispose(ref m_geometryShader);
+            SeeingSharpUtil.SafeDispose(ref _geometryShader);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_geometryShader != null;
+        public override bool IsLoaded => _geometryShader != null;
 
         /// <summary>
         /// Gets the loaded GeometryShader object.
         /// </summary>
-        internal D3D11.GeometryShader GeometryShader => m_geometryShader;
+        internal D3D11.GeometryShader GeometryShader => _geometryShader;
     }
 }

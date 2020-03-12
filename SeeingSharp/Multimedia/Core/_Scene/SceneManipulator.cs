@@ -31,8 +31,8 @@ namespace SeeingSharp.Multimedia.Core
     public class SceneManipulator
     {
         // Objects that remember all changes on object/resource collections
-        private List<SceneObject> m_createdObjects;
-        private List<NamedOrGenericKey> m_createdResources;
+        private List<SceneObject> _createdObjects;
+        private List<NamedOrGenericKey> _createdResources;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
@@ -43,8 +43,8 @@ namespace SeeingSharp.Multimedia.Core
             this.Owner = owner;
             this.IsValid = false;
 
-            m_createdObjects = new List<SceneObject>();
-            m_createdResources = new List<NamedOrGenericKey>();
+            _createdObjects = new List<SceneObject>();
+            _createdResources = new List<NamedOrGenericKey>();
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void ResetObjectAndResourceCollections()
         {
-            m_createdObjects.Clear();
-            m_createdResources.Clear();
+            _createdObjects.Clear();
+            _createdResources.Clear();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Core
             this.CheckValid();
 
             var result = this.Owner.AddResource(resourceFactory, NamedOrGenericKey.Empty);
-            m_createdResources.Add(result);
+            _createdResources.Add(result);
             return result;
         }
 
@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Core
             this.CheckValid();
 
             var result = this.Owner.AddResource(resourceFactory, resourceKey);
-            m_createdResources.Add(result);
+            _createdResources.Add(result);
             return result;
         }
 
@@ -147,7 +147,7 @@ namespace SeeingSharp.Multimedia.Core
             if (!this.Owner.ContainsResource(resourceKey))
             {
                 var result = this.Owner.AddResource(resourceFactory, resourceKey);
-                m_createdResources.Add(result);
+                _createdResources.Add(result);
                 return result;
             }
             return resourceKey;
@@ -230,7 +230,7 @@ namespace SeeingSharp.Multimedia.Core
             this.CheckValid();
 
             var result = this.Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
-            m_createdObjects.Add(result);
+            _createdObjects.Add(result);
             return result;
         }
 
@@ -245,7 +245,7 @@ namespace SeeingSharp.Multimedia.Core
             this.CheckValid();
 
             var result = this.Owner.Add(sceneObject, layer);
-            m_createdObjects.Add(result);
+            _createdObjects.Add(result);
             return result;
         }
 
@@ -507,15 +507,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a list containing all created objects.
         /// </summary>
-        public IEnumerable<SceneObject> CreatedObjects => m_createdObjects;
+        public IEnumerable<SceneObject> CreatedObjects => _createdObjects;
 
-        public int CreatedObjectsCount => m_createdObjects.Count;
+        public int CreatedObjectsCount => _createdObjects.Count;
 
         /// <summary>
         /// Gets a list containing all created resources.
         /// </summary>
-        public IEnumerable<NamedOrGenericKey> CreatedResources => m_createdResources;
+        public IEnumerable<NamedOrGenericKey> CreatedResources => _createdResources;
 
-        public int CreatedResourcesCount => m_createdResources.Count;
+        public int CreatedResourcesCount => _createdResources.Count;
     }
 }

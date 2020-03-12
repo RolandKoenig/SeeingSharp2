@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerDWrite : IDisposable, ICheckDisposed
     {
-        private DWrite.Factory m_factory;
+        private DWrite.Factory _factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
@@ -36,7 +36,7 @@ namespace SeeingSharp.Multimedia.Core
         internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
         {
             // Create DirectWrite Factory object
-            m_factory = new DWrite.Factory(DWrite.FactoryType.Shared);
+            _factory = new DWrite.Factory(DWrite.FactoryType.Shared);
         }
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            m_factory = SeeingSharpUtil.DisposeObject(m_factory);
+            _factory = SeeingSharpUtil.DisposeObject(_factory);
         }
 
         /// <summary>
         /// Is DirectWrite initialized successfully?
         /// </summary>
-        public bool IsDisposed => m_factory == null;
+        public bool IsDisposed => _factory == null;
 
         /// <summary>
         /// Gets the Factory object.
@@ -59,8 +59,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(m_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDWrite)); }
-                return m_factory;
+                if(_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDWrite)); }
+                return _factory;
             }
         }
     }

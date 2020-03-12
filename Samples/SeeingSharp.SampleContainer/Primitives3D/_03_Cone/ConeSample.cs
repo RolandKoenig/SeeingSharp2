@@ -57,19 +57,19 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
         //*********************************************************************
         private class ConeSampleSettings : Primitive3DSampleSettings
         {
-            private float m_radius = 0.5f;
-            private float m_height = 1f;
-            private int m_countOfSegments = 10;
+            private float _radius = 0.5f;
+            private float _height = 1f;
+            private int _countOfSegments = 10;
 
             [Category(CATEGORY_NAME)]
             public float Radius
             {
-                get => m_radius;
+                get => _radius;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_radius, value))
+                    if (!EngineMath.EqualsWithTolerance(_radius, value))
                     {
-                        m_radius = value;
+                        _radius = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -78,12 +78,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
             [Category(CATEGORY_NAME)]
             public float Height
             {
-                get => m_height;
+                get => _height;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(m_height, value))
+                    if (!EngineMath.EqualsWithTolerance(_height, value))
                     {
-                        m_height = value;
+                        _height = value;
                         this.RaiseRecreateRequest();
                     }
                 }
@@ -92,12 +92,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
             [Category(CATEGORY_NAME)]
             public int CountOfSegments
             {
-                get => m_countOfSegments;
+                get => _countOfSegments;
                 set
                 {
-                    if (m_countOfSegments != value)
+                    if (_countOfSegments != value)
                     {
-                        m_countOfSegments = value;
+                        _countOfSegments = value;
                         this.RaiseRecreateRequest();
                     }
                 }

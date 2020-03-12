@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class ConstantBufferResource : Resource
     {
         // Direct3D resources
-        private D3D11.Buffer m_constantBuffer;
+        private D3D11.Buffer _constantBuffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = this.CreateConstantBuffer(device);
+            _constantBuffer = this.CreateConstantBuffer(device);
         }
 
         /// <summary>
@@ -67,13 +67,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_constantBuffer = SeeingSharpUtil.DisposeObject(m_constantBuffer);
+            _constantBuffer = SeeingSharpUtil.DisposeObject(_constantBuffer);
         }
 
         /// <summary>
         /// Is the buffer loaded correctly?
         /// </summary>
-        public override bool IsLoaded => m_constantBuffer != null;
+        public override bool IsLoaded => _constantBuffer != null;
 
         /// <summary>
         /// Gets the total size of the constant buffer.
@@ -83,6 +83,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets the buffer object.
         /// </summary>
-        internal D3D11.Buffer ConstantBuffer => m_constantBuffer;
+        internal D3D11.Buffer ConstantBuffer => _constantBuffer;
     }
 }

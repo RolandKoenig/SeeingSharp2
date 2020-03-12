@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class WicBitmapSource : IDisposable
     {
         // Native resources
-        private WicBitmapSourceInternal m_wicBitmapSource;
+        private WicBitmapSourceInternal _wicBitmapSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="bitmapSource">The bitmap source.</param>
         private WicBitmapSource(WicBitmapSourceInternal bitmapSource)
         {
-            m_wicBitmapSource = bitmapSource;
+            _wicBitmapSource = bitmapSource;
         }
 
         /// <summary>
@@ -59,15 +59,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_wicBitmapSource);
+            SeeingSharpUtil.SafeDispose(ref _wicBitmapSource);
         }
 
         public int Width
         {
             get
             {
-                if (m_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
-                return m_wicBitmapSource.Converter.Size.Width;
+                if (_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
+                return _wicBitmapSource.Converter.Size.Width;
             }
         }
 
@@ -75,11 +75,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             get
             {
-                if (m_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
-                return m_wicBitmapSource.Converter.Size.Height;
+                if (_wicBitmapSource == null) { throw new ObjectDisposedException("WicBitmapSource"); }
+                return _wicBitmapSource.Converter.Size.Height;
             }
         }
 
-        internal BitmapSource BitmapSource => m_wicBitmapSource.Converter;
+        internal BitmapSource BitmapSource => _wicBitmapSource.Converter;
     }
 }

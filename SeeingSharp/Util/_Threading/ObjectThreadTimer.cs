@@ -25,18 +25,18 @@ namespace SeeingSharp.Util
 {
     public class ObjectThreadTimer
     {
-        private double m_speedFactor;
-        private DateTime m_startTimeStamp;
-        private TimeSpan m_timeSinceStart;
+        private double _speedFactor;
+        private DateTime _startTimeStamp;
+        private TimeSpan _timeSinceStart;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadTimer"/> class.
         /// </summary>
         public ObjectThreadTimer()
         {
-            m_speedFactor = 1.0;
-            m_startTimeStamp = DateTime.MinValue;
-            m_timeSinceStart = TimeSpan.Zero;
+            _speedFactor = 1.0;
+            _startTimeStamp = DateTime.MinValue;
+            _timeSinceStart = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace SeeingSharp.Util
         /// <param name="startTimeStamp">The start time stamp.</param>
         public ObjectThreadTimer(DateTime startTimeStamp)
         {
-            m_startTimeStamp = startTimeStamp;
-            m_timeSinceStart = TimeSpan.Zero;
-            m_speedFactor = 1.0;
+            _startTimeStamp = startTimeStamp;
+            _timeSinceStart = TimeSpan.Zero;
+            _speedFactor = 1.0;
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace SeeingSharp.Util
         /// <param name="speedFactor">Speed factor (standard: 1.0).</param>
         public ObjectThreadTimer(DateTime startTimeStamp, double speedFactor)
         {
-            m_startTimeStamp = startTimeStamp;
-            m_timeSinceStart = TimeSpan.Zero;
-            m_speedFactor = speedFactor;
+            _startTimeStamp = startTimeStamp;
+            _timeSinceStart = TimeSpan.Zero;
+            _speedFactor = speedFactor;
         }
 
         /// <summary>
@@ -67,31 +67,31 @@ namespace SeeingSharp.Util
         /// </summary>
         internal void Add(TimeSpan timeSpan)
         {
-            if (EngineMath.EqualsWithTolerance(m_speedFactor, 1.0))
+            if (EngineMath.EqualsWithTolerance(_speedFactor, 1.0))
             {
-                m_timeSinceStart = m_timeSinceStart.Add(timeSpan);
+                _timeSinceStart = _timeSinceStart.Add(timeSpan);
             }
             else
             {
-                m_timeSinceStart = m_timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * m_speedFactor)));
+                _timeSinceStart = _timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * _speedFactor)));
             }
         }
 
         /// <summary>
         /// Gets current time (thread-time, not pc-time!).
         /// </summary>
-        public DateTime Now => m_startTimeStamp.Add(m_timeSinceStart);
+        public DateTime Now => _startTimeStamp.Add(_timeSinceStart);
 
         /// <summary>
         /// Gets or sets current speed factor of the timer (default: 1.0).
         /// </summary>
         public double SpeedFactor
         {
-            get => m_speedFactor;
+            get => _speedFactor;
             set
             {
                 if (value < 0.0) { throw new ArgumentException("SpeedFactor can not be less than zero!", "value"); }
-                m_speedFactor = value;
+                _speedFactor = value;
             }
         }
     }

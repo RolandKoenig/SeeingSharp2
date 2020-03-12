@@ -27,14 +27,14 @@ namespace SeeingSharp.Util
 {
     public class SingleInstanceCollection<T> : IEnumerable<T>, ICollection<T>
     {
-        private Dictionary<T, object> m_dictionary;
+        private Dictionary<T, object> _dictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleInstanceCollection{T}" /> class.
         /// </summary>
         public SingleInstanceCollection()
         {
-            m_dictionary = new Dictionary<T, object>();
+            _dictionary = new Dictionary<T, object>();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SeeingSharp.Util
         {
             item.EnsureNotNull(nameof(item));
 
-            m_dictionary[item] = null;
+            _dictionary[item] = null;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Clear()
         {
-            m_dictionary.Clear();
+            _dictionary.Clear();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SeeingSharp.Util
         {
             item.EnsureNotNull(nameof(item));
 
-            return m_dictionary.ContainsKey(item);
+            return _dictionary.ContainsKey(item);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SeeingSharp.Util
         /// <param name="arrayIndex">Index of the array.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            m_dictionary.Keys.CopyTo(array, arrayIndex);
+            _dictionary.Keys.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace SeeingSharp.Util
         {
             item.EnsureNotNull(nameof(item));
 
-            if (m_dictionary.ContainsKey(item))
+            if (_dictionary.ContainsKey(item))
             {
-                return m_dictionary.Remove(item);
+                return _dictionary.Remove(item);
             }
             return false;
         }
@@ -102,7 +102,7 @@ namespace SeeingSharp.Util
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return m_dictionary.Keys.GetEnumerator();
+            return _dictionary.Keys.GetEnumerator();
         }
 
         /// <summary>
@@ -113,14 +113,14 @@ namespace SeeingSharp.Util
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return m_dictionary.Keys.GetEnumerator();
+            return _dictionary.Keys.GetEnumerator();
         }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </summary>
         /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
-        public int Count => m_dictionary.Count;
+        public int Count => _dictionary.Count;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.

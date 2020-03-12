@@ -29,18 +29,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class SimplePolygon2DGeometrySink : DummyComObject, GeometrySink
     {
-        private List<Vector2> m_currentPolygonBuilder;
-        private Vector2 m_origin;
-        private List<Polygon2D> m_polygons2D;
+        private List<Vector2> _currentPolygonBuilder;
+        private Vector2 _origin;
+        private List<Polygon2D> _polygons2D;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePolygon2DGeometrySink" /> class.
         /// </summary>
         public SimplePolygon2DGeometrySink(Vector2 origin)
         {
-            m_origin = origin;
-            m_polygons2D = new List<Polygon2D>();
-            m_currentPolygonBuilder = new List<Vector2>(500);
+            _origin = origin;
+            _polygons2D = new List<Polygon2D>();
+            _currentPolygonBuilder = new List<Vector2>(500);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <unmanaged>void AddLine([None] D2D1_POINT_2F point)</unmanaged>
         public void AddLine(RawVector2 point)
         {
-            m_currentPolygonBuilder.Add(new Vector2(point.X, point.Y) - m_origin);
+            _currentPolygonBuilder.Add(new Vector2(point.X, point.Y) - _origin);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             for (var loop = 0; loop < pointsRef.Length; loop++)
             {
-                m_currentPolygonBuilder.Add(new Vector2(pointsRef[loop].X, pointsRef[loop].Y) - m_origin);
+                _currentPolygonBuilder.Add(new Vector2(pointsRef[loop].X, pointsRef[loop].Y) - _origin);
             }
         }
 
@@ -132,8 +132,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </remarks>
         public void BeginFigure(RawVector2 startPoint, FigureBegin figureBegin)
         {
-            m_currentPolygonBuilder.Clear();
-            m_currentPolygonBuilder.Add(new Vector2(startPoint.X, startPoint.Y) - m_origin);
+            _currentPolygonBuilder.Clear();
+            _currentPolygonBuilder.Add(new Vector2(startPoint.X, startPoint.Y) - _origin);
         }
 
         /// <summary>
@@ -157,10 +157,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </remarks>
         public void EndFigure(FigureEnd figureEnd)
         {
-            if (m_currentPolygonBuilder.Count >= 3)
+            if (_currentPolygonBuilder.Count >= 3)
             {
-                m_polygons2D.Add(new Polygon2D(m_currentPolygonBuilder.ToArray()));
-                m_currentPolygonBuilder.Clear();
+                _polygons2D.Add(new Polygon2D(_currentPolygonBuilder.ToArray()));
+                _currentPolygonBuilder.Clear();
             }
         }
 
@@ -193,6 +193,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets a collection containing all generated polygons.
         /// </summary>
-        public IEnumerable<Polygon2D> GeneratedPolygons => m_polygons2D;
+        public IEnumerable<Polygon2D> GeneratedPolygons => _polygons2D;
     }
 }

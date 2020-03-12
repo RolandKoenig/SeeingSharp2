@@ -28,17 +28,17 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed, IEngineDeviceResource
     {
         // Helper flags
-        private bool m_isDisposed;
+        private bool _isDisposed;
 
         // Device resource handling
-        private int[] m_deviceResourceIndices;
+        private int[] _deviceResourceIndices;
 
         protected Drawing2DResourceBase()
         {
-            m_deviceResourceIndices = new int[GraphicsCore.Current.DeviceCount];
-            for (var loop = 0; loop < m_deviceResourceIndices.Length; loop++)
+            _deviceResourceIndices = new int[GraphicsCore.Current.DeviceCount];
+            for (var loop = 0; loop < _deviceResourceIndices.Length; loop++)
             {
-                m_deviceResourceIndices[loop] = -1;
+                _deviceResourceIndices[loop] = -1;
             }
         }
 
@@ -47,9 +47,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         public virtual void Dispose()
         {
-            if (!m_isDisposed)
+            if (!_isDisposed)
             {
-                m_isDisposed = true;
+                _isDisposed = true;
                 GraphicsCore.Current.MainLoop.RegisterForUnload(this);
             }
         }
@@ -62,12 +62,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public int GetDeviceResourceIndex(EngineDevice device)
         {
-            return m_deviceResourceIndices[device.DeviceIndex];
+            return _deviceResourceIndices[device.DeviceIndex];
         }
 
         public void SetDeviceResourceIndex(EngineDevice device, int resourceIndex)
         {
-            m_deviceResourceIndices[device.DeviceIndex] = resourceIndex;
+            _deviceResourceIndices[device.DeviceIndex] = resourceIndex;
         }
 
         void IEngineDeviceResource.UnloadResources(EngineDevice device)
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Is this object disposed?
         /// </summary>
-        public bool IsDisposed => m_isDisposed;
+        public bool IsDisposed => _isDisposed;
 
 
     }

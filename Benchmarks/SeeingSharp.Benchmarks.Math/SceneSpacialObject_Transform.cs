@@ -29,31 +29,31 @@ namespace SeeingSharp.Benchmarks.Math
     [SimpleJob(RuntimeMoniker.Net471)]
     public class SceneSpacialObject_Transform
     {
-        private SharpDX.Matrix m_sdxScaling = SharpDX.Matrix.Scaling(2.5f, -2f, 3f);
-        private SharpDX.Matrix m_sdxRotation = SharpDX.Matrix.RotationYawPitchRoll(0.23f, 0.42f, -0.23f);
-        private SharpDX.Matrix m_sdxTranslation = SharpDX.Matrix.Translation(3f, 1.5f, 5f);
-        private SharpDX.Matrix m_sdxPrevTop = SharpDX.Matrix.Identity;
+        private SharpDX.Matrix _sdxScaling = SharpDX.Matrix.Scaling(2.5f, -2f, 3f);
+        private SharpDX.Matrix _sdxRotation = SharpDX.Matrix.RotationYawPitchRoll(0.23f, 0.42f, -0.23f);
+        private SharpDX.Matrix _sdxTranslation = SharpDX.Matrix.Translation(3f, 1.5f, 5f);
+        private SharpDX.Matrix _sdxPrevTop = SharpDX.Matrix.Identity;
 
-        private System.Numerics.Matrix4x4 m_numericsScaling = System.Numerics.Matrix4x4.CreateScale(2.5f, -2f, 3f);
-        private System.Numerics.Matrix4x4 m_numericsRotation = System.Numerics.Matrix4x4.CreateFromYawPitchRoll(0.23f, 0.42f, -0.23f);
-        private System.Numerics.Matrix4x4 m_numericsTranslation = System.Numerics.Matrix4x4.CreateTranslation(3f, 1.5f, 5f);
-        private System.Numerics.Matrix4x4 m_numericsPrevTop = System.Numerics.Matrix4x4.Identity;
+        private System.Numerics.Matrix4x4 _numericsScaling = System.Numerics.Matrix4x4.CreateScale(2.5f, -2f, 3f);
+        private System.Numerics.Matrix4x4 _numericsRotation = System.Numerics.Matrix4x4.CreateFromYawPitchRoll(0.23f, 0.42f, -0.23f);
+        private System.Numerics.Matrix4x4 _numericsTranslation = System.Numerics.Matrix4x4.CreateTranslation(3f, 1.5f, 5f);
+        private System.Numerics.Matrix4x4 _numericsPrevTop = System.Numerics.Matrix4x4.Identity;
 
         [Benchmark]
-        public SharpDX.Matrix SharpDX_SceneSpacialObject_FullTransform_Precalculated()
+        public SharpDX.Matrix SharpDX_SceneSpacialObject_FullTransfor_Precalculated()
         {
-            return m_sdxScaling *
-                   m_sdxRotation *
-                   m_sdxTranslation *
-                   m_sdxPrevTop;
+            return _sdxScaling *
+                   _sdxRotation *
+                   _sdxTranslation *
+                   _sdxPrevTop;
         }
 
         [Benchmark]
-        public SharpDX.Matrix SharpDX_SceneSpacialObject_FullTransform_Precalculated_Refs()
+        public SharpDX.Matrix SharpDX_SceneSpacialObject_FullTransfor_Precalculated_Refs()
         {
-            SharpDX.Matrix.Multiply(ref m_sdxScaling, ref m_sdxRotation, out SharpDX.Matrix result);
-            SharpDX.Matrix.Multiply(ref result, ref m_sdxTranslation, out result);
-            SharpDX.Matrix.Multiply(ref result, ref m_sdxPrevTop, out result);
+            SharpDX.Matrix.Multiply(ref _sdxScaling, ref _sdxRotation, out SharpDX.Matrix result);
+            SharpDX.Matrix.Multiply(ref result, ref _sdxTranslation, out result);
+            SharpDX.Matrix.Multiply(ref result, ref _sdxPrevTop, out result);
 
             return result;
         }
@@ -68,12 +68,12 @@ namespace SeeingSharp.Benchmarks.Math
         }
 
         [Benchmark]
-        public System.Numerics.Matrix4x4 Numerics_SceneSpacialObject_FullTransform_Precalculated()
+        public System.Numerics.Matrix4x4 Numerics_SceneSpacialObject_FullTransfor_Precalculated()
         {
-            return m_numericsScaling *
-                   m_numericsRotation *
-                   m_numericsTranslation *
-                   m_numericsPrevTop;
+            return _numericsScaling *
+                   _numericsRotation *
+                   _numericsTranslation *
+                   _numericsPrevTop;
         }
 
         [Benchmark]

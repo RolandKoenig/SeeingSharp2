@@ -27,29 +27,29 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerDXGI : IDisposable, ICheckDisposed
     {
-        private DXGI.Factory1 m_dxgiFactory;
+        private DXGI.Factory1 _dxgiFactory;
 
         internal FactoryHandlerDXGI(GraphicsCoreConfiguration coreConfiguration)
         {
-            m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory4());
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory2()); }
-            if (m_dxgiFactory == null) { m_dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory1()); }
-            if (m_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
+            _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory4());
+            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory2()); }
+            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory1()); }
+            if (_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
         }
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_dxgiFactory);
+            SeeingSharpUtil.SafeDispose(ref _dxgiFactory);
         }
 
-        public bool IsDisposed => m_dxgiFactory == null;
+        public bool IsDisposed => _dxgiFactory == null;
 
         internal DXGI.Factory1 Factory
         {
             get
             {
-                if(m_dxgiFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDXGI)); }
-                return m_dxgiFactory;
+                if(_dxgiFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDXGI)); }
+                return _dxgiFactory;
             }
         }
     }

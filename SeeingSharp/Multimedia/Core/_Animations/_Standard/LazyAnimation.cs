@@ -25,8 +25,8 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class LazyAnimation : IAnimation
     {
-        private IAnimation m_animation;
-        private Func<IAnimation> m_animationCreator;
+        private IAnimation _animation;
+        private Func<IAnimation> _animationCreator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyAnimation"/> class.
@@ -34,8 +34,8 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationCreator">The animation creator.</param>
         public LazyAnimation(Func<IAnimation> animationCreator)
         {
-            m_animationCreator = animationCreator;
-            m_animation = null;
+            _animationCreator = animationCreator;
+            _animation = null;
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="targetObject">The object to check for.</param>
         public bool IsObjectAnimated(object targetObject)
         {
-            if (m_animation == null) { m_animation = m_animationCreator(); }
-            if (m_animation == null) { return false; }
+            if (_animation == null) { _animation = _animationCreator(); }
+            if (_animation == null) { return false; }
 
-            return m_animation.IsObjectAnimated(targetObject);
+            return _animation.IsObjectAnimated(targetObject);
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="animationState">The current state of the animation.</param>
         public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (m_animation == null) { m_animation = m_animationCreator(); }
-            if (m_animation == null) { return AnimationUpdateResult.Empty; }
+            if (_animation == null) { _animation = _animationCreator(); }
+            if (_animation == null) { return AnimationUpdateResult.EMPTY; }
 
-            return m_animation.Update(updateState, animationState);
+            return _animation.Update(updateState, animationState);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Reset()
         {
-            if (m_animation == null) { m_animation = m_animationCreator(); }
+            if (_animation == null) { _animation = _animationCreator(); }
 
-            m_animation?.Reset();
+            _animation?.Reset();
         }
 
         /// <summary>
@@ -82,10 +82,10 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="defaultCycleTime">The default cycle time if we would be in continuous calculation mode.</param>
         public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
-            if (m_animation == null) { m_animation = m_animationCreator(); }
-            if (m_animation == null) { return TimeSpan.Zero; }
+            if (_animation == null) { _animation = _animationCreator(); }
+            if (_animation == null) { return TimeSpan.Zero; }
 
-            return m_animation.GetTimeTillNextEvent(previousMinFinishTime, previousMaxFinishTime, defaultCycleTime);
+            return _animation.GetTimeTillNextEvent(previousMinFinishTime, previousMaxFinishTime, defaultCycleTime);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_animation == null) { m_animation = m_animationCreator(); }
-                if (m_animation == null) { return true; }
-                return m_animation.Finished;
+                if (_animation == null) { _animation = _animationCreator(); }
+                if (_animation == null) { return true; }
+                return _animation.Finished;
             }
         }
 
@@ -108,9 +108,9 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_animation == null) { m_animation = m_animationCreator(); }
-                if (m_animation == null) { return false; }
-                return m_animation.IsBlockingAnimation;
+                if (_animation == null) { _animation = _animationCreator(); }
+                if (_animation == null) { return false; }
+                return _animation.IsBlockingAnimation;
             }
         }
 

@@ -26,12 +26,12 @@ namespace SeeingSharp.Multimedia.Core
     public class ChangeFloatByAnimation : AnimationBase
     {
         //Members for running animation
-        private float m_alreadyIncreased;
+        private float _alreadyIncreased;
 
         //Configuration members
-        private Func<float> m_getValueFunc;
-        private float m_increaseTotal;
-        private Action<float> m_setValueAction;
+        private Func<float> _getValueFunc;
+        private float _increaseTotal;
+        private Action<float> _setValueAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeFloatByAnimation" /> class.
@@ -44,9 +44,9 @@ namespace SeeingSharp.Multimedia.Core
         public ChangeFloatByAnimation(object targetObject, Func<float> getValueFunc, Action<float> setValueAction, float increaseTotal, TimeSpan timeSpan)
             : base(targetObject, AnimationType.FixedTime, timeSpan)
         {
-            m_getValueFunc = getValueFunc;
-            m_setValueAction = setValueAction;
-            m_increaseTotal = increaseTotal;
+            _getValueFunc = getValueFunc;
+            _setValueAction = setValueAction;
+            _increaseTotal = increaseTotal;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_alreadyIncreased = 0f;
+            _alreadyIncreased = 0f;
         }
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             var currentLocationPercent = (float)(this.CurrentTime.TotalMilliseconds / this.FixedTime.TotalMilliseconds);
-            var toIncreaseTotal = m_increaseTotal * currentLocationPercent;
-            var toIncrease = toIncreaseTotal - m_alreadyIncreased;
+            var toIncreaseTotal = _increaseTotal * currentLocationPercent;
+            var toIncrease = toIncreaseTotal - _alreadyIncreased;
 
-            m_setValueAction(m_getValueFunc() + toIncrease);
+            _setValueAction(_getValueFunc() + toIncrease);
 
-            m_alreadyIncreased = toIncreaseTotal;
+            _alreadyIncreased = toIncreaseTotal;
         }
 
         /// <summary>

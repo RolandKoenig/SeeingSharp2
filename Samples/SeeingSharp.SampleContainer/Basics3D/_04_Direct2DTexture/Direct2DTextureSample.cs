@@ -39,9 +39,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
         typeof(Direct2DTextureSampleSettings))]
     public class Direct2DTextureSample : SampleBase
     {
-        private SolidBrushResource m_solidBrush;
-        private SolidBrushResource m_textBrush;
-        private TextFormatResource m_textFormat;
+        private SolidBrushResource _solidBrush;
+        private SolidBrushResource _textBrush;
+        private TextFormatResource _textFormat;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -50,9 +50,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
             var castedSettings = settings as Direct2DTextureSampleSettings ?? new Direct2DTextureSampleSettings();
 
             // 2D rendering is made here
-            m_solidBrush = new SolidBrushResource(Color4.Gray);
-            m_textFormat = new TextFormatResource("Arial", 36);
-            m_textBrush = new SolidBrushResource(Color4.RedColor);
+            _solidBrush = new SolidBrushResource(Color4.Gray);
+            _textFormat = new TextFormatResource("Arial", 36);
+            _textBrush = new SolidBrushResource(Color4.RedColor);
 
             var d2DDrawingLayer = new Custom2DDrawingLayer(graphics =>
             {
@@ -60,12 +60,12 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
                 graphics.Clear(Color4.LightBlue);
                 graphics.FillRoundedRectangle(
                     d2DRectangle, 30, 30,
-                    m_solidBrush);
+                    _solidBrush);
 
                 d2DRectangle.Inflate(-10, -10);
                 graphics.DrawText(
                     castedSettings.DisplayText,
-                    m_textFormat, d2DRectangle, m_textBrush);
+                    _textFormat, d2DRectangle, _textBrush);
             });
 
             // Build 3D scene
@@ -118,9 +118,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
         {
             base.OnClosed();
 
-            SeeingSharpUtil.SafeDispose(ref m_solidBrush);
-            SeeingSharpUtil.SafeDispose(ref m_textBrush);
-            SeeingSharpUtil.SafeDispose(ref m_textFormat);
+            SeeingSharpUtil.SafeDispose(ref _solidBrush);
+            SeeingSharpUtil.SafeDispose(ref _textBrush);
+            SeeingSharpUtil.SafeDispose(ref _textFormat);
         }
 
         //*********************************************************************

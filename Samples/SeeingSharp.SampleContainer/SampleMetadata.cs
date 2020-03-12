@@ -26,36 +26,36 @@ namespace SeeingSharp.SampleContainer
 {
     public class SampleMetadata
     {
-        private SampleDescriptionAttribute m_description;
-        private Type m_sampleType;
+        private SampleDescriptionAttribute _description;
+        private Type _sampleType;
 
         public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
         {
-            m_description = description;
-            m_sampleType = sampleType;
+            _description = description;
+            _sampleType = sampleType;
 
-            this.Name = m_description.SampleName;
-            this.OrderId = m_description.OrderID;
-            this.Group = m_description.SampleGroupName;
-            this.SourceCodeUrl = m_description.SourceCodeUrl;
+            this.Name = _description.SampleName;
+            this.OrderId = _description.OrderID;
+            this.Group = _description.SampleGroupName;
+            this.SourceCodeUrl = _description.SourceCodeUrl;
         }
 
         public SampleBase CreateSampleObject()
         {
-            if (m_sampleType == null)
+            if (_sampleType == null)
             {
                 throw new ApplicationException("No sample type given!");
             }
 
-            var result = Activator.CreateInstance(m_sampleType) as SampleBase;
-            if (result == null) { throw new ApplicationException($"Sample type {m_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
+            var result = Activator.CreateInstance(_sampleType) as SampleBase;
+            if (result == null) { throw new ApplicationException($"Sample type {_sampleType.FullName} is not derived from {nameof(SampleBase)}!"); }
 
             return result;
         }
 
         public SampleSettings CreateSampleSettingsObject()
         {
-            var settingsType = m_description.SettingsType;
+            var settingsType = _description.SettingsType;
 
             if (settingsType == null)
             {
@@ -66,7 +66,7 @@ namespace SeeingSharp.SampleContainer
 
             if (result == null)
             {
-                throw new ApplicationException($"SampleSettings type {m_sampleType.FullName} is not derived from {nameof(SampleSettings)}!");
+                throw new ApplicationException($"SampleSettings type {_sampleType.FullName} is not derived from {nameof(SampleSettings)}!");
             }
 
             return result;
@@ -74,12 +74,12 @@ namespace SeeingSharp.SampleContainer
 
         public AssemblyResourceLink TryGetSampleImageLink()
         {
-            if (m_description == null) { return null; }
-            if (string.IsNullOrWhiteSpace(m_description.SampleImageFileName)) { return null; }
+            if (_description == null) { return null; }
+            if (string.IsNullOrWhiteSpace(_description.SampleImageFileName)) { return null; }
 
             return new AssemblyResourceLink(
-                m_sampleType,
-                m_description.SampleImageFileName);
+                _sampleType,
+                _description.SampleImageFileName);
         }
 
         public string Name

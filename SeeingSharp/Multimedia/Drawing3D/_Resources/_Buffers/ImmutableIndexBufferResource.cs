@@ -29,29 +29,29 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class ImmutableIndexBufferResource : Resource
     {
         // Direct3D resources
-        private D3D11.Buffer m_buffer;
+        private D3D11.Buffer _buffer;
 
         // Configuration
-        private Func<int[]> m_bufferDataFactory;
+        private Func<int[]> _bufferDataFactory;
 
         public ImmutableIndexBufferResource(Func<int[]> bufferDataFactory)
         {
-            m_bufferDataFactory = bufferDataFactory;
+            _bufferDataFactory = bufferDataFactory;
         }
 
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_buffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(
-                device, m_bufferDataFactory());
+            _buffer = GraphicsHelper.Internals.CreateImmutableIndexBuffer(
+                device, _bufferDataFactory());
         }
 
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            SeeingSharpUtil.SafeDispose(ref m_buffer);
+            SeeingSharpUtil.SafeDispose(ref _buffer);
         }
 
-        internal D3D11.Buffer Buffer => m_buffer;
+        internal D3D11.Buffer Buffer => _buffer;
 
-        public override bool IsLoaded => m_buffer != null;
+        public override bool IsLoaded => _buffer != null;
     }
 }

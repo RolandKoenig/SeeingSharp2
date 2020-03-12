@@ -33,18 +33,18 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     internal class Direct2DOverlayRenderer : IDisposable
     {
-        private static readonly NamedOrGenericKey RES_KEY_FALLBACK_TEXTURE = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyFallbackTexture = GraphicsCore.GetNextGenericResourceKey();
 
         // Graphics object
-        private Graphics2D m_graphics2D;
+        private Graphics2D _graphics2D;
 
         // Given resources
-        private EngineDevice m_device;
-        private D3D11.Texture2D m_renderTarget3D;
+        private EngineDevice _device;
+        private D3D11.Texture2D _renderTarget3D;
 
         // Own 2D render target resource
-        private D2D.RenderTarget m_renderTarget2D;
-        private D2D.Bitmap1 m_renderTargetBitmap;
+        private D2D.RenderTarget _renderTarget2D;
+        private D2D.Bitmap1 _renderTargetBitmap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
@@ -60,8 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {
-            m_device = device;
-            m_renderTarget3D = renderTarget3D;
+            _device = device;
+            _renderTarget3D = renderTarget3D;
 
             this.CreateResources(viewWidth, viewHeight, dpiScaling, forceInit);
         }
@@ -71,14 +71,14 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void BeginDraw()
         {
-            if (m_renderTarget2D == null) { return; }
-            if (m_renderTarget2D.IsDisposed) { return; }
+            if (_renderTarget2D == null) { return; }
+            if (_renderTarget2D.IsDisposed) { return; }
 
-            m_device.DeviceContextD2D.Target = m_renderTargetBitmap;
-            m_device.DeviceContextD2D.DotsPerInch = m_renderTargetBitmap.DotsPerInch;
+            _device.DeviceContextD2D.Target = _renderTargetBitmap;
+            _device.DeviceContextD2D.DotsPerInch = _renderTargetBitmap.DotsPerInch;
 
             // Start Direct2D rendering
-            m_renderTarget2D.BeginDraw();
+            _renderTarget2D.BeginDraw();
         }
 
         /// <summary>
@@ -86,17 +86,17 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void EndDraw()
         {
-            if (m_renderTarget2D == null) { return; }
-            if (m_renderTarget2D.IsDisposed) { return; }
+            if (_renderTarget2D == null) { return; }
+            if (_renderTarget2D.IsDisposed) { return; }
 
             try
             {
-                m_renderTarget2D.EndDraw();
+                _renderTarget2D.EndDraw();
             }
             finally
             {
                 // Finish Direct2D drawing
-                m_device.DeviceContextD2D.Target = null;
+                _device.DeviceContextD2D.Target = null;
             }
         }
 
@@ -106,14 +106,14 @@ namespace SeeingSharp.Multimedia.Core
         public void Dispose()
         {
             // Dispose all created objects
-            if (m_renderTarget2D != null)
+            if (_renderTarget2D != null)
             {
-                SeeingSharpUtil.SafeDispose(ref m_renderTargetBitmap);
-                m_renderTarget2D = null;
+                SeeingSharpUtil.SafeDispose(ref _renderTargetBitmap);
+                _renderTarget2D = null;
             }
             else
             {
-                SeeingSharpUtil.SafeDispose(ref m_renderTarget2D);
+                SeeingSharpUtil.SafeDispose(ref _renderTarget2D);
             }
         }
 
@@ -129,13 +129,13 @@ namespace SeeingSharp.Multimedia.Core
 
             // Cancel here if the device does not support 2D rendering
             if (!forceInit &&
-               !m_device.Supports2D)
+               !_device.Supports2D)
             {
                 return;
             }
 
             // Create the render target
-            using (var dxgiSurface = m_renderTarget3D.QueryInterface<Surface>())
+            using (var dxgiSurface = _renderTarget3D.QueryInterface<Surface>())
             {
                 var bitmapProperties = new D2D.BitmapProperties1
                 {
@@ -146,27 +146,27 @@ namespace SeeingSharp.Multimedia.Core
                         D2D.AlphaMode.Premultiplied)
                 };
 
-                m_renderTargetBitmap = new D2D.Bitmap1(m_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
-                m_renderTarget2D = m_device.DeviceContextD2D;
-                m_graphics2D = new Graphics2D(m_device, m_device.DeviceContextD2D, scaledScreenSize);
+                _renderTargetBitmap = new D2D.Bitmap1(_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
+                _renderTarget2D = _device.DeviceContextD2D;
+                _graphics2D = new Graphics2D(_device, _device.DeviceContextD2D, scaledScreenSize);
             }
         }
 
         /// <summary>
         /// Is this resource loaded correctly?
         /// </summary>
-        public bool IsLoaded => m_renderTarget2D != null;
+        public bool IsLoaded => _renderTarget2D != null;
 
-        internal bool IsRenderTargetDisposed => m_renderTarget2D?.IsDisposed == true;
+        internal bool IsRenderTargetDisposed => _renderTarget2D?.IsDisposed == true;
 
         /// <summary>
         /// Gets the Direct2D render target.
         /// </summary>
-        internal D2D.RenderTarget RenderTarget2D => m_renderTarget2D;
+        internal D2D.RenderTarget RenderTarget2D => _renderTarget2D;
 
         /// <summary>
         /// Gets the 2D graphics object.
         /// </summary>
-        internal Graphics2D Graphics => m_graphics2D;
+        internal Graphics2D Graphics => _graphics2D;
     }
 }

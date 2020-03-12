@@ -28,8 +28,8 @@ namespace SeeingSharp.WpfSamples
 {
     public class SampleViewModel : PropertyChangedBase
     {
-        private BitmapSource m_bitmapSource;
-        private Task m_bitmapSourceTask;
+        private BitmapSource _bitmapSource;
+        private Task _bitmapSourceTask;
 
         public SampleViewModel(SampleMetadata sample)
         {
@@ -46,7 +46,7 @@ namespace SeeingSharp.WpfSamples
         {
             get
             {
-                if (m_bitmapSource == null && m_bitmapSourceTask == null)
+                if (_bitmapSource == null && _bitmapSourceTask == null)
                 {
                     var sourceLink = this.SampleMetadata.TryGetSampleImageLink();
 
@@ -55,7 +55,7 @@ namespace SeeingSharp.WpfSamples
                         return null;
                     }
 
-                    m_bitmapSourceTask = Task.Run(() =>
+                    _bitmapSourceTask = Task.Run(() =>
                     {
                         var source = new BitmapImage();
                         source.BeginInit();
@@ -63,13 +63,13 @@ namespace SeeingSharp.WpfSamples
                         source.EndInit();
                         source.Freeze();
 
-                        m_bitmapSource = source;
+                        _bitmapSource = source;
                     }).ContinueWith(
                         task => this.RaisePropertyChanged(nameof(this.BitmapSource)),
                         TaskScheduler.FromCurrentSynchronizationContext());
                 }
 
-                return m_bitmapSource;
+                return _bitmapSource;
             }
         }
     }

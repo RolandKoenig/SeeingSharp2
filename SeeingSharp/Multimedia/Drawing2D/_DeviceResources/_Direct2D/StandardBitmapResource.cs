@@ -36,22 +36,22 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class StandardBitmapResource : BitmapResource
     {
         // Resources
-        private D2D.Bitmap[] m_loadedBitmaps;
+        private D2D.Bitmap[] _loadedBitmaps;
 
         // Configuration
-        private ResourceLink m_resourceLink;
-        private int m_framesX;
-        private int m_framesY;
-        private int m_totalFrameCount;
+        private ResourceLink _resourceLink;
+        private int _framesX;
+        private int _framesY;
+        private int _totalFrameCount;
 
         // RuntimeValues
-        private bool m_firstLoadDone;
-        private int m_framePixelWidth;
-        private int m_framePixelHeight;
-        private int m_pixelWidth;
-        private int m_pixelHeight;
-        private double m_dpiX;
-        private double m_dpyY;
+        private bool _firstLoadDone;
+        private int _framePixelWidth;
+        private int _framePixelHeight;
+        private int _pixelWidth;
+        private int _pixelHeight;
+        private double _dpiX;
+        private double _dpyY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
@@ -64,23 +64,23 @@ namespace SeeingSharp.Multimedia.Drawing2D
             frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
             frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
 
-            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
-            m_resourceLink = resource;
+            _loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            _resourceLink = resource;
 
             // Set default values (modified after first load)
-            m_firstLoadDone = false;
-            m_pixelWidth = 0;
-            m_pixelHeight = 0;
-            m_dpiX = 96.0;
-            m_dpyY = 96.0;
-            m_framesX = frameCountX;
-            m_framesY = frameCountY;
-            m_totalFrameCount = m_framesX * m_framesY;
+            _firstLoadDone = false;
+            _pixelWidth = 0;
+            _pixelHeight = 0;
+            _dpiX = 96.0;
+            _dpyY = 96.0;
+            _framesX = frameCountX;
+            _framesY = frameCountY;
+            _totalFrameCount = _framesX * _framesY;
         }
 
         public override string ToString()
         {
-            return $"Bitmap ({m_pixelWidth}x{m_pixelHeight} pixels)";
+            return $"Bitmap ({_pixelWidth}x{_pixelHeight} pixels)";
         }
 
         /// <summary>
@@ -99,31 +99,31 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             if (this.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
 
-            var result = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var result = _loadedBitmaps[engineDevice.DeviceIndex];
             if (result == null)
             {
-                using (var inputStream = m_resourceLink.OpenInputStream())
+                using (var inputStream = _resourceLink.OpenInputStream())
                 using (var bitmapSourceWrapper = GraphicsHelper.Internals.LoadBitmapSource_D2D(inputStream))
                 {
                     BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
                     // Store common properties about the bitmap
-                    if (!m_firstLoadDone)
+                    if (!_firstLoadDone)
                     {
-                        m_firstLoadDone = true;
-                        m_pixelWidth = bitmapSource.Size.Width;
-                        m_pixelHeight = bitmapSource.Size.Height;
-                        if (m_totalFrameCount > 1)
+                        _firstLoadDone = true;
+                        _pixelWidth = bitmapSource.Size.Width;
+                        _pixelHeight = bitmapSource.Size.Height;
+                        if (_totalFrameCount > 1)
                         {
-                            m_framePixelWidth = m_pixelWidth / m_framesX;
-                            m_framePixelHeight = m_pixelHeight / m_framesY;
+                            _framePixelWidth = _pixelWidth / _framesX;
+                            _framePixelHeight = _pixelHeight / _framesY;
                         }
                         else
                         {
-                            m_framePixelWidth = m_pixelWidth;
-                            m_framePixelHeight = m_pixelHeight;
+                            _framePixelWidth = _pixelWidth;
+                            _framePixelHeight = _pixelHeight;
                         }
-                        bitmapSource.GetResolution(out m_dpiX, out m_dpyY);
+                        bitmapSource.GetResolution(out _dpiX, out _dpyY);
                     }
 
                     // Load the bitmap into Direct2D
@@ -134,7 +134,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                             D2D.AlphaMode.Premultiplied)));
 
                     // Register loaded bitmap
-                    m_loadedBitmaps[engineDevice.DeviceIndex] = result;
+                    _loadedBitmaps[engineDevice.DeviceIndex] = result;
                     engineDevice.RegisterDeviceResource(this);
                 }
             }
@@ -148,39 +148,39 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var brush = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var brush = _loadedBitmaps[engineDevice.DeviceIndex];
 
             if (brush != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
 
                 SeeingSharpUtil.DisposeObject(brush);
-                m_loadedBitmaps[engineDevice.DeviceIndex] = null;
+                _loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }
 
         /// <summary>
         /// Gets the width of the bitmap in pixel´.
         /// </summary>
-        public override int PixelWidth => m_pixelWidth;
+        public override int PixelWidth => _pixelWidth;
 
         /// <summary>
         /// Gets the height of the bitmap in pixel.
         /// </summary>
-        public override int PixelHeight => m_pixelHeight;
+        public override int PixelHeight => _pixelHeight;
 
-        public override double DpiX => m_dpiX;
+        public override double DpiX => _dpiX;
 
-        public override double DpiY => m_dpyY;
+        public override double DpiY => _dpyY;
 
-        public override int FrameCountX => m_framesX;
+        public override int FrameCountX => _framesX;
 
-        public override int FrameCountY => m_framesY;
+        public override int FrameCountY => _framesY;
 
-        public override int TotalFrameCount => m_totalFrameCount;
+        public override int TotalFrameCount => _totalFrameCount;
 
-        public override int SingleFramePixelWidth => m_framePixelWidth;
+        public override int SingleFramePixelWidth => _framePixelWidth;
 
-        public override int SingleFramePixelHeight => m_framePixelHeight;
+        public override int SingleFramePixelHeight => _framePixelHeight;
     }
 }

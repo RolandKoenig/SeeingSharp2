@@ -31,25 +31,25 @@ namespace SeeingSharp.Multimedia.Input
     internal class WpfKeyAndMouseInputHandler : IInputHandler
     {
         // Target objects
-        private SeeingSharpRendererElement m_rendererElement;
+        private SeeingSharpRendererElement _rendererElement;
 
         // Helper
-        private bool m_lastDragPointValid;
-        private System.Windows.Point m_lastDragPoint;
+        private bool _lastDragPointValid;
+        private System.Windows.Point _lastDragPoint;
 
         // Input states
-        private MouseOrPointerState m_stateMouseOrPointer;
-        private KeyboardState m_stateKeyboard;
+        private MouseOrPointerState _stateMouseOrPointer;
+        private KeyboardState _stateKeyboard;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfKeyAndMouseInputHandler"/> class.
         /// </summary>
         public WpfKeyAndMouseInputHandler()
         {
-            m_stateMouseOrPointer = new MouseOrPointerState();
-            m_stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
+            _stateMouseOrPointer = new MouseOrPointerState();
+            _stateMouseOrPointer.Internals.Type = MouseOrPointerType.Mouse;
 
-            m_stateKeyboard = new KeyboardState();
+            _stateKeyboard = new KeyboardState();
         }
 
         /// <summary>
@@ -69,23 +69,23 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
         public void Start(IInputEnabledView viewObject)
         {
-            m_rendererElement = viewObject as SeeingSharpRendererElement;
-            if (m_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
+            _rendererElement = viewObject as SeeingSharpRendererElement;
+            if (_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
             // Register all events needed for mouse camera dragging
-            m_rendererElement.Dispatcher?.BeginInvoke(new Action(() =>
+            _rendererElement.Dispatcher?.BeginInvoke(new Action(() =>
             {
-                m_rendererElement.MouseWheel += this.OnRendererElement_MouseWheel;
-                m_rendererElement.MouseDown += this.OnRendererElement_MouseDown;
-                m_rendererElement.MouseUp += this.OnRendererElement_MouseUp;
-                m_rendererElement.MouseMove += this.OnRendererElement_MouseMove;
-                m_rendererElement.MouseLeave += this.OnRendererElement_MouseLeave;
-                m_rendererElement.GotFocus += this.OnRenderElement_GotFocus;
-                m_rendererElement.LostFocus += this.OnRendererElement_LostFocus;
-                m_rendererElement.LostKeyboardFocus += this.OnRendererElement_LostKeyboardFocus;
-                m_rendererElement.PreviewMouseUp += this.OnRendererElement_PreviewMouseUp;
-                m_rendererElement.KeyUp += this.OnRendererElement_KeyUp;
-                m_rendererElement.KeyDown += this.OnRendererElement_KeyDown;
+                _rendererElement.MouseWheel += this.OnRendererElement_MouseWheel;
+                _rendererElement.MouseDown += this.OnRendererElement_MouseDown;
+                _rendererElement.MouseUp += this.OnRendererElement_MouseUp;
+                _rendererElement.MouseMove += this.OnRendererElement_MouseMove;
+                _rendererElement.MouseLeave += this.OnRendererElement_MouseLeave;
+                _rendererElement.GotFocus += this.OnRenderElement_GotFocus;
+                _rendererElement.LostFocus += this.OnRendererElement_LostFocus;
+                _rendererElement.LostKeyboardFocus += this.OnRendererElement_LostKeyboardFocus;
+                _rendererElement.PreviewMouseUp += this.OnRendererElement_PreviewMouseUp;
+                _rendererElement.KeyUp += this.OnRendererElement_KeyUp;
+                _rendererElement.KeyDown += this.OnRendererElement_KeyDown;
             }));
         }
 
@@ -95,7 +95,7 @@ namespace SeeingSharp.Multimedia.Input
         public void Stop()
         {
             // Deregister all events
-            var rendererElement = m_rendererElement;
+            var rendererElement = _rendererElement;
             rendererElement?.Dispatcher?.BeginInvoke(new Action(() =>
             {
                 rendererElement.MouseWheel -= this.OnRendererElement_MouseWheel;
@@ -109,10 +109,10 @@ namespace SeeingSharp.Multimedia.Input
                 rendererElement.PreviewMouseUp -= this.OnRendererElement_PreviewMouseUp;
             }));
 
-            m_rendererElement = null;
+            _rendererElement = null;
 
-            m_stateKeyboard = new KeyboardState();
-            m_stateMouseOrPointer = new MouseOrPointerState();
+            _stateKeyboard = new KeyboardState();
+            _stateMouseOrPointer = new MouseOrPointerState();
         }
 
         /// <summary>
@@ -120,22 +120,22 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         public void GetInputStates(List<InputStateBase> target)
         {
-            target.Add(m_stateMouseOrPointer);
-            target.Add(m_stateKeyboard);
+            target.Add(_stateMouseOrPointer);
+            target.Add(_stateKeyboard);
         }
 
         private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
+            _stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
         }
 
         private void OnRendererElement_KeyUp(object sender, KeyEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyKeyUp((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
+            _stateKeyboard.Internals.NotifyKeyUp((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
         }
 
         /// <summary>
@@ -145,149 +145,149 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="e"></param>
         private void OnRendererElement_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateMouseOrPointer.Internals.NotifyMouseWheel(e.Delta);
+            _stateMouseOrPointer.Internals.NotifyMouseWheel(e.Delta);
         }
 
         private void OnRenderElement_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyFocusGot();
+            _stateKeyboard.Internals.NotifyFocusGot();
         }
 
         private void OnRendererElement_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyFocusLost();
+            _stateKeyboard.Internals.NotifyFocusLost();
         }
 
         private void OnRendererElement_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateKeyboard.Internals.NotifyFocusLost();
+            _stateKeyboard.Internals.NotifyFocusLost();
         }
 
         private void OnRendererElement_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_rendererElement.Focus();
+            _rendererElement.Focus();
 
             switch (e.ChangedButton)
             {
                 case System.Windows.Input.MouseButton.Left:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Left);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Left);
                     break;
 
                 case System.Windows.Input.MouseButton.Middle:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Middle);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Middle);
                     break;
 
                 case System.Windows.Input.MouseButton.Right:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Right);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Right);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton1:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended1);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended1);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton2:
-                    m_stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended2);
+                    _stateMouseOrPointer.Internals.NotifyButtonDown(MouseButton.Extended2);
                     break;
             }
         }
 
         private void OnRendererElement_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
-            m_stateMouseOrPointer.Internals.NotifyInside(false);
+            _stateMouseOrPointer.Internals.NotifyInside(false);
 
-            m_lastDragPointValid = false;
-            m_lastDragPoint = new System.Windows.Point();
+            _lastDragPointValid = false;
+            _lastDragPoint = new System.Windows.Point();
         }
 
         private void OnRendererElement_MouseMove(object sender, MouseEventArgs e)
         {
-            if (m_rendererElement == null)
+            if (_rendererElement == null)
             {
                 return;
             }
 
-            m_stateMouseOrPointer.Internals.NotifyInside(true);
+            _stateMouseOrPointer.Internals.NotifyInside(true);
 
-            var currentPosition = e.GetPosition(m_rendererElement);
+            var currentPosition = e.GetPosition(_rendererElement);
 
-            if (m_lastDragPointValid)
+            if (_lastDragPointValid)
             {
-                var moveDistance = currentPosition - m_lastDragPoint;
-                var renderSize = m_rendererElement.RenderSize;
-                m_stateMouseOrPointer.Internals.NotifyMouseLocation(
+                var moveDistance = currentPosition - _lastDragPoint;
+                var renderSize = _rendererElement.RenderSize;
+                _stateMouseOrPointer.Internals.NotifyMouseLocation(
                     new Vector2((float)currentPosition.X, (float)currentPosition.Y),
                     new Vector2((float)moveDistance.X, (float)moveDistance.Y),
                     new Vector2((float)renderSize.Width, (float)renderSize.Height));
             }
 
-            m_lastDragPointValid = true;
-            m_lastDragPoint = currentPosition;
+            _lastDragPointValid = true;
+            _lastDragPoint = currentPosition;
         }
 
         private void OnRendererElement_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
             switch (e.ChangedButton)
             {
                 case System.Windows.Input.MouseButton.Left:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
                     break;
 
                 case System.Windows.Input.MouseButton.Middle:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
                     break;
 
                 case System.Windows.Input.MouseButton.Right:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton1:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton2:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
                     break;
             }
         }
 
         private void OnRendererElement_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (m_rendererElement == null) { return; }
+            if (_rendererElement == null) { return; }
 
             switch (e.ChangedButton)
             {
                 case System.Windows.Input.MouseButton.Left:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Left);
                     break;
 
                 case System.Windows.Input.MouseButton.Middle:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Middle);
                     break;
 
                 case System.Windows.Input.MouseButton.Right:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Right);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton1:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended1);
                     break;
 
                 case System.Windows.Input.MouseButton.XButton2:
-                    m_stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
+                    _stateMouseOrPointer.Internals.NotifyButtonUp(MouseButton.Extended2);
                     break;
             }
         }

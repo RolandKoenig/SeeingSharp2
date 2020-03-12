@@ -27,18 +27,18 @@ namespace SeeingSharp.WpfSamples
 {
     public class PerformanceOverviewViewModel : PropertyChangedBase
     {
-        private PerformanceAnalyzer m_performanceAnalyzer;
+        private PerformanceAnalyzer _performanceAnalyzer;
 
         public PerformanceOverviewViewModel(PerformanceAnalyzer performanceAnalyzer)
         {
-            m_performanceAnalyzer = performanceAnalyzer;
+            _performanceAnalyzer = performanceAnalyzer;
             this.DurationResults = new List<DurationPerformanceResult>();
         }
 
         public void TriggerRefresh()
         {
             this.DurationResults.Clear();
-            foreach (var actResult in m_performanceAnalyzer.GetCurrentResults())
+            foreach (var actResult in _performanceAnalyzer.GetCurrentResults())
             {
                 this.DurationResults.Add(actResult);
             }

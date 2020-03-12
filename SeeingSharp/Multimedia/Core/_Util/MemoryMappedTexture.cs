@@ -29,9 +29,9 @@ namespace SeeingSharp.Multimedia.Core
         where T : unmanaged
     {
         // The native structure, where we store all texture data
-        private IntPtr m_pointer;
-        private T* m_pointerNative;
-        private Size2 m_size;
+        private IntPtr _pointer;
+        private T* _pointerNative;
+        private Size2 _size;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryMappedTexture{T}"/> class.
@@ -39,9 +39,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="size">The total size of the texture.</param>
         public MemoryMappedTexture(Size2 size)
         {
-            m_pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
-            m_pointerNative = (T*)m_pointer.ToPointer();
-            m_size = size;
+            _pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
+            _pointerNative = (T*)_pointer.ToPointer();
+            _size = size;
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public void Dispose()
         {
-            Marshal.FreeHGlobal(m_pointer);
-            m_pointer = IntPtr.Zero;
-            m_pointerNative = (T*)0;
-            m_size = new Size2(0, 0);
+            Marshal.FreeHGlobal(_pointer);
+            _pointer = IntPtr.Zero;
+            _pointerNative = (T*)0;
+            _size = new Size2(0, 0);
         }
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public T* GetNativePointer()
         {
-            if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-            return m_pointerNative;
+            if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+            return _pointerNative;
         }
 
         /// <summary>
@@ -74,12 +74,12 @@ namespace SeeingSharp.Multimedia.Core
             get
             {
                 if (xPos < 0) { throw new ArgumentException("xPos"); }
-                if (xPos >= m_size.Width) { throw new ArgumentException("xPos"); }
+                if (xPos >= _size.Width) { throw new ArgumentException("xPos"); }
                 if (yPos < 0) { throw new ArgumentException("yPos"); }
-                if (yPos >= m_size.Height) { throw new ArgumentException("yPos"); }
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                if (yPos >= _size.Height) { throw new ArgumentException("yPos"); }
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
 
-                return m_pointerNative[yPos * m_size.Width + xPos];
+                return _pointerNative[yPos * _size.Width + xPos];
             }
         }
 
@@ -90,8 +90,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-                return (uint) (m_size.Width * m_size.Height * sizeof(T));
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                return (uint) (_size.Width * _size.Height * sizeof(T));
             }
         }
 
@@ -102,8 +102,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-                return m_size;
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                return _size;
             }
         }
 
@@ -114,8 +114,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-                return m_size.Width;
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                return _size.Width;
             }
         }
 
@@ -126,8 +126,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-                return m_size.Height;
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                return _size.Height;
             }
         }
 
@@ -138,12 +138,12 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if (m_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-                return m_pointer;
+                if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+                return _pointer;
             }
         }
 
         /// <inheritdoc />
-        public bool IsDisposed => m_pointer == IntPtr.Zero;
+        public bool IsDisposed => _pointer == IntPtr.Zero;
     }
 }

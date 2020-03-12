@@ -31,19 +31,19 @@ namespace SeeingSharp.ModelViewer.Util
         private const string CATEGORY_RENDERING = "Rendering";
         private const string CATEGORY_LIGHTING = "Lighting";
 
-        private readonly RenderLoop m_renderLoop;
+        private readonly RenderLoop _renderLoop;
 
         public RenderingOptions(RenderLoop renderLoop)
         {
-            m_renderLoop = renderLoop;
+            _renderLoop = renderLoop;
 
             this.Reset = new DelegateCommand(() =>
             {
-                m_renderLoop.Configuration.Reset();
+                _renderLoop.Configuration.Reset();
 
-                if (!(m_renderLoop.Camera is PerspectiveCamera3D))
+                if (!(_renderLoop.Camera is PerspectiveCamera3D))
                 {
-                    m_renderLoop.Camera = new PerspectiveCamera3D();
+                    _renderLoop.Camera = new PerspectiveCamera3D();
                 }
 
                 this.RaisePropertyChanged(string.Empty);
@@ -56,17 +56,17 @@ namespace SeeingSharp.ModelViewer.Util
         [Category(CATEGORY_RENDERING)]
         public CameraMode CameraMode
         {
-            get => m_renderLoop.Camera is PerspectiveCamera3D ? CameraMode.Perspective : CameraMode.Orthographic;
+            get => _renderLoop.Camera is PerspectiveCamera3D ? CameraMode.Perspective : CameraMode.Orthographic;
             set
             {
                 switch (value)
                 {
                     case CameraMode.Perspective: 
-                        m_renderLoop.Camera = new PerspectiveCamera3D();
+                        _renderLoop.Camera = new PerspectiveCamera3D();
                         break;
                     
                     case CameraMode.Orthographic:
-                        m_renderLoop.Camera = new OrthographicCamera3D();
+                        _renderLoop.Camera = new OrthographicCamera3D();
                         break;
                 }
             }
@@ -75,10 +75,10 @@ namespace SeeingSharp.ModelViewer.Util
         [Category(CATEGORY_RENDERING)]
         public bool Antialiasing
         {
-            get => m_renderLoop.Configuration.AntialiasingEnabled;
+            get => _renderLoop.Configuration.AntialiasingEnabled;
             set
             {
-                m_renderLoop.Configuration.AntialiasingEnabled = value;
+                _renderLoop.Configuration.AntialiasingEnabled = value;
                 this.RaisePropertyChanged(nameof(this.Antialiasing));
             } 
         }
@@ -86,12 +86,12 @@ namespace SeeingSharp.ModelViewer.Util
         [Category(CATEGORY_RENDERING)]
         public AntialiasingQualityLevel AntialiasingQuality
         {
-            get => m_renderLoop.Configuration.AntialiasingQuality;
+            get => _renderLoop.Configuration.AntialiasingQuality;
             set
             {
-                if (value != m_renderLoop.Configuration.AntialiasingQuality)
+                if (value != _renderLoop.Configuration.AntialiasingQuality)
                 {
-                    m_renderLoop.Configuration.AntialiasingQuality = value;
+                    _renderLoop.Configuration.AntialiasingQuality = value;
                     this.RaisePropertyChanged(nameof(this.AntialiasingQuality));
                 }
             }
@@ -102,10 +102,10 @@ namespace SeeingSharp.ModelViewer.Util
         [FormatString("N2")]
         public float AmbientFactor
         {
-            get => m_renderLoop.Configuration.AmbientFactor;
+            get => _renderLoop.Configuration.AmbientFactor;
             set
             {
-                m_renderLoop.Configuration.AmbientFactor = value;
+                _renderLoop.Configuration.AmbientFactor = value;
                 this.RaisePropertyChanged(nameof(this.AmbientFactor));
             }
         }
@@ -115,10 +115,10 @@ namespace SeeingSharp.ModelViewer.Util
         [FormatString("N2")]
         public float LightPower
         {
-            get => m_renderLoop.Configuration.LightPower;
+            get => _renderLoop.Configuration.LightPower;
             set
             {
-                m_renderLoop.Configuration.LightPower = value;
+                _renderLoop.Configuration.LightPower = value;
                 this.RaisePropertyChanged(nameof(this.LightPower));
             }
         }
@@ -128,10 +128,10 @@ namespace SeeingSharp.ModelViewer.Util
         [FormatString("N2")]
         public float StrongLightFactor
         {
-            get => m_renderLoop.Configuration.StrongLightFactor;
+            get => _renderLoop.Configuration.StrongLightFactor;
             set
             {
-                m_renderLoop.Configuration.StrongLightFactor = value;
+                _renderLoop.Configuration.StrongLightFactor = value;
                 this.RaisePropertyChanged(nameof(this.StrongLightFactor));
             }
         }

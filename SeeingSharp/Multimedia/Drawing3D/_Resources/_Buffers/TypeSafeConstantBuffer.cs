@@ -28,8 +28,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         where T : struct
     {
         // Configuration
-        private T m_initialData;
-        private int m_structureSize;
+        private T _initialData;
+        private int _structureSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
@@ -37,8 +37,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public TypeSafeConstantBufferResource()
             : base(SharpDX.Utilities.SizeOf<T>())
         {
-            m_initialData = new T();
-            m_structureSize = SharpDX.Utilities.SizeOf<T>();
+            _initialData = new T();
+            _structureSize = SharpDX.Utilities.SizeOf<T>();
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public TypeSafeConstantBufferResource(T initialData)
             : base(SharpDX.Utilities.SizeOf<T>())
         {
-            m_initialData = initialData;
-            m_structureSize = SharpDX.Utilities.SizeOf<T>();
+            _initialData = initialData;
+            _structureSize = SharpDX.Utilities.SizeOf<T>();
         }
 
         /// <summary>
@@ -58,14 +58,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             using (var dataStream = new SharpDX.DataStream(SharpDX.Utilities.SizeOf<T>(), true, true))
             {
-                dataStream.Write(m_initialData);
+                dataStream.Write(_initialData);
                 dataStream.Position = 0;
 
                 return new D3D11.Buffer(
                     device.DeviceD3D11_1,
                     dataStream,
                     new D3D11.BufferDescription(
-                        m_structureSize,
+                        _structureSize,
                         D3D11.ResourceUsage.Dynamic,
                         D3D11.BindFlags.ConstantBuffer,
                         D3D11.CpuAccessFlags.Write,

@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ExtrudeGeometryFactory : GeometryFactory
     {
-        private List<D2D.Triangle[]> m_generatedTriangles;
+        private List<D2D.Triangle[]> _generatedTriangles;
 
         /// <summary>
         /// Create a new <see cref="ExtruderTessellationSink"/>
         /// </summary>
         public ExtrudeGeometryFactory()
         {
-            m_generatedTriangles = new List<D2D.Triangle[]>();
+            _generatedTriangles = new List<D2D.Triangle[]>();
 
             this.Internals = new ExtrudeGeometryFactoryInternals(this);
         }
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Ensure that triangle list is created
-            if (m_generatedTriangles == null) { m_generatedTriangles = new List<D2D.Triangle[]>(); }
+            if (_generatedTriangles == null) { _generatedTriangles = new List<D2D.Triangle[]>(); }
 
             // Define methods for calculating bounds
             var minX = float.MaxValue;
@@ -151,14 +151,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Apply values
             this.TriangleCount = triangleCount;
             this.Bounds = bounds;
-            m_generatedTriangles = generatedTriangles;
+            _generatedTriangles = generatedTriangles;
         }
 
         /// <inheritdoc />
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             // Handle empty case
-            if (m_generatedTriangles.Count == 0)
+            if (_generatedTriangles.Count == 0)
             {
                 return new Geometry(0);
             }
@@ -166,7 +166,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var result = new Geometry(this.TriangleCount * 3);
             var surface = result.CreateSurface(this.TriangleCount);
 
-            var generatedTriangles = m_generatedTriangles;
+            var generatedTriangles = _generatedTriangles;
             foreach (var actTriangleArray in generatedTriangles)
             {
                 foreach (var actTriangle in actTriangleArray)
@@ -198,11 +198,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //*********************************************************************
         public class ExtrudeGeometryFactoryInternals
         {
-            private ExtrudeGeometryFactory m_owner;
+            private ExtrudeGeometryFactory _owner;
 
             internal ExtrudeGeometryFactoryInternals(ExtrudeGeometryFactory owner)
             {
-                m_owner = owner;
+                _owner = owner;
             }
 
             /// <summary>
@@ -215,7 +215,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 D2D.Geometry geometry, float flatteningTolerance,
                 ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
             {
-                m_owner.SetGeometry(geometry, flatteningTolerance, extrudeOptions);
+                _owner.SetGeometry(geometry, flatteningTolerance, extrudeOptions);
             }
         }
 

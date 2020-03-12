@@ -27,9 +27,9 @@ namespace SeeingSharp.Multimedia.Core
     public class RotateQuaternionToAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectQuaternion m_targetObject;
-        private Quaternion m_startQuaternion;
-        private Quaternion m_targetQuaternion;
+        private IAnimatableObjectQuaternion _targetObject;
+        private Quaternion _startQuaternion;
+        private Quaternion _targetQuaternion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RotateQuaternionToAnimation" /> class.
@@ -40,8 +40,8 @@ namespace SeeingSharp.Multimedia.Core
         public RotateQuaternionToAnimation(IAnimatableObjectQuaternion targetObject, Quaternion targetQuaternion, TimeSpan timeSpan)
             : base(targetObject, AnimationType.FixedTime, timeSpan)
         {
-            m_targetObject = targetObject;
-            m_targetQuaternion = targetQuaternion;
+            _targetObject = targetObject;
+            _targetQuaternion = targetQuaternion;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startQuaternion = m_targetObject.RotationQuaternion;
+            _startQuaternion = _targetObject.RotationQuaternion;
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace SeeingSharp.Multimedia.Core
             //how does Slerp work: --> http://en.wikipedia.org/wiki/Slerp
             var changeFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
 
-            var slerpQuaternion = Quaternion.Slerp(m_startQuaternion, m_targetQuaternion, changeFactor);
-            m_targetObject.RotationQuaternion = slerpQuaternion;
+            var slerpQuaternion = Quaternion.Slerp(_startQuaternion, _targetQuaternion, changeFactor);
+            _targetObject.RotationQuaternion = slerpQuaternion;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.RotationQuaternion = m_targetQuaternion;
+            _targetObject.RotationQuaternion = _targetQuaternion;
         }
     }
 }

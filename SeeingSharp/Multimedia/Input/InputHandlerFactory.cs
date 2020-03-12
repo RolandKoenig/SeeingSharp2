@@ -30,14 +30,14 @@ namespace SeeingSharp.Multimedia.Input
 {
     public class InputHandlerFactory
     {
-        private List<IInputHandler> m_inputHandlers;
+        private List<IInputHandler> _inputHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputHandlerFactory"/> class.
         /// </summary>
         internal InputHandlerFactory(SeeingSharpLoader loader)
         {
-            m_inputHandlers = new List<IInputHandler>(4);
+            _inputHandlers = new List<IInputHandler>(4);
             foreach (var actExtension in loader.Extensions)
             {
                 var actInputHandlers = actExtension.CreateInputHandlers();
@@ -45,7 +45,7 @@ namespace SeeingSharp.Multimedia.Input
 
                 foreach (var actInputHandler in actInputHandlers)
                 {
-                    m_inputHandlers.Add(actInputHandler);
+                    _inputHandlers.Add(actInputHandler);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Input
         {
             var result = new List<IInputHandler>();
 
-            foreach (var actInputHandler in m_inputHandlers)
+            foreach (var actInputHandler in _inputHandlers)
             {
                 // Query for the input handler's information
                 var actSupportedViewTypes = actInputHandler.GetSupportedViewTypes();
@@ -174,6 +174,6 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Gets the total count of loaded input handlers
         /// </summary>
-        public int Count => m_inputHandlers.Count;
+        public int Count => _inputHandlers.Count;
     }
 }

@@ -31,7 +31,7 @@ namespace SeeingSharp.WpfSamples
     /// </summary>
     public partial class PerformanceOverviewDialog : Window
     {
-        private DispatcherTimer m_refreshTimer;
+        private DispatcherTimer _refreshTimer;
 
         public PerformanceOverviewDialog()
         {
@@ -56,20 +56,20 @@ namespace SeeingSharp.WpfSamples
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (m_refreshTimer != null) { return; }
+            if (_refreshTimer != null) { return; }
 
-            m_refreshTimer = new DispatcherTimer();
-            m_refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
-            m_refreshTimer.Tick += this.OnRefreshRefreshTimer_Tick;
-            m_refreshTimer.Start();
+            _refreshTimer = new DispatcherTimer();
+            _refreshTimer.Interval = TimeSpan.FromMilliseconds(500.0);
+            _refreshTimer.Tick += this.OnRefreshRefreshTimer_Tick;
+            _refreshTimer.Start();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if(m_refreshTimer == null){ return; }
+            if(_refreshTimer == null){ return; }
 
-            m_refreshTimer.Stop();
-            m_refreshTimer = null;
+            _refreshTimer.Stop();
+            _refreshTimer = null;
         }
     }
 }

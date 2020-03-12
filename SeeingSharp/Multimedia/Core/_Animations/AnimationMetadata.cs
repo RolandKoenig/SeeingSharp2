@@ -42,7 +42,6 @@ namespace SeeingSharp.Multimedia.Core
         public IAnimation Animation
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -51,7 +50,6 @@ namespace SeeingSharp.Multimedia.Core
         public Action FinishedCallback
         {
             get;
-            private set;
         }
     }
 }

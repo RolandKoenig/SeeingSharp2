@@ -25,42 +25,42 @@ namespace SeeingSharp.Multimedia.Components
 {
     public class FocusedPointCameraComponent : FocusedCameraComponent
     {
-        private Vector3 m_focusedLocation;
+        private Vector3 _focusedLocation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
         /// </summary>
         public FocusedPointCameraComponent()
         {
-            m_focusedLocation = Vector3.Zero;
+            _focusedLocation = Vector3.Zero;
         }
 
         public FocusedPointCameraComponent(Vector3 focusedLocation)
         {
-            m_focusedLocation = focusedLocation;
+            _focusedLocation = focusedLocation;
         }
 
         protected override Vector3 GetFocusedLocation()
         {
-            return m_focusedLocation;
+            return _focusedLocation;
         }
 
         public float FocusedPointX
         {
-            get => m_focusedLocation.X;
-            set => m_focusedLocation.X = value;
+            get => _focusedLocation.X;
+            set => _focusedLocation.X = value;
         }
 
         public float FocusedPointY
         {
-            get => m_focusedLocation.Y;
-            set => m_focusedLocation.Y = value;
+            get => _focusedLocation.Y;
+            set => _focusedLocation.Y = value;
         }
 
         public float FocusedPointZ
         {
-            get => m_focusedLocation.Z;
-            set => m_focusedLocation.Z = value;
+            get => _focusedLocation.Z;
+            set => _focusedLocation.Z = value;
         }
     }
 }

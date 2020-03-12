@@ -27,7 +27,7 @@ namespace SeeingSharp.Util
 {
     public class AssemblyResourceLinkSource : ResourceLink
     {
-        private AssemblyResourceLink m_resourceLink;
+        private AssemblyResourceLink _resourceLink;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyResourceLinkSource" /> class.
@@ -37,7 +37,7 @@ namespace SeeingSharp.Util
         {
             resourceLink.EnsureNotNull(nameof(resourceLink));
 
-            m_resourceLink = resourceLink;
+            _resourceLink = resourceLink;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public override string ToString()
         {
-            return "Assembly-Resource: " + m_resourceLink;
+            return "Assembly-Resource: " + _resourceLink;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace SeeingSharp.Util
             newFileName.EnsureNotNullOrEmptyOrWhiteSpace(nameof(newFileName));
 
             return new AssemblyResourceLinkSource(
-                m_resourceLink.GetForAnotherFile(newFileName, subdirectories));
+                _resourceLink.GetForAnotherFile(newFileName, subdirectories));
         }
 
         /// <summary>
@@ -90,20 +90,20 @@ namespace SeeingSharp.Util
         /// </summary>
         public override Stream OpenInputStream()
         {
-            return m_resourceLink.OpenRead();
+            return _resourceLink.OpenRead();
         }
 
         public override bool Exists()
         {
-            return m_resourceLink.IsValid();
+            return _resourceLink.IsValid();
         }
 
         /// <summary>
         /// Gets the file extension of the resource we target to.
         /// </summary>
-        public override string FileExtension => this.GetExtensionFromFileName(m_resourceLink.ResourceFile);
+        public override string FileExtension => this.GetExtensionFromFileName(_resourceLink.ResourceFile);
 
-        public override string FileNameWithExtension => m_resourceLink.ResourceFile;
+        public override string FileNameWithExtension => _resourceLink.ResourceFile;
 
         /// <summary>
         /// Are async operations supported on this ResourceLink?

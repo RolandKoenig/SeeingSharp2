@@ -27,22 +27,22 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class GenericInputEventArgs : EventArgs
     {
-        private List<InputFrame> m_inputFrames;
+        private List<InputFrame> _inputFrames;
 
         internal GenericInputEventArgs()
         {
-            m_inputFrames = new List<InputFrame>(16);
+            _inputFrames = new List<InputFrame>(16);
         }
 
         internal void NotifyNewPass(List<InputFrame> inputFrames)
         {
-            m_inputFrames.Clear();
-            m_inputFrames.AddRange(inputFrames);
+            _inputFrames.Clear();
+            _inputFrames.AddRange(inputFrames);
         }
 
         /// <summary>
         /// Gets a list containing all InputFrames.
         /// </summary>
-        public IReadOnlyList<InputFrame> InputFrames => m_inputFrames;
+        public IReadOnlyList<InputFrame> InputFrames => _inputFrames;
     }
 }

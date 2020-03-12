@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class SpriteMaterialResource : MaterialResource
     {
         // Static Resource keys
-        private static readonly NamedOrGenericKey RES_KEY_VERTEX_SHADER = GraphicsCore.GetNextGenericResourceKey();
-        private static readonly NamedOrGenericKey RES_KEY_PIXEL_SHADER = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyVertexShader = GraphicsCore.GetNextGenericResourceKey();
+        private static readonly NamedOrGenericKey s_resKeyPixelShader = GraphicsCore.GetNextGenericResourceKey();
 
         // Resource members
-        private TextureResource m_textureResource;
-        private DefaultResources m_defaultResources;
-        private PixelShaderResource m_pixelShader;
-        private VertexShaderResource m_vertexShader;
+        private TextureResource _textureResource;
+        private DefaultResources _defaultResources;
+        private PixelShaderResource _pixelShader;
+        private VertexShaderResource _vertexShader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
@@ -52,21 +52,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             //Load all required shaders and constant buffers
-            m_vertexShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_VERTEX_SHADER,
+            _vertexShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyVertexShader,
                 () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Sprite", "SpriteVertexShader"));
-            m_pixelShader = resources.GetResourceAndEnsureLoaded(
-                RES_KEY_PIXEL_SHADER,
+            _pixelShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyPixelShader,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Sprite", "SpritePixelShader"));
 
             // Get a reference to default resource object
-            m_defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
+            _defaultResources = resources.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
 
             //Load the texture if any configured.
             if (!this.TextureKey.IsEmpty)
             {
                 //Get texture resource
-                m_textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(this.TextureKey);
+                _textureResource = resources.GetResourceAndEnsureLoaded<TextureResource>(this.TextureKey);
             }
         }
 
@@ -75,10 +75,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = null;
-            m_vertexShader = null;
-            m_pixelShader = null;
-            m_textureResource = null;
+            _defaultResources = null;
+            _vertexShader = null;
+            _pixelShader = null;
+            _textureResource = null;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
         internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
         {
-            return m_vertexShader.GetInputLayout(device, inputElements);
+            return _vertexShader.GetInputLayout(device, inputElements);
         }
 
         /// <summary>
@@ -105,16 +105,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 previousMaterial.ResourceType == this.ResourceType;
             if (!isResourceSameType)
             {
-                deviceContext.PixelShader.SetSampler(0, m_defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
 
-                deviceContext.VertexShader.Set(m_vertexShader.VertexShader);
-                deviceContext.PixelShader.Set(m_pixelShader.PixelShader);
+                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
+                deviceContext.PixelShader.Set(_pixelShader.PixelShader);
             }
 
             // Set texture resource (if set)
-            if (m_textureResource != null)
+            if (_textureResource != null)
             {
-                deviceContext.PixelShader.SetShaderResource(0, m_textureResource.TextureView);
+                deviceContext.PixelShader.SetShaderResource(0, _textureResource.TextureView);
             }
             else
             {
@@ -130,6 +130,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_vertexShader != null;
+        public override bool IsLoaded => _vertexShader != null;
     }
 }

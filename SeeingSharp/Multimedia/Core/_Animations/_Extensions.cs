@@ -26,23 +26,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Starts building an AnimationSequence for this object.
         /// </summary>
-        /// <typeparam name="TargetObjectType">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObjectType">The type of the target object.</typeparam>
         /// <param name="animatableObject">The object to be animated.</param>
-        public static IAnimationSequenceBuilder<TargetObjectType> BuildAnimationSequence<TargetObjectType>(this TargetObjectType animatableObject)
-            where TargetObjectType : class, IAnimatableObject
+        public static IAnimationSequenceBuilder<TTargetObjectType> BuildAnimationSequence<TTargetObjectType>(this TTargetObjectType animatableObject)
+            where TTargetObjectType : class, IAnimatableObject
         {
-            return animatableObject.AnimationHandler.BuildAnimationSequence<TargetObjectType>();
+            return animatableObject.AnimationHandler.BuildAnimationSequence<TTargetObjectType>();
         }
 
         /// <summary>
         /// Starts building an AnimationSequence for the given object.
         /// The generated animation is managed by this object.
         /// </summary>
-        /// <typeparam name="TargetObjectType">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObjectType">The type of the target object.</typeparam>
         /// <param name="animationHost">The host object of the animation.</param>
         /// <param name="animatableObject">The object to be animated.</param>
-        public static IAnimationSequenceBuilder<TargetObjectType> BuildAnimationSequence<TargetObjectType>(this IAnimatableObject animationHost, TargetObjectType animatableObject)
-            where TargetObjectType : class
+        public static IAnimationSequenceBuilder<TTargetObjectType> BuildAnimationSequence<TTargetObjectType>(this IAnimatableObject animationHost, TTargetObjectType animatableObject)
+            where TTargetObjectType : class
         {
             return animationHost.AnimationHandler.BuildAnimationSequence(animatableObject);
         }

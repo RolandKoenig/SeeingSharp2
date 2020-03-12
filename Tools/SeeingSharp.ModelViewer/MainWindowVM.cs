@@ -33,17 +33,17 @@ namespace SeeingSharp.ModelViewer
 {
     public class MainWindowVM : PropertyChangedBase
     {
-        private RenderLoop m_renderLoop;
-        private string m_loadedFile;
+        private RenderLoop _renderLoop;
+        private string _loadedFile;
 
-        private bool m_isLoading;
+        private bool _isLoading;
 
         public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequest;
 
         public MainWindowVM(RenderLoop renderLoop)
         {
-            m_renderLoop = renderLoop;
-            m_loadedFile = string.Empty;
+            _renderLoop = renderLoop;
+            _loadedFile = string.Empty;
 
             this.Command_OpenFile = new DelegateCommand(this.OpenFile);
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
@@ -56,7 +56,7 @@ namespace SeeingSharp.ModelViewer
 
         public async Task LoadInitialScene()
         {
-            m_renderLoop.SceneComponents.Add(
+            _renderLoop.SceneComponents.Add(
                 new FocusedPointCameraComponent()
                 {
                     CameraDistanceMin = 0.1f,
@@ -64,7 +64,7 @@ namespace SeeingSharp.ModelViewer
                     CameraHRotationInitial = 2f
                 });
 
-            await m_renderLoop.Register2DDrawingLayerAsync(
+            await _renderLoop.Register2DDrawingLayerAsync(
                 new PerformanceMeasureDrawingLayer(10f));
 
             await this.LoadSceneInternalAsync(null, null);
@@ -89,16 +89,16 @@ namespace SeeingSharp.ModelViewer
             try
             {
                 // Reset the scene
-                await SceneHelper.ResetScene(m_renderLoop);
+                await SceneHelper.ResetScene(_renderLoop);
 
                 // Load the given model
                 if (modelLink == null)
                 {
-                    m_loadedFile = string.Empty;
+                    _loadedFile = string.Empty;
                 }
                 else
                 {
-                    m_loadedFile = modelLink.ToString() ?? "";
+                    _loadedFile = modelLink.ToString() ?? "";
                     if (importOptions == null)
                     {
                         importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
@@ -106,18 +106,18 @@ namespace SeeingSharp.ModelViewer
 
                     try
                     {
-                        await m_renderLoop.Scene.ImportAsync(modelLink, importOptions);
+                        await _renderLoop.Scene.ImportAsync(modelLink, importOptions);
                     }
                     catch (Exception)
                     {
-                        await SceneHelper.ResetScene(m_renderLoop);
-                        m_loadedFile = string.Empty;
+                        await SceneHelper.ResetScene(_renderLoop);
+                        _loadedFile = string.Empty;
                         throw;
                     }
                 
-                    await m_renderLoop.WaitForNextFinishedRenderAsync();
+                    await _renderLoop.WaitForNextFinishedRenderAsync();
 
-                    await m_renderLoop.MoveCameraToDefaultLocationAsync(
+                    await _renderLoop.MoveCameraToDefaultLocationAsync(
                         -EngineMath.RAD_45DEG,
                         EngineMath.RAD_45DEG);
                 }
@@ -134,9 +134,9 @@ namespace SeeingSharp.ModelViewer
         { 
             var titleBuilder = new StringBuilder(128);
             titleBuilder.Append("SeeingSharp 2 ModelViewer");
-            if (!string.IsNullOrEmpty(m_loadedFile))
+            if (!string.IsNullOrEmpty(_loadedFile))
             {
-                titleBuilder.Append($" - {m_loadedFile}");
+                titleBuilder.Append($" - {_loadedFile}");
             }
 
             this.AppTitle = titleBuilder.ToString();
@@ -155,12 +155,12 @@ namespace SeeingSharp.ModelViewer
 
         public bool IsLoading
         {
-            get => m_isLoading;
+            get => _isLoading;
             set
             {
-                if (m_isLoading != value)
+                if (_isLoading != value)
                 {
-                    m_isLoading = value;
+                    _isLoading = value;
                     this.RaisePropertyChanged(nameof(this.IsLoading));
                     this.RaisePropertyChanged(nameof(this.ControlsEnabled));
                     this.RaisePropertyChanged(nameof(this.LoadingWindowVisibility));

@@ -19,7 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Input
@@ -29,88 +29,87 @@ namespace SeeingSharp.Multimedia.Input
         public static readonly KeyboardState Dummy = new KeyboardState();
 
         // Current key states
-        private List<WinVirtualKey> m_keysHit;
-        private List<WinVirtualKey> m_keysDown;
-        private bool m_focused;
+        private List<WinVirtualKey> _keysHit;
+        private List<WinVirtualKey> _keysDown;
+        private bool _focused;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardState"/> class.
         /// </summary>
         public KeyboardState()
         {
-            m_keysHit = new List<WinVirtualKey>(6);
-            m_keysDown = new List<WinVirtualKey>(12);
+            _keysHit = new List<WinVirtualKey>(6);
+            _keysDown = new List<WinVirtualKey>(12);
 
             this.Internals = new KeyboardStateInternals(this);
         }
 
         public bool IsKeyHit(WinVirtualKey key)
         {
-            if (!m_focused) { return false; }
+            if (!_focused) { return false; }
 
-            return m_keysHit.Contains(key);
+            return _keysHit.Contains(key);
         }
 
         public bool IsKeyDown(WinVirtualKey key)
         {
-            if (!m_focused) { return false; }
+            if (!_focused) { return false; }
 
             return
-                m_keysDown.Contains(key) ||
-                m_keysHit.Contains(key);
+                _keysDown.Contains(key) ||
+                _keysHit.Contains(key);
         }
 
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            var targetStateCasted = targetState as KeyboardState;
-            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
+            var targetStateCasted = (KeyboardState)targetState;
 
-            targetStateCasted.m_keysHit.Clear();
-            targetStateCasted.m_keysHit.AddRange(m_keysHit);
+            targetStateCasted._keysHit.Clear();
+            targetStateCasted._keysHit.AddRange(_keysHit);
 
-            targetStateCasted.m_keysDown.Clear();
-            targetStateCasted.m_keysDown.AddRange(m_keysDown);
+            targetStateCasted._keysDown.Clear();
+            targetStateCasted._keysDown.AddRange(_keysDown);
 
-            targetStateCasted.m_focused = m_focused;
+            targetStateCasted._focused = _focused;
 
             // Update local collections (move hit keys to down keys)
-            m_keysDown.AddRange(m_keysHit);
-            m_keysHit.Clear();
+            _keysDown.AddRange(_keysHit);
+            _keysHit.Clear();
         }
 
         internal void NotifyKeyDown(WinVirtualKey key)
         {
             var anyRegistered =
-                m_keysDown.Contains(key) ||
-                m_keysHit.Contains(key);
+                _keysDown.Contains(key) ||
+                _keysHit.Contains(key);
             if (anyRegistered) { return; }
 
-            m_keysHit.Add(key);
+            _keysHit.Add(key);
         }
 
         internal void NotifyKeyUp(WinVirtualKey key)
         {
-            while (m_keysHit.Remove(key)) { }
-            while (m_keysDown.Remove(key)) { }
+            while (_keysHit.Remove(key)) { }
+            while (_keysDown.Remove(key)) { }
         }
 
         internal void NotifyFocusLost()
         {
-            m_focused = false;
-            m_keysDown.Clear();
-            m_keysHit.Clear();
+            _focused = false;
+            _keysDown.Clear();
+            _keysHit.Clear();
         }
 
         internal void NotifyFocusGot()
         {
-            m_focused = true;
+            _focused = true;
         }
 
-        public IEnumerable<WinVirtualKey> KeysDown => m_keysDown;
+        public IEnumerable<WinVirtualKey> KeysDown => _keysDown;
 
-        public IEnumerable<WinVirtualKey> KeysHit => m_keysHit;
+        public IEnumerable<WinVirtualKey> KeysHit => _keysHit;
 
-        public bool IsConnected => m_focused;
+        public bool IsConnected => _focused;
 
         public KeyboardStateInternals Internals
         {
@@ -123,31 +122,31 @@ namespace SeeingSharp.Multimedia.Input
         //*********************************************************************
         public class KeyboardStateInternals
         {
-            private KeyboardState m_host;
+            private KeyboardState _host;
 
             internal KeyboardStateInternals(KeyboardState host)
             {
-                m_host = host;
+                _host = host;
             }
 
             public void NotifyKeyDown(WinVirtualKey key)
             {
-                m_host.NotifyKeyDown(key);
+                _host.NotifyKeyDown(key);
             }
 
             public void NotifyKeyUp(WinVirtualKey key)
             {
-                m_host.NotifyKeyUp(key);
+                _host.NotifyKeyUp(key);
             }
 
             public void NotifyFocusGot()
             {
-                m_host.NotifyFocusGot();
+                _host.NotifyFocusGot();
             }
 
             public void NotifyFocusLost()
             {
-                m_host.NotifyFocusLost();
+                _host.NotifyFocusLost();
             }
         }
     }

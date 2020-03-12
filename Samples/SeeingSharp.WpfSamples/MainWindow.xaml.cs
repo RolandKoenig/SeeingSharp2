@@ -34,17 +34,17 @@ namespace SeeingSharp.WpfSamples
 {
     public partial class MainWindow : Window
     {
-        private SampleBase m_actSample;
-        private SampleMetadata m_actSampleInfo;
-        private bool m_isChangingSample;
+        private SampleBase _actSample;
+        private SampleMetadata _actSampleInfo;
+        private bool _isChangingSample;
 
-        private List<ChildRenderWindow> m_childWindows;
+        private List<ChildRenderWindow> _childWindows;
 
         public MainWindow()
         {
             this.InitializeComponent();
 
-            m_childWindows = new List<ChildRenderWindow>();
+            _childWindows = new List<ChildRenderWindow>();
 
             this.Loaded += this.OnLoaded;
         }
@@ -86,9 +86,9 @@ namespace SeeingSharp.WpfSamples
                 return;
             }
 
-            if (m_actSample != null)
+            if (_actSample != null)
             {
-                await m_actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings);
+                await _actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings);
             }
         }
 
@@ -107,15 +107,15 @@ namespace SeeingSharp.WpfSamples
         /// </summary>
         private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
-            if (m_isChangingSample) { return; }
+            if (_isChangingSample) { return; }
 
-            m_isChangingSample = true;
+            _isChangingSample = true;
             try
             {
-                if (m_actSampleInfo == sampleInfo) { return; }
+                if (_actSampleInfo == sampleInfo) { return; }
 
                 // Clear previous sample
-                if (m_actSampleInfo != null)
+                if (_actSampleInfo != null)
                 {
                     await CtrlRenderer.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
                     {
@@ -123,17 +123,17 @@ namespace SeeingSharp.WpfSamples
                     });
                     await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
 
-                    foreach (var actChildWindow in m_childWindows)
+                    foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    m_actSample.OnClosed();
+                    _actSample.OnClosed();
                 }
 
                 // Reset members
-                m_actSample = null;
-                m_actSampleInfo = null;
+                _actSample = null;
+                _actSampleInfo = null;
 
                 // Apply new sample
                 if (sampleInfo != null)
@@ -143,13 +143,13 @@ namespace SeeingSharp.WpfSamples
                     await sampleObject.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlRenderer.RenderLoop, sampleSettings);
 
-                    foreach (var actChildWindow in m_childWindows)
+                    foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.SetRenderingDataAsync(sampleObject);
                     }
 
-                    m_actSample = sampleObject;
-                    m_actSampleInfo = sampleInfo;
+                    _actSample = sampleObject;
+                    _actSampleInfo = sampleInfo;
 
                     await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
                         new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 120f));
@@ -162,13 +162,13 @@ namespace SeeingSharp.WpfSamples
             }
             finally
             {
-                m_isChangingSample = false;
+                _isChangingSample = false;
             }
         }
 
         private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
         {
-            var actSample = m_actSample;
+            var actSample = _actSample;
             actSample?.Update();
         }
 
@@ -187,13 +187,13 @@ namespace SeeingSharp.WpfSamples
             var childWindow = new ChildRenderWindow();
             childWindow.InitializeChildWindow(CtrlRenderer.Scene, CtrlRenderer.Camera.GetViewPoint());
 
-            m_childWindows.Add(childWindow);
-            childWindow.Closed += (_1, _2) => { m_childWindows.Remove(childWindow); };
+            _childWindows.Add(childWindow);
+            childWindow.Closed += (_1, _2) => { _childWindows.Remove(childWindow); };
 
             childWindow.Owner = this;
             childWindow.Show();
 
-            await childWindow.SetRenderingDataAsync(m_actSample);
+            await childWindow.SetRenderingDataAsync(_actSample);
         }
 
         private void OnMnuCmdChangeResolution_Click(object sender, RoutedEventArgs e)

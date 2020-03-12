@@ -130,21 +130,21 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
         //*********************************************************************
         private class StaticCubesSampleSettings : SampleSettingsWith3D
         {
-            private int m_cubeCountPerSide = 15;
-            private bool m_animated;
-            private bool m_halfTextured;
+            private int _cubeCountPerSide = 15;
+            private bool _animated;
+            private bool _halfTextured;
 
             [Category("Static Cubes")]
             public int CubeCountPerSide
             {
-                get => m_cubeCountPerSide;
+                get => _cubeCountPerSide;
                 set
                 {
                     var givenValue = value;
                     if (givenValue < 1) { givenValue = 1; }
                     if (givenValue > 50) { givenValue = 50; }
 
-                    m_cubeCountPerSide = givenValue;
+                    _cubeCountPerSide = givenValue;
                     base.RaiseRecreateRequest();
                 }
             }
@@ -152,10 +152,10 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
             [Category("Static Cubes")]
             public bool Animated
             {
-                get => m_animated;
+                get => _animated;
                 set
                 {
-                    m_animated = value;
+                    _animated = value;
                     base.RaiseRecreateRequest();
                 }
             }
@@ -163,10 +163,10 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
             [Category("Static Cubes")]
             public bool HalfTextured
             {
-                get => m_halfTextured;
+                get => _halfTextured;
                 set
                 {
-                    m_halfTextured = value;
+                    _halfTextured = value;
                     base.RaiseRecreateRequest();
                 }
             }

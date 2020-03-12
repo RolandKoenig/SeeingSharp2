@@ -25,7 +25,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class RenderPassDefaultTransparent : RenderPassBase
     {
-        private DefaultResources m_defaultResources;
+        private DefaultResources _defaultResources;
 
         /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
@@ -35,8 +35,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OutputMerger.BlendState = m_defaultResources.AlphaBlendingBlendState;
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDisableZWrites;
+            deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDisableZWrites;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OutputMerger.BlendState = m_defaultResources.DefaultBlendState;
-            deviceContext.OutputMerger.DepthStencilState = m_defaultResources.DepthStencilStateDefault;
+            deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
+            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             //Get default resources
-            m_defaultResources = resources.GetResourceAndEnsureLoaded(
+            _defaultResources = resources.GetResourceAndEnsureLoaded(
                 DefaultResources.RESOURCE_KEY,
                 () => new DefaultResources());
         }
@@ -71,12 +71,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            m_defaultResources = null;
+            _defaultResources = null;
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_defaultResources != null;
+        public override bool IsLoaded => _defaultResources != null;
     }
 }

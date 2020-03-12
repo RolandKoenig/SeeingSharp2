@@ -29,62 +29,62 @@ namespace SeeingSharp.Multimedia.Core
     internal class MainLoop_RenderAndUpdateBeside
     {
         // Common Dependencies
-        private GraphicsCore m_core;
-        private EngineMainLoop m_mainLoop;
+        private GraphicsCore _core;
+        private EngineMainLoop _mainLoop;
 
         // Dependencies for one pass
-        private IReadOnlyList<RenderLoop> m_registeredRenderLoops;
-        private IReadOnlyList<Scene> m_scenesToRender;
-        private IReadOnlyList<EngineDevice> m_devicesInUse;
-        private UpdateState m_updateState;
+        private IReadOnlyList<RenderLoop> _registeredRenderLoops;
+        private IReadOnlyList<Scene> _scenesToRender;
+        private IReadOnlyList<EngineDevice> _devicesInUse;
+        private UpdateState _updateState;
 
         // Cached values and collections
-        private Action<int> m_actionTriggerRenderOrUpdateBesideTask;
-        private ConcurrentQueue<RenderLoop> m_invalidRenderLoops;
-        private List<string> m_perfSceneUpdateBesideActivityNames;
-        private List<string> m_perfDeviceRenderActivityNames;
+        private Action<int> _actionTriggerRenderOrUpdateBesideTask;
+        private ConcurrentQueue<RenderLoop> _invalidRenderLoops;
+        private List<string> _perfSceneUpdateBesideActivityNames;
+        private List<string> _perfDeviceRenderActivityNames;
 
         public MainLoop_RenderAndUpdateBeside(GraphicsCore core, EngineMainLoop mainLoop)
         {
-            m_core = core;
-            m_mainLoop = mainLoop;
+            _core = core;
+            _mainLoop = mainLoop;
 
-            m_invalidRenderLoops = new ConcurrentQueue<RenderLoop>();
-            m_perfSceneUpdateBesideActivityNames = new List<string>(16);
-            m_perfDeviceRenderActivityNames = new List<string>(16);
+            _invalidRenderLoops = new ConcurrentQueue<RenderLoop>();
+            _perfSceneUpdateBesideActivityNames = new List<string>(16);
+            _perfDeviceRenderActivityNames = new List<string>(16);
 
-            m_actionTriggerRenderOrUpdateBesideTask = this.TriggerRenderOrUpdateBesideTask;
+            _actionTriggerRenderOrUpdateBesideTask = this.TriggerRenderOrUpdateBesideTask;
         }
 
         public void SetPassParameters(
             IReadOnlyList<RenderLoop> registeredRenderLoops, IReadOnlyList<Scene> scenesToRender,
             IReadOnlyList<EngineDevice> devicesInUse, UpdateState updateState)
         {
-            m_registeredRenderLoops = registeredRenderLoops;
-            m_scenesToRender = scenesToRender;
-            m_devicesInUse = devicesInUse;
-            m_updateState = updateState;
+            _registeredRenderLoops = registeredRenderLoops;
+            _scenesToRender = scenesToRender;
+            _devicesInUse = devicesInUse;
+            _updateState = updateState;
 
             // Clear render loop queue
-            while (m_invalidRenderLoops.TryDequeue(out _)) { }
+            while (_invalidRenderLoops.TryDequeue(out _)) { }
 
             // Prepare cached activity names for measuring scene updates
-            while (m_scenesToRender.Count > m_perfSceneUpdateBesideActivityNames.Count)
+            while (_scenesToRender.Count > _perfSceneUpdateBesideActivityNames.Count)
             {
-                m_perfSceneUpdateBesideActivityNames.Add(
-                    string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_BESIDE, m_perfSceneUpdateBesideActivityNames.Count));
+                _perfSceneUpdateBesideActivityNames.Add(
+                    string.Format(SeeingSharpConstants.PERF_GLOBAL_UPDATE_BESIDE, _perfSceneUpdateBesideActivityNames.Count));
             }
-            for (var loop = 0; loop < m_devicesInUse.Count; loop++)
+            for (var loop = 0; loop < _devicesInUse.Count; loop++)
             {
-                var actDevice = m_devicesInUse[loop];
-                while (m_perfDeviceRenderActivityNames.Count <= actDevice.DeviceIndex)
+                var actDevice = _devicesInUse[loop];
+                while (_perfDeviceRenderActivityNames.Count <= actDevice.DeviceIndex)
                 {
-                    m_perfDeviceRenderActivityNames.Add(string.Empty);
+                    _perfDeviceRenderActivityNames.Add(string.Empty);
                 }
 
-                if (m_perfDeviceRenderActivityNames[actDevice.DeviceIndex] == string.Empty)
+                if (_perfDeviceRenderActivityNames[actDevice.DeviceIndex] == string.Empty)
                 {
-                    m_perfDeviceRenderActivityNames[actDevice.DeviceIndex] =
+                    _perfDeviceRenderActivityNames[actDevice.DeviceIndex] =
                         string.Format(SeeingSharpConstants.PERF_GLOBAL_RENDER_DEVICE, actDevice.AdapterDescription);
                 }
             }
@@ -92,36 +92,36 @@ namespace SeeingSharp.Multimedia.Core
 
         public void ExecutePass()
         {
-            using (m_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
+            using (_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
             {
                 // Trigger all tasks for 'Update' pass
-                Parallel.For(0, m_devicesInUse.Count + m_scenesToRender.Count, m_actionTriggerRenderOrUpdateBesideTask);
+                Parallel.For(0, _devicesInUse.Count + _scenesToRender.Count, _actionTriggerRenderOrUpdateBesideTask);
 
                 // Handle all invalid render loops
-                while (m_invalidRenderLoops.TryDequeue(out var actRenderLoop))
+                while (_invalidRenderLoops.TryDequeue(out var actRenderLoop))
                 {
-                    m_mainLoop.DeregisterRenderLoop(actRenderLoop);
+                    _mainLoop.DeregisterRenderLoop(actRenderLoop);
                 }
 
                 // Reset camera changed flags
-                for (var loop = 0; loop < m_registeredRenderLoops.Count; loop++)
+                for (var loop = 0; loop < _registeredRenderLoops.Count; loop++)
                 {
-                    m_registeredRenderLoops[loop].Camera.StateChanged = false;
+                    _registeredRenderLoops[loop].Camera.StateChanged = false;
                 }
             }
         }
 
         private void TriggerRenderOrUpdateBesideTask(int actTaskIndex)
         {   
-            if (actTaskIndex < m_devicesInUse.Count)
+            if (actTaskIndex < _devicesInUse.Count)
             {
                 // Render all targets for the current device
-                var actDevice = m_devicesInUse[actTaskIndex];
-                using (m_core.BeginMeasureActivityDuration(m_perfDeviceRenderActivityNames[actDevice.DeviceIndex]))
+                var actDevice = _devicesInUse[actTaskIndex];
+                using (_core.BeginMeasureActivityDuration(_perfDeviceRenderActivityNames[actDevice.DeviceIndex]))
                 {
-                    for (var loop = 0; loop < m_registeredRenderLoops.Count; loop++)
+                    for (var loop = 0; loop < _registeredRenderLoops.Count; loop++)
                     {
-                        var actRenderLoop = m_registeredRenderLoops[loop];
+                        var actRenderLoop = _registeredRenderLoops[loop];
 
                         try
                         {
@@ -133,7 +133,7 @@ namespace SeeingSharp.Multimedia.Core
                         catch (Exception ex)
                         {
                             // Mark this renderloop as invalid
-                            m_invalidRenderLoops.Enqueue(actRenderLoop);
+                            _invalidRenderLoops.Enqueue(actRenderLoop);
 
                             // Publish exception info
                             GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.EngineMainLoop_Render);
@@ -144,13 +144,13 @@ namespace SeeingSharp.Multimedia.Core
             else
             {
                 // Perform updates beside rendering for the current scene
-                var sceneIndex = actTaskIndex - m_devicesInUse.Count;
-                using (m_core.BeginMeasureActivityDuration(m_perfSceneUpdateBesideActivityNames[sceneIndex]))
+                var sceneIndex = actTaskIndex - _devicesInUse.Count;
+                using (_core.BeginMeasureActivityDuration(_perfSceneUpdateBesideActivityNames[sceneIndex]))
                 {
-                    var actScene = m_scenesToRender[sceneIndex];
+                    var actScene = _scenesToRender[sceneIndex];
                     var actUpdateState = actScene.CachedUpdateState;
 
-                    actUpdateState.OnStartSceneUpdate(actScene, m_updateState, null);
+                    actUpdateState.OnStartSceneUpdate(actScene, _updateState, null);
                     actScene.UpdateBesideRender(actUpdateState);
                 }
             }

@@ -25,7 +25,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
 {
     public class Custom2DDrawingLayer
     {
-        private Action<Graphics2D> m_draw2DAction;
+        private Action<Graphics2D> _draw2DAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Custom2DDrawingLayer"/> class.
@@ -41,7 +41,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="draw2DAction">The action which is used for rendering.</param>
         public Custom2DDrawingLayer(Action<Graphics2D> draw2DAction)
         {
-            m_draw2DAction = draw2DAction;
+            _draw2DAction = draw2DAction;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="graphics">The graphics object used for drawing.</param>
         protected virtual void Draw2D(Graphics2D graphics)
         {
-            m_draw2DAction?.Invoke(graphics);
+            _draw2DAction?.Invoke(graphics);
         }
 
         /// <summary>

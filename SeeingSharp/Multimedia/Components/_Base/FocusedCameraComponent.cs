@@ -30,15 +30,15 @@ namespace SeeingSharp.Multimedia.Components
     public abstract class FocusedCameraComponent
         : SceneComponent<FocusedCameraComponent.PerSceneContext>
     {
-        private const float ORTHO_ZOOM_FACTOR_START = 1500f;
-        private const float ORTHO_ZOOM_FACTOR_PER_CAMERA_DISTANCE = 250f;
+        private const float ORTHO_ZOO_FACTOR_START = 1500f;
+        private const float ORTHO_ZOO_FACTOR_PER_CAMERA_DISTANCE = 250f;
 
         // Constants
         private const float SINGLE_ROTATION_H = EngineMath.RAD_180DEG / 100f;
         private const float SINGLE_ROTATION_V = EngineMath.RAD_180DEG / 100f;
 
         // Configuration
-        private Vector2 m_hvRotation;
+        private Vector2 _hvRotation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
@@ -48,7 +48,7 @@ namespace SeeingSharp.Multimedia.Components
             this.CameraDistanceInitial = 4f;
             this.CameraDistanceMin = 1f;
             this.CameraDistanceMax = 5f;
-            m_hvRotation = new Vector2(
+            _hvRotation = new Vector2(
                 EngineMath.RAD_45DEG,
                 EngineMath.RAD_45DEG);
         }
@@ -66,7 +66,7 @@ namespace SeeingSharp.Multimedia.Components
             var result = new PerSceneContext
             {
                 CameraDistance = this.CameraDistanceInitial,
-                CameraHVRotation = m_hvRotation
+                CameraHVRotation = _hvRotation
             };
 
             return result;
@@ -137,7 +137,7 @@ namespace SeeingSharp.Multimedia.Components
 
             if(actCamera is OrthographicCamera3D orthoCamera)
             {
-                orthoCamera.ZoomFactor = ORTHO_ZOOM_FACTOR_START - (componentContext.CameraDistance * ORTHO_ZOOM_FACTOR_PER_CAMERA_DISTANCE);
+                orthoCamera.ZoomFactor = ORTHO_ZOO_FACTOR_START - (componentContext.CameraDistance * ORTHO_ZOO_FACTOR_PER_CAMERA_DISTANCE);
             }
         }
 
@@ -281,8 +281,8 @@ namespace SeeingSharp.Multimedia.Components
         /// </summary>
         public float CameraHRotationInitial
         {
-            get => m_hvRotation.X;
-            set => m_hvRotation.X = value;
+            get => _hvRotation.X;
+            set => _hvRotation.X = value;
         }
 
         /// <summary>
@@ -290,8 +290,8 @@ namespace SeeingSharp.Multimedia.Components
         /// </summary>
         public float CameraVRotationInitial
         {
-            get => m_hvRotation.Y;
-            set => m_hvRotation.Y = value;
+            get => _hvRotation.Y;
+            set => _hvRotation.Y = value;
         }
 
         public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;

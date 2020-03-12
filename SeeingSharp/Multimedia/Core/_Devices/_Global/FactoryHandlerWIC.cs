@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerWIC : IDisposable, ICheckDisposed
     {
-        private ImagingFactory m_wicFactory;
+        private ImagingFactory _wicFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
@@ -53,10 +53,10 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                if(m_wicFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerWIC)); }
-                return m_wicFactory;
+                if(_wicFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerWIC)); }
+                return _wicFactory;
             }
-            private set => m_wicFactory = value;
+            private set => _wicFactory = value;
         }
     }
 }

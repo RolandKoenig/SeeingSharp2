@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public struct AnimationUpdateResult
     {
-        public static readonly AnimationUpdateResult Empty = new AnimationUpdateResult();
+        public static readonly AnimationUpdateResult EMPTY = new AnimationUpdateResult();
 
         /// <summary>
         /// Total count of finished animations.

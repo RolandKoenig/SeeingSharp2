@@ -31,42 +31,42 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class ExportModelContainer
     {
-        private Dictionary<NamedOrGenericKey, ExportGeometryInfo> m_dicExportGeometry;
-        private Dictionary<NamedOrGenericKey, ExportMaterialInfo> m_dicExportMaterial;
-        private Dictionary<SceneObject, object> m_dicOriginalObjects;
+        private Dictionary<NamedOrGenericKey, ExportGeometryInfo> _dicExportGeometry;
+        private Dictionary<NamedOrGenericKey, ExportMaterialInfo> _dicExportMaterial;
+        private Dictionary<SceneObject, object> _dicOriginalObjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
         /// </summary>
         internal ExportModelContainer()
         {
-            m_dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
-            m_dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
-            m_dicOriginalObjects = new Dictionary<SceneObject, object>();
+            _dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
+            _dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
+            _dicOriginalObjects = new Dictionary<SceneObject, object>();
         }
 
         public void AddExportGeometry(ExportGeometryInfo exportGeometry)
         {
             exportGeometry.EnsureNotNull(nameof(exportGeometry));
 
-            m_dicExportGeometry[exportGeometry.Key] = exportGeometry;
+            _dicExportGeometry[exportGeometry.Key] = exportGeometry;
         }
 
         public void AddExportMaterial(ExportMaterialInfo exportMaterial)
         {
             exportMaterial.EnsureNotNull(nameof(exportMaterial));
 
-            m_dicExportMaterial[exportMaterial.Key] = exportMaterial;
+            _dicExportMaterial[exportMaterial.Key] = exportMaterial;
         }
 
         public bool ContainsExportGeometry(NamedOrGenericKey key)
         {
-            return m_dicExportGeometry.ContainsKey(key);
+            return _dicExportGeometry.ContainsKey(key);
         }
 
         public bool ContainsExportMaterial(NamedOrGenericKey key)
         {
-            return m_dicExportMaterial.ContainsKey(key);
+            return _dicExportMaterial.ContainsKey(key);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
-            return m_dicOriginalObjects.ContainsKey(sceneObject);
+            return _dicOriginalObjects.ContainsKey(sceneObject);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
-            m_dicOriginalObjects[sceneObject] = null;
+            _dicOriginalObjects[sceneObject] = null;
         }
     }
 }

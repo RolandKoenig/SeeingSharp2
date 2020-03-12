@@ -31,24 +31,24 @@ namespace SeeingSharp.Multimedia.Input
     public class MouseOrPointerState : InputStateBase
     {
         public static readonly MouseOrPointerState Dummy = new MouseOrPointerState();
-        private static readonly int BUTTON_COUNT = Enum.GetValues(typeof(MouseButton)).Length;
+        private static readonly int s_buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
 
         // Current state
-        private Vector2 m_moveDistancePixel;
-        private Vector2 m_positionPixel;
-        private Vector2 m_screenSizePixel;
-        private int m_wheelDelta;
-        private bool[] m_buttonsHit;        // Only for one frame at true
-        private bool[] m_buttonsDown;       // All following frames the mouse is down
-        private bool[] m_buttonsUp;         // True on the frame when the button changes to up
-        private bool m_isInside;
+        private Vector2 _moveDistancePixel;
+        private Vector2 _positionPixel;
+        private Vector2 _screenSizePixel;
+        private int _wheelDelta;
+        private bool[] _buttonsHit;        // Only for one frame at true
+        private bool[] _buttonsDown;       // All following frames the mouse is down
+        private bool[] _buttonsUp;         // True on the frame when the button changes to up
+        private bool _isInside;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseOrPointerState"/> class.
         /// </summary>
         public MouseOrPointerState()
         {
-            var buttonCount = BUTTON_COUNT;
+            var buttonCount = s_buttonCount;
             if (buttonCount <= 0)
             {
                 buttonCount = Enum.GetValues(typeof(MouseButton)).Length;
@@ -56,9 +56,9 @@ namespace SeeingSharp.Multimedia.Input
 
             this.Internals = new MouseOrPointerStateInternals(this);
 
-            m_buttonsHit = new bool[buttonCount];
-            m_buttonsDown = new bool[buttonCount];
-            m_buttonsUp = new bool[buttonCount];
+            _buttonsHit = new bool[buttonCount];
+            _buttonsDown = new bool[buttonCount];
+            _buttonsUp = new bool[buttonCount];
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="mouseButton">The mouse button.</param>
         public bool IsButtonHit(MouseButton mouseButton)
         {
-            return m_buttonsHit[(int)mouseButton];
+            return _buttonsHit[(int)mouseButton];
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="mouseButton">The mouse button.</param>
         public bool IsButtonDown(MouseButton mouseButton)
         {
-            return m_buttonsDown[(int)mouseButton];
+            return _buttonsDown[(int)mouseButton];
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="mouseButton">The mouse button.</param>
         public bool IsButtonUp(MouseButton mouseButton)
         {
-            return m_buttonsUp[(int)mouseButton];
+            return _buttonsUp[(int)mouseButton];
         }
 
         /// <summary>
@@ -95,38 +95,37 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         protected override void CopyAndResetForUpdatePassInternal(InputStateBase targetState)
         {
-            var targetStateCasted = targetState as MouseOrPointerState;
-            targetStateCasted.EnsureNotNull(nameof(targetStateCasted));
+            var targetStateCasted = (MouseOrPointerState) targetState;
 
-            targetStateCasted.m_moveDistancePixel = m_moveDistancePixel;
-            targetStateCasted.m_screenSizePixel = m_screenSizePixel;
-            targetStateCasted.m_positionPixel = m_positionPixel;
-            targetStateCasted.m_wheelDelta = m_wheelDelta;
-            targetStateCasted.m_isInside = m_isInside;
+            targetStateCasted._moveDistancePixel = _moveDistancePixel;
+            targetStateCasted._screenSizePixel = _screenSizePixel;
+            targetStateCasted._positionPixel = _positionPixel;
+            targetStateCasted._wheelDelta = _wheelDelta;
+            targetStateCasted._isInside = _isInside;
             targetStateCasted.Type = this.Type;
-            for (var loop = 0; loop < BUTTON_COUNT; loop++)
+            for (var loop = 0; loop < s_buttonCount; loop++)
             {
-                targetStateCasted.m_buttonsDown[loop] = m_buttonsDown[loop];
-                targetStateCasted.m_buttonsHit[loop] = m_buttonsHit[loop];
-                targetStateCasted.m_buttonsUp[loop] = m_buttonsUp[loop];
+                targetStateCasted._buttonsDown[loop] = _buttonsDown[loop];
+                targetStateCasted._buttonsHit[loop] = _buttonsHit[loop];
+                targetStateCasted._buttonsUp[loop] = _buttonsUp[loop];
             }
 
             // Reset current object
-            m_moveDistancePixel = Vector2.Zero;
-            m_wheelDelta = 0;
-            for (var loop = 0; loop < BUTTON_COUNT; loop++)
+            _moveDistancePixel = Vector2.Zero;
+            _wheelDelta = 0;
+            for (var loop = 0; loop < s_buttonCount; loop++)
             {
-                m_buttonsUp[loop] = false;
+                _buttonsUp[loop] = false;
 
-                if (m_buttonsHit[loop] || m_buttonsDown[loop])
+                if (_buttonsHit[loop] || _buttonsDown[loop])
                 {
-                    m_buttonsHit[loop] = false;
-                    m_buttonsDown[loop] = true;
+                    _buttonsHit[loop] = false;
+                    _buttonsDown[loop] = true;
                 }
                 else
                 {
-                    m_buttonsHit[loop] = false;
-                    m_buttonsDown[loop] = false;
+                    _buttonsHit[loop] = false;
+                    _buttonsDown[loop] = false;
                 }
             }
         }
@@ -163,7 +162,7 @@ namespace SeeingSharp.Multimedia.Input
             };
 
             // Check correct count of buttons
-            buttonStates.EnsureCountEquals(BUTTON_COUNT, nameof(buttonStates));
+            buttonStates.EnsureCountEquals(s_buttonCount, nameof(buttonStates));
 
             // Update mouse states
             for (var loop = 0; loop < buttonStates.Length; loop++)
@@ -178,9 +177,9 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         internal void NotifyMouseLocation(Vector2 pixelPosition, Vector2 moveDistancePixel, Vector2 screenSizePixel)
         {
-            m_positionPixel = pixelPosition;
-            m_moveDistancePixel = moveDistancePixel;
-            m_screenSizePixel = screenSizePixel;
+            _positionPixel = pixelPosition;
+            _moveDistancePixel = moveDistancePixel;
+            _screenSizePixel = screenSizePixel;
         }
 
         /// <summary>
@@ -189,20 +188,20 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         internal void NotifyMouseWheel(int wheelDelta)
         {
-            m_wheelDelta += wheelDelta;
+            _wheelDelta += wheelDelta;
         }
 
         internal void NotifyInside(bool isMouseInside)
         {
-            m_isInside = isMouseInside;
+            _isInside = isMouseInside;
 
-            if (!m_isInside)
+            if (!_isInside)
             {
-                for (var loop = 0; loop < BUTTON_COUNT; loop++)
+                for (var loop = 0; loop < s_buttonCount; loop++)
                 {
-                    m_buttonsDown[loop] = false;
-                    m_buttonsHit[loop] = false;
-                    m_buttonsUp[loop] = false;
+                    _buttonsDown[loop] = false;
+                    _buttonsHit[loop] = false;
+                    _buttonsUp[loop] = false;
                 }
             }
         }
@@ -215,34 +214,34 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="pressedState">True, if the button is pressed currently.</param>
         private void UpdateMouseButtonState(int buttonIndex, bool pressedState)
         {
-            var isHitOrDown = m_buttonsHit[buttonIndex] | m_buttonsDown[buttonIndex];
+            var isHitOrDown = _buttonsHit[buttonIndex] | _buttonsDown[buttonIndex];
             if (isHitOrDown == pressedState) { return; }
 
             if (pressedState)
             {
-                m_buttonsHit[buttonIndex] = true;
-                m_buttonsDown[buttonIndex] = true;
+                _buttonsHit[buttonIndex] = true;
+                _buttonsDown[buttonIndex] = true;
             }
             else
             {
-                m_buttonsHit[buttonIndex] = false;
-                m_buttonsDown[buttonIndex] = false;
-                m_buttonsUp[buttonIndex] = true;
+                _buttonsHit[buttonIndex] = false;
+                _buttonsDown[buttonIndex] = false;
+                _buttonsUp[buttonIndex] = true;
             }
         }
 
-        public Vector2 MoveDistanceDip => m_moveDistancePixel;
+        public Vector2 MoveDistanceDip => _moveDistancePixel;
 
-        public Vector2 PositionDip => m_positionPixel;
+        public Vector2 PositionDip => _positionPixel;
 
         public Vector2 MoveDistanceRelative
         {
             get
             {
-                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
-                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
-                return m_moveDistancePixel / m_screenSizePixel;
+                return _moveDistancePixel / _screenSizePixel;
             }
         }
 
@@ -250,24 +249,24 @@ namespace SeeingSharp.Multimedia.Input
         {
             get
             {
-                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.X, 0f)) { return Vector2.Zero; }
-                if (EngineMath.EqualsWithTolerance(m_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
 
-                return m_positionPixel / m_screenSizePixel;
+                return _positionPixel / _screenSizePixel;
             }
         }
 
         /// <summary>
         /// Gets the size of the screen in device independent pixel.
         /// </summary>
-        public Vector2 ScreenSizeDip => m_screenSizePixel;
+        public Vector2 ScreenSizeDip => _screenSizePixel;
 
         /// <summary>
         /// Gets the current wheel delta.
         /// </summary>
-        public int WheelDelta => m_wheelDelta;
+        public int WheelDelta => _wheelDelta;
 
-        public bool IsInsideView => m_isInside;
+        public bool IsInsideView => _isInside;
 
         public MouseOrPointerType Type { get; internal set; }
 
@@ -278,21 +277,21 @@ namespace SeeingSharp.Multimedia.Input
         //*********************************************************************
         public class MouseOrPointerStateInternals
         {
-            private MouseOrPointerState m_host;
+            private MouseOrPointerState _host;
 
             internal MouseOrPointerStateInternals(MouseOrPointerState host)
             {
-                m_host = host;
+                _host = host;
             }
 
             public void NotifyButtonDown(MouseButton button)
             {
-                m_host.NotifyButtonDown(button);
+                _host.NotifyButtonDown(button);
             }
 
             public void NotifyButtonUp(MouseButton button)
             {
-                m_host.NotifyButtonUp(button);
+                _host.NotifyButtonUp(button);
             }
 
             public void NotifyButtonStates(
@@ -302,28 +301,28 @@ namespace SeeingSharp.Multimedia.Input
                 bool isExtended1ButtonDown,
                 bool isExtended2ButtonDown)
             {
-                m_host.NotifyButtonStates(isLeftButtonDown, isMiddleButtonDown, isRightButtonDown, isExtended1ButtonDown, isExtended2ButtonDown);
+                _host.NotifyButtonStates(isLeftButtonDown, isMiddleButtonDown, isRightButtonDown, isExtended1ButtonDown, isExtended2ButtonDown);
             }
 
             public void NotifyMouseLocation(Vector2 pixelPosition, Vector2 moveDistancePixel, Vector2 screenSizePixel)
             {
-                m_host.NotifyMouseLocation(pixelPosition, moveDistancePixel, screenSizePixel);
+                _host.NotifyMouseLocation(pixelPosition, moveDistancePixel, screenSizePixel);
             }
 
             public void NotifyMouseWheel(int wheelDelta)
             {
-                m_host.NotifyMouseWheel(wheelDelta);
+                _host.NotifyMouseWheel(wheelDelta);
             }
 
             public void NotifyInside(bool isMouseInside)
             {
-                m_host.NotifyInside(isMouseInside);
+                _host.NotifyInside(isMouseInside);
             }
 
             public MouseOrPointerType Type
             {
-                get => m_host.Type;
-                set => m_host.Type = value;
+                get => _host.Type;
+                set => _host.Type = value;
             }
         }
     }

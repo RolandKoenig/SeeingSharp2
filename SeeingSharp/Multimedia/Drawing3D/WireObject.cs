@@ -33,15 +33,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class WireObject : SceneSpacialObject
     {
         // Configuration
-        private bool m_forceReloadLineData;
-        private Line[] m_lineData;
+        private bool _forceReloadLineData;
+        private Line[] _lineData;
         
         // Bounding volumes
-        private BoundingBox m_boundingBox;
-        private BoundingSphere m_boundingSphere;
+        private BoundingBox _boundingBox;
+        private BoundingSphere _boundingSphere;
 
         // Direct3D resources
-        private IndexBasedDynamicCollection<LocalResourceData> m_localResources;
+        private IndexBasedDynamicCollection<LocalResourceData> _localResources;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WireObject" /> class.
@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public WireObject()
         {
             this.Color = Color4.Black;
-            m_localResources = new IndexBasedDynamicCollection<LocalResourceData>();
+            _localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public WireObject(params Line[] lines)
             : this()
         {
-            m_lineData = lines;
+            _lineData = lines;
 
             this.UpdateBoundingVolumes();
         }
@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             : this()
         {
             this.Color = lineColor;
-            m_lineData = lines;
+            _lineData = lines;
 
             this.UpdateBoundingVolumes();
         }
@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var bTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Minimum.Z);
             var cTop = new Vector3(boundingBox.Maximum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
             var dTop = new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z);
-            m_lineData = new[]
+            _lineData = new[]
             {
                 new Line(aBottom, bBottom),
                 new Line(bBottom, cBottom),
@@ -119,7 +119,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="resourceDictionary">Current resource dictionary.</param>
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
-            m_localResources.AddObject(
+            _localResources.AddObject(
                 new LocalResourceData
                 {
                     LineVertexBuffer = null
@@ -133,7 +133,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device for which to check.</param>
         public override bool IsLoaded(EngineDevice device)
         {
-            return m_localResources.HasObjectAt(device.DeviceIndex);
+            return _localResources.HasObjectAt(device.DeviceIndex);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            var result = m_boundingBox;
+            var result = _boundingBox;
             result.Transform(this.Transform);
             return result;
         }
@@ -155,7 +155,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            var result = m_boundingSphere;
+            var result = _boundingSphere;
             result.Transform(this.Transform);
             return result;
         }
@@ -168,14 +168,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.UnloadResources();
 
             // Dispose all locally created resources
-            foreach (var actLocalResource in m_localResources)
+            foreach (var actLocalResource in _localResources)
             {
                 if (actLocalResource == null) { continue; }
 
                 SeeingSharpUtil.SafeDispose(ref actLocalResource.LineVertexBuffer);
             }
 
-            m_localResources.Clear();
+            _localResources.Clear();
         }
 
         /// <summary>
@@ -187,10 +187,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             base.UpdateInternal(updateState);
 
             // Handle line data reloading flag
-            if (m_forceReloadLineData)
+            if (_forceReloadLineData)
             {
-                m_localResources.ForEachInEnumeration(actItem => actItem.LineDataLoaded = false);
-                m_forceReloadLineData = false;
+                _localResources.ForEachInEnumeration(actItem => actItem.LineDataLoaded = false);
+                _forceReloadLineData = false;
 
                 this.UpdateBoundingVolumes();
             }
@@ -226,13 +226,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             if (boundBoxCalc.CanCreateBoundingBox)
             {
-                m_boundingBox = boundBoxCalc.CreateBoundingBox();
-                BoundingSphere.FromBox(ref m_boundingBox, out m_boundingSphere);
+                _boundingBox = boundBoxCalc.CreateBoundingBox();
+                BoundingSphere.FromBox(ref _boundingBox, out _boundingSphere);
             }
             else
             {
-                m_boundingBox = BoundingBox.Empty;
-                m_boundingSphere = BoundingSphere.Empty;
+                _boundingBox = BoundingBox.Empty;
+                _boundingSphere = BoundingSphere.Empty;
             }
         }
 
@@ -244,27 +244,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             this.UpdateAndApplyRenderParameters(renderState);
 
-            var resourceData = m_localResources[renderState.DeviceIndex];
+            var resourceData = _localResources[renderState.DeviceIndex];
 
             // Load line data to memory if needed
             if (!resourceData.LineDataLoaded)
             {
-                if (m_lineData == null ||
-                    m_lineData.Length == 0)
+                if (_lineData == null ||
+                    _lineData.Length == 0)
                 {
                     return;
                 }
 
                 // Loading of line data
                 SeeingSharpUtil.SafeDispose(ref resourceData.LineVertexBuffer);
-                resourceData.LineVertexBuffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(renderState.Device, m_lineData);
+                resourceData.LineVertexBuffer = GraphicsHelper.Internals.CreateImmutableVertexBuffer(renderState.Device, _lineData);
                 resourceData.LineDataLoaded = true;
             }
 
             // Apply vertex buffer and draw lines
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(resourceData.LineVertexBuffer, LineVertex.Size, 0));
-            deviceContext.Draw(m_lineData.Length * 2, 0);
+            deviceContext.Draw(_lineData.Length * 2, 0);
         }
 
         /// <summary>
@@ -272,13 +272,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public Line[] LineData
         {
-            get => m_lineData;
+            get => _lineData;
             set
             {
-                if (m_lineData != value)
+                if (_lineData != value)
                 {
-                    m_lineData = value;
-                    m_forceReloadLineData = true;
+                    _lineData = value;
+                    _forceReloadLineData = true;
                 }
             }
         }

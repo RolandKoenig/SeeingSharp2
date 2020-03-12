@@ -25,14 +25,14 @@ namespace SeeingSharp.Util
 {
     public class UniqueGenericKeyGenerator
     {
-        private long m_nextGenericKey;
+        private long _nextGenericKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UniqueGenericKeyGenerator" /> class.
         /// </summary>
         public UniqueGenericKeyGenerator()
         {
-            m_nextGenericKey = long.MinValue;
+            _nextGenericKey = long.MinValue;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public NamedOrGenericKey GetNextGeneric()
         {
-            var result = Interlocked.Increment(ref m_nextGenericKey);
+            var result = Interlocked.Increment(ref _nextGenericKey);
             result--;
             return new NamedOrGenericKey(result);
         }

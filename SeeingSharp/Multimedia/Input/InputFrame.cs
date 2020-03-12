@@ -30,9 +30,9 @@ namespace SeeingSharp.Multimedia.Input
     /// </summary>
     public class InputFrame
     {
-        private TimeSpan m_frameDuration;
-        private List<InputStateBase> m_inputStates;
-        private List<InputStateBase> m_recoveredStates;
+        private TimeSpan _frameDuration;
+        private List<InputStateBase> _inputStates;
+        private List<InputStateBase> _recoveredStates;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputFrame"/> class.
@@ -50,12 +50,12 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewInfo">The view for which to get all input states.</param>
         public IEnumerable<InputStateBase> GetInputStates(ViewInformation viewInfo)
         {
-            var inputStateCount = m_inputStates.Count;
+            var inputStateCount = _inputStates.Count;
             for (var loop = 0; loop < inputStateCount; loop++)
             {
-                if (m_inputStates[loop].RelatedView == viewInfo)
+                if (_inputStates[loop].RelatedView == viewInfo)
                 {
-                    yield return m_inputStates[loop];
+                    yield return _inputStates[loop];
                 }
             }
         }
@@ -67,18 +67,18 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
         internal void Reset(int expectedStateCount, TimeSpan frameDuration)
         {
-            if (m_inputStates == null)
+            if (_inputStates == null)
             {
-                m_inputStates = new List<InputStateBase>(expectedStateCount);
-                m_recoveredStates = new List<InputStateBase>(expectedStateCount);
+                _inputStates = new List<InputStateBase>(expectedStateCount);
+                _recoveredStates = new List<InputStateBase>(expectedStateCount);
             }
             else
             {
-                m_recoveredStates.AddRange(m_inputStates);
-                m_inputStates.Clear();
+                _recoveredStates.AddRange(_inputStates);
+                _inputStates.Clear();
             }
 
-            m_frameDuration = frameDuration;
+            _frameDuration = frameDuration;
 
             this.DefaultMouseOrPointer = MouseOrPointerState.Dummy;
             this.DefaultGamepad = GamepadState.Dummy;
@@ -89,12 +89,12 @@ namespace SeeingSharp.Multimedia.Input
         {
             // Get the state object to where to copy the given InputState
             InputStateBase targetState = null;
-            for (var loop = 0; loop < m_recoveredStates.Count; loop++)
+            for (var loop = 0; loop < _recoveredStates.Count; loop++)
             {
-                if (m_recoveredStates[loop].CurrentType == inputState.CurrentType)
+                if (_recoveredStates[loop].CurrentType == inputState.CurrentType)
                 {
-                    targetState = m_recoveredStates[loop];
-                    m_recoveredStates.RemoveAt(loop);
+                    targetState = _recoveredStates[loop];
+                    _recoveredStates.RemoveAt(loop);
                     break;
                 }
             }
@@ -112,7 +112,7 @@ namespace SeeingSharp.Multimedia.Input
 
         private void AddState(InputStateBase inputState)
         {
-            m_inputStates.Add(inputState);
+            _inputStates.Add(inputState);
 
             // Register first MouseOrPointer state as default
             if (this.DefaultMouseOrPointer == MouseOrPointerState.Dummy)
@@ -145,12 +145,12 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Gets the total count of input states.
         /// </summary>
-        public int CountStates => m_inputStates.Count;
+        public int CountStates => _inputStates.Count;
 
         /// <summary>
         /// Gets a collection containing all gathered input states.
         /// </summary>
-        public IEnumerable<InputStateBase> InputStates => m_inputStates;
+        public IEnumerable<InputStateBase> InputStates => _inputStates;
 
         /// <summary>
         /// Gets the first MouseOrPointerState.
@@ -179,6 +179,6 @@ namespace SeeingSharp.Multimedia.Input
             private set;
         }
 
-        public TimeSpan FrameDuration => m_frameDuration;
+        public TimeSpan FrameDuration => _frameDuration;
     }
 }

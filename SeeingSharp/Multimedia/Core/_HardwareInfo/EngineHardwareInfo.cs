@@ -27,7 +27,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class EngineHardwareInfo
     {
-        private List<EngineAdapterInfo> m_adapters;
+        private List<EngineAdapterInfo> _adapters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
@@ -42,7 +42,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         private void LoadAdapterInformation(EngineFactory factory)
         {
-            m_adapters = new List<EngineAdapterInfo>();
+            _adapters = new List<EngineAdapterInfo>();
 
             var adapterCount = factory.DXGI.Factory.GetAdapterCount1();
             for (var loop = 0; loop < adapterCount; loop++)
@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     var actAdapter = factory.DXGI.Factory.GetAdapter1(loop);
-                    m_adapters.Add(new EngineAdapterInfo(loop, actAdapter));
+                    _adapters.Add(new EngineAdapterInfo(loop, actAdapter));
                 }
                 catch (Exception)
                 {
@@ -63,13 +63,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all adapters.
         /// </summary>
-        public List<EngineAdapterInfo> Adapters => m_adapters;
+        public List<EngineAdapterInfo> Adapters => _adapters;
 
         public EngineAdapterInfo SoftwareAdapter
         {
             get
             {
-                return m_adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
+                return _adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
             }
         }
     }

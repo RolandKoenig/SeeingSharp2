@@ -28,7 +28,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PixelShaderResource : ShaderResource
     {
         // Resources for Direct3D 11 rendering
-        private D3D11.PixelShader m_pixelShader;
+        private D3D11.PixelShader _pixelShader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
@@ -45,9 +45,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void LoadShader(EngineDevice device, byte[] shaderBytecode)
         {
-            if (m_pixelShader == null)
+            if (_pixelShader == null)
             {
-                m_pixelShader = new D3D11.PixelShader(device.DeviceD3D11_1, shaderBytecode);
+                _pixelShader = new D3D11.PixelShader(device.DeviceD3D11_1, shaderBytecode);
             }
         }
 
@@ -56,17 +56,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override void UnloadShader()
         {
-            m_pixelShader = SeeingSharpUtil.DisposeObject(m_pixelShader);
+            _pixelShader = SeeingSharpUtil.DisposeObject(_pixelShader);
         }
 
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => m_pixelShader != null;
+        public override bool IsLoaded => _pixelShader != null;
 
         /// <summary>
         /// Gets the loaded PixelShader object.
         /// </summary>
-        internal D3D11.PixelShader PixelShader => m_pixelShader;
+        internal D3D11.PixelShader PixelShader => _pixelShader;
     }
 }

@@ -33,14 +33,14 @@ namespace SeeingSharp.Multimedia.Views
     internal class SwapChainPanelWrapper : IDisposable
     {
         // UI objects
-        private SwapChainBackgroundPanel m_bgPanel;
-        private ISwapChainBackgroundPanelNative m_bgPanelNative;
-        private SwapChainPanel m_panel;
-        private ISwapChainPanelNative m_panelNative;
+        private SwapChainBackgroundPanel _bgPanel;
+        private ISwapChainBackgroundPanelNative _bgPanelNative;
+        private SwapChainPanel _panel;
+        private ISwapChainPanelNative _panelNative;
 
         // Configuration
-        private float m_currentDpiX;
-        private float m_currentDpiY;
+        private float _currentDpiX;
+        private float _currentDpiY;
         public event EventHandler CompositionScaleChanged;
         public event EventHandler<RoutedEventArgs> Loaded;
         public event EventHandler<SizeChangedEventArgs> SizeChanged;
@@ -51,8 +51,8 @@ namespace SeeingSharp.Multimedia.Views
         public SwapChainPanelWrapper()
         {
             var displayInfo = DisplayInformation.GetForCurrentView();
-            m_currentDpiX = displayInfo.LogicalDpi;
-            m_currentDpiY = displayInfo.LogicalDpi;
+            _currentDpiX = displayInfo.LogicalDpi;
+            _currentDpiY = displayInfo.LogicalDpi;
         }
 
         /// <summary>
@@ -62,12 +62,12 @@ namespace SeeingSharp.Multimedia.Views
         public SwapChainPanelWrapper(SwapChainBackgroundPanel bgPanel)
             : this()
         {
-            m_bgPanel = bgPanel;
-            m_bgPanelNative = SharpDX.ComObject.As<ISwapChainBackgroundPanelNative>(m_bgPanel);
+            _bgPanel = bgPanel;
+            _bgPanelNative = SharpDX.ComObject.As<ISwapChainBackgroundPanelNative>(_bgPanel);
 
-            m_bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            m_bgPanel.Loaded += this.OnAnyPanel_Loaded;
-            m_bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
+            _bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            _bgPanel.Loaded += this.OnAnyPanel_Loaded;
+            _bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
         }
 
         /// <summary>
@@ -77,19 +77,19 @@ namespace SeeingSharp.Multimedia.Views
         public SwapChainPanelWrapper(SwapChainPanel panel)
             : this()
         {
-            m_panel = panel;
-            m_panelNative = SharpDX.ComObject.As<ISwapChainPanelNative>(m_panel);
+            _panel = panel;
+            _panelNative = SharpDX.ComObject.As<ISwapChainPanelNative>(_panel);
 
-            m_panel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            m_panel.Loaded += this.OnAnyPanel_Loaded;
-            m_panel.Unloaded += this.OnAnyPanel_Unloaded;
-            m_panel.CompositionScaleChanged += this.OnPanelCompositionScaleChanged;
+            _panel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            _panel.Loaded += this.OnAnyPanel_Loaded;
+            _panel.Unloaded += this.OnAnyPanel_Unloaded;
+            _panel.CompositionScaleChanged += this.OnPanelCompositionScaleChanged;
         }
 
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref m_bgPanelNative);
-            SeeingSharpUtil.SafeDispose(ref m_panelNative);
+            SeeingSharpUtil.SafeDispose(ref _bgPanelNative);
+            SeeingSharpUtil.SafeDispose(ref _panelNative);
         }
 
         private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
@@ -124,8 +124,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (m_bgPanel != null) { return m_bgPanel; }
-                if (m_panel != null) { return m_panel; }
+                if (_bgPanel != null) { return _bgPanel; }
+                if (_panel != null) { return _panel; }
                 throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }
@@ -137,8 +137,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             set
             {
-                if (m_bgPanelNative != null) { m_bgPanelNative.SwapChain = value; }
-                else if (m_panelNative != null) { m_panelNative.SwapChain = value; }
+                if (_bgPanelNative != null) { _bgPanelNative.SwapChain = value; }
+                else if (_panelNative != null) { _panelNative.SwapChain = value; }
                 else
                 {
                     throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
@@ -146,14 +146,14 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        public bool CompositionRescalingNeeded => m_panel != null;
+        public bool CompositionRescalingNeeded => _panel != null;
 
         public double CompositionScaleX
         {
             get
             {
-                if (m_panel != null) { return m_panel.CompositionScaleX; }
-                return m_currentDpiX / 96.0;
+                if (_panel != null) { return _panel.CompositionScaleX; }
+                return _currentDpiX / 96.0;
             }
         }
 
@@ -161,8 +161,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (m_panel != null) { return m_panel.CompositionScaleY; }
-                return m_currentDpiY / 96.0;
+                if (_panel != null) { return _panel.CompositionScaleY; }
+                return _currentDpiY / 96.0;
             }
         }
 
@@ -170,8 +170,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (m_bgPanel != null) { return m_bgPanel.Dispatcher; }
-                if (m_panel != null) { return m_panel.Dispatcher; }
+                if (_bgPanel != null) { return _bgPanel.Dispatcher; }
+                if (_panel != null) { return _panel.Dispatcher; }
                 throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }
@@ -180,8 +180,8 @@ namespace SeeingSharp.Multimedia.Views
         {
             get
             {
-                if (m_bgPanel != null) { return m_bgPanel.Visibility; }
-                if (m_panel != null) { return m_panel.Visibility; }
+                if (_bgPanel != null) { return _bgPanel.Visibility; }
+                if (_panel != null) { return _panel.Visibility; }
                 throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }

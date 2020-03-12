@@ -36,21 +36,21 @@ namespace SeeingSharp.UwpSamples.Controls
         public static readonly DependencyProperty SelectedObjectProperty =
             DependencyProperty.Register(nameof(SelectedObject), typeof(object), typeof(PropertyGrid), new PropertyMetadata(null, OnSelectedObjectChanged));
 
-        private PropertyGridViewModel m_propertyGridVM;
+        private PropertyGridViewModel _propertyGridVM;
 
         public PropertyGrid()
         {
             this.InitializeComponent();
 
-            m_propertyGridVM = new PropertyGridViewModel();
-            GridMain.DataContext = m_propertyGridVM;
+            _propertyGridVM = new PropertyGridViewModel();
+            GridMain.DataContext = _propertyGridVM;
         }
 
         private static void OnSelectedObjectChanged(DependencyObject sender, DependencyPropertyChangedEventArgs eArgs)
         {
             if (!(sender is PropertyGrid propGrid)) { return; }
 
-            propGrid.m_propertyGridVM.SelectedObject = eArgs.NewValue;
+            propGrid._propertyGridVM.SelectedObject = eArgs.NewValue;
             propGrid.UpdatePropertiesView();
         }
 
@@ -58,7 +58,7 @@ namespace SeeingSharp.UwpSamples.Controls
         {
             GridMain.Children.Clear();
 
-            var lstProperties = new List<ConfigurablePropertyMetadata>(m_propertyGridVM.PropertyMetadata);
+            var lstProperties = new List<ConfigurablePropertyMetadata>(_propertyGridVM.PropertyMetadata);
             lstProperties.Sort((left, right) => left.CategoryName.CompareTo(right.CategoryName));
             var lstPropertyCategories = lstProperties
                 .Select(actProperty => actProperty.CategoryName)
@@ -77,7 +77,7 @@ namespace SeeingSharp.UwpSamples.Controls
             // Create all controls
             var actRowIndex = 0;
             var actCategory = string.Empty;
-            foreach (var actProperty in m_propertyGridVM.PropertyMetadata)
+            foreach (var actProperty in _propertyGridVM.PropertyMetadata)
             {
                 if (actProperty.CategoryName != actCategory)
                 {

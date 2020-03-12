@@ -409,7 +409,6 @@ namespace SeeingSharp.Util.SdxTK
         public static Image Load(Stream imageStream)
         {
             // Use fast path using NativeFileStream
-            // TODO: THIS IS NOT OPTIMIZED IN THE CASE THE STREAM IS NOT AN IMAGE. FIND A WAY TO OPTIMIZE THIS CASE.
             var nativeImageStream = imageStream as SDXIO.NativeFileStream;
             if (nativeImageStream != null)
             {

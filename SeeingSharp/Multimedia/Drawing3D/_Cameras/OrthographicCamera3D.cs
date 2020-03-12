@@ -27,10 +27,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class OrthographicCamera3D : Camera3DBase
     {
         // Constants
-        private const float ZOOM_FACTOR_MIN = 1f;
+        private const float ZOO_FACTOR_MIN = 1f;
 
         // Configuration
-        private float m_zoomFactor = 10f;
+        private float _zoomFactor = 10f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
@@ -58,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.ApplyViewPoint(camera3DViewPoint);
 
-            m_zoomFactor = camera3DViewPoint.OrthographicZoomFactor;
+            _zoomFactor = camera3DViewPoint.OrthographicZoomFactor;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override Camera3DViewPoint GetViewPoint()
         {
             var result = base.GetViewPoint();
-            result.OrthographicZoomFactor = m_zoomFactor;
+            result.OrthographicZoomFactor = _zoomFactor;
             return result;
         }
 
@@ -80,10 +80,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
             dist = dist * 0.1f;
             while (Math.Abs(dist) > 1f)
             {
-                m_zoomFactor = m_zoomFactor + Math.Sign(dist) * (m_zoomFactor / 10f);
+                _zoomFactor = _zoomFactor + Math.Sign(dist) * (_zoomFactor / 10f);
                 dist = dist - Math.Sign(dist);
             }
-            m_zoomFactor = m_zoomFactor + dist * m_zoomFactor;
+            _zoomFactor = _zoomFactor + dist * _zoomFactor;
 
             this.UpdateCamera();
         }
@@ -104,8 +104,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
-            var zoomFactor = m_zoomFactor;
-            if (zoomFactor <= ZOOM_FACTOR_MIN) { zoomFactor = ZOOM_FACTOR_MIN; }
+            var zoomFactor = _zoomFactor;
+            if (zoomFactor <= ZOO_FACTOR_MIN) { zoomFactor = ZOO_FACTOR_MIN; }
 
             Matrix4x4Ex.CreateOrthoLH(this.ScreenWidth / zoomFactor, screenHeight / zoomFactor,
                 -Math.Abs(Math.Max(zNear, zFar)),
@@ -121,12 +121,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float ZoomFactor
         {
-            get => m_zoomFactor;
+            get => _zoomFactor;
             set
             {
-                if (!EngineMath.EqualsWithTolerance(m_zoomFactor, value))
+                if (!EngineMath.EqualsWithTolerance(_zoomFactor, value))
                 {
-                    m_zoomFactor = value;
+                    _zoomFactor = value;
                     this.UpdateCamera();
                 }
             }

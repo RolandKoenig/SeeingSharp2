@@ -19,8 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
-using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp
 {
@@ -48,7 +48,7 @@ namespace SeeingSharp
         public const decimal TOLERANCE_DECIMAL_POSITIVE = 0.00001M;
         public const decimal TOLERANCE_DECIMAL_NEGATIVE = -0.00001M;
 
-        public static float AngleFromXY(float x, float y)
+        public static float AngleFromXy(float x, float y)
         {
             // Implemented with sample code from http://www.d3dcoder.net/d3d11.htm, Source Code Set II
             var theta = 0f;

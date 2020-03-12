@@ -36,17 +36,17 @@ namespace SeeingSharp.Multimedia.Views
     public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
     {
         // Configuration
-        private int m_pixelWidth;
-        private int m_pixelHeight;
+        private int _pixelWidth;
+        private int _pixelHeight;
 
         // All needed direct3d resources
-        private D3D11.Device m_device;
-        private D3D11.DeviceContext m_deviceContext;
-        private D3D11.Texture2D m_copyHelperTextureStaging;
-        private D3D11.Texture2D m_renderTarget;
-        private D3D11.Texture2D m_renderTargetDepth;
-        private D3D11.RenderTargetView m_renderTargetView;
-        private D3D11.DepthStencilView m_renderTargetDepthView;
+        private D3D11.Device _device;
+        private D3D11.DeviceContext _deviceContext;
+        private D3D11.Texture2D _copyHelperTextureStaging;
+        private D3D11.Texture2D _renderTarget;
+        private D3D11.Texture2D _renderTargetDepth;
+        private D3D11.RenderTargetView _renderTargetView;
+        private D3D11.DepthStencilView _renderTargetDepthView;
 
         /// <summary>
         /// Raises before the render target starts rendering.
@@ -62,8 +62,8 @@ namespace SeeingSharp.Multimedia.Views
         public MemoryRenderTarget(int pixelWidth, int pixelHeight, SynchronizationContext syncContext = null)
         {
             // Set configuration
-            m_pixelWidth = pixelWidth;
-            m_pixelHeight = pixelHeight;
+            _pixelWidth = pixelWidth;
+            _pixelHeight = pixelHeight;
 
             if (syncContext == null) { syncContext = new SynchronizationContext(); }
 
@@ -99,14 +99,14 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_DisposeViewResources(EngineDevice device)
         {
-            m_renderTargetDepthView = SeeingSharpUtil.DisposeObject(m_renderTargetDepthView);
-            m_renderTargetDepth = SeeingSharpUtil.DisposeObject(m_renderTargetDepth);
-            m_renderTargetView = SeeingSharpUtil.DisposeObject(m_renderTargetView);
-            m_renderTarget = SeeingSharpUtil.DisposeObject(m_renderTarget);
-            m_copyHelperTextureStaging = SeeingSharpUtil.DisposeObject(m_copyHelperTextureStaging);
+            _renderTargetDepthView = SeeingSharpUtil.DisposeObject(_renderTargetDepthView);
+            _renderTargetDepth = SeeingSharpUtil.DisposeObject(_renderTargetDepth);
+            _renderTargetView = SeeingSharpUtil.DisposeObject(_renderTargetView);
+            _renderTarget = SeeingSharpUtil.DisposeObject(_renderTarget);
+            _copyHelperTextureStaging = SeeingSharpUtil.DisposeObject(_copyHelperTextureStaging);
 
-            m_device = null;
-            m_deviceContext = null;
+            _device = null;
+            _deviceContext = null;
         }
 
         /// <summary>
@@ -114,26 +114,26 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
-            var width = m_pixelWidth;
-            var height = m_pixelHeight;
+            var width = _pixelWidth;
+            var height = _pixelHeight;
 
             //Get references to current render device
-            m_device = device.DeviceD3D11_1;
-            m_deviceContext = m_device.ImmediateContext;
+            _device = device.DeviceD3D11_1;
+            _deviceContext = _device.ImmediateContext;
 
             //Create the swap chain and the render target
-            m_renderTarget = GraphicsHelper.Internals.CreateRenderTargetTexture(device, width, height, this.RenderLoop.Configuration);
-            m_renderTargetView = new D3D11.RenderTargetView(m_device, m_renderTarget);
+            _renderTarget = GraphicsHelper.Internals.CreateRenderTargetTexture(device, width, height, this.RenderLoop.Configuration);
+            _renderTargetView = new D3D11.RenderTargetView(_device, _renderTarget);
 
             //Create the depth buffer
-            m_renderTargetDepth = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, this.RenderLoop.Configuration);
-            m_renderTargetDepthView = new D3D11.DepthStencilView(m_device, m_renderTargetDepth);
+            _renderTargetDepth = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, this.RenderLoop.Configuration);
+            _renderTargetDepthView = new D3D11.DepthStencilView(_device, _renderTargetDepth);
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
             //Return all generated objects
-            return Tuple.Create(m_renderTarget, m_renderTargetView, m_renderTargetDepth, m_renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);
+            return Tuple.Create(_renderTarget, _renderTargetView, _renderTargetDepth, _renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);
         }
 
         /// <summary>
@@ -158,8 +158,8 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
         {
             // Finish rendering of all render tasks
-            m_deviceContext.Flush();
-            m_deviceContext.ClearState();
+            _deviceContext.Flush();
+            _deviceContext.ClearState();
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace SeeingSharp.Multimedia.Views
             set => this.RenderLoop.ClearColor = value;
         }
 
-        public SynchronizationContext UISynchronizationContext => this.RenderLoop.UISynchronizationContext;
+        public SynchronizationContext UISynchronizationContext => this.RenderLoop.UiSynchronizationContext;
 
         public bool IsOperational => this.RenderLoop.IsOperational;
     }

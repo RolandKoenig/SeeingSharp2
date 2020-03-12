@@ -28,14 +28,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class Mesh : SceneSpacialObject
     {
         // Resources
-        private IndexBasedDynamicCollection<GeometryResource> m_localResGeometry;
-        private IndexBasedDynamicCollection<MaterialResource[]> m_localResMaterials;
-        private IndexBasedDynamicCollection<RenderingChunk[]> m_localChunks;
-        private bool m_passRelevantValuesChanged;
+        private readonly IndexBasedDynamicCollection<GeometryResource> _localResGeometry;
+        private readonly IndexBasedDynamicCollection<MaterialResource[]> _localResMaterials;
+        private readonly IndexBasedDynamicCollection<RenderingChunk[]> _localChunks;
+        private bool _passRelevantValuesChanged;
 
         // Configuration members
-        private NamedOrGenericKey m_resGeometryKey;
-        private NamedOrGenericKey[] m_resMaterialResourceKeys;
+        private NamedOrGenericKey _resGeometryKey;
+        private NamedOrGenericKey[] _resMaterialResourceKeys;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mesh"/> class.
@@ -44,14 +44,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="materialResourceKeys">The material resources to apply on this Mesh.</param>
         public Mesh(NamedOrGenericKey geometryResourceKey, params NamedOrGenericKey[] materialResourceKeys)
         {
-            m_localResGeometry = new IndexBasedDynamicCollection<GeometryResource>();
-            m_localResMaterials = new IndexBasedDynamicCollection<MaterialResource[]>();
-            m_localChunks = new IndexBasedDynamicCollection<RenderingChunk[]>();
+            _localResGeometry = new IndexBasedDynamicCollection<GeometryResource>();
+            _localResMaterials = new IndexBasedDynamicCollection<MaterialResource[]>();
+            _localChunks = new IndexBasedDynamicCollection<RenderingChunk[]>();
 
-            m_resGeometryKey = geometryResourceKey;
-            m_resMaterialResourceKeys = materialResourceKeys;
+            _resGeometryKey = geometryResourceKey;
+            _resMaterialResourceKeys = materialResourceKeys;
 
-            m_passRelevantValuesChanged = true;
+            _passRelevantValuesChanged = true;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
+            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -80,7 +80,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
+            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -106,7 +106,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         public override string ToString()
         {
-            return $"GenericObject (Geometry: {m_resGeometryKey.ToString()})";
+            return $"GenericObject (Geometry: {_resGeometryKey.ToString()})";
         }
 
         /// <summary>
@@ -117,32 +117,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override void LoadResources(EngineDevice device, ResourceDictionary resourceDictionary)
         {
             // Load geometry
-            var geoResource = resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(m_resGeometryKey);
-            m_localResGeometry.AddObject(geoResource, device.DeviceIndex, false);
+            var geoResource = resourceDictionary.GetResourceAndEnsureLoaded<GeometryResource>(_resGeometryKey);
+            _localResGeometry.AddObject(geoResource, device.DeviceIndex, false);
 
             // Load materials
             MaterialResource[] matResources;
-            if (m_resMaterialResourceKeys.Length > 0)
+            if (_resMaterialResourceKeys.Length > 0)
             {
-                matResources = new MaterialResource[m_resMaterialResourceKeys.Length];
+                matResources = new MaterialResource[_resMaterialResourceKeys.Length];
                 for (var loop = 0; loop < matResources.Length; loop++)
                 {
                     matResources[loop] =
                         resourceDictionary
-                            .GetResourceAndEnsureLoaded<MaterialResource>(m_resMaterialResourceKeys[loop]);
+                            .GetResourceAndEnsureLoaded<MaterialResource>(_resMaterialResourceKeys[loop]);
                 }
-                m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
+                _localResMaterials.AddObject(matResources, device.DeviceIndex, false);
             }
             else
             {
                 matResources = new MaterialResource[1];
                 matResources[0] = resourceDictionary.GetOrCreateDefaultMaterialResource();
-                m_localResMaterials.AddObject(matResources, device.DeviceIndex, false);
+                _localResMaterials.AddObject(matResources, device.DeviceIndex, false);
 
             }
 
             // Load chunks
-            m_localChunks.AddObject(
+            _localChunks.AddObject(
                 geoResource.BuildRenderingChunks(device, matResources),
                 device.DeviceIndex,
                 false);
@@ -155,11 +155,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override bool IsLoaded(EngineDevice device)
         {
             // Handle geometry
-            if (!m_localResGeometry.HasObjectAt(device.DeviceIndex))
+            if (!_localResGeometry.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }
-            if (!m_localResMaterials.HasObjectAt(device.DeviceIndex))
+            if (!_localResMaterials.HasObjectAt(device.DeviceIndex))
             {
                 return false;
             }
@@ -174,10 +174,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.UnloadResources();
 
-            m_localResGeometry.Clear();
-            m_localResMaterials.Clear();
+            _localResGeometry.Clear();
+            _localResMaterials.Clear();
 
-            m_localChunks.Clear();
+            _localChunks.Clear();
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             // Subscribe to render passes
             var countSubscriptions = 0;
-            if (m_passRelevantValuesChanged || (countSubscriptions = this.CountRenderPassSubscriptions(layerViewSubset)) == 0)
+            if (_passRelevantValuesChanged || (countSubscriptions = this.CountRenderPassSubscriptions(layerViewSubset)) == 0)
             {
                 // Unsubscribe from all passes first
                 if (countSubscriptions > 0)
@@ -212,7 +212,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
 
                 // Update local flag
-                m_passRelevantValuesChanged = false;
+                _passRelevantValuesChanged = false;
             }
         }
 
@@ -223,7 +223,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             base.OnOpacityChanged();
 
-            m_passRelevantValuesChanged = true;
+            _passRelevantValuesChanged = true;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </returns>
         internal override float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
         {
-            var geometryResource = m_localResGeometry[viewInfo.Device.DeviceIndex];
+            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
             {
@@ -298,11 +298,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this.UpdateAndApplyRenderParameters(renderState);
 
             renderState.RenderChunks(
-                m_localChunks[renderState.DeviceIndex]);
+                _localChunks[renderState.DeviceIndex]);
         }
 
         public override bool IsExportable => false;
 
-        public NamedOrGenericKey GeometryResourceKey => m_resGeometryKey;
+        public NamedOrGenericKey GeometryResourceKey => _resGeometryKey;
     }
 }

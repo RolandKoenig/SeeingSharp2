@@ -27,15 +27,15 @@ namespace SeeingSharp.UwpSamples.Controls
 {
     public class ConfigurablePropertyMetadata
     {
-        private object m_hostObject;
-        private Type m_hostType;
-        private PropertyInfo m_propertyInfo;
+        private object _hostObject;
+        private Type _hostType;
+        private PropertyInfo _propertyInfo;
 
         internal ConfigurablePropertyMetadata(PropertyInfo propertyInfo, object hostObject)
         {
-            m_propertyInfo = propertyInfo;
-            m_hostType = hostObject.GetType();
-            m_hostObject = hostObject;
+            _propertyInfo = propertyInfo;
+            _hostType = hostObject.GetType();
+            _hostObject = hostObject;
 
             this.CategoryName = propertyInfo.GetCustomAttribute<CategoryAttribute>()?.Category ?? string.Empty;
 
@@ -47,7 +47,7 @@ namespace SeeingSharp.UwpSamples.Controls
                 this.PropertyDisplayName = attribDisplayName.DisplayName;
             }
 
-            var propertyType = m_propertyInfo.PropertyType;
+            var propertyType = _propertyInfo.PropertyType;
             if (propertyType == typeof(bool))
             {
                 this.ValueType = PropertyValueType.Bool;
@@ -79,25 +79,25 @@ namespace SeeingSharp.UwpSamples.Controls
         public Array GetEnumMembers()
         {
             if (this.ValueType != PropertyValueType.Enum) { throw new InvalidOperationException($"Method {nameof(this.GetEnumMembers)} not supported on value type {this.ValueType}!"); }
-            return Enum.GetValues(m_propertyInfo.PropertyType);
+            return Enum.GetValues(_propertyInfo.PropertyType);
         }
 
         public object GetValue()
         {
-            return m_propertyInfo.GetValue(m_hostObject);
+            return _propertyInfo.GetValue(_hostObject);
         }
 
         public void SetValue(object value)
         {
             var givenType = value.GetType();
-            var targetType = m_propertyInfo.PropertyType;
+            var targetType = _propertyInfo.PropertyType;
             if (givenType == targetType)
             {
-                m_propertyInfo.SetValue(m_hostObject, value);
+                _propertyInfo.SetValue(_hostObject, value);
             }
             else
             {
-                m_propertyInfo.SetValue(m_hostObject, Convert.ChangeType(value, targetType));
+                _propertyInfo.SetValue(_hostObject, Convert.ChangeType(value, targetType));
             }
         }
 

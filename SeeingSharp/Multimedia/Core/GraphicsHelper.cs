@@ -23,7 +23,6 @@ using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
-using SeeingSharp.Util.SdxTK;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
@@ -55,7 +54,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="device">Graphics device.</param>
         /// <param name="rawImage">Raw image data.</param>
-        internal static D3D11.Texture2D CreateTexture(EngineDevice device, Image rawImage)
+        internal static D3D11.Texture2D CreateTexture(EngineDevice device, SDXTK.Image rawImage)
         {
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -72,7 +71,7 @@ namespace SeeingSharp.Multimedia.Core
             };
 
             // Special handling for cube textures
-            if (rawImage.Description.Dimension == TextureDimension.TextureCube)
+            if (rawImage.Description.Dimension == SDXTK.TextureDimension.TextureCube)
             {
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.TextureCube;
             }
@@ -96,12 +95,12 @@ namespace SeeingSharp.Multimedia.Core
             // All default texture formats
             public const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
             public const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
-            public const Format DEFAULT_TEXTURE_FORMAT_SHARING_D2D = Format.B8G8R8A8_UNorm;
+            public const Format DEFAULT_TEXTURE_FORMAT_SHARING_DIRECT_2D = Format.B8G8R8A8_UNorm;
             public const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
             public const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
             public const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
             public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
-            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_D2D = PixelFormat.Format32bppPBGRA;
+            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D = PixelFormat.Format32bppPBGRA;
 
             /// <summary>
             /// Loads a bitmap using WIC.
@@ -171,7 +170,7 @@ namespace SeeingSharp.Multimedia.Core
                 var formatConverter = new FormatConverter(GraphicsCore.Current.FactoryWIC);
                 formatConverter.Initialize(
                     bitmapDecoder.GetFrame(0),
-                    Internals.DEFAULT_WIC_BITMAP_FORMAT_D2D,
+                    Internals.DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D,
                     BitmapDitherType.None,
                     null,
                     0.0,
@@ -237,16 +236,16 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> m_mappedTexture)
+            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> mappedTexture)
             {
                 //Create the texture
                 var dataRectangle = new SharpDX.DataRectangle(
-                    m_mappedTexture.Pointer,
-                    m_mappedTexture.Width * 4);
+                    mappedTexture.Pointer,
+                    mappedTexture.Width * 4);
                 var result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
                 {
-                    Width = m_mappedTexture.Width,
-                    Height = m_mappedTexture.Height,
+                    Width = mappedTexture.Width,
+                    Height = mappedTexture.Height,
                     ArraySize = 1,
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     Usage = D3D11.ResourceUsage.Default,
@@ -803,11 +802,11 @@ namespace SeeingSharp.Multimedia.Core
                 device.EnsureNotNull(nameof(device));
                 indices.EnsureNotNull(nameof(indices));
 
-                const int bytesPerIndex = sizeof(uint);
+                const int BYTES_PER_INDEX = sizeof(uint);
                 var countIndices = indices.Sum(actArray => actArray.Length);
                 var outStreamIndex = new SharpDX.DataStream(
                     countIndices *
-                    bytesPerIndex, true, true);
+                    BYTES_PER_INDEX, true, true);
 
                 // Write all instance data to the target stream
                 foreach (var actArray in indices)
@@ -828,7 +827,7 @@ namespace SeeingSharp.Multimedia.Core
                     BindFlags = D3D11.BindFlags.IndexBuffer,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
                     OptionFlags = D3D11.ResourceOptionFlags.None,
-                    SizeInBytes = countIndices * bytesPerIndex,
+                    SizeInBytes = countIndices * BYTES_PER_INDEX,
                     Usage = D3D11.ResourceUsage.Immutable
                 };
 

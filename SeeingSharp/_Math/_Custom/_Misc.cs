@@ -32,7 +32,7 @@ namespace SeeingSharp
 
     public struct Polygon2DMergeOptions
     {
-        public static readonly Polygon2DMergeOptions Default = new Polygon2DMergeOptions();
+        public static readonly Polygon2DMergeOptions DEFAULT = new Polygon2DMergeOptions();
 
         public bool MakeMergepointSpaceForTriangulation;
     }

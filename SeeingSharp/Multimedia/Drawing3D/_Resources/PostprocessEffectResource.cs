@@ -29,23 +29,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Notifies that rendering begins.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
-        internal abstract void NotifyBeforeRender(RenderState renderState, int passID);
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
+        internal abstract void NotifyBeforeRender(RenderState renderState, int passId);
 
         /// <summary>
         /// Notifies that rendering of the plain part has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
         /// <returns>True, if rendering should continue with next pass. False if postprocess effect is finished.</returns>
-        internal abstract void NotifyAfterRenderPlain(RenderState renderState, int passID);
+        internal abstract void NotifyAfterRenderPlain(RenderState renderState, int passId);
 
         /// <summary>
         /// Notifies that rendering has finished.
         /// </summary>
         /// <param name="renderState">The current render state.</param>
-        /// <param name="passID">The ID of the current pass (starting with 0)</param>
+        /// <param name="passId">The ID of the current pass (starting with 0)</param>
         /// <returns>True, if rendering should continue with next pass. False if postprocess effect is finished.</returns>
-        internal abstract bool NotifyAfterRender(RenderState renderState, int passID);
+        internal abstract bool NotifyAfterRender(RenderState renderState, int passId);
     }
 }

@@ -27,13 +27,13 @@ namespace SeeingSharp.Multimedia.Core
     public class Move3DByAnimation : AnimationBase
     {
         // Parameters
-        private IAnimatableObjectPosition m_targetObject;
-        private Vector3 m_moveVector;
-        private MovementAnimationHelper m_moveHelper;
+        private IAnimatableObjectPosition _targetObject;
+        private Vector3 _moveVector;
+        private MovementAnimationHelper _moveHelper;
 
         // Runtime values
-        private Vector3 m_targetVector;
-        private Vector3 m_startVector;
+        private Vector3 _targetVector;
+        private Vector3 _startVector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Move3DByAnimation" /> class.
@@ -44,14 +44,14 @@ namespace SeeingSharp.Multimedia.Core
         public Move3DByAnimation(IAnimatableObjectPosition targetObject, Vector3 moveVector, TimeSpan duration)
             : base(targetObject)
         {
-            m_targetObject = targetObject;
-            m_moveVector = moveVector;
-            m_moveHelper = new MovementAnimationHelper(
+            _targetObject = targetObject;
+            _moveVector = moveVector;
+            _moveHelper = new MovementAnimationHelper(
                 new MovementSpeed(moveVector, duration),
                 moveVector);
 
             // Switch animation to fixed-time type
-            this.ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace SeeingSharp.Multimedia.Core
         public Move3DByAnimation(IAnimatableObjectPosition targetObject, Vector3 moveVector, MovementSpeed moveSpeed)
             : base(targetObject)
         {
-            m_targetObject = targetObject;
-            m_moveVector = moveVector;
-            m_moveHelper = new MovementAnimationHelper(moveSpeed, moveVector);
+            _targetObject = targetObject;
+            _moveVector = moveVector;
+            _moveHelper = new MovementAnimationHelper(moveSpeed, moveVector);
 
             // Switch animation to fixed-time type
-            this.ChangeToFixedTime(m_moveHelper.MovementTime);
+            this.ChangeToFixedTime(_moveHelper.MovementTime);
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_targetVector = m_targetObject.Position + m_moveVector;
-            m_startVector = m_targetObject.Position;
+            _targetVector = _targetObject.Position + _moveVector;
+            _startVector = _targetObject.Position;
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            m_targetObject.Position = m_startVector + m_moveHelper.GetPartialMoveDistance(this.CurrentTime);
+            _targetObject.Position = _startVector + _moveHelper.GetPartialMoveDistance(this.CurrentTime);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.Position = m_targetVector;
-            m_targetVector = Vector3.Zero;
-            m_startVector = Vector3.Zero;
+            _targetObject.Position = _targetVector;
+            _targetVector = Vector3.Zero;
+            _startVector = Vector3.Zero;
         }
     }
 }

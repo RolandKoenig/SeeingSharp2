@@ -29,9 +29,9 @@ namespace SeeingSharp.Multimedia.Core
     public class DeviceHandlerD2D
     {
         // Main references for Direct2D
-        private D2D.RenderTarget m_renderTarget;
-        private D2D.Device m_deviceD2D;
-        private D2D.DeviceContext m_deviceContextD2D;
+        private D2D.RenderTarget _renderTarget;
+        private D2D.Device _deviceD2D;
+        private D2D.DeviceContext _deviceContextD2D;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
@@ -48,40 +48,40 @@ namespace SeeingSharp.Multimedia.Core
 
                 using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<Device>())
                 {
-                    m_deviceD2D = new D2D.Device1(engineFactory.FactoryD2D_2, dxgiDevice);
-                    m_deviceContextD2D = new D2D.DeviceContext(
-                        m_deviceD2D,
+                    _deviceD2D = new D2D.Device1(engineFactory.FactoryD2D_2, dxgiDevice);
+                    _deviceContextD2D = new D2D.DeviceContext(
+                        _deviceD2D,
                         D2D.DeviceContextOptions.None);
-                    m_renderTarget = m_deviceContextD2D;
+                    _renderTarget = _deviceContextD2D;
                 }
             }
             catch (Exception)
             {
-                SeeingSharpUtil.SafeDispose(ref m_deviceContextD2D);
-                SeeingSharpUtil.SafeDispose(ref m_deviceD2D);
-                SeeingSharpUtil.SafeDispose(ref m_renderTarget);
+                SeeingSharpUtil.SafeDispose(ref _deviceContextD2D);
+                SeeingSharpUtil.SafeDispose(ref _deviceD2D);
+                SeeingSharpUtil.SafeDispose(ref _renderTarget);
             }
         }
 
         public void UnloadResources()
         {
-            SeeingSharpUtil.SafeDispose(ref m_deviceContextD2D);
-            SeeingSharpUtil.SafeDispose(ref m_deviceD2D);
-            SeeingSharpUtil.SafeDispose(ref m_renderTarget);
+            SeeingSharpUtil.SafeDispose(ref _deviceContextD2D);
+            SeeingSharpUtil.SafeDispose(ref _deviceD2D);
+            SeeingSharpUtil.SafeDispose(ref _renderTarget);
         }
 
-        public bool IsLoaded => m_renderTarget != null;
+        public bool IsLoaded => _renderTarget != null;
 
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        internal D2D.Device Device => m_deviceD2D;
+        internal D2D.Device Device => _deviceD2D;
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        internal D2D.DeviceContext DeviceContext => m_deviceContextD2D;
+        internal D2D.DeviceContext DeviceContext => _deviceContextD2D;
 
-        internal D2D.RenderTarget RenderTarget => m_renderTarget;
+        internal D2D.RenderTarget RenderTarget => _renderTarget;
     }
 }

@@ -409,50 +409,6 @@ namespace SeeingSharp
             return Contains(ref point);
         }
 
-        /// <summary>
-        /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>Type of the containment</returns>
-        public ContainmentType Contains(Vector3[] points)
-        {
-            throw new NotImplementedException();
-            /* TODO: (PMin) This method is wrong, does not calculate case where only plane from points is intersected
-            var containsAny = false;
-            var containsAll = true;
-            for (int i = 0; i < points.Length; i++)
-            {
-                switch (Contains(ref points[i]))
-                {
-                    case ContainmentType.Contains:
-                    case ContainmentType.Intersects:
-                        containsAny = true;
-                        break;
-                    case ContainmentType.Disjoint:
-                        containsAll = false;
-                        break;
-                }
-            }
-            if (containsAny)
-            {
-                if (containsAll)
-                    return ContainmentType.Contains;
-                else
-                    return ContainmentType.Intersects;
-            }
-            else
-                return ContainmentType.Disjoint;  */
-        }
-        /// <summary>
-        /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="result">Type of the containment.</param>
-        public void Contains(Vector3[] points, out ContainmentType result)
-        {
-            result = Contains(points);
-        }
-
         private void GetBoxToPlanePVertexNVertex(ref BoundingBox box, ref Vector3 planeNormal, out Vector3 p, out Vector3 n)
         {
             p = box.Minimum;
@@ -568,35 +524,6 @@ namespace SeeingSharp
         public void Contains(ref BoundingSphere sphere, out ContainmentType result)
         {
             result = Contains(ref sphere);
-        }
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
-        /// <param name="frustum">The frustum.</param>
-        /// <returns>Type of the containment</returns>
-        public bool Contains(ref BoundingFrustum frustum)
-        {
-            return Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
-        }
-
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
-        /// <param name="frustum">The frustum.</param>
-        /// <returns>Type of the containment</returns>
-        public bool Contains(BoundingFrustum frustum)
-        {
-            return Contains(ref frustum);
-        }
-
-        /// <summary>
-        /// Determines the intersection relationship between the frustum and another bounding frustum.
-        /// </summary>
-        /// <param name="frustum">The frustum.</param>
-        /// <param name="result">Type of the containment.</param>
-        public void Contains(ref BoundingFrustum frustum, out bool result)
-        {
-            result = Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
         }
 
         /// <summary>

@@ -33,20 +33,20 @@ namespace SeeingSharp.WinFormsSamples
 {
     public partial class MainWindow : Form
     {
-        private SampleBase m_actSample;
-        private SampleSettings m_actSampleSettings;
-        private SampleMetadata m_actSampleInfo;
-        private bool m_isChangingSample;
-        private List<ToolStripItem> m_sampleCommandToolbarItems;
+        private SampleBase _actSample;
+        private SampleSettings _actSampleSettings;
+        private SampleMetadata _actSampleInfo;
+        private bool _isChangingSample;
+        private List<ToolStripItem> _sampleCommandToolbarItems;
 
-        private List<ChildRenderWindow> m_childWindows;
+        private List<ChildRenderWindow> _childWindows;
 
         public MainWindow()
         {
             this.InitializeComponent();
 
-            m_sampleCommandToolbarItems = new List<ToolStripItem>();
-            m_childWindows = new List<ChildRenderWindow>();
+            _sampleCommandToolbarItems = new List<ToolStripItem>();
+            _childWindows = new List<ChildRenderWindow>();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -59,9 +59,9 @@ namespace SeeingSharp.WinFormsSamples
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             // Register viewbox filter
-            m_ctrlRenderPanel.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            _ctrlRenderPanel.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
 
-            m_ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
+            _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
             // AddObject all sample pages
             var sampleRepo = new SampleRepository();
@@ -74,7 +74,7 @@ namespace SeeingSharp.WinFormsSamples
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
                 var actTabPage = new TabPage(actSampleGroup.GroupName);
-                m_tabControlSamples.TabPages.Add(actTabPage);
+                _tabControlSamples.TabPages.Add(actTabPage);
 
                 if (firstTabPage == null)
                 {
@@ -89,8 +89,8 @@ namespace SeeingSharp.WinFormsSamples
 
                 actListView.ItemSelectionChanged += this.OnListView_ItemSelectionChanged;
                 actListView.MultiSelect = false;
-                actListView.LargeImageList = m_images;
-                actListView.SmallImageList = m_images;
+                actListView.LargeImageList = _images;
+                actListView.SmallImageList = _images;
                 actTabPage.Controls.Add(actListView);
 
                 if (firstListView == null)
@@ -121,8 +121,8 @@ namespace SeeingSharp.WinFormsSamples
                     {
                         using (var inStream = sampleImageLink.OpenRead())
                         {
-                            m_images.Images.Add(Image.FromStream(inStream));
-                            newListItem.ImageIndex = m_images.Images.Count - 1;
+                            _images.Images.Add(Image.FromStream(inStream));
+                            newListItem.ImageIndex = _images.Images.Count - 1;
                         }
                     }
                 }
@@ -130,7 +130,7 @@ namespace SeeingSharp.WinFormsSamples
 
             if (firstTabPage != null)
             {
-                m_tabControlSamples.SelectedTab = firstTabPage;
+                _tabControlSamples.SelectedTab = firstTabPage;
             }
 
             if (firstListViewItem != null)
@@ -144,95 +144,95 @@ namespace SeeingSharp.WinFormsSamples
         /// </summary>
         private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
-            if (m_isChangingSample) { return; }
+            if (_isChangingSample) { return; }
 
-            m_isChangingSample = true;
+            _isChangingSample = true;
             try
             {
-                if (m_actSampleInfo == sampleInfo) { return; }
+                if (_actSampleInfo == sampleInfo) { return; }
 
                 // Clear previous sample
-                if (m_actSampleInfo != null)
+                if (_actSampleInfo != null)
                 {
-                    await m_ctrlRenderPanel.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
+                    await _ctrlRenderPanel.RenderLoop.Scene.ManipulateSceneAsync(manipulator =>
                     {
                         manipulator.Clear(true);
                     });
-                    await m_ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
+                    await _ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
 
-                    foreach (var actChildWindow in m_childWindows)
+                    foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    m_actSample.OnClosed();
+                    _actSample.OnClosed();
                 }
-                if (m_actSampleSettings != null)
+                if (_actSampleSettings != null)
                 {
-                    m_actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
+                    _actSampleSettings.RecreateRequest -= this.OnSampleSettings_RecreateRequest;
                 }
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 // Reset members
-                m_actSample = null;
-                m_actSampleInfo = null;
+                _actSample = null;
+                _actSampleInfo = null;
 
                 // Apply new sample
                 if (sampleInfo != null)
                 {
                     var sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
-                    await sampleObject.OnInitRenderingWindowAsync(m_ctrlRenderPanel.RenderLoop);
-                    await sampleObject.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+                    await sampleObject.OnStartupAsync(_ctrlRenderPanel.RenderLoop, sampleSettings);
+                    await sampleObject.OnInitRenderingWindowAsync(_ctrlRenderPanel.RenderLoop);
+                    await sampleObject.OnReloadAsync(_ctrlRenderPanel.RenderLoop, sampleSettings);
 
-                    foreach (var actChildWindow in m_childWindows)
+                    foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.SetRenderingDataAsync(sampleObject);
                     }
 
-                    m_actSample = sampleObject;
-                    m_actSampleSettings = sampleSettings;
-                    m_actSampleInfo = sampleInfo;
+                    _actSample = sampleObject;
+                    _actSampleSettings = sampleSettings;
+                    _actSampleInfo = sampleInfo;
 
-                    if (m_actSampleSettings != null)
+                    if (_actSampleSettings != null)
                     {
-                        m_actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
+                        _actSampleSettings.RecreateRequest += this.OnSampleSettings_RecreateRequest;
                     }
 
-                    m_propertyGrid.SelectedObject = sampleSettings;
+                    _propertyGrid.SelectedObject = sampleSettings;
                     this.UpdateSampleCommands(sampleSettings);
 
-                    await m_ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
+                    await _ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
                         new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 0f));
                 }
                 else
                 {
-                    m_propertyGrid.SelectedObject = null;
+                    _propertyGrid.SelectedObject = null;
                     this.UpdateSampleCommands(null);
                 }
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 // Wait for next finished rendering
-                await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
+                await _ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
-                await m_ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
+                await _ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
             }
             finally
             {
-                m_isChangingSample = false;
+                _isChangingSample = false;
             }
         }
 
         private void UpdateSampleCommands(SampleSettings settings)
         {
-            foreach (var actLastItem in m_sampleCommandToolbarItems)
+            foreach (var actLastItem in _sampleCommandToolbarItems)
             {
-                m_barTools.Items.Remove(actLastItem);
+                _barTools.Items.Remove(actLastItem);
                 actLastItem.Dispose();
             }
-            m_sampleCommandToolbarItems.Clear();
+            _sampleCommandToolbarItems.Clear();
 
             if (settings == null) { return; }
             var isFirst = true;
@@ -243,18 +243,18 @@ namespace SeeingSharp.WinFormsSamples
                 if (isFirst)
                 {
                     var separator = new ToolStripSeparator();
-                    m_barTools.Items.Add(separator);
-                    m_sampleCommandToolbarItems.Add(separator);
+                    _barTools.Items.Add(separator);
+                    _sampleCommandToolbarItems.Add(separator);
                     isFirst = false;
                 }
 
-                var actNewToolbarItem = m_barTools.Items.Add(actCommandInner.CommandText);
+                var actNewToolbarItem = _barTools.Items.Add(actCommandInner.CommandText);
                 actNewToolbarItem.Tag = actCommand;
                 actNewToolbarItem.Click += (sender, eArgs) =>
                 {
                     if (actCommandInner.CanExecute(null)) { actCommandInner.Execute(null); }
                 };
-                m_sampleCommandToolbarItems.Add(actNewToolbarItem);
+                _sampleCommandToolbarItems.Add(actNewToolbarItem);
             }
         }
 
@@ -276,7 +276,7 @@ namespace SeeingSharp.WinFormsSamples
 
             var sampleSettings = sampleInfo.CreateSampleSettingsObject();
             sampleSettings.ThrottleRecreateRequest = false;
-            sampleSettings.SetEnvironment(m_ctrlRenderPanel.RenderLoop, sampleInfo);
+            sampleSettings.SetEnvironment(_ctrlRenderPanel.RenderLoop, sampleInfo);
 
             // Now apply the sample
             this.ApplySample(sampleInfo, sampleSettings);
@@ -284,25 +284,25 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            m_renderWindowControlsComponent.UpdateTargetControlStates();
+            _renderWindowControlsComponent.UpdateTargetControlStates();
         }
 
         private async void OnCmdCopyScreenshot_Click(object sender, EventArgs e)
         {
-            var bitmap = await m_ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
+            var bitmap = await _ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
             Clipboard.SetImage(bitmap);
         }
 
         private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
         {
-            var actSample = m_actSample;
+            var actSample = _actSample;
             actSample?.Update();
         }
 
         private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
         {
-            var sample = m_actSample;
-            var sampleSettings = m_actSampleSettings;
+            var sample = _actSample;
+            var sampleSettings = _actSampleSettings;
             if (sample == null)
             {
                 return;
@@ -312,21 +312,21 @@ namespace SeeingSharp.WinFormsSamples
                 return;
             }
 
-            await sample.OnReloadAsync(m_ctrlRenderPanel.RenderLoop, sampleSettings);
+            await sample.OnReloadAsync(_ctrlRenderPanel.RenderLoop, sampleSettings);
         }
 
         private async void OnCmdNewChildWindow_Click(object sender, EventArgs e)
         {
             var childWindow = new ChildRenderWindow();
             childWindow.Icon = this.Icon;
-            childWindow.InitializeChildWindow(m_ctrlRenderPanel.Scene, m_ctrlRenderPanel.Camera.GetViewPoint());
+            childWindow.InitializeChildWindow(_ctrlRenderPanel.Scene, _ctrlRenderPanel.Camera.GetViewPoint());
 
-            m_childWindows.Add(childWindow);
-            childWindow.Closed += (_1, _2) => { m_childWindows.Remove(childWindow); };
+            _childWindows.Add(childWindow);
+            childWindow.Closed += (_1, _2) => { _childWindows.Remove(childWindow); };
 
             childWindow.Show(this);
 
-            await childWindow.SetRenderingDataAsync(m_actSample);
+            await childWindow.SetRenderingDataAsync(_actSample);
         }
     }
 }

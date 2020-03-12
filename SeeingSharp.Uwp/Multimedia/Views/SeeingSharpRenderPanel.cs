@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Views
 {
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
-        private SeeingSharpPanelPainter m_painter;
+        private SeeingSharpPanelPainter _painter;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,9 +44,9 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public SeeingSharpRenderPanel()
         {
-            m_painter = new SeeingSharpPanelPainter(this);
-            m_painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
-            m_painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
+            _painter = new SeeingSharpPanelPainter(this);
+            _painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
+            _painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
         }
 
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
@@ -71,35 +71,35 @@ namespace SeeingSharp.Multimedia.Views
         /// <summary>
         /// Gets the RenderLoop that is currently in use.
         /// </summary>
-        public RenderLoop RenderLoop => m_painter.RenderLoop;
+        public RenderLoop RenderLoop => _painter.RenderLoop;
 
         /// <summary>
         /// Does the target control have focus?
         /// </summary>
-        public bool Focused => ((IInputEnabledView)m_painter).Focused;
+        public bool Focused => ((IInputEnabledView)_painter).Focused;
 
         /// <summary>
         /// Discard rendering?
         /// </summary>
         public bool DiscardRendering
         {
-            get => m_painter.DiscardRendering;
-            set => m_painter.DiscardRendering = value;
+            get => _painter.DiscardRendering;
+            set => _painter.DiscardRendering = value;
         }
 
         public EngineDevice SelectedDevice
         {
-            get => m_painter.RenderLoop.Device;
-            set => m_painter.RenderLoop.SetRenderingDevice(value);
+            get => _painter.RenderLoop.Device;
+            set => _painter.RenderLoop.SetRenderingDevice(value);
         }
 
-        public GraphicsViewConfiguration Configuration => m_painter.RenderLoop.Configuration;
+        public GraphicsViewConfiguration Configuration => _painter.RenderLoop.Configuration;
 
         public Size CurrentViewSize
         {
             get
             {
-                var currentViewSize = m_painter.RenderLoop.CurrentViewSize;
+                var currentViewSize = _painter.RenderLoop.CurrentViewSize;
 
                 var result = new Size
                 {

@@ -27,11 +27,10 @@ namespace SeeingSharp.Multimedia.Core
     public class ChangeAccentuationToAnimation : AnimationBase
     {
         // Parameters
-        private float m_startAccentuation;
-        private TimeSpan m_duration;
-        private float m_moveAccentuation;
-        private float m_targetAccentuation;
-        private IAnimatableObjectAccentuation m_targetObject;
+        private float _startAccentuation;
+        private float _moveAccentuation;
+        private float _targetAccentuation;
+        private IAnimatableObjectAccentuation _targetObject;
 
         /// <summary>
         /// Initialize a new Instance of the <see cref="ChangeAccentuationToAnimation" /> class.
@@ -47,9 +46,8 @@ namespace SeeingSharp.Multimedia.Core
             targetAccentuation.EnsureInRange(0f, 1f, nameof(targetAccentuation));
             duration.EnsureLongerThanZero(nameof(duration));
 
-            m_targetObject = targetObject;
-            m_duration = duration;
-            m_targetAccentuation = targetAccentuation;
+            _targetObject = targetObject;
+            _targetAccentuation = targetAccentuation;
 
             if (targetAccentuation < 0f || targetAccentuation > 1f)
             {
@@ -62,8 +60,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnStartAnimation()
         {
-            m_startAccentuation = m_targetObject.AccentuationFactor;
-            m_moveAccentuation = m_targetAccentuation - m_startAccentuation;
+            _startAccentuation = _targetObject.AccentuationFactor;
+            _moveAccentuation = _targetAccentuation - _startAccentuation;
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace SeeingSharp.Multimedia.Core
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
             var changeFactor = this.CurrentTime.Ticks / (float)this.FixedTime.Ticks;
-            m_targetObject.AccentuationFactor = m_startAccentuation + m_moveAccentuation * changeFactor;
+            _targetObject.AccentuationFactor = _startAccentuation + _moveAccentuation * changeFactor;
         }
 
         /// <summary>
@@ -81,10 +79,10 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         protected override void OnFixedTimeAnimationFinished()
         {
-            m_targetObject.AccentuationFactor = m_targetAccentuation;
+            _targetObject.AccentuationFactor = _targetAccentuation;
 
-            m_moveAccentuation = 0;
-            m_startAccentuation = 1;
+            _moveAccentuation = 0;
+            _startAccentuation = 1;
         }
     }
 }

@@ -28,11 +28,11 @@ namespace SeeingSharp.Multimedia.Core
 {
     internal class LoaderModelExporterExtension : ISeeingSharpExtensions
     {
-        private IModelExporter m_modelExporter;
+        private IModelExporter _modelExporter;
 
         public LoaderModelExporterExtension(IModelExporter modelExporter)
         {
-            m_modelExporter = modelExporter;
+            _modelExporter = modelExporter;
         }
 
         public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
 
         public IEnumerable<IModelExporter> CreateModelExporters()
         {
-            yield return m_modelExporter;
+            yield return _modelExporter;
         }
 
         public void EditCoreConfiguration(GraphicsCoreConfiguration coreConfig)

@@ -30,24 +30,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public abstract class EffectResource : Drawing2DResourceBase, IImage, IImageInternal
     {
         // Configuration
-        private IImageInternal[] m_effectInputs;
+        private IImageInternal[] _effectInputs;
 
         // Resources
-        private D2D.Effect[] m_loadedEffects;
+        private D2D.Effect[] _loadedEffects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectResource"/> class.
         /// </summary>
         protected EffectResource(params IImage[] effectInputs)
         {
-            m_loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
+            _loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
 
             // Get all effect inputs
-            m_effectInputs = new IImageInternal[effectInputs.Length];
+            _effectInputs = new IImageInternal[effectInputs.Length];
             for (var loop = 0; loop < effectInputs.Length; loop++)
             {
-                m_effectInputs[loop] = effectInputs[loop] as IImageInternal;
-                if (m_effectInputs[loop] == null)
+                _effectInputs[loop] = effectInputs[loop] as IImageInternal;
+                if (_effectInputs[loop] == null)
                 {
                     throw new SeeingSharpGraphicsException("Unable to process effectinput at index " + loop + "!");
                 }
@@ -66,14 +66,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var actEffect = m_loadedEffects[engineDevice.DeviceIndex];
+            var actEffect = _loadedEffects[engineDevice.DeviceIndex];
 
             if (actEffect != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
 
                 SeeingSharpUtil.DisposeObject(actEffect);
-                m_loadedEffects[engineDevice.DeviceIndex] = null;
+                _loadedEffects[engineDevice.DeviceIndex] = null;
             }
         }
 
@@ -82,9 +82,9 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// </summary>
         BitmapResource IImageInternal.TryGetSourceBitmap()
         {
-            if (m_effectInputs.Length > 0)
+            if (_effectInputs.Length > 0)
             {
-                return m_effectInputs[0].TryGetSourceBitmap();
+                return _effectInputs[0].TryGetSourceBitmap();
             }
 
             return null;
@@ -96,7 +96,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="device">The device for which to get the input.</param>
         IDisposable IImageInternal.GetImageObject(EngineDevice device)
         {
-            var effect = m_loadedEffects[device.DeviceIndex];
+            var effect = _loadedEffects[device.DeviceIndex];
 
             if (effect == null)
             {
@@ -104,16 +104,16 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 effect = this.BuildEffect(device);
 
                 // Set input values
-                for (var loop = 0; loop < m_effectInputs.Length; loop++)
+                for (var loop = 0; loop < _effectInputs.Length; loop++)
                 {
-                    using (var actInput = m_effectInputs[loop].GetImageObject(device) as D2D.Image)
+                    using (var actInput = _effectInputs[loop].GetImageObject(device) as D2D.Image)
                     {
                         effect.SetInput(loop, actInput, new RawBool(false));
                     }
                 }
 
                 // Store loaded effect
-                m_loadedEffects[device.DeviceIndex] = effect;
+                _loadedEffects[device.DeviceIndex] = effect;
                 device.RegisterDeviceResource(this);
             }
 

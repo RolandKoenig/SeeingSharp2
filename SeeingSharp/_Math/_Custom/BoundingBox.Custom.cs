@@ -33,10 +33,10 @@ namespace SeeingSharp
             var minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-            var anyInteration = false;
+            var anyInteraction = false;
             foreach (var actContainedLocation in containedLocations)
             {
-                anyInteration = true;
+                anyInteraction = true;
 
                 if (minimum.X > actContainedLocation.X) { minimum.X = actContainedLocation.X; }
                 if (minimum.Y > actContainedLocation.Y) { minimum.Y = actContainedLocation.Y; }
@@ -47,7 +47,7 @@ namespace SeeingSharp
                 if (maximum.Z < actContainedLocation.Z) { maximum.Z = actContainedLocation.Z; }
             }
 
-            if (!anyInteration) { throw new SeeingSharpException("No vectors given!"); }
+            if (!anyInteraction) { throw new SeeingSharpException("No vectors given!"); }
 
             Minimum = minimum;
             Maximum = maximum;

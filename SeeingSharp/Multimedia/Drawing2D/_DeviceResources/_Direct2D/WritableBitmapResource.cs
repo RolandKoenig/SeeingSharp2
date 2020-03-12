@@ -30,13 +30,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public class WritableBitmapResource : BitmapResource
     {
         // Configuration
-        private Size2 m_bitmapSize;
-        private D2D.PixelFormat m_pixelFormat;
-        private double m_dpiX;
-        private double m_dpiY;
+        private Size2 _bitmapSize;
+        private D2D.PixelFormat _pixelFormat;
+        private double _dpiX;
+        private double _dpiY;
 
         // Resources
-        private D2D.Bitmap[] m_loadedBitmaps;
+        private D2D.Bitmap[] _loadedBitmaps;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WritableBitmapResource"/> class.
@@ -47,13 +47,13 @@ namespace SeeingSharp.Multimedia.Drawing2D
             AlphaMode alphaMode = AlphaMode.Straight,
             double dpiX = 96.0, double dpiY = 96.0)
         {
-            m_loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
-            m_bitmapSize = bitmapSize;
-            m_pixelFormat = new D2D.PixelFormat(
+            _loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            _bitmapSize = bitmapSize;
+            _pixelFormat = new D2D.PixelFormat(
                 (Format)format,
                 (D2D.AlphaMode)alphaMode);
-            m_dpiX = dpiX;
-            m_dpiY = dpiY;
+            _dpiX = dpiX;
+            _dpiY = dpiY;
         }
 
         /// <summary>
@@ -80,15 +80,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            var result = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var result = _loadedBitmaps[engineDevice.DeviceIndex];
             if (result == null)
             {
                 // Load the bitmap initially
                 result = new D2D.Bitmap(
                     engineDevice.FakeRenderTarget2D,
-                    SdxMathHelper.SdxFromSize2(m_bitmapSize),
-                    new D2D.BitmapProperties(m_pixelFormat, (float)m_dpiX, (float)m_dpiY));
-                m_loadedBitmaps[engineDevice.DeviceIndex] = result;
+                    SdxMathHelper.SdxFromSize2(_bitmapSize),
+                    new D2D.BitmapProperties(_pixelFormat, (float)_dpiX, (float)_dpiY));
+                _loadedBitmaps[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);
             }
 
@@ -101,23 +101,23 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            var bitmap = m_loadedBitmaps[engineDevice.DeviceIndex];
+            var bitmap = _loadedBitmaps[engineDevice.DeviceIndex];
             if (bitmap != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
 
                 SeeingSharpUtil.DisposeObject(bitmap);
-                m_loadedBitmaps[engineDevice.DeviceIndex] = null;
+                _loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }
 
-        public override int PixelWidth => m_bitmapSize.Width;
+        public override int PixelWidth => _bitmapSize.Width;
 
-        public override int PixelHeight => m_bitmapSize.Height;
+        public override int PixelHeight => _bitmapSize.Height;
 
-        public override double DpiX => m_dpiX;
+        public override double DpiX => _dpiX;
 
-        public override double DpiY => m_dpiY;
+        public override double DpiY => _dpiY;
 
         public override int FrameCountX => 1;
 
@@ -125,8 +125,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         public override int TotalFrameCount => 1;
 
-        public override int SingleFramePixelWidth => m_bitmapSize.Width;
+        public override int SingleFramePixelWidth => _bitmapSize.Width;
 
-        public override int SingleFramePixelHeight => m_bitmapSize.Height;
+        public override int SingleFramePixelHeight => _bitmapSize.Height;
     }
 }

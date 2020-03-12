@@ -32,12 +32,12 @@ namespace SeeingSharp.Multimedia.DrawingVideo
     public abstract class SeeingSharpVideoWriter
     {
         // Runtime values
-        private Size2 m_videoSize;
-        private bool m_hasStarted;
-        private bool m_hasFinished;
-        private Exception m_startException;
-        private Exception m_drawException;
-        private Exception m_finishException;
+        private Size2 _videoSize;
+        private bool _hasStarted;
+        private bool _hasFinished;
+        private Exception _startException;
+        private Exception _drawException;
+        private Exception _finishException;
 
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
@@ -64,11 +64,11 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             {
                 device.EnsureNotNull(nameof(device));
                 uploadedTexture.EnsureNotNull(nameof(uploadedTexture));
-                if (!m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
-                if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
+                if (!_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
+                if (_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
 
                 // Check for correct image size
-                if (m_videoSize != uploadedTexture.PixelSize)
+                if (_videoSize != uploadedTexture.PixelSize)
                 {
                     throw new SeeingSharpGraphicsException("Size has changed during recording!");
                 }
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
             }
             catch (Exception ex)
             {
-                m_drawException = ex;
+                _drawException = ex;
             }
         }
 
@@ -87,7 +87,7 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// </summary>
         protected void CheckWhetherChangesAreValid()
         {
-            if (m_hasStarted || m_hasFinished) { throw new SeeingSharpGraphicsException("Unable to do changed when VideoWriter is running!"); }
+            if (_hasStarted || _hasFinished) { throw new SeeingSharpGraphicsException("Unable to do changed when VideoWriter is running!"); }
         }
 
         /// <summary>
@@ -115,26 +115,26 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         internal void StartRendering(Size2 videoSize)
         {
             videoSize.EnsureNotEmpty(nameof(videoSize));
-            if (m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already started before!"); }
-            if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
+            if (_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already started before!"); }
+            if (_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
 
-            m_videoSize = videoSize;
+            _videoSize = videoSize;
 
             // Reset exceptions
-            m_drawException = null;
-            m_startException = null;
-            m_finishException = null;
+            _drawException = null;
+            _startException = null;
+            _finishException = null;
 
             // Ensure that the target directory exists
             try
             {
-                this.StartRenderingInternal(m_videoSize);
-                m_hasStarted = true;
+                this.StartRenderingInternal(_videoSize);
+                _hasStarted = true;
             }
             catch (Exception ex)
             {
-                m_startException = ex;
-                m_hasStarted = false;
+                _startException = ex;
+                _hasStarted = false;
             }
         }
 
@@ -145,18 +145,18 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         {
             try
             {
-                if (!m_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
-                if (m_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
+                if (!_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} is not started!"); }
+                if (_hasFinished) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already finished before!"); }
 
                 this.FinishRenderingInternal();
             }
             catch (Exception ex)
             {
-                m_finishException = ex;
+                _finishException = ex;
             }
             finally
             {
-                m_hasFinished = true;
+                _hasFinished = true;
                 this.RecordingFinished.Raise(this, EventArgs.Empty);
             }
         }
@@ -169,12 +169,12 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <summary>
         /// Has rendering started?
         /// </summary>
-        public bool HasStarted => m_hasStarted;
+        public bool HasStarted => _hasStarted;
 
         /// <summary>
         /// Has rendering finished?
         /// </summary>
-        public bool HasFinished => m_hasFinished;
+        public bool HasFinished => _hasFinished;
 
         /// <summary>
         /// The RenderLoop this VideoWriter is currently associated to.
@@ -188,12 +188,12 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         /// <summary>
         /// Gets the current video size.
         /// </summary>
-        public Size2 VideoSize => m_videoSize;
+        public Size2 VideoSize => _videoSize;
 
-        public Exception LastStartException => m_startException;
+        public Exception LastStartException => _startException;
 
-        public Exception LastDrawException => m_drawException;
+        public Exception LastDrawException => _drawException;
 
-        public Exception LastFinishException => m_finishException;
+        public Exception LastFinishException => _finishException;
     }
 }
