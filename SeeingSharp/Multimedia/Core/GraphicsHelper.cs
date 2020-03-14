@@ -208,111 +208,55 @@ namespace SeeingSharp.Multimedia.Core
                 return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription);
             }
 
-            /// <summary>
-            /// Loads the texture2D from stream.
-            /// </summary>
-            /// <param name="device">The device on which to create the texture.</param>
-            /// <param name="inStream">The source stream.</param>
-            /// <returns></returns>
-            public static D3D11.Texture2D LoadTexture2D(EngineDevice device, Stream inStream)
+            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> mappedTexture, bool generateMiplevels)
             {
-                using (var bitmapSourceWrapper = LoadBitmapSource(inStream))
-                {
-                    return LoadTexture2DFromBitmap(device, bitmapSourceWrapper);
-                }
-            }
-
-            /// <summary>
-            /// Loads a new texture from the given file path.
-            /// </summary>
-            /// <param name="device">The device on which to create the texture.</param>
-            /// <param name="fileName">The source file</param>
-            /// <returns></returns>
-            public static D3D11.Texture2D LoadTexture2D(EngineDevice device, string fileName)
-            {
-                using (var bitmapSourceWrapper = LoadBitmapSource(fileName))
-                {
-                    return LoadTexture2DFromBitmap(device, bitmapSourceWrapper);
-                }
-            }
-
-            public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> mappedTexture)
-            {
-                //Create the texture
+                // Create the texture
                 var dataRectangle = new SharpDX.DataRectangle(
                     mappedTexture.Pointer,
                     mappedTexture.Width * 4);
-                var result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
+
+                D3D11.Texture2D result;
+                if (generateMiplevels)
                 {
-                    Width = mappedTexture.Width,
-                    Height = mappedTexture.Height,
-                    ArraySize = 1,
-                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                    Usage = D3D11.ResourceUsage.Default,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    Format = DEFAULT_TEXTURE_FORMAT,
-                    MipLevels = 0,
-                    OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
-                    SampleDescription = new SampleDescription(1, 0)
-                }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
+                    result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
+                        {
+                            Width = mappedTexture.Width,
+                            Height = mappedTexture.Height,
+                            ArraySize = 1,
+                            BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
+                            Usage = D3D11.ResourceUsage.Default,
+                            CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                            Format = DEFAULT_TEXTURE_FORMAT,
+                            MipLevels = 0,
+                            OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
+                            SampleDescription = new SampleDescription(1, 0)
+                        }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
 
-                //Workaround for now... auto generate mip-levels
-                // TODO: Dispatch this call to render-thread..
-                using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
-                {
-                    device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
-                }
-
-                return result;
-            }
-
-            /// <summary>
-            /// Creates a <see cref="SharpDX.Direct3D11.Texture2D"/> from a WIC <see cref="SharpDX.WIC.BitmapSource"/>
-            /// </summary>
-            /// <param name="device">The Direct3D11 device</param>
-            /// <param name="bitmapSourceWrapper">The WIC bitmap source</param>
-            /// <returns>A Texture2D</returns>
-            public static D3D11.Texture2D LoadTexture2DFromBitmap(EngineDevice device, WicBitmapSourceInternal bitmapSourceWrapper)
-            {
-                device.EnsureNotNull(nameof(device));
-                bitmapSourceWrapper.EnsureNotNullOrDisposed(nameof(bitmapSourceWrapper));
-
-                BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
-
-                // Allocate DataStream to receive the WIC image pixels
-                var stride = bitmapSource.Size.Width * 4;
-                using (var buffer = new SharpDX.DataStream(bitmapSource.Size.Height * stride, true, true))
-                {
-                    // Copy the content of the WIC to the buffer
-                    bitmapSource.CopyPixels(stride, buffer);
-
-                    //Create the texture
-                    var dataRectangle = new SharpDX.DataRectangle(buffer.DataPointer, stride);
-
-                    var result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
-                    {
-                        Width = bitmapSource.Size.Width,
-                        Height = bitmapSource.Size.Height,
-                        ArraySize = 1,
-                        BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                        Usage = D3D11.ResourceUsage.Default,
-                        CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                        Format = DEFAULT_TEXTURE_FORMAT,
-                        MipLevels = 0,
-                        OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
-                        SampleDescription = new SampleDescription(1, 0)
-                    }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
-
-                    //Workaround for now... auto generate mip-levels
-                    // TODO: Dispatch this call to render-thread..
+                    // Auto generate miplevels
                     using (var shaderResourceView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, result))
                     {
                         device.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
                     }
-
-                    //Return the generated texture
-                    return result;
                 }
+                else
+                {
+                    result = new D3D11.Texture2D(device.DeviceD3D11_1, new D3D11.Texture2DDescription
+                        {
+                            Width = mappedTexture.Width,
+                            Height = mappedTexture.Height,
+                            ArraySize = 1,
+                            BindFlags = D3D11.BindFlags.ShaderResource,
+                            Usage = D3D11.ResourceUsage.Default,
+                            CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                            Format = DEFAULT_TEXTURE_FORMAT,
+                            MipLevels = 1,
+                            OptionFlags = D3D11.ResourceOptionFlags.None,
+                            SampleDescription = new SampleDescription(1, 0)
+                        }, 
+                        dataRectangle);
+                }
+
+                return result;
             }
 
             /// <summary>
@@ -394,37 +338,6 @@ namespace SeeingSharp.Multimedia.Core
                 };
 
                 return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription);
-            }
-
-            /// <summary>
-            /// Creates a standard texture with the given width and height.
-            /// </summary>
-            /// <param name="device">Graphics device.</param>
-            /// <param name="width">Width of generated texture.</param>
-            /// <param name="height">Height of generated texture.</param>
-            /// <param name="rawData">Raw data to be loaded into the texture.</param>
-            public static D3D11.Texture2D CreateTexture(EngineDevice device, int width, int height, SharpDX.DataBox[] rawData)
-            {
-                device.EnsureNotNull(nameof(device));
-                width.EnsurePositiveOrZero(nameof(width));
-                height.EnsurePositiveOrZero(nameof(height));
-                rawData.EnsureNotNull(nameof(rawData));
-
-                var textureDescription = new D3D11.Texture2DDescription
-                {
-                    Width = width,
-                    Height = height,
-                    MipLevels = 1,
-                    ArraySize = 1,
-                    Format = DEFAULT_TEXTURE_FORMAT,
-                    Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new SampleDescription(1, 0),
-                    BindFlags = D3D11.BindFlags.ShaderResource,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    OptionFlags = D3D11.ResourceOptionFlags.None
-                };
-
-                return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription, rawData);
             }
 
             /// <summary>
@@ -889,35 +802,6 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Create the state object finally
                 return new D3D11.SamplerState(device.DeviceD3D11_1, samplerDesk);
-            }
-
-            /// <summary>
-            /// Creates a render target texture with the given width and height.
-            /// </summary>
-            /// <param name="device">Graphics device.</param>
-            /// <param name="width">Width of generated texture.</param>
-            /// <param name="height">Height of generated texture.</param>
-            public static D3D11.Texture2D CreateRenderTargetTextureDummy(D3D11.Device device, int width, int height)
-            {
-                device.EnsureNotNull(nameof(device));
-                width.EnsurePositiveOrZero(nameof(width));
-                height.EnsurePositiveOrZero(nameof(height));
-
-                var textureDescription = new D3D11.Texture2DDescription
-                {
-                    Width = width,
-                    Height = height,
-                    MipLevels = 1,
-                    ArraySize = 1,
-                    Format = DEFAULT_TEXTURE_FORMAT,
-                    Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new SampleDescription(1, 0),
-                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    OptionFlags = D3D11.ResourceOptionFlags.None
-                };
-
-                return new D3D11.Texture2D(device, textureDescription);
             }
 
             /// <summary>

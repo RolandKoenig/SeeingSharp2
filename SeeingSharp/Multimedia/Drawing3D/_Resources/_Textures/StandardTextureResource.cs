@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
             else if (_inMemoryTexture != null)
             {
-                _texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, _inMemoryTexture);
+                _texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, _inMemoryTexture, true);
             }
 
             // Create view for shaders
