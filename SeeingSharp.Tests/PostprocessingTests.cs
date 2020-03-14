@@ -58,16 +58,27 @@ namespace SeeingSharp.Tests
                         device => new FocusPostprocessEffectResource(false, 0f));
 
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
-                    defaultLayer.PostprocessEffectKey = keyPostprocess;
+                    var focusLayer = manipulator.AddLayer("Focus");
+                    focusLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
-                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
-                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
-                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
-                    newMesh.Color = Color4.RedColor;
+                    var frontMesh = manipulator.AddMeshObject(resGeometry, defaultLayer.Name, resMaterial);
+                    frontMesh.Color = Color4.BlueColor;
+                    frontMesh.Scaling = new Vector3(1f, 0.5f, 0.5f);
+                    frontMesh.Position = new Vector3(0.5f, 2f, -3f);
+
+                    var backMesh = manipulator.AddMeshObject(resGeometry, defaultLayer.Name, resMaterial);
+                    backMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 3f, 0f);
+                    backMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    backMesh.Color = Color4.RedColor;
+
+                    var focusMesh = manipulator.AddMeshObject(resGeometry, focusLayer.Name, resMaterial);
+                    focusMesh.TransformSourceObject = backMesh;
+                    focusMesh.TransformationType = SpacialTransformationType.TakeFromOtherObject;
+                    focusMesh.Color = Color4.RedColor;
                 });
                 await memRenderTarget.AwaitRenderAsync();
 

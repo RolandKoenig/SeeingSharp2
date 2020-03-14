@@ -145,6 +145,36 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
         /// </summary>
+        /// <param name="texture">The texture to be loaded into the bitmap.</param>
+        public static GDI.Bitmap LoadBitmapFromMemoryMappedTexture(MemoryMappedTexture<int> texture)
+        {
+            texture.EnsureNotNullOrDisposed(nameof(texture));
+
+            var width = texture.Width;
+            var height = texture.Height;
+
+            // Create and lock bitmap so it can be accessed for texture loading
+            var resultBitmap = new GDI.Bitmap(width, height);
+            var bitmapData = resultBitmap.LockBits(
+                new GDI.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
+                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                SeeingSharpUtil.CopyMemory(
+                    texture.Pointer, bitmapData.Scan0, texture.SizeInBytes);
+            }
+            finally
+            {
+                resultBitmap.UnlockBits(bitmapData);
+            }
+
+            return resultBitmap;
+        }
+
+
+        /// <summary>
+        /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
+        /// </summary>
         /// <param name="device">The device on which the texture is created.</param>
         /// <param name="stagingTexture">The texture to be loaded into the bitmap.</param>
         /// <param name="width">The width of the texture.</param>

@@ -20,8 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
@@ -37,12 +35,20 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <inheritdoc />
+        public override string ToString()
+        {
+            return this.Key;
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref _bufferColor);
         }
 
         public string Key { get; }
+
+        public MemoryMappedTexture<int> BufferColor => _bufferColor;
 
         /// <inheritdoc />
         public bool IsDisposed => _bufferColor == null;

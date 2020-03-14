@@ -83,6 +83,16 @@ namespace SeeingSharp.Tests
             bitmap.Save(Path.Combine(desktopDir, fileName));
         }
 
+        public static void DumpToDesktop(RenderPassDump dumpedRenderPipeline)
+        {
+            foreach (var actDumpEntry in dumpedRenderPipeline.DumpResults)
+            {
+                using var actDumpColorBitmap =
+                    GraphicsHelperWinForms.LoadBitmapFromMemoryMappedTexture(actDumpEntry.BufferColor);
+                TestUtilities.DumpToDesktop(actDumpColorBitmap, $"{actDumpEntry.Key}.png");
+            }
+        }
+
         public static IDisposable FailTestOnInternalExceptions()
         {
             Exception internalEx = null;

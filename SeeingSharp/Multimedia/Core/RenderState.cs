@@ -115,30 +115,37 @@ namespace SeeingSharp.Multimedia.Core
 
                 // Apply material
                 this.ApplyMaterial(actChunk.Material);
-                D3D11.InputLayout newInputLayout = null;
-                if (this.ForcedMaterial != null)
-                {
-                    newInputLayout = this.ForcedMaterial.GetInputLayout(
-                        device,
-                        StandardVertex.InputElements);
-                    deviceContext.InputAssembler.InputLayout = newInputLayout;
-                }
-                try
-                {
-                    // Draw current render block
-                    deviceContext.DrawIndexed(
-                        actChunk.Template.IndexCount,
-                        actChunk.Template.StartIndex,
-                        0);
-                }
-                finally
-                {
-                    if (newInputLayout != null)
-                    {
-                        deviceContext.InputAssembler.InputLayout = null;
-                        SeeingSharpUtil.SafeDispose(ref newInputLayout);
-                    }
-                }
+
+                // Draw current render block
+                deviceContext.DrawIndexed(
+                    actChunk.Template.IndexCount,
+                    actChunk.Template.StartIndex,
+                    0);
+
+                //D3D11.InputLayout newInputLayout = null;
+                //if (this.ForcedMaterial != null)
+                //{
+                //    newInputLayout = this.ForcedMaterial.GetInputLayout(
+                //        device,
+                //        StandardVertex.InputElements);
+                //    deviceContext.InputAssembler.InputLayout = newInputLayout;
+                //}
+                //try
+                //{
+                //    // Draw current render block
+                //    deviceContext.DrawIndexed(
+                //        actChunk.Template.IndexCount,
+                //        actChunk.Template.StartIndex,
+                //        0);
+                //}
+                //finally
+                //{
+                //    if (newInputLayout != null)
+                //    {
+                //        deviceContext.InputAssembler.InputLayout = null;
+                //        SeeingSharpUtil.SafeDispose(ref newInputLayout);
+                //    }
+                //}
             }
         }
 
@@ -310,9 +317,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
         internal void ForceMaterial(MaterialResource material)
         {
-            _lastAppliedMaterial?.Discard(this);
-            _lastAppliedMaterial = null;
-
             _forcedMaterial = material;
         }
 
@@ -360,12 +364,12 @@ namespace SeeingSharp.Multimedia.Core
             _lastAppliedMaterial = null;
         }
 
-        internal void DumpCurrentRenderTargets(string dumpKey)
+        internal void DumpCurrentRenderTargetsIfActivated(string layerName, int passID, string step)
         {
             if (_currentTargetDump == null) { return; }
             if (_currentRenderSettings == null) { return; }
 
-            _currentTargetDump.Dump(dumpKey, _currentRenderSettings.RenderTargets);
+            _currentTargetDump.Dump($"{layerName}.Pass{passID}.{step}", _currentRenderSettings.RenderTargets);
         }
 
         /// <summary>

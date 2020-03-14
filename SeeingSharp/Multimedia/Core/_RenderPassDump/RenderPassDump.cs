@@ -21,8 +21,8 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SeeingSharp.Util;
+using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -30,6 +30,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         private bool _isDisposed;
         private TextureUploader _uploaderColor;
+        private Size2 _size;
 
         private List<RenderPassDumpEntry> _dumpResults;
 
@@ -37,6 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             _dumpResults = new List<RenderPassDumpEntry>(8);
 
+            _size = size2;
             _uploaderColor = new TextureUploader(
                 device, size2.Width, size2.Height, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, isMultisampled);
         }
@@ -45,7 +47,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
 
-            
+            var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
+            using (var colorBufferTexture = renderTargets.ColorBuffer.ResourceAs<D3D11.Texture2D>())
+            {
+                _uploaderColor.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
+            }
+
+            _dumpResults.Add(actDumpEntry);
         }
 
         /// <inheritdoc />

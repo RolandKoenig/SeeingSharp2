@@ -472,8 +472,6 @@ namespace SeeingSharp.Multimedia.Views
             }
             if (parentForm.WindowState == FormWindowState.Minimized) { return false; }
 
-
-
             return true;
         }
 

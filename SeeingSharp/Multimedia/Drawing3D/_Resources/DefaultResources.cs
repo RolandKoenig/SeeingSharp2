@@ -134,8 +134,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 var rasterDesc = D3D11.RasterizerStateDescription.Default();
                 rasterDesc.DepthBias = GraphicsHelper.Internals.GetDepthBiasValue(device, -0.00003f);
-                rasterDesc.IsAntialiasedLineEnabled = true;
-                rasterDesc.IsMultisampleEnabled = true;
                 return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
             });
 

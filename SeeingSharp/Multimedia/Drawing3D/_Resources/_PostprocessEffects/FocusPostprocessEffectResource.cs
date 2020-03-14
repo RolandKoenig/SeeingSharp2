@@ -61,11 +61,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _fadeIntensity = fadeIntensity;
         }
 
-        /// <summary>
-        /// Loads the resource.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="resources">Parent ResourceDictionary.</param>
+        /// <inheritdoc />
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             base.LoadResourceInternal(device, resources);
@@ -117,12 +113,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _cbSecondPass = null;
         }
 
-        /// <summary>
-        /// Notifies that rendering begins.
-        /// </summary>
-        /// <param name="renderState">The current render state.</param>
-        /// <param name="passId">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyBeforeRender(RenderState renderState, int passId)
+        /// <inheritdoc />
+        internal override void NotifyBeforeRender(RenderState renderState, string layerName, int passId)
         {
             if (renderState.Device.IsHighDetailSupported && !_forceSimpleMethod)
             {
@@ -172,25 +164,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        /// <summary>
-        /// Notifies that rendering of the plain part has finished.
-        /// </summary>
-        /// <param name="renderState">The current render state.</param>
-        /// <param name="passId">The ID of the current pass (starting with 0)</param>
-        internal override void NotifyAfterRenderPlain(RenderState renderState, int passId)
+        /// <inheritdoc />
+        internal override void NotifyAfterRenderPlain(RenderState renderState, string layerName, int passId)
         {
             // Nothing to be done here
         }
 
-        /// <summary>
-        /// Notifies that rendering has finished.
-        /// </summary>
-        /// <param name="renderState">The current render state.</param>
-        /// <param name="passId">The ID of the current pass (starting with 0)</param>
-        /// <returns>
-        /// True, if rendering should continue with next pass. False if postprocess effect is finished.
-        /// </returns>
-        internal override bool NotifyAfterRender(RenderState renderState, int passId)
+        /// <inheritdoc />
+        internal override bool NotifyAfterRender(RenderState renderState, string layerName, int passId)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
@@ -200,6 +181,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 deviceContext.Rasterizer.State = _defaultResources.RasterStateDefault;
                 deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
                 renderState.ForceMaterial(null);
+
+                renderState.DumpCurrentRenderTargetsIfActivated(layerName, passId, "FocusAfterRender");
 
                 // Reset render target (needed for all passes)
                 _renderTarget.PopFromRenderState(renderState);
@@ -257,9 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             return false;
         }
 
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
+        /// <inheritdoc />
         public override bool IsLoaded =>
             _renderTarget != null &&
             _singleForcedColor != null &&

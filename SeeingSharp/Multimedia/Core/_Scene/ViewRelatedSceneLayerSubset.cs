@@ -516,10 +516,11 @@ namespace SeeingSharp.Multimedia.Core
 
             var passId = 0;
             var continueWithNextPass = true;
+            var layerName = _sceneLayer.Name;
             while (continueWithNextPass)
             {
                 // Notify state before rendering
-                postprocessEffect?.NotifyBeforeRender(renderState, passId);
+                postprocessEffect?.NotifyBeforeRender(renderState, layerName, passId);
 
                 try
                 {
@@ -531,7 +532,7 @@ namespace SeeingSharp.Multimedia.Core
                     this.RenderPass(null, _objectsPassPlainRender, renderState, ref invalidObjects);
 
                     // Notify state after plain rendering
-                    postprocessEffect?.NotifyAfterRenderPlain(renderState, passId);
+                    postprocessEffect?.NotifyAfterRenderPlain(renderState, layerName, passId);
 
                     // Render all lines
                     this.RenderPass(
@@ -549,12 +550,16 @@ namespace SeeingSharp.Multimedia.Core
                     // Notify state after rendering
                     if (postprocessEffect != null)
                     {
-                        continueWithNextPass = postprocessEffect.NotifyAfterRender(renderState, passId);
+                        continueWithNextPass = postprocessEffect.NotifyAfterRender(renderState, layerName, passId);
                     }
                     else { continueWithNextPass = false; }
 
                     // Increment passID value
-                    passId++;
+                    if (continueWithNextPass)
+                    {
+                        renderState.DumpCurrentRenderTargetsIfActivated(_sceneLayer.Name, passId, "End");
+                        passId++;
+                    }
                 }
             }
 
@@ -565,10 +570,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Dump render state on end of the layer
-            if (renderState.IsWritingRenderPassDump)
-            {
-                renderState.DumpCurrentRenderTargets($"{_sceneLayer.Name}.End");
-            }
+            renderState.DumpCurrentRenderTargetsIfActivated(_sceneLayer.Name, passId, "End");
 
             // RemoveObject all invalid objects
             if (invalidObjects != null)
