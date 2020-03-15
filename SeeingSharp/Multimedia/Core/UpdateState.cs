@@ -20,6 +20,8 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Collections.Generic;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -29,9 +31,13 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class UpdateState : IAnimationUpdateState
     {
+        // Constants
+        private static readonly InputFrame[] s_dummyFrameCollection = new InputFrame[0];
+
         // Parameters passed by global loop
         private int _updateTimeMilliseconds;
         private TimeSpan _updateTime;
+        private IEnumerable<InputFrame> _inputFrames;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
@@ -44,11 +50,11 @@ namespace SeeingSharp.Multimedia.Core
         /// Initializes a new instance of the <see cref="UpdateState"/> class.
         /// </summary>
         /// <param name="updateTime">The update time.</param>
-        public UpdateState(TimeSpan updateTime)
+        /// <param name="inputFrames">A list containing all gathered InputFrames since last update pass.</param>
+        internal UpdateState(TimeSpan updateTime, IEnumerable<InputFrame> inputFrames)
             : this()
         {
-            _updateTime = updateTime;
-            _updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+            this.Reset(updateTime, inputFrames);
         }
 
         /// <summary>
@@ -70,10 +76,14 @@ namespace SeeingSharp.Multimedia.Core
         /// Resets this UpdateState to the given update time.
         /// </summary>
         /// <param name="updateTime">The update time.</param>
-        internal void Reset(TimeSpan updateTime)
+        /// <param name="inputFrames">A list containing all gathered InputFrames since last update pass.</param>
+        internal void Reset(TimeSpan updateTime, IEnumerable<InputFrame> inputFrames)
         {
             _updateTime = updateTime;
             _updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
+
+            _inputFrames = inputFrames;
+            if (_inputFrames == null) { _inputFrames = s_dummyFrameCollection; }
         }
 
         /// <summary>
@@ -91,5 +101,10 @@ namespace SeeingSharp.Multimedia.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets a collection containing all gathered InputFrames since last update pass.
+        /// </summary>
+        public IEnumerable<InputFrame> InputFrames => _inputFrames;
     }
 }

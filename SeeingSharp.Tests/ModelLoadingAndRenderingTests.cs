@@ -38,7 +38,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_StlFile()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {

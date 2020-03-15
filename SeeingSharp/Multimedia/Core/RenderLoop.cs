@@ -709,7 +709,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Prepares rendering (refreshes view resources, post last rendered image to the view, ...)
         /// </summary>
-        internal async Task<IReadOnlyList<Action>> PrepareRenderAsync()
+        internal async Task<IReadOnlyList<Action>> PrepareRenderAsync(UpdateState updateState)
         {
             _cachedPrepareRenderContinuationActions.Clear();
             if (this.DiscardRendering) { return _cachedPrepareRenderContinuationActions; }

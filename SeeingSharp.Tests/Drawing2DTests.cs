@@ -42,7 +42,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Collision_Ellipse_to_Ellipse()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             var ellipseGeometry01 = new EllipseGeometryResource(
                 new Vector2(50, 50), 10f, 10f);
@@ -68,7 +68,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Collision_Ellipse_to_Polygon()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             var ellipseGeometry01 = new EllipseGeometryResource(
                 new Vector2(50, 50), 10f, 10f);
@@ -94,7 +94,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleText_SimpleSingleColor()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4.RedColor))
             using (var textFormat = new TextFormatResource("Arial", 70))
@@ -128,7 +128,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_Solid()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4.Gray))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
@@ -159,7 +159,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleGeometry()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             var polygon = new Polygon2D(new Vector2(10, 10), new Vector2(900, 100), new Vector2(800, 924), new Vector2(50, 1014), new Vector2(10, 10));
 
@@ -193,7 +193,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleGeometry_Ellipse()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4.LightGray))
             using (var solidBrushBorder = new SolidBrushResource(Color4.Gray))
@@ -227,7 +227,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_LinearGradient()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var gradientBrush = new LinearGradientBrushResource(
                 new Vector2(0f, 0f),
@@ -269,7 +269,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_RadialGradient()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var radialGradientBrush = new RadialGradientBrushResource(
                 new Vector2(200f, 400f),
@@ -310,7 +310,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_Over3D()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             var brushColor = Color4.Gray;
             brushColor.ChangeAlphaTo(0.5f);
@@ -370,7 +370,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_DebugLayer()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var debugLayer = new DebugDrawingLayer())
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
@@ -395,7 +395,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_D2D_Texture()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4.Gray))
             using (var textFormat = new TextFormatResource("Arial", 36))
@@ -457,7 +457,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleBitmap_WithTransparency()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var solidBrush = new SolidBrushResource(Color4.LightGray))
             using (var bitmap = new StandardBitmapResource(new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Logo.png")))
@@ -491,7 +491,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleBitmap_Animated()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var bitmap = new StandardBitmapResource(
                 new AssemblyResourceLink(this.GetType(), "Resources.Bitmaps.Boom.png"),

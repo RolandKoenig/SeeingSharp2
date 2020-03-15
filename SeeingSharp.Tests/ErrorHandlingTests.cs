@@ -43,7 +43,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task MemoryRenderTarget_2DInitError()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             GDI.Bitmap screenshot = null;
             using (TestUtilities.FailTestOnInternalExceptions())
@@ -115,7 +115,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task MemoryRenderTarget_GraphicsInitError()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             var isRenderTargetOperational = true;
             var isGraphicsCoreInitialized = true;
@@ -144,7 +144,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task WinForms_Parent_Child_Switch()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             Panel hostPanel1 = null;
             Panel hostPanel2 = null;

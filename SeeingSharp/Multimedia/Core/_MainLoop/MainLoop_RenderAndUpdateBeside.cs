@@ -150,7 +150,7 @@ namespace SeeingSharp.Multimedia.Core
                     var actScene = _scenesToRender[sceneIndex];
                     var actUpdateState = actScene.CachedUpdateState;
 
-                    actUpdateState.OnStartSceneUpdate(actScene, _updateState, null);
+                    actUpdateState.OnStartSceneUpdate(actScene, _updateState);
                     actScene.UpdateBesideRender(actUpdateState);
                 }
             }

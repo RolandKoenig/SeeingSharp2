@@ -38,7 +38,6 @@ namespace SeeingSharp.Multimedia.Core
         // parameters for single update step
         private bool _isPaused;
         private UpdateState _updateState;
-        private IEnumerable<InputFrame> _inputFrames;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
@@ -46,7 +45,6 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneRelatedUpdateState()
         {
             this.World = new Matrix4Stack(Matrix4x4.Identity);
-            _inputFrames = null;
         }
 
         /// <summary>
@@ -54,8 +52,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="targetScene">The scene for which to prepare this state object</param>
         /// <param name="updateState">The update state.</param>
-        /// <param name="inputFrames">A list containing all gathered InputFrames since last update pass.</param>
-        internal void OnStartSceneUpdate(Scene targetScene, UpdateState updateState, IEnumerable<InputFrame> inputFrames)
+        internal void OnStartSceneUpdate(Scene targetScene, UpdateState updateState)
         {
             targetScene.EnsureNotNull(nameof(targetScene));
             updateState.EnsureNotNull(nameof(updateState));
@@ -67,9 +64,6 @@ namespace SeeingSharp.Multimedia.Core
 
             _updateState = updateState;
             this.SceneLayer = null;
-
-            _inputFrames = inputFrames;
-            if (_inputFrames == null) { _inputFrames = s_dummyFrameCollection; }
         }
 
         /// <summary>
@@ -113,7 +107,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
-        public IEnumerable<InputFrame> InputFrames => _inputFrames;
+        public IEnumerable<InputFrame> InputFrames => _updateState.InputFrames;
 
         internal bool ForceTransformUpdatesOnChildren;
     }

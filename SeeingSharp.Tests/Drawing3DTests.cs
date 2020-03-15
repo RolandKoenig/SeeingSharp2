@@ -40,7 +40,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_ClearedScreen()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -66,7 +66,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleLine()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -121,7 +121,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -166,7 +166,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_FullScreenTexture()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -208,7 +208,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_DiffuseColorFromMaterial()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -258,7 +258,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_StackedGeometry()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -310,7 +310,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_Transparent()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -354,7 +354,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_Orthographic()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -403,7 +403,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_Skybox()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {

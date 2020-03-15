@@ -215,7 +215,7 @@ namespace SeeingSharp.Multimedia.Core
                 var camerasToUpdate = new List<Camera3DBase>(16);
                 var devicesInUse = new List<EngineDevice>(16);
                 var inputFrames = new List<InputFrame>(16);
-                var updateState = new UpdateState(TimeSpan.Zero);
+                var updateState = new UpdateState(TimeSpan.Zero, null);
 
                 while (!cancelToken.IsCancellationRequested)
                 {
@@ -248,21 +248,26 @@ namespace SeeingSharp.Multimedia.Core
                             // Queries for devices / scenes in use
                             QueryForScenesAndCameras(renderingRenderLoops, scenesToRender, camerasToUpdate);
                             QueryForDevicesInUse(renderingRenderLoops, devicesInUse);
+                            var deviceInUseCount = devicesInUse.Count;
 
                             // Handle device lost events
-                            foreach (var actDevice in devicesInUse)
+                            for(var loop=0; loop<deviceInUseCount; loop++)
                             {
-                                if (actDevice.IsLost)
-                                {
-                                    actDevice.RecreateAfterDeviceLost();
-                                }
+                                var actDevice = devicesInUse[loop];
+                                if(!actDevice.IsLost){ continue; }
+
+                                actDevice.RecreateAfterDeviceLost();
                             }
 
                             // Cleanup device resources
-                            foreach (var actDevice in devicesInUse)
+                            for(var loop=0; loop<deviceInUseCount; loop++)
                             {
+                                var actDevice = devicesInUse[loop];
                                 actDevice.CleanupDeviceResourceCollection();
                             }
+
+                            // Get all input frames
+                            _host.InputGatherer.QueryForCurrentFrames(inputFrames);
 
                             // Build new UpdateState object
                             var updateTime = renderStopWatch.Elapsed;
@@ -271,16 +276,13 @@ namespace SeeingSharp.Multimedia.Core
                                 updateTime = TimeSpan.FromMilliseconds(100.0);
                             }
 
-                            updateState.Reset(updateTime);
+                            updateState.Reset(updateTime, inputFrames);
 
                             // Restart the stopwatch
                             renderStopWatch.Restart();
 
-                            // Get all input frames
-                            _host.InputGatherer.QueryForCurrentFrames(inputFrames);
-
                             // First global pass: Update scene and prepare rendering
-                            _logicUpdateAndPrepareRendering.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, inputFrames, updateState);
+                            _logicUpdateAndPrepareRendering.SetPassParameters(renderingRenderLoops, scenesToRender, devicesInUse, updateState);
                             await _logicUpdateAndPrepareRendering.ExecutePassAsync()
                                 .ConfigureAwait(false);
 

@@ -38,7 +38,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACFlatShadedObject()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -83,7 +83,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACShadedObject()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -126,7 +126,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACTwoSidedObject()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
@@ -171,7 +171,7 @@ namespace SeeingSharp.Tests
         [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACSingleSidedObject()
         {
-            await TestUtilities.InitializeWithGrahicsAsync();
+            await TestUtilities.InitializeWithGraphicsAsync();
 
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {

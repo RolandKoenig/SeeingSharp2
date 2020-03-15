@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Create shared UpdateState object
                 while (this.CountRunningAnimations > 0)
                 {
-                    this.Update(new UpdateState(singleUpdateInterval));
+                    this.Update(new UpdateState(singleUpdateInterval, null));
 
                     totalStepCount++;
                 }
@@ -197,7 +197,7 @@ namespace SeeingSharp.Multimedia.Core
                 this.PrecalculateAnimations();
 
                 // Create shared UpdateState object
-                var updateState = new UpdateState(TimeSpan.Zero);
+                var updateState = new UpdateState(TimeSpan.Zero, null);
 
                 // Perform whole animation in an event-driven way
                 var steps = new List<EventDrivenStepInfo>(12);
@@ -206,7 +206,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     // Perform animation calculation
                     var timeTillNext = this.TimeTillCurrentAnimationStepFinished;
-                    updateState.Reset(timeTillNext);
+                    updateState.Reset(timeTillNext, null);
                     var updateResult = this.Update(updateState);
 
                     // Generate report data

@@ -40,7 +40,6 @@ namespace SeeingSharp.Multimedia.Core
         private List<RenderLoop> _renderingRenderLoops;
         private IReadOnlyList<Scene> _scenesToRender;
         private IReadOnlyList<EngineDevice> _devicesInUse;
-        private IEnumerable<InputFrame> _inputFrames;
         private UpdateState _updateState;
 
         // Caches values and collections
@@ -67,13 +66,12 @@ namespace SeeingSharp.Multimedia.Core
 
         public void SetPassParameters(
             List<RenderLoop> renderingRenderLoops, IReadOnlyList<Scene> scenesToRender,
-            IReadOnlyList<EngineDevice> devicesInUse, IEnumerable<InputFrame> inputFrames, UpdateState updateState)
+            IReadOnlyList<EngineDevice> devicesInUse, UpdateState updateState)
         {
             // Update all local members
             _renderingRenderLoops = renderingRenderLoops;
             _scenesToRender = scenesToRender;
             _devicesInUse = devicesInUse;
-            _inputFrames = inputFrames;
             _updateState = updateState; 
 
             // Clear temporary needed arrays
@@ -173,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 try
                 {
-                    var currentResult = await actRenderLoop.PrepareRenderAsync();
+                    var currentResult = await actRenderLoop.PrepareRenderAsync(_updateState);
 
                     if((currentResult == null) || (currentResult.Count == 0))
                     {
@@ -221,7 +219,7 @@ namespace SeeingSharp.Multimedia.Core
                     var actScene = _scenesToRender[sceneIndex];
                     var actUpdateState = actScene.CachedUpdateState;
 
-                    actUpdateState.OnStartSceneUpdate(actScene, _updateState, _inputFrames);
+                    actUpdateState.OnStartSceneUpdate(actScene, _updateState);
 
                     actScene.Update(actUpdateState);
                 }

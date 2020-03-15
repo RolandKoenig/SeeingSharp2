@@ -34,7 +34,7 @@ namespace SeeingSharp.Tests
 {
     public static class TestUtilities
     {
-        public static async Task InitializeWithGrahicsAsync()
+        public static async Task InitializeWithGraphicsAsync()
         {
             // Initialize the graphics engine
             if (!GraphicsCore.IsLoaded)
