@@ -649,5 +649,7 @@ namespace SeeingSharp.Multimedia.Views
                 }
             }
         }
+
+        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
     }
 }

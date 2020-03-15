@@ -79,6 +79,8 @@ namespace SeeingSharp.Multimedia.Core
 
         RenderLoop_PrepareRendering,
 
+        RenderLoop_PrepareRendering_Update2DOverlay,
+
         RenderLoop_Unload,
 
         EngineMainLoop_PrepareRendering,

@@ -53,7 +53,7 @@ namespace SeeingSharp.WpfSamples
             await actSample.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
 
             await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(10f));
+                new PerformanceMeasureDrawingLayer(10f, this.CtrlRenderer.ViewInformation));
         }
 
         public async Task ClearAsync()

@@ -71,14 +71,6 @@ namespace SeeingSharp.WpfSamples
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
         }
 
-        private void OnRenderLoop_ManipulateFilterList(object sender, ManipulateFilterListArgs e)
-        {
-            if (e.FilterList.Count == 0)
-            {
-                e.FilterList.Add(new SceneViewboxObjectFilter());
-            }
-        }
-
         private async void OnViewModel_ReloadRequest(object sender, EventArgs e)
         {
             if (!(this.DataContext is MainWindowViewModel viewModel))
@@ -152,7 +144,7 @@ namespace SeeingSharp.WpfSamples
                     _actSampleInfo = sampleInfo;
 
                     await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(120f));
+                        new PerformanceMeasureDrawingLayer(120f, this.CtrlRenderer.ViewInformation));
                 }
 
                 // Wait for next finished rendering

@@ -65,7 +65,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="updateState">Current state of update process.</param>
         public void Update(UpdateState updateState)
         {
-
+            _drawingLayer.UpdateInternal(updateState);
         }
 
         /// <summary>

@@ -38,6 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         private int _updateTimeMilliseconds;
         private TimeSpan _updateTime;
         private IEnumerable<InputFrame> _inputFrames;
+        private ulong _cycleId;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
@@ -55,6 +56,12 @@ namespace SeeingSharp.Multimedia.Core
             : this()
         {
             this.Reset(updateTime, inputFrames);
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"Update time: {_updateTimeMilliseconds}, Cycle Id: {_cycleId}";
         }
 
         /// <summary>
@@ -84,6 +91,9 @@ namespace SeeingSharp.Multimedia.Core
 
             _inputFrames = inputFrames;
             if (_inputFrames == null) { _inputFrames = s_dummyFrameCollection; }
+
+            if (_cycleId < ulong.MaxValue) { _cycleId++; }
+            else { _cycleId = 0; }
         }
 
         /// <summary>
@@ -106,5 +116,11 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
         public IEnumerable<InputFrame> InputFrames => _inputFrames;
+
+        /// <summary>
+        /// Gets a number which is incremented on each cycle of the <see cref="EngineMainLoop"/>.
+        /// It starts again at 0 when it reaches maximum.
+        /// </summary>
+        public ulong MainLoopCycleId => _cycleId;
     }
 }

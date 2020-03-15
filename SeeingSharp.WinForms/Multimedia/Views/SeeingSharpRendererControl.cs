@@ -600,5 +600,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         [Browsable(false)]
         public bool IsOperational => _renderLoop.IsOperational;
+
+        [Browsable(false)]
+        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
     }
 }

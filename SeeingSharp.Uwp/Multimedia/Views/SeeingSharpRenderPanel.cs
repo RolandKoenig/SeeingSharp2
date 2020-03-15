@@ -20,15 +20,12 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Windows.ApplicationModel;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SeeingSharp.Multimedia.Views
@@ -132,5 +129,7 @@ namespace SeeingSharp.Multimedia.Views
             get => this.RenderLoop.Camera;
             set => this.RenderLoop.Camera = value;
         }
+
+        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
     }
 }

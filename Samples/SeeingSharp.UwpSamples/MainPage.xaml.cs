@@ -125,7 +125,7 @@ namespace SeeingSharp.UwpSamples
                     }
 
                     await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(130f));
+                        new PerformanceMeasureDrawingLayer(130f, this.CtrlSwapChain.ViewInformation));
                 }
 
                 // Wait for next finished rendering

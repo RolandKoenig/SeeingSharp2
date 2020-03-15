@@ -729,8 +729,36 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Trigger prepare rendering on GUI thread
-            await this.UiSynchronizationContext.PostAsync(_cachedPrepareRenderOnGui)
-                .ConfigureAwait(false);
+            var guiRefreshTask = this.UiSynchronizationContext.PostAsync(_cachedPrepareRenderOnGui);
+
+            // Update overlays
+            foreach (var actOverlay in _2dDrawingLayers)
+            {
+                try
+                {
+                    actOverlay.UpdateInternal(updateState);
+                }
+                catch (Exception ex)
+                {
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_PrepareRendering_Update2DOverlay);
+                }
+            }
+
+            // Update debug overlay
+            if (_debugDrawingLayer != null)
+            {
+                try
+                {
+                    _debugDrawingLayer.UpdateInternal(updateState);
+                }
+                catch (Exception ex)
+                {
+                    GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.RenderLoop_PrepareRendering_Update2DOverlay);
+                }
+            }
+
+            // Wait for gui refresh
+            await guiRefreshTask.ConfigureAwait(false);
 
             // Draw all frames to registered VideoWriters
             if (writeVideoFrames)

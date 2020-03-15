@@ -22,6 +22,7 @@
 using SeeingSharp.Multimedia.Core;
 using System;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -50,6 +51,8 @@ namespace SeeingSharp.Multimedia.Input
         /// <param name="viewInfo">The view for which to get all input states.</param>
         public IEnumerable<InputStateBase> GetInputStates(ViewInformation viewInfo)
         {
+            viewInfo.EnsureNotNull(nameof(viewInfo));
+
             var inputStateCount = _inputStates.Count;
             for (var loop = 0; loop < inputStateCount; loop++)
             {
@@ -57,6 +60,51 @@ namespace SeeingSharp.Multimedia.Input
                 {
                     yield return _inputStates[loop];
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets all <see cref="KeyboardState"/> objects.
+        /// </summary>
+        public IEnumerable<KeyboardState> GetKeyboardStates(ViewInformation viewInfo = null)
+        {
+            return this.GetStates<KeyboardState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets all <see cref="MouseOrPointerState"/> objects.
+        /// </summary>
+        public IEnumerable<MouseOrPointerState> GetMouseOrPointerStates(ViewInformation viewInfo = null)
+        {
+            return this.GetStates<MouseOrPointerState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets all <see cref="GamepadState"/> objects.
+        /// </summary>
+        public IEnumerable<GamepadState> GetGamepadStates(ViewInformation viewInfo = null)
+        {
+            return this.GetStates<GamepadState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets all states of the given type.
+        /// </summary>
+        public IEnumerable<T> GetStates<T>(ViewInformation viewInfo = null)
+            where T : InputStateBase
+        {
+            var inputStateCount = _inputStates.Count;
+            for (var loop = 0; loop < inputStateCount; loop++)
+            {
+                var actStateCasted = _inputStates[loop] as T;
+                if(actStateCasted == null){ continue; }
+
+                if (viewInfo != null)
+                {
+                    if(actStateCasted.RelatedView != viewInfo) { continue; }
+                }
+
+                yield return actStateCasted;
             }
         }
 

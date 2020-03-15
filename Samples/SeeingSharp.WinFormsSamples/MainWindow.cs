@@ -69,8 +69,6 @@ namespace SeeingSharp.WinFormsSamples
             TabPage firstTabPage = null;
             ListView firstListView = null;
             ListViewItem firstListViewItem = null;
-            var generatedTabs = new Dictionary<string, ListView>();
-
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
                 var actTabPage = new TabPage(actSampleGroup.GroupName);
@@ -203,7 +201,7 @@ namespace SeeingSharp.WinFormsSamples
                     this.UpdateSampleCommands(sampleSettings);
 
                     await _ctrlRenderPanel.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(0f));
+                        new PerformanceMeasureDrawingLayer(0f, _ctrlRenderPanel.ViewInformation));
                 }
                 else
                 {

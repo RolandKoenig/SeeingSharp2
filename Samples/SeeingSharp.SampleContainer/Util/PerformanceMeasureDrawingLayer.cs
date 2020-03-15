@@ -24,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.SampleContainer.Util
 {
@@ -32,6 +34,8 @@ namespace SeeingSharp.SampleContainer.Util
         // Data source
         private List<TimeSpan> _lastTimeSpans;
         private DateTime _lastRender;
+        private bool _enabled;
+        private ViewInformation _view;
         private float _verticalPadding;
 
         // Drawing resources
@@ -40,8 +44,9 @@ namespace SeeingSharp.SampleContainer.Util
         private SolidBrushResource _foreBrush;
         private SolidBrushResource _borderBrush;
 
-        public PerformanceMeasureDrawingLayer(float verticalPadding)
+        public PerformanceMeasureDrawingLayer(float verticalPadding, ViewInformation view)
         {
+            _view = view;
             _verticalPadding = verticalPadding;
 
             _lastTimeSpans = new List<TimeSpan>();
@@ -55,11 +60,43 @@ namespace SeeingSharp.SampleContainer.Util
             _backBrush = new SolidBrushResource(Color4.LightGray);
             _foreBrush = new SolidBrushResource(Color4.Black);
             _borderBrush = new SolidBrushResource(Color4.DarkGray);
+
+            _enabled = true;
         }
 
+        /// <inheritdoc />
+        protected override void Update(UpdateState updateState)
+        {
+            base.Update(updateState);
+
+            foreach (var actInputFrame in updateState.InputFrames)
+            {
+                foreach (var actKeyboardState in actInputFrame.GetKeyboardStates(_view))
+                {
+                    foreach (var actHitKey in actKeyboardState.KeysHit)
+                    {
+                        switch (actHitKey)
+                        {
+                            case WinVirtualKey.D1:
+                                _enabled = true;
+                                break;
+
+                            case WinVirtualKey.D0:
+                                _enabled = false;
+                                break;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        /// <inheritdoc />
         protected override void Draw2D(Graphics2D graphics)
         {
             base.Draw2D(graphics);
+
+            if (!_enabled) { return; }
 
             // Get display text
             var fpsText = "-";

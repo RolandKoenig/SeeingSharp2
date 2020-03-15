@@ -925,6 +925,12 @@ namespace SeeingSharp.Multimedia.Core
             {
                 actLayer.Update(updateState);
             }
+
+            // Update overlays
+            foreach (var actOverlay in _drawing2DLayers)
+            {
+                actOverlay.UpdateInternal(updateState.UpdateState);
+            }
         }
 
         /// <summary>

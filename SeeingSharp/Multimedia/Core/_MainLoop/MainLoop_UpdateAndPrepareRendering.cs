@@ -23,7 +23,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -156,7 +155,7 @@ namespace SeeingSharp.Multimedia.Core
 
         private async Task<List<Action>> PrepareRenderForDeviceAsync(
             List<RenderLoop> renderingRenderLoops,
-            EngineDevice device,
+            EngineDevice deviceToUpdate,
             List<Action> additionalContinuationActions,
             object additionalContinuationActionsLock)
         {
@@ -164,15 +163,31 @@ namespace SeeingSharp.Multimedia.Core
             for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
             {
                 var actRenderLoop = renderingRenderLoops[loop];
-                if ((actRenderLoop.Device != device) || (actRenderLoop.Internals.TargetDevice != null))
+                var actDevice = actRenderLoop.Device;
+                var actTargetDevice = actRenderLoop.Internals.TargetDevice;
+
+                var isChangingDevice = (actTargetDevice != null) &&
+                                       (actDevice != actTargetDevice);
+                var isSameDevice = (actDevice != null) &&
+                                   (deviceToUpdate == actDevice);
+
+                // ReSharper disable once ReplaceWithSingleAssignment.False
+                var doCallPrepareRender = false;
+                
+                // ReSharper disable once ConvertIfToOrExpression
+                if ((deviceToUpdate == null) && (isChangingDevice))
                 {
-                    if(device != null){ continue; }
+                    doCallPrepareRender = true;
+                }
+                if ((deviceToUpdate != null) && (isSameDevice))
+                {
+                    doCallPrepareRender = true;
                 }
 
+                if(!doCallPrepareRender){ continue; }
                 try
                 {
                     var currentResult = await actRenderLoop.PrepareRenderAsync(_updateState);
-
                     if((currentResult == null) || (currentResult.Count == 0))
                     {
                         // Nothing to do in this case - no continuation actions
