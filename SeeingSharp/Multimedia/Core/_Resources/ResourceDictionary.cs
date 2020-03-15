@@ -38,6 +38,7 @@ namespace SeeingSharp.Multimedia.Core
         private int _lastRenderBlockID;
         private int _lastDeviceLoadIndex;
         private List<IRenderableResource> _renderableResources;
+        private List<IUpdatableResource> _updatableResources;
         private Dictionary<NamedOrGenericKey, ResourceInfo> _resources;
         private ConcurrentQueue<Resource> _resourcesMarkedForUnloading;
 
@@ -54,7 +55,9 @@ namespace SeeingSharp.Multimedia.Core
             _lastRenderBlockID = -1;
 
             _renderableResources = new List<IRenderableResource>();
+            _updatableResources = new List<IUpdatableResource>();
             this.RenderableResources = new ReadOnlyCollection<IRenderableResource>(_renderableResources);
+            this.UpdatableResources = new ReadOnlyCollection<IUpdatableResource>(_updatableResources);
 
             _resources = new Dictionary<NamedOrGenericKey, ResourceInfo>();
             _resourcesMarkedForUnloading = new ConcurrentQueue<Resource>();
@@ -211,6 +214,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             _renderableResources.Clear();
+            _updatableResources.Clear();
             _resources.Clear();
         }
 
@@ -278,6 +282,10 @@ namespace SeeingSharp.Multimedia.Core
             {
                 _renderableResources.Add(newResource.RenderableResource);
             }
+            if (newResource.UpdatableResource != null)
+            {
+                _updatableResources.Add(newResource.UpdatableResource);
+            }
 
             //Register this dictionary on the resource
             resource.Dictionary = this;
@@ -335,6 +343,7 @@ namespace SeeingSharp.Multimedia.Core
                 //Unload the resource
                 if (resourceInfo.Resource.IsLoaded) { resourceInfo.Resource.UnloadResource(); }
                 if (resourceInfo.RenderableResource != null) { _renderableResources.Remove(resourceInfo.RenderableResource); }
+                if (resourceInfo.UpdatableResource != null) { _updatableResources.Remove(resourceInfo.UpdatableResource); }
 
                 //RemoveObject the resource
                 _resources.Remove(key);
@@ -476,6 +485,11 @@ namespace SeeingSharp.Multimedia.Core
         public ReadOnlyCollection<IRenderableResource> RenderableResources { get; }
 
         /// <summary>
+        /// Gets an enumeration containing all updatable resources.
+        /// </summary>
+        public ReadOnlyCollection<IUpdatableResource> UpdatableResources { get; }
+
+        /// <summary>
         /// Gets a reference to default resources object.
         /// </summary>
         public DefaultResources DefaultResources => this.GetResourceAndEnsureLoaded<DefaultResources>(DefaultResources.RESOURCE_KEY);
@@ -503,9 +517,11 @@ namespace SeeingSharp.Multimedia.Core
             {
                 Resource = resource;
                 RenderableResource = resource as IRenderableResource;
+                UpdatableResource = resource as IUpdatableResource;
             }
 
             public IRenderableResource RenderableResource;
+            public IUpdatableResource UpdatableResource;
             public Resource Resource;
         }
 
@@ -565,7 +581,7 @@ namespace SeeingSharp.Multimedia.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public Resource Current => _resourceInfoEnumerator.Current.Resource;
+            public Resource Current => _resourceInfoEnumerator.Current?.Resource;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.

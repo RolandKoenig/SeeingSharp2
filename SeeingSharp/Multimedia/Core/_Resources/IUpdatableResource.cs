@@ -22,17 +22,12 @@
 
 namespace SeeingSharp.Multimedia.Core
 {
-    public interface IRenderableResource
+    public interface IUpdatableResource
     {
         /// <summary>
-        /// Triggers internal rendering within the resource (e. g. Render to Texture).
+        /// Triggers internal update within the resource (e. g. Render to Texture).
         /// </summary>
-        /// <param name="renderState">Current render state.</param>
-        void Render(RenderState renderState);
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        bool IsLoaded { get; }
+        /// <param name="updateState">Current state of update process.</param>
+        void Update(UpdateState updateState);
     }
 }

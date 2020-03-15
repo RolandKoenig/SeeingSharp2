@@ -28,7 +28,7 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
-    public class Direct2DTextureResource : TextureResource, IRenderableResource
+    public class Direct2DTextureResource : TextureResource, IRenderableResource, IUpdatableResource
     {
         private Custom2DDrawingLayer _drawingLayer;
         private int _width;
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Triggers internal update within the resource (e. g. Render to Texture).
         /// </summary>
         /// <param name="updateState">Current state of update process.</param>
-        public void Update(SceneRelatedUpdateState updateState)
+        public void Update(UpdateState updateState)
         {
 
         }

@@ -914,12 +914,9 @@ namespace SeeingSharp.Multimedia.Core
             // Render all renderable resources
             foreach (var actResourceDict in _registeredResourceDicts)
             {
-                foreach (var actRenderableResource in actResourceDict.RenderableResources)
+                foreach (var actRenderableResource in actResourceDict.UpdatableResources)
                 {
-                    if (actRenderableResource.IsLoaded)
-                    {
-                        actRenderableResource.Update(updateState);
-                    }
+                    actRenderableResource.Update(updateState.UpdateState);
                 }
             }
 
@@ -969,8 +966,6 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="renderState">State of the render.</param>
         internal void HandleRenderResources(RenderState renderState)
         {
-            //renderState.LastRenderBlockID = -1;
-
             // Get current resource dictionary
             var resources = _registeredResourceDicts[renderState.DeviceIndex];
 
@@ -1254,7 +1249,6 @@ namespace SeeingSharp.Multimedia.Core
         internal SceneRelatedUpdateState CachedUpdateState
         {
             get;
-            private set;
         }
     }
 }

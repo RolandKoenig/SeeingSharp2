@@ -94,6 +94,11 @@ namespace SeeingSharp.Multimedia.Core
             }
         }
 
+        /// <summary>
+        /// Gets the overall update state of Seeing#.
+        /// </summary>
+        public UpdateState UpdateState => _updateState;
+
         public bool IgnorePauseState { get; set; }
 
         public Matrix4Stack World { get; }
