@@ -50,7 +50,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.Texture2D _colorBufferShaderResource;
         private D3D11.ShaderResourceView _colorBufferShaderResourceView;
 
-        // Resources for ObjectID buffer
+        // Resources for ObjectId buffer
         private D3D11.Texture2D _objectIdBuffer;
         private D3D11.RenderTargetView _objectIdBufferRenderTargetView;
 
@@ -145,7 +145,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Create object-id resources
                 if (_creationMode.HasFlag(RenderTargetCreationMode.ObjectId))
                 {
-                    _objectIdBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureObjectIDs(
+                    _objectIdBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureObjectIds(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
                     _objectIdBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _objectIdBuffer);
                 }
@@ -243,11 +243,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             // Handle object-id buffer
             if (mode.HasFlag(PushRenderTargetMode.UseOwnObjectIdBuffer))
             {
-                newRenderTargets.ObjectIDBuffer = _objectIdBufferRenderTargetView;
+                newRenderTargets.ObjectIdBuffer = _objectIdBufferRenderTargetView;
             }
             else if (mode.HasFlag(PushRenderTargetMode.OvertakeObjectIdBuffer))
             {
-                newRenderTargets.ObjectIDBuffer = prevRenderTargets.ObjectIDBuffer;
+                newRenderTargets.ObjectIdBuffer = prevRenderTargets.ObjectIdBuffer;
             }
 
             // Handle normal-depth buffer

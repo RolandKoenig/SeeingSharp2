@@ -443,13 +443,13 @@ namespace SeeingSharp.Util.SdxTK
         //-------------------------------------------------------------------------------------
         // Decodes a single frame
         //-------------------------------------------------------------------------------------
-        private static Image DecodeSingleFrame(WICFlags flags, ImageDescription metadata, Guid convertGUID, BitmapFrameDecode frame)
+        private static Image DecodeSingleFrame(WICFlags flags, ImageDescription metadata, Guid convertGuid, BitmapFrameDecode frame)
         {
             var image = Image.New(metadata);
 
             var pixelBuffer = image.PixelBuffer[0];
 
-            if (convertGUID == Guid.Empty)
+            if (convertGuid == Guid.Empty)
             {
                 frame.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
             }
@@ -457,7 +457,7 @@ namespace SeeingSharp.Util.SdxTK
             {
                 using (var converter = new FormatConverter(Factory))
                 {
-                    converter.Initialize(frame, convertGUID, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
+                    converter.Initialize(frame, convertGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
                     converter.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                 }
             }

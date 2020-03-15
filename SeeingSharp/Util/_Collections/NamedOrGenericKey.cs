@@ -204,7 +204,7 @@ namespace SeeingSharp.Util
             get
             {
                 if (this.NameKey != null) { return "Name: " + this.NameKey; }
-                return "Generic ID: " + this.GenericKey;
+                return "Generic Id: " + this.GenericKey;
             }
         }
 

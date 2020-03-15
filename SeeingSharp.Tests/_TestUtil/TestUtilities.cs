@@ -98,19 +98,19 @@ namespace SeeingSharp.Tests
             Exception internalEx = null;
             var location = InternalExceptionLocation.DisposeGraphicsObject;
 
-            EventHandler<InternalCatchedExceptionEventArgs> eventHandler = (sender, e) =>
+            void EventHandler(object sender, InternalCatchedExceptionEventArgs e)
             {
                 if (internalEx == null)
                 {
                     internalEx = e.Exception;
                     location = e.Location;
                 }
-            };
+            }
 
-            GraphicsCore.InternalCatchedException += eventHandler;
+            GraphicsCore.InternalCatchedException += EventHandler;
             return new DummyDisposable(() =>
             {
-                GraphicsCore.InternalCatchedException -= eventHandler;
+                GraphicsCore.InternalCatchedException -= EventHandler;
 
                 Assert.IsTrue(internalEx == null, $"Internal exception at {location}: {internalEx}");
             });

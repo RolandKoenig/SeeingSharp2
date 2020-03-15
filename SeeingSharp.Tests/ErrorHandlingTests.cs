@@ -149,7 +149,7 @@ namespace SeeingSharp.Tests
             Panel hostPanel1 = null;
             Panel hostPanel2 = null;
             SeeingSharpRendererControl renderControl = null;
-            var stepID = 0;
+            var stepId = 0;
             Exception fakeUIThreadException = null;
 
             var fakeUIThread = new ObjectThread("Fake-UI", 100);
@@ -182,9 +182,9 @@ namespace SeeingSharp.Tests
             fakeUIThread.Tick += (sender, eArgs) =>
             {
                 Application.DoEvents();
-                stepID++;
+                stepId++;
 
-                switch (stepID)
+                switch (stepId)
                 {
                     case 2:
                         hostPanel1.Controls.Remove(renderControl);

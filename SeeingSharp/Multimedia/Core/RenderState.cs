@@ -364,12 +364,12 @@ namespace SeeingSharp.Multimedia.Core
             _lastAppliedMaterial = null;
         }
 
-        internal void DumpCurrentRenderTargetsIfActivated(string layerName, int passID, string step)
+        internal void DumpCurrentRenderTargetsIfActivated(string layerName, int passId, string step)
         {
             if (_currentTargetDump == null) { return; }
             if (_currentRenderSettings == null) { return; }
 
-            _currentTargetDump.Dump($"{layerName}.Pass{passID}.{step}", _currentRenderSettings.RenderTargets);
+            _currentTargetDump.Dump($"{layerName}.Pass{passId}.{step}", _currentRenderSettings.RenderTargets);
         }
 
         /// <summary>
@@ -602,7 +602,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Create render target array (if not done before)
                 if (_targetArray == null) { _targetArray = new D3D11.RenderTargetView[3]; }
                 _targetArray[0] = this.RenderTargets.ColorBuffer;
-                _targetArray[1] = this.RenderTargets.ObjectIDBuffer;
+                _targetArray[1] = this.RenderTargets.ObjectIdBuffer;
                 _targetArray[2] = this.RenderTargets.NormalDepthBuffer;
 
                 if (_viewports == null){ _viewports = new RawViewportF[3]; }

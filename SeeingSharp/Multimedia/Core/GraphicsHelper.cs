@@ -456,13 +456,13 @@ namespace SeeingSharp.Multimedia.Core
 
             /// <summary>
             /// Creates a render target texture with the given width and height.
-            /// This texture is used to receive ObjectIDs and stores data as single unsigned integers (32-Bit).
+            /// This texture is used to receive ObjectIds and stores data as single unsigned integers (32-Bit).
             /// </summary>
             /// <param name="device">Graphics device.</param>
             /// <param name="width">Width of generated texture.</param>
             /// <param name="height">Height of generated texture.</param>
             /// <param name="gfxConfig">The GFX configuration.</param>
-            public static D3D11.Texture2D CreateRenderTargetTextureObjectIDs(
+            public static D3D11.Texture2D CreateRenderTargetTextureObjectIds(
                 EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
             {
                 device.EnsureNotNull(nameof(device));

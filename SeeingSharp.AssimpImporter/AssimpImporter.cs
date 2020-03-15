@@ -94,9 +94,9 @@ namespace SeeingSharp.AssimpImporter
 
                 // Count vertices
                 var fullVertexCount = 0;
-                foreach (var actMeshID in actNode.MeshIndices)
+                foreach (var actMeshId in actNode.MeshIndices)
                 {
-                    var actMesh = scene.Meshes[actMeshID];
+                    var actMesh = scene.Meshes[actMeshId];
                     fullVertexCount += actMesh.VertexCount;
                 }
 
@@ -106,9 +106,9 @@ namespace SeeingSharp.AssimpImporter
                 var materialKeys = new NamedOrGenericKey[meshCount];
                 for (var meshIndex = 0; meshIndex < meshCount; meshIndex++)
                 {
-                    var actMeshID = actNode.MeshIndices[meshIndex]; 
+                    var actMeshId = actNode.MeshIndices[meshIndex]; 
                     var actBaseVertex = newGeometry.CountVertices;
-                    var actMesh = scene.Meshes[actMeshID];
+                    var actMesh = scene.Meshes[actMeshId];
 
                     List<Assimp.Color4D> vertexColors = null;
                     if (actMesh.HasVertexColors(0))
@@ -124,23 +124,23 @@ namespace SeeingSharp.AssimpImporter
 
                     // Create all vertices
                     var vertexCount = actMesh.VertexCount;
-                    for (var actVertexID = 0; actVertexID < vertexCount; actVertexID++)
+                    for (var actVertexId = 0; actVertexId < vertexCount; actVertexId++)
                     {
                         var vertexIndex = newGeometry.AddVertex();
                         ref var newVertex = ref newGeometry.GetVertexBasicRef(vertexIndex);
 
-                        newVertex.Position = AssimpHelper.Vector3FromAssimp(actMesh.Vertices[actVertexID]);
+                        newVertex.Position = AssimpHelper.Vector3FromAssimp(actMesh.Vertices[actVertexId]);
                         if (actMesh.HasNormals)
                         {
-                            newVertex.Normal = AssimpHelper.Vector3FromAssimp(actMesh.Normals[actVertexID]);
+                            newVertex.Normal = AssimpHelper.Vector3FromAssimp(actMesh.Normals[actVertexId]);
                         }
                         if (vertexColors != null)
                         {
-                            newVertex.Color = AssimpHelper.Color4FromAssimp(vertexColors[actVertexID]);
+                            newVertex.Color = AssimpHelper.Color4FromAssimp(vertexColors[actVertexId]);
                         }
                         if (textureCoords1 != null)
                         {
-                            newVertex.TexCoord1 = AssimpHelper.Vector2FromAssimp(textureCoords1[actVertexID]);
+                            newVertex.TexCoord1 = AssimpHelper.Vector2FromAssimp(textureCoords1[actVertexId]);
                         }
 
                         boundingBoxCalc.AddCoordinate(ref newVertex.Position);

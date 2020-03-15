@@ -674,7 +674,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 actVertex.Normal = Vector3.Normalize(actVertex.Position);
                 actVertex.Position = actVertex.Normal * radius;
 
-                var theta = EngineMath.AngleFromXy(actVertex.Position.X, actVertex.Position.Z);
+                var theta = EngineMath.AngleFromXY(actVertex.Position.X, actVertex.Position.Z);
                 var phi = (float)Math.Acos(actVertex.Position.Y / radius);
                 actVertex.TexCoord1 = new Vector2(
                     theta / EngineMath.PI_2,

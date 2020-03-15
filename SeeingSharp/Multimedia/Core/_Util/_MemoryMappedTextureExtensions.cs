@@ -25,7 +25,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public static class MemoryMappedTextureExtensions
     {
-        // Some query steps, relevant for QueryForObjectID method
+        // Some query steps, relevant for QueryForObjectId method
         private static readonly Point[] s_queryObjectIdSteps = {
             new Point(1, 0),new Point(1, 0),
             new Point(0, 1),
@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Core
         };
 
         /// <summary>
-        /// Queries for the ObjectID at the given location.
+        /// Queries for the ObjectId at the given location.
         /// </summary>
         /// <param name="texture">The uploaded texture.</param>
         /// <param name="xPos">The x position where to start.</param>
@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (currentY >= pixelSize.Height) { continue; }
 
                 // Read current value and compare with last one
-                //  (If equal, than at least two pixels are the same => Return this ObjectID)
+                //  (If equal, than at least two pixels are the same => Return this ObjectId)
                 var currObjId = pointerNative[currentY * pixelSize.Width + currentX];
                 if (EngineMath.EqualsWithTolerance(currObjId, lastObjId)) { return currObjId; }
 

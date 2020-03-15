@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             ColorBuffer = colorBuffer;
             DepthStencilBuffer = depthStencilBuffer;
-            ObjectIDBuffer = null;
+            ObjectIdBuffer = null;
             NormalDepthBuffer = null;
         }
 
@@ -43,12 +43,12 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="colorBuffer">The color buffer.</param>
         /// <param name="depthStencilBuffer">The depth stencil buffer.</param>
-        /// <param name="objectIDBuffer">The object identifier buffer.</param>
-        public RenderTargets(in D3D11.RenderTargetView colorBuffer, in D3D11.DepthStencilView depthStencilBuffer, in D3D11.RenderTargetView objectIDBuffer)
+        /// <param name="objectIdBuffer">The object identifier buffer.</param>
+        public RenderTargets(in D3D11.RenderTargetView colorBuffer, in D3D11.DepthStencilView depthStencilBuffer, in D3D11.RenderTargetView objectIdBuffer)
         {
             ColorBuffer = colorBuffer;
             DepthStencilBuffer = depthStencilBuffer;
-            ObjectIDBuffer = objectIDBuffer;
+            ObjectIdBuffer = objectIdBuffer;
             NormalDepthBuffer = null;
         }
 
@@ -63,9 +63,9 @@ namespace SeeingSharp.Multimedia.Core
         internal D3D11.DepthStencilView DepthStencilBuffer;
 
         /// <summary>
-        /// The ObjectID output buffer.
+        /// The ObjectId output buffer.
         /// </summary>
-        internal D3D11.RenderTargetView ObjectIDBuffer;
+        internal D3D11.RenderTargetView ObjectIdBuffer;
 
         /// <summary>
         /// The normal/depth output buffer (processes the data for input on other postprocessing effects).

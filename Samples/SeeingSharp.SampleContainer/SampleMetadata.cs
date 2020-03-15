@@ -35,7 +35,7 @@ namespace SeeingSharp.SampleContainer
             _sampleType = sampleType;
 
             this.Name = _description.SampleName;
-            this.OrderId = _description.OrderID;
+            this.OrderId = _description.OrderId;
             this.Group = _description.SampleGroupName;
             this.SourceCodeUrl = _description.SourceCodeUrl;
         }

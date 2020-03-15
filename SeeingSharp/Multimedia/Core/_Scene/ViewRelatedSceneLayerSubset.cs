@@ -554,7 +554,7 @@ namespace SeeingSharp.Multimedia.Core
                     }
                     else { continueWithNextPass = false; }
 
-                    // Increment passID value
+                    // Increment passId value
                     if (continueWithNextPass)
                     {
                         renderState.DumpCurrentRenderTargetsIfActivated(_sceneLayer.Name, passId, "End");

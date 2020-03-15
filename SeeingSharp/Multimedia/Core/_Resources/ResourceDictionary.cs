@@ -35,7 +35,7 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class ResourceDictionary : IEnumerable<Resource>
     {
-        private int _lastRenderBlockID;
+        private int _lastRenderBlockId;
         private int _lastDeviceLoadIndex;
         private List<IRenderableResource> _renderableResources;
         private List<IUpdatableResource> _updatableResources;
@@ -52,7 +52,7 @@ namespace SeeingSharp.Multimedia.Core
 
             _lastDeviceLoadIndex = this.Device.LoadDeviceIndex;
 
-            _lastRenderBlockID = -1;
+            _lastRenderBlockId = -1;
 
             _renderableResources = new List<IRenderableResource>();
             _updatableResources = new List<IUpdatableResource>();
@@ -143,12 +143,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the next render block id.
         /// </summary>
-        internal int GetNextRenderBlockID()
+        internal int GetNextRenderBlockId()
         {
-            if (_lastRenderBlockID == int.MaxValue) { _lastRenderBlockID = 0; }
-            else { _lastRenderBlockID = _lastRenderBlockID + 1; }
+            if (_lastRenderBlockId == int.MaxValue) { _lastRenderBlockId = 0; }
+            else { _lastRenderBlockId = _lastRenderBlockId + 1; }
 
-            return _lastRenderBlockID;
+            return _lastRenderBlockId;
         }
 
         /// <summary>

@@ -227,10 +227,10 @@ namespace SeeingSharp.Multimedia.Core
                         {
                             // Wait some time before doing anything..
                             var lastRenderMilliseconds = renderStopWatch.GetTrueElapsedMilliseconds();
-                            var delayTime = SeeingSharpConstants.MINIMU_FRAME_TIME_MS - lastRenderMilliseconds;
-                            if (delayTime < SeeingSharpConstants.MINIMU_DELAY_TIME_MS)
+                            var delayTime = SeeingSharpConstants.MINIMUM_FRAME_TIME_MS - lastRenderMilliseconds;
+                            if (delayTime < SeeingSharpConstants.MINIMUM_DELAY_TIME_MS)
                             {
-                                delayTime = SeeingSharpConstants.MINIMU_DELAY_TIME_MS;
+                                delayTime = SeeingSharpConstants.MINIMUM_DELAY_TIME_MS;
                             }
 
                             using (_host.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_WAIT_TIME))
