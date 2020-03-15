@@ -57,7 +57,7 @@ namespace SeeingSharp.UwpSamples
             await actSample.OnInitRenderingWindowAsync(this.CtrlSwapChain.RenderLoop);
 
             await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(GraphicsCore.Current.PerformanceAnalyzer, 10f));
+                new PerformanceMeasureDrawingLayer(10f));
         }
 
         public async Task ClearAsync()

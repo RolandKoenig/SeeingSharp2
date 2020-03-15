@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -31,7 +30,6 @@ namespace SeeingSharp.SampleContainer.Util
     public class PerformanceMeasureDrawingLayer : Custom2DDrawingLayer
     {
         // Data source
-        private PerformanceAnalyzer _performanceAnalyzer;
         private List<TimeSpan> _lastTimeSpans;
         private DateTime _lastRender;
         private float _verticalPadding;
@@ -42,9 +40,8 @@ namespace SeeingSharp.SampleContainer.Util
         private SolidBrushResource _foreBrush;
         private SolidBrushResource _borderBrush;
 
-        public PerformanceMeasureDrawingLayer(PerformanceAnalyzer performanceAnalyzer, float verticalPadding)
+        public PerformanceMeasureDrawingLayer(float verticalPadding)
         {
-            _performanceAnalyzer = performanceAnalyzer;
             _verticalPadding = verticalPadding;
 
             _lastTimeSpans = new List<TimeSpan>();
