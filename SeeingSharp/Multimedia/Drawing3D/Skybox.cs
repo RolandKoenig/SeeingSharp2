@@ -217,6 +217,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Draw the skybox
             deviceContext.DrawIndexed(6 * 6, 0, 0);
+            renderState.CountDrawCallsInternal++;
         }
 
         /// <summary>

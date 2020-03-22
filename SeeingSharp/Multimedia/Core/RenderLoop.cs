@@ -697,16 +697,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Internal method that resets some flags directly before rendering.
-        /// </summary>
-        internal void ResetFlagsBeforeRendering()
-        {
-            // Handle VisibleObjectCount field
-            this.VisibleObjectCount = VisibleObjectCountInternal;
-            VisibleObjectCountInternal = 0;
-        }
-
-        /// <summary>
         /// Prepares rendering (refreshes view resources, post last rendered image to the view, ...)
         /// </summary>
         internal async Task<IReadOnlyList<Action>> PrepareRenderAsync(UpdateState updateState)
@@ -1206,6 +1196,9 @@ namespace SeeingSharp.Multimedia.Core
                         _renderState.StopDump();
                         actRenderPassDumpTaskSource?.TrySetResult(actRenderPassDump);
                     }
+
+                    this.CountDrawCalls = _renderState.CountDrawCallsInternal;
+                    this.CountVisibleObjects = _renderState.CountVisibleObjectsInternal;
                 }
             }
             finally
@@ -1509,12 +1502,19 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public EngineDevice Device => _currentDevice;
 
-
-
         /// <summary>
         /// Gets the total count of visible objects.
         /// </summary>
-        public int VisibleObjectCount
+        public int CountVisibleObjects
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the total count of draw calls on last render.
+        /// </summary>
+        public int CountDrawCalls
         {
             get;
             private set;
@@ -1523,7 +1523,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Gets the total count of resources on the current device.
         /// </summary>
-        public int ResourceCount
+        public int CountGraphicsResources
         {
             get
             {
@@ -1588,11 +1588,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the collection containing all filters.
         /// </summary>
         internal List<SceneObjectFilter> FiltersInternal { get; }
-
-        /// <summary>
-        /// Internal field that is used to count visible objects.
-        /// </summary>
-        internal int VisibleObjectCountInternal;
 
         //*********************************************************************
         //*********************************************************************

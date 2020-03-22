@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.WinFormsSamples
+﻿using System.Windows.Forms;
+
+namespace SeeingSharp.WinFormsSamples
 {
     partial class MainWindow
     {
@@ -33,7 +35,8 @@
             this._barStatus = new System.Windows.Forms.StatusStrip();
             this._lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblResourceCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblResourceCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
@@ -81,7 +84,8 @@
             this._barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._lblResolutionDesc,
             this._lblResolution,
-            this.toolStripStatusLabel1,
+            this._lblResourceCountDesc,
+            this._lblResourceCount,
             this._lblObjectCountDesc,
             this._lblObjectCount,
             this._lblDeviceDesc,
@@ -104,18 +108,25 @@
             this._lblResolution.Size = new System.Drawing.Size(92, 19);
             this._lblResolution.Text = "<widthxheight>";
             // 
-            // toolStripStatusLabel1
+            // _lblResourceCountDesc
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(19, 19);
-            this.toolStripStatusLabel1.Text = "px";
+            this._lblResourceCountDesc.Name = "_lblResourceCountDesc";
+            this._lblResourceCountDesc.Size = new System.Drawing.Size(64, 19);
+            this._lblResourceCountDesc.Text = "# 3D Resources:";
+            this._lblResourceCountDesc.BorderSides = ToolStripStatusLabelBorderSides.Left;
+            // 
+            // _lblResourceCount
+            // 
+            this._lblResourceCount.Name = "_lblResourceCount";
+            this._lblResourceCount.Size = new System.Drawing.Size(54, 19);
+            this._lblResourceCount.Text = "<count>";
             // 
             // _lblObjectCountDesc
             // 
-            this._lblObjectCountDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this._lblObjectCountDesc.Name = "_lblObjectCountDesc";
             this._lblObjectCountDesc.Size = new System.Drawing.Size(64, 19);
-            this._lblObjectCountDesc.Text = "# Objects:";
+            this._lblObjectCountDesc.Text = "# 3D Objects:";
+            this._lblObjectCountDesc.BorderSides = ToolStripStatusLabelBorderSides.Left;
             // 
             // _lblObjectCount
             // 
@@ -286,6 +297,7 @@
             // _renderWindowControlsComponent
             // 
             this._renderWindowControlsComponent.LblCurrentDevice = this._lblDevice;
+            this._renderWindowControlsComponent.LblCurrentResourceCount = this._lblResourceCount;
             this._renderWindowControlsComponent.LblCurrentObjectCount = this._lblObjectCount;
             this._renderWindowControlsComponent.LblCurrentResolution = this._lblResolution;
             this._renderWindowControlsComponent.RenderControl = this._ctrlRenderPanel;
@@ -334,6 +346,8 @@
         private System.Windows.Forms.ToolStripButton _cmdScreenshot;
         private System.Windows.Forms.ToolStripButton _cmdNewChildWindow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResourceCountDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResourceCount;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCountDesc;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCount;
         private System.Windows.Forms.ToolStripDropDownButton _mnuChangeDevice;
@@ -343,7 +357,6 @@
         private System.Windows.Forms.ImageList _images;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem to1024x1024ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.PropertyGrid _propertyGrid;
         private System.Windows.Forms.SplitContainer _splitter;
         private RenderWindowControlsComponent _renderWindowControlsComponent;

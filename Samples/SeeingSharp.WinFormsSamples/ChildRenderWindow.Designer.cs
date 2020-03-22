@@ -45,7 +45,8 @@
             this._barStatus = new System.Windows.Forms.StatusStrip();
             this._lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblResolution = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblResourceCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblResourceCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
@@ -157,7 +158,8 @@
             this._barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._lblResolutionDesc,
             this._lblResolution,
-            this.toolStripStatusLabel1,
+            this._lblResourceCountDesc,
+            this._lblResourceCount,
             this._lblObjectCountDesc,
             this._lblObjectCount,
             this._lblDeviceDesc,
@@ -180,18 +182,25 @@
             this._lblResolution.Size = new System.Drawing.Size(25, 19);
             this._lblResolution.Text = "0x0";
             // 
-            // toolStripStatusLabel1
+            // _lblObjectCountDesc
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(20, 19);
-            this.toolStripStatusLabel1.Text = "px";
+            this._lblResourceCountDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this._lblResourceCountDesc.Name = "_lblResourceCountDesc";
+            this._lblResourceCountDesc.Size = new System.Drawing.Size(64, 19);
+            this._lblResourceCountDesc.Text = "# 3D Resources:";
+            // 
+            // _lblObjectCount
+            // 
+            this._lblResourceCount.Name = "_lblResourceCount";
+            this._lblResourceCount.Size = new System.Drawing.Size(30, 19);
+            this._lblResourceCount.Text = "0 / 0";
             // 
             // _lblObjectCountDesc
             // 
             this._lblObjectCountDesc.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this._lblObjectCountDesc.Name = "_lblObjectCountDesc";
             this._lblObjectCountDesc.Size = new System.Drawing.Size(64, 19);
-            this._lblObjectCountDesc.Text = "# Objects:";
+            this._lblObjectCountDesc.Text = "# 3D Objects:";
             // 
             // _lblObjectCount
             // 
@@ -215,6 +224,7 @@
             // _renderWindowControlsComponent
             // 
             this._renderWindowControlsComponent.LblCurrentDevice = this._lblDevice;
+            this._renderWindowControlsComponent.LblCurrentResourceCount = this._lblResourceCount;
             this._renderWindowControlsComponent.LblCurrentObjectCount = this._lblObjectCount;
             this._renderWindowControlsComponent.LblCurrentResolution = this._lblResolution;
             this._renderWindowControlsComponent.RenderControl = this._ctrlRenderer;
@@ -258,7 +268,8 @@
         private System.Windows.Forms.StatusStrip _barStatus;
         private System.Windows.Forms.ToolStripStatusLabel _lblResolutionDesc;
         private System.Windows.Forms.ToolStripStatusLabel _lblResolution;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResourceCountDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblResourceCount;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCountDesc;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCount;
         private System.Windows.Forms.ToolStripStatusLabel _lblDeviceDesc;

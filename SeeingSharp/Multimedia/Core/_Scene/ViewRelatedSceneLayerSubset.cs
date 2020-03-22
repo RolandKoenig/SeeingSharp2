@@ -34,6 +34,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // State members
         private bool _disposed;
+        private int _countVisibleObjects;
 
         // Temporary collections
         private List<Tuple<SceneObject, bool, bool>> _tmpChangedVisibilities;
@@ -303,7 +304,7 @@ namespace SeeingSharp.Multimedia.Core
                 // Update subscriptions based on object state
                 var allObjects = _sceneLayer.ObjectsInternal;
                 var allObjectsLength = allObjects.Count;
-                var visibleObjectCount = this.ViewInformation.Owner.VisibleObjectCountInternal;
+                _countVisibleObjects = 0;
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actSceneObject = allObjects[loop];
@@ -314,10 +315,9 @@ namespace SeeingSharp.Multimedia.Core
                         actSceneObject.IsVisible(this.ViewInformation))
                     {
                         actSceneObject.UpdateForView(updateState, this);
-                        visibleObjectCount++;
+                        _countVisibleObjects++;
                     }
                 }
-                this.ViewInformation.Owner.VisibleObjectCountInternal = visibleObjectCount;
             }
             finally
             {
@@ -462,6 +462,8 @@ namespace SeeingSharp.Multimedia.Core
         internal void Render(RenderState renderState)
         {
             if (_disposed) { throw new ObjectDisposedException("ViewRelatedLayerSubset"); }
+
+            renderState.CountVisibleObjectsInternal += _countVisibleObjects;
 
             // Skip rendering if there is nothing to do..
             if (_objectsPassLineRender.Subscriptions.Count == 0 &&

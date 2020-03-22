@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -51,11 +50,11 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        private void OnRefreshTimer_Tick(object sender, System.EventArgs e)
+        private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            this.TxtResourceCount.GetBindingExpression(TextBlock.TextProperty).UpdateTarget();
-            this.TxtVisibleObjectCount.GetBindingExpression(TextBlock.TextProperty).UpdateTarget();
-
+            this.TxtResourceCount.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
+            this.TxtVisibleObjectCount.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
+            this.TxtCountDrawCalls.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

@@ -60,8 +60,9 @@ namespace SeeingSharp.UwpSamples.Controls
 
         private void OnRefreshTimer_Tick(object sender, object e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountObjects)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountResources)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountObjects)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountDrawCalls)));
         }
 
         public SeeingSharpRenderPanel CtrlRenderer
@@ -70,8 +71,10 @@ namespace SeeingSharp.UwpSamples.Controls
             set => this.SetValue(CtrlRendererProperty, value);
         }
 
-        public int CountObjects => this.CtrlRenderer?.RenderLoop.VisibleObjectCount ?? 0;
+        public int CountResources => this.CtrlRenderer?.RenderLoop.CountGraphicsResources ?? 0;
 
-        public int CountResources => this.CtrlRenderer?.RenderLoop.ResourceCount ?? 0;
+        public int CountObjects => this.CtrlRenderer?.RenderLoop.CountVisibleObjects ?? 0;
+        
+        public int CountDrawCalls => this.CtrlRenderer?.RenderLoop.CountDrawCalls ?? 0;
     }
 }

@@ -142,12 +142,6 @@ namespace SeeingSharp.Multimedia.Core
                     actAction();
                 }
 
-                // SetPassParameters all dummy flags before rendering
-                foreach (var actRenderLoop in _renderingRenderLoops)
-                {
-                    actRenderLoop.ResetFlagsBeforeRendering();
-                }
-
                 // Unload all deregistered RenderLoops
                 await _mainLoop.UpdateRenderLoopRegistrationsAsync(_renderingRenderLoops);
             }

@@ -21,7 +21,6 @@
 */
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using System;
@@ -121,31 +120,7 @@ namespace SeeingSharp.Multimedia.Core
                     actChunk.Template.IndexCount,
                     actChunk.Template.StartIndex,
                     0);
-
-                //D3D11.InputLayout newInputLayout = null;
-                //if (this.ForcedMaterial != null)
-                //{
-                //    newInputLayout = this.ForcedMaterial.GetInputLayout(
-                //        device,
-                //        StandardVertex.InputElements);
-                //    deviceContext.InputAssembler.InputLayout = newInputLayout;
-                //}
-                //try
-                //{
-                //    // Draw current render block
-                //    deviceContext.DrawIndexed(
-                //        actChunk.Template.IndexCount,
-                //        actChunk.Template.StartIndex,
-                //        0);
-                //}
-                //finally
-                //{
-                //    if (newInputLayout != null)
-                //    {
-                //        deviceContext.InputAssembler.InputLayout = null;
-                //        SeeingSharpUtil.SafeDispose(ref newInputLayout);
-                //    }
-                //}
+                this.CountDrawCallsInternal++;
             }
         }
 
@@ -406,6 +381,9 @@ namespace SeeingSharp.Multimedia.Core
             _currentScene = null;
             _world.ResetStackToIdentity();
 
+            this.CountDrawCallsInternal = 0;
+            this.CountVisibleObjectsInternal = 0;
+
             // Initialize current render properties
             if (_currentRenderSettings == null)
             {
@@ -561,6 +539,16 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets or sets the current view index.
         /// </summary>
         internal int ViewIndex;
+
+        /// <summary>
+        /// Current count of draw calls.
+        /// </summary>
+        internal int CountDrawCallsInternal;
+
+        /// <summary>
+        /// Current count of visible objects.
+        /// </summary>
+        internal int CountVisibleObjectsInternal;
 
         //*********************************************************************
         //*********************************************************************

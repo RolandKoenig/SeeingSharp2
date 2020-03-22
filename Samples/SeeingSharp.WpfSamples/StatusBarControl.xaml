@@ -38,13 +38,19 @@
 
         <TextBlock Text="# 3D Resources:" />
         <TextBlock x:Name="TxtResourceCount" 
-                   Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.ResourceCount}" />
+                   Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountGraphicsResources}" />
         <Rectangle Width="1"
                    Fill="Gray" />
 
         <TextBlock Text="# 3D Objects:" />
         <TextBlock x:Name="TxtVisibleObjectCount" 
-                   Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.VisibleObjectCount}" />
+                   Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountVisibleObjects}" />
+        <Rectangle Width="1"
+                   Fill="Gray" />
+
+        <TextBlock Text="# Draw calls:" />
+        <TextBlock x:Name="TxtCountDrawCalls" 
+                   Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountDrawCalls}" />
         <Rectangle Width="1"
                    Fill="Gray" />
 
