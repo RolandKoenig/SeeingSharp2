@@ -24,14 +24,22 @@ namespace SeeingSharp.WinFormsSamples
                 var viewSize = _renderControl.RenderLoop.ViewInformation.CurrentViewSize;
                 this.LblCurrentResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
             }
+
             if(this.LblCurrentResourceCount != null)
             {
                 this.LblCurrentResourceCount.Text = _renderControl.RenderLoop.CountGraphicsResources.ToString();
             }
+
             if (this.LblCurrentObjectCount != null)
             {
                 this.LblCurrentObjectCount.Text = _renderControl.RenderLoop.CountVisibleObjects.ToString();
             }
+
+            if (this.LblCurrentDrawCallCount != null)
+            {
+                this.LblCurrentDrawCallCount.Text = _renderControl.RenderLoop.CountDrawCalls.ToString();
+            }
+
             if (this.LblCurrentDevice != null)
             {
                 this.LblCurrentDevice.Text = _renderControl.RenderLoop.Device?.AdapterDescription ?? "-";
@@ -111,6 +119,12 @@ namespace SeeingSharp.WinFormsSamples
         }
 
         public ToolStripStatusLabel LblCurrentObjectCount
+        {
+            get;
+            set;
+        }
+
+        public ToolStripStatusLabel LblCurrentDrawCallCount
         {
             get;
             set;

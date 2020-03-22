@@ -39,6 +39,8 @@ namespace SeeingSharp.WinFormsSamples
             this._lblResourceCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblObjectCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblDrawCallCountDesc = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblDrawCallCount = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblDeviceDesc = new System.Windows.Forms.ToolStripStatusLabel();
             this._lblDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this._barTools = new System.Windows.Forms.ToolStrip();
@@ -88,6 +90,8 @@ namespace SeeingSharp.WinFormsSamples
             this._lblResourceCount,
             this._lblObjectCountDesc,
             this._lblObjectCount,
+            this._lblDrawCallCountDesc,
+            this._lblDrawCallCount,
             this._lblDeviceDesc,
             this._lblDevice});
             this._barStatus.Location = new System.Drawing.Point(0, 576);
@@ -133,6 +137,19 @@ namespace SeeingSharp.WinFormsSamples
             this._lblObjectCount.Name = "_lblObjectCount";
             this._lblObjectCount.Size = new System.Drawing.Size(54, 19);
             this._lblObjectCount.Text = "<count>";
+            // 
+            // _lblDrawCallCountDesc
+            // 
+            this._lblDrawCallCountDesc.Name = "_lblDrawCallCountDesc";
+            this._lblDrawCallCountDesc.Size = new System.Drawing.Size(64, 19);
+            this._lblDrawCallCountDesc.Text = "# Draw calls:";
+            this._lblDrawCallCountDesc.BorderSides = ToolStripStatusLabelBorderSides.Left;
+            // 
+            // _lblDrawCallCount
+            // 
+            this._lblDrawCallCount.Name = "_lblDrawCallCount";
+            this._lblDrawCallCount.Size = new System.Drawing.Size(54, 19);
+            this._lblDrawCallCount.Text = "<count>";
             // 
             // _lblDeviceDesc
             // 
@@ -299,6 +316,7 @@ namespace SeeingSharp.WinFormsSamples
             this._renderWindowControlsComponent.LblCurrentDevice = this._lblDevice;
             this._renderWindowControlsComponent.LblCurrentResourceCount = this._lblResourceCount;
             this._renderWindowControlsComponent.LblCurrentObjectCount = this._lblObjectCount;
+            this._renderWindowControlsComponent.LblCurrentDrawCallCount = this._lblDrawCallCount;
             this._renderWindowControlsComponent.LblCurrentResolution = this._lblResolution;
             this._renderWindowControlsComponent.RenderControl = this._ctrlRenderPanel;
             this._renderWindowControlsComponent.MnuChooseDevice = this._mnuChangeDevice;
@@ -350,6 +368,8 @@ namespace SeeingSharp.WinFormsSamples
         private System.Windows.Forms.ToolStripStatusLabel _lblResourceCount;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCountDesc;
         private System.Windows.Forms.ToolStripStatusLabel _lblObjectCount;
+        private System.Windows.Forms.ToolStripStatusLabel _lblDrawCallCountDesc;
+        private System.Windows.Forms.ToolStripStatusLabel _lblDrawCallCount;
         private System.Windows.Forms.ToolStripDropDownButton _mnuChangeDevice;
         private System.Windows.Forms.ToolStripStatusLabel _lblDeviceDesc;
         private System.Windows.Forms.ToolStripStatusLabel _lblDevice;
