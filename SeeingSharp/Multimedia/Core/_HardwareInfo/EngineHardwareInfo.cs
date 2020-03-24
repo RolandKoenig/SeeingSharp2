@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,19 @@ namespace SeeingSharp.Multimedia.Core
     public class EngineHardwareInfo
     {
         private List<EngineAdapterInfo> _adapters;
+
+        /// <summary>
+        /// Gets a collection containing all adapters.
+        /// </summary>
+        public List<EngineAdapterInfo> Adapters => _adapters;
+
+        public EngineAdapterInfo SoftwareAdapter
+        {
+            get
+            {
+                return _adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineHardwareInfo" /> class.
@@ -57,19 +71,6 @@ namespace SeeingSharp.Multimedia.Core
                     //No exception handling needed here
                     // .. adapter information simply can not be gathered
                 }
-            }
-        }
-
-        /// <summary>
-        /// Gets a collection containing all adapters.
-        /// </summary>
-        public List<EngineAdapterInfo> Adapters => _adapters;
-
-        public EngineAdapterInfo SoftwareAdapter
-        {
-            get
-            {
-                return _adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
             }
         }
     }

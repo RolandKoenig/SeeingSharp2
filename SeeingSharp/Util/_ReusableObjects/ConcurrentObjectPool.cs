@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Threading;
 
@@ -38,9 +39,9 @@ namespace SeeingSharp.Util
     public class ConcurrentObjectPool<T> 
         where T : class
     {
-        private T _firstItem;
         private readonly T[] _items;
         private readonly Func<T> _generator;
+        private T _firstItem;
 
         public ConcurrentObjectPool(Func<T> generator, int size)
         {

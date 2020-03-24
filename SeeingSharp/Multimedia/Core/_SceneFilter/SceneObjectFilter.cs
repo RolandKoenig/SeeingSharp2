@@ -19,13 +19,28 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public abstract class SceneObjectFilter
     {
+        /// <summary>
+        /// Do update this filter on each frame?
+        /// </summary>
+        public virtual bool UpdateEachFrame => false;
+
+        /// <summary>
+        /// Has filter configuration changed?
+        /// </summary>
+        internal bool ConfigurationChanged;
+
+        /// <summary>
+        /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
+        /// </summary>
+        internal bool ConfigurationChangedUi;
         /// <summary>
         /// An event that notifies changed filter configuration.
         /// </summary>
@@ -56,20 +71,5 @@ namespace SeeingSharp.Multimedia.Core
             ConfigurationChangedUi = true;
             this.FilterConfigurationChanged.Raise(this, EventArgs.Empty);
         }
-
-        /// <summary>
-        /// Do update this filter on each frame?
-        /// </summary>
-        public virtual bool UpdateEachFrame => false;
-
-        /// <summary>
-        /// Has filter configuration changed?
-        /// </summary>
-        internal bool ConfigurationChanged;
-
-        /// <summary>
-        /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
-        /// </summary>
-        internal bool ConfigurationChangedUi;
     }
 }

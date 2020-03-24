@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -29,12 +30,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="rotateVector">The rotate vector.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<TargetObject> RotateEulerAnglesBy<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, Vector3 rotateVector, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectEulerRotation
+        public static IAnimationSequenceBuilder<TTargetObject> RotateEulerAnglesBy<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, Vector3 rotateVector, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectEulerRotation
         {
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
@@ -46,32 +47,31 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object to the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="rotateVector">The rotate vector.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<TargetObject> RotateEulerAnglesTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, Vector3 rotateVector, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectEulerRotation
+        public static IAnimationSequenceBuilder<TTargetObject> RotateEulerAnglesTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, Vector3 rotateVector, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectEulerRotation
         {
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
-                    sequenceBuilder.TargetObject, rotateVector, animationTime,
-                    stateChangeMode: AnimationStateChangeMode.ChangeStateTo));
+                    sequenceBuilder.TargetObject, rotateVector, animationTime));
             return sequenceBuilder;
         }
 
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="THostObject">The type of the ost object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="rotateVector">The rotate vector.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<HostObject> RotateEulerAnglesBy<HostObject, TargetObject>(this IAnimationSequenceBuilder<HostObject> sequenceBuilder, TargetObject targetObject, Vector3 rotateVector, TimeSpan animationTime)
-            where HostObject : class
-            where TargetObject : class, IAnimatableObjectEulerRotation
+        public static IAnimationSequenceBuilder<THostObject> RotateEulerAnglesBy<THostObject, TTargetObject>(this IAnimationSequenceBuilder<THostObject> sequenceBuilder, TTargetObject targetObject, Vector3 rotateVector, TimeSpan animationTime)
+            where THostObject : class
+            where TTargetObject : class, IAnimatableObjectEulerRotation
         {
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
@@ -83,12 +83,12 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetYaw">The target value for the Yaw (Y) rotation component.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<TargetObject> RotateEulerAnglesYawBy<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, float targetYaw, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectEulerRotation
+        public static IAnimationSequenceBuilder<TTargetObject> RotateEulerAnglesYawBy<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, float targetYaw, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectEulerRotation
         {
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
@@ -101,15 +101,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object by the given euler rotation vector.
         /// </summary>
-        /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="THostObject">The type of the ost object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetYaw">The target value for the Yaw (Y) rotation component.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<HostObject> RotateEulerAnglesYawBy<HostObject, TargetObject>(this IAnimationSequenceBuilder<HostObject> sequenceBuilder, TargetObject targetObject, float targetYaw, TimeSpan animationTime)
-            where HostObject : class
-            where TargetObject : class, IAnimatableObjectEulerRotation
+        public static IAnimationSequenceBuilder<THostObject> RotateEulerAnglesYawBy<THostObject, TTargetObject>(this IAnimationSequenceBuilder<THostObject> sequenceBuilder, TTargetObject targetObject, float targetYaw, TimeSpan animationTime)
+            where THostObject : class
+            where TTargetObject : class, IAnimatableObjectEulerRotation
         {
             sequenceBuilder.Add(
                 new RotateEulerAnglesAnimation(
@@ -122,13 +122,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object to the given quaternion.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetQuaternion">The target quaternion.</param>
         /// <param name="animationTime">The animation time.</param>
         /// <returns></returns>
-        public static IAnimationSequenceBuilder<TargetObject> RotateQuaternionTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, Quaternion targetQuaternion, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectQuaternion
+        public static IAnimationSequenceBuilder<TTargetObject> RotateQuaternionTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, Quaternion targetQuaternion, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectQuaternion
         {
             sequenceBuilder.Add(
                 new RotateQuaternionToAnimation(sequenceBuilder.TargetObject, targetQuaternion, animationTime));
@@ -138,15 +138,15 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Rotates the object to the given quaternion.
         /// </summary>
-        /// <typeparam name="HostObject">The type of the ost object.</typeparam>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="THostObject">The type of the ost object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">The sequence builder.</param>
         /// <param name="targetObject">The target object.</param>
         /// <param name="targetQuaternion">The target quaternion.</param>
         /// <param name="animationTime">The animation time.</param>
-        public static IAnimationSequenceBuilder<HostObject> RotateQuaternionTo<HostObject, TargetObject>(this IAnimationSequenceBuilder<HostObject> sequenceBuilder, TargetObject targetObject, Quaternion targetQuaternion, TimeSpan animationTime)
-            where HostObject : class
-            where TargetObject : class, IAnimatableObjectQuaternion
+        public static IAnimationSequenceBuilder<THostObject> RotateQuaternionTo<THostObject, TTargetObject>(this IAnimationSequenceBuilder<THostObject> sequenceBuilder, TTargetObject targetObject, Quaternion targetQuaternion, TimeSpan animationTime)
+            where THostObject : class
+            where TTargetObject : class, IAnimatableObjectQuaternion
         {
             sequenceBuilder.Add(
                 new RotateQuaternionToAnimation(targetObject, targetQuaternion, animationTime));

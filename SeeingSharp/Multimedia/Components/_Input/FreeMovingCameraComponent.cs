@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
-using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Components
 {
@@ -31,6 +32,10 @@ namespace SeeingSharp.Multimedia.Components
         // Constants
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
+
+        public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
+
+        public override bool IsViewSpecific => true;
 
         /// <summary>
         /// Attaches this component to a scene.
@@ -198,9 +203,5 @@ namespace SeeingSharp.Multimedia.Components
                 actCamera.Zoom(mouseState.WheelDelta / 100f * multiplier);
             }
         }
-
-        public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
-
-        public override bool IsViewSpecific => true;
     }
 }

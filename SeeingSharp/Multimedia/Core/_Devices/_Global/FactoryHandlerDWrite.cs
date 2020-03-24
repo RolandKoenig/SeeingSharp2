@@ -31,23 +31,6 @@ namespace SeeingSharp.Multimedia.Core
         private DWrite.Factory _factory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
-        /// </summary>
-        internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
-        {
-            // Create DirectWrite Factory object
-            _factory = new DWrite.Factory(DWrite.FactoryType.Shared);
-        }
-
-        /// <summary>
-        /// Unloads all resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _factory = SeeingSharpUtil.DisposeObject(_factory);
-        }
-
-        /// <summary>
         /// Is DirectWrite initialized successfully?
         /// </summary>
         public bool IsDisposed => _factory == null;
@@ -62,6 +45,23 @@ namespace SeeingSharp.Multimedia.Core
                 if(_factory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDWrite)); }
                 return _factory;
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FactoryHandlerDWrite"/> class.
+        /// </summary>
+        internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
+        {
+            // Create DirectWrite Factory object
+            _factory = new DWrite.Factory(DWrite.FactoryType.Shared);
+        }
+
+        /// <summary>
+        /// Unloads all resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _factory = SeeingSharpUtil.DisposeObject(_factory);
         }
     }
 }

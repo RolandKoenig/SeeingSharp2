@@ -19,22 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public static partial class Drawing3DAnimationExtensions
     {
-        public static IAnimationSequenceBuilder<TargetObject> ChangeOpacityTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, float targetOpacity, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectOpacity
+        public static IAnimationSequenceBuilder<TTargetObject> ChangeOpacityTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, float targetOpacity, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectOpacity
         {
             sequenceBuilder.Add(
                 new ChangeOpacityToAnimation(sequenceBuilder.TargetObject, targetOpacity, animationTime));
             return sequenceBuilder;
         }
 
-        public static IAnimationSequenceBuilder<TargetObject> ChangeAccentuationFactorTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, float targetAccentuation, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectAccentuation
+        public static IAnimationSequenceBuilder<TTargetObject> ChangeAccentuationFactorTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, float targetAccentuation, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectAccentuation
         {
             sequenceBuilder.Add(
                 new ChangeAccentuationToAnimation(sequenceBuilder.TargetObject, targetAccentuation, animationTime));

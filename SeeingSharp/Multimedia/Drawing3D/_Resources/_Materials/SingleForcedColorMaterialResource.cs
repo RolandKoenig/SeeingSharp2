@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -42,6 +43,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Shader parameters
         private float _fadeIntensity;
         private bool _cbPerMaterialDataChanged;
+
+        public override bool IsLoaded =>
+            _vertexShader != null &&
+            _pixelShader != null;
+
+        public float FadeIntensity
+        {
+            get => _fadeIntensity;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_fadeIntensity, value))
+                {
+                    _fadeIntensity = value;
+                    _cbPerMaterialDataChanged = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Loads the resource.
@@ -108,23 +126,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.PixelShader.Set(_pixelShader.PixelShader);
             deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
             deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-        }
-
-        public override bool IsLoaded =>
-            _vertexShader != null &&
-            _pixelShader != null;
-
-        public float FadeIntensity
-        {
-            get => _fadeIntensity;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_fadeIntensity, value))
-                {
-                    _fadeIntensity = value;
-                    _cbPerMaterialDataChanged = true;
-                }
-            }
         }
     }
 }

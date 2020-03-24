@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using System;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -33,8 +34,6 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     internal class Direct2DOverlayRenderer : IDisposable
     {
-        private static readonly NamedOrGenericKey s_resKeyFallbackTexture = GraphicsCore.GetNextGenericResourceKey();
-
         // Graphics object
         private Graphics2D _graphics2D;
 
@@ -45,6 +44,23 @@ namespace SeeingSharp.Multimedia.Core
         // Own 2D render target resource
         private D2D.RenderTarget _renderTarget2D;
         private D2D.Bitmap1 _renderTargetBitmap;
+
+        /// <summary>
+        /// Is this resource loaded correctly?
+        /// </summary>
+        public bool IsLoaded => _renderTarget2D != null;
+
+        internal bool IsRenderTargetDisposed => _renderTarget2D?.IsDisposed == true;
+
+        /// <summary>
+        /// Gets the Direct2D render target.
+        /// </summary>
+        internal D2D.RenderTarget RenderTarget2D => _renderTarget2D;
+
+        /// <summary>
+        /// Gets the 2D graphics object.
+        /// </summary>
+        internal Graphics2D Graphics => _graphics2D;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
@@ -151,22 +167,5 @@ namespace SeeingSharp.Multimedia.Core
                 _graphics2D = new Graphics2D(_device, _device.DeviceContextD2D, scaledScreenSize);
             }
         }
-
-        /// <summary>
-        /// Is this resource loaded correctly?
-        /// </summary>
-        public bool IsLoaded => _renderTarget2D != null;
-
-        internal bool IsRenderTargetDisposed => _renderTarget2D?.IsDisposed == true;
-
-        /// <summary>
-        /// Gets the Direct2D render target.
-        /// </summary>
-        internal D2D.RenderTarget RenderTarget2D => _renderTarget2D;
-
-        /// <summary>
-        /// Gets the 2D graphics object.
-        /// </summary>
-        internal Graphics2D Graphics => _graphics2D;
     }
 }

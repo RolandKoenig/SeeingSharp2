@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -29,6 +30,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Resources for Direct3D 11 rendering
         private D3D11.PixelShader _pixelShader;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _pixelShader != null;
+
+        /// <summary>
+        /// Gets the loaded PixelShader object.
+        /// </summary>
+        internal D3D11.PixelShader PixelShader => _pixelShader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
@@ -58,15 +69,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             _pixelShader = SeeingSharpUtil.DisposeObject(_pixelShader);
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _pixelShader != null;
-
-        /// <summary>
-        /// Gets the loaded PixelShader object.
-        /// </summary>
-        internal D3D11.PixelShader PixelShader => _pixelShader;
     }
 }

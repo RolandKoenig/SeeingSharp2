@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SharpDX.Direct2D1.Effects;
 using D2D = SharpDX.Direct2D1;
@@ -27,6 +28,12 @@ namespace SeeingSharp.Multimedia.Drawing2D
 {
     public class GaussianBlurEffectResource : EffectResource
     {
+        public float StandardDeviation
+        {
+            get;
+            set;
+        }
+
         public GaussianBlurEffectResource(IImage sourceImage)
             : base(sourceImage)
         {
@@ -47,12 +54,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             };
 
             return blurEffect;
-        }
-
-        public float StandardDeviation
-        {
-            get;
-            set;
         }
     }
 }

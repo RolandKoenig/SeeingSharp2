@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp
@@ -29,6 +30,11 @@ namespace SeeingSharp
 
         public Vector2 Location;
         public Vector2 Size;
+
+        /// <summary>
+        /// Is this box empty?
+        /// </summary>
+        public bool IsEmpty => Vector2Ex.IsEmpty(ref this.Location) && Vector2Ex.IsEmpty(ref this.Size);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundingBox2D" /> struct.
@@ -78,10 +84,5 @@ namespace SeeingSharp
         {
             return smallerBox.IsContainedBy(biggerBox);
         }
-
-        /// <summary>
-        /// Is this box empty?
-        /// </summary>
-        public bool IsEmpty => Location.IsEmpty() && Size.IsEmpty();
     }
 }

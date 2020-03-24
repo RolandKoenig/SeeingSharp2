@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -59,6 +60,259 @@ namespace SeeingSharp.Multimedia.Core
         private Color4 _color;
         private float _accentuationFactor;
         private float _opacity;
+
+        /// <summary>
+        /// The accentuation factor.
+        /// </summary>
+        public float AccentuationFactor
+        {
+            get => _accentuationFactor;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_accentuationFactor, value))
+                {
+                    _accentuationFactor = value;
+                    this.TriggerRecreateOfParameters();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets current rotation.
+        /// </summary>
+        public Vector3 RotationEuler
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the opacity of this object.
+        /// </summary>
+        public float Opacity
+        {
+            get => _opacity;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_opacity, value))
+                {
+                    _opacity = value;
+
+                    this.TriggerRecreateOfParameters();
+                    this.OnOpacityChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets current position.
+        /// </summary>
+        public Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        public Quaternion RotationQuaternion
+        {
+            get => _rotationQuaternion;
+            set
+            {
+                _rotationQuaternion = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets current scaling.
+        /// </summary>
+        public Vector3 Scaling
+        {
+            get => _scaling;
+            set
+            {
+                _scaling = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the x coordinate of this object.
+        /// </summary>
+        public float XPos
+        {
+            get => _position.X;
+            set
+            {
+                _position.X = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the y coordinate of this object.
+        /// </summary>
+        public float YPos
+        {
+            get => _position.Y;
+            set
+            {
+                _position.Y = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the z coordinate of this object.
+        /// </summary>
+        public float ZPos
+        {
+            get => _position.Z;
+            set
+            {
+                _position.Z = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the used rotation type.
+        /// </summary>
+        public SpacialTransformationType TransformationType
+        {
+            get => _transformationType;
+            set
+            {
+                _transformationType = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the vector that points up (default: Y-Axis).
+        /// This is relevant when rotation is calculated by direction.
+        /// </summary>
+        public Vector3 RotationUp
+        {
+            get => _rotationUp;
+            set
+            {
+                _rotationUp = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the vector that points forward (default: Z-Axis).
+        /// This is relevant when rotation is calculated by direction.
+        /// </summary>
+        public Vector3 RotationForward
+        {
+            get => _rotationForward;
+            set
+            {
+                _rotationForward = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current maximum scale factor.
+        /// </summary>
+        public float MaxScaleFactor
+        {
+            get
+            {
+                switch (_transformationType)
+                {
+                    case SpacialTransformationType.ScalingTranslation:
+                    case SpacialTransformationType.ScalingTranslationEulerAngles:
+                    case SpacialTransformationType.ScalingTranslationQuaternion:
+                        return Math.Max(_scaling.X, Math.Max(_scaling.Y, _scaling.Z));
+
+                    default:
+                        return 1f;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a matrix that transforms local space to world space.
+        /// </summary>
+        public Matrix4x4 Transform => _transform;
+
+        /// <summary>
+        /// Gets or sets the source of the transformation value when SpacialTransformationType.CustomTransform is set.
+        /// </summary>
+        public SceneSpacialObject TransformSourceObject
+        {
+            get => _transformSourceObject;
+            set
+            {
+                if (_transformSourceObject != value)
+                {
+                    _transformSourceObject = value;
+                    _transformParamsChanged = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a matrix which is to apply on SpacialTransformationType.CustomTransform.
+        /// </summary>
+        public Matrix4x4 CustomTransform
+        {
+            get => _customTransform;
+            set
+            {
+                _customTransform = value;
+                _transformParamsChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets the vector that looks up.
+        /// </summary>
+        public Vector3 Up => Vector3.Transform(new Vector3(0f, 1f, 0f), _transform);
+
+        /// <summary>
+        /// Gets the vector that looks into front.
+        /// </summary>
+        public Vector3 Look => Vector3.Transform(new Vector3(0f, 0f, 1f), _transform);
+
+        /// <summary>
+        /// Gets the vector that looks to the right.
+        /// </summary>
+        public Vector3 Right => Vector3.Transform(new Vector3(1f, 0f, 0f), _transform);
+
+        /// <summary>
+        /// The color of this object.
+        /// </summary>
+        public Color4 Color
+        {
+            get => _color;
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    this.TriggerRecreateOfParameters();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all local render parameters.
+        /// </summary>
+        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneSpacialObject"/> class.
@@ -324,8 +578,8 @@ namespace SeeingSharp.Multimedia.Core
             // Calculates local transform matrix (transforms local space to world space)
             var doRecreateShaderParameters = false;
             
-            if ((_hostedObject != null) &&
-                ((!this.IsStatic) || _hostedObjectChanged))
+            if (_hostedObject != null &&
+                (!this.IsStatic || _hostedObjectChanged))
             {
                 if (_hostedObjectChanged) { doRecreateShaderParameters = true; }
                 _hostedObjectChanged = false;
@@ -338,9 +592,9 @@ namespace SeeingSharp.Multimedia.Core
                     // Gather transformation values
                     case ObjectHostMode.Default:
                         _transformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
-                        if ((hostedPosition != _position) ||
-                            (hostedRotation != _rotation) ||
-                            (hostedScaling != _scaling))
+                        if (hostedPosition != _position ||
+                            hostedRotation != _rotation ||
+                            hostedScaling != _scaling)
                         {
                             _position = hostedPosition;
                             _scaling = hostedScaling;
@@ -355,8 +609,8 @@ namespace SeeingSharp.Multimedia.Core
                         _rotation = Vector3.Zero;
                         _rotationQuaternion = Quaternion.Identity;
                         _transformationType = SpacialTransformationType.ScalingTranslation;
-                        if ((hostedPosition != _position) ||
-                            (hostedScaling != _scaling))
+                        if (hostedPosition != _position ||
+                            hostedScaling != _scaling)
                         {
                             _position = hostedPosition;
                             _scaling = hostedScaling;
@@ -369,8 +623,8 @@ namespace SeeingSharp.Multimedia.Core
                     case ObjectHostMode.IgnoreScaling:
                         //_scaling = Vector3.One;
                         _transformationType = SpacialTransformationType.TranslationEulerAngles;
-                        if ((hostedPosition != _position) ||
-                            (hostedRotation != _rotation))
+                        if (hostedPosition != _position ||
+                            hostedRotation != _rotation)
                         {
                             _position = hostedPosition;
                             _rotation = hostedRotation;
@@ -415,9 +669,9 @@ namespace SeeingSharp.Multimedia.Core
                 _transformParamsChanged || updateState.ForceTransformUpdatesOnChildren;
 
             // Update local transform matrix if transform values have changed
-            if ((_transformParamsChanged) || 
-                (updateState.ForceTransformUpdatesOnChildren) || 
-                (_transformationType == SpacialTransformationType.TakeFromOtherObject))  // <-- Special case: We don't know weather transform has changed there
+            if (_transformParamsChanged || 
+                updateState.ForceTransformUpdatesOnChildren || 
+                _transformationType == SpacialTransformationType.TakeFromOtherObject)  // <-- Special case: We don't know weather transform has changed there
             {
                 _transformParamsChanged = false;
                 _forceTransformUpdateOnChildren = this.HasChildren;
@@ -601,7 +855,7 @@ namespace SeeingSharp.Multimedia.Core
                     Color = _color.ToVector4(),
                     Opacity = _opacity,
                     World = Matrix4x4.Transpose(_transform),
-                    ObjectScaling = _scaling,
+                    ObjectScaling = _scaling
                 };
 
                 // Update constant buffer
@@ -624,258 +878,5 @@ namespace SeeingSharp.Multimedia.Core
                 actRenderParameters.NeedsRefresh = true;
             }
         }
-
-        /// <summary>
-        /// The accentuation factor.
-        /// </summary>
-        public float AccentuationFactor
-        {
-            get => _accentuationFactor;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_accentuationFactor, value))
-                {
-                    _accentuationFactor = value;
-                    this.TriggerRecreateOfParameters();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets current rotation.
-        /// </summary>
-        public Vector3 RotationEuler
-        {
-            get => _rotation;
-            set
-            {
-                _rotation = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the opacity of this object.
-        /// </summary>
-        public float Opacity
-        {
-            get => _opacity;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_opacity, value))
-                {
-                    _opacity = value;
-
-                    this.TriggerRecreateOfParameters();
-                    this.OnOpacityChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets current position.
-        /// </summary>
-        public Vector3 Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        public Quaternion RotationQuaternion
-        {
-            get => _rotationQuaternion;
-            set
-            {
-                _rotationQuaternion = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets current scaling.
-        /// </summary>
-        public Vector3 Scaling
-        {
-            get => _scaling;
-            set
-            {
-                _scaling = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the x coordinate of this object.
-        /// </summary>
-        public float XPos
-        {
-            get => _position.X;
-            set
-            {
-                _position.X = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the y coordinate of this object.
-        /// </summary>
-        public float YPos
-        {
-            get => _position.Y;
-            set
-            {
-                _position.Y = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the z coordinate of this object.
-        /// </summary>
-        public float ZPos
-        {
-            get => _position.Z;
-            set
-            {
-                _position.Z = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the used rotation type.
-        /// </summary>
-        public SpacialTransformationType TransformationType
-        {
-            get => _transformationType;
-            set
-            {
-                _transformationType = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the vector that points up (default: Y-Axis).
-        /// This is relevant when rotation is calculated by direction.
-        /// </summary>
-        public Vector3 RotationUp
-        {
-            get => _rotationUp;
-            set
-            {
-                _rotationUp = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the vector that points forward (default: Z-Axis).
-        /// This is relevant when rotation is calculated by direction.
-        /// </summary>
-        public Vector3 RotationForward
-        {
-            get => _rotationForward;
-            set
-            {
-                _rotationForward = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets the current maximum scale factor.
-        /// </summary>
-        public float MaxScaleFactor
-        {
-            get
-            {
-                switch (_transformationType)
-                {
-                    case SpacialTransformationType.ScalingTranslation:
-                    case SpacialTransformationType.ScalingTranslationEulerAngles:
-                    case SpacialTransformationType.ScalingTranslationQuaternion:
-                        return Math.Max(_scaling.X, Math.Max(_scaling.Y, _scaling.Z));
-
-                    default:
-                        return 1f;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a matrix that transforms local space to world space.
-        /// </summary>
-        public Matrix4x4 Transform => _transform;
-
-        /// <summary>
-        /// Gets or sets the source of the transformation value when SpacialTransformationType.CustomTransform is set.
-        /// </summary>
-        public SceneSpacialObject TransformSourceObject
-        {
-            get => _transformSourceObject;
-            set
-            {
-                if (_transformSourceObject != value)
-                {
-                    _transformSourceObject = value;
-                    _transformParamsChanged = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a matrix which is to apply on SpacialTransformationType.CustomTransform.
-        /// </summary>
-        public Matrix4x4 CustomTransform
-        {
-            get => _customTransform;
-            set
-            {
-                _customTransform = value;
-                _transformParamsChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets the vector that looks up.
-        /// </summary>
-        public Vector3 Up => Vector3.Transform(new Vector3(0f, 1f, 0f), _transform);
-
-        /// <summary>
-        /// Gets the vector that looks into front.
-        /// </summary>
-        public Vector3 Look => Vector3.Transform(new Vector3(0f, 0f, 1f), _transform);
-
-        /// <summary>
-        /// Gets the vector that looks to the right.
-        /// </summary>
-        public Vector3 Right => Vector3.Transform(new Vector3(1f, 0f, 0f), _transform);
-
-        /// <summary>
-        /// The color of this object.
-        /// </summary>
-        public Color4 Color
-        {
-            get => _color;
-            set
-            {
-                if (_color != value)
-                {
-                    _color = value;
-                    this.TriggerRecreateOfParameters();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets all local render parameters.
-        /// </summary>
-        internal IndexBasedDynamicCollection<ObjectRenderParameters> RenderParameters { get; }
     }
 }

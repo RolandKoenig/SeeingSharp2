@@ -19,16 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -66,6 +67,16 @@ namespace SeeingSharp.Multimedia.Core
         // Logic blocks
         private MainLoop_UpdateAndPrepareRendering _logicUpdateAndPrepareRendering;
         private MainLoop_RenderAndUpdateBeside _logicRenderAndUpdateBeside;
+
+        /// <summary>
+        /// Is the MainLoop running?
+        /// </summary>
+        public bool IsRunning => _runningTask != null;
+
+        /// <summary>
+        /// Gets the total count of registered RenderLoop objects.
+        /// </summary>
+        public int RegisteredRenderLoopCount => _registeredRenderLoops.Count;
 
         /// <summary>
         /// Occurs each pass within the MainLoop and holds information about generic
@@ -490,15 +501,5 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
         }
-
-        /// <summary>
-        /// Is the MainLoop running?
-        /// </summary>
-        public bool IsRunning => _runningTask != null;
-
-        /// <summary>
-        /// Gets the total count of registered RenderLoop objects.
-        /// </summary>
-        public int RegisteredRenderLoopCount => _registeredRenderLoops.Count;
     }
 }

@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Drawing3D;
+
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -29,30 +30,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         // Runtime values
         private BoundingFrustum _cameraFrustum;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewInformation" /> class.
-        /// </summary>
-        internal ViewInformation(RenderLoop owner)
-        {
-            Owner = owner;
-
-            ViewIndex = -1;
-        }
-
-        public static implicit operator ViewInformation(RenderLoop renderLoop)
-        {
-            return renderLoop.ViewInformation;
-        }
-
-        /// <summary>
-        /// Updates the bounding frustum.
-        /// </summary>
-        /// <param name="viewProjectionMatrix"></param>
-        internal void UpdateFrustum(Matrix4x4 viewProjectionMatrix)
-        {
-            _cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
-        }
 
         /// <summary>
         /// Gets the current view size.
@@ -100,5 +77,29 @@ namespace SeeingSharp.Multimedia.Core
         ///             Its value is set by RegisterView and DeregisterView methods of the Scene class
         /// </summary>
         internal int ViewIndex;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewInformation" /> class.
+        /// </summary>
+        internal ViewInformation(RenderLoop owner)
+        {
+            Owner = owner;
+
+            ViewIndex = -1;
+        }
+
+        public static implicit operator ViewInformation(RenderLoop renderLoop)
+        {
+            return renderLoop.ViewInformation;
+        }
+
+        /// <summary>
+        /// Updates the bounding frustum.
+        /// </summary>
+        /// <param name="viewProjectionMatrix"></param>
+        internal void UpdateFrustum(Matrix4x4 viewProjectionMatrix)
+        {
+            _cameraFrustum = new BoundingFrustum(viewProjectionMatrix);
+        }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
@@ -32,6 +33,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Resources
         private TypeSafeConstantBufferResource<CBPerView> _cbPerView;
         private PostprocessEffectResource _postprocessEffect;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _cbPerView != null;
+
+        /// <summary>
+        /// Gets or sets the key of the postprocess effect.
+        /// </summary>
+        internal NamedOrGenericKey PostprocessEffectKey { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewRenderParameters" /> class.
@@ -111,15 +122,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.VertexShader.SetConstantBuffer(1, _cbPerView.ConstantBuffer);
             deviceContext.PixelShader.SetConstantBuffer(1, _cbPerView.ConstantBuffer);
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _cbPerView != null;
-
-        /// <summary>
-        /// Gets or sets the key of the postprocess effect.
-        /// </summary>
-        internal NamedOrGenericKey PostprocessEffectKey { get; set; }
     }
 }

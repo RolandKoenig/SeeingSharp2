@@ -19,7 +19,7 @@ namespace SeeingSharp
         /// <summary>
         /// A <see cref = "Int3" /> with all of its components set to zero.
         /// </summary>
-        public static readonly Int3 Zero = new Int3();
+        public static readonly Int3 Zero;
 
         /// <summary>
         /// The X unit <see cref = "Int3" /> (1, 0, 0).
@@ -90,10 +90,14 @@ namespace SeeingSharp
         public Int3(int[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 3)
+            {
                 throw new ArgumentOutOfRangeException("values",
-                                                      "There must be three and only three input values for Int3.");
+                    "There must be three and only three input values for Int3.");
+            }
 
             X = values[0];
             Y = values[1];
@@ -149,7 +153,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
         {
-            return new int[] { X, Y, Z };
+            return new[] { X, Y, Z };
         }
 
         /// <summary>
@@ -291,17 +295,17 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the clamped value.</param>
         public static void Clamp(ref Int3 value, ref Int3 min, ref Int3 max, out Int3 result)
         {
-            int x = value.X;
-            x = (x > max.X) ? max.X : x;
-            x = (x < min.X) ? min.X : x;
+            var x = value.X;
+            x = x > max.X ? max.X : x;
+            x = x < min.X ? min.X : x;
 
-            int y = value.Y;
-            y = (y > max.Y) ? max.Y : y;
-            y = (y < min.Y) ? min.Y : y;
+            var y = value.Y;
+            y = y > max.Y ? max.Y : y;
+            y = y < min.Y ? min.Y : y;
 
-            int z = value.Z;
-            z = (z > max.Z) ? max.Z : z;
-            z = (z < min.Z) ? min.Z : z;
+            var z = value.Z;
+            z = z > max.Z ? max.Z : z;
+            z = z < min.Z ? min.Z : z;
 
             result = new Int3(x, y, z);
         }
@@ -328,9 +332,9 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains an new vector composed of the largest components of the source vectors.</param>
         public static void Max(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result.X = (left.X > right.X) ? left.X : right.X;
-            result.Y = (left.Y > right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z > right.Z) ? left.Z : right.Z;
+            result.X = left.X > right.X ? left.X : right.X;
+            result.Y = left.Y > right.Y ? left.Y : right.Y;
+            result.Z = left.Z > right.Z ? left.Z : right.Z;
         }
 
         /// <summary>
@@ -354,9 +358,9 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains an new vector composed of the smallest components of the source vectors.</param>
         public static void Min(ref Int3 left, ref Int3 right, out Int3 result)
         {
-            result.X = (left.X < right.X) ? left.X : right.X;
-            result.Y = (left.Y < right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z < right.Z) ? left.Z : right.Z;
+            result.X = left.X < right.X ? left.X : right.X;
+            result.Y = left.Y < right.Y ? left.Y : right.Y;
+            result.Z = left.Z < right.Z ? left.Z : right.Z;
         }
 
         /// <summary>
@@ -510,7 +514,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2}",
                                  X.ToString(format, CultureInfo.CurrentCulture),
@@ -541,7 +547,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                ToString(formatProvider);
+            {
+                this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "X:{0} Y:{1} Z:{2}", X.ToString(format, formatProvider),
                                  Y.ToString(format, formatProvider), Z.ToString(format, formatProvider));
@@ -580,12 +588,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Int3)))
+            {
                 return false;
+            }
 
-            return Equals((Int3)value);
+            return this.Equals((Int3)value);
         }
 
         /// <summary>

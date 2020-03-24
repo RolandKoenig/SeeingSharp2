@@ -19,28 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Util;
 using SharpDX.WIC;
-using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
-        internal WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
-        {
-            this.Decoder = decoder;
-            this.Converter = converter;
-
-            this.Internals = new WicBitmapSourceInternalInternals(this);
-        }
-
-        public void Dispose()
-        {
-            this.Converter = SeeingSharpUtil.DisposeObject(this.Converter);
-            this.Decoder = SeeingSharpUtil.DisposeObject(this.Decoder);
-        }
-
         public bool IsDisposed => this.Converter == null;
 
         internal BitmapDecoder Decoder
@@ -57,6 +44,20 @@ namespace SeeingSharp.Multimedia.Core
 
         public WicBitmapSourceInternalInternals Internals { get; }
 
+        internal WicBitmapSourceInternal(BitmapDecoder decoder, FormatConverter converter)
+        {
+            this.Decoder = decoder;
+            this.Converter = converter;
+
+            this.Internals = new WicBitmapSourceInternalInternals(this);
+        }
+
+        public void Dispose()
+        {
+            this.Converter = SeeingSharpUtil.DisposeObject(this.Converter);
+            this.Decoder = SeeingSharpUtil.DisposeObject(this.Decoder);
+        }
+
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -64,14 +65,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             private WicBitmapSourceInternal _owner;
 
+            public BitmapDecoder Decoder => _owner.Decoder;
+
+            public FormatConverter Converter => _owner.Converter;
+
             public WicBitmapSourceInternalInternals(WicBitmapSourceInternal owner)
             {
                 _owner = owner;
             }
-
-            public BitmapDecoder Decoder => _owner.Decoder;
-
-            public FormatConverter Converter => _owner.Converter;
         }
     }
 }

@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -33,6 +34,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         // Configuration
         private Func<int[]> _bufferDataFactory;
+
+        internal D3D11.Buffer Buffer => _buffer;
+
+        public override bool IsLoaded => _buffer != null;
 
         public ImmutableIndexBufferResource(Func<int[]> bufferDataFactory)
         {
@@ -49,9 +54,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             SeeingSharpUtil.SafeDispose(ref _buffer);
         }
-
-        internal D3D11.Buffer Buffer => _buffer;
-
-        public override bool IsLoaded => _buffer != null;
     }
 }

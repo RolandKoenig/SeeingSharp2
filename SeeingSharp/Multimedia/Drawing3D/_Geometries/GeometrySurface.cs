@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using SeeingSharp.Checking;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -36,6 +37,36 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public partial class GeometrySurface
     {
         private UnsafeList<TriangleCorner> _corners;
+
+        /// <summary>
+        /// Retrieves a collection of triangles
+        /// </summary>
+        public TriangleCollection Triangles { get; }
+
+        /// <summary>
+        /// Gets a collection containing all indexes.
+        /// </summary>
+        public IndexCollection Indices { get; }
+
+        /// <summary>
+        /// Gets a collection containing all corners.
+        /// </summary>
+        public CornerCollection Corners { get; }
+
+        /// <summary>
+        /// Retrieves total count of all triangles within this geometry
+        /// </summary>
+        public int CountTriangles => _corners.Count / 3;
+
+        /// <summary>
+        /// Gets the owner of this surface.
+        /// </summary>
+        public Geometry Owner { get; }
+
+        /// <summary>
+        /// Retrieves total count of all indexes within this geometry
+        /// </summary>
+        internal int CountIndices => _corners.Count;
 
         internal GeometrySurface(Geometry owner, int triangleCapacity)
         {
@@ -109,6 +140,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             this.Subdivide(0, this.CountTriangles);
         }
+
         /// <summary>
         /// Subdivides the given collection of triangles of this surface.
         /// </summary>
@@ -722,36 +754,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             return triangleIndices;
         }
 
-        /// <summary>
-        /// Retrieves a collection of triangles
-        /// </summary>
-        public TriangleCollection Triangles { get; }
-
-        /// <summary>
-        /// Gets a collection containing all indexes.
-        /// </summary>
-        public IndexCollection Indices { get; }
-
-        /// <summary>
-        /// Gets a collection containing all corners.
-        /// </summary>
-        public CornerCollection Corners { get; }
-
-        /// <summary>
-        /// Retrieves total count of all triangles within this geometry
-        /// </summary>
-        public int CountTriangles => _corners.Count / 3;
-
-        /// <summary>
-        /// Gets the owner of this surface.
-        /// </summary>
-        public Geometry Owner { get; }
-
-        /// <summary>
-        /// Retrieves total count of all indexes within this geometry
-        /// </summary>
-        internal int CountIndices => _corners.Count;
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -761,6 +763,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public class TriangleCollection : IEnumerable<Triangle>
         {
             private GeometrySurface _owner;
+
+            /// <summary>
+            /// Retrieves the triangle at the given index
+            /// </summary>
+            public Triangle this[int index]
+            {
+                get
+                {
+                    var startIndex = index * 3;
+                    return new Triangle(
+                        _owner._corners[startIndex].Index, 
+                        _owner._corners[startIndex + 1].Index, 
+                        _owner._corners[startIndex + 2].Index);
+                }
+            }
 
             internal TriangleCollection(GeometrySurface owner)
             {
@@ -810,21 +827,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     yield return this[loop];
                 }
             }
-
-            /// <summary>
-            /// Retrieves the triangle at the given index
-            /// </summary>
-            public Triangle this[int index]
-            {
-                get
-                {
-                    var startIndex = index * 3;
-                    return new Triangle(
-                        _owner._corners[startIndex].Index, 
-                        _owner._corners[startIndex + 1].Index, 
-                        _owner._corners[startIndex + 2].Index);
-                }
-            }
         }
 
         //*********************************************************************
@@ -836,6 +838,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public class IndexCollection : IEnumerable<int>
         {
             private GeometrySurface _owner;
+
+            /// <summary>
+            /// Returns the index at ghe given index
+            /// </summary>
+            public int this[int index] => _owner._corners[index].Index;
+
+            public int Count => _owner._corners.Count;
 
             internal IndexCollection(GeometrySurface owner)
             {
@@ -853,13 +862,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 return _owner._corners.Select(actCorner => actCorner.Index)
                     .GetEnumerator();
             }
-
-            /// <summary>
-            /// Returns the index at ghe given index
-            /// </summary>
-            public int this[int index] => _owner._corners[index].Index;
-
-            public int Count => _owner._corners.Count;
         }
 
         //*********************************************************************
@@ -871,6 +873,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public class CornerCollection : IEnumerable<TriangleCorner>
         {
             private GeometrySurface _owner;
+
+            /// <summary>
+            /// Returns the index at ghe given index
+            /// </summary>
+            public TriangleCorner this[int index] => _owner._corners[index];
+
+            public int Count => _owner._corners.Count;
 
             internal CornerCollection(GeometrySurface owner)
             {
@@ -886,13 +895,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 return _owner._corners.GetEnumerator();
             }
-
-            /// <summary>
-            /// Returns the index at ghe given index
-            /// </summary>
-            public TriangleCorner this[int index] => _owner._corners[index];
-
-            public int Count => _owner._corners.Count;
         }
     }
 }

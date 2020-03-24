@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -160,20 +161,20 @@ namespace SeeingSharp.Multimedia.Core
                 var actDevice = actRenderLoop.Device;
                 var actTargetDevice = actRenderLoop.Internals.TargetDevice;
 
-                var isChangingDevice = (actTargetDevice != null) &&
-                                       (actDevice != actTargetDevice);
-                var isSameDevice = (actDevice != null) &&
-                                   (deviceToUpdate == actDevice);
+                var isChangingDevice = actTargetDevice != null &&
+                                       actDevice != actTargetDevice;
+                var isSameDevice = actDevice != null &&
+                                   deviceToUpdate == actDevice;
 
                 // ReSharper disable once ReplaceWithSingleAssignment.False
                 var doCallPrepareRender = false;
                 
                 // ReSharper disable once ConvertIfToOrExpression
-                if ((deviceToUpdate == null) && (isChangingDevice))
+                if (deviceToUpdate == null && isChangingDevice)
                 {
                     doCallPrepareRender = true;
                 }
-                if ((deviceToUpdate != null) && (isSameDevice))
+                if (deviceToUpdate != null && isSameDevice)
                 {
                     doCallPrepareRender = true;
                 }
@@ -182,7 +183,7 @@ namespace SeeingSharp.Multimedia.Core
                 try
                 {
                     var currentResult = await actRenderLoop.PrepareRenderAsync(_updateState);
-                    if((currentResult == null) || (currentResult.Count == 0))
+                    if(currentResult == null || currentResult.Count == 0)
                     {
                         // Nothing to do in this case - no continuation actions
                     }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -28,6 +29,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class ExportMaterialInfo
     {
+        public NamedOrGenericKey Key { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportMaterialInfo"/> class.
         /// </summary>
@@ -36,7 +39,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             this.Key = key;
         }
-
-        public NamedOrGenericKey Key { get; }
     }
 }

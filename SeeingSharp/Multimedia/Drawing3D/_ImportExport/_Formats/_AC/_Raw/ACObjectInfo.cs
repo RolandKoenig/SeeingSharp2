@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -26,6 +27,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class ACObjectInfo
     {
+        public List<ACObjectInfo> Children;
+        public int KidCount;
+        public string Name;
+        public Matrix4x4 Rotation;
+        public List<ACSurface> Surfaces;
+        public string Texture;
+        public Vector2 TextureRepeat;
+        public Vector3 Translation;
+        public ACObjectType Type;
+        public string Url;
+        public List<ACVertex> Vertices;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ACObjectInfo"/> class.
         /// </summary>
@@ -62,17 +75,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return result;
         }
-
-        public List<ACObjectInfo> Children;
-        public int KidCount;
-        public string Name;
-        public Matrix4x4 Rotation;
-        public List<ACSurface> Surfaces;
-        public string Texture;
-        public Vector2 TextureRepeat;
-        public Vector3 Translation;
-        public ACObjectType Type;
-        public string Url;
-        public List<ACVertex> Vertices;
     }
 }

@@ -19,38 +19,39 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Util;
-using DXGI = SharpDX.DXGI;
+using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class FactoryHandlerDXGI : IDisposable, ICheckDisposed
     {
-        private DXGI.Factory1 _dxgiFactory;
-
-        internal FactoryHandlerDXGI(GraphicsCoreConfiguration coreConfiguration)
-        {
-            _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory4());
-            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory2()); }
-            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new DXGI.Factory1()); }
-            if (_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
-        }
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref _dxgiFactory);
-        }
+        private Factory1 _dxgiFactory;
 
         public bool IsDisposed => _dxgiFactory == null;
 
-        internal DXGI.Factory1 Factory
+        internal Factory1 Factory
         {
             get
             {
                 if(_dxgiFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerDXGI)); }
                 return _dxgiFactory;
             }
+        }
+
+        internal FactoryHandlerDXGI(GraphicsCoreConfiguration coreConfiguration)
+        {
+            _dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory4());
+            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory2()); }
+            if (_dxgiFactory == null) { _dxgiFactory = SeeingSharpUtil.TryExecute(() => new Factory1()); }
+            if (_dxgiFactory == null) { throw new SeeingSharpGraphicsException("Unable to create the DXGI Factory object!"); }
+        }
+
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref _dxgiFactory);
         }
     }
 }

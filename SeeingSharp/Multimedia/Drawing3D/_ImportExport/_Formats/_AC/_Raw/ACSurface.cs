@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -26,15 +27,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class ACSurface
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ACSurface"/> class.
-        /// </summary>
-        public ACSurface()
-        {
-            VertexReferences = new List<int>();
-            TextureCoordinates = new List<Vector2>();
-        }
-
         /// <summary>
         /// Is this surface built using polygons?
         /// </summary>
@@ -64,5 +56,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public int Material;
         public List<Vector2> TextureCoordinates;
         public List<int> VertexReferences;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ACSurface"/> class.
+        /// </summary>
+        public ACSurface()
+        {
+            VertexReferences = new List<int>();
+            TextureCoordinates = new List<Vector2>();
+        }
     }
 }

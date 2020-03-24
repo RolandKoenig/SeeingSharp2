@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -61,10 +62,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     materialKeys[loop],
-                    (device) => new StandardMaterialResource()
+                    device => new StandardMaterialResource
                     {
                         UseVertexColors = false,
-                        MaterialDiffuseColor = actACMaterial.Diffuse,
+                        MaterialDiffuseColor = actACMaterial.Diffuse
                     }));
             }
 

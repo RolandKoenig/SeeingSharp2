@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using System;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -37,6 +38,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         // Resources
         private D2D.Bitmap[] _loadedBitmaps;
+
+        public override int PixelWidth => _bitmapSize.Width;
+
+        public override int PixelHeight => _bitmapSize.Height;
+
+        public override double DpiX => _dpiX;
+
+        public override double DpiY => _dpiY;
+
+        public override int FrameCountX => 1;
+
+        public override int FrameCountY => 1;
+
+        public override int TotalFrameCount => 1;
+
+        public override int SingleFramePixelWidth => _bitmapSize.Width;
+
+        public override int SingleFramePixelHeight => _bitmapSize.Height;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WritableBitmapResource"/> class.
@@ -110,23 +129,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 _loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }
-
-        public override int PixelWidth => _bitmapSize.Width;
-
-        public override int PixelHeight => _bitmapSize.Height;
-
-        public override double DpiX => _dpiX;
-
-        public override double DpiY => _dpiY;
-
-        public override int FrameCountX => 1;
-
-        public override int FrameCountY => 1;
-
-        public override int TotalFrameCount => 1;
-
-        public override int SingleFramePixelWidth => _bitmapSize.Width;
-
-        public override int SingleFramePixelHeight => _bitmapSize.Height;
     }
 }

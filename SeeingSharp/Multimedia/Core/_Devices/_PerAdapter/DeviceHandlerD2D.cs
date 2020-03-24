@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using System;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Core
@@ -32,6 +33,20 @@ namespace SeeingSharp.Multimedia.Core
         private D2D.RenderTarget _renderTarget;
         private D2D.Device _deviceD2D;
         private D2D.DeviceContext _deviceContextD2D;
+
+        public bool IsLoaded => _renderTarget != null;
+
+        /// <summary>
+        /// Gets a reference to the Direct2D view to the device.
+        /// </summary>
+        internal D2D.Device Device => _deviceD2D;
+
+        /// <summary>
+        /// Gets a reference to the device DeviceContext for rendering.
+        /// </summary>
+        internal D2D.DeviceContext DeviceContext => _deviceContextD2D;
+
+        internal D2D.RenderTarget RenderTarget => _renderTarget;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
@@ -69,19 +84,5 @@ namespace SeeingSharp.Multimedia.Core
             SeeingSharpUtil.SafeDispose(ref _deviceD2D);
             SeeingSharpUtil.SafeDispose(ref _renderTarget);
         }
-
-        public bool IsLoaded => _renderTarget != null;
-
-        /// <summary>
-        /// Gets a reference to the Direct2D view to the device.
-        /// </summary>
-        internal D2D.Device Device => _deviceD2D;
-
-        /// <summary>
-        /// Gets a reference to the device DeviceContext for rendering.
-        /// </summary>
-        internal D2D.DeviceContext DeviceContext => _deviceContextD2D;
-
-        internal D2D.RenderTarget RenderTarget => _renderTarget;
     }
 }

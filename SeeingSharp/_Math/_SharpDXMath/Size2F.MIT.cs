@@ -45,9 +45,15 @@ namespace SeeingSharp
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Size2F)) return false;
-            return Equals((Size2F)obj);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (obj.GetType() != typeof(Size2F))
+            {
+                return false;
+            }
+            return this.Equals((Size2F)obj);
         }
 
         /// <inheritdoc/>

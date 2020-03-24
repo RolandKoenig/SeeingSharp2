@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Multimedia.Input;
@@ -39,6 +40,33 @@ namespace SeeingSharp.Multimedia.Core
         private TimeSpan _updateTime;
         private IEnumerable<InputFrame> _inputFrames;
         private ulong _cycleId;
+
+        /// <summary>
+        /// Gets current update time.
+        /// </summary>
+        public TimeSpan UpdateTime => _updateTime;
+
+        /// <summary>
+        /// Gets the current update time in milliseconds.
+        /// </summary>
+        public int UpdateTimeMilliseconds => _updateTimeMilliseconds;
+
+        public bool IgnorePauseState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets a collection containing all gathered InputFrames since last update pass.
+        /// </summary>
+        public IEnumerable<InputFrame> InputFrames => _inputFrames;
+
+        /// <summary>
+        /// Gets a number which is incremented on each cycle of the <see cref="EngineMainLoop"/>.
+        /// It starts again at 0 when it reaches maximum.
+        /// </summary>
+        public ulong MainLoopCycleId => _cycleId;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
@@ -95,32 +123,5 @@ namespace SeeingSharp.Multimedia.Core
             if (_cycleId < ulong.MaxValue) { _cycleId++; }
             else { _cycleId = 0; }
         }
-
-        /// <summary>
-        /// Gets current update time.
-        /// </summary>
-        public TimeSpan UpdateTime => _updateTime;
-
-        /// <summary>
-        /// Gets the current update time in milliseconds.
-        /// </summary>
-        public int UpdateTimeMilliseconds => _updateTimeMilliseconds;
-
-        public bool IgnorePauseState
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets a collection containing all gathered InputFrames since last update pass.
-        /// </summary>
-        public IEnumerable<InputFrame> InputFrames => _inputFrames;
-
-        /// <summary>
-        /// Gets a number which is incremented on each cycle of the <see cref="EngineMainLoop"/>.
-        /// It starts again at 0 when it reaches maximum.
-        /// </summary>
-        public ulong MainLoopCycleId => _cycleId;
     }
 }

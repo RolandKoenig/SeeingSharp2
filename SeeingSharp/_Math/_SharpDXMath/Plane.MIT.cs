@@ -52,8 +52,8 @@ namespace SeeingSharp
         /// <param name="normal">The normal vector to the plane.</param>
         public Plane(Vector3 point, Vector3 normal)
         {
-            this.Normal = normal;
-            this.D = -Vector3.Dot(normal, point);
+            Normal = normal;
+            D = -Vector3.Dot(normal, point);
         }
 
         /// <summary>
@@ -75,21 +75,21 @@ namespace SeeingSharp
         /// <param name="point3">Third point of a triangle defining the plane.</param>
         public Plane(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            float x1 = point2.X - point1.X;
-            float y1 = point2.Y - point1.Y;
-            float z1 = point2.Z - point1.Z;
-            float x2 = point3.X - point1.X;
-            float y2 = point3.Y - point1.Y;
-            float z2 = point3.Z - point1.Z;
-            float yz = (y1 * z2) - (z1 * y2);
-            float xz = (z1 * x2) - (x1 * z2);
-            float xy = (x1 * y2) - (y1 * x2);
-            float invPyth = 1.0f / (float)(Math.Sqrt((yz * yz) + (xz * xz) + (xy * xy)));
+            var x1 = point2.X - point1.X;
+            var y1 = point2.Y - point1.Y;
+            var z1 = point2.Z - point1.Z;
+            var x2 = point3.X - point1.X;
+            var y2 = point3.Y - point1.Y;
+            var z2 = point3.Z - point1.Z;
+            var yz = y1 * z2 - z1 * y2;
+            var xz = z1 * x2 - x1 * z2;
+            var xy = x1 * y2 - y1 * x2;
+            var invPyth = 1.0f / (float)Math.Sqrt(yz * yz + xz * xz + xy * xy);
 
             Normal.X = yz * invPyth;
             Normal.Y = xz * invPyth;
             Normal.Z = xy * invPyth;
-            D = -((Normal.X * point1.X) + (Normal.Y * point1.Y) + (Normal.Z * point1.Z));
+            D = -(Normal.X * point1.X + Normal.Y * point1.Y + Normal.Z * point1.Z);
         }
 
         /// <summary>
@@ -101,9 +101,13 @@ namespace SeeingSharp
         public Plane(float[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Plane.");
+            }
 
             Normal.X = values[0];
             Normal.Y = values[1];
@@ -151,7 +155,7 @@ namespace SeeingSharp
         /// </summary>
         public void Normalize()
         {
-            float magnitude = 1.0f / (float)(Math.Sqrt((Normal.X * Normal.X) + (Normal.Y * Normal.Y) + (Normal.Z * Normal.Z)));
+            var magnitude = 1.0f / (float)Math.Sqrt(Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
 
             Normal.X *= magnitude;
             Normal.Y *= magnitude;
@@ -165,7 +169,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the plane.</returns>
         public float[] ToArray()
         {
-            return new float[] { Normal.X, Normal.Y, Normal.Z, D };
+            return new[] { Normal.X, Normal.Y, Normal.Z, D };
         }
 
         /// <summary>
@@ -300,7 +304,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the dot product of the specified plane and vector.</param>
         public static void Dot(ref Plane left, ref Vector4 right, out float result)
         {
-            result = (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z) + (left.D * right.W);
+            result = left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z + left.D * right.W;
         }
 
         /// <summary>
@@ -311,7 +315,7 @@ namespace SeeingSharp
         /// <returns>The dot product of the specified plane and vector.</returns>
         public static float Dot(Plane left, Vector4 right)
         {
-            return (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z) + (left.D * right.W);
+            return left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z + left.D * right.W;
         }
 
         /// <summary>
@@ -322,7 +326,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the dot product of a specified vector and the normal of the Plane plus the distance value of the plane.</param>
         public static void DotCoordinate(ref Plane left, ref Vector3 right, out float result)
         {
-            result = (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z) + left.D;
+            result = left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z + left.D;
         }
 
         /// <summary>
@@ -333,7 +337,7 @@ namespace SeeingSharp
         /// <returns>The dot product of a specified vector and the normal of the Plane plus the distance value of the plane.</returns>
         public static float DotCoordinate(Plane left, Vector3 right)
         {
-            return (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z) + left.D;
+            return left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z + left.D;
         }
 
         /// <summary>
@@ -344,7 +348,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the dot product of the specified vector and the normal of the plane.</param>
         public static void DotNormal(ref Plane left, ref Vector3 right, out float result)
         {
-            result = (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z);
+            result = left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z;
         }
 
         /// <summary>
@@ -355,7 +359,7 @@ namespace SeeingSharp
         /// <returns>The dot product of the specified vector and the normal of the plane.</returns>
         public static float DotNormal(Plane left, Vector3 right)
         {
-            return (left.Normal.X * right.X) + (left.Normal.Y * right.Y) + (left.Normal.Z * right.Z);
+            return left.Normal.X * right.X + left.Normal.Y * right.Y + left.Normal.Z * right.Z;
         }
 
         /// <summary>
@@ -365,7 +369,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the normalized plane.</param>
         public static void Normalize(ref Plane plane, out Plane result)
         {
-            float magnitude = 1.0f / (float)(Math.Sqrt((plane.Normal.X * plane.Normal.X) + (plane.Normal.Y * plane.Normal.Y) + (plane.Normal.Z * plane.Normal.Z)));
+            var magnitude = 1.0f / (float)Math.Sqrt(plane.Normal.X * plane.Normal.X + plane.Normal.Y * plane.Normal.Y + plane.Normal.Z * plane.Normal.Z);
 
             result.Normal.X = plane.Normal.X * magnitude;
             result.Normal.Y = plane.Normal.Y * magnitude;
@@ -380,7 +384,7 @@ namespace SeeingSharp
         /// <returns>The normalized plane.</returns>
         public static Plane Normalize(Plane plane)
         {
-            float magnitude = 1.0f / (float)(Math.Sqrt((plane.Normal.X * plane.Normal.X) + (plane.Normal.Y * plane.Normal.Y) + (plane.Normal.Z * plane.Normal.Z)));
+            var magnitude = 1.0f / (float)Math.Sqrt(plane.Normal.X * plane.Normal.X + plane.Normal.Y * plane.Normal.Y + plane.Normal.Z * plane.Normal.Z);
             return new Plane(plane.Normal.X * magnitude, plane.Normal.Y * magnitude, plane.Normal.Z * magnitude, plane.D * magnitude);
         }
 
@@ -392,26 +396,26 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the transformed plane.</param>
         public static void Transform(ref Plane plane, ref Quaternion rotation, out Plane result)
         {
-            float x2 = rotation.X + rotation.X;
-            float y2 = rotation.Y + rotation.Y;
-            float z2 = rotation.Z + rotation.Z;
-            float wx = rotation.W * x2;
-            float wy = rotation.W * y2;
-            float wz = rotation.W * z2;
-            float xx = rotation.X * x2;
-            float xy = rotation.X * y2;
-            float xz = rotation.X * z2;
-            float yy = rotation.Y * y2;
-            float yz = rotation.Y * z2;
-            float zz = rotation.Z * z2;
+            var x2 = rotation.X + rotation.X;
+            var y2 = rotation.Y + rotation.Y;
+            var z2 = rotation.Z + rotation.Z;
+            var wx = rotation.W * x2;
+            var wy = rotation.W * y2;
+            var wz = rotation.W * z2;
+            var xx = rotation.X * x2;
+            var xy = rotation.X * y2;
+            var xz = rotation.X * z2;
+            var yy = rotation.Y * y2;
+            var yz = rotation.Y * z2;
+            var zz = rotation.Z * z2;
 
-            float x = plane.Normal.X;
-            float y = plane.Normal.Y;
-            float z = plane.Normal.Z;
+            var x = plane.Normal.X;
+            var y = plane.Normal.Y;
+            var z = plane.Normal.Z;
 
-            result.Normal.X = ((x * ((1.0f - yy) - zz)) + (y * (xy - wz))) + (z * (xz + wy));
-            result.Normal.Y = ((x * (xy + wz)) + (y * ((1.0f - xx) - zz))) + (z * (yz - wx));
-            result.Normal.Z = ((x * (xz - wy)) + (y * (yz + wx))) + (z * ((1.0f - xx) - yy));
+            result.Normal.X = x * (1.0f - yy - zz) + y * (xy - wz) + z * (xz + wy);
+            result.Normal.Y = x * (xy + wz) + y * (1.0f - xx - zz) + z * (yz - wx);
+            result.Normal.Z = x * (xz - wy) + y * (yz + wx) + z * (1.0f - xx - yy);
             result.D = plane.D;
         }
 
@@ -424,26 +428,26 @@ namespace SeeingSharp
         public static Plane Transform(Plane plane, Quaternion rotation)
         {
             Plane result;
-            float x2 = rotation.X + rotation.X;
-            float y2 = rotation.Y + rotation.Y;
-            float z2 = rotation.Z + rotation.Z;
-            float wx = rotation.W * x2;
-            float wy = rotation.W * y2;
-            float wz = rotation.W * z2;
-            float xx = rotation.X * x2;
-            float xy = rotation.X * y2;
-            float xz = rotation.X * z2;
-            float yy = rotation.Y * y2;
-            float yz = rotation.Y * z2;
-            float zz = rotation.Z * z2;
+            var x2 = rotation.X + rotation.X;
+            var y2 = rotation.Y + rotation.Y;
+            var z2 = rotation.Z + rotation.Z;
+            var wx = rotation.W * x2;
+            var wy = rotation.W * y2;
+            var wz = rotation.W * z2;
+            var xx = rotation.X * x2;
+            var xy = rotation.X * y2;
+            var xz = rotation.X * z2;
+            var yy = rotation.Y * y2;
+            var yz = rotation.Y * z2;
+            var zz = rotation.Z * z2;
 
-            float x = plane.Normal.X;
-            float y = plane.Normal.Y;
-            float z = plane.Normal.Z;
+            var x = plane.Normal.X;
+            var y = plane.Normal.Y;
+            var z = plane.Normal.Z;
 
-            result.Normal.X = ((x * ((1.0f - yy) - zz)) + (y * (xy - wz))) + (z * (xz + wy));
-            result.Normal.Y = ((x * (xy + wz)) + (y * ((1.0f - xx) - zz))) + (z * (yz - wx));
-            result.Normal.Z = ((x * (xz - wy)) + (y * (yz + wx))) + (z * ((1.0f - xx) - yy));
+            result.Normal.X = x * (1.0f - yy - zz) + y * (xy - wz) + z * (xz + wy);
+            result.Normal.Y = x * (xy + wz) + y * (1.0f - xx - zz) + z * (yz - wx);
+            result.Normal.Z = x * (xz - wy) + y * (yz + wx) + z * (1.0f - xx - yy);
             result.D = plane.D;
 
             return result;
@@ -458,34 +462,36 @@ namespace SeeingSharp
         public static void Transform(Plane[] planes, ref Quaternion rotation)
         {
             if (planes == null)
-                throw new ArgumentNullException("planes");
-
-            float x2 = rotation.X + rotation.X;
-            float y2 = rotation.Y + rotation.Y;
-            float z2 = rotation.Z + rotation.Z;
-            float wx = rotation.W * x2;
-            float wy = rotation.W * y2;
-            float wz = rotation.W * z2;
-            float xx = rotation.X * x2;
-            float xy = rotation.X * y2;
-            float xz = rotation.X * z2;
-            float yy = rotation.Y * y2;
-            float yz = rotation.Y * z2;
-            float zz = rotation.Z * z2;
-
-            for (int i = 0; i < planes.Length; ++i)
             {
-                float x = planes[i].Normal.X;
-                float y = planes[i].Normal.Y;
-                float z = planes[i].Normal.Z;
+                throw new ArgumentNullException("planes");
+            }
+
+            var x2 = rotation.X + rotation.X;
+            var y2 = rotation.Y + rotation.Y;
+            var z2 = rotation.Z + rotation.Z;
+            var wx = rotation.W * x2;
+            var wy = rotation.W * y2;
+            var wz = rotation.W * z2;
+            var xx = rotation.X * x2;
+            var xy = rotation.X * y2;
+            var xz = rotation.X * z2;
+            var yy = rotation.Y * y2;
+            var yz = rotation.Y * z2;
+            var zz = rotation.Z * z2;
+
+            for (var i = 0; i < planes.Length; ++i)
+            {
+                var x = planes[i].Normal.X;
+                var y = planes[i].Normal.Y;
+                var z = planes[i].Normal.Z;
 
                 /*
                  * Note:
                  * Factor common arithmetic out of loop.
                 */
-                planes[i].Normal.X = ((x * ((1.0f - yy) - zz)) + (y * (xy - wz))) + (z * (xz + wy));
-                planes[i].Normal.Y = ((x * (xy + wz)) + (y * ((1.0f - xx) - zz))) + (z * (yz - wx));
-                planes[i].Normal.Z = ((x * (xz - wy)) + (y * (yz + wx))) + (z * ((1.0f - xx) - yy));
+                planes[i].Normal.X = x * (1.0f - yy - zz) + y * (xy - wz) + z * (xz + wy);
+                planes[i].Normal.Y = x * (xy + wz) + y * (1.0f - xx - zz) + z * (yz - wx);
+                planes[i].Normal.Z = x * (xz - wy) + y * (yz + wx) + z * (1.0f - xx - yy);
             }
         }
 
@@ -497,18 +503,18 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the transformed plane.</param>
         public static void Transform(ref Plane plane, ref Matrix4x4 transformation, out Plane result)
         {
-            float x = plane.Normal.X;
-            float y = plane.Normal.Y;
-            float z = plane.Normal.Z;
-            float d = plane.D;
+            var x = plane.Normal.X;
+            var y = plane.Normal.Y;
+            var z = plane.Normal.Z;
+            var d = plane.D;
 
             Matrix4x4 inverse;
             Matrix4x4.Invert(transformation, out inverse);
 
-            result.Normal.X = (((x * inverse.M11) + (y * inverse.M12)) + (z * inverse.M13)) + (d * inverse.M14);
-            result.Normal.Y = (((x * inverse.M21) + (y * inverse.M22)) + (z * inverse.M23)) + (d * inverse.M24);
-            result.Normal.Z = (((x * inverse.M31) + (y * inverse.M32)) + (z * inverse.M33)) + (d * inverse.M34);
-            result.D = (((x * inverse.M41) + (y * inverse.M42)) + (z * inverse.M43)) + (d * inverse.M44);
+            result.Normal.X = x * inverse.M11 + y * inverse.M12 + z * inverse.M13 + d * inverse.M14;
+            result.Normal.Y = x * inverse.M21 + y * inverse.M22 + z * inverse.M23 + d * inverse.M24;
+            result.Normal.Z = x * inverse.M31 + y * inverse.M32 + z * inverse.M33 + d * inverse.M34;
+            result.D = x * inverse.M41 + y * inverse.M42 + z * inverse.M43 + d * inverse.M44;
         }
 
         /// <summary>
@@ -520,17 +526,17 @@ namespace SeeingSharp
         public static Plane Transform(Plane plane, Matrix4x4 transformation)
         {
             Plane result;
-            float x = plane.Normal.X;
-            float y = plane.Normal.Y;
-            float z = plane.Normal.Z;
-            float d = plane.D;
+            var x = plane.Normal.X;
+            var y = plane.Normal.Y;
+            var z = plane.Normal.Z;
+            var d = plane.D;
 
             Matrix4x4 inverted;
             Matrix4x4.Invert(transformation, out inverted);
-            result.Normal.X = (((x * inverted.M11) + (y * inverted.M12)) + (z * inverted.M13)) + (d * inverted.M14);
-            result.Normal.Y = (((x * inverted.M21) + (y * inverted.M22)) + (z * inverted.M23)) + (d * inverted.M24);
-            result.Normal.Z = (((x * inverted.M31) + (y * inverted.M32)) + (z * inverted.M33)) + (d * inverted.M34);
-            result.D = (((x * inverted.M41) + (y * inverted.M42)) + (z * inverted.M43)) + (d * inverted.M44);
+            result.Normal.X = x * inverted.M11 + y * inverted.M12 + z * inverted.M13 + d * inverted.M14;
+            result.Normal.Y = x * inverted.M21 + y * inverted.M22 + z * inverted.M23 + d * inverted.M24;
+            result.Normal.Z = x * inverted.M31 + y * inverted.M32 + z * inverted.M33 + d * inverted.M34;
+            result.D = x * inverted.M41 + y * inverted.M42 + z * inverted.M43 + d * inverted.M44;
 
             return result;
         }
@@ -544,12 +550,14 @@ namespace SeeingSharp
         public static void Transform(Plane[] planes, ref Matrix4x4 transformation)
         {
             if (planes == null)
+            {
                 throw new ArgumentNullException("planes");
+            }
 
             Matrix4x4 inverse;
             Matrix4x4.Invert(transformation, out inverse);
 
-            for (int i = 0; i < planes.Length; ++i)
+            for (var i = 0; i < planes.Length; ++i)
             {
                 Transform(ref planes[i], ref transformation, out planes[i]);
             }
@@ -682,12 +690,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Plane)))
+            {
                 return false;
+            }
 
-            return Equals((Plane)value);
+            return this.Equals((Plane)value);
         }
     }
 }

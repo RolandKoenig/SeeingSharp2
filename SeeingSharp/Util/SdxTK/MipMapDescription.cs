@@ -33,6 +33,46 @@ namespace SeeingSharp.Util.SdxTK
     internal class MipMapDescription : IEquatable<MipMapDescription>
     {
         /// <summary>
+        /// Depth of this mipmap.
+        /// </summary>
+        public readonly int Depth;
+
+        /// <summary>
+        /// DepthStride of this mipmap (number of bytes per depth slice).
+        /// </summary>
+        public readonly int DepthStride;
+
+        /// <summary>
+        /// Height of this mipmap.
+        /// </summary>
+        public readonly int Height;
+
+        /// <summary>
+        /// Height of this mipmap.
+        /// </summary>
+        public readonly int HeightPacked;
+
+        /// <summary>
+        /// Size in bytes of this whole mipmap.
+        /// </summary>
+        public readonly int MipmapSize;
+
+        /// <summary>
+        /// RowStride of this mipmap (number of bytes per row).
+        /// </summary>
+        public readonly int RowStride;
+
+        /// <summary>
+        /// Width of this mipmap.
+        /// </summary>
+        public readonly int Width;
+
+        /// <summary>
+        /// Width of this mipmap.
+        /// </summary>
+        public readonly int WidthPacked;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MipMapDescription" /> class.
         /// </summary>
         /// <param name="width">The width.</param>
@@ -121,45 +161,5 @@ namespace SeeingSharp.Util.SdxTK
             }
             return Width == other.Width && Height == other.Height && WidthPacked == other.WidthPacked && HeightPacked == other.HeightPacked && Depth == other.Depth && RowStride == other.RowStride && MipmapSize == other.MipmapSize && DepthStride == other.DepthStride;
         }
-
-        /// <summary>
-        /// Depth of this mipmap.
-        /// </summary>
-        public readonly int Depth;
-
-        /// <summary>
-        /// DepthStride of this mipmap (number of bytes per depth slice).
-        /// </summary>
-        public readonly int DepthStride;
-
-        /// <summary>
-        /// Height of this mipmap.
-        /// </summary>
-        public readonly int Height;
-
-        /// <summary>
-        /// Height of this mipmap.
-        /// </summary>
-        public readonly int HeightPacked;
-
-        /// <summary>
-        /// Size in bytes of this whole mipmap.
-        /// </summary>
-        public readonly int MipmapSize;
-
-        /// <summary>
-        /// RowStride of this mipmap (number of bytes per row).
-        /// </summary>
-        public readonly int RowStride;
-
-        /// <summary>
-        /// Width of this mipmap.
-        /// </summary>
-        public readonly int Width;
-
-        /// <summary>
-        /// Width of this mipmap.
-        /// </summary>
-        public readonly int WidthPacked;
     }
 }

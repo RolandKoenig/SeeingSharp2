@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
@@ -28,6 +29,24 @@ namespace SeeingSharp.Util
         private double _speedFactor;
         private DateTime _startTimeStamp;
         private TimeSpan _timeSinceStart;
+
+        /// <summary>
+        /// Gets current time (thread-time, not pc-time!).
+        /// </summary>
+        public DateTime Now => _startTimeStamp.Add(_timeSinceStart);
+
+        /// <summary>
+        /// Gets or sets current speed factor of the timer (default: 1.0).
+        /// </summary>
+        public double SpeedFactor
+        {
+            get => _speedFactor;
+            set
+            {
+                if (value < 0.0) { throw new ArgumentException("SpeedFactor can not be less than zero!", "value"); }
+                _speedFactor = value;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadTimer"/> class.
@@ -74,24 +93,6 @@ namespace SeeingSharp.Util
             else
             {
                 _timeSinceStart = _timeSinceStart.Add(TimeSpan.FromTicks((long)(timeSpan.Ticks * _speedFactor)));
-            }
-        }
-
-        /// <summary>
-        /// Gets current time (thread-time, not pc-time!).
-        /// </summary>
-        public DateTime Now => _startTimeStamp.Add(_timeSinceStart);
-
-        /// <summary>
-        /// Gets or sets current speed factor of the timer (default: 1.0).
-        /// </summary>
-        public double SpeedFactor
-        {
-            get => _speedFactor;
-            set
-            {
-                if (value < 0.0) { throw new ArgumentException("SpeedFactor can not be less than zero!", "value"); }
-                _speedFactor = value;
             }
         }
     }

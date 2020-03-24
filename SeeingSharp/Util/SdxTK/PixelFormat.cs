@@ -23,9 +23,9 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SharpDX.DXGI;
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {

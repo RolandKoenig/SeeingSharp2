@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SharpDX.DXGI;
+
 using System;
 using System.Collections.Generic;
+using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -30,6 +31,44 @@ namespace SeeingSharp.Multimedia.Core
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
         private OutputDescription _outputDescription;
+
+        /// <summary>
+        /// Gets the name of the output device.
+        /// </summary>
+        public string DeviceName => _outputDescription.DeviceName;
+
+        public int AdapterIndex { get; }
+
+        public int OutputIndex { get; }
+
+        public bool IsAttachedToDesktop => _outputDescription.IsAttachedToDesktop;
+
+        /// <summary>
+        /// Gets the total count of pixels on X axis.
+        /// </summary>
+        public int DesktopWidth => _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left;
+
+        /// <summary>
+        /// Gets the total count of pixels on Y axis.
+        /// </summary>
+        public int DesktopHeight => _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top;
+
+        public int DesktopXPos => _outputDescription.DesktopBounds.Left;
+
+        public int DesktopYPos => _outputDescription.DesktopBounds.Top;
+
+        public string DesktopResolution =>
+            _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left +
+            "x" +
+            (_outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top);
+
+        public string DesktopLocation => "X = " + _outputDescription.DesktopBounds.Left + ", Y = " + _outputDescription.DesktopBounds.Top;
+
+        public string Rotation => _outputDescription.Rotation.ToString();
+
+        public EngineOutputModeInfo DefaultMode => this.SupportedModes[0];
+
+        public EngineOutputModeInfo[] SupportedModes { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
@@ -74,43 +113,5 @@ namespace SeeingSharp.Multimedia.Core
             // Store mode list
             this.SupportedModes = strippedModeList.ToArray();
         }
-
-        /// <summary>
-        /// Gets the name of the output device.
-        /// </summary>
-        public string DeviceName => _outputDescription.DeviceName;
-
-        public int AdapterIndex { get; }
-
-        public int OutputIndex { get; }
-
-        public bool IsAttachedToDesktop => _outputDescription.IsAttachedToDesktop;
-
-        /// <summary>
-        /// Gets the total count of pixels on X axis.
-        /// </summary>
-        public int DesktopWidth => _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left;
-
-        /// <summary>
-        /// Gets the total count of pixels on Y axis.
-        /// </summary>
-        public int DesktopHeight => _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top;
-
-        public int DesktopXPos => _outputDescription.DesktopBounds.Left;
-
-        public int DesktopYPos => _outputDescription.DesktopBounds.Top;
-
-        public string DesktopResolution =>
-            _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left +
-            "x" +
-            (_outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top);
-
-        public string DesktopLocation => "X = " + _outputDescription.DesktopBounds.Left + ", Y = " + _outputDescription.DesktopBounds.Top;
-
-        public string Rotation => _outputDescription.Rotation.ToString();
-
-        public EngineOutputModeInfo DefaultMode => this.SupportedModes[0];
-
-        public EngineOutputModeInfo[] SupportedModes { get; }
     }
 }

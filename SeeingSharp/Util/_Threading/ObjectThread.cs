@@ -19,7 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -45,6 +46,31 @@ namespace SeeingSharp.Util
         private ConcurrentQueue<Action> _taskQueue;
         private SemaphoreSlim _mainLoopSynchronizeObject;
         private SemaphoreSlim _threadStopSynchronizeObject;
+
+        /// <summary>
+        /// Gets current thread time.
+        /// </summary>
+        public DateTime ThreadTime => this.Timer.Now;
+
+        /// <summary>
+        /// Gets current timer of the thread.
+        /// </summary>
+        public ObjectThreadTimer Timer { get; }
+
+        /// <summary>
+        /// Gets the current SynchronizationContext object.
+        /// </summary>
+        public SynchronizationContext SyncContext => _syncContext;
+
+        /// <summary>
+        /// Gets the name of this thread.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets or sets the thread's heartbeat.
+        /// </summary>
+        protected int HeartBeat { get; set; }
 
         /// <summary>
         /// Called when the thread ist starting.
@@ -372,31 +398,6 @@ namespace SeeingSharp.Util
                 // ignored
             }
         }
-
-        /// <summary>
-        /// Gets current thread time.
-        /// </summary>
-        public DateTime ThreadTime => this.Timer.Now;
-
-        /// <summary>
-        /// Gets current timer of the thread.
-        /// </summary>
-        public ObjectThreadTimer Timer { get; }
-
-        /// <summary>
-        /// Gets the current SynchronizationContext object.
-        /// </summary>
-        public SynchronizationContext SyncContext => _syncContext;
-
-        /// <summary>
-        /// Gets the name of this thread.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets or sets the thread's heartbeat.
-        /// </summary>
-        protected int HeartBeat { get; set; }
 
         //*********************************************************************
         //*********************************************************************

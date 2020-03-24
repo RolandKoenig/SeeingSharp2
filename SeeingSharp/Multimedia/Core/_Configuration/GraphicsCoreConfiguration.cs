@@ -24,14 +24,6 @@ namespace SeeingSharp.Multimedia.Core
     public class GraphicsCoreConfiguration
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsCoreConfiguration" /> class.
-        /// </summary>
-        public GraphicsCoreConfiguration()
-        {
-            this.DebugEnabled = false;
-        }
-
-        /// <summary>
         /// Can enable debug mode for all created devices.
         /// This value can only be manipulated when loading SeeingSharp.
         /// </summary>
@@ -49,6 +41,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraphicsCoreConfiguration" /> class.
+        /// </summary>
+        public GraphicsCoreConfiguration()
+        {
+            this.DebugEnabled = false;
         }
     }
 }

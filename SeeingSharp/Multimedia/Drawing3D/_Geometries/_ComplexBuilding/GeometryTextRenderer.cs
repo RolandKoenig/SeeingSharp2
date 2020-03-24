@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Multimedia.Drawing3D

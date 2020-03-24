@@ -23,12 +23,12 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SharpDX;
-using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX;
+using SharpDX.DXGI;
 using SDX = SharpDX;
 using SDXIO = SharpDX.IO;
 
@@ -74,6 +74,36 @@ namespace SeeingSharp.Util.SdxTK
         /// </summary>
         private int totalSizeInBytes;
         private int zBufferCountPerArraySlice;
+
+        /// <summary>
+        /// Gets a pointer to the image buffer in memory.
+        /// </summary>
+        /// <value>A pointer to the image buffer in memory.</value>
+        public IntPtr DataPointer => buffer;
+
+        /// <summary>
+        /// Provides access to all pixel buffers.
+        /// </summary>
+        /// <remarks>
+        /// For Texture3D, each z slice of the Texture3D has a pixelBufferArray * by the number of mipmaps.
+        /// For other textures, there is Description.MipLevels * Description.ArraySize pixel buffers.
+        /// </remarks>
+        public PixelBufferArray PixelBuffer => pixelBufferArray;
+
+        /// <summary>
+        /// Gets the total number of bytes occupied by this image in memory.
+        /// </summary>
+        public int TotalSizeInBytes => totalSizeInBytes;
+
+        /// <summary>
+        /// Description of this image.
+        /// </summary>
+        public ImageDescription Description;
+
+        /// <summary>
+        /// Pixel buffers.
+        /// </summary>
+        internal PixelBuffer[] pixelBuffers;
 
         static Image()
         {
@@ -478,7 +508,7 @@ namespace SeeingSharp.Util.SdxTK
             }
 
             // If everything was fine, load the image from memory
-            return Load(memoryPtr, size, false);
+            return Load(memoryPtr, size);
         }
 
         /// <summary>
@@ -751,7 +781,7 @@ namespace SeeingSharp.Util.SdxTK
                 int rowPitch, slicePitch;
                 int widthPacked;
                 int heightPacked;
-                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked, PitchFlags.None);
+                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked);
 
                 mipmaps[level] = new MipMapDescription(
                     w,
@@ -969,36 +999,6 @@ namespace SeeingSharp.Util.SdxTK
             }
         }
 
-        /// <summary>
-        /// Gets a pointer to the image buffer in memory.
-        /// </summary>
-        /// <value>A pointer to the image buffer in memory.</value>
-        public IntPtr DataPointer => buffer;
-
-        /// <summary>
-        /// Provides access to all pixel buffers.
-        /// </summary>
-        /// <remarks>
-        /// For Texture3D, each z slice of the Texture3D has a pixelBufferArray * by the number of mipmaps.
-        /// For other textures, there is Description.MipLevels * Description.ArraySize pixel buffers.
-        /// </remarks>
-        public PixelBufferArray PixelBuffer => pixelBufferArray;
-
-        /// <summary>
-        /// Gets the total number of bytes occupied by this image in memory.
-        /// </summary>
-        public int TotalSizeInBytes => totalSizeInBytes;
-
-        /// <summary>
-        /// Description of this image.
-        /// </summary>
-        public ImageDescription Description;
-
-        /// <summary>
-        /// Pixel buffers.
-        /// </summary>
-        internal PixelBuffer[] pixelBuffers;
-
         public delegate Image ImageLoadDelegate(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle);
 
         public delegate void ImageSaveDelegate(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream);
@@ -1015,18 +1015,18 @@ namespace SeeingSharp.Util.SdxTK
 
         private class LoadSaveDelegate
         {
+            public ImageFileType FileType;
+
+            public ImageLoadDelegate Load;
+
+            public ImageSaveDelegate Save;
+
             public LoadSaveDelegate(ImageFileType fileType, ImageLoadDelegate load, ImageSaveDelegate save)
             {
                 FileType = fileType;
                 Load = load;
                 Save = save;
             }
-
-            public ImageFileType FileType;
-
-            public ImageLoadDelegate Load;
-
-            public ImageSaveDelegate Save;
         }
     }
 }

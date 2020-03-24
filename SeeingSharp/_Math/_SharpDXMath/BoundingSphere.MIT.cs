@@ -28,8 +28,8 @@ namespace SeeingSharp
         /// <param name="radius">The radius of the sphere.</param>
         public BoundingSphere(Vector3 center, float radius)
         {
-            this.Center = center;
-            this.Radius = radius;
+            Center = center;
+            Radius = radius;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingBox box)
         {
-            return Intersects(ref box);
+            return this.Intersects(ref box);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingSphere sphere)
         {
-            return Intersects(ref sphere);
+            return this.Intersects(ref sphere);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SeeingSharp
             }
 
             // Check that count is in the correct range
-            if (count < 0 || (start + count) > points.Length)
+            if (count < 0 || start + count > points.Length)
             {
                 throw new ArgumentOutOfRangeException("count", count, string.Format("Must be in the range <= {0}", points.Length));
             }
@@ -206,8 +206,8 @@ namespace SeeingSharp
             var upperEnd = start + count;
 
             //Find the center of all points.
-            Vector3 center = Vector3.Zero;
-            for (int i = start; i < upperEnd; ++i)
+            var center = Vector3.Zero;
+            for (var i = start; i < upperEnd; ++i)
             {
                 center = Vector3.Add(points[i], center);
             }
@@ -216,15 +216,17 @@ namespace SeeingSharp
             center /= (float)count;
 
             //Find the radius of the sphere
-            float radius = 0f;
-            for (int i = start; i < upperEnd; ++i)
+            var radius = 0f;
+            for (var i = start; i < upperEnd; ++i)
             {
                 //We are doing a relative distance comparasin to find the maximum distance
                 //from the center of our sphere.
-                float distance = Vector3.DistanceSquared(center, points[i]);
+                var distance = Vector3.DistanceSquared(center, points[i]);
 
                 if (distance > radius)
+                {
                     radius = distance;
+                }
             }
 
             //Find the real distance from the DistanceSquared.
@@ -271,11 +273,11 @@ namespace SeeingSharp
         {
             result.Center = Vector3.Lerp(box.Minimum, box.Maximum, 0.5f);
 
-            float x = box.Minimum.X - box.Maximum.X;
-            float y = box.Minimum.Y - box.Maximum.Y;
-            float z = box.Minimum.Z - box.Maximum.Z;
+            var x = box.Minimum.X - box.Maximum.X;
+            var y = box.Minimum.Y - box.Maximum.Y;
+            var z = box.Minimum.Z - box.Maximum.Z;
 
-            float distance = (float)(Math.Sqrt((x * x) + (y * y) + (z * z)));
+            var distance = (float)Math.Sqrt(x * x + y * y + z * z);
             result.Radius = distance * 0.5f;
         }
 
@@ -299,11 +301,11 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
         public static void Merge(ref BoundingSphere value1, ref BoundingSphere value2, out BoundingSphere result)
         {
-            Vector3 difference = value2.Center - value1.Center;
+            var difference = value2.Center - value1.Center;
 
-            float length = difference.Length();
-            float radius = value1.Radius;
-            float radius2 = value2.Radius;
+            var length = difference.Length();
+            var radius = value1.Radius;
+            var radius2 = value2.Radius;
 
             if (radius + radius2 >= length)
             {
@@ -320,9 +322,9 @@ namespace SeeingSharp
                 }
             }
 
-            Vector3 vector = difference * (1.0f / length);
-            float min = Math.Min(-radius, length - radius2);
-            float max = (Math.Max(radius, length + radius2) - min) * 0.5f;
+            var vector = difference * (1.0f / length);
+            var min = Math.Min(-radius, length - radius2);
+            var max = (Math.Max(radius, length + radius2) - min) * 0.5f;
 
             result.Center = value1.Center + vector * (max + min);
             result.Radius = max;
@@ -384,7 +386,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "Center:{0} Radius:{1}", Center.ToString(format, CultureInfo.CurrentCulture),
                 Radius.ToString(format, CultureInfo.CurrentCulture));
@@ -413,7 +417,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "Center:{0} Radius:{1}", Center.ToString(format, formatProvider),
                 Radius.ToString(format, formatProvider));
@@ -452,12 +458,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(BoundingSphere)))
+            {
                 return false;
+            }
 
-            return Equals((BoundingSphere)value);
+            return this.Equals((BoundingSphere)value);
         }
     }
 }

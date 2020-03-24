@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -37,6 +38,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         // Resources
         private LoadedBrushResources[] _loadedBrushes;
+
+        public Gamma Gamma { get; }
+
+        public ExtendMode ExtendMode { get; }
+
+        public Vector2 StartPoint { get; }
+
+        public Vector2 EndPoint { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
@@ -105,7 +114,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 var d2dGradientStops = new D2D.GradientStop[_gradientStops.Length];
                 for (var loop = 0; loop < d2dGradientStops.Length; loop++)
                 {
-                    d2dGradientStops[loop] = new D2D.GradientStop()
+                    d2dGradientStops[loop] = new D2D.GradientStop
                     {
                         Color = SdxMathHelper.RawFromColor4(_gradientStops[loop].Color),
                         Position = _gradientStops[loop].Position
@@ -145,14 +154,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             return result.Brush;
         }
-
-        public Gamma Gamma { get; }
-
-        public ExtendMode ExtendMode { get; }
-
-        public Vector2 StartPoint { get; }
-
-        public Vector2 EndPoint { get; }
 
         //*********************************************************************
         //*********************************************************************

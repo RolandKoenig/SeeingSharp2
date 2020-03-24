@@ -19,9 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Util;
+using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -31,6 +33,18 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private List<D2D.Triangle[]> _generatedTriangles;
 
         /// <summary>
+        /// Total count of generated triangles
+        /// </summary>
+        public int TriangleCount { get; private set; }
+
+        /// <summary>
+        /// Bounds of the given geometry.
+        /// </summary>
+        public Size2F Bounds { get; private set; }
+
+        public ExtrudeGeometryFactoryInternals Internals { get; }
+
+        /// <summary>
         /// Create a new <see cref="ExtruderTessellationSink"/>
         /// </summary>
         public ExtrudeGeometryFactory()
@@ -38,6 +52,33 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _generatedTriangles = new List<D2D.Triangle[]>();
 
             this.Internals = new ExtrudeGeometryFactoryInternals(this);
+        }
+
+        /// <inheritdoc />
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
+        {
+            // Handle empty case
+            if (_generatedTriangles.Count == 0)
+            {
+                return new Geometry(0);
+            }
+
+            var result = new Geometry(this.TriangleCount * 3);
+            var surface = result.CreateSurface(this.TriangleCount);
+
+            var generatedTriangles = _generatedTriangles;
+            foreach (var actTriangleArray in generatedTriangles)
+            {
+                foreach (var actTriangle in actTriangleArray)
+                {
+                    surface.BuildTriangleV(
+                        new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
+                        new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
+                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y));
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -67,7 +108,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var minY = float.MaxValue;
             var maxY = float.MinValue;
             var minPoint = Vector2.Zero;
-            void UpdateMinWidthHeight(SharpDX.Mathematics.Interop.RawVector2 actCorner)
+            void UpdateMinWidthHeight(RawVector2 actCorner)
             {
                 if (actCorner.X < minX) { minX = actCorner.X; }
                 if (actCorner.X > maxX) { maxX = actCorner.X; }
@@ -114,9 +155,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
-                        actTriangle.Point2 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
-                        actTriangle.Point3 = new SharpDX.Mathematics.Interop.RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
+                        actTriangle.Point1 = new RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
+                        actTriangle.Point2 = new RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
+                        actTriangle.Point3 = new RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
 
                         actTriangleArray[loop] = actTriangle;
                     }
@@ -154,45 +195,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _generatedTriangles = generatedTriangles;
         }
 
-        /// <inheritdoc />
-        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
-        {
-            // Handle empty case
-            if (_generatedTriangles.Count == 0)
-            {
-                return new Geometry(0);
-            }
-
-            var result = new Geometry(this.TriangleCount * 3);
-            var surface = result.CreateSurface(this.TriangleCount);
-
-            var generatedTriangles = _generatedTriangles;
-            foreach (var actTriangleArray in generatedTriangles)
-            {
-                foreach (var actTriangle in actTriangleArray)
-                {
-                    surface.BuildTriangleV(
-                        new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
-                        new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
-                        new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y));
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Total count of generated triangles
-        /// </summary>
-        public int TriangleCount { get; private set; }
-
-        /// <summary>
-        /// Bounds of the given geometry.
-        /// </summary>
-        public Size2F Bounds { get; private set; }
-
-        public ExtrudeGeometryFactoryInternals Internals { get; }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -224,6 +226,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         //*********************************************************************
         private class ExtruderTessellationSink : DummyComObject, D2D.TessellationSink
         {
+            public List<D2D.Triangle[]> Triangles { get; } = new List<D2D.Triangle[]>();
+
             public void AddTriangles(D2D.Triangle[] triangles)
             {
                 if (triangles == null ||
@@ -239,8 +243,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
 
             }
-
-            public List<D2D.Triangle[]> Triangles { get; } = new List<D2D.Triangle[]>();
         }
     }
 }

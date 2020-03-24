@@ -19,28 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class CylinderGeometryFactory : GeometryFactory
     {
-        public CylinderGeometryFactory()
-        {
-            this.Radius = 0.5f;
-            this.Height = 1f;
-            this.CountOfSegments = 10;
-        }
-
-        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
-        {
-            var result = new Geometry();
-            var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
-
-            return result;
-        }
-
         public float Radius
         {
             get;
@@ -57,6 +42,22 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get;
             set;
+        }
+
+        public CylinderGeometryFactory()
+        {
+            this.Radius = 0.5f;
+            this.Height = 1f;
+            this.CountOfSegments = 10;
+        }
+
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
+        {
+            var result = new Geometry();
+            var mainSurface = result.CreateSurface();
+            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
+
+            return result;
         }
     }
 }

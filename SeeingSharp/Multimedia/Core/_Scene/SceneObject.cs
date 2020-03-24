@@ -19,14 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Numerics;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -47,6 +48,112 @@ namespace SeeingSharp.Multimedia.Core
 
         // Members for animations
         private AnimationHandler _animationHandler;
+
+        /// <summary>
+        /// Gets current AnimationHandler object.
+        /// </summary>
+        public virtual AnimationHandler AnimationHandler => _animationHandler;
+
+        /// <summary>
+        /// Gets a dynamic container for custom data.
+        /// </summary>
+        public dynamic CustomData { get; }
+
+        /// <summary>
+        /// Gets or sets an additional data object.
+        /// </summary>
+        public object Tag1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets an additional data object.
+        /// </summary>
+        public object Tag2 { get; set; }
+
+        /// <summary>
+        /// Is this object visible for picking-test?
+        /// </summary>
+        public bool IsPickingTestVisible
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets current scene.
+        /// </summary>
+        public Scene Scene => _scene;
+
+        /// <summary>
+        /// Gets or sets the scene layer.
+        /// </summary>
+        public SceneLayer SceneLayer => _sceneLayer;
+
+        /// <summary>
+        /// Is this object a static object?
+        /// </summary>
+        public bool IsStatic
+        {
+            get => _isStatic;
+            set
+            {
+                if (this.Scene != null) { throw new SeeingSharpException("Unable to change IsStatic state when the object is already assigned to a scene!"); }
+                _isStatic = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the target detail level.
+        /// </summary>
+        public DetailLevel TargetDetailLevel
+        {
+            get => _targetDetailLevel;
+            set
+            {
+                if (this.Scene != null) { throw new SeeingSharpGraphicsException("Unable to change TargetDetailLevel when object is already added to a scene!"); }
+                _targetDetailLevel = value;
+            }
+        }
+
+        /// <summary>
+        /// Does this object have a parent?
+        /// </summary>
+        public bool HasParent => _parent != null;
+
+        /// <summary>
+        /// Gets the parent object.
+        /// </summary>
+        public SceneObject Parent => _parent;
+
+        /// <summary>
+        /// Does this object have any child?
+        /// </summary>
+        public bool HasChildren
+        {
+            get
+            {
+                var children = _children;
+                return children != null && children.Count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets the total count of direct children of this object.
+        /// </summary>
+        public int CountChildren => _children.Count;
+
+        /// <summary>
+        /// Is it possible to export this object?
+        /// </summary>
+        public virtual bool IsExportable
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Indicates whether transformation data has changed during last update calls.
+        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
+        /// </summary>
+        internal bool TransformationChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObject"/> class.
@@ -493,111 +600,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             this.UpdateForViewInternal(updateState, layerViewSubset);
         }
-
-        /// <summary>
-        /// Gets current AnimationHandler object.
-        /// </summary>
-        public virtual AnimationHandler AnimationHandler => _animationHandler;
-
-        /// <summary>
-        /// Gets a dynamic container for custom data.
-        /// </summary>
-        public dynamic CustomData { get; }
-
-        /// <summary>
-        /// Gets or sets an additional data object.
-        /// </summary>
-        public object Tag1 { get; set; }
-
-        /// <summary>
-        /// Gets or sets an additional data object.
-        /// </summary>
-        public object Tag2 { get; set; }
-
-        /// <summary>
-        /// Is this object visible for picking-test?
-        /// </summary>
-        public bool IsPickingTestVisible
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets current scene.
-        /// </summary>
-        public Scene Scene => _scene;
-
-        /// <summary>
-        /// Gets or sets the scene layer.
-        /// </summary>
-        public SceneLayer SceneLayer => _sceneLayer;
-
-        /// <summary>
-        /// Is this object a static object?
-        /// </summary>
-        public bool IsStatic
-        {
-            get => _isStatic;
-            set
-            {
-                if (this.Scene != null) { throw new SeeingSharpException("Unable to change IsStatic state when the object is already assigned to a scene!"); }
-                _isStatic = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the target detail level.
-        /// </summary>
-        public DetailLevel TargetDetailLevel
-        {
-            get => _targetDetailLevel;
-            set
-            {
-                if (this.Scene != null) { throw new SeeingSharpGraphicsException("Unable to change TargetDetailLevel when object is already added to a scene!"); }
-                _targetDetailLevel = value;
-            }
-        }
-
-        /// <summary>
-        /// Does this object have a parent?
-        /// </summary>
-        public bool HasParent => _parent != null;
-
-        /// <summary>
-        /// Gets the parent object.
-        /// </summary>
-        public SceneObject Parent => _parent;
-
-        /// <summary>
-        /// Does this object have any child?
-        /// </summary>
-        public bool HasChildren
-        {
-            get
-            {
-                var children = _children;
-                return children != null && children.Count > 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets the total count of direct children of this object.
-        /// </summary>
-        public int CountChildren => _children.Count;
-
-        /// <summary>
-        /// Is it possible to export this object?
-        /// </summary>
-        public virtual bool IsExportable
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Indicates whether transformation data has changed during last update calls.
-        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
-        /// </summary>
-        internal bool TransformationChanged;
     }
 }

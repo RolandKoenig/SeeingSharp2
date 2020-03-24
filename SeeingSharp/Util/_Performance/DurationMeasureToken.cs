@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Diagnostics;
 
@@ -29,10 +30,19 @@ namespace SeeingSharp.Util
         private PerformanceAnalyzer _owner;
         private Stopwatch _stopwatch;
 
+        public string Activity { get; internal set; }
+
+        public long ElapsedTicks => _stopwatch.Elapsed.Ticks;
+
         public DurationMeasureToken(PerformanceAnalyzer owner)
         {
             _owner = owner;
             _stopwatch = new Stopwatch();
+        }
+
+        public void Dispose()
+        {
+            _owner.EndMeasureActivityDuration(this);
         }
 
         internal void Start()
@@ -45,14 +55,5 @@ namespace SeeingSharp.Util
         {
             _stopwatch.Stop();
         }
-
-        public void Dispose()
-        {
-            _owner.EndMeasureActivityDuration(this);
-        }
-
-        public string Activity { get; internal set; }
-
-        public long ElapsedTicks => _stopwatch.Elapsed.Ticks;
     }
 }

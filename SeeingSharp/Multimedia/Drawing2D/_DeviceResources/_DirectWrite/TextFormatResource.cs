@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 using DWrite = SharpDX.DirectWrite;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -42,6 +43,78 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private TextAlignment _textAlignment;
         private WordWrapping _wordWrapping;
         private ReadingDirection _readingDirection;
+
+        /// <summary>
+        /// Gets or sets the alignment of the paragraph.
+        /// </summary>
+        public ParagraphAlignment ParagraphAlignment
+        {
+            get => _paragraphAlignment;
+            set
+            {
+                var castedValue = value;
+
+                if (castedValue != _paragraphAlignment)
+                {
+                    _paragraphAlignment = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the alignment of the paragraph.
+        /// </summary>
+        public TextAlignment TextAlignment
+        {
+            get => _textAlignment;
+            set
+            {
+                var castedValue = value;
+
+                if (castedValue != _textAlignment)
+                {
+                    _textAlignment = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the WordWrapping mode.
+        /// </summary>
+        public WordWrapping WordWrapping
+        {
+            get => _wordWrapping;
+            set
+            {
+                var castedValue = value;
+
+                if (castedValue != _wordWrapping)
+                {
+                    _wordWrapping = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the reading direction.
+        /// </summary>
+        public ReadingDirection ReadingDirection
+        {
+            get => _readingDirection;
+            set
+            {
+                var castedValue = value;
+
+                if (castedValue != _readingDirection)
+                {
+                    _readingDirection = castedValue;
+                    _runtimeDataChangedFlags.SetAllValuesTo(true);
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextFormatResource"/> class.
@@ -127,78 +200,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Gets or sets the alignment of the paragraph.
-        /// </summary>
-        public ParagraphAlignment ParagraphAlignment
-        {
-            get => _paragraphAlignment;
-            set
-            {
-                var castedValue = value;
-
-                if (castedValue != _paragraphAlignment)
-                {
-                    _paragraphAlignment = castedValue;
-                    _runtimeDataChangedFlags.SetAllValuesTo(true);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the alignment of the paragraph.
-        /// </summary>
-        public TextAlignment TextAlignment
-        {
-            get => _textAlignment;
-            set
-            {
-                var castedValue = value;
-
-                if (castedValue != _textAlignment)
-                {
-                    _textAlignment = castedValue;
-                    _runtimeDataChangedFlags.SetAllValuesTo(true);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the WordWrapping mode.
-        /// </summary>
-        public WordWrapping WordWrapping
-        {
-            get => _wordWrapping;
-            set
-            {
-                var castedValue = value;
-
-                if (castedValue != _wordWrapping)
-                {
-                    _wordWrapping = castedValue;
-                    _runtimeDataChangedFlags.SetAllValuesTo(true);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the reading direction.
-        /// </summary>
-        public ReadingDirection ReadingDirection
-        {
-            get => _readingDirection;
-            set
-            {
-                var castedValue = value;
-
-                if (castedValue != _readingDirection)
-                {
-                    _readingDirection = castedValue;
-                    _runtimeDataChangedFlags.SetAllValuesTo(true);
-                }
-            }
         }
     }
 }

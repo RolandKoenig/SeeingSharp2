@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Threading.Tasks;
 
@@ -27,6 +28,38 @@ namespace SeeingSharp.Multimedia.Core
     public interface IAnimationSequenceBuilder<out TTargetType>
         where TTargetType : class
     {
+        /// <summary>
+        /// Gets the target object.
+        /// </summary>
+        TTargetType TargetObject
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the corresponding animation handler.
+        /// </summary>
+        AnimationHandler AnimationHandler
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the current count of items within this SequenceBuilder object.
+        /// </summary>
+        int ItemCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Is Apply already called?
+        /// </summary>
+        bool Applied
+        {
+            get;
+        }
+
         /// <summary>
         /// Adds an AnimationSequence to this builder.
         /// </summary>
@@ -71,37 +104,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Finishes the animation and starts from beginning.
         /// </summary>
         void ApplyAsSecondaryAndRewind();
-
-        /// <summary>
-        /// Gets the target object.
-        /// </summary>
-        TTargetType TargetObject
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets the corresponding animation handler.
-        /// </summary>
-        AnimationHandler AnimationHandler
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets the current count of items within this SequenceBuilder object.
-        /// </summary>
-        int ItemCount
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Is Apply already called?
-        /// </summary>
-        bool Applied
-        {
-            get;
-        }
     }
 }

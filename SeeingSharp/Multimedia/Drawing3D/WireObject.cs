@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -35,13 +36,29 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Configuration
         private bool _forceReloadLineData;
         private Line[] _lineData;
-        
+
         // Bounding volumes
         private BoundingBox _boundingBox;
         private BoundingSphere _boundingSphere;
 
         // Direct3D resources
         private IndexBasedDynamicCollection<LocalResourceData> _localResources;
+
+        /// <summary>
+        /// Gets or sets current line data.
+        /// </summary>
+        public Line[] LineData
+        {
+            get => _lineData;
+            set
+            {
+                if (_lineData != value)
+                {
+                    _lineData = value;
+                    _forceReloadLineData = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WireObject" /> class.
@@ -106,7 +123,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 new Line(aBottom, aTop),
                 new Line(bBottom, bTop),
                 new Line(cBottom, cTop),
-                new Line(dBottom, dTop),
+                new Line(dBottom, dTop)
             };
 
             this.UpdateBoundingVolumes();
@@ -265,22 +282,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(resourceData.LineVertexBuffer, LineVertex.Size, 0));
             deviceContext.Draw(_lineData.Length * 2, 0);
-        }
-
-        /// <summary>
-        /// Gets or sets current line data.
-        /// </summary>
-        public Line[] LineData
-        {
-            get => _lineData;
-            set
-            {
-                if (_lineData != value)
-                {
-                    _lineData = value;
-                    _forceReloadLineData = true;
-                }
-            }
         }
 
         //*********************************************************************

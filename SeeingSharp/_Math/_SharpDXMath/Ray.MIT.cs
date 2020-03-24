@@ -28,8 +28,8 @@ namespace SeeingSharp
         /// <param name="direction">The normalized direction of the ray.</param>
         public Ray(Vector3 position, Vector3 direction)
         {
-            this.Position = position;
-            this.Direction = direction;
+            Position = position;
+            Direction = direction;
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingBox box)
         {
-            return Intersects(ref box);
+            return this.Intersects(ref box);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingSphere sphere)
         {
-            return Intersects(ref sphere);
+            return this.Intersects(ref sphere);
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace SeeingSharp
             farPoint = Vector3Ex.Unproject(farPoint, viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth,
                                         viewport.MaxDepth, worldViewProjection);
 
-            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+            var direction = Vector3.Normalize(farPoint - nearPoint);
 
             return new Ray(nearPoint, direction);
         }
@@ -359,12 +359,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Ray)))
+            {
                 return false;
+            }
 
-            return Equals((Ray)value);
+            return this.Equals((Ray)value);
         }
     }
 }

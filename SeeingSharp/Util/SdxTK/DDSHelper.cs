@@ -23,11 +23,11 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SharpDX.DXGI;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using SDX = SharpDX;
 using SDXM = SharpDX.Multimedia;
@@ -113,7 +113,7 @@ namespace SeeingSharp.Util.SdxTK
                                                                                                            | ConversionFlags.Format4444, new DDS.PixelFormat(DDS.PixelFormatFlags.Rgb, 0, 16, 0x0f00, 0x00f0, 0x000f, 0x0000)),
                                                                  // D3DFMT_X4R4G4B4
                                                                  new LegacyMap(Format.R8G8B8A8_UNorm, ConversionFlags.Expand
-                                                                                                           | ConversionFlags.Format44, new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0, 8, 0x0f, 0x00, 0x00, 0xf0)), // D3DFMT_A4L4
+                                                                                                           | ConversionFlags.Format44, new DDS.PixelFormat(DDS.PixelFormatFlags.Luminance, 0, 8, 0x0f, 0x00, 0x00, 0xf0)) // D3DFMT_A4L4
         };
 
         /// <summary>

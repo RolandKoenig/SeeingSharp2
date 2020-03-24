@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Util
@@ -31,6 +32,18 @@ namespace SeeingSharp.Util
         private Matrix4Stack _mStack;
         private Vector3 _minCoord;
         private Vector3 _maxCoord;
+
+        public bool CanCreateBoundingBox
+        {
+            get
+            {
+                if (_minCoord == s_vectorMinInitial) { return false; }
+                if (_maxCoord == s_vectorMaxInitial) { return false; }
+                if (Vector3Ex.EqualsWithTolerance(_minCoord, _maxCoord)){ return false; }
+
+                return true;
+            }
+        }
 
         public ObjectTreeBoundingBoxCalculator()
         {
@@ -77,18 +90,6 @@ namespace SeeingSharp.Util
             }
 
             return new BoundingBox(_minCoord, _maxCoord);
-        }
-
-        public bool CanCreateBoundingBox
-        {
-            get
-            {
-                if (_minCoord == s_vectorMinInitial) { return false; }
-                if (_maxCoord == s_vectorMaxInitial) { return false; }
-                if (Vector3Ex.EqualsWithTolerance(_minCoord, _maxCoord)){ return false; }
-
-                return true;
-            }
         }
     }
 }

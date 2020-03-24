@@ -51,7 +51,7 @@
         /// The two bounding volumes overlap.
         /// </summary>
         Intersects
-    };
+    }
 
     /// <summary>
     /// Describes the result of an intersection with a plane in three dimensions.
@@ -72,5 +72,5 @@
         /// The object is intersecting the plane.
         /// </summary>
         Intersecting
-    };
+    }
 }

@@ -34,6 +34,9 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.QueryDataPipelineStatistics _result;
         private bool _resultGot;
 
+        /// <inheritdoc />
+        public bool IsDisposed => _query == null;
+
         public PipelineStatisticsQueryHelper(EngineDevice device)
         {
             var deviceD3D11 = device.DeviceD3D11_1;
@@ -78,8 +81,5 @@ namespace SeeingSharp.Multimedia.Core
 
             return _result;
         }
-
-        /// <inheritdoc />
-        public bool IsDisposed => _query == null;
     }
 }

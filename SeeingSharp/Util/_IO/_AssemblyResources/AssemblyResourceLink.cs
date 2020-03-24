@@ -19,13 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -34,6 +35,36 @@ namespace SeeingSharp.Util
     /// </summary>
     public class AssemblyResourceLink
     {
+        /// <summary>
+        /// Gets the target assembly.
+        /// </summary>
+        public Assembly TargetAssembly { get; }
+
+        /// <summary>
+        /// Gets the namespace of the resource.
+        /// </summary>
+        public string ResourceNamespace { get; }
+
+        /// <summary>
+        /// Gets the name of the file (without namespace).
+        /// </summary>
+        public string ResourceFile { get; }
+
+        /// <summary>
+        /// Gets the resource path.
+        /// </summary>
+        public string ResourcePath
+        {
+            get
+            {
+                var resultBuilder = new StringBuilder();
+                resultBuilder.Append(this.ResourceNamespace);
+                resultBuilder.Append(".");
+                resultBuilder.Append(this.ResourceFile);
+                return resultBuilder.ToString();
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyResourceLink"/> class.
         /// </summary>
@@ -178,36 +209,6 @@ namespace SeeingSharp.Util
             using (var inStreamReader = new StreamReader(inStream))
             {
                 return inStreamReader.ReadToEnd();
-            }
-        }
-
-        /// <summary>
-        /// Gets the target assembly.
-        /// </summary>
-        public Assembly TargetAssembly { get; }
-
-        /// <summary>
-        /// Gets the namespace of the resource.
-        /// </summary>
-        public string ResourceNamespace { get; }
-
-        /// <summary>
-        /// Gets the name of the file (without namespace).
-        /// </summary>
-        public string ResourceFile { get; }
-
-        /// <summary>
-        /// Gets the resource path.
-        /// </summary>
-        public string ResourcePath
-        {
-            get
-            {
-                var resultBuilder = new StringBuilder();
-                resultBuilder.Append(this.ResourceNamespace);
-                resultBuilder.Append(".");
-                resultBuilder.Append(this.ResourceFile);
-                return resultBuilder.ToString();
             }
         }
     }

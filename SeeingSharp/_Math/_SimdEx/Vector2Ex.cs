@@ -19,8 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
+using System.Text;
 
 namespace SeeingSharp
 {
@@ -29,8 +31,8 @@ namespace SeeingSharp
         public static bool EqualsWithTolerance(Vector2 left, Vector2 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
-                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance);
+                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance);
         }
 
         public static Vector2 FromSize2(Size2 size)
@@ -45,12 +47,12 @@ namespace SeeingSharp
 
         public static float GetValue(Vector2 vector, int index)
         {
-            switch (index)
+            return index switch
             {
-                case 1: return vector.X;
-                case 2: return vector.Y;
-                default: throw new ArgumentException("Invalid index!");
-            }
+                1 => vector.X,
+                2 => vector.Y,
+                _ => throw new ArgumentException("Invalid index!")
+            };
         }
 
         public static void SetValue(Vector2 vector, int index, float value)
@@ -61,6 +63,11 @@ namespace SeeingSharp
                 case 2: vector.Y = value; break;
                 default: throw new ArgumentException("Invalid index!");
             }
+        }
+
+        public static bool IsEmpty(ref Vector2 vector)
+        {
+            return vector.Equals(Vector2.Zero);
         }
     }
 }

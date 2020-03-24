@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -28,6 +29,14 @@ namespace SeeingSharp.Util
     public class ReusableMemoryStreams
     {
         private ConcurrentStack<MemoryStream> _memoryStreams;
+
+        public int Count => _memoryStreams.Count;
+
+        public static ReusableMemoryStreams Current
+        {
+            get;
+            private set;
+        }
 
         static ReusableMemoryStreams()
         {
@@ -72,14 +81,6 @@ namespace SeeingSharp.Util
         public void Clear()
         {
             _memoryStreams.Clear();
-        }
-
-        public int Count => _memoryStreams.Count;
-
-        public static ReusableMemoryStreams Current
-        {
-            get;
-            private set;
         }
     }
 }

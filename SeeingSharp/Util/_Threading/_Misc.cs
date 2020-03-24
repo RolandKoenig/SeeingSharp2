@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
@@ -52,6 +53,16 @@ namespace SeeingSharp.Util
     public class ObjectThreadExceptionEventArgs : EventArgs
     {
         /// <summary>
+        /// Gets the occurred exception.
+        /// </summary>
+        public Exception Exception { get; }
+
+        /// <summary>
+        /// Gets current state of the thread.
+        /// </summary>
+        public ObjectThreadState State { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThreadExceptionEventArgs"/> class.
         /// </summary>
         /// <param name="threadState">The current state of the <see cref="ObjectThread"/>.</param>
@@ -61,15 +72,5 @@ namespace SeeingSharp.Util
             this.Exception = innerException;
             this.State = threadState;
         }
-
-        /// <summary>
-        /// Gets the occurred exception.
-        /// </summary>
-        public Exception Exception { get; }
-
-        /// <summary>
-        /// Gets current state of the thread.
-        /// </summary>
-        public ObjectThreadState State { get; }
     }
 }

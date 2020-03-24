@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -29,15 +30,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class Camera3DViewPoint
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Camera3DViewPoint"/> class.
-        /// </summary>
-        public Camera3DViewPoint()
-        {
-            this.OrthographicZoomFactor = 10f;
-            this.CameraType = Camera3DType.Perspective;
-        }
-
         public Camera3DType CameraType
         {
             get;
@@ -84,6 +76,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Camera3DViewPoint"/> class.
+        /// </summary>
+        public Camera3DViewPoint()
+        {
+            this.OrthographicZoomFactor = 10f;
+            this.CameraType = Camera3DType.Perspective;
         }
     }
 }

@@ -27,19 +27,21 @@ namespace SeeingSharp
         /// <returns>true if <paramref name="other" /> and this instance are the same type and represent the same value; otherwise, false.</returns>
         public bool Equals(Bool other)
         {
-            return this.boolValue == other.boolValue;
+            return boolValue == other.boolValue;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
+            {
                 return false;
-            return obj is Bool && Equals((Bool)obj);
+            }
+            return obj is Bool && this.Equals((Bool)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.boolValue;
+            return boolValue;
         }
 
         /// <summary>

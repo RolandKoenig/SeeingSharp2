@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -43,6 +44,8 @@ namespace SeeingSharp.Util
         private bool _continueOnCaptureContext;
         private Action _continuation;
         private object _stateSwitchLock;
+
+        public bool IsCompleted { get; private set; }
 
         private ReusableAwaiter()
         {
@@ -163,7 +166,5 @@ namespace SeeingSharp.Util
             var continueAction = _continuation;
             continueAction?.Invoke();
         }
-
-        public bool IsCompleted { get; private set; }
     }
 }

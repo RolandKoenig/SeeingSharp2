@@ -123,9 +123,13 @@ namespace SeeingSharp
         public Color4(float[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color4.");
+            }
 
             Red = values[0];
             Green = values[1];
@@ -199,12 +203,12 @@ namespace SeeingSharp
         /// <returns>A packed integer containing all four color components.</returns>
         public int ToBgra()
         {
-            uint a = (uint)(Alpha * 255.0f) & 255;
-            uint r = (uint)(Red * 255.0f) & 255;
-            uint g = (uint)(Green * 255.0f) & 255;
-            uint b = (uint)(Blue * 255.0f) & 255;
+            var a = (uint)(Alpha * 255.0f) & 255;
+            var r = (uint)(Red * 255.0f) & 255;
+            var g = (uint)(Green * 255.0f) & 255;
+            var b = (uint)(Blue * 255.0f) & 255;
 
-            uint value = b;
+            var value = b;
             value |= g << 8;
             value |= r << 16;
             value |= a << 24;
@@ -230,12 +234,12 @@ namespace SeeingSharp
         /// <returns>A packed integer containing all four color components.</returns>
         public int ToRgba()
         {
-            uint a = (uint)(Alpha * 255.0f) & 255;
-            uint r = (uint)(Red * 255.0f) & 255;
-            uint g = (uint)(Green * 255.0f) & 255;
-            uint b = (uint)(Blue * 255.0f) & 255;
+            var a = (uint)(Alpha * 255.0f) & 255;
+            var r = (uint)(Red * 255.0f) & 255;
+            var g = (uint)(Green * 255.0f) & 255;
+            var b = (uint)(Blue * 255.0f) & 255;
 
-            uint value = r;
+            var value = r;
             value |= g << 8;
             value |= b << 16;
             value |= a << 24;
@@ -267,7 +271,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the color.</returns>
         public float[] ToArray()
         {
-            return new float[] { Red, Green, Blue, Alpha };
+            return new[] { Red, Green, Blue, Alpha };
         }
 
         /// <summary>
@@ -402,21 +406,21 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the clamped value.</param>
         public static void Clamp(ref Color4 value, ref Color4 min, ref Color4 max, out Color4 result)
         {
-            float alpha = value.Alpha;
-            alpha = (alpha > max.Alpha) ? max.Alpha : alpha;
-            alpha = (alpha < min.Alpha) ? min.Alpha : alpha;
+            var alpha = value.Alpha;
+            alpha = alpha > max.Alpha ? max.Alpha : alpha;
+            alpha = alpha < min.Alpha ? min.Alpha : alpha;
 
-            float red = value.Red;
-            red = (red > max.Red) ? max.Red : red;
-            red = (red < min.Red) ? min.Red : red;
+            var red = value.Red;
+            red = red > max.Red ? max.Red : red;
+            red = red < min.Red ? min.Red : red;
 
-            float green = value.Green;
-            green = (green > max.Green) ? max.Green : green;
-            green = (green < min.Green) ? min.Green : green;
+            var green = value.Green;
+            green = green > max.Green ? max.Green : green;
+            green = green < min.Green ? min.Green : green;
 
-            float blue = value.Blue;
-            blue = (blue > max.Blue) ? max.Blue : blue;
-            blue = (blue < min.Blue) ? min.Blue : blue;
+            var blue = value.Blue;
+            blue = blue > max.Blue ? max.Blue : blue;
+            blue = blue < min.Blue ? min.Blue : blue;
 
             result = new Color4(red, green, blue, alpha);
         }
@@ -485,13 +489,13 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the cubic interpolation of the two colors.</param>
         public static void SmoothStep(ref Color4 start, ref Color4 end, float amount, out Color4 result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
+            amount = amount > 1.0f ? 1.0f : amount < 0.0f ? 0.0f : amount;
+            amount = amount * amount * (3.0f - 2.0f * amount);
 
-            result.Alpha = start.Alpha + ((end.Alpha - start.Alpha) * amount);
-            result.Red = start.Red + ((end.Red - start.Red) * amount);
-            result.Green = start.Green + ((end.Green - start.Green) * amount);
-            result.Blue = start.Blue + ((end.Blue - start.Blue) * amount);
+            result.Alpha = start.Alpha + (end.Alpha - start.Alpha) * amount;
+            result.Red = start.Red + (end.Red - start.Red) * amount;
+            result.Green = start.Green + (end.Green - start.Green) * amount;
+            result.Blue = start.Blue + (end.Blue - start.Blue) * amount;
         }
 
         /// <summary>
@@ -503,14 +507,14 @@ namespace SeeingSharp
         /// <returns>The cubic interpolation of the two colors.</returns>
         public static Color4 SmoothStep(Color4 start, Color4 end, float amount)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
+            amount = amount > 1.0f ? 1.0f : amount < 0.0f ? 0.0f : amount;
+            amount = amount * amount * (3.0f - 2.0f * amount);
 
             return new Color4(
-                start.Red + ((end.Red - start.Red) * amount),
-                start.Green + ((end.Green - start.Green) * amount),
-                start.Blue + ((end.Blue - start.Blue) * amount),
-                start.Alpha + ((end.Alpha - start.Alpha) * amount));
+                start.Red + (end.Red - start.Red) * amount,
+                start.Green + (end.Green - start.Green) * amount,
+                start.Blue + (end.Blue - start.Blue) * amount,
+                start.Alpha + (end.Alpha - start.Alpha) * amount);
         }
 
         /// <summary>
@@ -521,10 +525,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
         public static void Max(ref Color4 left, ref Color4 right, out Color4 result)
         {
-            result.Alpha = (left.Alpha > right.Alpha) ? left.Alpha : right.Alpha;
-            result.Red = (left.Red > right.Red) ? left.Red : right.Red;
-            result.Green = (left.Green > right.Green) ? left.Green : right.Green;
-            result.Blue = (left.Blue > right.Blue) ? left.Blue : right.Blue;
+            result.Alpha = left.Alpha > right.Alpha ? left.Alpha : right.Alpha;
+            result.Red = left.Red > right.Red ? left.Red : right.Red;
+            result.Green = left.Green > right.Green ? left.Green : right.Green;
+            result.Blue = left.Blue > right.Blue ? left.Blue : right.Blue;
         }
 
         /// <summary>
@@ -548,10 +552,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains an new color composed of the smallest components of the source colors.</param>
         public static void Min(ref Color4 left, ref Color4 right, out Color4 result)
         {
-            result.Alpha = (left.Alpha < right.Alpha) ? left.Alpha : right.Alpha;
-            result.Red = (left.Red < right.Red) ? left.Red : right.Red;
-            result.Green = (left.Green < right.Green) ? left.Green : right.Green;
-            result.Blue = (left.Blue < right.Blue) ? left.Blue : right.Blue;
+            result.Alpha = left.Alpha < right.Alpha ? left.Alpha : right.Alpha;
+            result.Red = left.Red < right.Red ? left.Red : right.Red;
+            result.Green = left.Green < right.Green ? left.Green : right.Green;
+            result.Blue = left.Blue < right.Blue ? left.Blue : right.Blue;
         }
 
         /// <summary>
@@ -604,7 +608,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustSaturation(ref Color4 value, float saturation, out Color4 result)
         {
-            float grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
+            var grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
 
             result.Alpha = value.Alpha;
             result.Red = grey + saturation * (value.Red - grey);
@@ -620,7 +624,7 @@ namespace SeeingSharp
         /// <returns>The adjusted color.</returns>
         public static Color4 AdjustSaturation(Color4 value, float saturation)
         {
-            float grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
+            var grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
 
             return new Color4(
                 grey + saturation * (value.Red - grey),
@@ -841,7 +845,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha.ToString(format, CultureInfo.CurrentCulture),
                 Red.ToString(format, CultureInfo.CurrentCulture), Green.ToString(format, CultureInfo.CurrentCulture), Blue.ToString(format, CultureInfo.CurrentCulture));
@@ -870,7 +876,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha.ToString(format, formatProvider),
                 Red.ToString(format, formatProvider), Green.ToString(format, formatProvider), Blue.ToString(format, formatProvider));
@@ -909,12 +917,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Color4)))
+            {
                 return false;
+            }
 
-            return Equals((Color4)value);
+            return this.Equals((Color4)value);
         }
     }
 }

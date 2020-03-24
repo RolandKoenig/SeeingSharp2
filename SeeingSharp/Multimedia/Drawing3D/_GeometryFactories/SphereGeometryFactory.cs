@@ -23,16 +23,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class SphereGeometryFactory : GeometryFactory
     {
-        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
-        {
-            var result = new Geometry();
-
-            var mainSurface = result.CreateSurface();
-            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius);
-
-            return result;
-        }
-
         public int TDiv
         {
             get;
@@ -50,5 +40,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get;
             set;
         } = 0.5f;
+
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
+        {
+            var result = new Geometry();
+
+            var mainSurface = result.CreateSurface();
+            mainSurface.BuildShpere(this.TDiv, this.PDiv, this.Radius);
+
+            return result;
+        }
     }
 }

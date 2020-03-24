@@ -19,14 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SharpDX;
+
 using System;
+using SharpDX;
 
 namespace SeeingSharp.Util
 {
     internal class DummyComObject : IUnknown, ICallbackable, IDisposable
     {
         private int _referenceCounter;
+
+        /// <inheritdoc />
+        public IDisposable Shadow { get; set; }
 
         /// <inheritdoc />
         public virtual void Dispose()
@@ -54,8 +58,5 @@ namespace SeeingSharp.Util
             _referenceCounter--;
             return _referenceCounter;
         }
-
-        /// <inheritdoc />
-        public IDisposable Shadow { get; set; }
     }
 }

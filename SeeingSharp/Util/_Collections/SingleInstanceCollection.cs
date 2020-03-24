@@ -19,15 +19,28 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System.Collections;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
     public class SingleInstanceCollection<T> : IEnumerable<T>, ICollection<T>
     {
         private Dictionary<T, object> _dictionary;
+
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+        /// </summary>
+        /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
+        public int Count => _dictionary.Count;
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
+        /// </summary>
+        /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.</returns>
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleInstanceCollection{T}" /> class.
@@ -115,17 +128,5 @@ namespace SeeingSharp.Util
         {
             return _dictionary.Keys.GetEnumerator();
         }
-
-        /// <summary>
-        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
-        /// </summary>
-        /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
-        public int Count => _dictionary.Count;
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
-        /// </summary>
-        /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.</returns>
-        public bool IsReadOnly => false;
     }
 }

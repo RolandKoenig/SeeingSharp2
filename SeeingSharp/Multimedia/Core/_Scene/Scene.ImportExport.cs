@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -99,8 +100,8 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public async Task<IEnumerable<SceneObject>> ImportAsync(ImportedModelContainer modelContainer)
         {
-            if ((!modelContainer.IsFinished) ||
-                (!modelContainer.IsValid))
+            if (!modelContainer.IsFinished ||
+                !modelContainer.IsValid)
             {
                 throw new SeeingSharpException($"Given {nameof(ImportedModelContainer)} is not finished or valid!");
             }

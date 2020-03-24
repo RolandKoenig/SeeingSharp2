@@ -19,11 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Numerics;
-using SharpDX;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
 
 namespace SeeingSharp
 {
@@ -33,6 +31,11 @@ namespace SeeingSharp
         private int _pushTimes;
 
         private Matrix4x4 _top;
+
+        /// <summary>
+        /// Gets the top matrix
+        /// </summary>
+        public Matrix4x4 Top => _top;
 
         /// <summary>
         /// Creates a new matrix stack using 4x4 matrices
@@ -267,10 +270,5 @@ namespace SeeingSharp
                 _pushTimes--;
             }
         }
-
-        /// <summary>
-        /// Gets the top matrix
-        /// </summary>
-        public Matrix4x4 Top => _top;
     }
 }

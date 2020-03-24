@@ -19,24 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class PyramidGeometryFactory : GeometryFactory
     {
-        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
-        {
-            var result = new Geometry();
-            result.CreateSurface()
-                .BuildPyramidFullV(
-                    new Vector3(0f, 0f, 0f),
-                    this.Width,
-                    this.Height);
-
-            return result;
-        }
-
         public float Width
         {
             get;
@@ -48,5 +37,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
             get;
             set;
         } = 1f;
+
+        public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
+        {
+            var result = new Geometry();
+            result.CreateSurface()
+                .BuildPyramidFullV(
+                    new Vector3(0f, 0f, 0f),
+                    this.Width,
+                    this.Height);
+
+            return result;
+        }
     }
 }

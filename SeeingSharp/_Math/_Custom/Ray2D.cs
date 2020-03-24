@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -72,8 +73,8 @@ namespace SeeingSharp
         /// <param name="tolerance">The tolerated difference between two values.</param>
         public bool EqualsWithTolerance(Ray2D otherRay, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
-            return Vector2Ex.EqualsWithTolerance(this.Origin, otherRay.Origin, tolerance: tolerance) &&
-                   Vector2Ex.EqualsWithTolerance(this.Direction, otherRay.Direction, tolerance: tolerance);
+            return Vector2Ex.EqualsWithTolerance(Origin, otherRay.Origin, tolerance) &&
+                   Vector2Ex.EqualsWithTolerance(Direction, otherRay.Direction, tolerance);
         }
 
         public float A
@@ -101,7 +102,6 @@ namespace SeeingSharp
             get
             {
                 var start = Origin;
-                var end = Origin + Direction;
                 return this.A * start.X + this.B * start.Y;
             }
         }

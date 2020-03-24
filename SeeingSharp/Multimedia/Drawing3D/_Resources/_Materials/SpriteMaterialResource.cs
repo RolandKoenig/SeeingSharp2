@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -36,6 +37,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private DefaultResources _defaultResources;
         private PixelShaderResource _pixelShader;
         private VertexShaderResource _vertexShader;
+
+        /// <summary>
+        /// Gets the key of the texture resource.
+        /// </summary>
+        public NamedOrGenericKey TextureKey { get; }
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _vertexShader != null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpriteMaterialResource"/> class.
@@ -121,15 +132,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 deviceContext.PixelShader.SetShaderResource(0, null);
             }
         }
-
-        /// <summary>
-        /// Gets the key of the texture resource.
-        /// </summary>
-        public NamedOrGenericKey TextureKey { get; }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _vertexShader != null;
     }
 }

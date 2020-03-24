@@ -19,21 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class EventDrivenStepInfo
     {
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        public override string ToString()
-        {
-            return "" + this.AnimationCount + " Animations (Time: " + SeeingSharpUtil.FormatTimespanCompact(this.UpdateTime) + ")";
-        }
-
         public int AnimationCount
         {
             get;
@@ -44,6 +37,14 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        public override string ToString()
+        {
+            return "" + this.AnimationCount + " Animations (Time: " + SeeingSharpUtil.FormatTimespanCompact(this.UpdateTime) + ")";
         }
     }
 }

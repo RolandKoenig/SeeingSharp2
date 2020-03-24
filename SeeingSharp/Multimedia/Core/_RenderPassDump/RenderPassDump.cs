@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Util;
@@ -34,6 +35,11 @@ namespace SeeingSharp.Multimedia.Core
 
         private List<RenderPassDumpEntry> _dumpResults;
 
+        public IReadOnlyList<RenderPassDumpEntry> DumpResults => _dumpResults;
+
+        /// <inheritdoc />
+        public bool IsDisposed => _isDisposed;
+
         internal RenderPassDump(EngineDevice device, Size2 size2, bool isMultisampled)
         {
             _dumpResults = new List<RenderPassDumpEntry>(8);
@@ -41,19 +47,6 @@ namespace SeeingSharp.Multimedia.Core
             _size = size2;
             _uploaderColor = new TextureUploader(
                 device, size2.Width, size2.Height, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT, isMultisampled);
-        }
-
-        internal void Dump(string dumpKey, RenderTargets renderTargets)
-        {
-            if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
-
-            var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
-            using (var colorBufferTexture = renderTargets.ColorBuffer.ResourceAs<D3D11.Texture2D>())
-            {
-                _uploaderColor.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
-            }
-
-            _dumpResults.Add(actDumpEntry);
         }
 
         /// <inheritdoc />
@@ -70,9 +63,17 @@ namespace SeeingSharp.Multimedia.Core
             _isDisposed = true;
         }
 
-        public IReadOnlyList<RenderPassDumpEntry> DumpResults => _dumpResults;
+        internal void Dump(string dumpKey, RenderTargets renderTargets)
+        {
+            if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
 
-        /// <inheritdoc />
-        public bool IsDisposed => _isDisposed;
+            var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
+            using (var colorBufferTexture = renderTargets.ColorBuffer.ResourceAs<D3D11.Texture2D>())
+            {
+                _uploaderColor.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
+            }
+
+            _dumpResults.Add(actDumpEntry);
+        }
     }
 }

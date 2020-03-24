@@ -24,6 +24,11 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderPass2DOverlay : RenderPassBase
     {
         /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => true;
+
+        /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
         /// </summary>
         /// <param name="renderState">The current render state.</param>
@@ -56,10 +61,5 @@ namespace SeeingSharp.Multimedia.Core
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => true;
     }
 }

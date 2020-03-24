@@ -33,6 +33,59 @@ namespace SeeingSharp.Multimedia.Input
         private bool _isConnected;
 
         /// <summary>
+        /// Do we have any controller connected on this point.
+        /// </summary>
+        public bool IsConnected => _isConnected;
+
+        /// <summary>
+        /// Gets the currently pressed buttons.
+        /// </summary>
+        public GamepadButton PressedButtons
+        {
+            get
+            {
+                if (!_isConnected) { return GamepadButton.None; }
+                return _currentState.Buttons;
+            }
+        }
+
+        /// <summary>
+        /// The position of the left thumbstick on the X-axis. The value is between -1.0 and and 1.0.
+        /// </summary>
+        public float LeftThumbX => _currentState.LeftThumbstickX;
+
+        /// <summary>
+        /// The position of the left thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
+        /// </summary>
+        public float LeftThumbY => _currentState.LeftThumbstickY;
+
+        /// <summary>
+        /// The position of the left trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
+        /// </summary>
+        public float LeftTrigger => _currentState.LeftTrigger;
+
+        /// <summary>
+        /// The position of the right thumbstick on the X-axis. The value is between -1.0 and and 1.0.
+        /// </summary>
+        public float RightThumbX => _currentState.RightThumbstickX;
+
+        /// <summary>
+        /// The position of the right thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
+        /// </summary>
+        public float RightThumbY => _currentState.RightThumbstickY;
+
+        /// <summary>
+        /// The position of the right trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
+        /// </summary>
+        public float RightTrigger => _currentState.RightTrigger;
+
+        public GamepadStateInternals Internals
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Prevents a default instance of the <see cref="GamepadState"/> class from being created.
         /// </summary>
         public GamepadState()
@@ -101,59 +154,6 @@ namespace SeeingSharp.Multimedia.Input
         {
             _prevState = _currentState;
             _currentState = controllerState;
-        }
-
-        /// <summary>
-        /// Do we have any controller connected on this point.
-        /// </summary>
-        public bool IsConnected => _isConnected;
-
-        /// <summary>
-        /// Gets the currently pressed buttons.
-        /// </summary>
-        public GamepadButton PressedButtons
-        {
-            get
-            {
-                if (!_isConnected) { return GamepadButton.None; }
-                return _currentState.Buttons;
-            }
-        }
-
-        /// <summary>
-        /// The position of the left thumbstick on the X-axis. The value is between -1.0 and and 1.0.
-        /// </summary>
-        public float LeftThumbX => _currentState.LeftThumbstickX;
-
-        /// <summary>
-        /// The position of the left thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
-        /// </summary>
-        public float LeftThumbY => _currentState.LeftThumbstickY;
-
-        /// <summary>
-        /// The position of the left trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
-        /// </summary>
-        public float LeftTrigger => _currentState.LeftTrigger;
-
-        /// <summary>
-        /// The position of the right thumbstick on the X-axis. The value is between -1.0 and and 1.0.
-        /// </summary>
-        public float RightThumbX => _currentState.RightThumbstickX;
-
-        /// <summary>
-        /// The position of the right thumbstick on the Y-axis. The value is between -1.0 and and 1.0.
-        /// </summary>
-        public float RightThumbY => _currentState.RightThumbstickY;
-
-        /// <summary>
-        /// The position of the right trigger. The value is between 0.0 (not depressed) and 1.0 (fully depressed).
-        /// </summary>
-        public float RightTrigger => _currentState.RightTrigger;
-
-        public GamepadStateInternals Internals
-        {
-            get;
-            private set;
         }
 
         //*********************************************************************

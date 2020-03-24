@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -26,6 +27,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public abstract class MaterialResource : Resource
     {
+        public virtual bool IsExportable => false;
+
         /// <summary>
         /// Stores all required data into a new <see cref="ExportMaterialInfo"/>.
         /// </summary>
@@ -53,7 +56,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
         internal abstract D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements);
-
-        public virtual bool IsExportable => false;
     }
 }

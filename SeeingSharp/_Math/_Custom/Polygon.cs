@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,16 @@ namespace SeeingSharp
     {
         private Vector3[] _vertices;
         private Lazy<Vector3> _normal;
+
+        /// <summary>
+        /// Gets a collection containing all vertices.
+        /// </summary>
+        public ReadOnlyCollection<Vector3> Vertices { get; }
+
+        /// <summary>
+        /// Gets the normal of this polygon.
+        /// </summary>
+        public Vector3 Normal => _normal.Value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Polygon" /> class.
@@ -87,15 +98,5 @@ namespace SeeingSharp
             var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();
         }
-
-        /// <summary>
-        /// Gets a collection containing all vertices.
-        /// </summary>
-        public ReadOnlyCollection<Vector3> Vertices { get; }
-
-        /// <summary>
-        /// Gets the normal of this polygon.
-        /// </summary>
-        public Vector3 Normal => _normal.Value;
     }
 }

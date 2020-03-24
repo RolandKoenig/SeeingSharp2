@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using System.Numerics;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -31,6 +32,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Resources
         private IndexBasedDynamicCollection<SkyboxLocalResources> _localResources;
+
+        /// <summary>
+        /// Gets or sets the key of the cube texture.
+        /// </summary>
+        public NamedOrGenericKey CubeTextureKey { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Skybox"/> class.
@@ -219,11 +225,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.DrawIndexed(6 * 6, 0, 0);
             renderState.CountDrawCallsInternal++;
         }
-
-        /// <summary>
-        /// Gets or sets the key of the cube texture.
-        /// </summary>
-        public NamedOrGenericKey CubeTextureKey { get; set; }
 
         //*********************************************************************
         //*********************************************************************

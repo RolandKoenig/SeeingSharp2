@@ -24,10 +24,7 @@ namespace SeeingSharp
         /// </summary>
         public Matrix4x4 Matrix
         {
-            get
-            {
-                return pMatrix;
-            }
+            get => pMatrix;
             set
             {
                 pMatrix = value;
@@ -37,63 +34,27 @@ namespace SeeingSharp
         /// <summary>
         /// Gets the near plane of the BoundingFrustum.
         /// </summary>
-        public Plane Near
-        {
-            get
-            {
-                return pNear;
-            }
-        }
+        public Plane Near => pNear;
         /// <summary>
         /// Gets the far plane of the BoundingFrustum.
         /// </summary>
-        public Plane Far
-        {
-            get
-            {
-                return pFar;
-            }
-        }
+        public Plane Far => pFar;
         /// <summary>
         /// Gets the left plane of the BoundingFrustum.
         /// </summary>
-        public Plane Left
-        {
-            get
-            {
-                return pLeft;
-            }
-        }
+        public Plane Left => pLeft;
         /// <summary>
         /// Gets the right plane of the BoundingFrustum.
         /// </summary>
-        public Plane Right
-        {
-            get
-            {
-                return pRight;
-            }
-        }
+        public Plane Right => pRight;
         /// <summary>
         /// Gets the top plane of the BoundingFrustum.
         /// </summary>
-        public Plane Top
-        {
-            get
-            {
-                return pTop;
-            }
-        }
+        public Plane Top => pTop;
         /// <summary>
         /// Gets the bottom plane of the BoundingFrustum.
         /// </summary>
-        public Plane Bottom
-        {
-            get
-            {
-                return pBottom;
-            }
-        }
+        public Plane Bottom => pBottom;
 
         /// <summary>
         /// Creates a new instance of BoundingFrustum.
@@ -119,7 +80,7 @@ namespace SeeingSharp
         /// </returns>
         public bool Equals(BoundingFrustum other)
         {
-            return this.pMatrix == other.pMatrix;
+            return pMatrix == other.pMatrix;
         }
 
         /// <summary>
@@ -132,7 +93,9 @@ namespace SeeingSharp
         public override bool Equals(object obj)
         {
             if (obj != null && obj is BoundingFrustum)
-                return Equals((BoundingFrustum)obj);
+            {
+                return this.Equals((BoundingFrustum)obj);
+            }
             return false;
         }
 
@@ -232,7 +195,7 @@ namespace SeeingSharp
         private static Vector3 Get3PlanesInterPoint(ref Plane p1, ref Plane p2, ref Plane p3)
         {
             //P = -d1 * N2xN3 / N1.N2xN3 - d2 * N3xN1 / N2.N3xN1 - d3 * N1xN2 / N3.N1xN2 
-            Vector3 v =
+            var v =
                 -p1.D * Vector3.Cross(p2.Normal, p3.Normal) / Vector3.Dot(p1.Normal, Vector3.Cross(p2.Normal, p3.Normal))
                 - p2.D * Vector3.Cross(p3.Normal, p1.Normal) / Vector3.Dot(p2.Normal, Vector3.Cross(p3.Normal, p1.Normal))
                 - p3.D * Vector3.Cross(p1.Normal, p2.Normal) / Vector3.Dot(p3.Normal, Vector3.Cross(p1.Normal, p2.Normal));
@@ -258,22 +221,22 @@ namespace SeeingSharp
             lookDir = Vector3.Normalize(lookDir);
             upDir = Vector3.Normalize(upDir);
 
-            Vector3 nearCenter = cameraPos + lookDir * znear;
-            Vector3 farCenter = cameraPos + lookDir * zfar;
-            float nearHalfHeight = (float)(znear * Math.Tan(fov / 2f));
-            float farHalfHeight = (float)(zfar * Math.Tan(fov / 2f));
-            float nearHalfWidth = nearHalfHeight * aspect;
-            float farHalfWidth = farHalfHeight * aspect;
+            var nearCenter = cameraPos + lookDir * znear;
+            var farCenter = cameraPos + lookDir * zfar;
+            var nearHalfHeight = (float)(znear * Math.Tan(fov / 2f));
+            var farHalfHeight = (float)(zfar * Math.Tan(fov / 2f));
+            var nearHalfWidth = nearHalfHeight * aspect;
+            var farHalfWidth = farHalfHeight * aspect;
 
-            Vector3 rightDir = Vector3.Normalize(Vector3.Cross(upDir, lookDir));
-            Vector3 Near1 = nearCenter - nearHalfHeight * upDir + nearHalfWidth * rightDir;
-            Vector3 Near2 = nearCenter + nearHalfHeight * upDir + nearHalfWidth * rightDir;
-            Vector3 Near3 = nearCenter + nearHalfHeight * upDir - nearHalfWidth * rightDir;
-            Vector3 Near4 = nearCenter - nearHalfHeight * upDir - nearHalfWidth * rightDir;
-            Vector3 Far1 = farCenter - farHalfHeight * upDir + farHalfWidth * rightDir;
-            Vector3 Far2 = farCenter + farHalfHeight * upDir + farHalfWidth * rightDir;
-            Vector3 Far3 = farCenter + farHalfHeight * upDir - farHalfWidth * rightDir;
-            Vector3 Far4 = farCenter - farHalfHeight * upDir - farHalfWidth * rightDir;
+            var rightDir = Vector3.Normalize(Vector3.Cross(upDir, lookDir));
+            var Near1 = nearCenter - nearHalfHeight * upDir + nearHalfWidth * rightDir;
+            var Near2 = nearCenter + nearHalfHeight * upDir + nearHalfWidth * rightDir;
+            var Near3 = nearCenter + nearHalfHeight * upDir - nearHalfWidth * rightDir;
+            var Near4 = nearCenter - nearHalfHeight * upDir - nearHalfWidth * rightDir;
+            var Far1 = farCenter - farHalfHeight * upDir + farHalfWidth * rightDir;
+            var Far2 = farCenter + farHalfHeight * upDir + farHalfWidth * rightDir;
+            var Far3 = farCenter + farHalfHeight * upDir - farHalfWidth * rightDir;
+            var Far4 = farCenter - farHalfHeight * upDir - farHalfWidth * rightDir;
 
             var result = new BoundingFrustum();
             result.pNear = new Plane(Near1, Near2, Near3);
@@ -318,7 +281,7 @@ namespace SeeingSharp
         public Vector3[] GetCorners()
         {
             var corners = new Vector3[8];
-            GetCorners(corners);
+            this.GetCorners(corners);
             return corners;
         }
 
@@ -351,15 +314,15 @@ namespace SeeingSharp
         /// <returns>Perspective camera parameters from the frustum</returns>
         public FrustumCameraParams GetCameraParams()
         {
-            var corners = GetCorners();
+            var corners = this.GetCorners();
             var cameraParam = new FrustumCameraParams();
             cameraParam.Position = Get3PlanesInterPoint(ref pRight, ref pTop, ref pLeft);
             cameraParam.LookAtDir = pNear.Normal;
             cameraParam.UpDir = Vector3.Normalize(Vector3.Cross(pRight.Normal, pNear.Normal));
             cameraParam.FOV = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal))) * 2);
             cameraParam.AspectRatio = (corners[6] - corners[5]).Length() / (corners[4] - corners[5]).Length();
-            cameraParam.ZNear = (cameraParam.Position + (pNear.Normal * pNear.D)).Length();
-            cameraParam.ZFar = (cameraParam.Position + (pFar.Normal * pFar.D)).Length();
+            cameraParam.ZNear = (cameraParam.Position + pNear.Normal * pNear.D).Length();
+            cameraParam.ZFar = (cameraParam.Position + pFar.Normal * pFar.D).Length();
             return cameraParam;
         }
 
@@ -372,7 +335,7 @@ namespace SeeingSharp
         {
             var result = PlaneIntersectionType.Front;
             var planeResult = PlaneIntersectionType.Front;
-            for (int i = 0; i < 6; i++)
+            for (var i = 0; i < 6; i++)
             {
                 switch (i)
                 {
@@ -406,26 +369,38 @@ namespace SeeingSharp
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(Vector3 point)
         {
-            return Contains(ref point);
+            return this.Contains(ref point);
         }
 
         private void GetBoxToPlanePVertexNVertex(ref BoundingBox box, ref Vector3 planeNormal, out Vector3 p, out Vector3 n)
         {
             p = box.Minimum;
             if (planeNormal.X >= 0)
+            {
                 p.X = box.Maximum.X;
+            }
             if (planeNormal.Y >= 0)
+            {
                 p.Y = box.Maximum.Y;
+            }
             if (planeNormal.Z >= 0)
+            {
                 p.Z = box.Maximum.Z;
+            }
 
             n = box.Maximum;
             if (planeNormal.X >= 0)
+            {
                 n.X = box.Minimum.X;
+            }
             if (planeNormal.Y >= 0)
+            {
                 n.Y = box.Minimum.Y;
+            }
             if (planeNormal.Z >= 0)
+            {
                 n.Z = box.Minimum.Z;
+            }
         }
 
         /// <summary>
@@ -438,15 +413,19 @@ namespace SeeingSharp
             Vector3 p, n;
             Plane plane;
             var result = ContainmentType.Contains;
-            for (int i = 0; i < 6; i++)
+            for (var i = 0; i < 6; i++)
             {
-                plane = GetPlane(i);
-                GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
+                plane = this.GetPlane(i);
+                this.GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
                 if (Collision.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
+                {
                     return ContainmentType.Disjoint;
+                }
 
                 if (Collision.PlaneIntersectsPoint(ref plane, ref n) == PlaneIntersectionType.Back)
+                {
                     result = ContainmentType.Intersects;
+                }
             }
             return result;
         }
@@ -458,7 +437,7 @@ namespace SeeingSharp
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(BoundingBox box)
         {
-            return Contains(ref box);
+            return this.Contains(ref box);
         }
 
         /// <summary>
@@ -468,7 +447,7 @@ namespace SeeingSharp
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingBox box, out ContainmentType result)
         {
-            result = Contains(ref box);
+            result = this.Contains(ref box);
         }
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding sphere.
@@ -479,7 +458,7 @@ namespace SeeingSharp
         {
             var result = PlaneIntersectionType.Front;
             var planeResult = PlaneIntersectionType.Front;
-            for (int i = 0; i < 6; i++)
+            for (var i = 0; i < 6; i++)
             {
                 switch (i)
                 {
@@ -513,7 +492,7 @@ namespace SeeingSharp
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(BoundingSphere sphere)
         {
-            return Contains(sphere);
+            return this.Contains(sphere);
         }
 
         /// <summary>
@@ -523,7 +502,7 @@ namespace SeeingSharp
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingSphere sphere, out ContainmentType result)
         {
-            result = Contains(ref sphere);
+            result = this.Contains(ref sphere);
         }
 
         /// <summary>
@@ -533,7 +512,7 @@ namespace SeeingSharp
         /// <returns>Type of the containment</returns>
         public bool Intersects(ref BoundingSphere sphere)
         {
-            return Contains(ref sphere) != ContainmentType.Disjoint;
+            return this.Contains(ref sphere) != ContainmentType.Disjoint;
         }
         /// <summary>
         /// Checks whether the current BoundingFrustum intersects a BoundingSphere.
@@ -542,7 +521,7 @@ namespace SeeingSharp
         /// <param name="result">Set to <c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
         public void Intersects(ref BoundingSphere sphere, out bool result)
         {
-            result = Contains(ref sphere) != ContainmentType.Disjoint;
+            result = this.Contains(ref sphere) != ContainmentType.Disjoint;
         }
         /// <summary>
         /// Checks whether the current BoundingFrustum intersects a BoundingBox.
@@ -551,7 +530,7 @@ namespace SeeingSharp
         /// <returns><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</returns>
         public bool Intersects(ref BoundingBox box)
         {
-            return Contains(ref box) != ContainmentType.Disjoint;
+            return this.Contains(ref box) != ContainmentType.Disjoint;
         }
         /// <summary>
         /// Checks whether the current BoundingFrustum intersects a BoundingBox.
@@ -560,15 +539,19 @@ namespace SeeingSharp
         /// <param name="result"><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
         public void Intersects(ref BoundingBox box, out bool result)
         {
-            result = Contains(ref box) != ContainmentType.Disjoint;
+            result = this.Contains(ref box) != ContainmentType.Disjoint;
         }
 
         private PlaneIntersectionType PlaneIntersectsPoints(ref Plane plane, Vector3[] points)
         {
             var result = Collision.PlaneIntersectsPoint(ref plane, ref points[0]);
-            for (int i = 1; i < points.Length; i++)
+            for (var i = 1; i < points.Length; i++)
+            {
                 if (Collision.PlaneIntersectsPoint(ref plane, ref points[i]) != result)
+                {
                     return PlaneIntersectionType.Intersecting;
+                }
+            }
             return result;
         }
 
@@ -579,7 +562,7 @@ namespace SeeingSharp
         /// <returns>Plane intersection type.</returns>
         public PlaneIntersectionType Intersects(ref Plane plane)
         {
-            return PlaneIntersectsPoints(ref plane, GetCorners());
+            return this.PlaneIntersectsPoints(ref plane, this.GetCorners());
         }
         /// <summary>
         /// Checks whether the current BoundingFrustum intersects the specified Plane.
@@ -588,7 +571,7 @@ namespace SeeingSharp
         /// <param name="result">Plane intersection type.</param>
         public void Intersects(ref Plane plane, out PlaneIntersectionType result)
         {
-            result = PlaneIntersectsPoints(ref plane, GetCorners());
+            result = this.PlaneIntersectsPoints(ref plane, this.GetCorners());
         }
 
         /// <summary>
@@ -598,7 +581,7 @@ namespace SeeingSharp
         /// <returns>With of the frustum at the specified depth</returns>
         public float GetWidthAtDepth(float depth)
         {
-            float hAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pLeft.Normal))));
+            var hAngle = (float)(Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pLeft.Normal)));
             return (float)(Math.Tan(hAngle) * depth * 2);
         }
 
@@ -609,7 +592,7 @@ namespace SeeingSharp
         /// <returns>Height of the frustum at the specified depth</returns>
         public float GetHeightAtDepth(float depth)
         {
-            float vAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal))));
+            var vAngle = (float)(Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal)));
             return (float)(Math.Tan(vAngle) * depth * 2);
         }
 
@@ -633,7 +616,7 @@ namespace SeeingSharp
         public bool Intersects(ref Ray ray)
         {
             float? inDist, outDist;
-            return Intersects(ref ray, out inDist, out outDist);
+            return this.Intersects(ref ray, out inDist, out outDist);
         }
         /// <summary>
         /// Checks whether the current BoundingFrustum intersects the specified Ray.
@@ -644,12 +627,12 @@ namespace SeeingSharp
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
         public bool Intersects(ref Ray ray, out float? inDistance, out float? outDistance)
         {
-            if (Contains(ray.Position) != ContainmentType.Disjoint)
+            if (this.Contains(ray.Position) != ContainmentType.Disjoint)
             {
-                float nearstPlaneDistance = float.MaxValue;
-                for (int i = 0; i < 6; i++)
+                var nearstPlaneDistance = float.MaxValue;
+                for (var i = 0; i < 6; i++)
                 {
-                    var plane = GetPlane(i);
+                    var plane = this.GetPlane(i);
                     float distance;
                     if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance) && distance < nearstPlaneDistance)
                     {
@@ -661,40 +644,34 @@ namespace SeeingSharp
                 outDistance = null;
                 return true;
             }
-            else
+            //We will find the two points at which the ray enters and exists the frustum
+            //These two points make a line which center inside the frustum if the ray intersets it
+            //Or outside the frustum if the ray intersects frustum planes outside it.
+            var minDist = float.MaxValue;
+            var maxDist = float.MinValue;
+            for (var i = 0; i < 6; i++)
             {
-                //We will find the two points at which the ray enters and exists the frustum
-                //These two points make a line which center inside the frustum if the ray intersets it
-                //Or outside the frustum if the ray intersects frustum planes outside it.
-                float minDist = float.MaxValue;
-                float maxDist = float.MinValue;
-                for (int i = 0; i < 6; i++)
+                var plane = this.GetPlane(i);
+                float distance;
+                if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance))
                 {
-                    var plane = GetPlane(i);
-                    float distance;
-                    if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance))
-                    {
-                        minDist = Math.Min(minDist, distance);
-                        maxDist = Math.Max(maxDist, distance);
-                    }
-                }
-
-                Vector3 minPoint = ray.Position + ray.Direction * minDist;
-                Vector3 maxPoint = ray.Position + ray.Direction * maxDist;
-                Vector3 center = (minPoint + maxPoint) / 2f;
-                if (Contains(ref center) != ContainmentType.Disjoint)
-                {
-                    inDistance = minDist;
-                    outDistance = maxDist;
-                    return true;
-                }
-                else
-                {
-                    inDistance = null;
-                    outDistance = null;
-                    return false;
+                    minDist = Math.Min(minDist, distance);
+                    maxDist = Math.Max(maxDist, distance);
                 }
             }
+
+            var minPoint = ray.Position + ray.Direction * minDist;
+            var maxPoint = ray.Position + ray.Direction * maxDist;
+            var center = (minPoint + maxPoint) / 2f;
+            if (this.Contains(ref center) != ContainmentType.Disjoint)
+            {
+                inDistance = minDist;
+                outDistance = maxDist;
+                return true;
+            }
+            inDistance = null;
+            outDistance = null;
+            return false;
         }
 
         /// <summary>
@@ -707,18 +684,18 @@ namespace SeeingSharp
         /// <returns>The zoom to fit distance</returns>
         public float GetZoomToExtentsShiftDistance(Vector3[] points)
         {
-            float vAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal))));
-            float vSin = (float)Math.Sin(vAngle);
-            float hAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pLeft.Normal))));
-            float hSin = (float)Math.Sin(hAngle);
-            float horizontalToVerticalMapping = vSin / hSin;
+            var vAngle = (float)(Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal)));
+            var vSin = (float)Math.Sin(vAngle);
+            var hAngle = (float)(Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pLeft.Normal)));
+            var hSin = (float)Math.Sin(hAngle);
+            var horizontalToVerticalMapping = vSin / hSin;
 
-            var ioFrustrum = GetInsideOutClone();
+            var ioFrustrum = this.GetInsideOutClone();
 
-            float maxPointDist = float.MinValue;
-            for (int i = 0; i < points.Length; i++)
+            var maxPointDist = float.MinValue;
+            for (var i = 0; i < points.Length; i++)
             {
-                float pointDist = Collision.DistancePlanePoint(ref ioFrustrum.pTop, ref points[i]);
+                var pointDist = Collision.DistancePlanePoint(ref ioFrustrum.pTop, ref points[i]);
                 pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pBottom, ref points[i]));
                 pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pLeft, ref points[i]) * horizontalToVerticalMapping);
                 pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pRight, ref points[i]) * horizontalToVerticalMapping);
@@ -738,7 +715,7 @@ namespace SeeingSharp
         /// <returns>The zoom to fit distance</returns>
         public float GetZoomToExtentsShiftDistance(ref BoundingBox boundingBox)
         {
-            return GetZoomToExtentsShiftDistance(boundingBox.GetCorners());
+            return this.GetZoomToExtentsShiftDistance(boundingBox.GetCorners());
         }
 
         /// <summary>
@@ -749,7 +726,7 @@ namespace SeeingSharp
         /// <returns>The zoom to fit vector</returns>
         public Vector3 GetZoomToExtentsShiftVector(Vector3[] points)
         {
-            return GetZoomToExtentsShiftDistance(points) * pNear.Normal;
+            return this.GetZoomToExtentsShiftDistance(points) * pNear.Normal;
         }
         /// <summary>
         /// Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit) operation,
@@ -759,7 +736,7 @@ namespace SeeingSharp
         /// <returns>The zoom to fit vector</returns>
         public Vector3 GetZoomToExtentsShiftVector(ref BoundingBox boundingBox)
         {
-            return GetZoomToExtentsShiftDistance(boundingBox.GetCorners()) * pNear.Normal;
+            return this.GetZoomToExtentsShiftDistance(boundingBox.GetCorners()) * pNear.Normal;
         }
 
         /// <summary>
@@ -768,12 +745,6 @@ namespace SeeingSharp
         /// <value>
         /// 	<c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
         /// </value>
-        public bool IsOrthographic
-        {
-            get
-            {
-                return (pLeft.Normal == -pRight.Normal) && (pTop.Normal == -pBottom.Normal);
-            }
-        }
+        public bool IsOrthographic => pLeft.Normal == -pRight.Normal && pTop.Normal == -pBottom.Normal;
     }
 }

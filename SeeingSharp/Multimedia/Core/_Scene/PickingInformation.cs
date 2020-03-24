@@ -19,12 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 namespace SeeingSharp.Multimedia.Core
 {
     public class PickingInformation
     {
         private float _distance;
         private SceneObject _pickedObject;
+
+        /// <summary>
+        /// The picked object.
+        /// </summary>
+        public SceneObject PickedObject => _pickedObject;
+
+        /// <summary>
+        /// Gets the distance to the picked object.
+        /// </summary>
+        public float Distance => _distance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PickingInformation" /> class.
@@ -49,15 +60,5 @@ namespace SeeingSharp.Multimedia.Core
                 _pickedObject = pickedObject;
             }
         }
-
-        /// <summary>
-        /// The picked object.
-        /// </summary>
-        public SceneObject PickedObject => _pickedObject;
-
-        /// <summary>
-        /// Gets the distance to the picked object.
-        /// </summary>
-        public float Distance => _distance;
     }
 }

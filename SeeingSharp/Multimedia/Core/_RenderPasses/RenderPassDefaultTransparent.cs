@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.Multimedia.Core
@@ -26,6 +27,11 @@ namespace SeeingSharp.Multimedia.Core
     public class RenderPassDefaultTransparent : RenderPassBase
     {
         private DefaultResources _defaultResources;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _defaultResources != null;
 
         /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
@@ -73,10 +79,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             _defaultResources = null;
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _defaultResources != null;
     }
 }

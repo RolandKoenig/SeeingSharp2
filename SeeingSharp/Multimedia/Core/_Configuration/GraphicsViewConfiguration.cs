@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
 using System.ComponentModel;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -50,43 +51,6 @@ namespace SeeingSharp.Multimedia.Core
         private float _lightPower;
         private float _strongLightFactor;
         private bool _alphaEnabledSwapChain;
-
-        /// <summary>
-        /// Occurs when any configuration flag has changed.
-        /// This event may occur in different threads!
-        /// </summary>
-        public event EventHandler ConfigurationChanged;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsViewConfiguration" /> class.
-        /// </summary>
-        internal GraphicsViewConfiguration()
-        {
-            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
-            ShowTexturesInternal = DEFAULT_SHOW_TEXTURES;
-            this.WireframeEnabled = DEFAULT_WIREFRAME;
-            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
-            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
-            _generatedBorderFactor = DEFAULT_BORDER_FACTOR;
-            _accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
-            _ambientFactor = DEFAULT_AMBIENT_FACTOR;
-            _lightPower = DEFAULT_LIGHT_POWER;
-            _strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
-            _alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
-        }
-
-        public void Reset()
-        {
-            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
-            this.WireframeEnabled = DEFAULT_WIREFRAME;
-            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
-            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
-            this.GeneratedBorderFactor= DEFAULT_BORDER_FACTOR;
-            this.AccentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
-            this.AmbientFactor = DEFAULT_AMBIENT_FACTOR;
-            this.LightPower = DEFAULT_LIGHT_POWER;
-            this.StrongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
-        }
 
         public bool ViewNeedsRefresh { get; set; }
 
@@ -258,5 +222,42 @@ namespace SeeingSharp.Multimedia.Core
         /// Internal accessor for ShowTextures variable.
         /// </summary>
         internal bool ShowTexturesInternal;
+
+        /// <summary>
+        /// Occurs when any configuration flag has changed.
+        /// This event may occur in different threads!
+        /// </summary>
+        public event EventHandler ConfigurationChanged;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraphicsViewConfiguration" /> class.
+        /// </summary>
+        internal GraphicsViewConfiguration()
+        {
+            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
+            ShowTexturesInternal = DEFAULT_SHOW_TEXTURES;
+            this.WireframeEnabled = DEFAULT_WIREFRAME;
+            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
+            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
+            _generatedBorderFactor = DEFAULT_BORDER_FACTOR;
+            _accentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
+            _ambientFactor = DEFAULT_AMBIENT_FACTOR;
+            _lightPower = DEFAULT_LIGHT_POWER;
+            _strongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
+            _alphaEnabledSwapChain = DEFAULT_SWAP_CHAIN_WIDTH_ALPHA;
+        }
+
+        public void Reset()
+        {
+            this.ShowTextures = DEFAULT_SHOW_TEXTURES;
+            this.WireframeEnabled = DEFAULT_WIREFRAME;
+            this.AntialiasingEnabled = DEFAULT_ANTIALIASING;
+            this.AntialiasingQuality = DEFAULT_ANTIALIASING_QUALITY;
+            this.GeneratedBorderFactor= DEFAULT_BORDER_FACTOR;
+            this.AccentuationFactor = DEFAULT_ACCENTUATION_FACTOR;
+            this.AmbientFactor = DEFAULT_AMBIENT_FACTOR;
+            this.LightPower = DEFAULT_LIGHT_POWER;
+            this.StrongLightFactor = DEFAULT_STRONG_LIGHT_FACTOR;
+        }
     }
 }

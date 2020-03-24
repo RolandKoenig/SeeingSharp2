@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp
@@ -29,7 +30,7 @@ namespace SeeingSharp
 
         public void Transform(Matrix4x4 matrix)
         {
-            if(this == BoundingSphere.Empty){ return; }
+            if(this == Empty){ return; }
 
             var center = Center;
             var otherPoint = center + new Vector3(Radius, 0f, 0f);

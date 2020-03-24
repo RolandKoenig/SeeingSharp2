@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -38,6 +39,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal Geometry Geometry;
         internal D3D11.InputElement[] InputElements;
 
+        public bool IsDisposed => IndexBuffer != null;
+
         public RenderingChunk CreateChunk(EngineDevice device, MaterialResource material)
         {
             var result = new RenderingChunk();
@@ -53,7 +56,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref IndexBuffer);
             SeeingSharpUtil.SafeDispose(ref VertexBuffer);
         }
-
-        public bool IsDisposed => IndexBuffer != null;
     }
 }

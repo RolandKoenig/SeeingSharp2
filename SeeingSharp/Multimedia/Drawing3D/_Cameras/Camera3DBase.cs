@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -48,6 +49,181 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private float _zFar = 500f;
 
         /// <summary>
+        /// Gets the current AnimationHandler for this camera.
+        /// </summary>
+        public AnimationHandler AnimationHandler { get; }
+
+        public bool InvertScreenMove { get; set; }
+
+        /// <summary>
+        /// Retrieves the view-matrix.
+        /// </summary>
+        public Matrix4x4 View => _view;
+
+        /// <summary>
+        /// Gets the view-projection matrix.
+        /// </summary>
+        public Matrix4x4 ViewProjection => _viewProj;
+
+        /// <summary>
+        /// Retrieves or sets the direction / target.
+        /// </summary>
+        public Vector3 Direction => _look;
+
+        /// <summary>
+        /// Retrieves a vector, which is targeting right.
+        /// </summary>
+        public Vector3 Right => _right;
+
+        /// <summary>
+        /// Retrieves a vector, which is targeting upwards.
+        /// </summary>
+        public Vector3 Up => _up;
+
+        /// <summary>
+        /// Gets or sets the vector that points up.
+        /// </summary>
+        public Vector3 UpVector
+        {
+            get => _upVector;
+            set
+            {
+                if (_upVector != value)
+                {
+                    _upVector = value;
+                    this.UpdateCamera();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves or sets the rotation-angles of the target.
+        /// The first element of the vector is hRot, the second is vRot.
+        /// 
+        /// The angles are radian values!
+        /// </summary>
+        public Vector2 TargetRotation
+        {
+            get => new Vector2(_hRotation, _vRotation);
+            set
+            {
+                var v = value;
+
+                _hRotation = v.X;
+                _vRotation = v.Y;
+
+                if (_vRotation >= (float)Math.PI / 2f) { _vRotation = (float)Math.PI / 2f - 0.001f; }
+                if (_vRotation <= -(float)Math.PI / 2f) { _vRotation = -(float)Math.PI / 2f + 0.001f; }
+
+                _relativeTarget.X = (float)(1f * Math.Cos(_vRotation) * Math.Cos(_hRotation));
+                _relativeTarget.Y = (float)(1f * Math.Sin(_vRotation));
+                _relativeTarget.Z = (float)(1f * Math.Cos(_vRotation) * Math.Sin(_hRotation));
+
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the target position.
+        /// </summary>
+        public Vector3 Target
+        {
+            get => _relativeTarget + _position;
+            set => this.RelativeTarget = value - _position;
+        }
+
+        /// <summary>
+        /// Gets or sets the relative target position.
+        /// </summary>
+        public Vector3 RelativeTarget
+        {
+            get => _relativeTarget;
+            set
+            {
+                _relativeTarget = Vector3.Normalize(value);
+
+                // Update horizontal and vertical rotation
+                Vector3Ex.ToHVRotation(_relativeTarget, out _hRotation, out _vRotation);
+
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum distance of rendered pixels.
+        /// </summary>
+        public float ZNear
+        {
+            get => _zNear;
+            set
+            {
+                _zNear = value;
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum distance of rendered pixels.
+        /// </summary>
+        public float ZFar
+        {
+            get => _zFar;
+            set
+            {
+                _zFar = value;
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves or sets the position of the camera.
+        /// </summary>
+        public Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves projection-matrix.
+        /// </summary>
+        public Matrix4x4 Projection => _project;
+
+        /// <summary>
+        /// Width of the screen.
+        /// </summary>
+        public int ScreenWidth { get; set; }
+
+        /// <summary>
+        /// Height of the screen.
+        /// </summary>
+        public int ScreenHeight { get; set; }
+
+        /// <summary>
+        /// Did the state of the camera change last time?
+        /// Set this flag to false to reset the value.
+        /// </summary>
+        public bool StateChanged
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the currently associated RenderLoop object.
+        /// </summary>
+        public object AssociatedRenderLoop { get; internal set; }
+
+        public bool IsOrthographic => IsOrthopraphicInternal;
+
+        internal bool IsOrthopraphicInternal;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Camera3DBase"/> class.
         /// </summary>
         protected Camera3DBase(bool isOrthographic)
@@ -64,7 +240,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="height">Height of the render window.</param>
         protected Camera3DBase(bool isOrthographic, int width, int height)
         {
-            this.IsOrthopraphicInternal = isOrthographic;
+            IsOrthopraphicInternal = isOrthographic;
             this.ScreenWidth = width;
             this.ScreenHeight = height;
 
@@ -282,180 +458,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         protected abstract void CalculateViewProjectionMatrices(
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix);
-
-        /// <summary>
-        /// Gets the current AnimationHandler for this camera.
-        /// </summary>
-        public AnimationHandler AnimationHandler { get; }
-
-        public bool InvertScreenMove { get; set; }
-
-        /// <summary>
-        /// Retrieves the view-matrix.
-        /// </summary>
-        public Matrix4x4 View => _view;
-
-        /// <summary>
-        /// Gets the view-projection matrix.
-        /// </summary>
-        public Matrix4x4 ViewProjection => _viewProj;
-
-        /// <summary>
-        /// Retrieves or sets the direction / target.
-        /// </summary>
-        public Vector3 Direction => _look;
-
-        /// <summary>
-        /// Retrieves a vector, which is targeting right.
-        /// </summary>
-        public Vector3 Right => _right;
-
-        /// <summary>
-        /// Retrieves a vector, which is targeting upwards.
-        /// </summary>
-        public Vector3 Up => _up;
-
-        /// <summary>
-        /// Gets or sets the vector that points up.
-        /// </summary>
-        public Vector3 UpVector
-        {
-            get => _upVector;
-            set
-            {
-                if (_upVector != value)
-                {
-                    _upVector = value;
-                    this.UpdateCamera();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Retrieves or sets the rotation-angles of the target.
-        /// The first element of the vector is hRot, the second is vRot.
-        /// 
-        /// The angles are radian values!
-        /// </summary>
-        public Vector2 TargetRotation
-        {
-            get => new Vector2(_hRotation, _vRotation);
-            set
-            {
-                var v = value;
-
-                _hRotation = v.X;
-                _vRotation = v.Y;
-
-                if (_vRotation >= (float)Math.PI / 2f) { _vRotation = (float)Math.PI / 2f - 0.001f; }
-                if (_vRotation <= -(float)Math.PI / 2f) { _vRotation = -(float)Math.PI / 2f + 0.001f; }
-
-                _relativeTarget.X = (float)(1f * Math.Cos(_vRotation) * Math.Cos(_hRotation));
-                _relativeTarget.Y = (float)(1f * Math.Sin(_vRotation));
-                _relativeTarget.Z = (float)(1f * Math.Cos(_vRotation) * Math.Sin(_hRotation));
-
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the target position.
-        /// </summary>
-        public Vector3 Target
-        {
-            get => _relativeTarget + _position;
-            set => this.RelativeTarget = value - _position;
-        }
-
-        /// <summary>
-        /// Gets or sets the relative target position.
-        /// </summary>
-        public Vector3 RelativeTarget
-        {
-            get => _relativeTarget;
-            set
-            {
-                _relativeTarget = Vector3.Normalize(value);
-
-                // Update horizontal and vertical rotation
-                Vector3Ex.ToHVRotation(_relativeTarget, out _hRotation, out _vRotation);
-
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum distance of rendered pixels.
-        /// </summary>
-        public float ZNear
-        {
-            get => _zNear;
-            set
-            {
-                _zNear = value;
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum distance of rendered pixels.
-        /// </summary>
-        public float ZFar
-        {
-            get => _zFar;
-            set
-            {
-                _zFar = value;
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Retrieves or sets the position of the camera.
-        /// </summary>
-        public Vector3 Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Retrieves projection-matrix.
-        /// </summary>
-        public Matrix4x4 Projection => _project;
-
-        /// <summary>
-        /// Width of the screen.
-        /// </summary>
-        public int ScreenWidth { get; set; }
-
-        /// <summary>
-        /// Height of the screen.
-        /// </summary>
-        public int ScreenHeight { get; set; }
-
-        /// <summary>
-        /// Did the state of the camera change last time?
-        /// Set this flag to false to reset the value.
-        /// </summary>
-        public bool StateChanged
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the currently associated RenderLoop object.
-        /// </summary>
-        public object AssociatedRenderLoop { get; internal set; }
-
-        public bool IsOrthographic => this.IsOrthopraphicInternal;
-
-        internal bool IsOrthopraphicInternal;
     }
 }

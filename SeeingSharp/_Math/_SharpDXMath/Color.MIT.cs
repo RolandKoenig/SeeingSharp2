@@ -177,9 +177,13 @@ namespace SeeingSharp
         public Color(float[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color.");
+            }
 
             R = ToByte(values[0]);
             G = ToByte(values[1]);
@@ -196,9 +200,13 @@ namespace SeeingSharp
         public Color(byte[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color.");
+            }
 
             R = values[0];
             G = values[1];
@@ -252,7 +260,7 @@ namespace SeeingSharp
             value |= R << 16;
             value |= A << 24;
 
-            return (int)value;
+            return value;
         }
 
         /// <summary>
@@ -266,7 +274,7 @@ namespace SeeingSharp
             value |= B << 16;
             value |= A << 24;
 
-            return (int)value;
+            return value;
         }
 
         /// <summary>
@@ -311,19 +319,31 @@ namespace SeeingSharp
         /// <returns>The Hue-Saturation-Brightness (HSB) saturation for this <see cref="Color"/></returns>
         public float GetBrightness()
         {
-            float r = (float)R / 255.0f;
-            float g = (float)G / 255.0f;
-            float b = (float)B / 255.0f;
+            var r = R / 255.0f;
+            var g = G / 255.0f;
+            var b = B / 255.0f;
 
             float max, min;
 
             max = r; min = r;
 
-            if (g > max) max = g;
-            if (b > max) max = b;
+            if (g > max)
+            {
+                max = g;
+            }
+            if (b > max)
+            {
+                max = b;
+            }
 
-            if (g < min) min = g;
-            if (b < min) min = b;
+            if (g < min)
+            {
+                min = g;
+            }
+            if (b < min)
+            {
+                min = b;
+            }
 
             return (max + min) / 2;
         }
@@ -335,23 +355,37 @@ namespace SeeingSharp
         public float GetHue()
         {
             if (R == G && G == B)
+            {
                 return 0; // 0 makes as good an UNDEFINED value as any
+            }
 
-            float r = (float)R / 255.0f;
-            float g = (float)G / 255.0f;
-            float b = (float)B / 255.0f;
+            var r = R / 255.0f;
+            var g = G / 255.0f;
+            var b = B / 255.0f;
 
             float max, min;
             float delta;
-            float hue = 0.0f;
+            var hue = 0.0f;
 
             max = r; min = r;
 
-            if (g > max) max = g;
-            if (b > max) max = b;
+            if (g > max)
+            {
+                max = g;
+            }
+            if (b > max)
+            {
+                max = b;
+            }
 
-            if (g < min) min = g;
-            if (b < min) min = b;
+            if (g < min)
+            {
+                min = g;
+            }
+            if (b < min)
+            {
+                min = b;
+            }
 
             delta = max - min;
 
@@ -382,20 +416,32 @@ namespace SeeingSharp
         /// <returns>The Hue-Saturation-Brightness (HSB) saturation for this <see cref="Color"/></returns>
         public float GetSaturation()
         {
-            float r = (float)R / 255.0f;
-            float g = (float)G / 255.0f;
-            float b = (float)B / 255.0f;
+            var r = R / 255.0f;
+            var g = G / 255.0f;
+            var b = B / 255.0f;
 
             float max, min;
             float l, s = 0;
 
             max = r; min = r;
 
-            if (g > max) max = g;
-            if (b > max) max = b;
+            if (g > max)
+            {
+                max = g;
+            }
+            if (b > max)
+            {
+                max = b;
+            }
 
-            if (g < min) min = g;
-            if (b < min) min = b;
+            if (g < min)
+            {
+                min = g;
+            }
+            if (b < min)
+            {
+                min = b;
+            }
 
             // if max == min, then there is no color and
             // the saturation is zero.
@@ -548,21 +594,21 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the clamped value.</param>
         public static void Clamp(ref Color value, ref Color min, ref Color max, out Color result)
         {
-            byte alpha = value.A;
-            alpha = (alpha > max.A) ? max.A : alpha;
-            alpha = (alpha < min.A) ? min.A : alpha;
+            var alpha = value.A;
+            alpha = alpha > max.A ? max.A : alpha;
+            alpha = alpha < min.A ? min.A : alpha;
 
-            byte red = value.R;
-            red = (red > max.R) ? max.R : red;
-            red = (red < min.R) ? min.R : red;
+            var red = value.R;
+            red = red > max.R ? max.R : red;
+            red = red < min.R ? min.R : red;
 
-            byte green = value.G;
-            green = (green > max.G) ? max.G : green;
-            green = (green < min.G) ? min.G : green;
+            var green = value.G;
+            green = green > max.G ? max.G : green;
+            green = green < min.G ? min.G : green;
 
-            byte blue = value.B;
-            blue = (blue > max.B) ? max.B : blue;
-            blue = (blue < min.B) ? min.B : blue;
+            var blue = value.B;
+            blue = blue > max.B ? max.B : blue;
+            blue = blue < min.B ? min.B : blue;
 
             result = new Color(red, green, blue, alpha);
         }
@@ -671,13 +717,13 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the cubic interpolation of the two colors.</param>
         public static void SmoothStep(ref Color start, ref Color end, float amount, out Color result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
+            amount = amount > 1.0f ? 1.0f : amount < 0.0f ? 0.0f : amount;
+            amount = amount * amount * (3.0f - 2.0f * amount);
 
-            result.A = (byte)(start.A + ((end.A - start.A) * amount));
-            result.R = (byte)(start.R + ((end.R - start.R) * amount));
-            result.G = (byte)(start.G + ((end.G - start.G) * amount));
-            result.B = (byte)(start.B + ((end.B - start.B) * amount));
+            result.A = (byte)(start.A + (end.A - start.A) * amount);
+            result.R = (byte)(start.R + (end.R - start.R) * amount);
+            result.G = (byte)(start.G + (end.G - start.G) * amount);
+            result.B = (byte)(start.B + (end.B - start.B) * amount);
         }
 
         /// <summary>
@@ -689,14 +735,14 @@ namespace SeeingSharp
         /// <returns>The cubic interpolation of the two colors.</returns>
         public static Color SmoothStep(Color start, Color end, float amount)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
+            amount = amount > 1.0f ? 1.0f : amount < 0.0f ? 0.0f : amount;
+            amount = amount * amount * (3.0f - 2.0f * amount);
 
             return new Color(
-                (byte)(start.R + ((end.R - start.R) * amount)),
-                (byte)(start.G + ((end.G - start.G) * amount)),
-                (byte)(start.B + ((end.B - start.B) * amount)),
-                (byte)(start.A + ((end.A - start.A) * amount)));
+                (byte)(start.R + (end.R - start.R) * amount),
+                (byte)(start.G + (end.G - start.G) * amount),
+                (byte)(start.B + (end.B - start.B) * amount),
+                (byte)(start.A + (end.A - start.A) * amount));
         }
 
         /// <summary>
@@ -707,10 +753,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
         public static void Max(ref Color left, ref Color right, out Color result)
         {
-            result.A = (left.A > right.A) ? left.A : right.A;
-            result.R = (left.R > right.R) ? left.R : right.R;
-            result.G = (left.G > right.G) ? left.G : right.G;
-            result.B = (left.B > right.B) ? left.B : right.B;
+            result.A = left.A > right.A ? left.A : right.A;
+            result.R = left.R > right.R ? left.R : right.R;
+            result.G = left.G > right.G ? left.G : right.G;
+            result.B = left.B > right.B ? left.B : right.B;
         }
 
         /// <summary>
@@ -734,10 +780,10 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains an new color composed of the smallest components of the source colors.</param>
         public static void Min(ref Color left, ref Color right, out Color result)
         {
-            result.A = (left.A < right.A) ? left.A : right.A;
-            result.R = (left.R < right.R) ? left.R : right.R;
-            result.G = (left.G < right.G) ? left.G : right.G;
-            result.B = (left.B < right.B) ? left.B : right.B;
+            result.A = left.A < right.A ? left.A : right.A;
+            result.R = left.R < right.R ? left.R : right.R;
+            result.G = left.G < right.G ? left.G : right.G;
+            result.B = left.B < right.B ? left.B : right.B;
         }
 
         /// <summary>
@@ -790,7 +836,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustSaturation(ref Color value, float saturation, out Color result)
         {
-            float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
+            var grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
             result.A = value.A;
             result.R = ToByte(grey + saturation * (value.R / 255.0f - grey));
@@ -806,7 +852,7 @@ namespace SeeingSharp
         /// <returns>The adjusted color.</returns>
         public static Color AdjustSaturation(Color value, float saturation)
         {
-            float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
+            var grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
             return new Color(
                 ToByte(grey + saturation * (value.R / 255.0f - grey)),
@@ -1046,7 +1092,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "A:{0} R:{1} G:{2} B:{3}", A.ToString(format, CultureInfo.CurrentCulture),
                 R.ToString(format, CultureInfo.CurrentCulture), G.ToString(format, CultureInfo.CurrentCulture), B.ToString(format, CultureInfo.CurrentCulture));
@@ -1075,7 +1123,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "A:{0} R:{1} G:{2} B:{3}", A.ToString(format, formatProvider),
                 R.ToString(format, formatProvider), G.ToString(format, formatProvider), B.ToString(format, formatProvider));
@@ -1114,12 +1164,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Color)))
+            {
                 return false;
+            }
 
-            return Equals((Color)value);
+            return this.Equals((Color)value);
         }
 
         private static byte ToByte(float component)

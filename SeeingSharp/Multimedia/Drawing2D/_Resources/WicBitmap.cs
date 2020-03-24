@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
-using System;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
@@ -32,6 +33,24 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // Native resource
         private Bitmap _wicBitmap;
+
+        public int Width
+        {
+            get
+            {
+                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                return _wicBitmap.Size.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
+                return _wicBitmap.Size.Height;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmap"/> class.
@@ -89,24 +108,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public void Dispose()
         {
             SeeingSharpUtil.SafeDispose(ref _wicBitmap);
-        }
-
-        public int Width
-        {
-            get
-            {
-                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return _wicBitmap.Size.Width;
-            }
-        }
-
-        public int Height
-        {
-            get
-            {
-                if (_wicBitmap == null) { throw new ObjectDisposedException("WicBitmap"); }
-                return _wicBitmap.Size.Height;
-            }
         }
     }
 }

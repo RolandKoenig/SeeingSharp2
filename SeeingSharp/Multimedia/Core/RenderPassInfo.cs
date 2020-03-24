@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -32,6 +33,18 @@ namespace SeeingSharp.Multimedia.Core
         public static readonly RenderPassInfo PASS_TRANSPARENT_RENDER = new RenderPassInfo("DefaultTransparentRender");
         public static readonly RenderPassInfo PASS_SPRITE_BATCH = new RenderPassInfo("SpriteBatchRender");
         public static readonly RenderPassInfo PASS_2D_OVERLAY = new RenderPassInfo("2D-Overlay", true);
+
+        /// <summary>
+        /// Gets a collection containing all render passes.
+        /// </summary>
+        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses { get; }
+
+        /// <summary>
+        /// Gets the name of this pass.
+        /// </summary>
+        public string Name { get; }
+
+        public bool IsSorted { get; }
 
         /// <summary>
         /// Initializes the <see cref="RenderPassInfo" /> class.
@@ -67,17 +80,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             return this.Name;
         }
-
-        /// <summary>
-        /// Gets a collection containing all render passes.
-        /// </summary>
-        public static ReadOnlyCollection<RenderPassInfo> AllRenderPasses { get; }
-
-        /// <summary>
-        /// Gets the name of this pass.
-        /// </summary>
-        public string Name { get; }
-
-        public bool IsSorted { get; }
     }
 }

@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -30,6 +31,8 @@ namespace SeeingSharp.Multimedia.Core
         private List<IEngineDeviceResource> _deviceResources;
         private List<IEngineDeviceResource> _deviceResourcesPrev;
         private bool _cleanupNeeded;
+
+        internal bool CleanupNeeded => _cleanupNeeded;
 
         internal DeviceResourceManager(EngineDevice device)
         {
@@ -96,7 +99,5 @@ namespace SeeingSharp.Multimedia.Core
 
             _cleanupNeeded = true;
         }
-
-        internal bool CleanupNeeded => _cleanupNeeded;
     }
 }

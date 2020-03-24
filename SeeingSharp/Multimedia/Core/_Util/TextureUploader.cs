@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
 using SeeingSharp.Checking;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -33,7 +34,7 @@ namespace SeeingSharp.Multimedia.Core
         private EngineDevice _device;
         private int _width;
         private int _height;
-        private DXGI.Format _format;
+        private Format _format;
         private bool _isMultisampled;
         private bool _isDisposed;
 
@@ -44,6 +45,9 @@ namespace SeeingSharp.Multimedia.Core
         private D3D11.Texture2D _copyHelperTextureStaging;
         private D3D11.Texture2D _copyHelperTextureStandard;
 
+        /// <inheritdoc />
+        public bool IsDisposed => _isDisposed;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureUploader"/> class.
         /// </summary>
@@ -52,22 +56,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <param name="pixelHeight">Height of textures to be uploaded.</param>
         /// <param name="format">Format of textures to be uploaded.</param>
         /// <param name="isMultisampled">True if this uploader expects multisampled textures.</param>
-        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, DXGI.Format format, bool isMultisampled)
+        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, Format format, bool isMultisampled)
         {
             _device = device;
             _width = pixelWidth;
             _height = pixelHeight;
             _format = format;
             _isMultisampled = isMultisampled; 
-        }
-
-        internal static TextureUploader ConstructUsingPropertiesFromTexture(EngineDevice device, D3D11.Texture2D texture)
-        {
-            var textureDesc = texture.Description;
-            return new TextureUploader(
-                device, 
-                textureDesc.Width, textureDesc.Height, textureDesc.Format,
-                GraphicsHelper.IsMultisampled(textureDesc));
         }
 
         /// <summary>
@@ -127,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Check format compatibility
-            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(_format);
+            var textureFormatByteSize = FormatHelper.SizeOfInBytes(_format);
             if (textureFormatByteSize != sizeof(T))
             {
                 throw new SeeingSharpGraphicsException(
@@ -145,7 +140,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 var rowPitchSource = dataBox.RowPitch;
                 var rowPitchDestination = targetFloatBuffer.Width * sizeof(T);
-                if ((rowPitchSource > 0) && (rowPitchDestination > 0))
+                if (rowPitchSource > 0 && rowPitchDestination > 0)
                 {
                     for (var loopY = 0; loopY < _height; loopY++)
                     {
@@ -171,6 +166,15 @@ namespace SeeingSharp.Multimedia.Core
             SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStaging);
             SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStandard);
             _isDisposed = true;
+        }
+
+        internal static TextureUploader ConstructUsingPropertiesFromTexture(EngineDevice device, D3D11.Texture2D texture)
+        {
+            var textureDesc = texture.Description;
+            return new TextureUploader(
+                device, 
+                textureDesc.Width, textureDesc.Height, textureDesc.Format,
+                GraphicsHelper.IsMultisampled(textureDesc));
         }
 
         /// <summary>
@@ -200,8 +204,5 @@ namespace SeeingSharp.Multimedia.Core
                 _device.DeviceImmediateContextD3D11.CopyResource(textureToUpload, _copyHelperTextureStaging);
             }
         }
-
-        /// <inheritdoc />
-        public bool IsDisposed => _isDisposed;
     }
 }

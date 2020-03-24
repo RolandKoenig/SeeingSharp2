@@ -19,15 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
-using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class SceneObjectInfo
     {
         private List<SceneObjectInfo> _children;
+
+        public SceneObject OriginalObject { get; }
+
+        public SceneObjectInfoType Type { get; }
+
+        public IReadOnlyList<SceneObjectInfo> Children => _children;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectInfo"/> class.
@@ -70,11 +77,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             return $"Type:{this.Type}, #Children:{this.Children.Count}";
         }
-
-        public SceneObject OriginalObject { get; }
-
-        public SceneObjectInfoType Type { get; }
-
-        public IReadOnlyList<SceneObjectInfo> Children => _children;
     }
 }

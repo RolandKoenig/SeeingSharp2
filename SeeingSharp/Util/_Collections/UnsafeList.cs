@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -45,6 +46,63 @@ namespace SeeingSharp.Util
         private T[] _backingArray;
         private int _size;
         private int _version;
+
+        public int Capacity
+        {
+            get => _backingArray.Length;
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                if (value == _backingArray.Length)
+                {
+                    return;
+                }
+
+                if (value > 0)
+                {
+                    var array = new T[value];
+                    if (_size > 0)
+                    {
+                        Array.Copy(_backingArray, 0, array, 0, _size);
+                    }
+                    _backingArray = array;
+                }
+                else
+                {
+                    _backingArray = s_emptyArray;
+                }
+            }
+        }
+
+        public int Count => _size;
+
+        public T this[int index]
+        {
+            get
+            {
+                if ((uint)index >= (uint)_size)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                }
+                return _backingArray[index];
+            }
+            set
+            {
+                if ((uint)index >= (uint)_size)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                }
+                _backingArray[index] = value;
+                _version++;
+            }
+        }
+
+        bool ICollection<T>.IsReadOnly => false;
+
+        public T[] BackingArray => _backingArray;
 
         public UnsafeList()
         {
@@ -252,7 +310,7 @@ namespace SeeingSharp.Util
             }
             if (version != _version)
             {
-                throw new InvalidOperationException($"Enumeration has changed during the foreach loop!");
+                throw new InvalidOperationException("Enumeration has changed during the foreach loop!");
             }
         }
 
@@ -545,63 +603,6 @@ namespace SeeingSharp.Util
             return new Enumerator(this);
         }
 
-        public int Capacity
-        {
-            get => _backingArray.Length;
-            set
-            {
-                if (value < _size)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value));
-                }
-                if (value == _backingArray.Length)
-                {
-                    return;
-                }
-
-                if (value > 0)
-                {
-                    var array = new T[value];
-                    if (_size > 0)
-                    {
-                        Array.Copy(_backingArray, 0, array, 0, _size);
-                    }
-                    _backingArray = array;
-                }
-                else
-                {
-                    _backingArray = s_emptyArray;
-                }
-            }
-        }
-
-        public int Count => _size;
-
-        public T this[int index]
-        {
-            get
-            {
-                if ((uint)index >= (uint)_size)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                }
-                return _backingArray[index];
-            }
-            set
-            {
-                if ((uint)index >= (uint)_size)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                }
-                _backingArray[index] = value;
-                _version++;
-            }
-        }
-
-        bool ICollection<T>.IsReadOnly => false;
-
-        public T[] BackingArray => _backingArray;
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -640,7 +641,7 @@ namespace SeeingSharp.Util
             {
                 if (_version != _mUnsafeList._version)
                 {
-                    throw new InvalidOperationException($"Collection was modified while enumerating");
+                    throw new InvalidOperationException("Collection was modified while enumerating");
 
                 }
                 _index = _mUnsafeList._size + 1;
@@ -652,7 +653,7 @@ namespace SeeingSharp.Util
             {
                 if (_version != _mUnsafeList._version)
                 {
-                    throw new InvalidOperationException($"Collection was modified while enumerating");
+                    throw new InvalidOperationException("Collection was modified while enumerating");
                 }
                 _index = 0;
                 _current = default;

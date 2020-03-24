@@ -19,45 +19,47 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
+using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp
 {
     internal static class SdxMathHelper
     {
-        internal static unsafe SharpDX.Mathematics.Interop.RawColor4 RawFromColor4(Color4 value)
+        internal static unsafe RawColor4 RawFromColor4(Color4 value)
         {
-            return *(SharpDX.Mathematics.Interop.RawColor4*)(&value);
+            return *(RawColor4*)(&value);
         }
 
-        internal static unsafe SharpDX.Mathematics.Interop.RawMatrix3x2 RawFromMatrix3x2(Matrix3x2 value)
+        internal static unsafe RawMatrix3x2 RawFromMatrix3x2(Matrix3x2 value)
         {
-            return *(SharpDX.Mathematics.Interop.RawMatrix3x2*)(&value);
+            return *(RawMatrix3x2*)(&value);
         }
 
-        internal static unsafe Matrix3x2 Matrix3x2FromRaw(SharpDX.Mathematics.Interop.RawMatrix3x2 value)
+        internal static unsafe Matrix3x2 Matrix3x2FromRaw(RawMatrix3x2 value)
         {
             return *(Matrix3x2*)(&value);
         }
 
-        internal static unsafe SharpDX.Mathematics.Interop.RawVector2 RawFromVector2(Vector2 value)
+        internal static unsafe RawVector2 RawFromVector2(Vector2 value)
         {
-            return *(SharpDX.Mathematics.Interop.RawVector2*)(&value);
+            return *(RawVector2*)(&value);
         }
 
-        internal static unsafe Vector2 Vector2FromRaw(SharpDX.Mathematics.Interop.RawVector2 value)
+        internal static unsafe Vector2 Vector2FromRaw(RawVector2 value)
         {
             return *(Vector2*)(&value);
         }
 
-        internal static unsafe SharpDX.Mathematics.Interop.RawRectangle RawFromRectangle(Rectangle value)
+        internal static unsafe RawRectangle RawFromRectangle(Rectangle value)
         {
-            return *(SharpDX.Mathematics.Interop.RawRectangle*)(&value);
+            return *(RawRectangle*)(&value);
         }
 
-        internal static unsafe SharpDX.Mathematics.Interop.RawRectangleF RawFromRectangleF(RectangleF value)
+        internal static unsafe RawRectangleF RawFromRectangleF(RectangleF value)
         {
-            return *(SharpDX.Mathematics.Interop.RawRectangleF*)(&value);
+            return *(RawRectangleF*)(&value);
         }
 
         internal static unsafe SharpDX.Size2 SdxFromSize2(Size2 value)

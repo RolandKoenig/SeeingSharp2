@@ -18,7 +18,7 @@ namespace SeeingSharp
         /// <summary>
         /// A <see cref = "Bool4" /> with all of its components set to false.
         /// </summary>
-        public static readonly Bool4 False = new Bool4();
+        public static readonly Bool4 False;
 
         /// <summary>
         /// The X unit <see cref = "Bool4" /> (true, 0, 0, 0).
@@ -70,14 +70,8 @@ namespace SeeingSharp
         /// </summary>
         public bool X
         {
-            get
-            {
-                return iX != 0;
-            }
-            set
-            {
-                iX = value ? 1 : 0;
-            }
+            get => iX != 0;
+            set => iX = value ? 1 : 0;
         }
 
         /// <summary>
@@ -85,14 +79,8 @@ namespace SeeingSharp
         /// </summary>
         public bool Y
         {
-            get
-            {
-                return iY != 0;
-            }
-            set
-            {
-                iY = value ? 1 : 0;
-            }
+            get => iY != 0;
+            set => iY = value ? 1 : 0;
         }
 
         /// <summary>
@@ -100,14 +88,8 @@ namespace SeeingSharp
         /// </summary>
         public bool Z
         {
-            get
-            {
-                return iZ != 0;
-            }
-            set
-            {
-                iZ = value ? 1 : 0;
-            }
+            get => iZ != 0;
+            set => iZ = value ? 1 : 0;
         }
 
         /// <summary>
@@ -115,14 +97,8 @@ namespace SeeingSharp
         /// </summary>
         public bool W
         {
-            get
-            {
-                return iW != 0;
-            }
-            set
-            {
-                iW = value ? 1 : 0;
-            }
+            get => iW != 0;
+            set => iW = value ? 1 : 0;
         }
 
         /// <summary>
@@ -162,11 +138,15 @@ namespace SeeingSharp
         public Bool4(bool[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException(
                     "values",
                     "There must be four and only four input values for Bool4.");
+            }
 
             iX = values[0] ? 1 : 0;
             iY = values[1] ? 1 : 0;
@@ -188,13 +168,13 @@ namespace SeeingSharp
                 switch (index)
                 {
                     case 0:
-                        return X;
+                        return this.X;
                     case 1:
-                        return Y;
+                        return this.Y;
                     case 2:
-                        return Z;
+                        return this.Z;
                     case 3:
-                        return W;
+                        return this.W;
                 }
 
                 throw new ArgumentOutOfRangeException("index", "Indices for Bool4 run from 0 to 3, inclusive.");
@@ -205,16 +185,16 @@ namespace SeeingSharp
                 switch (index)
                 {
                     case 0:
-                        X = value;
+                        this.X = value;
                         break;
                     case 1:
-                        Y = value;
+                        this.Y = value;
                         break;
                     case 2:
-                        Z = value;
+                        this.Z = value;
                         break;
                     case 3:
-                        W = value;
+                        this.W = value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("index", "Indices for Bool4 run from 0 to 3, inclusive.");
@@ -228,7 +208,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public bool[] ToArray()
         {
-            return new bool[] { X, Y, Z, W };
+            return new[] {this.X, this.Y, this.Z, this.W };
         }
 
         /// <summary>
@@ -261,7 +241,7 @@ namespace SeeingSharp
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}", X, Y, Z, W);
+            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}", this.X, this.Y, this.Z, this.W);
         }
 
         /// <summary>
@@ -274,7 +254,7 @@ namespace SeeingSharp
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, format, X, Y, Z, W);
+            return string.Format(formatProvider, format, this.X, this.Y, this.Z, this.W);
         }
 
         /// <summary>
@@ -299,7 +279,7 @@ namespace SeeingSharp
         /// </returns>
         public bool Equals(Bool4 other)
         {
-            return other.X == X && other.Y == Y && other.Z == Z && other.W == W;
+            return other.X == this.X && other.Y == this.Y && other.Z == this.Z && other.W == this.W;
         }
 
         /// <summary>
@@ -312,12 +292,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Bool4)))
+            {
                 return false;
+            }
 
-            return Equals((Bool4)value);
+            return this.Equals((Bool4)value);
         }
 
         /// <summary>

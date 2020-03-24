@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
@@ -31,24 +32,6 @@ namespace SeeingSharp.Multimedia.Core
         private FactoryHandlerD2D _handlerDirect2D;
         private FactoryHandlerDWrite _handlerDirectWrite;
         private FactoryHandlerWIC _handlerWIC;
-
-        internal EngineFactory(GraphicsCoreConfiguration coreConfiguration)
-        {
-            this.DXGI = new FactoryHandlerDXGI(coreConfiguration);
-            this.WIC = new FactoryHandlerWIC(coreConfiguration);
-            this.Direct2D = new FactoryHandlerD2D(coreConfiguration);
-            this.DirectWrite = new FactoryHandlerDWrite(coreConfiguration);
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            this.DXGI = SeeingSharpUtil.DisposeObject(this.DXGI);
-            this.Direct2D = SeeingSharpUtil.DisposeObject(this.Direct2D);
-            this.DirectWrite = SeeingSharpUtil.DisposeObject(this.DirectWrite);
-            this.WIC = SeeingSharpUtil.DisposeObject(this.WIC);
-            this.IsDisposed = true;
-        }
 
         public bool IsDisposed { get; private set; }
 
@@ -99,6 +82,24 @@ namespace SeeingSharp.Multimedia.Core
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
                 return this.Direct2D.Factory;
             }
+        }
+
+        internal EngineFactory(GraphicsCoreConfiguration coreConfiguration)
+        {
+            this.DXGI = new FactoryHandlerDXGI(coreConfiguration);
+            this.WIC = new FactoryHandlerWIC(coreConfiguration);
+            this.Direct2D = new FactoryHandlerD2D(coreConfiguration);
+            this.DirectWrite = new FactoryHandlerDWrite(coreConfiguration);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.DXGI = SeeingSharpUtil.DisposeObject(this.DXGI);
+            this.Direct2D = SeeingSharpUtil.DisposeObject(this.Direct2D);
+            this.DirectWrite = SeeingSharpUtil.DisposeObject(this.DirectWrite);
+            this.WIC = SeeingSharpUtil.DisposeObject(this.WIC);
+            this.IsDisposed = true;
         }
     }
 }

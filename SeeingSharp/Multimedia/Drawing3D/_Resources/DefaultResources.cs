@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -50,6 +51,35 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Lazy<D3D11.SamplerState> _samplerStateLow;
         private Lazy<D3D11.SamplerState> _samplerStateMedium;
         private Lazy<D3D11.SamplerState> _samplerStateHigh;
+
+        /// <summary>
+        /// Are resources loaded?
+        /// </summary>
+        public bool ResourcesLoaded => _defaultBlendState != null;
+
+        public override bool IsLoaded => _defaultBlendState != null;
+
+        internal D3D11.BlendState DefaultBlendState => _defaultBlendState?.Value;
+
+        internal D3D11.BlendState AlphaBlendingBlendState => _alphaBlendingBlendState?.Value;
+
+        internal D3D11.DepthStencilState DepthStencilStateDefault => _depthStencilStateDefault?.Value;
+
+        internal D3D11.DepthStencilState DepthStencilStateDisableZWrites => _depthStencilStateDisableZWrites?.Value;
+
+        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth => _depthStencilStateAlwaysPass?.Value;
+
+        internal D3D11.DepthStencilState DepthStencilStateInvertedZTest => _depthStencilStateInvertedZTest?.Value;
+
+        internal D3D11.RasterizerState RasterStateDefault => _rasterStateDefault?.Value;
+
+        internal D3D11.RasterizerState RasterStateBiased => _rasterStateBiased?.Value;
+
+        internal D3D11.RasterizerState RasterStateWireframe => _rasterStateWireframe?.Value;
+
+        internal D3D11.RasterizerState RasterStateLines => _rasterStateLines?.Value;
+
+        internal D3D11.SamplerState SamplerStateDefault => _samplerStateMedium?.Value;
 
         /// <summary>
         /// Loads the resource.
@@ -204,34 +234,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return _samplerStateLow.Value;
         }
-
-        /// <summary>
-        /// Are resources loaded?
-        /// </summary>
-        public bool ResourcesLoaded => _defaultBlendState != null;
-
-        public override bool IsLoaded => _defaultBlendState != null;
-
-        internal D3D11.BlendState DefaultBlendState => _defaultBlendState?.Value;
-
-        internal D3D11.BlendState AlphaBlendingBlendState => _alphaBlendingBlendState?.Value;
-
-        internal D3D11.DepthStencilState DepthStencilStateDefault => _depthStencilStateDefault?.Value;
-
-        internal D3D11.DepthStencilState DepthStencilStateDisableZWrites => _depthStencilStateDisableZWrites?.Value;
-
-        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth => _depthStencilStateAlwaysPass?.Value;
-
-        internal D3D11.DepthStencilState DepthStencilStateInvertedZTest => _depthStencilStateInvertedZTest?.Value;
-
-        internal D3D11.RasterizerState RasterStateDefault => _rasterStateDefault?.Value;
-
-        internal D3D11.RasterizerState RasterStateBiased => _rasterStateBiased?.Value;
-
-        internal D3D11.RasterizerState RasterStateWireframe => _rasterStateWireframe?.Value;
-
-        internal D3D11.RasterizerState RasterStateLines => _rasterStateLines?.Value;
-
-        internal D3D11.SamplerState SamplerStateDefault => _samplerStateMedium?.Value;
     }
 }

@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 using D3D = SharpDX.Direct3D;
 
 namespace SeeingSharp.Multimedia.Core
@@ -70,6 +71,16 @@ namespace SeeingSharp.Multimedia.Core
         private PassSubscriptionProperties _objectsPassSpriteBatchRender;
         private PassSubscriptionProperties _objectsPass2DOverlay;
         private bool _anythingUnsubscribed;
+
+        /// <summary>
+        /// Gets the corresponding ViewInformation object.
+        /// </summary>
+        public ViewInformation ViewInformation { get; }
+
+        /// <summary>
+        /// Gets or sets the index of this view subset within the scene.
+        /// </summary>
+        public int ViewIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewRelatedSceneLayerSubset" /> class.
@@ -497,7 +508,7 @@ namespace SeeingSharp.Multimedia.Core
                 LightPower = viewConfiguration.LightPower,
                 StrongLightFactor = viewConfiguration.StrongLightFactor,
                 ViewProj = Matrix4x4.Transpose(this.ViewInformation.Camera.ViewProjection),
-                View = Matrix4x4.Transpose(this.ViewInformation.Camera.View),
+                View = Matrix4x4.Transpose(this.ViewInformation.Camera.View)
             };
 
             _renderParameters.UpdateValues(renderState, cbPerView);
@@ -878,16 +889,6 @@ namespace SeeingSharp.Multimedia.Core
                 _invalidObjectsToDeregister.Enqueue(actInvalidObject);
             }
         }
-
-        /// <summary>
-        /// Gets the corresponding ViewInformation object.
-        /// </summary>
-        public ViewInformation ViewInformation { get; }
-
-        /// <summary>
-        /// Gets or sets the index of this view subset within the scene.
-        /// </summary>
-        public int ViewIndex;
 
         //*********************************************************************
         //*********************************************************************

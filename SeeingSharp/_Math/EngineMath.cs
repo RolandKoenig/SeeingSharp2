@@ -52,16 +52,15 @@ namespace SeeingSharp
         {
             // Implemented with sample code from http://www.d3dcoder.net/d3d11.htm, Source Code Set II
             var theta = 0f;
-
             if (x >= 0f)
             {
                 // Quadrant I or IV
-                if (EngineMath.EqualsWithTolerance(x, 0f))
+                if (EqualsWithTolerance(x, 0f))
                 {
                     // If x = 0, then atan(y/x) = +pi/2 if y > 0
                     //                atan(y/x) = -pi/2 if y < 0
-                    if (y > 0f) { theta = EngineMath.PI / 2f; }
-                    else { theta = EngineMath.PI / -2f; }
+                    if (y > 0f) { theta = PI / 2f; }
+                    else { theta = PI / -2f; }
                 }
                 else
                 {
@@ -70,13 +69,13 @@ namespace SeeingSharp
 
                 if (theta < 0f)
                 {
-                    theta += 2f * EngineMath.PI;
+                    theta += 2f * PI;
                 }
             }
             else
             {
                 // Quadrant II or III
-                theta = (float) (Math.Atan(y / x) + EngineMath.PI);
+                theta = (float) (Math.Atan(y / x) + PI);
             }
 
             return theta;
@@ -219,7 +218,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        public static bool EqualsWithTolerance(double left, double right, double tolerance = EngineMath.TOLERANCE_DOUBLE_POSITIVE)
+        public static bool EqualsWithTolerance(double left, double right, double tolerance = TOLERANCE_DOUBLE_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }
@@ -230,7 +229,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        public static bool EqualsWithTolerance(float left, float right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
+        public static bool EqualsWithTolerance(float left, float right, float tolerance = TOLERANCE_FLOAT_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }
@@ -241,7 +240,7 @@ namespace SeeingSharp
         /// <param name="left">One of the value to be compared.</param>
         /// <param name="right">One of the value to be compared.</param>
         /// <param name="tolerance">The tolerance for the comparision.</param>
-        public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = EngineMath.TOLERANCE_DECIMAL_POSITIVE)
+        public static bool EqualsWithTolerance(decimal left, decimal right, decimal tolerance = TOLERANCE_DECIMAL_POSITIVE)
         {
             return Math.Abs(left - right) < tolerance;
         }

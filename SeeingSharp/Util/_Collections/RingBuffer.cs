@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
@@ -36,6 +37,28 @@ namespace SeeingSharp.Util
         private T[] _buffer;
         private int _itemStart;
         private int _itemLength;
+
+        /// <summary>
+        /// Gets the object at the specified index.
+        /// </summary>
+        public T this[int index]
+        {
+            get
+            {
+                ref var result = ref this.GetByRef(index);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the total count of items.
+        /// </summary>
+        public int Count => _itemLength;
+
+        /// <summary>
+        /// Gets the maximum capacity of the buffer.
+        /// </summary>
+        public int MaxCapacity => _buffer.Length;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RingBuffer{T}"/> class.
@@ -82,14 +105,11 @@ namespace SeeingSharp.Util
                 _itemLength++;
                 return ref _buffer[(_itemStart + (_itemLength - 1)) % _buffer.Length];
             }
-            else
-            {
-                _itemStart = (_itemStart + 1) % _buffer.Length;
+            _itemStart = (_itemStart + 1) % _buffer.Length;
 
-                var nextIndex = _itemStart - 1;
-                if (nextIndex < 0) { nextIndex = _buffer.Length - 1; }
-                return ref _buffer[nextIndex];
-            }
+            var nextIndex = _itemStart - 1;
+            if (nextIndex < 0) { nextIndex = _buffer.Length - 1; }
+            return ref _buffer[nextIndex];
         }
 
         /// <summary>
@@ -130,27 +150,5 @@ namespace SeeingSharp.Util
             _itemLength = 0;
             _itemStart = 0;
         }
-
-        /// <summary>
-        /// Gets the object at the specified index.
-        /// </summary>
-        public T this[int index]
-        {
-            get
-            {
-                ref var result = ref this.GetByRef(index);
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Gets the total count of items.
-        /// </summary>
-        public int Count => _itemLength;
-
-        /// <summary>
-        /// Gets the maximum capacity of the buffer.
-        /// </summary>
-        public int MaxCapacity => _buffer.Length;
     }
 }

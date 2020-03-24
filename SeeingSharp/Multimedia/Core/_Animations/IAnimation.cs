@@ -19,12 +19,33 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public interface IAnimation
     {
+        /// <summary>
+        /// Is the animation finished?
+        /// </summary>
+        bool Finished { get; }
+
+        /// <summary>
+        /// Is the animation canceled?
+        /// </summary>
+        bool Canceled { get; set; }
+
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// </summary>
+        bool IsBlockingAnimation { get; }
+
+        /// <summary>
+        /// Should this animation ignore pause state?
+        /// </summary>
+        bool IgnorePauseState { get; set; }
+
         /// <summary>
         /// Checks if the given object is animated by this animation.
         /// </summary>
@@ -51,25 +72,5 @@ namespace SeeingSharp.Multimedia.Core
         /// Resets this animation.
         /// </summary>
         void Reset();
-
-        /// <summary>
-        /// Is the animation finished?
-        /// </summary>
-        bool Finished { get; }
-
-        /// <summary>
-        /// Is the animation canceled?
-        /// </summary>
-        bool Canceled { get; set; }
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// </summary>
-        bool IsBlockingAnimation { get; }
-
-        /// <summary>
-        /// Should this animation ignore pause state?
-        /// </summary>
-        bool IgnorePauseState { get; set; }
     }
 }

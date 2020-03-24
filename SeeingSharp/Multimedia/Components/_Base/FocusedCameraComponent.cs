@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Input;
-using System;
-using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Components
 {
@@ -39,6 +40,46 @@ namespace SeeingSharp.Multimedia.Components
 
         // Configuration
         private Vector2 _hvRotation;
+
+        public float CameraDistanceInitial
+        {
+            get;
+            set;
+        }
+
+        public float CameraDistanceMin
+        {
+            get;
+            set;
+        }
+
+        public float CameraDistanceMax
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Initial horizontal rotation of the camera (degrees).
+        /// </summary>
+        public float CameraHRotationInitial
+        {
+            get => _hvRotation.X;
+            set => _hvRotation.X = value;
+        }
+
+        /// <summary>
+        /// Initial vertical rotation of the camera (degrees).
+        /// </summary>
+        public float CameraVRotationInitial
+        {
+            get => _hvRotation.Y;
+            set => _hvRotation.Y = value;
+        }
+
+        public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
+
+        public override bool IsViewSpecific => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
@@ -137,7 +178,7 @@ namespace SeeingSharp.Multimedia.Components
 
             if(actCamera is OrthographicCamera3D orthoCamera)
             {
-                orthoCamera.ZoomFactor = ORTHO_ZOO_FACTOR_START - (componentContext.CameraDistance * ORTHO_ZOO_FACTOR_PER_CAMERA_DISTANCE);
+                orthoCamera.ZoomFactor = ORTHO_ZOO_FACTOR_START - componentContext.CameraDistance * ORTHO_ZOO_FACTOR_PER_CAMERA_DISTANCE;
             }
         }
 
@@ -227,7 +268,7 @@ namespace SeeingSharp.Multimedia.Components
                     }
                     else
                     {
-                        componentContext.CameraDistance -= (moving.Y / 100f);
+                        componentContext.CameraDistance -= moving.Y / 100f;
                     }
                 }
                 else if (mouseState.IsButtonDown(MouseButton.Left) ||
@@ -244,7 +285,7 @@ namespace SeeingSharp.Multimedia.Components
             {
                 if (camera.IsOrthographic)
                 {
-                    componentContext.CameraDistance -= (mouseState.WheelDelta / 500f);
+                    componentContext.CameraDistance -= mouseState.WheelDelta / 500f;
                 }
                 else
                 {
@@ -257,46 +298,6 @@ namespace SeeingSharp.Multimedia.Components
                 }
             }
         }
-
-        public float CameraDistanceInitial
-        {
-            get;
-            set;
-        }
-
-        public float CameraDistanceMin
-        {
-            get;
-            set;
-        }
-
-        public float CameraDistanceMax
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Initial horizontal rotation of the camera (degrees).
-        /// </summary>
-        public float CameraHRotationInitial
-        {
-            get => _hvRotation.X;
-            set => _hvRotation.X = value;
-        }
-
-        /// <summary>
-        /// Initial vertical rotation of the camera (degrees).
-        /// </summary>
-        public float CameraVRotationInitial
-        {
-            get => _hvRotation.Y;
-            set => _hvRotation.Y = value;
-        }
-
-        public override string ComponentGroup => SeeingSharpConstants.COMPONENT_GROUP_CAMERA;
-
-        public override bool IsViewSpecific => true;
 
         //*********************************************************************
         //*********************************************************************

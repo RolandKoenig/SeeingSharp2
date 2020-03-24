@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,6 +33,50 @@ namespace SeeingSharp.Util
         private int _listCount;
         private object _lockObject;
         private Dictionary<T, int> _objectIndices;
+
+        /// <summary>
+        /// Gets the element at the given index.
+        /// </summary>
+        /// <param name="index">The index of the element to get.</param>
+        public T this[int index]
+        {
+            get
+            {
+                var objectList = _list;
+                if (index >= _listCount) { return null; }
+                return objectList[index];
+            }
+        }
+
+        /// <summary>
+        /// Gets the first item or null if there is none.
+        /// </summary>
+        public T FirstOrDefaultItem
+        {
+            get
+            {
+                var objectList = _list;
+                for (var loop = 0; loop < objectList.Count; loop++)
+                {
+                    if (objectList[loop] != null) { return objectList[loop]; }
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the total count of items within this collection.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _objectIndices.Count;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexBasedDynamicCollection{T}" /> class.
@@ -237,50 +282,6 @@ namespace SeeingSharp.Util
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Gets the element at the given index.
-        /// </summary>
-        /// <param name="index">The index of the element to get.</param>
-        public T this[int index]
-        {
-            get
-            {
-                var objectList = _list;
-                if (index >= _listCount) { return null; }
-                return objectList[index];
-            }
-        }
-
-        /// <summary>
-        /// Gets the first item or null if there is none.
-        /// </summary>
-        public T FirstOrDefaultItem
-        {
-            get
-            {
-                var objectList = _list;
-                for (var loop = 0; loop < objectList.Count; loop++)
-                {
-                    if (objectList[loop] != null) { return objectList[loop]; }
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the total count of items within this collection.
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                lock (_lockObject)
-                {
-                    return _objectIndices.Count;
-                }
-            }
         }
     }
 }

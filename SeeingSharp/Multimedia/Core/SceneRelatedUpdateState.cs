@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Input;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -38,33 +39,6 @@ namespace SeeingSharp.Multimedia.Core
         // parameters for single update step
         private bool _isPaused;
         private UpdateState _updateState;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
-        /// </summary>
-        internal SceneRelatedUpdateState()
-        {
-            this.World = new Matrix4Stack(Matrix4x4.Identity);
-        }
-
-        /// <summary>
-        /// Called just before the update pass of a scene object starts.
-        /// </summary>
-        /// <param name="targetScene">The scene for which to prepare this state object</param>
-        /// <param name="updateState">The update state.</param>
-        internal void OnStartSceneUpdate(Scene targetScene, UpdateState updateState)
-        {
-            targetScene.EnsureNotNull(nameof(targetScene));
-            updateState.EnsureNotNull(nameof(updateState));
-
-            _isPaused = targetScene.IsPaused;
-            this.IgnorePauseState = updateState.IgnorePauseState;
-
-            this.World.ResetStackToIdentity();
-
-            _updateState = updateState;
-            this.SceneLayer = null;
-        }
 
         /// <summary>
         /// Gets current update time.
@@ -115,5 +89,32 @@ namespace SeeingSharp.Multimedia.Core
         public IEnumerable<InputFrame> InputFrames => _updateState.InputFrames;
 
         internal bool ForceTransformUpdatesOnChildren;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneRelatedUpdateState"/> class.
+        /// </summary>
+        internal SceneRelatedUpdateState()
+        {
+            this.World = new Matrix4Stack(Matrix4x4.Identity);
+        }
+
+        /// <summary>
+        /// Called just before the update pass of a scene object starts.
+        /// </summary>
+        /// <param name="targetScene">The scene for which to prepare this state object</param>
+        /// <param name="updateState">The update state.</param>
+        internal void OnStartSceneUpdate(Scene targetScene, UpdateState updateState)
+        {
+            targetScene.EnsureNotNull(nameof(targetScene));
+            updateState.EnsureNotNull(nameof(updateState));
+
+            _isPaused = targetScene.IsPaused;
+            this.IgnorePauseState = updateState.IgnorePauseState;
+
+            this.World.ResetStackToIdentity();
+
+            _updateState = updateState;
+            this.SceneLayer = null;
+        }
     }
 }

@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
-using SharpDX.DXGI;
+
 using System;
 using System.Collections.Generic;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -49,6 +50,60 @@ namespace SeeingSharp.Multimedia.Core
         // Parameters of created device
         private D3D11.DeviceCreationFlags _creationFlags;
         private D3D.FeatureLevel _featureLevel;
+
+        /// <summary>
+        /// Is the hardware Direct3D 11 or upper?
+        /// </summary>
+        public bool IsDirect3D11OrUpperHardware =>
+            _featureLevel == D3D.FeatureLevel.Level_11_0 ||
+            _featureLevel == D3D.FeatureLevel.Level_11_1;
+
+        /// <summary>
+        /// Is device successfully initialized?
+        /// </summary>
+        public bool IsInitialized => _device1 != null;
+
+        /// <summary>
+        /// Gets a short description containing info about the created device.
+        /// </summary>
+        public string DeviceModeDescription
+        {
+            get
+            {
+                if (_device1 == null) { return "None"; }
+
+                return _dxgiAdapter + " - " + _featureLevel;
+            }
+        }
+
+        /// <summary>
+        /// Gets the driver level.
+        /// </summary>
+        public HardwareDriverLevel DriverLevel { get; }
+
+        /// <summary>
+        /// Gets current feature level.
+        /// </summary>
+        internal D3D.FeatureLevel FeatureLevel => _featureLevel;
+
+        /// <summary>
+        /// Gets the Direct3D 11 device.
+        /// </summary>
+        internal D3D11.Device1 Device1 => _device1;
+
+        internal D3D11.Device3 Device3 => _device3;
+
+        internal D3D11.DeviceCreationFlags CreationFlags => _creationFlags;
+
+        /// <summary>
+        /// Gets the immediate context.
+        /// </summary>
+        internal D3D11.DeviceContext ImmediateContext => _immediateContext;
+
+        /// <summary>
+        /// Gets the immediate context.
+        /// </summary>
+        internal D3D11.DeviceContext3 ImmediateContext3 => _immediateContext3;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
@@ -128,57 +183,5 @@ namespace SeeingSharp.Multimedia.Core
             _creationFlags = D3D11.DeviceCreationFlags.None;
             _featureLevel = D3D.FeatureLevel.Level_11_0;
         }
-
-        /// <summary>
-        /// Is the hardware Direct3D 11 or upper?
-        /// </summary>
-        public bool IsDirect3D11OrUpperHardware =>
-            _featureLevel == D3D.FeatureLevel.Level_11_0 ||
-            _featureLevel == D3D.FeatureLevel.Level_11_1;
-
-        /// <summary>
-        /// Is device successfully initialized?
-        /// </summary>
-        public bool IsInitialized => _device1 != null;
-
-        /// <summary>
-        /// Gets a short description containing info about the created device.
-        /// </summary>
-        public string DeviceModeDescription
-        {
-            get
-            {
-                if (_device1 == null) { return "None"; }
-
-                return _dxgiAdapter + " - " + _featureLevel;
-            }
-        }
-
-        /// <summary>
-        /// Gets the driver level.
-        /// </summary>
-        public HardwareDriverLevel DriverLevel { get; }
-
-        /// <summary>
-        /// Gets current feature level.
-        /// </summary>
-        internal D3D.FeatureLevel FeatureLevel => _featureLevel;
-
-        /// <summary>
-        /// Gets the Direct3D 11 device.
-        /// </summary>
-        internal D3D11.Device1 Device1 => _device1;
-
-        internal D3D11.Device3 Device3 => _device3;
-
-        /// <summary>
-        /// Gets the immediate context.
-        /// </summary>
-        internal D3D11.DeviceContext ImmediateContext => _immediateContext;
-
-        /// <summary>
-        /// Gets the immediate context.
-        /// </summary>
-        internal D3D11.DeviceContext3 ImmediateContext3 => _immediateContext3;
     }
 }

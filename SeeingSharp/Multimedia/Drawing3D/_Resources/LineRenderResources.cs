@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -38,6 +39,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private VertexShaderResource _vertexShader;
         private PixelShaderResource _pixelShader;
         private D3D11.InputLayout _inputLayout;
+
+        /// <summary>
+        /// Is the resource loaded correctly?
+        /// </summary>
+        public override bool IsLoaded => _pixelShader != null;
+
+        /// <summary>
+        /// Gets the vertex shader resource.
+        /// </summary>
+        public VertexShaderResource VertexShader => _vertexShader;
+
+        /// <summary>
+        /// Gets the pixel shader resource.
+        /// </summary>
+        public PixelShaderResource PixelShader => _pixelShader;
+
+        /// <summary>
+        /// Gets the input layout for the vertex shader.
+        /// </summary>
+        internal D3D11.InputLayout InputLayout => _inputLayout;
 
         /// <summary>
         /// Loads the resource.
@@ -67,25 +88,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _vertexShader = null;
             _pixelShader = null;
         }
-
-        /// <summary>
-        /// Is the resource loaded correctly?
-        /// </summary>
-        public override bool IsLoaded => _pixelShader != null;
-
-        /// <summary>
-        /// Gets the vertex shader resource.
-        /// </summary>
-        public VertexShaderResource VertexShader => _vertexShader;
-
-        /// <summary>
-        /// Gets the pixel shader resource.
-        /// </summary>
-        public PixelShaderResource PixelShader => _pixelShader;
-
-        /// <summary>
-        /// Gets the input layout for the vertex shader.
-        /// </summary>
-        internal D3D11.InputLayout InputLayout => _inputLayout;
     }
 }

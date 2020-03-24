@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -47,6 +48,50 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private bool _isFinished;
         private bool _isValid;
         private Exception _finishException;
+
+        public ResourceLink Source { get; }
+
+        /// <summary>
+        /// Gets a collection containing all imported objects.
+        /// </summary>
+        public IList<SceneObject> Objects => _objects;
+
+        /// <summary>
+        /// Gets the hierarchy information of the imported objects.
+        /// </summary>
+        public IList<ParentChildRelationship> ParentChildRelationships => _parentChildRelationships;
+
+        /// <summary>
+        /// Gets a collection containing all imported resources.
+        /// </summary>
+        public IList<ImportedResourceInfo> ImportedResources => _importedResources;
+
+        /// <summary>
+        /// Is loading finished?
+        /// </summary>
+        public bool IsFinished => _isFinished;
+
+        /// <summary>
+        /// Does this object contain a valid model?
+        /// </summary>
+        public bool IsValid => _isValid;
+
+        /// <summary>
+        /// An exception occurred during loading. This property may be set, when loading is finished and IsValid=false.
+        /// </summary>
+        public Exception FinishException => _finishException;
+
+        /// <summary>
+        /// The root object which gets generated when loading is finished successfully.
+        /// All objects loaded are children of this root object.
+        /// </summary>
+        public ScenePivotObject RootObject { get; private set; }
+
+        /// <summary>
+        /// The bounding volume within the space of the root object.
+        /// It is set when loading is finished successfully.
+        /// </summary>
+        public BoundingBox BoundingBox { get; private set; } = BoundingBox.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedModelContainer" /> class.
@@ -135,8 +180,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 if (_importOptions.FitToCube)
                 {
                     var scaleFactor = Math.Min(
-                        (1f / boundingBox.Width),
-                        Math.Min((1f / boundingBox.Height), (1f / boundingBox.Depth)));
+                        1f / boundingBox.Width,
+                        Math.Min(1f / boundingBox.Height, 1f / boundingBox.Depth));
                     rootObject.Scaling *= scaleFactor;
                     rootObject.Position = new Vector3(
                         (0f - (boundingBox.Minimum.X + (boundingBox.Maximum.X - boundingBox.Minimum.X) / 2f)) *
@@ -172,6 +217,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Generates a key for a resource contained in an imported object graph.
+        /// </summary>
+        /// <param name="resourceClass">The type of the resource (defined by importer).</param>
+        /// <param name="resourceId">The id of the resource (defined by importer)</param>
+        public NamedOrGenericKey GetResourceKey(string resourceClass, string resourceId)
+        {
+            return new NamedOrGenericKey(
+                "Imported." + _importId + "." + resourceClass + "." + resourceId);
+        }
+
+        /// <summary>
         /// Search for root objects (objects with no parents).
         /// </summary>
         private IEnumerable<SceneObject> FindRootObjects()
@@ -194,60 +250,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
-
-        /// <summary>
-        /// Generates a key for a resource contained in an imported object graph.
-        /// </summary>
-        /// <param name="resourceClass">The type of the resource (defined by importer).</param>
-        /// <param name="resourceId">The id of the resource (defined by importer)</param>
-        public NamedOrGenericKey GetResourceKey(string resourceClass, string resourceId)
-        {
-            return new NamedOrGenericKey(
-                "Imported." + _importId + "." + resourceClass + "." + resourceId);
-        }
-
-        public ResourceLink Source { get; }
-
-        /// <summary>
-        /// Gets a collection containing all imported objects.
-        /// </summary>
-        public IList<SceneObject> Objects => _objects;
-
-        /// <summary>
-        /// Gets the hierarchy information of the imported objects.
-        /// </summary>
-        public IList<ParentChildRelationship> ParentChildRelationships => _parentChildRelationships;
-
-        /// <summary>
-        /// Gets a collection containing all imported resources.
-        /// </summary>
-        public IList<ImportedResourceInfo> ImportedResources => _importedResources;
-
-        /// <summary>
-        /// Is loading finished?
-        /// </summary>
-        public bool IsFinished => _isFinished;
-
-        /// <summary>
-        /// Does this object contain a valid model?
-        /// </summary>
-        public bool IsValid => _isValid;
-
-        /// <summary>
-        /// An exception occurred during loading. This property may be set, when loading is finished and IsValid=false.
-        /// </summary>
-        public Exception FinishException => _finishException;
-
-        /// <summary>
-        /// The root object which gets generated when loading is finished successfully.
-        /// All objects loaded are children of this root object.
-        /// </summary>
-        public ScenePivotObject RootObject { get; private set; }
-
-        /// <summary>
-        /// The bounding volume within the space of the root object.
-        /// It is set when loading is finished successfully.
-        /// </summary>
-        public BoundingBox BoundingBox { get; private set; } = BoundingBox.Empty;
     }
 }

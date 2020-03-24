@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -37,6 +38,65 @@ namespace SeeingSharp.Multimedia.Core
         private bool _finished;
         private bool _started;
         private bool _canceled;
+
+        /// <summary>
+        /// Has this animation finished executing?
+        /// </summary>
+        public bool Finished => _finished;
+
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// If true, all following animation have to wait for finish-event.
+        /// </summary>
+        public virtual bool IsBlockingAnimation => false;
+
+        /// <summary>
+        /// Is this animation canceled?
+        /// </summary>
+        public bool Canceled
+        {
+            get => _canceled;
+            set
+            {
+                if (_canceled != value)
+                {
+                    _canceled = value;
+                    if (_canceled)
+                    {
+                        this.OnCanceled();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Should this animation ignore pause state?
+        /// </summary>
+        public bool IgnorePauseState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the animation type.
+        /// </summary>
+        public AnimationType AnimationType => _animationType;
+
+        /// <summary>
+        /// Complete duration when in FixedTime mode.
+        /// </summary>
+        public TimeSpan FixedTime => _fixedTime;
+
+        /// <summary>
+        /// Current time in FixedTime mode.
+        /// </summary>
+        public TimeSpan CurrentTime => _currentTime;
+
+        /// <summary>
+        /// Gets the target object.
+        /// </summary>
+        public object TargetObject { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationBase"/> class.
@@ -292,64 +352,5 @@ namespace SeeingSharp.Multimedia.Core
                 _started = true;
             }
         }
-
-        /// <summary>
-        /// Has this animation finished executing?
-        /// </summary>
-        public bool Finished => _finished;
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// If true, all following animation have to wait for finish-event.
-        /// </summary>
-        public virtual bool IsBlockingAnimation => false;
-
-        /// <summary>
-        /// Is this animation canceled?
-        /// </summary>
-        public bool Canceled
-        {
-            get => _canceled;
-            set
-            {
-                if (_canceled != value)
-                {
-                    _canceled = value;
-                    if (_canceled)
-                    {
-                        this.OnCanceled();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Should this animation ignore pause state?
-        /// </summary>
-        public bool IgnorePauseState
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the animation type.
-        /// </summary>
-        public AnimationType AnimationType => _animationType;
-
-        /// <summary>
-        /// Complete duration when in FixedTime mode.
-        /// </summary>
-        public TimeSpan FixedTime => _fixedTime;
-
-        /// <summary>
-        /// Current time in FixedTime mode.
-        /// </summary>
-        public TimeSpan CurrentTime => _currentTime;
-
-        /// <summary>
-        /// Gets the target object.
-        /// </summary>
-        public object TargetObject { get; }
     }
 }

@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.WIC;
-using System;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -52,6 +53,30 @@ namespace SeeingSharp.Multimedia.Drawing2D
         private int _pixelHeight;
         private double _dpiX;
         private double _dpyY;
+
+        /// <summary>
+        /// Gets the width of the bitmap in pixel´.
+        /// </summary>
+        public override int PixelWidth => _pixelWidth;
+
+        /// <summary>
+        /// Gets the height of the bitmap in pixel.
+        /// </summary>
+        public override int PixelHeight => _pixelHeight;
+
+        public override double DpiX => _dpiX;
+
+        public override double DpiY => _dpyY;
+
+        public override int FrameCountX => _framesX;
+
+        public override int FrameCountY => _framesY;
+
+        public override int TotalFrameCount => _totalFrameCount;
+
+        public override int SingleFramePixelWidth => _framePixelWidth;
+
+        public override int SingleFramePixelHeight => _framePixelHeight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardBitmapResource"/> class.
@@ -150,29 +175,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
                 _loadedBitmaps[engineDevice.DeviceIndex] = null;
             }
         }
-
-        /// <summary>
-        /// Gets the width of the bitmap in pixel´.
-        /// </summary>
-        public override int PixelWidth => _pixelWidth;
-
-        /// <summary>
-        /// Gets the height of the bitmap in pixel.
-        /// </summary>
-        public override int PixelHeight => _pixelHeight;
-
-        public override double DpiX => _dpiX;
-
-        public override double DpiY => _dpyY;
-
-        public override int FrameCountX => _framesX;
-
-        public override int FrameCountY => _framesY;
-
-        public override int TotalFrameCount => _totalFrameCount;
-
-        public override int SingleFramePixelWidth => _framePixelWidth;
-
-        public override int SingleFramePixelHeight => _framePixelHeight;
     }
 }

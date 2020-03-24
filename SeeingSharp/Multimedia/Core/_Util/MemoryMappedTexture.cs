@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util;
@@ -32,37 +33,6 @@ namespace SeeingSharp.Multimedia.Core
         private IntPtr _pointer;
         private T* _pointerNative;
         private Size2 _size;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryMappedTexture{T}"/> class.
-        /// </summary>
-        /// <param name="size">The total size of the texture.</param>
-        public MemoryMappedTexture(Size2 size)
-        {
-            _pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
-            _pointerNative = (T*)_pointer.ToPointer();
-            _size = size;
-        }
-
-        /// <summary>
-        /// Disposes this object.
-        /// </summary>
-        public void Dispose()
-        {
-            Marshal.FreeHGlobal(_pointer);
-            _pointer = IntPtr.Zero;
-            _pointerNative = (T*)0;
-            _size = new Size2(0, 0);
-        }
-
-        /// <summary>
-        /// Gets the native pointer to the memory.
-        /// </summary>
-        public T* GetNativePointer()
-        {
-            if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
-            return _pointerNative;
-        }
 
         /// <summary>
         /// Gets the float value which is located on the given location.
@@ -145,5 +115,36 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <inheritdoc />
         public bool IsDisposed => _pointer == IntPtr.Zero;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryMappedTexture{T}"/> class.
+        /// </summary>
+        /// <param name="size">The total size of the texture.</param>
+        public MemoryMappedTexture(Size2 size)
+        {
+            _pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
+            _pointerNative = (T*)_pointer.ToPointer();
+            _size = size;
+        }
+
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
+        public void Dispose()
+        {
+            Marshal.FreeHGlobal(_pointer);
+            _pointer = IntPtr.Zero;
+            _pointerNative = (T*)0;
+            _size = new Size2(0, 0);
+        }
+
+        /// <summary>
+        /// Gets the native pointer to the memory.
+        /// </summary>
+        public T* GetNativePointer()
+        {
+            if (_pointer == IntPtr.Zero) { throw new ObjectDisposedException(nameof(MemoryMappedTexture<T>)); }
+            return _pointerNative;
+        }
     }
 }

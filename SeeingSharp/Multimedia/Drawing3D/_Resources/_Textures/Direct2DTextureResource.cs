@@ -19,10 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
+using SharpDX;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -41,6 +43,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Resources for Direct2D
         private Graphics2D _graphics2D;
         private Direct2DOverlayRenderer _overlayRenderer;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _graphics2D != null;
+
+        /// <summary>
+        /// Gets the texture object.
+        /// </summary>
+        internal override D3D11.Texture2D Texture => _renderTargetTexture;
+
+        /// <summary>
+        /// Gets a ShaderResourceView targeting the texture.
+        /// </summary>
+        internal override D3D11.ShaderResourceView TextureView => _renderTargetTextureView;
+
+        /// <summary>
+        /// Gets the size of the texture array.
+        /// 1 for normal textures.
+        /// 6 for cubemap textures.
+        /// </summary>
+        public override int ArraySize => 1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DTextureResource"/> class.
@@ -91,7 +115,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 {
                     _overlayRenderer.EndDraw();
                 }
-                catch (SharpDX.SharpDXException dxException)
+                catch (SharpDXException dxException)
                 {
                     if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                     {
@@ -137,27 +161,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             SeeingSharpUtil.SafeDispose(ref _renderTargetTextureView);
             SeeingSharpUtil.SafeDispose(ref _renderTargetTexture);
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _graphics2D != null;
-
-        /// <summary>
-        /// Gets the texture object.
-        /// </summary>
-        internal override D3D11.Texture2D Texture => _renderTargetTexture;
-
-        /// <summary>
-        /// Gets a ShaderResourceView targeting the texture.
-        /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _renderTargetTextureView;
-
-        /// <summary>
-        /// Gets the size of the texture array.
-        /// 1 for normal textures.
-        /// 6 for cubemap textures.
-        /// </summary>
-        public override int ArraySize => 1;
     }
 }

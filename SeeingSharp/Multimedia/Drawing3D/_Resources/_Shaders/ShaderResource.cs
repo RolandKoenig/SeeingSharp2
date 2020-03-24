@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.D3DCompiler;
@@ -32,6 +33,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private byte[] _shaderBytecode;
         private ResourceLink _resourceLink;
         private ShaderResourceKind _resourceKind;
+
+        /// <summary>
+        /// Gets the shaders raw bytecode.
+        /// </summary>
+        public byte[] ShaderBytecode => _shaderBytecode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShaderResource"/> class.
@@ -112,10 +118,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     throw new SeeingSharpException($"Unhandled {nameof(ShaderResourceKind)}: {resourceKind}");
             }
         }
-
-        /// <summary>
-        /// Gets the shaders raw bytecode.
-        /// </summary>
-        public byte[] ShaderBytecode => _shaderBytecode;
     }
 }

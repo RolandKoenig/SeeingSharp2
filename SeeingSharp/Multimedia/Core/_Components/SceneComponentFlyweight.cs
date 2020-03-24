@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Concurrent;
-using SeeingSharp.Checking;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -35,6 +36,8 @@ namespace SeeingSharp.Multimedia.Core
         private Scene _owner;
         private ConcurrentQueue<SceneComponentRequest> _componentRequests;
         private List<SceneComponentInfo> _attachedComponents;
+
+        internal int CountAttached => _attachedComponents.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneComponentFlyweight"/> class.
@@ -284,7 +287,5 @@ namespace SeeingSharp.Multimedia.Core
             componentIndex = -1;
             return false;
         }
-
-        internal int CountAttached => _attachedComponents.Count;
     }
 }

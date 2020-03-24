@@ -33,9 +33,9 @@ namespace SeeingSharp
         /// <param name="z">The Z component.</param>
         public Half3(Half x, Half y, Half z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace SeeingSharp
         /// <param name="value">The value to set for the X, Y, and Z components.</param>
         public Half3(Half value)
         {
-            this.X = value;
-            this.Y = value;
-            this.Z = value;
+            X = value;
+            Y = value;
+            Z = value;
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace SeeingSharp
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            int num = this.Z.GetHashCode() + this.Y.GetHashCode();
-            return (this.X.GetHashCode() + num);
+            var num = Z.GetHashCode() + Y.GetHashCode();
+            return X.GetHashCode() + num;
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace SeeingSharp
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
         public static bool Equals(ref Half3 value1, ref Half3 value2)
         {
-            return (((value1.X == value2.X) && (value1.Y == value2.Y)) && (value1.Z == value2.Z));
+            return value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace SeeingSharp
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals(Half3 other)
         {
-            return (((this.X == other.X) && (this.Y == other.Y)) && (this.Z == other.Z));
+            return X == other.X && Y == other.Y && Z == other.Z;
         }
 
         /// <summary>

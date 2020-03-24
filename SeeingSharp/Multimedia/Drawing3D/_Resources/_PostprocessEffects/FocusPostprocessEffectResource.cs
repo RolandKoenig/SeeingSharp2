@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
+using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
-using System.Runtime.InteropServices;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -47,6 +48,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private PixelShaderResource _pixelShaderBlur;
         private TypeSafeConstantBufferResource<CbPerObject> _cbFirstPass;
         private TypeSafeConstantBufferResource<CbPerObject> _cbSecondPass;
+
+        /// <inheritdoc />
+        public override bool IsLoaded =>
+            _renderTarget != null &&
+            _singleForcedColor != null &&
+            _singleForcedColor.IsLoaded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusPostprocessEffectResource"/> class.
@@ -239,12 +246,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return false;
         }
-
-        /// <inheritdoc />
-        public override bool IsLoaded =>
-            _renderTarget != null &&
-            _singleForcedColor != null &&
-            _singleForcedColor.IsLoaded;
 
         //*********************************************************************
         //*********************************************************************

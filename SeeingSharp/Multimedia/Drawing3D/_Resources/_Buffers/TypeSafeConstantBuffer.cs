@@ -19,7 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
+using SharpDX;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -35,20 +37,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
         /// </summary>
         public TypeSafeConstantBufferResource()
-            : base(SharpDX.Utilities.SizeOf<T>())
+            : base(Utilities.SizeOf<T>())
         {
             _initialData = new T();
-            _structureSize = SharpDX.Utilities.SizeOf<T>();
+            _structureSize = Utilities.SizeOf<T>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeSafeConstantBufferResource{T}" /> class.
         /// </summary>
         public TypeSafeConstantBufferResource(T initialData)
-            : base(SharpDX.Utilities.SizeOf<T>())
+            : base(Utilities.SizeOf<T>())
         {
             _initialData = initialData;
-            _structureSize = SharpDX.Utilities.SizeOf<T>();
+            _structureSize = Utilities.SizeOf<T>();
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         protected internal override D3D11.Buffer CreateConstantBuffer(EngineDevice device)
         {
-            using (var dataStream = new SharpDX.DataStream(SharpDX.Utilities.SizeOf<T>(), true, true))
+            using (var dataStream = new DataStream(Utilities.SizeOf<T>(), true, true))
             {
                 dataStream.Write(_initialData);
                 dataStream.Position = 0;
@@ -82,7 +84,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         internal void SetData(D3D11.DeviceContext deviceContext, T dataToSet)
         {
             var dataBox = deviceContext.MapSubresource(this.ConstantBuffer, 0, D3D11.MapMode.WriteDiscard, D3D11.MapFlags.None);
-            SharpDX.Utilities.Write(dataBox.DataPointer, ref dataToSet);
+            Utilities.Write(dataBox.DataPointer, ref dataToSet);
             deviceContext.UnmapSubresource(this.ConstantBuffer, 0);
         }
     }

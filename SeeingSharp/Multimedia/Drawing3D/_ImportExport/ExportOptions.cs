@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 
@@ -28,12 +29,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         private EngineDevice _device;
 
-        protected ExportOptions()
-        {
-            _device = GraphicsCore.Current.DefaultDevice;
-
-        }
-
         public EngineDevice ExportDevice
         {
             get => _device;
@@ -42,6 +37,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 value.EnsureNotNull(nameof(value));
                 _device = value;
             }
+        }
+
+        protected ExportOptions()
+        {
+            _device = GraphicsCore.Current.DefaultDevice;
+
         }
     }
 }

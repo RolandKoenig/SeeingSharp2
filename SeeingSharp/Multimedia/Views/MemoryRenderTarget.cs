@@ -19,14 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
+
 using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
@@ -47,6 +48,36 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.Texture2D _renderTargetDepth;
         private D3D11.RenderTargetView _renderTargetView;
         private D3D11.DepthStencilView _renderTargetDepthView;
+
+        /// <summary>
+        /// Gets or sets the scene.
+        /// </summary>
+        public Scene Scene
+        {
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
+        }
+
+        public Camera3DBase Camera
+        {
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
+        }
+
+        /// <summary>
+        /// Gets the renderloop object.
+        /// </summary>
+        public RenderLoop RenderLoop { get; }
+
+        public Color4 ClearColor
+        {
+            get => this.RenderLoop.ClearColor;
+            set => this.RenderLoop.ClearColor = value;
+        }
+
+        public SynchronizationContext UiSynchronizationContext => this.RenderLoop.UiSynchronizationContext;
+
+        public bool IsOperational => this.RenderLoop.IsOperational;
 
         /// <summary>
         /// Raises before the render target starts rendering.
@@ -169,35 +200,5 @@ namespace SeeingSharp.Multimedia.Views
         {
 
         }
-
-        /// <summary>
-        /// Gets or sets the scene.
-        /// </summary>
-        public Scene Scene
-        {
-            get => this.RenderLoop.Scene;
-            set => this.RenderLoop.SetScene(value);
-        }
-
-        public Camera3DBase Camera
-        {
-            get => this.RenderLoop.Camera;
-            set => this.RenderLoop.Camera = value;
-        }
-
-        /// <summary>
-        /// Gets the renderloop object.
-        /// </summary>
-        public RenderLoop RenderLoop { get; }
-
-        public Color4 ClearColor
-        {
-            get => this.RenderLoop.ClearColor;
-            set => this.RenderLoop.ClearColor = value;
-        }
-
-        public SynchronizationContext UiSynchronizationContext => this.RenderLoop.UiSynchronizationContext;
-
-        public bool IsOperational => this.RenderLoop.IsOperational;
     }
 }

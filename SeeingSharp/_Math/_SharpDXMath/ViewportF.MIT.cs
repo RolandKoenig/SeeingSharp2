@@ -97,10 +97,7 @@ namespace SeeingSharp
         /// <value>The bounds.</value>
         public RectangleF Bounds
         {
-            get
-            {
-                return new RectangleF(X, Y, Width, Height);
-            }
+            get => new RectangleF(X, Y, Width, Height);
 
             set
             {
@@ -137,7 +134,7 @@ namespace SeeingSharp
             {
                 return false;
             }
-            return obj is ViewportF && Equals((ViewportF)obj);
+            return obj is ViewportF && this.Equals((ViewportF)obj);
         }
 
         /// <summary>
@@ -150,7 +147,7 @@ namespace SeeingSharp
         {
             unchecked
             {
-                int hashCode = X.GetHashCode();
+                var hashCode = X.GetHashCode();
                 hashCode = (hashCode * 397) ^ Y.GetHashCode();
                 hashCode = (hashCode * 397) ^ Width.GetHashCode();
                 hashCode = (hashCode * 397) ^ Height.GetHashCode();
@@ -202,17 +199,17 @@ namespace SeeingSharp
         public Vector3 Project(Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)
         {
             var matrix = Matrix4x4.Multiply(Matrix4x4.Multiply(world, view), projection);
-            var vector = (Vector3)Vector3.Transform(source, matrix);
-            float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
+            var vector = Vector3.Transform(source, matrix);
+            var a = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
 
             if (!MathUtil.WithinEpsilon(a, 1f))
             {
-                vector = (vector / a);
+                vector = vector / a;
             }
 
-            vector.X = (((vector.X + 1f) * 0.5f) * Width) + X;
-            vector.Y = (((-vector.Y + 1f) * 0.5f) * Height) + Y;
-            vector.Z = (vector.Z * (MaxDepth - MinDepth)) + MinDepth;
+            vector.X = (vector.X + 1f) * 0.5f * Width + X;
+            vector.Y = (-vector.Y + 1f) * 0.5f * Height + Y;
+            vector.Z = vector.Z * (MaxDepth - MinDepth) + MinDepth;
 
             return vector;
         }
@@ -227,18 +224,18 @@ namespace SeeingSharp
         /// <returns>Vector3.</returns>
         public Vector3 Unproject(Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)
         {
-            Matrix4x4 matrix = Matrix4x4.Identity;
+            var matrix = Matrix4x4.Identity;
             Matrix4x4.Invert(Matrix4x4.Multiply(Matrix4x4.Multiply(world, view), projection), out matrix);
 
-            source.X = (((source.X - X) / (Width)) * 2f) - 1f;
-            source.Y = -((((source.Y - Y) / (Height)) * 2f) - 1f);
+            source.X = (source.X - X) / Width * 2f - 1f;
+            source.Y = -((source.Y - Y) / Height * 2f - 1f);
             source.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
-            var vector = (Vector3)Vector3.Transform(source, matrix);
+            var vector = Vector3.Transform(source, matrix);
 
-            float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
+            var a = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
             if (!MathUtil.WithinEpsilon(a, 1f))
             {
-                vector = (vector / a);
+                vector = vector / a;
             }
 
             return vector;

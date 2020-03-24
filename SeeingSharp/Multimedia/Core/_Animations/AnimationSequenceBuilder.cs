@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,26 @@ namespace SeeingSharp.Multimedia.Core
     {
         private bool _applied;
         private List<IAnimation> _sequenceList;
+
+        /// <summary>
+        /// Gets the corresponding animation handler.
+        /// </summary>
+        public AnimationHandler AnimationHandler { get; }
+
+        /// <summary>
+        /// Gets the target object of this animation
+        /// </summary>
+        public TTargetType TargetObject { get; }
+
+        /// <summary>
+        /// Gets the item count.
+        /// </summary>
+        public int ItemCount => _sequenceList.Count;
+
+        /// <summary>
+        /// Was apply called already?
+        /// </summary>
+        public bool Applied => _applied;
 
         /// <summary>
         /// Initializes a new instance of the AnimationSequenceBuilder class.
@@ -237,25 +258,5 @@ namespace SeeingSharp.Multimedia.Core
             this.AnimationHandler.BeginSecondaryAnimation(_sequenceList);
             _applied = true;
         }
-
-        /// <summary>
-        /// Gets the corresponding animation handler.
-        /// </summary>
-        public AnimationHandler AnimationHandler { get; }
-
-        /// <summary>
-        /// Gets the target object of this animation
-        /// </summary>
-        public TTargetType TargetObject { get; }
-
-        /// <summary>
-        /// Gets the item count.
-        /// </summary>
-        public int ItemCount => _sequenceList.Count;
-
-        /// <summary>
-        /// Was apply called already?
-        /// </summary>
-        public bool Applied => _applied;
     }
 }

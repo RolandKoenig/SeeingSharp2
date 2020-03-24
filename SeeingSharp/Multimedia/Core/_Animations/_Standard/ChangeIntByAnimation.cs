@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -32,6 +33,12 @@ namespace SeeingSharp.Multimedia.Core
         private Func<int> _getValueFunc;
         private Action<int> _setValueAction;
         private int _increaseTotal;
+
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// If true, all following animation have to wait for finish-event.
+        /// </summary>
+        public override bool IsBlockingAnimation => false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeIntByAnimation" /> class.
@@ -70,11 +77,5 @@ namespace SeeingSharp.Multimedia.Core
 
             _alreadyIncreased = toIncreaseTotal;
         }
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// If true, all following animation have to wait for finish-event.
-        /// </summary>
-        public override bool IsBlockingAnimation => false;
     }
 }

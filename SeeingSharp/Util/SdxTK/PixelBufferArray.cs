@@ -32,11 +32,6 @@ namespace SeeingSharp.Util.SdxTK
     {
         private readonly Image image;
 
-        internal PixelBufferArray(Image image)
-        {
-            this.image = image;
-        }
-
         /// <summary>
         /// Gets the pixel buffer.
         /// </summary>
@@ -65,5 +60,10 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>A <see cref="PixelBuffer"/>.</returns>
         public PixelBuffer this[int arrayIndex, int zIndex, int mipIndex] => image.GetPixelBuffer(arrayIndex, zIndex, mipIndex);
+
+        internal PixelBufferArray(Image image)
+        {
+            this.image = image;
+        }
     }
 }

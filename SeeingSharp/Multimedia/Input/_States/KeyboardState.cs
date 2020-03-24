@@ -33,6 +33,18 @@ namespace SeeingSharp.Multimedia.Input
         private List<WinVirtualKey> _keysDown;
         private bool _focused;
 
+        public IEnumerable<WinVirtualKey> KeysDown => _keysDown;
+
+        public IEnumerable<WinVirtualKey> KeysHit => _keysHit;
+
+        public bool IsConnected => _focused;
+
+        public KeyboardStateInternals Internals
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardState"/> class.
         /// </summary>
@@ -103,18 +115,6 @@ namespace SeeingSharp.Multimedia.Input
         internal void NotifyFocusGot()
         {
             _focused = true;
-        }
-
-        public IEnumerable<WinVirtualKey> KeysDown => _keysDown;
-
-        public IEnumerable<WinVirtualKey> KeysHit => _keysHit;
-
-        public bool IsConnected => _focused;
-
-        public KeyboardStateInternals Internals
-        {
-            get;
-            private set;
         }
 
         //*********************************************************************

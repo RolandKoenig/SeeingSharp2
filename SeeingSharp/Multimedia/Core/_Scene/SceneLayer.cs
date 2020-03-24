@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -37,6 +38,93 @@ namespace SeeingSharp.Multimedia.Core
         private List<SceneObject> _sceneObjectsNotSpacial;
         private bool _isInUpdate;
         private bool _isInUpdateBeside;
+
+        /// <summary>
+        /// Gets the name of this layer.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets parent scene.
+        /// </summary>
+        public Scene Scene { get; }
+
+        /// <summary>
+        /// Gets or sets an integer which controls the order
+        /// </summary>
+        public int OrderId
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Allow picking on this layer?
+        /// </summary>
+        public bool AllowPick
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key of the postprocess effect.
+        /// </summary>
+        public NamedOrGenericKey PostprocessEffectKey
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is rendering enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is rendering enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsRenderingEnabled
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Clear the depth buffer after rendering?
+        /// </summary>
+        public bool ClearDepthBufferAfterRendering
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Clear the depth buffer before rendering?
+        /// </summary>
+        public bool ClearDepthBufferBeforeRendering
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets a collection containing all objects.
+        /// </summary>
+        public ReadOnlyCollection<SceneObject> Objects { get; }
+
+        /// <summary>
+        /// Gets total count of objects within the scene.
+        /// </summary>
+        public int CountObjects => this.ObjectsInternal.Count;
+
+        /// <summary>
+        /// Gets a list containing all scene objects (internal accessor to the complete list).
+        /// </summary>
+        internal UnsafeList<SceneObject> ObjectsInternal { get; }
+
+        /// <summary>
+        /// Gets a list containing all spacial objects.
+        /// </summary>
+        internal List<SceneSpacialObject> SpacialObjects { get; }
 
         /// <summary>
         /// Creates a new SceneLayer object for the given scene.
@@ -439,92 +527,5 @@ namespace SeeingSharp.Multimedia.Core
                 this.RemoveObject(actObject);
             }
         }
-
-        /// <summary>
-        /// Gets the name of this layer.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets parent scene.
-        /// </summary>
-        public Scene Scene { get; }
-
-        /// <summary>
-        /// Gets or sets an integer which controls the order
-        /// </summary>
-        public int OrderId
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
-        /// Allow picking on this layer?
-        /// </summary>
-        public bool AllowPick
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the resource key of the postprocess effect.
-        /// </summary>
-        public NamedOrGenericKey PostprocessEffectKey
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is rendering enabled.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is rendering enabled; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsRenderingEnabled
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Clear the depth buffer after rendering?
-        /// </summary>
-        public bool ClearDepthBufferAfterRendering
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Clear the depth buffer before rendering?
-        /// </summary>
-        public bool ClearDepthBufferBeforeRendering
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets a collection containing all objects.
-        /// </summary>
-        public ReadOnlyCollection<SceneObject> Objects { get; }
-
-        /// <summary>
-        /// Gets total count of objects within the scene.
-        /// </summary>
-        public int CountObjects => this.ObjectsInternal.Count;
-
-        /// <summary>
-        /// Gets a list containing all scene objects (internal accessor to the complete list).
-        /// </summary>
-        internal UnsafeList<SceneObject> ObjectsInternal { get; }
-
-        /// <summary>
-        /// Gets a list containing all spacial objects.
-        /// </summary>
-        internal List<SceneSpacialObject> SpacialObjects { get; }
     }
 }

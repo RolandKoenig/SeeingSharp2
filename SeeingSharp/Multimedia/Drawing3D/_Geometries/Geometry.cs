@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -43,6 +44,74 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private bool _buildTimeTransformEnabled;
         private Matrix4x4 _buildTransformMatrix;
         private Func<VertexBasic, VertexBasic> _buildTimeTransformFunc;
+
+        /// <summary>
+        /// Gets the first surface of this geometry.
+        /// It there is no surface, then one gets created automatically.
+        /// </summary>
+        public GeometrySurface FirstSurface
+        {
+            get
+            {
+                if (_surfaces.Count == 0)
+                {
+                    this.CreateSurface();
+                }
+                return _surfaces[0];
+            }
+        }
+
+        /// <summary>
+        /// Retrieves total count of all vertices within this geometry
+        /// </summary>
+        public int CountVertices => _verticesBasic.Count;
+
+        /// <summary>
+        /// A short description for the use of this geometry
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Is this geometry empty?
+        /// </summary>
+        public bool IsEmpty => _verticesBasic.Count == 0 && _surfaces.Count == 0;
+
+        /// <summary>
+        /// Gets a collection of vertices.
+        /// </summary>
+        public VertexCollection Vertices { get; }
+
+        public SurfaceCollection Surfaces { get; }
+
+        public int CountSurfaces => _surfaces.Count;
+
+        public int CountTriangles
+        {
+            get
+            {
+                var sum = 0;
+                for (var loop = 0; loop < _surfaces.Count; loop++)
+                {
+                    sum += _surfaces[loop].CountTriangles;
+                }
+                return sum;
+            }
+        }
+
+        public int CountIndices
+        {
+            get
+            {
+                var sum = 0;
+                for (var loop = 0; loop < _surfaces.Count; loop++)
+                {
+                    sum += _surfaces[loop].CountIndices;
+                }
+                return sum;
+            }
+        }
+
+        public bool HasBinormalsTangents => _verticesBinormalTangents != null;
 
         /// <summary>
         /// Creates a new <see cref="Geometry"/> object
@@ -465,8 +534,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var vertexCount = _verticesBasic.Count;
             var hasBinormalsTangents = this.HasBinormalsTangents;
             var result = new Geometry(
-                verticesCapacity: vertexCount * capacityMultiplier,
-                hasBinormalsTangents: hasBinormalsTangents);
+                vertexCount * capacityMultiplier,
+                hasBinormalsTangents);
 
             // Copy geometry
             if (copyGeometryData)
@@ -589,74 +658,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
         }
 
-        /// <summary>
-        /// Gets the first surface of this geometry.
-        /// It there is no surface, then one gets created automatically.
-        /// </summary>
-        public GeometrySurface FirstSurface
-        {
-            get
-            {
-                if (_surfaces.Count == 0)
-                {
-                    this.CreateSurface();
-                }
-                return _surfaces[0];
-            }
-        }
-
-        /// <summary>
-        /// Retrieves total count of all vertices within this geometry
-        /// </summary>
-        public int CountVertices => _verticesBasic.Count;
-
-        /// <summary>
-        /// A short description for the use of this geometry
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Is this geometry empty?
-        /// </summary>
-        public bool IsEmpty => _verticesBasic.Count == 0 && _surfaces.Count == 0;
-
-        /// <summary>
-        /// Gets a collection of vertices.
-        /// </summary>
-        public VertexCollection Vertices { get; }
-
-        public SurfaceCollection Surfaces { get; }
-
-        public int CountSurfaces => _surfaces.Count;
-
-        public int CountTriangles
-        {
-            get
-            {
-                var sum = 0;
-                for (var loop = 0; loop < _surfaces.Count; loop++)
-                {
-                    sum += _surfaces[loop].CountTriangles;
-                }
-                return sum;
-            }
-        }
-
-        public int CountIndices
-        {
-            get
-            {
-                var sum = 0;
-                for (var loop = 0; loop < _surfaces.Count; loop++)
-                {
-                    sum += _surfaces[loop].CountIndices;
-                }
-                return sum;
-            }
-        }
-
-        public bool HasBinormalsTangents => _verticesBinormalTangents != null;
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -666,6 +667,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public class VertexCollection : IEnumerable<VertexBasic>
         {
             private Geometry _owner;
+
+            /// <summary>
+            /// Returns the vertex at ghe given index
+            /// </summary>
+            public VertexBasic this[int index] => _owner._verticesBasic[index];
 
             internal VertexCollection(Geometry owner)
             {
@@ -689,14 +695,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 return _owner._verticesBasic.GetEnumerator();
             }
-
-            /// <summary>
-            /// Returns the vertex at ghe given index
-            /// </summary>
-            public VertexBasic this[int index]
-            {
-                get => _owner._verticesBasic[index];
-            }
         }
 
         //*********************************************************************
@@ -708,6 +706,15 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public class SurfaceCollection : IEnumerable<GeometrySurface>
         {
             private Geometry _owner;
+
+            /// <summary>
+            /// Returns the surface at ghe given index
+            /// </summary>
+            public GeometrySurface this[int index]
+            {
+                get => _owner._surfaces[index];
+                internal set => _owner._surfaces[index] = value;
+            }
 
             internal SurfaceCollection(Geometry owner)
             {
@@ -727,15 +734,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return _owner._surfaces.GetEnumerator();
-            }
-
-            /// <summary>
-            /// Returns the surface at ghe given index
-            /// </summary>
-            public GeometrySurface this[int index]
-            {
-                get => _owner._surfaces[index];
-                internal set => _owner._surfaces[index] = value;
             }
         }
     }

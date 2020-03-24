@@ -19,8 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,8 +27,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Util
 {
@@ -101,7 +103,7 @@ namespace SeeingSharp.Util
         /// <param name="byteCount">The total count of bytes to be copied.</param>
         public static unsafe void CopyMemory(void* sourcePointer, void* targetPointer, uint byteCount)
         {
-            System.Runtime.CompilerServices.Unsafe.CopyBlock(targetPointer, sourcePointer, byteCount);
+            Unsafe.CopyBlock(targetPointer, sourcePointer, byteCount);
         }
 
         /// <summary>

@@ -19,17 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public static class ACFileLoader
     {
+        /// <summary>
+        /// Gets the default extension (e. g. ".ac").
+        /// </summary>
+        public static string DefaultExtension => ".ac";
+
         /// <summary>
         /// Imports an object-type form given raw model file.
         /// </summary>
@@ -132,205 +138,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Fills the given geometry using information from the given AC-File-Objects.
-        /// </summary>
-        /// <param name="objInfo">The object information from the AC file.</param>
-        /// <param name="acMaterials">A list containing all materials from the AC file.</param>
-        /// <param name="geometry">The Geometry to be filled.</param>
-        /// <param name="transformStack">Current matrix stack (for stacked objects).</param>
-        private static void FillGeometry(Geometry geometry, List<ACMaterialInfo> acMaterials, ACObjectInfo objInfo, Matrix4Stack transformStack)
-        {
-            var standardShadedVertices = new List<Tuple<int, int>>();
-
-            transformStack.Push();
-            try
-            {
-                // Perform local transformation for the current AC object
-                transformStack.TransformLocal(objInfo.Rotation);
-                transformStack.TranslateLocal(objInfo.Translation);
-
-                // Build geometry material by material
-                for (var actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
-                {
-                    var actGeometrySurface = geometry.Surfaces[actMaterialIndex];
-
-                    // Initialize local index table (needed for vertex reuse)
-                    var oneSideVertexCount = objInfo.Vertices.Count;
-                    var localIndices = new int[oneSideVertexCount * 2];
-
-                    for (var loop = 0; loop < localIndices.Length; loop++)
-                    {
-                        localIndices[loop] = int.MaxValue;
-                    }
-
-                    // Process all surfaces
-                    foreach (var actSurface in objInfo.Surfaces)
-                    {
-                        // Get the vertex index on which to start
-                        var startVertexIndex = geometry.CountVertices;
-                        var startTriangleIndex = actGeometrySurface.CountTriangles;
-
-                        // Only handle surfaces of the current material
-                        if (actSurface.Material != actMaterialIndex) { continue; }
-
-                        // Sort out unsupported surfaces
-                        if (actSurface.VertexReferences.Count < 3) { continue; }
-                        if (actSurface.IsLine) { continue; }
-                        if (actSurface.IsClosedLine) { continue; }
-
-                        // Preprocess referenced vertices
-                        var oneSideSurfaceVertexCount = actSurface.VertexReferences.Count;
-                        var countSurfaceSides = actSurface.IsTwoSided ? 2 : 1;
-                        var onGeometryReferencedVertices = new int[oneSideSurfaceVertexCount * countSurfaceSides];
-                        var surfaceVertexReferences = actSurface.VertexReferences;
-
-                        for (var loop = 0; loop < surfaceVertexReferences.Count; loop++)
-                        {
-                            var actTexCoord = actSurface.TextureCoordinates[loop];
-
-                            if (!actSurface.IsFlatShaded)
-                            {
-                                // Try to reuse vertices on standard shading
-                                if (localIndices[surfaceVertexReferences[loop]] == int.MaxValue)
-                                {
-                                    var position = Vector3.Transform(
-                                        objInfo.Vertices[surfaceVertexReferences[loop]].Position,
-                                        transformStack.Top);
-                                    localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new VertexBasic(
-                                        position, Color4.White, actTexCoord, Vector3.Zero));
-                                    if (actSurface.IsTwoSided)
-                                    {
-                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = geometry.AddVertex(new VertexBasic(
-                                            position, Color4.White, actTexCoord, Vector3.Zero));
-                                    }
-                                }
-
-                                // Store vertex reference for this surface's index
-                                onGeometryReferencedVertices[loop] = localIndices[surfaceVertexReferences[loop]];
-                                if (actSurface.IsTwoSided)
-                                {
-                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] =
-                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount];
-                                }
-                            }
-                            else
-                            {
-                                // Create one vertex for one reference for flat shading
-                                var position = Vector3.Transform(
-                                    objInfo.Vertices[surfaceVertexReferences[loop]].Position,
-                                    transformStack.Top);
-                                onGeometryReferencedVertices[loop] = geometry.AddVertex(new VertexBasic(
-                                    position, Color4.White, actTexCoord, Vector3.Zero));
-
-                                if (actSurface.IsTwoSided)
-                                {
-                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] = geometry.AddVertex(new VertexBasic(
-                                        position, Color4.White, actTexCoord, Vector3.Zero));
-                                }
-                            }
-                        }
-
-                        // Build object geometry
-                        switch (actSurface.VertexReferences.Count)
-                        {
-                            case 3:
-                                // Front side
-                                actGeometrySurface.AddTriangle(
-                                    onGeometryReferencedVertices[0],
-                                    onGeometryReferencedVertices[1],
-                                    onGeometryReferencedVertices[2]);
-
-                                // Back side
-                                if (actSurface.IsTwoSided)
-                                {
-                                    actGeometrySurface.AddTriangle(
-                                        onGeometryReferencedVertices[5],
-                                        onGeometryReferencedVertices[4],
-                                        onGeometryReferencedVertices[3]);
-                                }
-                                break;
-
-                            case 4:
-                                // Front side
-                                actGeometrySurface.AddTriangle(
-                                    onGeometryReferencedVertices[0],
-                                    onGeometryReferencedVertices[1],
-                                    onGeometryReferencedVertices[2]);
-                                actGeometrySurface.AddTriangle(
-                                    onGeometryReferencedVertices[2],
-                                    onGeometryReferencedVertices[3],
-                                    onGeometryReferencedVertices[0]);
-
-                                // Back side
-                                if (actSurface.IsTwoSided)
-                                {
-                                    actGeometrySurface.AddTriangle(
-                                        onGeometryReferencedVertices[6],
-                                        onGeometryReferencedVertices[5],
-                                        onGeometryReferencedVertices[4]);
-                                    actGeometrySurface.AddTriangle(
-                                        onGeometryReferencedVertices[4],
-                                        onGeometryReferencedVertices[7],
-                                        onGeometryReferencedVertices[6]);
-                                }
-                                break;
-
-                            default:
-                                if (!actSurface.IsTwoSided)
-                                {
-                                    // Front side
-                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices);
-                                }
-                                else
-                                {
-                                    // Front and back side
-                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices.Subset(0, oneSideSurfaceVertexCount));
-                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices.Subset(oneSideSurfaceVertexCount, oneSideSurfaceVertexCount));
-                                }
-                                break;
-                        }
-
-                        // Perform shading
-                        if (actSurface.IsFlatShaded)
-                        {
-                            actGeometrySurface.CalculateNormalsFlat(
-                                startTriangleIndex, actGeometrySurface.CountTriangles - startTriangleIndex);
-                        }
-                        else
-                        {
-                            // Nothing to be done for now..
-                            var vertexCount = geometry.CountVertices - startVertexIndex;
-                            if (vertexCount > 0)
-                            {
-                                standardShadedVertices.Add(
-                                    Tuple.Create(startVertexIndex, vertexCount));
-                            }
-                        }
-                    }
-
-                    // Calculate default shading finally (if any)
-                    foreach (var actStandardShadedPair in standardShadedVertices)
-                    {
-                        geometry.CalculateNormals(
-                            actStandardShadedPair.Item1,
-                            actStandardShadedPair.Item2);
-                    }
-                    standardShadedVertices.Clear();
-                }
-
-                // Fill in all child object data
-                foreach (var actObjInfo in objInfo.Children)
-                {
-                    FillGeometry(geometry, acMaterials, actObjInfo, transformStack);
-                }
-            }
-            finally
-            {
-                transformStack.Pop();
-            }
         }
 
         /// <summary>
@@ -751,8 +558,202 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Gets the default extension (e. g. ".ac").
+        /// Fills the given geometry using information from the given AC-File-Objects.
         /// </summary>
-        public static string DefaultExtension => ".ac";
+        /// <param name="objInfo">The object information from the AC file.</param>
+        /// <param name="acMaterials">A list containing all materials from the AC file.</param>
+        /// <param name="geometry">The Geometry to be filled.</param>
+        /// <param name="transformStack">Current matrix stack (for stacked objects).</param>
+        private static void FillGeometry(Geometry geometry, List<ACMaterialInfo> acMaterials, ACObjectInfo objInfo, Matrix4Stack transformStack)
+        {
+            var standardShadedVertices = new List<Tuple<int, int>>();
+
+            transformStack.Push();
+            try
+            {
+                // Perform local transformation for the current AC object
+                transformStack.TransformLocal(objInfo.Rotation);
+                transformStack.TranslateLocal(objInfo.Translation);
+
+                // Build geometry material by material
+                for (var actMaterialIndex = 0; actMaterialIndex < acMaterials.Count; actMaterialIndex++)
+                {
+                    var actGeometrySurface = geometry.Surfaces[actMaterialIndex];
+
+                    // Initialize local index table (needed for vertex reuse)
+                    var oneSideVertexCount = objInfo.Vertices.Count;
+                    var localIndices = new int[oneSideVertexCount * 2];
+
+                    for (var loop = 0; loop < localIndices.Length; loop++)
+                    {
+                        localIndices[loop] = int.MaxValue;
+                    }
+
+                    // Process all surfaces
+                    foreach (var actSurface in objInfo.Surfaces)
+                    {
+                        // Get the vertex index on which to start
+                        var startVertexIndex = geometry.CountVertices;
+                        var startTriangleIndex = actGeometrySurface.CountTriangles;
+
+                        // Only handle surfaces of the current material
+                        if (actSurface.Material != actMaterialIndex) { continue; }
+
+                        // Sort out unsupported surfaces
+                        if (actSurface.VertexReferences.Count < 3) { continue; }
+                        if (actSurface.IsLine) { continue; }
+                        if (actSurface.IsClosedLine) { continue; }
+
+                        // Preprocess referenced vertices
+                        var oneSideSurfaceVertexCount = actSurface.VertexReferences.Count;
+                        var countSurfaceSides = actSurface.IsTwoSided ? 2 : 1;
+                        var onGeometryReferencedVertices = new int[oneSideSurfaceVertexCount * countSurfaceSides];
+                        var surfaceVertexReferences = actSurface.VertexReferences;
+
+                        for (var loop = 0; loop < surfaceVertexReferences.Count; loop++)
+                        {
+                            var actTexCoord = actSurface.TextureCoordinates[loop];
+
+                            if (!actSurface.IsFlatShaded)
+                            {
+                                // Try to reuse vertices on standard shading
+                                if (localIndices[surfaceVertexReferences[loop]] == int.MaxValue)
+                                {
+                                    var position = Vector3.Transform(
+                                        objInfo.Vertices[surfaceVertexReferences[loop]].Position,
+                                        transformStack.Top);
+                                    localIndices[surfaceVertexReferences[loop]] = geometry.AddVertex(new VertexBasic(
+                                        position, Color4.White, actTexCoord, Vector3.Zero));
+                                    if (actSurface.IsTwoSided)
+                                    {
+                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount] = geometry.AddVertex(new VertexBasic(
+                                            position, Color4.White, actTexCoord, Vector3.Zero));
+                                    }
+                                }
+
+                                // Store vertex reference for this surface's index
+                                onGeometryReferencedVertices[loop] = localIndices[surfaceVertexReferences[loop]];
+                                if (actSurface.IsTwoSided)
+                                {
+                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] =
+                                        localIndices[surfaceVertexReferences[loop] + oneSideVertexCount];
+                                }
+                            }
+                            else
+                            {
+                                // Create one vertex for one reference for flat shading
+                                var position = Vector3.Transform(
+                                    objInfo.Vertices[surfaceVertexReferences[loop]].Position,
+                                    transformStack.Top);
+                                onGeometryReferencedVertices[loop] = geometry.AddVertex(new VertexBasic(
+                                    position, Color4.White, actTexCoord, Vector3.Zero));
+
+                                if (actSurface.IsTwoSided)
+                                {
+                                    onGeometryReferencedVertices[loop + oneSideSurfaceVertexCount] = geometry.AddVertex(new VertexBasic(
+                                        position, Color4.White, actTexCoord, Vector3.Zero));
+                                }
+                            }
+                        }
+
+                        // Build object geometry
+                        switch (actSurface.VertexReferences.Count)
+                        {
+                            case 3:
+                                // Front side
+                                actGeometrySurface.AddTriangle(
+                                    onGeometryReferencedVertices[0],
+                                    onGeometryReferencedVertices[1],
+                                    onGeometryReferencedVertices[2]);
+
+                                // Back side
+                                if (actSurface.IsTwoSided)
+                                {
+                                    actGeometrySurface.AddTriangle(
+                                        onGeometryReferencedVertices[5],
+                                        onGeometryReferencedVertices[4],
+                                        onGeometryReferencedVertices[3]);
+                                }
+                                break;
+
+                            case 4:
+                                // Front side
+                                actGeometrySurface.AddTriangle(
+                                    onGeometryReferencedVertices[0],
+                                    onGeometryReferencedVertices[1],
+                                    onGeometryReferencedVertices[2]);
+                                actGeometrySurface.AddTriangle(
+                                    onGeometryReferencedVertices[2],
+                                    onGeometryReferencedVertices[3],
+                                    onGeometryReferencedVertices[0]);
+
+                                // Back side
+                                if (actSurface.IsTwoSided)
+                                {
+                                    actGeometrySurface.AddTriangle(
+                                        onGeometryReferencedVertices[6],
+                                        onGeometryReferencedVertices[5],
+                                        onGeometryReferencedVertices[4]);
+                                    actGeometrySurface.AddTriangle(
+                                        onGeometryReferencedVertices[4],
+                                        onGeometryReferencedVertices[7],
+                                        onGeometryReferencedVertices[6]);
+                                }
+                                break;
+
+                            default:
+                                if (!actSurface.IsTwoSided)
+                                {
+                                    // Front side
+                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices);
+                                }
+                                else
+                                {
+                                    // Front and back side
+                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices.Subset(0, oneSideSurfaceVertexCount));
+                                    actGeometrySurface.AddPolygonByCuttingEars(onGeometryReferencedVertices.Subset(oneSideSurfaceVertexCount, oneSideSurfaceVertexCount));
+                                }
+                                break;
+                        }
+
+                        // Perform shading
+                        if (actSurface.IsFlatShaded)
+                        {
+                            actGeometrySurface.CalculateNormalsFlat(
+                                startTriangleIndex, actGeometrySurface.CountTriangles - startTriangleIndex);
+                        }
+                        else
+                        {
+                            // Nothing to be done for now..
+                            var vertexCount = geometry.CountVertices - startVertexIndex;
+                            if (vertexCount > 0)
+                            {
+                                standardShadedVertices.Add(
+                                    Tuple.Create(startVertexIndex, vertexCount));
+                            }
+                        }
+                    }
+
+                    // Calculate default shading finally (if any)
+                    foreach (var actStandardShadedPair in standardShadedVertices)
+                    {
+                        geometry.CalculateNormals(
+                            actStandardShadedPair.Item1,
+                            actStandardShadedPair.Item2);
+                    }
+                    standardShadedVertices.Clear();
+                }
+
+                // Fill in all child object data
+                foreach (var actObjInfo in objInfo.Children)
+                {
+                    FillGeometry(geometry, acMaterials, actObjInfo, transformStack);
+                }
+            }
+            finally
+            {
+                transformStack.Pop();
+            }
+        }
     }
 }

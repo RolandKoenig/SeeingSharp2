@@ -19,12 +19,25 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class CustomGeometryFactory : GeometryFactory
     {
+        /// <summary>
+        /// Gets the containing geometry.
+        /// </summary>
+        public Geometry Geometry { get; }
+
+        /// <summary>
+        /// Gets the containing geometry for low detail level.
+        /// </summary>
+        public Geometry GeometryLowDetail { get; }
+
+        public Func<GeometryBuildOptions, Geometry> BuilderFunction { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomGeometryFactory"/> class.
         /// </summary>
@@ -73,17 +86,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             if (buildOptions.IsHighDetail) { return this.Geometry; }
             return this.GeometryLowDetail;
         }
-
-        /// <summary>
-        /// Gets the containing geometry.
-        /// </summary>
-        public Geometry Geometry { get; }
-
-        /// <summary>
-        /// Gets the containing geometry for low detail level.
-        /// </summary>
-        public Geometry GeometryLowDetail { get; }
-
-        public Func<GeometryBuildOptions, Geometry> BuilderFunction { get; }
     }
 }

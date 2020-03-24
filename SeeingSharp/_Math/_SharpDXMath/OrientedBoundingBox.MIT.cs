@@ -61,12 +61,14 @@ namespace SeeingSharp
         public OrientedBoundingBox(Vector3[] points)
         {
             if (points == null || points.Length == 0)
+            {
                 throw new ArgumentNullException("points");
+            }
 
-            Vector3 minimum = new Vector3(float.MaxValue);
-            Vector3 maximum = new Vector3(float.MinValue);
+            var minimum = new Vector3(float.MaxValue);
+            var maximum = new Vector3(float.MinValue);
 
-            for (int i = 0; i < points.Length; ++i)
+            for (var i = 0; i < points.Length; ++i)
             {
                 minimum = Vector3.Min(minimum, points[i]);
                 maximum = Vector3.Max(maximum, points[i]);
@@ -186,13 +188,7 @@ namespace SeeingSharp
         /// The property will return the actual size even if the scaling is applied using Scale method, 
         /// but if the scaling is applied to transformation matrix, use GetSize Function instead.
         /// </remarks>
-        public Vector3 Size
-        {
-            get
-            {
-                return Extents * 2;
-            }
-        }
+        public Vector3 Size => Extents * 2;
 
         /// <summary>
         /// Returns the size of the <see cref="SeeingSharp.OrientedBoundingBox"/> taking into consideration the scaling applied to the transformation matrix.
@@ -233,13 +229,7 @@ namespace SeeingSharp
         /// <summary>
         /// Returns the center of the <see cref="SeeingSharp.OrientedBoundingBox"/>.
         /// </summary>
-        public Vector3 Center
-        {
-            get
-            {
-                return Transformation.Translation;
-            }
-        }
+        public Vector3 Center => Transformation.Translation;
 
         /// <summary>
         /// Determines whether a <see cref="SeeingSharp.OrientedBoundingBox"/> contains a point. 
@@ -252,7 +242,7 @@ namespace SeeingSharp
             Matrix4x4 invTrans;
             Matrix4x4.Invert(Transformation, out invTrans);
 
-            Vector3 locPoint = Vector3.Transform(point, invTrans);
+            var locPoint = Vector3.Transform(point, invTrans);
 
             locPoint.X = Math.Abs(locPoint.X);
             locPoint.Y = Math.Abs(locPoint.Y);
@@ -262,11 +252,14 @@ namespace SeeingSharp
             if (Math.Abs(locPoint.X - Extents.X) < MathUtil.ZeroTolerance &&
                 Math.Abs(locPoint.Y - Extents.Y) < MathUtil.ZeroTolerance &&
                 Math.Abs(locPoint.Z - Extents.Z) < MathUtil.ZeroTolerance)
+            {
                 return ContainmentType.Intersects;
+            }
             if (locPoint.X < Extents.X && locPoint.Y < Extents.Y && locPoint.Z < Extents.Z)
+            {
                 return ContainmentType.Contains;
-            else
-                return ContainmentType.Disjoint;
+            }
+            return ContainmentType.Disjoint;
         }
 
         /// <summary>
@@ -276,7 +269,7 @@ namespace SeeingSharp
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(Vector3 point)
         {
-            return Contains(ref point);
+            return this.Contains(ref point);
         }
 
         /// <summary>
@@ -292,9 +285,9 @@ namespace SeeingSharp
             var containsAll = true;
             var containsAny = false;
 
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
-                Vector3 locPoint = Vector3.Transform(points[i], invTrans);
+                var locPoint = Vector3.Transform(points[i], invTrans);
 
                 locPoint.X = Math.Abs(locPoint.X);
                 locPoint.Y = Math.Abs(locPoint.Y);
@@ -304,19 +297,28 @@ namespace SeeingSharp
                 if (Math.Abs(locPoint.X - Extents.X) < MathUtil.ZeroTolerance &&
                     Math.Abs(locPoint.Y - Extents.Y) < MathUtil.ZeroTolerance &&
                     Math.Abs(locPoint.Z - Extents.Z) < MathUtil.ZeroTolerance)
+                {
                     containsAny = true;
+                }
                 if (locPoint.X < Extents.X && locPoint.Y < Extents.Y && locPoint.Z < Extents.Z)
+                {
                     containsAny = true;
+                }
                 else
+                {
                     containsAll = false;
+                }
             }
 
             if (containsAll)
+            {
                 return ContainmentType.Contains;
-            else if (containsAny)
+            }
+            if (containsAny)
+            {
                 return ContainmentType.Intersects;
-            else
-                return ContainmentType.Disjoint;
+            }
+            return ContainmentType.Disjoint;
         }
 
         /// <summary>
@@ -335,29 +337,31 @@ namespace SeeingSharp
             Matrix4x4.Invert(Transformation, out invTrans);
 
             // Transform sphere center into the obb coordinates
-            Vector3 locCenter = Vector3.Transform(sphere.Center, invTrans);
+            var locCenter = Vector3.Transform(sphere.Center, invTrans);
 
             float locRadius;
             if (IgnoreScale)
+            {
                 locRadius = sphere.Radius;
+            }
             else
             {
                 // Transform sphere radius into the obb coordinates
-                Vector3 vRadius = Vector3.TransformNormal(Vector3.UnitX * sphere.Radius, invTrans);
+                var vRadius = Vector3.TransformNormal(Vector3.UnitX * sphere.Radius, invTrans);
                 locRadius = vRadius.Length();
             }
 
             //Perform regualr BoundingBox to BoundingSphere containment check
-            Vector3 minusExtens = -Extents;
-            Vector3 vector = Vector3.Clamp(locCenter, minusExtens, Extents);
-            float distance = Vector3.DistanceSquared(locCenter, vector);
+            var minusExtens = -Extents;
+            var vector = Vector3.Clamp(locCenter, minusExtens, Extents);
+            var distance = Vector3.DistanceSquared(locCenter, vector);
 
             if (distance > locRadius * locRadius)
+            {
                 return ContainmentType.Disjoint;
+            }
 
-            if ((((minusExtens.X + locRadius <= locCenter.X) && (locCenter.X <= Extents.X - locRadius)) && ((Extents.X - minusExtens.X > locRadius) &&
-                (minusExtens.Y + locRadius <= locCenter.Y))) && (((locCenter.Y <= Extents.Y - locRadius) && (Extents.Y - minusExtens.Y > locRadius)) &&
-                (((minusExtens.Z + locRadius <= locCenter.Z) && (locCenter.Z <= Extents.Z - locRadius)) && (Extents.X - minusExtens.X > locRadius))))
+            if (minusExtens.X + locRadius <= locCenter.X && locCenter.X <= Extents.X - locRadius && Extents.X - minusExtens.X > locRadius && minusExtens.Y + locRadius <= locCenter.Y && locCenter.Y <= Extents.Y - locRadius && Extents.Y - minusExtens.Y > locRadius && minusExtens.Z + locRadius <= locCenter.Z && locCenter.Z <= Extents.Z - locRadius && Extents.X - minusExtens.X > locRadius)
             {
                 return ContainmentType.Contains;
             }
@@ -367,7 +371,7 @@ namespace SeeingSharp
 
         private static Vector3[] GetRows(ref Matrix4x4 mat)
         {
-            return new Vector3[] {
+            return new[] {
                 new Vector3(mat.M11,mat.M12,mat.M13),
                 new Vector3(mat.M21,mat.M22,mat.M23),
                 new Vector3(mat.M31,mat.M32,mat.M33)
@@ -385,9 +389,11 @@ namespace SeeingSharp
         /// </remarks>
         public ContainmentType Contains(ref OrientedBoundingBox obb)
         {
-            var cornersCheck = Contains(obb.GetCorners());
+            var cornersCheck = this.Contains(obb.GetCorners());
             if (cornersCheck != ContainmentType.Disjoint)
+            {
                 return cornersCheck;
+            }
 
             //http://www.3dkingdoms.com/weekly/bbox.cpp
             var SizeA = Extents;
@@ -411,22 +417,24 @@ namespace SeeingSharp
 
 
             // Vector separating the centers of Box B and of Box A	
-            var vSepWS = obb.Center - Center;
+            var vSepWS = obb.Center - this.Center;
             // Rotated into Box A's coordinates
             var vSepA = new Vector3(Vector3.Dot(vSepWS, RotA[0]), Vector3.Dot(vSepWS, RotA[1]), Vector3.Dot(vSepWS, RotA[2]));
 
             // Test if any of A's basis vectors separate the box
             for (i = 0; i < 3; i++)
             {
-                ExtentA = Vector3Ex.GetValue(SizeA, i);
+                ExtentA = SizeA.GetValue(i);
                 ExtentB = Vector3.Dot(SizeB, new Vector3(
                     Matrix4x4Ex.GetValue(AR, i, 0),
                     Matrix4x4Ex.GetValue(AR, i, 1),
                     Matrix4x4Ex.GetValue(AR, i, 2)));
-                Separation = Math.Abs(Vector3Ex.GetValue(vSepA, i));
+                Separation = Math.Abs(vSepA.GetValue(i));
 
                 if (Separation > ExtentA + ExtentB)
+                {
                     return ContainmentType.Disjoint;
+                }
             }
 
             // Test if any of B's basis vectors separate the box
@@ -436,14 +444,16 @@ namespace SeeingSharp
                     Matrix4x4Ex.GetValue(AR, 0, k),
                     Matrix4x4Ex.GetValue(AR, 1, k),
                     Matrix4x4Ex.GetValue(AR, 2, k)));
-                ExtentB = Vector3Ex.GetValue(SizeB, k);
+                ExtentB = SizeB.GetValue(k);
                 Separation = Math.Abs(Vector3.Dot(vSepA, new Vector3(
                     Matrix4x4Ex.GetValue(R, 0, k),
                     Matrix4x4Ex.GetValue(R, 1, k),
                     Matrix4x4Ex.GetValue(R, 2, k))));
 
                 if (Separation > ExtentA + ExtentB)
+                {
                     return ContainmentType.Disjoint;
+                }
             }
 
             // Now test Cross Products of each basis vector combination ( A[i], B[k] )
@@ -453,16 +463,18 @@ namespace SeeingSharp
                     int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
                     int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
                     ExtentA =
-                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
-                        Vector3Ex.GetValue(SizeA, i2) * Matrix4x4Ex.GetValue(AR, i1, k);
+                        SizeA.GetValue(i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
+                        SizeA.GetValue(i2) * Matrix4x4Ex.GetValue(AR, i1, k);
                     ExtentB =
-                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
-                        Vector3Ex.GetValue(SizeB, k2) * Matrix4x4Ex.GetValue(AR, i, k1);
+                        SizeB.GetValue(k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
+                        SizeB.GetValue(k2) * Matrix4x4Ex.GetValue(AR, i, k1);
                     Separation = Math.Abs(
-                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) -
-                        Vector3Ex.GetValue(vSepA, i1) * Matrix4x4Ex.GetValue(R, i2, k));
+                        vSepA.GetValue(i2) * Matrix4x4Ex.GetValue(R, i1, k) -
+                        vSepA.GetValue(i1) * Matrix4x4Ex.GetValue(R, i2, k));
                     if (Separation > ExtentA + ExtentB)
+                    {
                         return ContainmentType.Disjoint;
+                    }
                 }
 
             // No separating axis found, the boxes overlap	
@@ -481,32 +493,52 @@ namespace SeeingSharp
         /// </remarks>
         public ContainmentType ContainsLine(ref Vector3 L1, ref Vector3 L2)
         {
-            var cornersCheck = Contains(new Vector3[] { L1, L2 });
+            var cornersCheck = this.Contains(new[] { L1, L2 });
             if (cornersCheck != ContainmentType.Disjoint)
+            {
                 return cornersCheck;
+            }
 
             //http://www.3dkingdoms.com/weekly/bbox.cpp
             // Put line in box space
             Matrix4x4 invTrans;
             Matrix4x4.Invert(Transformation, out invTrans);
 
-            Vector3 LB1 = Vector3.Transform(L1, invTrans);
-            Vector3 LB2 = Vector3.Transform(L1, invTrans);
+            var LB1 = Vector3.Transform(L1, invTrans);
+            var LB2 = Vector3.Transform(L1, invTrans);
 
             // Get line midpoint and extent
             var LMid = (LB1 + LB2) * 0.5f;
-            var L = (LB1 - LMid);
+            var L = LB1 - LMid;
             var LExt = new Vector3(Math.Abs(L.X), Math.Abs(L.Y), Math.Abs(L.Z));
 
             // Use Separating Axis Test
             // Separation vector from box center to line center is LMid, since the line is in box space
-            if (Math.Abs(LMid.X) > Extents.X + LExt.X) return ContainmentType.Disjoint;
-            if (Math.Abs(LMid.Y) > Extents.Y + LExt.Y) return ContainmentType.Disjoint;
-            if (Math.Abs(LMid.Z) > Extents.Z + LExt.Z) return ContainmentType.Disjoint;
+            if (Math.Abs(LMid.X) > Extents.X + LExt.X)
+            {
+                return ContainmentType.Disjoint;
+            }
+            if (Math.Abs(LMid.Y) > Extents.Y + LExt.Y)
+            {
+                return ContainmentType.Disjoint;
+            }
+            if (Math.Abs(LMid.Z) > Extents.Z + LExt.Z)
+            {
+                return ContainmentType.Disjoint;
+            }
             // Crossproducts of line and each axis
-            if (Math.Abs(LMid.Y * L.Z - LMid.Z * L.Y) > (Extents.Y * LExt.Z + Extents.Z * LExt.Y)) return ContainmentType.Disjoint;
-            if (Math.Abs(LMid.X * L.Z - LMid.Z * L.X) > (Extents.X * LExt.Z + Extents.Z * LExt.X)) return ContainmentType.Disjoint;
-            if (Math.Abs(LMid.X * L.Y - LMid.Y * L.X) > (Extents.X * LExt.Y + Extents.Y * LExt.X)) return ContainmentType.Disjoint;
+            if (Math.Abs(LMid.Y * L.Z - LMid.Z * L.Y) > Extents.Y * LExt.Z + Extents.Z * LExt.Y)
+            {
+                return ContainmentType.Disjoint;
+            }
+            if (Math.Abs(LMid.X * L.Z - LMid.Z * L.X) > Extents.X * LExt.Z + Extents.Z * LExt.X)
+            {
+                return ContainmentType.Disjoint;
+            }
+            if (Math.Abs(LMid.X * L.Y - LMid.Y * L.X) > Extents.X * LExt.Y + Extents.Y * LExt.X)
+            {
+                return ContainmentType.Disjoint;
+            }
             // No separating axis, the line intersects
             return ContainmentType.Intersects;
         }
@@ -522,9 +554,11 @@ namespace SeeingSharp
         /// </remarks>
         public ContainmentType Contains(ref BoundingBox box)
         {
-            var cornersCheck = Contains(box.GetCorners());
+            var cornersCheck = this.Contains(box.GetCorners());
             if (cornersCheck != ContainmentType.Disjoint)
+            {
                 return cornersCheck;
+            }
 
             var boxCenter = box.Minimum + (box.Maximum - box.Minimum) / 2f;
             var boxExtents = box.Maximum - boxCenter;
@@ -548,22 +582,24 @@ namespace SeeingSharp
 
 
             // Vector separating the centers of Box B and of Box A	
-            var vSepWS = boxCenter - Center;
+            var vSepWS = boxCenter - this.Center;
             // Rotated into Box A's coordinates
             var vSepA = new Vector3(Vector3.Dot(vSepWS, RotA[0]), Vector3.Dot(vSepWS, RotA[1]), Vector3.Dot(vSepWS, RotA[2]));
 
             // Test if any of A's basis vectors separate the box
             for (i = 0; i < 3; i++)
             {
-                ExtentA = Vector3Ex.GetValue(SizeA, i);
+                ExtentA = SizeA.GetValue(i);
                 ExtentB = Vector3.Dot(SizeB, new Vector3(
                     Matrix4x4Ex.GetValue(AR, i, 0),
                     Matrix4x4Ex.GetValue(AR, i, 1),
                     Matrix4x4Ex.GetValue(AR, i, 2)));
-                Separation = Math.Abs(Vector3Ex.GetValue(vSepA, i));
+                Separation = Math.Abs(vSepA.GetValue(i));
 
                 if (Separation > ExtentA + ExtentB)
+                {
                     return ContainmentType.Disjoint;
+                }
             }
 
             // Test if any of B's basis vectors separate the box
@@ -573,14 +609,16 @@ namespace SeeingSharp
                     Matrix4x4Ex.GetValue(AR, 0, k),
                     Matrix4x4Ex.GetValue(AR, 1, k),
                     Matrix4x4Ex.GetValue(AR, 2, k)));
-                ExtentB = Vector3Ex.GetValue(SizeB, k);
+                ExtentB = SizeB.GetValue(k);
                 Separation = Math.Abs(Vector3.Dot(vSepA, new Vector3(
                     Matrix4x4Ex.GetValue(R, 0, k),
                     Matrix4x4Ex.GetValue(R, 1, k),
                     Matrix4x4Ex.GetValue(R, 2, k))));
 
                 if (Separation > ExtentA + ExtentB)
+                {
                     return ContainmentType.Disjoint;
+                }
             }
 
             // Now test Cross Products of each basis vector combination ( A[i], B[k] )
@@ -590,16 +628,18 @@ namespace SeeingSharp
                     int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
                     int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
                     ExtentA =
-                        Vector3Ex.GetValue(SizeA, i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
-                        Vector3Ex.GetValue(SizeA, i2) * Matrix4x4Ex.GetValue(AR, i1, k);
+                        SizeA.GetValue(i1) * Matrix4x4Ex.GetValue(AR, i2, k) +
+                        SizeA.GetValue(i2) * Matrix4x4Ex.GetValue(AR, i1, k);
                     ExtentB =
-                        Vector3Ex.GetValue(SizeB, k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
-                        Vector3Ex.GetValue(SizeB, k2) * Matrix4x4Ex.GetValue(AR, i, k1);
+                        SizeB.GetValue(k1) * Matrix4x4Ex.GetValue(AR, i, k2) +
+                        SizeB.GetValue(k2) * Matrix4x4Ex.GetValue(AR, i, k1);
                     Separation = Math.Abs(
-                        Vector3Ex.GetValue(vSepA, i2) * Matrix4x4Ex.GetValue(R, i1, k) -
-                        Vector3Ex.GetValue(vSepA, i1) * Matrix4x4Ex.GetValue(R, i2, k));
+                        vSepA.GetValue(i2) * Matrix4x4Ex.GetValue(R, i1, k) -
+                        vSepA.GetValue(i1) * Matrix4x4Ex.GetValue(R, i2, k));
                     if (Separation > ExtentA + ExtentB)
+                    {
                         return ContainmentType.Disjoint;
+                    }
                 }
 
             // No separating axis found, the boxes overlap	
@@ -644,7 +684,7 @@ namespace SeeingSharp
         public bool Intersects(ref Ray ray)
         {
             Vector3 point;
-            return Intersects(ref ray, out point);
+            return this.Intersects(ref ray, out point);
         }
 
         private Vector3[] GetLocalCorners()
@@ -672,7 +712,7 @@ namespace SeeingSharp
         /// <returns>The axis-aligned BoundingBox of this OrientedBoundingBox.</returns>
         public BoundingBox GetBoundingBox()
         {
-            return BoundingBox.FromPoints(GetCorners());
+            return BoundingBox.FromPoints(this.GetCorners());
         }
 
         /// <summary>
@@ -732,11 +772,11 @@ namespace SeeingSharp
         /// </remarks>
         public static void Merge(ref OrientedBoundingBox A, ref OrientedBoundingBox B, bool NoMatrixScaleApplied = false)
         {
-            Matrix4x4 AtoB_Matrix = GetBoxToBoxMatrix(ref A, ref B, NoMatrixScaleApplied);
+            var AtoB_Matrix = GetBoxToBoxMatrix(ref A, ref B, NoMatrixScaleApplied);
 
             //Get B corners in A Space
             var bCorners = B.GetLocalCorners();
-            for (int loop = 0; loop < bCorners.Length; loop++)
+            for (var loop = 0; loop < bCorners.Length; loop++)
             {
                 bCorners[loop] = Vector3.Transform(bCorners[loop], AtoB_Matrix);
             }
@@ -805,12 +845,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(OrientedBoundingBox)))
+            {
                 return false;
+            }
 
-            return Equals((OrientedBoundingBox)value);
+            return this.Equals((OrientedBoundingBox)value);
         }
 
         /// <summary>
@@ -854,7 +898,7 @@ namespace SeeingSharp
         /// </returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.CurrentCulture, "Center: {0}, Extents: {1}", Center, Extents);
+            return string.Format(CultureInfo.CurrentCulture, "Center: {0}, Extents: {1}", this.Center, Extents);
         }
 
         /// <summary>
@@ -867,9 +911,11 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
-            return string.Format(CultureInfo.CurrentCulture, "Center: {0}, Extents: {1}", Center.ToString(format, CultureInfo.CurrentCulture),
+            return string.Format(CultureInfo.CurrentCulture, "Center: {0}, Extents: {1}", this.Center.ToString(format, CultureInfo.CurrentCulture),
                 Extents.ToString(format, CultureInfo.CurrentCulture));
         }
 
@@ -882,7 +928,7 @@ namespace SeeingSharp
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Center: {0}, Extents: {1}", Center.ToString(), Extents.ToString());
+            return string.Format(formatProvider, "Center: {0}, Extents: {1}", this.Center.ToString(), Extents.ToString());
         }
 
         /// <summary>
@@ -896,9 +942,11 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
-            return string.Format(formatProvider, "Center: {0}, Extents: {1}", Center.ToString(format, formatProvider),
+            return string.Format(formatProvider, "Center: {0}, Extents: {1}", this.Center.ToString(format, formatProvider),
                 Extents.ToString(format, formatProvider));
         }
     }

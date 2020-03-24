@@ -19,13 +19,34 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class ImportOptions
     {
+        /// <summary>
+        /// The resource may have a different coordinate system.
+        /// This property ensures that the coordinate system is mapped correctly to the one that
+        /// Seeing# uses. Default is LeftHanded_UpY.
+        /// </summary>
+        public CoordinateSystem ResourceCoordinateSystem
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// True if the model should be scaled and translated so it fits in a cube with a side with of 1.
+        /// </summary>
+        public bool FitToCube
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportOptions"/> class.
         /// </summary>
@@ -80,26 +101,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 default:
                     throw new SeeingSharpGraphicsException($"Unknown coordinate system {this.ResourceCoordinateSystem}!");
             }
-        }
-
-        /// <summary>
-        /// The resource may have a different coordinate system.
-        /// This property ensures that the coordinate system is mapped correctly to the one that
-        /// Seeing# uses. Default is LeftHanded_UpY.
-        /// </summary>
-        public CoordinateSystem ResourceCoordinateSystem
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// True if the model should be scaled and translated so it fits in a cube with a side with of 1.
-        /// </summary>
-        public bool FitToCube
-        {
-            get;
-            set;
         }
     }
 }

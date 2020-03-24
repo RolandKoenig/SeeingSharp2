@@ -19,17 +19,26 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing3D;
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class SeeingSharpLoader : ISeeingSharpExtensionProvider
     {
         private List<ISeeingSharpExtensions> _extensions;
+
+        public IEnumerable<ISeeingSharpExtensions> Extensions => _extensions;
+
+        public SeeingSharpLoadSettings LoadSettings
+        {
+            get;
+            set;
+        }
 
         internal SeeingSharpLoader()
         {
@@ -120,14 +129,6 @@ namespace SeeingSharp.Multimedia.Core
         {
             return this.ConfigureLoading(
                 loadSettings => loadSettings.DebugEnabled = true);
-        }
-
-        public IEnumerable<ISeeingSharpExtensions> Extensions => _extensions;
-
-        public SeeingSharpLoadSettings LoadSettings
-        {
-            get;
-            set;
         }
     }
 }

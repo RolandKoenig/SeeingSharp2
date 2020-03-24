@@ -30,20 +30,6 @@ namespace SeeingSharp.Multimedia.Core
     {
         private ImagingFactory _wicFactory;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
-        /// </summary>
-        internal FactoryHandlerWIC(GraphicsCoreConfiguration coreConfiguration)
-        {
-            this.Factory = new ImagingFactory();
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            this.Factory = SeeingSharpUtil.DisposeObject(this.Factory);
-        }
-
         public bool IsDisposed => this.Factory == null;
 
         /// <summary>
@@ -57,6 +43,20 @@ namespace SeeingSharp.Multimedia.Core
                 return _wicFactory;
             }
             private set => _wicFactory = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FactoryHandlerWIC" /> class.
+        /// </summary>
+        internal FactoryHandlerWIC(GraphicsCoreConfiguration coreConfiguration)
+        {
+            this.Factory = new ImagingFactory();
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.Factory = SeeingSharpUtil.DisposeObject(this.Factory);
         }
     }
 }

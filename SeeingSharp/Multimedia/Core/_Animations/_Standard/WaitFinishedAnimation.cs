@@ -19,12 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class WaitFinishedAnimation : AnimationBase
     {
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// If true, all following animation have to wait for finish-event.
+        /// </summary>
+        public override bool IsBlockingAnimation => true;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WaitFinishedAnimation" /> class.
         /// </summary>
@@ -58,11 +65,5 @@ namespace SeeingSharp.Multimedia.Core
                 this.NotifyAnimationFinished();
             }
         }
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// If true, all following animation have to wait for finish-event.
-        /// </summary>
-        public override bool IsBlockingAnimation => true;
     }
 }

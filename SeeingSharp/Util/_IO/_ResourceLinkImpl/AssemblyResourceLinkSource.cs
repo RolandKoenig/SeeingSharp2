@@ -19,15 +19,33 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System.IO;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
     public class AssemblyResourceLinkSource : ResourceLink
     {
         private AssemblyResourceLink _resourceLink;
+
+        /// <summary>
+        /// Gets the file extension of the resource we target to.
+        /// </summary>
+        public override string FileExtension => this.GetExtensionFromFileName(_resourceLink.ResourceFile);
+
+        public override string FileNameWithExtension => _resourceLink.ResourceFile;
+
+        /// <summary>
+        /// Are async operations supported on this ResourceLink?
+        /// </summary>
+        public override bool SupportsAsync => true;
+
+        /// <summary>
+        /// Are synchronous operations supported on this ResourceLink?
+        /// </summary>
+        public override bool SupportsSync => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyResourceLinkSource" /> class.
@@ -97,22 +115,5 @@ namespace SeeingSharp.Util
         {
             return _resourceLink.IsValid();
         }
-
-        /// <summary>
-        /// Gets the file extension of the resource we target to.
-        /// </summary>
-        public override string FileExtension => this.GetExtensionFromFileName(_resourceLink.ResourceFile);
-
-        public override string FileNameWithExtension => _resourceLink.ResourceFile;
-
-        /// <summary>
-        /// Are async operations supported on this ResourceLink?
-        /// </summary>
-        public override bool SupportsAsync => true;
-
-        /// <summary>
-        /// Are synchronous operations supported on this ResourceLink?
-        /// </summary>
-        public override bool SupportsSync => true;
     }
 }

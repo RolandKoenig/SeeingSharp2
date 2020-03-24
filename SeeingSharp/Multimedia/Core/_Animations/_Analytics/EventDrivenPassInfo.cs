@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 
@@ -29,20 +30,9 @@ namespace SeeingSharp.Multimedia.Core
     /// </summary>
     public class EventDrivenPassInfo
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventDrivenPassInfo"/> class.
-        /// </summary>
-        /// <param name="steps">All steps performed in this calculation.</param>
-        internal EventDrivenPassInfo(List<EventDrivenStepInfo> steps)
-        {
-            this.CountSteps = steps.Count;
-            this.Steps = steps;
-        }
-
         public List<EventDrivenStepInfo> Steps
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -74,7 +64,16 @@ namespace SeeingSharp.Multimedia.Core
         public int CountSteps
         {
             get;
-            private set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventDrivenPassInfo"/> class.
+        /// </summary>
+        /// <param name="steps">All steps performed in this calculation.</param>
+        internal EventDrivenPassInfo(List<EventDrivenStepInfo> steps)
+        {
+            this.CountSteps = steps.Count;
+            this.Steps = steps;
         }
     }
 }

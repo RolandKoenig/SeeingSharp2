@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -52,8 +53,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreateOrthoLH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreateOrthoLH(width, height, znear, zfar, out result);
+            CreateOrthoLH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -83,8 +83,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreateOrthoRH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreateOrthoRH(width, height, znear, zfar, out result);
+            CreateOrthoRH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -123,8 +122,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreateOrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            CreateOrthoOffCenterLH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -201,8 +199,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveLH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveLH(width, height, znear, zfar, out result);
+            CreatePerspectiveLH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -232,8 +229,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveRH(float width, float height, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveRH(width, height, znear, zfar, out result);
+            CreatePerspectiveRH(width, height, znear, zfar, out var result);
             return result;
         }
 
@@ -266,8 +262,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveFovLH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveFovLH(fov, aspect, znear, zfar, out result);
+            CreatePerspectiveFovLH(fov, aspect, znear, zfar, out var result);
             return result;
         }
 
@@ -300,8 +295,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveFovRH(float fov, float aspect, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveFovRH(fov, aspect, znear, zfar, out result);
+            CreatePerspectiveFovRH(fov, aspect, znear, zfar, out var result);
             return result;
         }
 
@@ -341,8 +335,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            CreatePerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -377,8 +370,7 @@ namespace SeeingSharp
         /// <returns>The created projection matrix.</returns>
         public static Matrix4x4 CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
         {
-            Matrix4x4 result;
-            CreatePerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out result);
+            CreatePerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out var result);
             return result;
         }
 
@@ -391,10 +383,9 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
         public static void CreateLookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix4x4 result)
         {
-            Vector3 xaxis, yaxis, zaxis;
-            zaxis = Vector3.Normalize(Vector3.Subtract(target, eye));
-            xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
-            yaxis = Vector3.Cross(zaxis, xaxis);
+            var zaxis = Vector3.Normalize(Vector3.Subtract(target, eye));
+            var xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
+            var yaxis = Vector3.Cross(zaxis, xaxis);
 
             result = Matrix4x4.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
@@ -419,8 +410,7 @@ namespace SeeingSharp
         /// <returns>The created look-at matrix.</returns>
         public static Matrix4x4 CreateLookAtLH(Vector3 eye, Vector3 target, Vector3 up)
         {
-            Matrix4x4 result;
-            CreateLookAtLH(ref eye, ref target, ref up, out result);
+            CreateLookAtLH(ref eye, ref target, ref up, out var result);
             return result;
         }
 
@@ -433,10 +423,9 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
         public static void CreateLookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix4x4 result)
         {
-            Vector3 xaxis, yaxis, zaxis;
-            zaxis = Vector3.Normalize(Vector3.Subtract(eye, target));
-            xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
-            yaxis = Vector3.Cross(zaxis, xaxis);
+            var zaxis = Vector3.Normalize(Vector3.Subtract(eye, target));
+            var xaxis = Vector3.Normalize(Vector3.Cross(up, zaxis));
+            var yaxis = Vector3.Cross(zaxis, xaxis);
 
             result = Matrix4x4.Identity;
             result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
@@ -516,7 +505,7 @@ namespace SeeingSharp
                 case 13: matrix.M42 = value; break;
                 case 14: matrix.M43 = value; break;
                 case 15: matrix.M44 = value; break;
-                default: throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
             }
         }
 

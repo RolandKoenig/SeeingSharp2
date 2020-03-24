@@ -91,7 +91,7 @@ namespace SeeingSharp
         /// </summary>
         /// <param name="point">Coordinate <see cref="SeeingSharp.Point"/>.</param> 
         /// <returns><c>true</c> if <see cref="SeeingSharp.Point"/> is inside <see cref="SeeingSharp.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(SeeingSharp.Point point)
+        public bool Contains(Point point)
         {
             if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
             {
@@ -106,10 +106,10 @@ namespace SeeingSharp
         /// <value>The left.</value>
         public float Left
         {
-            get { return _left; }
+            get => _left;
             set
             {
-                _right = value + Width;
+                _right = value + this.Width;
                 _left = value;
             }
         }
@@ -120,10 +120,10 @@ namespace SeeingSharp
         /// <value>The top.</value>
         public float Top
         {
-            get { return _top; }
+            get => _top;
             set
             {
-                _bottom = value + Height;
+                _bottom = value + this.Height;
                 _top = value;
             }
         }
@@ -134,8 +134,8 @@ namespace SeeingSharp
         /// <value>The right.</value>
         public float Right
         {
-            get { return _right; }
-            set { _right = value; }
+            get => _right;
+            set => _right = value;
         }
 
         /// <summary>
@@ -144,8 +144,8 @@ namespace SeeingSharp
         /// <value>The bottom.</value>
         public float Bottom
         {
-            get { return _bottom; }
-            set { _bottom = value; }
+            get => _bottom;
+            set => _bottom = value;
         }
 
         /// <summary>
@@ -154,10 +154,10 @@ namespace SeeingSharp
         /// <value>The left position.</value>
         public float X
         {
-            get { return _left; }
+            get => _left;
             set
             {
-                _right = value + Width;
+                _right = value + this.Width;
                 _left = value;
             }
         }
@@ -168,10 +168,10 @@ namespace SeeingSharp
         /// <value>The top position.</value>
         public float Y
         {
-            get { return _top; }
+            get => _top;
             set
             {
-                _bottom = value + Height;
+                _bottom = value + this.Height;
                 _top = value;
             }
         }
@@ -182,11 +182,8 @@ namespace SeeingSharp
         /// <value>The width.</value>
         public float Width
         {
-            get { return _right - _left; }
-            set
-            {
-                _right = _left + value;
-            }
+            get => _right - _left;
+            set => _right = _left + value;
         }
 
         /// <summary>
@@ -195,50 +192,32 @@ namespace SeeingSharp
         /// <value>The height.</value>
         public float Height
         {
-            get { return _bottom - _top; }
-            set
-            {
-                _bottom = _top + value;
-            }
+            get => _bottom - _top;
+            set => _bottom = _top + value;
         }
 
         /// <summary>Gets or sets the upper-left value of the Rectangle.</summary>
         public Vector2 Location
         {
-            get
-            {
-                return new Vector2(X, Y);
-            }
+            get => new Vector2(this.X, this.Y);
             set
             {
-                X = value.X;
-                Y = value.Y;
+                this.X = value.X;
+                this.Y = value.Y;
             }
         }
         /// <summary>Gets the Point that specifies the center of the rectangle.</summary>
-        public Vector2 Center
-        {
-            get
-            {
-                return new Vector2(X + (Width / 2), Y + (Height / 2));
-            }
-        }
+        public Vector2 Center => new Vector2(this.X + this.Width / 2, this.Y + this.Height / 2);
 
         /// <summary>Gets a value that indicates whether the Rectangle is empty.</summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return ((((Width == 0.0f) && (Height == 0.0f)) && (X == 0.0f)) && (Y == 0.0f));
-            }
-        }
+        public bool IsEmpty => this.Width == 0.0f && this.Height == 0.0f && this.X == 0.0f && this.Y == 0.0f;
 
         /// <summary>Changes the position of the Rectangle.</summary>
         /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
         public void Offset(Point amount)
         {
-            X += amount.X;
-            Y += amount.Y;
+            this.X += amount.X;
+            this.Y += amount.Y;
         }
 
         /// <summary>Changes the position of the Rectangle.</summary>
@@ -246,8 +225,8 @@ namespace SeeingSharp
         /// <param name="offsetY">Change in the y-position.</param>
         public void Offset(int offsetX, int offsetY)
         {
-            X += offsetX;
-            Y += offsetY;
+            this.X += offsetX;
+            this.Y += offsetY;
         }
 
         /// <summary>Pushes the edges of the Rectangle out by the horizontal and vertical values specified.</summary>
@@ -255,10 +234,10 @@ namespace SeeingSharp
         /// <param name="verticalAmount">Value to push the top and bottom out by.</param>
         public void Inflate(int horizontalAmount, int verticalAmount)
         {
-            X -= horizontalAmount;
-            Y -= verticalAmount;
-            Width += horizontalAmount * 2;
-            Height += verticalAmount * 2;
+            this.X -= horizontalAmount;
+            this.Y -= verticalAmount;
+            this.Width += horizontalAmount * 2;
+            this.Height += verticalAmount * 2;
         }
 
         /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
@@ -266,14 +245,14 @@ namespace SeeingSharp
         /// <param name="result">[OutAttribute] true if the specified Point is contained within this Rectangle; false otherwise.</param>
         public void Contains(ref Vector2 value, out bool result)
         {
-            result = (((X <= value.X) && (value.X < Right)) && (Y <= value.Y)) && (value.Y < Bottom);
+            result = this.X <= value.X && value.X < this.Right && this.Y <= value.Y && value.Y < this.Bottom;
         }
 
         /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
         /// <param name="value">The Rectangle to evaluate.</param>
         public bool Contains(Rectangle value)
         {
-            return ((((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom));
+            return this.X <= value.X && value.Right <= this.Right && this.Y <= value.Y && value.Bottom <= this.Bottom;
         }
 
         /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
@@ -281,14 +260,14 @@ namespace SeeingSharp
         /// <param name="result">[OutAttribute] On exit, is true if this Rectangle entirely contains the specified Rectangle, or false if not.</param>
         public void Contains(ref RectangleF value, out bool result)
         {
-            result = (((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom);
+            result = this.X <= value.X && value.Right <= this.Right && this.Y <= value.Y && value.Bottom <= this.Bottom;
         }
 
         /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>
         /// <param name="value">The Rectangle to evaluate.</param>
         public bool Intersects(RectangleF value)
         {
-            return ((((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom));
+            return value.X < this.Right && this.X < value.Right && value.Y < this.Bottom && this.Y < value.Bottom;
         }
 
         /// <summary>
@@ -298,7 +277,7 @@ namespace SeeingSharp
         /// <param name="result">[OutAttribute] true if the specified Rectangle intersects with this one; false otherwise.</param>
         public void Intersects(ref RectangleF value, out bool result)
         {
-            result = (((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom);
+            result = value.X < this.Right && this.X < value.Right && value.Y < this.Bottom && this.Y < value.Bottom;
         }
 
         /// <summary>
@@ -309,11 +288,11 @@ namespace SeeingSharp
         /// <returns>Rectangle.</returns>
         public static RectangleF Intersect(RectangleF value1, RectangleF value2)
         {
-            float newLeft = (value1.X > value2.X) ? value1.X : value2.X;
-            float newTop = (value1.Y > value2.Y) ? value1.Y : value2.Y;
-            float newRight = (value1.Right < value2.Right) ? value1.Right : value2.Right;
-            float newBottom = (value1.Bottom < value2.Bottom) ? value1.Bottom : value2.Bottom;
-            if ((newRight > newLeft) && (newBottom > newTop))
+            var newLeft = value1.X > value2.X ? value1.X : value2.X;
+            var newTop = value1.Y > value2.Y ? value1.Y : value2.Y;
+            var newRight = value1.Right < value2.Right ? value1.Right : value2.Right;
+            var newBottom = value1.Bottom < value2.Bottom ? value1.Bottom : value2.Bottom;
+            if (newRight > newLeft && newBottom > newTop)
             {
                 return new RectangleF(newLeft, newTop, newRight - newLeft, newBottom - newTop);
             }
@@ -326,11 +305,11 @@ namespace SeeingSharp
         /// <param name="result">[OutAttribute] The area where the two first parameters overlap.</param>
         public static void Intersect(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
         {
-            float newLeft = (value1.X > value2.X) ? value1.X : value2.X;
-            float newTop = (value1.Y > value2.Y) ? value1.Y : value2.Y;
-            float newRight = (value1.Right < value2.Right) ? value1.Right : value2.Right;
-            float newBottom = (value1.Bottom < value2.Bottom) ? value1.Bottom : value2.Bottom;
-            if ((newRight > newLeft) && (newBottom > newTop))
+            var newLeft = value1.X > value2.X ? value1.X : value2.X;
+            var newTop = value1.Y > value2.Y ? value1.Y : value2.Y;
+            var newRight = value1.Right < value2.Right ? value1.Right : value2.Right;
+            var newBottom = value1.Bottom < value2.Bottom ? value1.Bottom : value2.Bottom;
+            if (newRight > newLeft && newBottom > newTop)
             {
                 result = new RectangleF(newLeft, newTop, newRight - newLeft, newBottom - newTop);
             }
@@ -348,14 +327,14 @@ namespace SeeingSharp
         /// <returns>Rectangle.</returns>
         public static RectangleF Union(RectangleF value1, RectangleF value2)
         {
-            float num6 = value1.X + value1.Width;
-            float num5 = value2.X + value2.Width;
-            float num4 = value1.Y + value1.Height;
-            float num3 = value2.Y + value2.Height;
-            float num2 = (value1.X < value2.X) ? value1.X : value2.X;
-            float num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
-            float num8 = (num6 > num5) ? num6 : num5;
-            float num7 = (num4 > num3) ? num4 : num3;
+            var num6 = value1.X + value1.Width;
+            var num5 = value2.X + value2.Width;
+            var num4 = value1.Y + value1.Height;
+            var num3 = value2.Y + value2.Height;
+            var num2 = value1.X < value2.X ? value1.X : value2.X;
+            var num = value1.Y < value2.Y ? value1.Y : value2.Y;
+            var num8 = num6 > num5 ? num6 : num5;
+            var num7 = num4 > num3 ? num4 : num3;
             return new RectangleF(num2, num, num8 - num2, num7 - num);
         }
 
@@ -367,14 +346,14 @@ namespace SeeingSharp
         /// <param name="result">[OutAttribute] The Rectangle that must be the union of the first two rectangles.</param>
         public static void Union(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
         {
-            float num6 = value1.X + value1.Width;
-            float num5 = value2.X + value2.Width;
-            float num4 = value1.Y + value1.Height;
-            float num3 = value2.Y + value2.Height;
-            float num2 = (value1.X < value2.X) ? value1.X : value2.X;
-            float num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
-            float num8 = (num6 > num5) ? num6 : num5;
-            float num7 = (num4 > num3) ? num4 : num3;
+            var num6 = value1.X + value1.Width;
+            var num5 = value2.X + value2.Width;
+            var num4 = value1.Y + value1.Height;
+            var num3 = value2.Y + value2.Height;
+            var num2 = value1.X < value2.X ? value1.X : value2.X;
+            var num = value1.Y < value2.Y ? value1.Y : value2.Y;
+            var num8 = num6 > num5 ? num6 : num5;
+            var num7 = num4 > num3 ? num4 : num3;
             result = new RectangleF(num2, num, num8 - num2, num7 - num);
         }
 
@@ -387,18 +366,24 @@ namespace SeeingSharp
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(RectangleF)) return false;
-            return Equals((RectangleF)obj);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (obj.GetType() != typeof(RectangleF))
+            {
+                return false;
+            }
+            return this.Equals((RectangleF)obj);
         }
 
         /// <inheritdoc/>
         public bool Equals(RectangleF other)
         {
-            return (float)Math.Abs(other.Left - Left) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Right - Right) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Top - Top) < MathUtil.ZeroTolerance &&
-                   (float)Math.Abs(other.Bottom - Bottom) < MathUtil.ZeroTolerance;
+            return Math.Abs(other.Left - this.Left) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.Right - this.Right) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.Top - this.Top) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.Bottom - this.Bottom) < MathUtil.ZeroTolerance;
         }
 
         /// <summary>
@@ -411,7 +396,7 @@ namespace SeeingSharp
         {
             unchecked
             {
-                int result = _left.GetHashCode();
+                var result = _left.GetHashCode();
                 result = (result * 397) ^ _top.GetHashCode();
                 result = (result * 397) ^ _right.GetHashCode();
                 result = (result * 397) ^ _bottom.GetHashCode();

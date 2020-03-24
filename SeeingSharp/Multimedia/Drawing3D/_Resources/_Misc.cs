@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -54,6 +55,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class TextureChangedEventArgs : EventArgs
     {
         /// <summary>
+        /// Gets current renderstate object.
+        /// </summary>
+        public RenderState RenderState { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TextureChangedEventArgs"/> class.
         /// </summary>
         /// <param name="renderState">Current render state.</param>
@@ -61,10 +67,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             this.RenderState = renderState;
         }
-
-        /// <summary>
-        /// Gets current renderstate object.
-        /// </summary>
-        public RenderState RenderState { get; }
     }
 }

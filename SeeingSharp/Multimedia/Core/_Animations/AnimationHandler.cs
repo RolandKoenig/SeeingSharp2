@@ -19,12 +19,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class AnimationHandler : AnimationSequence
     {
+        /// <summary>
+        /// Gets the owner object.
+        /// </summary>
+        public object Owner { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationHandler"/> class.
         /// </summary>
@@ -62,10 +68,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             return new AnimationSequenceBuilder<TTargetObject>(this, animatedObject);
         }
-
-        /// <summary>
-        /// Gets the owner object.
-        /// </summary>
-        public object Owner { get; }
     }
 }

@@ -19,12 +19,91 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class Grid3DGeometryFactory : GeometryFactory
     {
+        public int GroupTileCount
+        {
+            get;
+            set;
+        }
+
+        public Color4 LineColor
+        {
+            get;
+            set;
+        }
+
+        public Color4 GroundColor
+        {
+            get;
+            set;
+        }
+
+        public bool HighlightXZLines
+        {
+            get;
+            set;
+        }
+
+        public Color4 XLineHighlightColor
+        {
+            get;
+            set;
+        }
+
+        public Color4 ZLineHighlightColor
+        {
+            get;
+            set;
+        }
+
+        public bool BuildBackFaces
+        {
+            get;
+            set;
+        }
+
+        public float TileWidth
+        {
+            get;
+            set;
+        }
+
+        public int TilesX
+        {
+            get;
+            set;
+        }
+
+        public int TilesZ
+        {
+            get;
+            set;
+        }
+
+        public bool GenerateGround
+        {
+            get;
+            set;
+        }
+
+        public float LineSmallDivider
+        {
+            get;
+            set;
+        }
+
+        public float LineBigDivider
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid3DGeometryFactory" /> class.
         /// </summary>
@@ -139,84 +218,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Return the generated geometry
             return result;
-        }
-
-        public int GroupTileCount
-        {
-            get;
-            set;
-        }
-
-        public Color4 LineColor
-        {
-            get;
-            set;
-        }
-
-        public Color4 GroundColor
-        {
-            get;
-            set;
-        }
-
-        public bool HighlightXZLines
-        {
-            get;
-            set;
-        }
-
-        public Color4 XLineHighlightColor
-        {
-            get;
-            set;
-        }
-
-        public Color4 ZLineHighlightColor
-        {
-            get;
-            set;
-        }
-
-        public bool BuildBackFaces
-        {
-            get;
-            set;
-        }
-
-        public float TileWidth
-        {
-            get;
-            set;
-        }
-
-        public int TilesX
-        {
-            get;
-            set;
-        }
-
-        public int TilesZ
-        {
-            get;
-            set;
-        }
-
-        public bool GenerateGround
-        {
-            get;
-            set;
-        }
-
-        public float LineSmallDivider
-        {
-            get;
-            set;
-        }
-
-        public float LineBigDivider
-        {
-            get;
-            set;
         }
     }
 }

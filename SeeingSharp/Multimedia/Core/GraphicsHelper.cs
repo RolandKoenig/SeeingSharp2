@@ -19,19 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.IO;
+using System.Linq;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
+using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
-using System;
-using System.IO;
-using System.Linq;
 using D3D11 = SharpDX.Direct3D11;
 using SDXTK = SeeingSharp.Util.SdxTK;
-using PixelFormat = SharpDX.WIC.PixelFormat;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -45,7 +46,7 @@ namespace SeeingSharp.Multimedia.Core
             using (var inStream = source.OpenInputStream())
             using (var rawImage = SDXTK.Image.Load(inStream))
             {
-                return GraphicsHelper.CreateTexture(device, rawImage);
+                return CreateTexture(device, rawImage);
             }
         }
 
@@ -130,7 +131,7 @@ namespace SeeingSharp.Multimedia.Core
                 var formatConverter = new FormatConverter(GraphicsCore.Current.FactoryWIC);
                 formatConverter.Initialize(
                     bitmapDecoder.GetFrame(0),
-                    Internals.DEFAULT_WIC_BITMAP_FORMAT,
+                    DEFAULT_WIC_BITMAP_FORMAT,
                     BitmapDitherType.None,
                     null,
                     0.0,
@@ -170,7 +171,7 @@ namespace SeeingSharp.Multimedia.Core
                 var formatConverter = new FormatConverter(GraphicsCore.Current.FactoryWIC);
                 formatConverter.Initialize(
                     bitmapDecoder.GetFrame(0),
-                    Internals.DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D,
+                    DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D,
                     BitmapDitherType.None,
                     null,
                     0.0,
@@ -211,7 +212,7 @@ namespace SeeingSharp.Multimedia.Core
             public static D3D11.Texture2D LoadTexture2DFromMappedTexture(EngineDevice device, MemoryMappedTexture<int> mappedTexture, bool generateMiplevels)
             {
                 // Create the texture
-                var dataRectangle = new SharpDX.DataRectangle(
+                var dataRectangle = new DataRectangle(
                     mappedTexture.Pointer,
                     mappedTexture.Width * 4);
 
@@ -678,7 +679,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 var vertexCount = vertices.Sum(actArray => actArray.Length);
                 var vertexSize = sizeof(T);
-                var outStream = new SharpDX.DataStream(
+                var outStream = new DataStream(
                     vertexCount * vertexSize,
                     true, true);
 
@@ -717,7 +718,7 @@ namespace SeeingSharp.Multimedia.Core
 
                 const int BYTES_PER_INDEX = sizeof(uint);
                 var countIndices = indices.Sum(actArray => actArray.Length);
-                var outStreamIndex = new SharpDX.DataStream(
+                var outStreamIndex = new DataStream(
                     countIndices *
                     BYTES_PER_INDEX, true, true);
 

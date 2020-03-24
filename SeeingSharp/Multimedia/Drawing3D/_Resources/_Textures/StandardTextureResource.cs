@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -41,6 +42,39 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Runtime
         private bool _isCubeTexture;
         private bool _isRenderTarget;
+
+        /// <summary>
+        /// Gets the texture object.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        internal override D3D11.Texture2D Texture => _texture;
+
+        /// <summary>
+        /// Gets a ShaderResourceView targeting the texture.
+        /// </summary>
+        internal override D3D11.ShaderResourceView TextureView => _textureView;
+
+        /// <summary>
+        /// Is the object loaded correctly?
+        /// </summary>
+        public override bool IsLoaded => _textureView != null;
+
+        /// <summary>
+        /// Is this texture a cube texture?
+        /// </summary>
+        public bool IsCubeTexture => _isCubeTexture;
+
+        /// <summary>
+        /// Is this texture a render target texture?
+        /// </summary>
+        public bool IsRenderTargetTexture => _isRenderTarget;
+
+        /// <summary>
+        /// Gets the size of the texture array.
+        /// 1 for normal textures.
+        /// 6 for cubemap textures.
+        /// </summary>
+        public override int ArraySize => _texture.Description.ArraySize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
@@ -116,38 +150,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _isCubeTexture = false;
             _isRenderTarget = false;
         }
-
-        /// <summary>
-        /// Gets the texture object.
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        internal override D3D11.Texture2D Texture => _texture;
-
-        /// <summary>
-        /// Gets a ShaderResourceView targeting the texture.
-        /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _textureView;
-
-        /// <summary>
-        /// Is the object loaded correctly?
-        /// </summary>
-        public override bool IsLoaded => _textureView != null;
-
-        /// <summary>
-        /// Is this texture a cube texture?
-        /// </summary>
-        public bool IsCubeTexture => _isCubeTexture;
-
-        /// <summary>
-        /// Is this texture a render target texture?
-        /// </summary>
-        public bool IsRenderTargetTexture => _isRenderTarget;
-
-        /// <summary>
-        /// Gets the size of the texture array.
-        /// 1 for normal textures.
-        /// 6 for cubemap textures.
-        /// </summary>
-        public override int ArraySize => _texture.Description.ArraySize;
     }
 }

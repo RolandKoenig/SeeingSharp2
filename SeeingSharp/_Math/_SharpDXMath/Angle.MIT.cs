@@ -45,7 +45,7 @@ namespace SeeingSharp
         /// The internal representation of the angle.
         /// </summary>
         [FieldOffset(0)]
-        float radians;
+        private float radians;
 
         [FieldOffset(0)]
         private int radiansInt;
@@ -100,12 +100,16 @@ namespace SeeingSharp
         /// </summary>
         public void Wrap()
         {
-            float newangle = (float)Math.IEEERemainder(radians, MathUtil.TwoPi);
+            var newangle = (float)Math.IEEERemainder(radians, MathUtil.TwoPi);
 
             if (newangle <= -MathUtil.Pi)
+            {
                 newangle += MathUtil.TwoPi;
+            }
             else if (newangle > MathUtil.Pi)
+            {
                 newangle -= MathUtil.TwoPi;
+            }
 
             radians = newangle;
         }
@@ -115,10 +119,12 @@ namespace SeeingSharp
         /// </summary>
         public void WrapPositive()
         {
-            float newangle = radians % MathUtil.TwoPi;
+            var newangle = radians % MathUtil.TwoPi;
 
             if (newangle < 0.0)
+            {
                 newangle += MathUtil.TwoPi;
+            }
 
             radians = newangle;
         }
@@ -128,8 +134,8 @@ namespace SeeingSharp
         /// </summary>
         public float Revolutions
         {
-            get { return MathUtil.RadiansToRevolutions(radians); }
-            set { radians = MathUtil.RevolutionsToRadians(value); }
+            get => MathUtil.RadiansToRevolutions(radians);
+            set => radians = MathUtil.RevolutionsToRadians(value);
         }
 
         /// <summary>
@@ -137,8 +143,8 @@ namespace SeeingSharp
         /// </summary>
         public float Degrees
         {
-            get { return MathUtil.RadiansToDegrees(radians); }
-            set { radians = MathUtil.DegreesToRadians(value); }
+            get => MathUtil.RadiansToDegrees(radians);
+            set => radians = MathUtil.DegreesToRadians(value);
         }
 
         /// <summary>
@@ -151,23 +157,23 @@ namespace SeeingSharp
         {
             get
             {
-                float degrees = MathUtil.RadiansToDegrees(radians);
+                var degrees = MathUtil.RadiansToDegrees(radians);
 
                 if (degrees < 0)
                 {
-                    float degreesfloor = (float)Math.Ceiling(degrees);
+                    var degreesfloor = (float)Math.Ceiling(degrees);
                     return (degrees - degreesfloor) * 60.0f;
                 }
                 else
                 {
-                    float degreesfloor = (float)Math.Floor(degrees);
+                    var degreesfloor = (float)Math.Floor(degrees);
                     return (degrees - degreesfloor) * 60.0f;
                 }
             }
             set
             {
-                float degrees = MathUtil.RadiansToDegrees(radians);
-                float degreesfloor = (float)Math.Floor(degrees);
+                var degrees = MathUtil.RadiansToDegrees(radians);
+                var degreesfloor = (float)Math.Floor(degrees);
 
                 degreesfloor += value / 60.0f;
                 radians = MathUtil.DegreesToRadians(degreesfloor);
@@ -184,34 +190,34 @@ namespace SeeingSharp
         {
             get
             {
-                float degrees = MathUtil.RadiansToDegrees(radians);
+                var degrees = MathUtil.RadiansToDegrees(radians);
 
                 if (degrees < 0)
                 {
-                    float degreesfloor = (float)Math.Ceiling(degrees);
+                    var degreesfloor = (float)Math.Ceiling(degrees);
 
-                    float minutes = (degrees - degreesfloor) * 60.0f;
-                    float minutesfloor = (float)Math.Ceiling(minutes);
+                    var minutes = (degrees - degreesfloor) * 60.0f;
+                    var minutesfloor = (float)Math.Ceiling(minutes);
 
                     return (minutes - minutesfloor) * 60.0f;
                 }
                 else
                 {
-                    float degreesfloor = (float)Math.Floor(degrees);
+                    var degreesfloor = (float)Math.Floor(degrees);
 
-                    float minutes = (degrees - degreesfloor) * 60.0f;
-                    float minutesfloor = (float)Math.Floor(minutes);
+                    var minutes = (degrees - degreesfloor) * 60.0f;
+                    var minutesfloor = (float)Math.Floor(minutes);
 
                     return (minutes - minutesfloor) * 60.0f;
                 }
             }
             set
             {
-                float degrees = MathUtil.RadiansToDegrees(radians);
-                float degreesfloor = (float)Math.Floor(degrees);
+                var degrees = MathUtil.RadiansToDegrees(radians);
+                var degreesfloor = (float)Math.Floor(degrees);
 
-                float minutes = (degrees - degreesfloor) * 60.0f;
-                float minutesfloor = (float)Math.Floor(minutes);
+                var minutes = (degrees - degreesfloor) * 60.0f;
+                var minutesfloor = (float)Math.Floor(minutes);
 
                 minutesfloor += value / 60.0f;
                 degreesfloor += minutesfloor / 60.0f;
@@ -224,8 +230,8 @@ namespace SeeingSharp
         /// </summary>
         public float Radians
         {
-            get { return radians; }
-            set { radians = value; }
+            get => radians;
+            set => radians = value;
         }
 
         /// <summary>
@@ -234,8 +240,8 @@ namespace SeeingSharp
         /// </summary>
         public float Milliradians
         {
-            get { return radians / (Milliradian * MathUtil.TwoPi); }
-            set { radians = value * (Milliradian * MathUtil.TwoPi); }
+            get => radians / (Milliradian * MathUtil.TwoPi);
+            set => radians = value * (Milliradian * MathUtil.TwoPi);
         }
 
         /// <summary>
@@ -243,88 +249,61 @@ namespace SeeingSharp
         /// </summary>
         public float Gradians
         {
-            get { return MathUtil.RadiansToGradians(radians); }
-            set { radians = MathUtil.RadiansToGradians(value); }
+            get => MathUtil.RadiansToGradians(radians);
+            set => radians = MathUtil.RadiansToGradians(value);
         }
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is a right angle (i.e. 90° or π/2).
         /// </summary>
-        public bool IsRight
-        {
-            get { return radians == MathUtil.PiOverTwo; }
-        }
+        public bool IsRight => radians == MathUtil.PiOverTwo;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is a straight angle (i.e. 180° or π).
         /// </summary>
-        public bool IsStraight
-        {
-            get { return radians == MathUtil.Pi; }
-        }
+        public bool IsStraight => radians == MathUtil.Pi;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is a full rotation angle (i.e. 360° or 2π).
         /// </summary>
-        public bool IsFullRotation
-        {
-            get { return radians == MathUtil.TwoPi; }
-        }
+        public bool IsFullRotation => radians == MathUtil.TwoPi;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is an oblique angle (i.e. is not 90° or a multiple of 90°).
         /// </summary>
-        public bool IsOblique
-        {
-            get { return WrapPositive(this).radians != MathUtil.PiOverTwo; }
-        }
+        public bool IsOblique => WrapPositive(this).radians != MathUtil.PiOverTwo;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is an acute angle (i.e. less than 90° but greater than 0°).
         /// </summary>
-        public bool IsAcute
-        {
-            get { return radians > 0.0 && radians < MathUtil.PiOverTwo; }
-        }
+        public bool IsAcute => radians > 0.0 && radians < MathUtil.PiOverTwo;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is an obtuse angle (i.e. greater than 90° but less than 180°).
         /// </summary>
-        public bool IsObtuse
-        {
-            get { return radians > MathUtil.PiOverTwo && radians < MathUtil.Pi; }
-        }
+        public bool IsObtuse => radians > MathUtil.PiOverTwo && radians < MathUtil.Pi;
 
         /// <summary>
         /// Gets a System.Boolean that determines whether this SeeingSharp.Angle
         /// is a reflex angle (i.e. greater than 180° but less than 360°).
         /// </summary>
-        public bool IsReflex
-        {
-            get { return radians > MathUtil.Pi && radians < MathUtil.TwoPi; }
-        }
+        public bool IsReflex => radians > MathUtil.Pi && radians < MathUtil.TwoPi;
 
         /// <summary>
         /// Gets a SeeingSharp.AngleSingle instance that complements this angle (i.e. the two angles add to 90°).
         /// </summary>
-        public AngleSingle Complement
-        {
-            get { return new AngleSingle(MathUtil.PiOverTwo - radians, AngleType.Radian); }
-        }
+        public AngleSingle Complement => new AngleSingle(MathUtil.PiOverTwo - radians, AngleType.Radian);
 
         /// <summary>
         /// Gets a SeeingSharp.AngleSingle instance that supplements this angle (i.e. the two angles add to 180°).
         /// </summary>
-        public AngleSingle Supplement
-        {
-            get { return new AngleSingle(MathUtil.Pi - radians, AngleType.Radian); }
-        }
+        public AngleSingle Supplement => new AngleSingle(MathUtil.Pi - radians, AngleType.Radian);
 
         /// <summary>
         /// Wraps the SeeingSharp.AngleSingle given in the value argument to be in the range [π, -π].
@@ -357,7 +336,9 @@ namespace SeeingSharp
         public static AngleSingle Min(AngleSingle left, AngleSingle right)
         {
             if (left.radians < right.radians)
+            {
                 return left;
+            }
 
             return right;
         }
@@ -371,7 +352,9 @@ namespace SeeingSharp
         public static AngleSingle Max(AngleSingle left, AngleSingle right)
         {
             if (left.radians > right.radians)
+            {
                 return left;
+            }
 
             return right;
         }
@@ -423,34 +406,22 @@ namespace SeeingSharp
         /// <summary>
         /// Gets a new SeeingSharp.AngleSingle instance that represents the zero angle (i.e. 0°).
         /// </summary>
-        public static AngleSingle ZeroAngle
-        {
-            get { return new AngleSingle(0.0f, AngleType.Radian); }
-        }
+        public static AngleSingle ZeroAngle => new AngleSingle(0.0f, AngleType.Radian);
 
         /// <summary>
         /// Gets a new SeeingSharp.AngleSingle instance that represents the right angle (i.e. 90° or π/2).
         /// </summary>
-        public static AngleSingle RightAngle
-        {
-            get { return new AngleSingle(MathUtil.PiOverTwo, AngleType.Radian); }
-        }
+        public static AngleSingle RightAngle => new AngleSingle(MathUtil.PiOverTwo, AngleType.Radian);
 
         /// <summary>
         /// Gets a new SeeingSharp.AngleSingle instance that represents the straight angle (i.e. 180° or π).
         /// </summary>
-        public static AngleSingle StraightAngle
-        {
-            get { return new AngleSingle(MathUtil.Pi, AngleType.Radian); }
-        }
+        public static AngleSingle StraightAngle => new AngleSingle(MathUtil.Pi, AngleType.Radian);
 
         /// <summary>
         /// Gets a new SeeingSharp.AngleSingle instance that represents the full rotation angle (i.e. 360° or 2π).
         /// </summary>
-        public static AngleSingle FullRotationAngle
-        {
-            get { return new AngleSingle(MathUtil.TwoPi, AngleType.Radian); }
-        }
+        public static AngleSingle FullRotationAngle => new AngleSingle(MathUtil.TwoPi, AngleType.Radian);
 
         /// <summary>
         /// Returns a System.Boolean that indicates whether the values of two SeeingSharp.Angle
@@ -605,18 +576,26 @@ namespace SeeingSharp
         public int CompareTo(object other)
         {
             if (other == null)
+            {
                 return 1;
+            }
 
             if (!(other is AngleSingle))
+            {
                 throw new ArgumentException("Argument must be of type Angle.", "other");
+            }
 
-            float radians = ((AngleSingle)other).radians;
+            var radians = ((AngleSingle)other).radians;
 
             if (this.radians > radians)
+            {
                 return 1;
+            }
 
             if (this.radians < radians)
+            {
                 return -1;
+            }
 
             return 0;
         }
@@ -636,11 +615,15 @@ namespace SeeingSharp
         /// </returns>
         public int CompareTo(AngleSingle other)
         {
-            if (this.radians > other.radians)
+            if (radians > other.radians)
+            {
                 return 1;
+            }
 
-            if (this.radians < other.radians)
+            if (radians < other.radians)
+            {
                 return -1;
+            }
 
             return 0;
         }
@@ -680,7 +663,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "{0}°", MathUtil.RadiansToDegrees(radians).ToString(format, CultureInfo.CurrentCulture));
         }
@@ -708,7 +693,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "{0}°", MathUtil.RadiansToDegrees(radians).ToString(format, CultureInfo.CurrentCulture));
         }
@@ -735,7 +722,7 @@ namespace SeeingSharp
         /// </returns>
         public override bool Equals(object obj)
         {
-            return (obj is AngleSingle) && (this == (AngleSingle)obj);
+            return obj is AngleSingle && this == (AngleSingle)obj;
         }
     }
 }

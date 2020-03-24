@@ -19,10 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -31,6 +28,10 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -63,6 +64,89 @@ namespace SeeingSharp.Multimedia.Core
         // Misc
         private bool _initialized;
         private List<SceneLayer> _sceneLayers;
+
+        /// <summary>
+        /// Gets total count of objects within the scene.
+        /// </summary>
+        public int CountObjects
+        {
+            get
+            {
+                var result = 0;
+
+                foreach (var actLayer in _sceneLayers)
+                {
+                    result += actLayer.CountObjects;
+                }
+
+                return result;
+            }
+        }
+
+        public int CountAttachedComponents => _sceneComponents.CountAttached;
+
+        /// <summary>
+        /// Gets total count of resources.
+        /// </summary>
+        public int CountResources
+        {
+            get
+            {
+                var firstResourceDict = _registeredResourceDicts.FirstOrDefault();
+
+                if (firstResourceDict != null)
+                {
+                    return firstResourceDict.ResourceCount;
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets total count of layers.
+        /// </summary>
+        public int CountLayers => _sceneLayers.Count;
+
+        /// <summary>
+        /// Gets the total count of view objects registered on this scene.
+        /// </summary>
+        public int CountViews => _registeredViews.Count;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this scene is in pause mode.
+        /// </summary>
+        public bool IsPaused
+        {
+            get;
+            set;
+        }
+
+        public Graphics2DTransformMode TransformMode2D { get; set; }
+
+        public Size2F VirtualScreenSize2D { get; set; }
+
+        public Matrix3x2 CustomTransform2D { get; set; }
+
+        /// <summary>
+        /// Discard automatic scene unloading.
+        /// (normally the scene gets cleared automatically after the last view
+        /// gets deregistered).
+        /// </summary>
+        public bool DiscardAutomaticUnload
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets a collection containing all layers.
+        /// </summary>
+        internal ReadOnlyCollection<SceneLayer> Layers { get; }
+
+        internal SceneRelatedUpdateState CachedUpdateState
+        {
+            get;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scene" /> class.
@@ -106,31 +190,7 @@ namespace SeeingSharp.Multimedia.Core
             {
                 return _registeredResourceDicts[device.DeviceIndex].ResourceCount;
             }
-            else
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Queries all loaded resources of the given resource key.
-        /// </summary>
-        internal IEnumerable<T> QueryResources<T>(NamedOrGenericKey resourceKey, Action checkValidAction)
-            where T : Resource
-        {
-            checkValidAction?.Invoke();
-
-            foreach (var actResourceDict in _registeredResourceDicts)
-            {
-                if(!actResourceDict.ContainsResource(resourceKey)){ continue; }
-
-                var actResource = actResourceDict.GetResource<T>(resourceKey);
-                if(actResource == null){ continue; }
-
-                yield return actResource;
-
-                checkValidAction?.Invoke();
-            }
+            return 0;
         }
 
         /// <summary>
@@ -359,6 +419,27 @@ namespace SeeingSharp.Multimedia.Core
             });
 
             return taskCompletionSource.Task;
+        }
+
+        /// <summary>
+        /// Queries all loaded resources of the given resource key.
+        /// </summary>
+        internal IEnumerable<T> QueryResources<T>(NamedOrGenericKey resourceKey, Action checkValidAction)
+            where T : Resource
+        {
+            checkValidAction?.Invoke();
+
+            foreach (var actResourceDict in _registeredResourceDicts)
+            {
+                if(!actResourceDict.ContainsResource(resourceKey)){ continue; }
+
+                var actResource = actResourceDict.GetResource<T>(resourceKey);
+                if(actResource == null){ continue; }
+
+                yield return actResource;
+
+                checkValidAction?.Invoke();
+            }
         }
 
         /// <summary>
@@ -903,8 +984,8 @@ namespace SeeingSharp.Multimedia.Core
             if (asyncActionsBeforeUpdateCount > 0)
             {
                 var actIndex = 0;
-                while ((actIndex < asyncActionsBeforeUpdateCount) &&
-                       (_asyncInvokesBeforeUpdate.TryDequeue(out var actAsyncAction)))
+                while (actIndex < asyncActionsBeforeUpdateCount &&
+                       _asyncInvokesBeforeUpdate.TryDequeue(out var actAsyncAction))
                 {
                     actAsyncAction();
                     actIndex++;
@@ -941,8 +1022,8 @@ namespace SeeingSharp.Multimedia.Core
             // Invoke all async action attached to this scene
             var prevCount = _asyncInvokesUpdateBesideRendering.Count;
             var actIndex = 0;
-            while ((actIndex < prevCount) &&
-                   (_asyncInvokesUpdateBesideRendering.TryDequeue(out var actAsyncAction)))
+            while (actIndex < prevCount &&
+                   _asyncInvokesUpdateBesideRendering.TryDequeue(out var actAsyncAction))
             {
                 actAsyncAction();
                 actIndex++;
@@ -988,8 +1069,8 @@ namespace SeeingSharp.Multimedia.Core
             var currentDevice = renderState.Device;
             foreach (var actRenderableResource in resources.RenderableResources)
             {
-                if ((actRenderableResource.IsLoaded) &&
-                    (!currentDevice.IsLost))
+                if (actRenderableResource.IsLoaded &&
+                    !currentDevice.IsLost)
                 {
                     actRenderableResource.Render(renderState);
                 }
@@ -1172,89 +1253,6 @@ namespace SeeingSharp.Multimedia.Core
         private void SortLayers()
         {
             _sceneLayers.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
-        }
-
-        /// <summary>
-        /// Gets total count of objects within the scene.
-        /// </summary>
-        public int CountObjects
-        {
-            get
-            {
-                var result = 0;
-
-                foreach (var actLayer in _sceneLayers)
-                {
-                    result += actLayer.CountObjects;
-                }
-
-                return result;
-            }
-        }
-
-        public int CountAttachedComponents => _sceneComponents.CountAttached;
-
-        /// <summary>
-        /// Gets total count of resources.
-        /// </summary>
-        public int CountResources
-        {
-            get
-            {
-                var firstResourceDict = _registeredResourceDicts.FirstOrDefault();
-
-                if (firstResourceDict != null)
-                {
-                    return firstResourceDict.ResourceCount;
-                }
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets total count of layers.
-        /// </summary>
-        public int CountLayers => _sceneLayers.Count;
-
-        /// <summary>
-        /// Gets the total count of view objects registered on this scene.
-        /// </summary>
-        public int CountViews => _registeredViews.Count;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this scene is in pause mode.
-        /// </summary>
-        public bool IsPaused
-        {
-            get;
-            set;
-        }
-
-        public Graphics2DTransformMode TransformMode2D { get; set; }
-
-        public Size2F VirtualScreenSize2D { get; set; }
-
-        public Matrix3x2 CustomTransform2D { get; set; }
-
-        /// <summary>
-        /// Discard automatic scene unloading.
-        /// (normally the scene gets cleared automatically after the last view
-        /// gets deregistered).
-        /// </summary>
-        public bool DiscardAutomaticUnload
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets a collection containing all layers.
-        /// </summary>
-        internal ReadOnlyCollection<SceneLayer> Layers { get; }
-
-        internal SceneRelatedUpdateState CachedUpdateState
-        {
-            get;
         }
     }
 }

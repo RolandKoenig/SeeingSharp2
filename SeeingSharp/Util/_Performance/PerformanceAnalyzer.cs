@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -42,6 +43,22 @@ namespace SeeingSharp.Util
         private DateTime _startupTimestamp;
 
         /// <summary>
+        /// The interval for which values are produced.
+        /// (Calculating is triggered after value interval).
+        /// </summary>
+        public TimeSpan ValueInterval { get; }
+
+        /// <summary>
+        /// The Maximum count of historical entries.
+        /// </summary>
+        public int MaxResultCountPerCalculator { get; }
+
+        /// <summary>
+        /// Accessor to internal methods/members.
+        /// </summary>
+        public PerformanceAnalyzerInternals Internals { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PerformanceAnalyzer"/> class.
         /// </summary>
         public PerformanceAnalyzer(TimeSpan valueInterval, int maxResultCountPerCalculator = 50)
@@ -60,6 +77,28 @@ namespace SeeingSharp.Util
             _cachedMeasureTokens = new ConcurrentObjectPool<DurationMeasureToken>(
                 () => new DurationMeasureToken(this),
                 INIT_COUNT_CACHED_MEASURE_TOKENS);
+        }
+
+        /// <summary>
+        /// Gets all current results.
+        /// </summary>
+        public IEnumerable<DurationPerformanceResult> GetCurrentResults()
+        {
+            // This call is not synchronized and may be called at any time (even when _isCalculating is set)
+            // Worst cases are that we
+            //  a) miss new new calculation result
+            //  b) get a result which was deleted from the list before
+            // No real problem actually...
+
+            var calculatorsLength = _cachedCalculators.Count;
+            var calculatorsArray = _cachedCalculators.BackingArray;
+            for (var loop = 0; loop < calculatorsLength; loop++)
+            {
+                var actCalculatorInfo = calculatorsArray[loop];
+
+                if(actCalculatorInfo?.CurrentResult == null){ continue; }
+                yield return actCalculatorInfo.CurrentResult;
+            }
         }
 
         /// <summary>
@@ -201,28 +240,6 @@ namespace SeeingSharp.Util
         }
 
         /// <summary>
-        /// Gets all current results.
-        /// </summary>
-        public IEnumerable<DurationPerformanceResult> GetCurrentResults()
-        {
-            // This call is not synchronized and may be called at any time (even when _isCalculating is set)
-            // Worst cases are that we
-            //  a) miss new new calculation result
-            //  b) get a result which was deleted from the list before
-            // No real problem actually...
-
-            var calculatorsLength = _cachedCalculators.Count;
-            var calculatorsArray = _cachedCalculators.BackingArray;
-            for (var loop = 0; loop < calculatorsLength; loop++)
-            {
-                var actCalculatorInfo = calculatorsArray[loop];
-
-                if(actCalculatorInfo?.CurrentResult == null){ continue; }
-                yield return actCalculatorInfo.CurrentResult;
-            }
-        }
-
-        /// <summary>
         /// Gets the calculator for the given activityName.
         /// </summary>
         /// <typeparam name="T">The type of the calculator to get.</typeparam>
@@ -247,22 +264,6 @@ namespace SeeingSharp.Util
             return newCalculatorInfo.Calculator;
         }
 
-        /// <summary>
-        /// The interval for which values are produced.
-        /// (Calculating is triggered after value interval).
-        /// </summary>
-        public TimeSpan ValueInterval { get; }
-
-        /// <summary>
-        /// The Maximum count of historical entries.
-        /// </summary>
-        public int MaxResultCountPerCalculator { get; }
-
-        /// <summary>
-        /// Accessor to internal methods/members.
-        /// </summary>
-        public PerformanceAnalyzerInternals Internals { get; }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -271,15 +272,15 @@ namespace SeeingSharp.Util
         /// </summary>
         private class CalculatorInfo
         {
+            public DurationPerformanceCalculator Calculator;
+            public RingBuffer<DurationPerformanceResult> Results;
+            public DurationPerformanceResult CurrentResult;
+
             public CalculatorInfo(DurationPerformanceCalculator calculator, int maxResultCount)
             {
                 Calculator = calculator;
                 Results = new RingBuffer<DurationPerformanceResult>(maxResultCount);
             }
-
-            public DurationPerformanceCalculator Calculator;
-            public RingBuffer<DurationPerformanceResult> Results;
-            public DurationPerformanceResult CurrentResult;
         }
 
         /// <summary>

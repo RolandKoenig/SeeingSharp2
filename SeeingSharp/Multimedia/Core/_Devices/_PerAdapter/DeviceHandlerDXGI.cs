@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 
@@ -28,6 +29,21 @@ namespace SeeingSharp.Multimedia.Core
     {
         private Adapter1 _adapter;
         private Factory2 _factory;
+
+        public bool IsInitialized =>
+            _factory != null &&
+            _adapter != null;
+
+        /// <summary>
+        /// Gets current factory object.
+        /// </summary>
+        /// <value>The factory.</value>
+        internal Factory2 Factory => _factory;
+
+        /// <summary>
+        /// Gets current adapter used for drawing.
+        /// </summary>
+        internal Adapter1 Adapter => _adapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
@@ -46,20 +62,5 @@ namespace SeeingSharp.Multimedia.Core
             _factory = SeeingSharpUtil.DisposeObject(_factory);
             _adapter = SeeingSharpUtil.DisposeObject(_adapter);
         }
-
-        public bool IsInitialized =>
-            _factory != null &&
-            _adapter != null;
-
-        /// <summary>
-        /// Gets current factory object.
-        /// </summary>
-        /// <value>The factory.</value>
-        internal Factory2 Factory => _factory;
-
-        /// <summary>
-        /// Gets current adapter used for drawing.
-        /// </summary>
-        internal Adapter1 Adapter => _adapter;
     }
 }

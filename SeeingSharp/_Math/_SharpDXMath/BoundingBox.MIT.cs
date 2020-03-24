@@ -28,8 +28,8 @@ namespace SeeingSharp
         /// <param name="maximum">The maximum vertex of the bounding box.</param>
         public BoundingBox(Vector3 minimum, Vector3 maximum)
         {
-            this.Minimum = minimum;
-            this.Maximum = maximum;
+            Minimum = minimum;
+            Maximum = maximum;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace SeeingSharp
         /// <returns>An array of points representing the eight corners of the bounding box.</returns>
         public Vector3[] GetCorners()
         {
-            Vector3[] results = new Vector3[8];
-            GetCorners(results);
+            var results = new Vector3[8];
+            this.GetCorners(results);
             return results;
         }
 
@@ -135,7 +135,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingBox box)
         {
-            return Intersects(ref box);
+            return this.Intersects(ref box);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace SeeingSharp
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(BoundingSphere sphere)
         {
-            return Intersects(ref sphere);
+            return this.Intersects(ref sphere);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace SeeingSharp
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(Vector3 point)
         {
-            return Contains(ref point);
+            return this.Contains(ref point);
         }
 
         /* This implentation is wrong
@@ -209,7 +209,7 @@ namespace SeeingSharp
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(BoundingBox box)
         {
-            return Contains(ref box);
+            return this.Contains(ref box);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace SeeingSharp
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(BoundingSphere sphere)
         {
-            return Contains(ref sphere);
+            return this.Contains(ref sphere);
         }
 
         /// <summary>
@@ -241,12 +241,14 @@ namespace SeeingSharp
         public static void FromPoints(Vector3[] points, out BoundingBox result)
         {
             if (points == null)
+            {
                 throw new ArgumentNullException("points");
+            }
 
-            Vector3 min = new Vector3(float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue);
+            var min = new Vector3(float.MaxValue);
+            var max = new Vector3(float.MinValue);
 
-            for (int i = 0; i < points.Length; ++i)
+            for (var i = 0; i < points.Length; ++i)
             {
                 min = Vector3.Min(min, points[i]);
                 max = Vector3.Max(max, points[i]);
@@ -264,12 +266,14 @@ namespace SeeingSharp
         public static BoundingBox FromPoints(Vector3[] points)
         {
             if (points == null)
+            {
                 throw new ArgumentNullException("points");
+            }
 
-            Vector3 min = new Vector3(float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue);
+            var min = new Vector3(float.MaxValue);
+            var max = new Vector3(float.MinValue);
 
-            for (int i = 0; i < points.Length; ++i)
+            for (var i = 0; i < points.Length; ++i)
             {
                 min = Vector3.Min(min, points[i]);
                 max = Vector3.Max(max, points[i]);
@@ -371,7 +375,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "Minimum:{0} Maximum:{1}", Minimum.ToString(format, CultureInfo.CurrentCulture),
                 Maximum.ToString(format, CultureInfo.CurrentCulture));
@@ -400,7 +406,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "Minimum:{0} Maximum:{1}", Minimum.ToString(format, formatProvider),
                 Maximum.ToString(format, formatProvider));
@@ -435,12 +443,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(BoundingBox)))
+            {
                 return false;
+            }
 
-            return Equals((BoundingBox)value);
+            return this.Equals((BoundingBox)value);
         }
     }
 }

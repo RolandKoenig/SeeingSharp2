@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
@@ -32,6 +33,11 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         // Device resource handling
         private int[] _deviceResourceIndices;
+
+        /// <summary>
+        /// Is this object disposed?
+        /// </summary>
+        public bool IsDisposed => _isDisposed;
 
         protected Drawing2DResourceBase()
         {
@@ -54,12 +60,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             }
         }
 
-        /// <summary>
-        /// Unloads all resources loaded on the given device.
-        /// </summary>
-        /// <param name="engineDevice">The device for which to unload the resource.</param>
-        internal abstract void UnloadResources(EngineDevice engineDevice);
-
         public int GetDeviceResourceIndex(EngineDevice device)
         {
             return _deviceResourceIndices[device.DeviceIndex];
@@ -70,16 +70,15 @@ namespace SeeingSharp.Multimedia.Drawing2D
             _deviceResourceIndices[device.DeviceIndex] = resourceIndex;
         }
 
+        /// <summary>
+        /// Unloads all resources loaded on the given device.
+        /// </summary>
+        /// <param name="engineDevice">The device for which to unload the resource.</param>
+        internal abstract void UnloadResources(EngineDevice engineDevice);
+
         void IEngineDeviceResource.UnloadResources(EngineDevice device)
         {
             this.UnloadResources(device);
         }
-
-        /// <summary>
-        /// Is this object disposed?
-        /// </summary>
-        public bool IsDisposed => _isDisposed;
-
-
     }
 }

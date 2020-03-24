@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 
@@ -37,6 +38,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
         // Resources
         private D2D.EllipseGeometry _geometry;
+
+        public override bool IsDisposed => _geometry == null;
+
+        public Vector2 Center => _center;
+
+        public float RadiusX => _radiusX;
+
+        public float RadiusY => _radiusY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EllipseGeometryResource"/> class.
@@ -86,13 +95,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             return _geometry;
         }
-
-        public override bool IsDisposed => _geometry == null;
-
-        public Vector2 Center => _center;
-
-        public float RadiusX => _radiusX;
-
-        public float RadiusY => _radiusY;
     }
 }

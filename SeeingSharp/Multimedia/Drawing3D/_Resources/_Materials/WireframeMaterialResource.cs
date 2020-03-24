@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
@@ -47,102 +48,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private GeometryShaderResource _geoShader;
         private PixelShaderResource _pixelShader;
         private TypeSafeConstantBufferResource<CBPerMaterial> _cbPerMaterial;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardMaterialResource"/> class.
-        /// </summary>
-        public WireframeMaterialResource()
-        {
-            _maxClipDistance = 1000f;
-            _adjustTextureCoordinates = false;
-            _addToAlpha = 0f;
-            _materialDiffuseColor = Color4.White;
-            _useVertexColors = true;
-        }
-
-        /// <inheritdoc />
-        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            // Load all required shaders and constant buffers
-            _vertexShader = resources.GetResourceAndEnsureLoaded(
-                s_resKeyVertexShader,
-                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Common", "WireframeVertexShader"));
-            _geoShader = resources.GetResourceAndEnsureLoaded(
-                s_resKeyGeoShader,
-                () => GraphicsHelper.Internals.GetGeometryShaderResource(device, "Common", "WireframeGeometryShader"));
-            _pixelShader = resources.GetResourceAndEnsureLoaded(
-                s_resKeyPixelShader,
-                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "WireframePixelShader"));
-            _cbPerMaterial = resources.GetResourceAndEnsureLoaded(
-                _keyConstantBuffer,
-                () => new TypeSafeConstantBufferResource<CBPerMaterial>());
-            _cbPerMaterialDataChanged = true;
-        }
-
-        /// <inheritdoc />
-        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
-        {
-            _vertexShader = null;
-            _geoShader = null;
-            _pixelShader = null;
-            _cbPerMaterial = null;
-        }
-
-        /// <inheritdoc />
-        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
-        {
-            return _vertexShader.GetInputLayout(device, inputElements);
-        }
-
-        /// <inheritdoc />
-        internal override void Apply(RenderState renderState, MaterialResource previousMaterial)
-        {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            var isResourceSameType =
-                previousMaterial != null &&
-                previousMaterial.ResourceType == this.ResourceType;
-
-            // Apply local shader configuration
-            if (_cbPerMaterialDataChanged)
-            {
-                _cbPerMaterial.SetData(
-                    deviceContext,
-                    new CBPerMaterial
-                    {
-                        ClipFactor = _clipFactor,
-                        MaxClipDistance = _maxClipDistance,
-                        Texture0Factor = 0f,
-                        AdjustTextureCoordinates = _adjustTextureCoordinates ? 1f : 0f,
-                        AddToAlpha = _addToAlpha,
-                        MaterialDiffuseColor = _materialDiffuseColor,
-                        DiffuseColorFactor = _useVertexColors ? 0f : 1f,
-                    });
-                _cbPerMaterialDataChanged = false;
-            }
-
-            // Apply sampler and constants
-            deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-            deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-
-            // Set texture resource (if set)
-            deviceContext.PixelShader.SetShaderResource(0, null);
-
-            // Set shader resources
-            if (!isResourceSameType)
-            {
-                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
-                deviceContext.GeometryShader.Set(_geoShader.GeometryShader);
-                deviceContext.PixelShader.Set(_pixelShader.PixelShader);
-            }
-        }
-
-        /// <inheritdoc />
-        internal override void Discard(RenderState renderState)
-        {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-
-            deviceContext.GeometryShader.Set(null);
-        }
 
         /// <inheritdoc />
         public override bool IsLoaded => _vertexShader != null;
@@ -236,6 +141,102 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     _cbPerMaterialDataChanged = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardMaterialResource"/> class.
+        /// </summary>
+        public WireframeMaterialResource()
+        {
+            _maxClipDistance = 1000f;
+            _adjustTextureCoordinates = false;
+            _addToAlpha = 0f;
+            _materialDiffuseColor = Color4.White;
+            _useVertexColors = true;
+        }
+
+        /// <inheritdoc />
+        protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            // Load all required shaders and constant buffers
+            _vertexShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyVertexShader,
+                () => GraphicsHelper.Internals.GetVertexShaderResource(device, "Common", "WireframeVertexShader"));
+            _geoShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyGeoShader,
+                () => GraphicsHelper.Internals.GetGeometryShaderResource(device, "Common", "WireframeGeometryShader"));
+            _pixelShader = resources.GetResourceAndEnsureLoaded(
+                s_resKeyPixelShader,
+                () => GraphicsHelper.Internals.GetPixelShaderResource(device, "Common", "WireframePixelShader"));
+            _cbPerMaterial = resources.GetResourceAndEnsureLoaded(
+                _keyConstantBuffer,
+                () => new TypeSafeConstantBufferResource<CBPerMaterial>());
+            _cbPerMaterialDataChanged = true;
+        }
+
+        /// <inheritdoc />
+        protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
+        {
+            _vertexShader = null;
+            _geoShader = null;
+            _pixelShader = null;
+            _cbPerMaterial = null;
+        }
+
+        /// <inheritdoc />
+        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        {
+            return _vertexShader.GetInputLayout(device, inputElements);
+        }
+
+        /// <inheritdoc />
+        internal override void Apply(RenderState renderState, MaterialResource previousMaterial)
+        {
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var isResourceSameType =
+                previousMaterial != null &&
+                previousMaterial.ResourceType == this.ResourceType;
+
+            // Apply local shader configuration
+            if (_cbPerMaterialDataChanged)
+            {
+                _cbPerMaterial.SetData(
+                    deviceContext,
+                    new CBPerMaterial
+                    {
+                        ClipFactor = _clipFactor,
+                        MaxClipDistance = _maxClipDistance,
+                        Texture0Factor = 0f,
+                        AdjustTextureCoordinates = _adjustTextureCoordinates ? 1f : 0f,
+                        AddToAlpha = _addToAlpha,
+                        MaterialDiffuseColor = _materialDiffuseColor,
+                        DiffuseColorFactor = _useVertexColors ? 0f : 1f
+                    });
+                _cbPerMaterialDataChanged = false;
+            }
+
+            // Apply sampler and constants
+            deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+
+            // Set texture resource (if set)
+            deviceContext.PixelShader.SetShaderResource(0, null);
+
+            // Set shader resources
+            if (!isResourceSameType)
+            {
+                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
+                deviceContext.GeometryShader.Set(_geoShader.GeometryShader);
+                deviceContext.PixelShader.Set(_pixelShader.PixelShader);
+            }
+        }
+
+        /// <inheritdoc />
+        internal override void Discard(RenderState renderState)
+        {
+            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+
+            deviceContext.GeometryShader.Set(null);
         }
     }
 }

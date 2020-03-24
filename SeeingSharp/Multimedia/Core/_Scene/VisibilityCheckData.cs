@@ -19,20 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
     internal class VisibilityCheckData
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VisibilityCheckData"/> class.
-        /// </summary>
-        internal VisibilityCheckData()
-        {
-            FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
-        }
-
         /// <summary>
         /// All data the the corresponding filter stages.
         /// </summary>
@@ -42,5 +35,13 @@ namespace SeeingSharp.Multimedia.Core
         /// Is this object visible?
         /// </summary>
         internal bool IsVisible;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisibilityCheckData"/> class.
+        /// </summary>
+        internal VisibilityCheckData()
+        {
+            FilterStageData = new IndexBasedDynamicCollection<VisibilityCheckFilterStageData>();
+        }
     }
 }

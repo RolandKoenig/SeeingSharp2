@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
@@ -61,6 +62,32 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private D3D11.ShaderResourceView _normalDepthBufferShaderResourceView;
 
         /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => true;
+
+        /// <summary>
+        /// Gets the texture itself.
+        /// </summary>
+        internal override D3D11.Texture2D Texture => _colorBuffer;
+
+        /// <summary>
+        /// Gets the shader resource view to the texture.
+        /// </summary>
+        internal override D3D11.ShaderResourceView TextureView => _colorBufferShaderResourceView;
+
+        public override int ArraySize => 1;
+
+        internal D3D11.Texture2D TextureColor => _colorBuffer;
+
+        internal D3D11.ShaderResourceView TextureViewColor => _colorBufferShaderResourceView;
+
+        /// <summary>
+        /// Gets the shader resource view to the normal-depth texture.
+        /// </summary>
+        internal D3D11.ShaderResourceView TextureViewNormalDepth => _normalDepthBufferShaderResourceView;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
         /// </summary>
         /// <param name="creationMode">Tells this object which texture to create.</param>
@@ -87,11 +114,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var currentAntialiasingEnabled = viewConfig.AntialiasingEnabled;
             var currentAntialiasingQuality = viewConfig.AntialiasingQuality;
 
-            if ((_width != currentViewSize.Width) ||
-                (_height != currentViewSize.Height) ||
-                (_antialiasingEnabled != currentAntialiasingEnabled) ||
-                (_antialiasingQuality != currentAntialiasingQuality) ||
-                (_forceRecreateResources))
+            if (_width != currentViewSize.Width ||
+                _height != currentViewSize.Height ||
+                _antialiasingEnabled != currentAntialiasingEnabled ||
+                _antialiasingQuality != currentAntialiasingQuality ||
+                _forceRecreateResources)
             {
                 _forceRecreateResources = false;
 
@@ -292,31 +319,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
             }
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => true;
-
-        /// <summary>
-        /// Gets the texture itself.
-        /// </summary>
-        internal override D3D11.Texture2D Texture => _colorBuffer;
-
-        /// <summary>
-        /// Gets the shader resource view to the texture.
-        /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _colorBufferShaderResourceView;
-
-        public override int ArraySize => 1;
-
-        internal D3D11.Texture2D TextureColor => _colorBuffer;
-
-        internal D3D11.ShaderResourceView TextureViewColor => _colorBufferShaderResourceView;
-
-        /// <summary>
-        /// Gets the shader resource view to the normal-depth texture.
-        /// </summary>
-        internal D3D11.ShaderResourceView TextureViewNormalDepth => _normalDepthBufferShaderResourceView;
     }
 }

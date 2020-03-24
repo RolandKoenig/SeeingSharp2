@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -33,10 +34,26 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private float _zoomFactor = 10f;
 
         /// <summary>
+        /// Gets or sets the zoom factor.
+        /// </summary>
+        public float ZoomFactor
+        {
+            get => _zoomFactor;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_zoomFactor, value))
+                {
+                    _zoomFactor = value;
+                    this.UpdateCamera();
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="OrthographicCamera3D"/> class.
         /// </summary>
         public OrthographicCamera3D()
-            : base(isOrthographic: true)
+            : base(true)
         {
         }
 
@@ -46,7 +63,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
         public OrthographicCamera3D(int width, int height)
-            : base(isOrthographic: true, width, height)
+            : base(true, width, height)
         {
         }
 
@@ -114,22 +131,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Matrix4x4Ex.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
-        }
-
-        /// <summary>
-        /// Gets or sets the zoom factor.
-        /// </summary>
-        public float ZoomFactor
-        {
-            get => _zoomFactor;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_zoomFactor, value))
-                {
-                    _zoomFactor = value;
-                    this.UpdateCamera();
-                }
-            }
         }
     }
 }

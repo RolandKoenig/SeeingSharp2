@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -28,6 +29,18 @@ namespace SeeingSharp
     {
         public Vector2 StartPosition;
         public Vector2 EndPosition;
+
+        /// <summary>
+        /// Gets the length of this line.
+        /// </summary>
+        public float Length
+        {
+            get
+            {
+                var lengthVector = EndPosition - StartPosition;
+                return lengthVector.Length();
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Line2D" /> struct.
@@ -113,18 +126,6 @@ namespace SeeingSharp
             if (distanceTo1 > this.Length) { return Tuple.Create(false, Vector2.Zero); }
 
             return intersectionResult;
-        }
-
-        /// <summary>
-        /// Gets the length of this line.
-        /// </summary>
-        public float Length
-        {
-            get
-            {
-                var lengthVector = EndPosition - StartPosition;
-                return lengthVector.Length();
-            }
         }
     }
 }

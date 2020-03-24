@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
@@ -31,6 +32,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         // Resources
         private TypeSafeConstantBufferResource<CBPerObject> _cbPerObject;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _cbPerObject != null;
+
+        /// <summary>
+        /// Does this object needs refreshing?
+        /// </summary>
+        internal bool NeedsRefresh;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectRenderParameters" /> class.
@@ -89,15 +100,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             deviceContext.VertexShader.SetConstantBuffer(2, _cbPerObject.ConstantBuffer);
             deviceContext.PixelShader.SetConstantBuffer(2, _cbPerObject.ConstantBuffer);
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public override bool IsLoaded => _cbPerObject != null;
-
-        /// <summary>
-        /// Does this object needs refreshing?
-        /// </summary>
-        internal bool NeedsRefresh;
     }
 }

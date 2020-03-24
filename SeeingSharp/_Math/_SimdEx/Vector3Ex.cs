@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -27,12 +28,16 @@ namespace SeeingSharp
 {
     public static class Vector3Ex
     {
+        public static Vector3 MinValue => new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+        public static Vector3 MaxValue => new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+
         public static bool EqualsWithTolerance(Vector3 left, Vector3 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
-                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.Z, right.Z, tolerance: tolerance);
+                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Z, right.Z, tolerance);
         }
 
         /// <summary>
@@ -234,8 +239,7 @@ namespace SeeingSharp
         /// <returns>The vector in screen space.</returns>
         public static Vector3 Project(Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, Matrix4x4 worldViewProjection)
         {
-            Vector3 result;
-            Project(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out result);
+            Project(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out var result);
             return result;
         }
 
@@ -254,8 +258,7 @@ namespace SeeingSharp
         public static void Unproject(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix4x4 worldViewProjection, out Vector3 result)
         {
             var v = new Vector3();
-            var matrix = new Matrix4x4();
-            Matrix4x4.Invert(worldViewProjection, out matrix);
+            Matrix4x4.Invert(worldViewProjection, out var matrix);
 
             v.X = (vector.X - x) / width * 2.0f - 1.0f;
             v.Y = -((vector.Y - y) / height * 2.0f - 1.0f);
@@ -278,8 +281,7 @@ namespace SeeingSharp
         /// <returns>The vector in object space.</returns>
         public static Vector3 Unproject(Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, Matrix4x4 worldViewProjection)
         {
-            Vector3 result;
-            Unproject(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out result);
+            Unproject(ref vector, x, y, width, height, minZ, maxZ, ref worldViewProjection, out var result);
             return result;
         }
 
@@ -320,16 +322,6 @@ namespace SeeingSharp
                 case 3: vector.Z = value; break;
                 default: throw new ArgumentException("Invalid index!");
             }
-        }
-
-        public static Vector3 MinValue
-        {
-            get => new Vector3(float.MinValue, float.MinValue, float.MinValue);
-        }
-
-        public static Vector3 MaxValue
-        {
-            get => new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         }
     }
 }

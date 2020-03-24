@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -29,10 +30,10 @@ namespace SeeingSharp
         public static bool EqualsWithTolerance(Vector4 left, Vector4 right, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
-                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.Z, right.Z, tolerance: tolerance) &&
-                EngineMath.EqualsWithTolerance(left.W, right.W, tolerance: tolerance);
+                EngineMath.EqualsWithTolerance(left.X, right.X, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.Z, right.Z, tolerance) &&
+                EngineMath.EqualsWithTolerance(left.W, right.W, tolerance);
         }
 
         public static float GetValue(Vector4 vector, int index)

@@ -19,7 +19,7 @@ namespace SeeingSharp
         /// <summary>
         /// A <see cref = "Int4" /> with all of its components set to zero.
         /// </summary>
-        public static readonly Int4 Zero = new Int4();
+        public static readonly Int4 Zero;
 
         /// <summary>
         /// The X unit <see cref = "Int4" /> (1, 0, 0, 0).
@@ -103,10 +103,14 @@ namespace SeeingSharp
         public Int4(int[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 4)
+            {
                 throw new ArgumentOutOfRangeException("values",
-                                                      "There must be four and only four input values for Int4.");
+                    "There must be four and only four input values for Int4.");
+            }
 
             X = values[0];
             Y = values[1];
@@ -168,7 +172,7 @@ namespace SeeingSharp
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
         {
-            return new int[] { X, Y, Z, W };
+            return new[] { X, Y, Z, W };
         }
 
         /// <summary>
@@ -310,21 +314,21 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains the clamped value.</param>
         public static void Clamp(ref Int4 value, ref Int4 min, ref Int4 max, out Int4 result)
         {
-            int x = value.X;
-            x = (x > max.X) ? max.X : x;
-            x = (x < min.X) ? min.X : x;
+            var x = value.X;
+            x = x > max.X ? max.X : x;
+            x = x < min.X ? min.X : x;
 
-            int y = value.Y;
-            y = (y > max.Y) ? max.Y : y;
-            y = (y < min.Y) ? min.Y : y;
+            var y = value.Y;
+            y = y > max.Y ? max.Y : y;
+            y = y < min.Y ? min.Y : y;
 
-            int z = value.Z;
-            z = (z > max.Z) ? max.Z : z;
-            z = (z < min.Z) ? min.Z : z;
+            var z = value.Z;
+            z = z > max.Z ? max.Z : z;
+            z = z < min.Z ? min.Z : z;
 
-            int w = value.W;
-            w = (w > max.W) ? max.W : w;
-            w = (w < min.W) ? min.W : w;
+            var w = value.W;
+            w = w > max.W ? max.W : w;
+            w = w < min.W ? min.W : w;
 
             result = new Int4(x, y, z, w);
         }
@@ -351,10 +355,10 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains an new vector composed of the largest components of the source vectors.</param>
         public static void Max(ref Int4 left, ref Int4 right, out Int4 result)
         {
-            result.X = (left.X > right.X) ? left.X : right.X;
-            result.Y = (left.Y > right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z > right.Z) ? left.Z : right.Z;
-            result.W = (left.W > right.W) ? left.W : right.W;
+            result.X = left.X > right.X ? left.X : right.X;
+            result.Y = left.Y > right.Y ? left.Y : right.Y;
+            result.Z = left.Z > right.Z ? left.Z : right.Z;
+            result.W = left.W > right.W ? left.W : right.W;
         }
 
         /// <summary>
@@ -378,10 +382,10 @@ namespace SeeingSharp
         /// <param name = "result">When the method completes, contains an new vector composed of the smallest components of the source vectors.</param>
         public static void Min(ref Int4 left, ref Int4 right, out Int4 result)
         {
-            result.X = (left.X < right.X) ? left.X : right.X;
-            result.Y = (left.Y < right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z < right.Z) ? left.Z : right.Z;
-            result.W = (left.W < right.W) ? left.W : right.W;
+            result.X = left.X < right.X ? left.X : right.X;
+            result.Y = left.Y < right.Y ? left.Y : right.Y;
+            result.Z = left.Z < right.Z ? left.Z : right.Z;
+            result.W = left.W < right.W ? left.W : right.W;
         }
 
         /// <summary>
@@ -545,7 +549,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}",
                                  X.ToString(format, CultureInfo.CurrentCulture),
@@ -577,7 +583,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                ToString(formatProvider);
+            {
+                this.ToString(formatProvider);
+            }
 
             return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, formatProvider),
                                  Y.ToString(format, formatProvider), Z.ToString(format, formatProvider),
@@ -617,12 +625,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Int4)))
+            {
                 return false;
+            }
 
-            return Equals((Int4)value);
+            return this.Equals((Int4)value);
         }
 
         /// <summary>

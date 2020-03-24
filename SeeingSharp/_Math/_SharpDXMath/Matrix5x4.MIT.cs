@@ -19,12 +19,12 @@ namespace SeeingSharp
         /// <summary>
         /// A <see cref="SeeingSharp.Matrix5x4"/> with all of its components set to zero.
         /// </summary>
-        public static readonly Matrix5x4 Zero = new Matrix5x4();
+        public static readonly Matrix5x4 Zero;
 
         /// <summary>
         /// The identity <see cref="SeeingSharp.Matrix5x4"/>.
         /// </summary>
-        public static readonly Matrix5x4 Identity = new Matrix5x4() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f, M54 = 0.0f };
+        public static readonly Matrix5x4 Identity = new Matrix5x4 { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f, M54 = 0.0f };
 
         /// <summary>
         /// Value at row 1 column 1 of the Matrix5x4.
@@ -184,9 +184,13 @@ namespace SeeingSharp
         public Matrix5x4(float[] values)
         {
             if (values == null)
+            {
                 throw new ArgumentNullException("values");
+            }
             if (values.Length != 20)
+            {
                 throw new ArgumentOutOfRangeException("values", "There must be 20 input values for Matrix5x4.");
+            }
 
             M11 = values[0];
             M12 = values[1];
@@ -219,7 +223,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 Row1
         {
-            get { return new Vector4(M11, M12, M13, M14); }
+            get => new Vector4(M11, M12, M13, M14);
             set { M11 = value.X; M12 = value.Y; M13 = value.Z; M14 = value.W; }
         }
 
@@ -228,7 +232,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 Row2
         {
-            get { return new Vector4(M21, M22, M23, M24); }
+            get => new Vector4(M21, M22, M23, M24);
             set { M21 = value.X; M22 = value.Y; M23 = value.Z; M24 = value.W; }
         }
 
@@ -237,7 +241,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 Row3
         {
-            get { return new Vector4(M31, M32, M33, M34); }
+            get => new Vector4(M31, M32, M33, M34);
             set { M31 = value.X; M32 = value.Y; M33 = value.Z; M34 = value.W; }
         }
 
@@ -246,7 +250,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 Row4
         {
-            get { return new Vector4(M41, M42, M43, M44); }
+            get => new Vector4(M41, M42, M43, M44);
             set { M41 = value.X; M42 = value.Y; M43 = value.Z; M44 = value.W; }
         }
 
@@ -255,7 +259,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 Row5
         {
-            get { return new Vector4(M51, M52, M53, M54); }
+            get => new Vector4(M51, M52, M53, M54);
             set { M51 = value.X; M52 = value.Y; M53 = value.Z; M54 = value.W; }
         }
 
@@ -264,7 +268,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 TranslationVector
         {
-            get { return new Vector4(M51, M52, M53, M54); }
+            get => new Vector4(M51, M52, M53, M54);
             set { M51 = value.X; M52 = value.Y; M53 = value.Z; M54 = value.W; }
         }
 
@@ -273,7 +277,7 @@ namespace SeeingSharp
         /// </summary>
         public Vector4 ScaleVector
         {
-            get { return new Vector4(M11, M22, M33, M44); }
+            get => new Vector4(M11, M22, M33, M44);
             set { M11 = value.X; M22 = value.Y; M33 = value.Z; M44 = value.W; }
         }
 
@@ -283,10 +287,7 @@ namespace SeeingSharp
         /// <value>
         /// <c>true</c> if this instance is an identity Matrix5x4; otherwise, <c>false</c>.
         /// </value>
-        public bool IsIdentity
-        {
-            get { return this.Equals(Identity); }
-        }
+        public bool IsIdentity => this.Equals(Identity);
 
         /// <summary>
         /// Gets or sets the component at the specified index.
@@ -368,21 +369,29 @@ namespace SeeingSharp
             get
             {
                 if (row < 0 || row > 4)
+                {
                     throw new ArgumentOutOfRangeException("row", "Rows for matrices run from 0 to 4, inclusive.");
+                }
                 if (column < 0 || column > 3)
+                {
                     throw new ArgumentOutOfRangeException("column", "Columns for matrices run from 0 to 3, inclusive.");
+                }
 
-                return this[(row * 4) + column];
+                return this[row * 4 + column];
             }
 
             set
             {
                 if (row < 0 || row > 4)
+                {
                     throw new ArgumentOutOfRangeException("row", "Rows for matrices run from 0 to 4, inclusive.");
+                }
                 if (column < 0 || column > 3)
+                {
                     throw new ArgumentOutOfRangeException("column", "Columns for matrices run from 0 to 3, inclusive.");
+                }
 
-                this[(row * 4) + column] = value;
+                this[row * 4 + column] = value;
             }
         }
 
@@ -510,7 +519,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the scaled Matrix5x4.</param>
         public static void Divide(ref Matrix5x4 left, float right, out Matrix5x4 result)
         {
-            float inv = 1.0f / right;
+            var inv = 1.0f / right;
 
             result.M11 = left.M11 * inv;
             result.M12 = left.M12 * inv;
@@ -589,26 +598,26 @@ namespace SeeingSharp
         /// </remarks>
         public static void Lerp(ref Matrix5x4 start, ref Matrix5x4 end, float amount, out Matrix5x4 result)
         {
-            result.M11 = start.M11 + ((end.M11 - start.M11) * amount);
-            result.M12 = start.M12 + ((end.M12 - start.M12) * amount);
-            result.M13 = start.M13 + ((end.M13 - start.M13) * amount);
-            result.M14 = start.M14 + ((end.M14 - start.M14) * amount);
-            result.M21 = start.M21 + ((end.M21 - start.M21) * amount);
-            result.M22 = start.M22 + ((end.M22 - start.M22) * amount);
-            result.M23 = start.M23 + ((end.M23 - start.M23) * amount);
-            result.M24 = start.M24 + ((end.M24 - start.M24) * amount);
-            result.M31 = start.M31 + ((end.M31 - start.M31) * amount);
-            result.M32 = start.M32 + ((end.M32 - start.M32) * amount);
-            result.M33 = start.M33 + ((end.M33 - start.M33) * amount);
-            result.M34 = start.M34 + ((end.M34 - start.M34) * amount);
-            result.M41 = start.M41 + ((end.M41 - start.M41) * amount);
-            result.M42 = start.M42 + ((end.M42 - start.M42) * amount);
-            result.M43 = start.M43 + ((end.M43 - start.M43) * amount);
-            result.M44 = start.M44 + ((end.M44 - start.M44) * amount);
-            result.M51 = start.M51 + ((end.M51 - start.M51) * amount);
-            result.M52 = start.M52 + ((end.M52 - start.M52) * amount);
-            result.M53 = start.M53 + ((end.M53 - start.M53) * amount);
-            result.M54 = start.M54 + ((end.M54 - start.M54) * amount);
+            result.M11 = start.M11 + (end.M11 - start.M11) * amount;
+            result.M12 = start.M12 + (end.M12 - start.M12) * amount;
+            result.M13 = start.M13 + (end.M13 - start.M13) * amount;
+            result.M14 = start.M14 + (end.M14 - start.M14) * amount;
+            result.M21 = start.M21 + (end.M21 - start.M21) * amount;
+            result.M22 = start.M22 + (end.M22 - start.M22) * amount;
+            result.M23 = start.M23 + (end.M23 - start.M23) * amount;
+            result.M24 = start.M24 + (end.M24 - start.M24) * amount;
+            result.M31 = start.M31 + (end.M31 - start.M31) * amount;
+            result.M32 = start.M32 + (end.M32 - start.M32) * amount;
+            result.M33 = start.M33 + (end.M33 - start.M33) * amount;
+            result.M34 = start.M34 + (end.M34 - start.M34) * amount;
+            result.M41 = start.M41 + (end.M41 - start.M41) * amount;
+            result.M42 = start.M42 + (end.M42 - start.M42) * amount;
+            result.M43 = start.M43 + (end.M43 - start.M43) * amount;
+            result.M44 = start.M44 + (end.M44 - start.M44) * amount;
+            result.M51 = start.M51 + (end.M51 - start.M51) * amount;
+            result.M52 = start.M52 + (end.M52 - start.M52) * amount;
+            result.M53 = start.M53 + (end.M53 - start.M53) * amount;
+            result.M54 = start.M54 + (end.M54 - start.M54) * amount;
         }
 
         /// <summary>
@@ -639,29 +648,29 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the cubic interpolation of the two matrices.</param>
         public static void SmoothStep(ref Matrix5x4 start, ref Matrix5x4 end, float amount, out Matrix5x4 result)
         {
-            amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
-            amount = (amount * amount) * (3.0f - (2.0f * amount));
+            amount = amount > 1.0f ? 1.0f : amount < 0.0f ? 0.0f : amount;
+            amount = amount * amount * (3.0f - 2.0f * amount);
 
-            result.M11 = start.M11 + ((end.M11 - start.M11) * amount);
-            result.M12 = start.M12 + ((end.M12 - start.M12) * amount);
-            result.M13 = start.M13 + ((end.M13 - start.M13) * amount);
-            result.M14 = start.M14 + ((end.M14 - start.M14) * amount);
-            result.M21 = start.M21 + ((end.M21 - start.M21) * amount);
-            result.M22 = start.M22 + ((end.M22 - start.M22) * amount);
-            result.M23 = start.M23 + ((end.M23 - start.M23) * amount);
-            result.M24 = start.M24 + ((end.M24 - start.M24) * amount);
-            result.M31 = start.M31 + ((end.M31 - start.M31) * amount);
-            result.M32 = start.M32 + ((end.M32 - start.M32) * amount);
-            result.M33 = start.M33 + ((end.M33 - start.M33) * amount);
-            result.M34 = start.M34 + ((end.M34 - start.M34) * amount);
-            result.M41 = start.M41 + ((end.M41 - start.M41) * amount);
-            result.M42 = start.M42 + ((end.M42 - start.M42) * amount);
-            result.M43 = start.M43 + ((end.M43 - start.M43) * amount);
-            result.M44 = start.M44 + ((end.M44 - start.M44) * amount);
-            result.M51 = start.M51 + ((end.M51 - start.M51) * amount);
-            result.M52 = start.M52 + ((end.M52 - start.M52) * amount);
-            result.M53 = start.M53 + ((end.M53 - start.M53) * amount);
-            result.M54 = start.M54 + ((end.M54 - start.M54) * amount);
+            result.M11 = start.M11 + (end.M11 - start.M11) * amount;
+            result.M12 = start.M12 + (end.M12 - start.M12) * amount;
+            result.M13 = start.M13 + (end.M13 - start.M13) * amount;
+            result.M14 = start.M14 + (end.M14 - start.M14) * amount;
+            result.M21 = start.M21 + (end.M21 - start.M21) * amount;
+            result.M22 = start.M22 + (end.M22 - start.M22) * amount;
+            result.M23 = start.M23 + (end.M23 - start.M23) * amount;
+            result.M24 = start.M24 + (end.M24 - start.M24) * amount;
+            result.M31 = start.M31 + (end.M31 - start.M31) * amount;
+            result.M32 = start.M32 + (end.M32 - start.M32) * amount;
+            result.M33 = start.M33 + (end.M33 - start.M33) * amount;
+            result.M34 = start.M34 + (end.M34 - start.M34) * amount;
+            result.M41 = start.M41 + (end.M41 - start.M41) * amount;
+            result.M42 = start.M42 + (end.M42 - start.M42) * amount;
+            result.M43 = start.M43 + (end.M43 - start.M43) * amount;
+            result.M44 = start.M44 + (end.M44 - start.M44) * amount;
+            result.M51 = start.M51 + (end.M51 - start.M51) * amount;
+            result.M52 = start.M52 + (end.M52 - start.M52) * amount;
+            result.M53 = start.M53 + (end.M53 - start.M53) * amount;
+            result.M54 = start.M54 + (end.M54 - start.M54) * amount;
         }
 
         /// <summary>
@@ -710,7 +719,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created scaling Matrix5x4.</param>
         public static void Scaling(float x, float y, float z, float w, out Matrix5x4 result)
         {
-            result = Matrix5x4.Identity;
+            result = Identity;
             result.M11 = x;
             result.M22 = y;
             result.M33 = z;
@@ -739,7 +748,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created scaling Matrix5x4.</param>
         public static void Scaling(float scale, out Matrix5x4 result)
         {
-            result = Matrix5x4.Identity;
+            result = Identity;
             result.M11 = result.M22 = result.M33 = result.M44 = scale;
         }
 
@@ -787,7 +796,7 @@ namespace SeeingSharp
         /// <param name="result">When the method completes, contains the created translation Matrix5x4.</param>
         public static void Translation(float x, float y, float z, float w, out Matrix5x4 result)
         {
-            result = Matrix5x4.Identity;
+            result = Identity;
             result.M51 = x;
             result.M52 = y;
             result.M53 = z;
@@ -940,7 +949,9 @@ namespace SeeingSharp
         public string ToString(string format)
         {
             if (format == null)
-                return ToString();
+            {
+                return this.ToString();
+            }
 
             return string.Format(format, CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M3:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}] [M51:{16} M52:{17} M53:{18} M54:{19}]",
                 M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture), M13.ToString(format, CultureInfo.CurrentCulture), M14.ToString(format, CultureInfo.CurrentCulture),
@@ -978,7 +989,9 @@ namespace SeeingSharp
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                return ToString(formatProvider);
+            {
+                return this.ToString(formatProvider);
+            }
 
             return string.Format(format, formatProvider, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M3:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}] [M51:{16} M52:{17} M53:{18} M54:{19}]",
                 M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider), M14.ToString(format, formatProvider),
@@ -1012,30 +1025,30 @@ namespace SeeingSharp
         /// </returns>
         public bool Equals(Matrix5x4 other)
         {
-            return (Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M13 - M13) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M14 - M14) < MathUtil.ZeroTolerance &&
+            return Math.Abs(other.M11 - M11) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M12 - M12) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M13 - M13) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M14 - M14) < MathUtil.ZeroTolerance &&
 
-                Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M23 - M23) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M24 - M24) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M21 - M21) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M22 - M22) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M23 - M23) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M24 - M24) < MathUtil.ZeroTolerance &&
 
-                Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M33 - M33) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M34 - M34) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M31 - M31) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M32 - M32) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M33 - M33) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M34 - M34) < MathUtil.ZeroTolerance &&
 
-                Math.Abs(other.M41 - M41) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M42 - M42) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M43 - M43) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M44 - M44) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M41 - M41) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M42 - M42) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M43 - M43) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M44 - M44) < MathUtil.ZeroTolerance &&
 
-                Math.Abs(other.M51 - M51) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M52 - M52) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M53 - M53) < MathUtil.ZeroTolerance &&
-                Math.Abs(other.M54 - M54) < MathUtil.ZeroTolerance);
+                   Math.Abs(other.M51 - M51) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M52 - M52) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M53 - M53) < MathUtil.ZeroTolerance &&
+                   Math.Abs(other.M54 - M54) < MathUtil.ZeroTolerance;
         }
 
         /// <summary>
@@ -1048,12 +1061,16 @@ namespace SeeingSharp
         public override bool Equals(object value)
         {
             if (value == null)
+            {
                 return false;
+            }
 
             if (!ReferenceEquals(value.GetType(), typeof(Matrix5x4)))
+            {
                 return false;
+            }
 
-            return Equals((Matrix5x4)value);
+            return this.Equals((Matrix5x4)value);
         }
     }
 }

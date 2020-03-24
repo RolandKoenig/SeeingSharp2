@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -29,13 +30,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Scales current object by the given move vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="scaleVector">The scale vector.</param>
         /// <param name="animationTime">Total time for the animation.</param>
         /// <returns></returns>
-        public static IAnimationSequenceBuilder<TargetObject> Scale3DTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, Vector3 scaleVector, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectScaling
+        public static IAnimationSequenceBuilder<TTargetObject> Scale3DTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, Vector3 scaleVector, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectScaling
         {
             sequenceBuilder.Add(
                 new Scale3DToAnimation(sequenceBuilder.TargetObject, scaleVector, animationTime));
@@ -45,13 +46,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Scales current object by the given move vector.
         /// </summary>
-        /// <typeparam name="TargetObject">The type of the target object.</typeparam>
+        /// <typeparam name="TTargetObject">The type of the target object.</typeparam>
         /// <param name="sequenceBuilder">AnimationSequenceBuilder building the animation.</param>
         /// <param name="targetScaling">The target scaling factor.</param>
         /// <param name="animationTime">Total time for the animation.</param>
         /// <returns></returns>
-        public static IAnimationSequenceBuilder<TargetObject> Scale3DTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, float targetScaling, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectScaling
+        public static IAnimationSequenceBuilder<TTargetObject> Scale3DTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, float targetScaling, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectScaling
         {
             sequenceBuilder.Add(
                 new Scale3DToAnimation(
@@ -61,8 +62,8 @@ namespace SeeingSharp.Multimedia.Core
             return sequenceBuilder;
         }
 
-        public static IAnimationSequenceBuilder<TargetObject> ScaleTo<TargetObject>(this IAnimationSequenceBuilder<TargetObject> sequenceBuilder, float targetScaling, TimeSpan animationTime)
-            where TargetObject : class, IAnimatableObjectSprite
+        public static IAnimationSequenceBuilder<TTargetObject> ScaleTo<TTargetObject>(this IAnimationSequenceBuilder<TTargetObject> sequenceBuilder, float targetScaling, TimeSpan animationTime)
+            where TTargetObject : class, IAnimatableObjectSprite
         {
             sequenceBuilder.Add(
                 new ScaleSpriteToAnimation(sequenceBuilder.TargetObject, targetScaling, animationTime));

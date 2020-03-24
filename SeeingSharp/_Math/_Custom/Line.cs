@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -55,8 +56,8 @@ namespace SeeingSharp
         public bool EqualsWithTolerance(Line otherLine, float tolerance = EngineMath.TOLERANCE_FLOAT_POSITIVE)
         {
             return
-                Vector3Ex.EqualsWithTolerance(this.StartPosition, otherLine.StartPosition, tolerance: tolerance) &&
-                Vector3Ex.EqualsWithTolerance(this.EndPosition, otherLine.EndPosition, tolerance: tolerance);
+                Vector3Ex.EqualsWithTolerance(StartPosition, otherLine.StartPosition, tolerance) &&
+                Vector3Ex.EqualsWithTolerance(EndPosition, otherLine.EndPosition, tolerance);
         }
 
         /// <summary>

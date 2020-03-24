@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -34,6 +35,32 @@ namespace SeeingSharp.Multimedia.Core
         private Func<AnimationHandler, AnimationHandler> _funcGetAnimationHandler;
         private Func<Color4, Color4> _funcGetDisplayColor;
         private IEngineOpacityProvider _opacityObject;
+
+        public Vector3 Position => _funcPositionMapper(_original.Position);
+
+        public Vector3 Rotation => _funcRotationMapper(_original.Rotation);
+
+        public Vector3 Scaling => _funcScalingMapper(_original.Scaling);
+
+        public AnimationHandler AnimationHandler
+        {
+            get
+            {
+                if (_funcGetAnimationHandler != null) { return _funcGetAnimationHandler(_original.AnimationHandler); }
+                return _original.AnimationHandler;
+            }
+        }
+
+        public Color4 DisplayColor
+        {
+            get
+            {
+                if (_funcGetDisplayColor != null) { return _funcGetDisplayColor(_original.DisplayColor); }
+                return _original.DisplayColor;
+            }
+        }
+
+        float IEngineOpacityProvider.Opacity => _opacityObject?.Opacity ?? 1f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HostedObjectTransformDataMapper"/> class.
@@ -93,52 +120,11 @@ namespace SeeingSharp.Multimedia.Core
             Func<Color4, Color4> funcColorMapper)
             : this(
                 originalObject,
-                (actPos) => actPos,
-                (actRot) => actRot,
-                (actScale) => actScale,
+                actPos => actPos,
+                actRot => actRot,
+                actScale => actScale,
                 funcColorMapper)
         {
-        }
-
-        public Vector3 Position
-        {
-            get { return _funcPositionMapper(_original.Position); }
-        }
-
-        public Vector3 Rotation
-        {
-            get { return _funcRotationMapper(_original.Rotation); }
-        }
-
-        public Vector3 Scaling
-        {
-            get { return _funcScalingMapper(_original.Scaling); }
-        }
-
-        public AnimationHandler AnimationHandler
-        {
-            get
-            {
-                if (_funcGetAnimationHandler != null) { return _funcGetAnimationHandler(_original.AnimationHandler); }
-                else { return _original.AnimationHandler; }
-            }
-        }
-
-        public Color4 DisplayColor
-        {
-            get
-            {
-                if (_funcGetDisplayColor != null) { return _funcGetDisplayColor(_original.DisplayColor); }
-                else { return _original.DisplayColor; }
-            }
-        }
-
-        float IEngineOpacityProvider.Opacity
-        {
-            get
-            {
-                return _opacityObject?.Opacity ?? 1f;
-            }
         }
     }
 }

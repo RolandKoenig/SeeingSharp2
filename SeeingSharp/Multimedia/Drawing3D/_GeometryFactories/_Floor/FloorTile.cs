@@ -26,6 +26,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private FloorTileInfo _tileInfo;
 
         /// <summary>
+        /// Gets the material used by this tile.
+        /// </summary>
+        public int MaterialIndex => _tileInfo.MaterialIndex;
+
+        /// <summary>
+        /// Gets the x-position of the tile.
+        /// </summary>
+        public int XPos { get; }
+
+        /// <summary>
+        /// Gets the y-position of the tile.
+        /// </summary>
+        public int YPos { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FloorTile"/> class.
         /// </summary>
         /// <param name="xPos">The x pos.</param>
@@ -49,20 +64,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             this.YPos = yPos;
             _tileInfo = tileInfo;
         }
-
-        /// <summary>
-        /// Gets the material used by this tile.
-        /// </summary>
-        public int MaterialIndex => _tileInfo.MaterialIndex;
-
-        /// <summary>
-        /// Gets the x-position of the tile.
-        /// </summary>
-        public int XPos { get; }
-
-        /// <summary>
-        /// Gets the y-position of the tile.
-        /// </summary>
-        public int YPos { get; }
     }
 }

@@ -23,10 +23,10 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SharpDX.DXGI;
-using SharpDX.IO;
 using System;
 using System.IO;
+using SharpDX.DXGI;
+using SharpDX.IO;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Util.SdxTK
@@ -42,6 +42,60 @@ namespace SeeingSharp.Util.SdxTK
         /// True when RowStride == sizeof(pixelformat) * width
         /// </summary>
         private bool isStrictRowStride;
+
+        /// <summary>
+        /// Gets the width.
+        /// </summary>
+        /// <value>The width.</value>
+        public int Width { get; }
+
+        /// <summary>
+        /// Gets the height.
+        /// </summary>
+        /// <value>The height.</value>
+        public int Height { get; }
+
+        /// <summary>
+        /// Gets the format (this value can be changed)
+        /// </summary>
+        /// <value>The format.</value>
+        public Format Format
+        {
+            get => format;
+            set
+            {
+                if (this.PixelSize != value.SizeOfInBytes())
+                {
+                    throw new ArgumentException(
+                        $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");
+                }
+                format = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the pixel size in bytes.
+        /// </summary>
+        /// <value>The pixel size in bytes.</value>
+        public int PixelSize { get; }
+
+        /// <summary>
+        /// Gets the row stride in number of bytes.
+        /// </summary>
+        /// <value>The row stride in number of bytes.</value>
+        public int RowStride { get; }
+
+        /// <summary>
+        /// Gets the total size in bytes of this pixel buffer.
+        /// </summary>
+        /// <value>The size in bytes of the pixel buffer.</value>
+        public int BufferStride { get; }
+
+        /// <summary>
+        /// Gets the pointer to the pixel buffer.
+        /// </summary>
+        /// <value>The pointer to the pixel buffer.</value>
+        public IntPtr DataPointer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PixelBuffer" /> struct.
@@ -298,59 +352,5 @@ namespace SeeingSharp.Util.SdxTK
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the width.
-        /// </summary>
-        /// <value>The width.</value>
-        public int Width { get; }
-
-        /// <summary>
-        /// Gets the height.
-        /// </summary>
-        /// <value>The height.</value>
-        public int Height { get; }
-
-        /// <summary>
-        /// Gets the format (this value can be changed)
-        /// </summary>
-        /// <value>The format.</value>
-        public Format Format
-        {
-            get => format;
-            set
-            {
-                if (this.PixelSize != value.SizeOfInBytes())
-                {
-                    throw new ArgumentException(
-                        $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");
-                }
-                format = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the pixel size in bytes.
-        /// </summary>
-        /// <value>The pixel size in bytes.</value>
-        public int PixelSize { get; }
-
-        /// <summary>
-        /// Gets the row stride in number of bytes.
-        /// </summary>
-        /// <value>The row stride in number of bytes.</value>
-        public int RowStride { get; }
-
-        /// <summary>
-        /// Gets the total size in bytes of this pixel buffer.
-        /// </summary>
-        /// <value>The size in bytes of the pixel buffer.</value>
-        public int BufferStride { get; }
-
-        /// <summary>
-        /// Gets the pointer to the pixel buffer.
-        /// </summary>
-        /// <value>The pointer to the pixel buffer.</value>
-        public IntPtr DataPointer { get; }
     }
 }

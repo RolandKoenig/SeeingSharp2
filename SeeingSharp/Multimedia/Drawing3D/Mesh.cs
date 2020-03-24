@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -36,6 +37,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         // Configuration members
         private NamedOrGenericKey _resGeometryKey;
         private NamedOrGenericKey[] _resMaterialResourceKeys;
+
+        public override bool IsExportable => false;
+
+        public NamedOrGenericKey GeometryResourceKey => _resGeometryKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mesh"/> class.
@@ -300,9 +305,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
             renderState.RenderChunks(
                 _localChunks[renderState.DeviceIndex]);
         }
-
-        public override bool IsExportable => false;
-
-        public NamedOrGenericKey GeometryResourceKey => _resGeometryKey;
     }
 }

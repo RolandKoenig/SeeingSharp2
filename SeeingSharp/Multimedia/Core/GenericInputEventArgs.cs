@@ -19,15 +19,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Input;
+
 using System;
 using System.Collections.Generic;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Core
 {
     public class GenericInputEventArgs : EventArgs
     {
         private List<InputFrame> _inputFrames;
+
+        /// <summary>
+        /// Gets a list containing all InputFrames.
+        /// </summary>
+        public IReadOnlyList<InputFrame> InputFrames => _inputFrames;
 
         internal GenericInputEventArgs()
         {
@@ -39,10 +45,5 @@ namespace SeeingSharp.Multimedia.Core
             _inputFrames.Clear();
             _inputFrames.AddRange(inputFrames);
         }
-
-        /// <summary>
-        /// Gets a list containing all InputFrames.
-        /// </summary>
-        public IReadOnlyList<InputFrame> InputFrames => _inputFrames;
     }
 }

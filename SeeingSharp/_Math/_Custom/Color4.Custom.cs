@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 
 namespace SeeingSharp
@@ -72,10 +73,10 @@ namespace SeeingSharp
         public bool EqualsWithTolerance(Color4 other)
         {
             return
-                EngineMath.EqualsWithTolerance(this.Red, other.Red) &&
-                EngineMath.EqualsWithTolerance(this.Green, other.Green) &&
-                EngineMath.EqualsWithTolerance(this.Blue, other.Blue) &&
-                EngineMath.EqualsWithTolerance(this.Alpha, other.Alpha);
+                EngineMath.EqualsWithTolerance(Red, other.Red) &&
+                EngineMath.EqualsWithTolerance(Green, other.Green) &&
+                EngineMath.EqualsWithTolerance(Blue, other.Blue) &&
+                EngineMath.EqualsWithTolerance(Alpha, other.Alpha);
         }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 
@@ -26,6 +27,16 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class InternalCatchedExceptionEventArgs : EventArgs
     {
+        /// <summary>
+        /// The cached exception object.
+        /// </summary>
+        public Exception Exception { get; }
+
+        /// <summary>
+        /// The location inside Seeing# where the exception occurred.
+        /// </summary>
+        public InternalExceptionLocation Location { get; }
+
         internal InternalCatchedExceptionEventArgs(
             Exception ex,
             InternalExceptionLocation location)
@@ -40,21 +51,8 @@ namespace SeeingSharp.Multimedia.Core
             {
                 return $"{this.Location}: {this.Exception.Message} ({this.Exception.GetType().FullName})";
             }
-            else
-            {
-                return this.Location.ToString();
-            }
+            return this.Location.ToString();
         }
-
-        /// <summary>
-        /// The cached exception object.
-        /// </summary>
-        public Exception Exception { get; }
-
-        /// <summary>
-        /// The location inside Seeing# where the exception occurred.
-        /// </summary>
-        public InternalExceptionLocation Location { get; }
     }
 
     public enum InternalExceptionLocation
@@ -87,19 +85,19 @@ namespace SeeingSharp.Multimedia.Core
 
         EngineMainLoop_Render,
 
-        EngineMainLoop_Loop,
+        EngineMainLoop_Loop
     }
 
     public class ManipulateFilterListArgs : EventArgs
     {
-        public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
-        {
-            this.FilterList = filterList;
-        }
-
         public List<SceneObjectFilter> FilterList
         {
             get;
+        }
+
+        public ManipulateFilterListArgs(List<SceneObjectFilter> filterList)
+        {
+            this.FilterList = filterList;
         }
     }
 

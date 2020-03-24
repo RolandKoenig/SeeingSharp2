@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,9 +30,44 @@ namespace SeeingSharp
     public class Polygon2D
     {
         private Vector2[] _vertices;
-        private ReadOnlyCollection<Vector2> _verticesPublic;
         private Lazy<BoundingBox2D> _boundingBox2D;
         private Lazy<EdgeOrder> _edgeOrder;
+
+        /// <summary>
+        /// Returns all lines defined by this polygon.
+        /// </summary>
+        public IEnumerable<Line2D> Lines
+        {
+            get
+            {
+                for (var loop = 0; loop < _vertices.Length; loop++)
+                {
+                    if (loop >= _vertices.Length - 1)
+                    {
+                        yield return new Line2D(_vertices[loop], _vertices[0]);
+                    }
+                    else
+                    {
+                        yield return new Line2D(_vertices[loop], _vertices[loop + 1]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all vertices defined by this polygon.
+        /// </summary>
+        public ReadOnlyCollection<Vector2> Vertices { get; }
+
+        /// <summary>
+        /// Gets the bounding box of this polygon.
+        /// </summary>
+        public BoundingBox2D BoundingBox => _boundingBox2D.Value;
+
+        /// <summary>
+        /// Gets the current edge order.
+        /// </summary>
+        public EdgeOrder EdgeOrder => _edgeOrder.Value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Polygon2D" /> class.
@@ -40,7 +76,7 @@ namespace SeeingSharp
         /// <exception cref="SeeingSharpException"></exception>
         public Polygon2D(params Vector2[] vertices)
         {
-            if (vertices.Length < 3) { throw new SeeingSharpException("A plygon must at least have 4 vertices!"); }
+            if (vertices.Length < 3) { throw new SeeingSharpException("A polygon must at least have 4 vertices!"); }
 
             //Apply given vertices (remove the last one if it is equal to the first one)
             _vertices = vertices;
@@ -52,7 +88,7 @@ namespace SeeingSharp
                 _vertices = newArray;
             }
 
-            _verticesPublic = new ReadOnlyCollection<Vector2>(_vertices);
+            this.Vertices = new ReadOnlyCollection<Vector2>(_vertices);
             _boundingBox2D = new Lazy<BoundingBox2D>(this.CalculateBoundingBox);
             _edgeOrder = new Lazy<EdgeOrder>(this.CalculateEdgeOrder);
         }
@@ -91,7 +127,7 @@ namespace SeeingSharp
                     holeVertexIndexWithHighestX = loopVertex;
                 }
             }
-            if (cutPoints != null) { cutPoints.Add(holeVertexWithHighestX); }
+            cutPoints?.Add(holeVertexWithHighestX);
 
             //Define a ray from the found vertex pointing in x direction
             var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
@@ -234,7 +270,7 @@ namespace SeeingSharp
             //Formula: 
             // For each Edge: (x2-x1)(y2+y1)
             // Take sum from each result
-            // If result is positiv, vertices are aligned clockwise, otherwhiese counter-clockwise
+            // If result is positive, vertices are aligned clockwise, otherwise counter-clockwise
 
             if (_vertices.Length < 2) { return EdgeOrder.Unknown; }
 
@@ -255,41 +291,5 @@ namespace SeeingSharp
             if (currentSum > 0f) { return EdgeOrder.Clockwise; }
             return EdgeOrder.CounterClockwise;
         }
-
-        /// <summary>
-        /// Returns all lines defined by this polygon.
-        /// </summary>
-        public IEnumerable<Line2D> Lines
-        {
-            get
-            {
-                for (var loop = 0; loop < _vertices.Length; loop++)
-                {
-                    if (loop >= _vertices.Length - 1)
-                    {
-                        yield return new Line2D(_vertices[loop], _vertices[0]);
-                    }
-                    else
-                    {
-                        yield return new Line2D(_vertices[loop], _vertices[loop + 1]);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets all vertices defined by this polygon.
-        /// </summary>
-        public ReadOnlyCollection<Vector2> Vertices => _verticesPublic;
-
-        /// <summary>
-        /// Gets the bounding box of this polygon.
-        /// </summary>
-        public BoundingBox2D BoundingBox => _boundingBox2D.Value;
-
-        /// <summary>
-        /// Gets the current edge order.
-        /// </summary>
-        public EdgeOrder EdgeOrder => _edgeOrder.Value;
     }
 }

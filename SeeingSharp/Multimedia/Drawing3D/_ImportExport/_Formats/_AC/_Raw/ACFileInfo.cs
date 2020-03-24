@@ -19,12 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     internal class ACFileInfo
     {
+        public List<ACMaterialInfo> Materials;
+        public List<ACObjectInfo> Objects;
+
         public ACFileInfo()
         {
             Materials = new List<ACMaterialInfo>();
@@ -46,8 +50,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return result;
         }
-
-        public List<ACMaterialInfo> Materials;
-        public List<ACObjectInfo> Objects;
     }
 }

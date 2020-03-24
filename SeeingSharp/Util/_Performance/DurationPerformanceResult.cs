@@ -19,31 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
 {
     public class DurationPerformanceResult
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DurationPerformanceResult"/> class.
-        /// </summary>
-        public DurationPerformanceResult(string activityName, DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
-        {
-            this.ActivityName = activityName;
-
-            this.Update(timestampKey, itemCount, sumAvgTicks, sumMaxTicks, sumMinTicks);
-        }
-
-        public void Update(DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
-        {
-            this.KeyTimestamp = timestampKey;
-            this.ItemCount = itemCount;
-            this.SumAverageTicks = sumAvgTicks;
-            this.SumMaxTicks = sumMaxTicks;
-            this.SumMinTicks = sumMinTicks;
-        }
-
         public string ActivityName { get; }
 
         /// <summary>
@@ -76,5 +58,24 @@ namespace SeeingSharp.Util
         /// </summary>
 
         public double SumAverageMsDouble => this.SumAverage.TotalMilliseconds;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DurationPerformanceResult"/> class.
+        /// </summary>
+        public DurationPerformanceResult(string activityName, DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        {
+            this.ActivityName = activityName;
+
+            this.Update(timestampKey, itemCount, sumAvgTicks, sumMaxTicks, sumMinTicks);
+        }
+
+        public void Update(DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        {
+            this.KeyTimestamp = timestampKey;
+            this.ItemCount = itemCount;
+            this.SumAverageTicks = sumAvgTicks;
+            this.SumMaxTicks = sumMaxTicks;
+            this.SumMinTicks = sumMinTicks;
+        }
     }
 }

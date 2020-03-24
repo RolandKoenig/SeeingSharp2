@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Components
@@ -26,24 +27,6 @@ namespace SeeingSharp.Multimedia.Components
     public class FocusedPointCameraComponent : FocusedCameraComponent
     {
         private Vector3 _focusedLocation;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
-        /// </summary>
-        public FocusedPointCameraComponent()
-        {
-            _focusedLocation = Vector3.Zero;
-        }
-
-        public FocusedPointCameraComponent(Vector3 focusedLocation)
-        {
-            _focusedLocation = focusedLocation;
-        }
-
-        protected override Vector3 GetFocusedLocation()
-        {
-            return _focusedLocation;
-        }
 
         public float FocusedPointX
         {
@@ -61,6 +44,24 @@ namespace SeeingSharp.Multimedia.Components
         {
             get => _focusedLocation.Z;
             set => _focusedLocation.Z = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
+        /// </summary>
+        public FocusedPointCameraComponent()
+        {
+            _focusedLocation = Vector3.Zero;
+        }
+
+        public FocusedPointCameraComponent(Vector3 focusedLocation)
+        {
+            _focusedLocation = focusedLocation;
+        }
+
+        protected override Vector3 GetFocusedLocation()
+        {
+            return _focusedLocation;
         }
     }
 }

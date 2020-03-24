@@ -19,15 +19,42 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Util
 {
     public abstract class ResourceLink
     {
+        /// <summary>
+        /// Gets the file extension of the resource we target to.
+        /// </summary>
+        public abstract string FileExtension
+        {
+            get;
+        }
+
+        public abstract string FileNameWithExtension { get; }
+
+        /// <summary>
+        /// Are async operations supported on this ResourceLink?
+        /// </summary>
+        public abstract bool SupportsAsync
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Are synchronous operations supported on this ResourceLink?
+        /// </summary>
+        public abstract bool SupportsSync
+        {
+            get;
+        }
+
         /// <summary>
         /// Writes the contents of this resource to the given dummy file.
         /// </summary>
@@ -137,32 +164,6 @@ namespace SeeingSharp.Util
                 return fileName.Substring(indexLastDot + 1).ToLower();
             }
             return string.Empty;
-        }
-
-        /// <summary>
-        /// Gets the file extension of the resource we target to.
-        /// </summary>
-        public abstract string FileExtension
-        {
-            get;
-        }
-
-        public abstract string FileNameWithExtension { get; }
-
-        /// <summary>
-        /// Are async operations supported on this ResourceLink?
-        /// </summary>
-        public abstract bool SupportsAsync
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Are synchronous operations supported on this ResourceLink?
-        /// </summary>
-        public abstract bool SupportsSync
-        {
-            get;
         }
     }
 }

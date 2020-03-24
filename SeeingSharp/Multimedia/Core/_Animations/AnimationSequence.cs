@@ -19,13 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -42,6 +43,49 @@ namespace SeeingSharp.Multimedia.Core
         private Queue<Queue<IAnimation>> _runningSecondaryAnimations;
         private int _runningSecondaryAnimationsCount;
         private TimeSpan _timeTillNextPartFinished;
+
+        /// <summary>
+        /// Is this animation finished?
+        /// </summary>
+        public bool Finished => _runningAnimationsCount <= 0;
+
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// </summary>
+        public bool IsBlockingAnimation => false;
+
+        /// <summary>
+        /// Is this animation canceled?
+        /// </summary>
+        public bool Canceled
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Should this animation ignore pause state?
+        /// </summary>
+        public bool IgnorePauseState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the total count of running animations
+        /// </summary>
+        public int CountRunningAnimations => _runningAnimationsCount + _runningSecondaryAnimationsCount;
+
+        /// <summary>
+        /// Gets the time when the next part of this animation is finished.
+        /// </summary>
+        public TimeSpan TimeTillCurrentAnimationStepFinished => _timeTillNextPartFinished;
+
+        /// <summary>
+        /// Gets or sets the default cycle time (cycles time in continuous calculation model).
+        /// </summary>
+        public TimeSpan DefaultCycleTime { get; set; } = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
 
         /// <summary>
         /// Raises when an animation within this sequence has failed.
@@ -520,8 +564,8 @@ namespace SeeingSharp.Multimedia.Core
             // Walk through preupdate action queue and perform each
             var prevCount = _preUpdateActions.Count;
             var currentIndex = 0;
-            while ((currentIndex < prevCount) &&
-                   (_preUpdateActions.TryDequeue(out var actPreUpdateAction)))
+            while (currentIndex < prevCount &&
+                   _preUpdateActions.TryDequeue(out var actPreUpdateAction))
             {
                 Interlocked.Decrement(ref _preUpdateActionsCount);
                 actPreUpdateAction();
@@ -749,48 +793,5 @@ namespace SeeingSharp.Multimedia.Core
 
             if (_currentWorkingThreadCount < 0) { throw new SeeingSharpGraphicsException("Invalid currentWorkingThreadCount on AnimationSequence!"); }
         }
-
-        /// <summary>
-        /// Is this animation finished?
-        /// </summary>
-        public bool Finished => _runningAnimationsCount <= 0;
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// </summary>
-        public bool IsBlockingAnimation => false;
-
-        /// <summary>
-        /// Is this animation canceled?
-        /// </summary>
-        public bool Canceled
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Should this animation ignore pause state?
-        /// </summary>
-        public bool IgnorePauseState
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the total count of running animations
-        /// </summary>
-        public int CountRunningAnimations => _runningAnimationsCount + _runningSecondaryAnimationsCount;
-
-        /// <summary>
-        /// Gets the time when the next part of this animation is finished.
-        /// </summary>
-        public TimeSpan TimeTillCurrentAnimationStepFinished => _timeTillNextPartFinished;
-
-        /// <summary>
-        /// Gets or sets the default cycle time (cycles time in continuous calculation model).
-        /// </summary>
-        public TimeSpan DefaultCycleTime { get; set; } = SeeingSharpConstants.UPDATE_DEFAULT_CYLCE;
     }
 }

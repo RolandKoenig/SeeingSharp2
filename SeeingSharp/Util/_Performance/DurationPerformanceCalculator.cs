@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Util
@@ -27,6 +28,12 @@ namespace SeeingSharp.Util
     {
         private RingBuffer<ActivityDurationInfo> _lastDurationItems;
         private DateTime _lastReportedDurationTimestamp;
+
+        public string ActivityName { get; }
+
+        public int RawDataEntries => _lastDurationItems.Count;
+
+        public DateTime LastReportedDurationTimestamp => _lastReportedDurationTimestamp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationPerformanceCalculator"/> class.
@@ -132,12 +139,6 @@ namespace SeeingSharp.Util
                     avgValue, maxValue, minValue);
             }
         }
-
-        public string ActivityName { get; }
-
-        public int RawDataEntries => _lastDurationItems.Count;
-
-        public DateTime LastReportedDurationTimestamp => _lastReportedDurationTimestamp;
 
         //*********************************************************************
         //*********************************************************************

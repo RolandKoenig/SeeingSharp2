@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -49,7 +50,7 @@ namespace SeeingSharp.Multimedia.Core
         ChangeStateTo,
 
         /// <summary>
-        /// An animation changes the state of an object by a given transition vlaue (e. g. move by vector).
+        /// An animation changes the state of an object by a given transition value (e. g. move by vector).
         /// </summary>
         ChangeStateBy
     }
@@ -107,17 +108,6 @@ namespace SeeingSharp.Multimedia.Core
     public class AnimationFailedEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnimationFailedEventArgs"/> class.
-        /// </summary>
-        /// <param name="animation">The animation.</param>
-        /// <param name="exception">The exception.</param>
-        internal AnimationFailedEventArgs(IAnimation animation, Exception exception)
-        {
-            this.Animation = animation;
-            this.Exception = exception;
-        }
-
-        /// <summary>
         /// Gets the animation that has failed.
         /// </summary>
         public IAnimation Animation
@@ -131,6 +121,17 @@ namespace SeeingSharp.Multimedia.Core
         public Exception Exception
         {
             get;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationFailedEventArgs"/> class.
+        /// </summary>
+        /// <param name="animation">The animation.</param>
+        /// <param name="exception">The exception.</param>
+        internal AnimationFailedEventArgs(IAnimation animation, Exception exception)
+        {
+            this.Animation = animation;
+            this.Exception = exception;
         }
     }
 }

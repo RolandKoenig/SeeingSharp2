@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -26,8 +27,17 @@ namespace SeeingSharp
 {
     public class Matrix3x2Stack
     {
+        private Stack<Matrix3x2> _stack;
+        private int _pushTimes;
+        private Matrix3x2 _top;
+
         /// <summary>
-        /// Cretaes a new matrix stack using 3x2 matrices
+        /// Gets the top matrix
+        /// </summary>
+        public Matrix3x2 Top => _top;
+
+        /// <summary>
+        /// Creates a new matrix stack using 3x2 matrices
         /// </summary>
         public Matrix3x2Stack()
         {
@@ -173,16 +183,5 @@ namespace SeeingSharp
                 _pushTimes--;
             }
         }
-
-        /// <summary>
-        /// Gets the top matrix
-        /// </summary>
-        public Matrix3x2 Top => _top;
-
-        #region Stack data
-        private Stack<Matrix3x2> _stack;
-        private int _pushTimes;
-        private Matrix3x2 _top;
-        #endregion
     }
 }

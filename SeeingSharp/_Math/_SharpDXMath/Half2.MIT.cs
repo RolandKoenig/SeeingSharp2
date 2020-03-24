@@ -28,8 +28,8 @@ namespace SeeingSharp
         /// <param name="y">The Y component.</param>
         public Half2(Half x, Half y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace SeeingSharp
         /// <param name="value">The value to set for both the X and Y components.</param>
         public Half2(Half value)
         {
-            this.X = value;
-            this.Y = value;
+            X = value;
+            Y = value;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SeeingSharp
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return (this.Y.GetHashCode() + this.X.GetHashCode());
+            return Y.GetHashCode() + X.GetHashCode();
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SeeingSharp
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
         public static bool Equals(ref Half2 value1, ref Half2 value2)
         {
-            return ((value1.X == value2.X) && (value1.Y == value2.Y));
+            return value1.X == value2.X && value1.Y == value2.Y;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SeeingSharp
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals(Half2 other)
         {
-            return ((this.X == other.X) && (this.Y == other.Y));
+            return X == other.X && Y == other.Y;
         }
 
         /// <summary>

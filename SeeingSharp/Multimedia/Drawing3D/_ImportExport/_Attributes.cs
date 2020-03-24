@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -26,12 +27,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class SupportedFileFormatAttribute : Attribute
     {
-        public SupportedFileFormatAttribute(string shortFormatName, string shortDescription)
-        {
-            this.ShortFormatName = shortFormatName;
-            this.ShortDescription = shortDescription;
-        }
-
         public string ShortFormatName
         {
             get;
@@ -40,6 +35,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public string ShortDescription
         {
             get;
+        }
+
+        public SupportedFileFormatAttribute(string shortFormatName, string shortDescription)
+        {
+            this.ShortFormatName = shortFormatName;
+            this.ShortDescription = shortDescription;
         }
     }
 }

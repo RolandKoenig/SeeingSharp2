@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Threading;
 
@@ -75,6 +76,9 @@ namespace SeeingSharp.Util
         /// </summary>
         private class PostAsyncState
         {
+            public Action PostAction;
+            public ReusableAwaiter Awaiter;
+
             public static PostAsyncState Take()
             {
                 return s_cachedObjects.Rent();
@@ -84,9 +88,6 @@ namespace SeeingSharp.Util
             {
                 s_cachedObjects.Return(state);
             }
-
-            public Action PostAction;
-            public ReusableAwaiter Awaiter;
         }
     }
 }

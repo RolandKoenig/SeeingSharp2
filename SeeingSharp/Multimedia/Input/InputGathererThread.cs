@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -85,8 +86,8 @@ namespace SeeingSharp.Multimedia.Input
             {
                 var prevCount = _commandQueue.Count;
                 var actIndex = 0;
-                while ((actIndex < prevCount) &&
-                       (_commandQueue.TryDequeue(out var actCommand)))
+                while (actIndex < prevCount &&
+                       _commandQueue.TryDequeue(out var actCommand))
                 {
                     actCommand();
                     actIndex++;

@@ -19,12 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class CubeGeometryFactory : GeometryFactory
     {
+        public float Width { get; set; } = 1f;
+
+        public float Height { get; set; } = 1f;
+
+        public float Depth { get; set; } = 1f;
+
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
@@ -35,11 +42,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return result;
         }
-
-        public float Width { get; set; } = 1f;
-
-        public float Height { get; set; } = 1f;
-
-        public float Depth { get; set; } = 1f;
     }
 }

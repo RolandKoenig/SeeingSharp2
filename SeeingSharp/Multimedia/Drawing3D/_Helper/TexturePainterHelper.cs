@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -41,6 +42,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private DefaultResources _defaultResources;
         private ObjectRenderParameters _renderParameters;
         private RenderingChunk[] _renderingChunks;
+
+        /// <summary>
+        /// Gets or sets the scaling.
+        /// </summary>
+        public float Scaling { get; set; }
+
+        public float AccentuationFactor { get; set; }
+
+        public float Opacity { get; set; }
+
+        /// <summary>
+        /// Are resources loaded?
+        /// </summary>
+        public bool IsLoaded => _geometryResource != null;
+
+        /// <summary>
+        /// Gets or sets the alpha blend mode.
+        /// </summary>
+        public TexturePainterAlphaBlendMode AlphaBlendMode
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TexturePainterHelper"/> class.
@@ -150,28 +173,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
             }
             deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
-        }
-
-        /// <summary>
-        /// Gets or sets the scaling.
-        /// </summary>
-        public float Scaling { get; set; }
-
-        public float AccentuationFactor { get; set; }
-
-        public float Opacity { get; set; }
-
-        /// <summary>
-        /// Are resources loaded?
-        /// </summary>
-        public bool IsLoaded => _geometryResource != null;
-
-        /// <summary>
-        /// Gets or sets the alpha blend mode.
-        /// </summary>
-        public TexturePainterAlphaBlendMode AlphaBlendMode
-        {
-            get; set;
         }
     }
 }

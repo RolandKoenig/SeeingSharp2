@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 
 namespace SeeingSharp.Multimedia.DrawingVideo
 {
@@ -38,6 +39,41 @@ namespace SeeingSharp.Multimedia.DrawingVideo
         private Exception _startException;
         private Exception _drawException;
         private Exception _finishException;
+
+        /// <summary>
+        /// Gets the target file this VideoWriter is writing to.
+        /// </summary>
+        public ResourceLink TargetFile { get; }
+
+        /// <summary>
+        /// Has rendering started?
+        /// </summary>
+        public bool HasStarted => _hasStarted;
+
+        /// <summary>
+        /// Has rendering finished?
+        /// </summary>
+        public bool HasFinished => _hasFinished;
+
+        /// <summary>
+        /// The RenderLoop this VideoWriter is currently associated to.
+        /// </summary>
+        public RenderLoop AssociatedRenderLoop
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Gets the current video size.
+        /// </summary>
+        public Size2 VideoSize => _videoSize;
+
+        public Exception LastStartException => _startException;
+
+        public Exception LastDrawException => _drawException;
+
+        public Exception LastFinishException => _finishException;
 
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
@@ -160,40 +196,5 @@ namespace SeeingSharp.Multimedia.DrawingVideo
                 this.RecordingFinished.Raise(this, EventArgs.Empty);
             }
         }
-
-        /// <summary>
-        /// Gets the target file this VideoWriter is writing to.
-        /// </summary>
-        public ResourceLink TargetFile { get; }
-
-        /// <summary>
-        /// Has rendering started?
-        /// </summary>
-        public bool HasStarted => _hasStarted;
-
-        /// <summary>
-        /// Has rendering finished?
-        /// </summary>
-        public bool HasFinished => _hasFinished;
-
-        /// <summary>
-        /// The RenderLoop this VideoWriter is currently associated to.
-        /// </summary>
-        public RenderLoop AssociatedRenderLoop
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
-        /// Gets the current video size.
-        /// </summary>
-        public Size2 VideoSize => _videoSize;
-
-        public Exception LastStartException => _startException;
-
-        public Exception LastDrawException => _drawException;
-
-        public Exception LastFinishException => _finishException;
     }
 }

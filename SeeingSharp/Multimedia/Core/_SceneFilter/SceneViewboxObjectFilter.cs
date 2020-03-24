@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Core
@@ -34,6 +35,59 @@ namespace SeeingSharp.Multimedia.Core
         private bool _enableYFilter;
         private float _yFilterMin;
         private float _yFilterMax;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the y-filter is enabled.
+        /// </summary>
+        public bool EnableYFilter
+        {
+            get => _enableYFilter;
+            set
+            {
+                if (_enableYFilter != value)
+                {
+                    _enableYFilter = value;
+                    this.RaiseFilterConfigurationChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum value of the y-filter.
+        /// </summary>
+        public float YFilterMin
+        {
+            get => _yFilterMin;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_yFilterMin, value))
+                {
+                    _yFilterMin = value;
+                    this.RaiseFilterConfigurationChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum value of the y-filter.
+        /// </summary>
+        public float YFilterMax
+        {
+            get => _yFilterMax;
+            set
+            {
+                if (!EngineMath.EqualsWithTolerance(_yFilterMax, value))
+                {
+                    _yFilterMax = value;
+                    this.RaiseFilterConfigurationChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Should this filter be updated on each frame?
+        /// </summary>
+        public override bool UpdateEachFrame => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneViewboxObjectFilter"/> class.
@@ -107,58 +161,5 @@ namespace SeeingSharp.Multimedia.Core
             // Object is visible
             return true;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the y-filter is enabled.
-        /// </summary>
-        public bool EnableYFilter
-        {
-            get => _enableYFilter;
-            set
-            {
-                if (_enableYFilter != value)
-                {
-                    _enableYFilter = value;
-                    this.RaiseFilterConfigurationChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum value of the y-filter.
-        /// </summary>
-        public float YFilterMin
-        {
-            get => _yFilterMin;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_yFilterMin, value))
-                {
-                    _yFilterMin = value;
-                    this.RaiseFilterConfigurationChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum value of the y-filter.
-        /// </summary>
-        public float YFilterMax
-        {
-            get => _yFilterMax;
-            set
-            {
-                if (!EngineMath.EqualsWithTolerance(_yFilterMax, value))
-                {
-                    _yFilterMax = value;
-                    this.RaiseFilterConfigurationChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Should this filter be updated on each frame?
-        /// </summary>
-        public override bool UpdateEachFrame => true;
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -50,7 +51,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <summary>
         /// Text is clipped to the layout rectangle.
         /// </summary>
-        Clip = 2,
+        Clip = 2
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Specifies that text is measured using the same glyph display metrics as
         /// text measured by GDI using a font created with CLEARTYPE_NATURAL_QUALITY.
         /// </summary>
-        GdiNatural = 2,
+        GdiNatural = 2
     }
 
     /// <summary>
@@ -93,7 +94,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Normal = 0,
         Oblique = 1,
-        Italic = 2,
+        Italic = 2
     }
 
     /// <summary>
@@ -116,7 +117,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         Heavy = 900,
         Black = 900,
         ExtraBlack = 950,
-        UltraBlack = 950,
+        UltraBlack = 950
     }
 
     /// <summary>
@@ -134,7 +135,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         SemiExpanded = 6,
         Expanded = 7,
         ExtraExpanded = 8,
-        UltraExpanded = 9,
+        UltraExpanded = 9
     }
 
     /// <summary>
@@ -144,7 +145,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Near = 0,
         Far = 1,
-        Center = 2,
+        Center = 2
     }
 
     /// <summary>
@@ -154,7 +155,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         Leading = 0,
         Trailing = 1,
-        Center = 2,
+        Center = 2
     }
 
     /// <summary>
@@ -163,7 +164,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum WordWrapping
     {
         Wrap = 0,
-        NoWrap = 1,
+        NoWrap = 1
     }
 
     /// <summary>
@@ -172,7 +173,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum ReadingDirection
     {
         LeftToRight = 0,
-        RightToLeft = 1,
+        RightToLeft = 1
     }
 
     // Copied from SharpDX project
@@ -208,7 +209,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// <doc-id>hh404496</doc-id>
         /// <unmanaged>DXGI_ALPHA_MODE_IGNORE</unmanaged>
         /// <unmanaged-short>DXGI_ALPHA_MODE_IGNORE</unmanaged-short>
-        Ignore,
+        Ignore
     }
 
     /// <summary>
@@ -217,7 +218,7 @@ namespace SeeingSharp.Multimedia.Drawing2D
     public enum BitmapInterpolationMode
     {
         NearestNeighbor = 0,
-        Linear = 1,
+        Linear = 1
     }
 
     /// <summary>

@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SharpDX.DXGI;
+
 using System;
 using System.Collections.Generic;
+using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -31,6 +32,33 @@ namespace SeeingSharp.Multimedia.Core
     {
         private AdapterDescription _adapterDescription;
         private D3D.FeatureLevel _d3d11FeatureLevel;
+
+        /// <summary>
+        /// Gets all outputs supported by this adapter.
+        /// </summary>
+        public List<EngineOutputInfo> Outputs { get; }
+
+        /// <summary>
+        /// Gets the index of the adapter.
+        /// </summary>
+        public int AdapterIndex { get; }
+
+        public string MaxFeatureLevelD3D11 => _d3d11FeatureLevel.ToString();
+
+        public bool IsSoftwareAdapter { get; }
+
+        /// <summary>
+        /// Gets the description of the adapter.
+        /// </summary>
+        public string AdapterDescription => _adapterDescription.Description.Replace("\0", "");
+
+        public string DedicatedSystemMemory => _adapterDescription.DedicatedSystemMemory.ToString();
+
+        public string DedicatedVideoMemory => _adapterDescription.DedicatedVideoMemory.ToString();
+
+        public string SharedSystemMemory => _adapterDescription.SharedSystemMemory.ToString();
+
+        public long Luid => _adapterDescription.Luid;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineAdapterInfo" /> class.
@@ -72,32 +100,5 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
         }
-
-        /// <summary>
-        /// Gets all outputs supported by this adapter.
-        /// </summary>
-        public List<EngineOutputInfo> Outputs { get; }
-
-        /// <summary>
-        /// Gets the index of the adapter.
-        /// </summary>
-        public int AdapterIndex { get; }
-
-        public string MaxFeatureLevelD3D11 => _d3d11FeatureLevel.ToString();
-
-        public bool IsSoftwareAdapter { get; }
-
-        /// <summary>
-        /// Gets the description of the adapter.
-        /// </summary>
-        public string AdapterDescription => _adapterDescription.Description.Replace("\0", "") ?? nameof(EngineAdapterInfo);
-
-        public string DedicatedSystemMemory => _adapterDescription.DedicatedSystemMemory.ToString();
-
-        public string DedicatedVideoMemory => _adapterDescription.DedicatedVideoMemory.ToString();
-
-        public string SharedSystemMemory => _adapterDescription.SharedSystemMemory.ToString();
-
-        public long Luid => _adapterDescription.Luid;
     }
 }

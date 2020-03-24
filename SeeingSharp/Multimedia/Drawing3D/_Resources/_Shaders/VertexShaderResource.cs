@@ -34,6 +34,16 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private Dictionary<D3D11.InputElement[], D3D11.InputLayout> _inputLayouts;
 
         /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public override bool IsLoaded => _vertexShader != null;
+
+        /// <summary>
+        /// Gets the loaded VertexShader object.
+        /// </summary>
+        internal D3D11.VertexShader VertexShader => _vertexShader;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.
         /// </summary>
         /// <param name="shaderProfile">Shader profile used for compiling.</param>
@@ -42,23 +52,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
             : base(shaderProfile, resourceLink, ShaderResourceKind.HlsFile)
         {
             _inputLayouts = new Dictionary<D3D11.InputElement[], D3D11.InputLayout>();
-        }
-
-        /// <summary>
-        /// Generates the requested input layout.
-        /// </summary>
-        /// <param name="device">The device on which to create the input layout.</param>
-        /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
-        {
-            if (_inputLayouts.TryGetValue(inputElements, out var inputLayout))
-            {
-                return inputLayout;
-            }
-
-            inputLayout = new D3D11.InputLayout(device.DeviceD3D11_1, this.ShaderBytecode, inputElements);
-            _inputLayouts.Add(inputElements, inputLayout);
-            return inputLayout;
         }
 
         /// <summary>
@@ -87,13 +80,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
-        /// Is the resource loaded?
+        /// Generates the requested input layout.
         /// </summary>
-        public override bool IsLoaded => _vertexShader != null;
+        /// <param name="device">The device on which to create the input layout.</param>
+        /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
+        internal D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        {
+            if (_inputLayouts.TryGetValue(inputElements, out var inputLayout))
+            {
+                return inputLayout;
+            }
 
-        /// <summary>
-        /// Gets the loaded VertexShader object.
-        /// </summary>
-        internal D3D11.VertexShader VertexShader => _vertexShader;
+            inputLayout = new D3D11.InputLayout(device.DeviceD3D11_1, this.ShaderBytecode, inputElements);
+            _inputLayouts.Add(inputElements, inputLayout);
+            return inputLayout;
+        }
     }
 }

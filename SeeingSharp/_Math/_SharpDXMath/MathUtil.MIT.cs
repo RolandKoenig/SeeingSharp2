@@ -31,14 +31,14 @@ namespace SeeingSharp
         public const float PiOverFour = 0.785398163397448310f;
 
         /// <summary>
-        /// Checks if a - b are almost equals within a float <see cref="Single.Epsilon"/>.
+        /// Checks if a - b are almost equals within a float <see cref="float.Epsilon"/>.
         /// </summary>
         /// <param name="a">The left value to compare.</param>
         /// <param name="b">The right value to compare.</param>
         /// <returns><c>true</c> if a almost equal to b within a float epsilon, <c>false</c> otherwise</returns>
         public static bool WithinEpsilon(float a, float b)
         {
-            return WithinEpsilon(a, b, Single.Epsilon);
+            return WithinEpsilon(a, b, float.Epsilon);
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace SeeingSharp
         /// <returns><c>true</c> if a almost equal to b within a float epsilon, <c>false</c> otherwise</returns>
         public static bool WithinEpsilon(float a, float b, float epsilon)
         {
-            float num = a - b;
-            return ((-epsilon <= num) && (num <= epsilon));
+            var num = a - b;
+            return -epsilon <= num && num <= epsilon;
         }
 
         /// <summary>
@@ -63,9 +63,11 @@ namespace SeeingSharp
         /// <returns>An array of who knows what.</returns>
         public static T[] Array<T>(T value, int count)
         {
-            T[] result = new T[count];
-            for (int i = 0; i < count; i++)
+            var result = new T[count];
+            for (var i = 0; i < count; i++)
+            {
                 result[i] = value;
+            }
 
             return result;
         }
@@ -239,9 +241,12 @@ namespace SeeingSharp
         /// <returns>Result of the wrapping.</returns>
         public static int Wrap(int value, int min, int max)
         {
-            if (min == max) return min;
+            if (min == max)
+            {
+                return min;
+            }
 
-            int v = (((value - min) % (max - min)));
+            var v = (value - min) % (max - min);
             if (value > max)
             {
                 return min + v;
@@ -263,9 +268,12 @@ namespace SeeingSharp
         /// <returns>Result of the wrapping.</returns>
         public static float Wrap(float value, float min, float max)
         {
-            if (WithinEpsilon(min, max)) return min;
+            if (WithinEpsilon(min, max))
+            {
+                return min;
+            }
 
-            float v = (((value - min) % (max - min)));
+            var v = (value - min) % (max - min);
             if (value > max)
             {
                 return min + v;
@@ -291,7 +299,7 @@ namespace SeeingSharp
         /// <returns>The result of gaussian function.</returns>
         public static float Gauss(float amplitude, float x, float y, float radX, float radY, float sigmaX, float sigmaY)
         {
-            float AExp = (amplitude * 2.718281828f);
+            var AExp = amplitude * 2.718281828f;
 
             return (float)
             (
@@ -317,16 +325,14 @@ namespace SeeingSharp
         /// <returns>The result of gaussian function.</returns>
         public static double Gauss(double amplitude, double x, double y, double radX, double radY, double sigmaX, double sigmaY)
         {
-            double AExp = (amplitude * 2.718281828);
+            var AExp = amplitude * 2.718281828;
 
             return
+            AExp -
             (
-                AExp -
-                (
-                    Math.Pow(x - radX / 2, 2) / (2 * Math.Pow(sigmaX, 2))
-                    +
-                    Math.Pow(y - radY / 2, 2) / (2 * Math.Pow(sigmaY, 2))
-                )
+                Math.Pow(x - radX / 2, 2) / (2 * Math.Pow(sigmaX, 2))
+                +
+                Math.Pow(y - radY / 2, 2) / (2 * Math.Pow(sigmaY, 2))
             );
         }
 
@@ -351,7 +357,7 @@ namespace SeeingSharp
         /// <returns>Random <c>double</c> number.</returns>
         public static double NextDouble(Random random, double min, double max)
         {
-            return (min + random.NextDouble() * (max - min));
+            return min + random.NextDouble() * (max - min);
         }
 
         /// <summary>
@@ -375,11 +381,11 @@ namespace SeeingSharp
         /// <returns>Random <c>long</c> number.</returns>
         public static long NextLong(Random random, long min, long max)
         {
-            byte[] buf = new byte[sizeof(long)];
+            var buf = new byte[sizeof(long)];
             random.NextBytes(buf);
-            long longRand = BitConverter.ToInt64(buf, 0);
+            var longRand = BitConverter.ToInt64(buf, 0);
 
-            return (Math.Abs(longRand % (max - min)) + min);
+            return Math.Abs(longRand % (max - min)) + min;
         }
 
         /// <summary>

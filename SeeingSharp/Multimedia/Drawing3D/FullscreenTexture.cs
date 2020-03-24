@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
@@ -31,6 +32,20 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
         // Device dependent resources
         private IndexBasedDynamicCollection<TexturePainterHelper> _texturePainterHelpers;
+
+        public float AccentuationFactor { get; set; }
+
+        public float Opacity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scaling factor.
+        /// </summary>
+        public float Scaling { get; set; }
+
+        /// <summary>
+        /// Gets or sets the alpha blend mode.
+        /// </summary>
+        public TexturePainterAlphaBlendMode AlphaBlendMode { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FullscreenTexture"/> class.
@@ -150,19 +165,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 actHelper.RenderPlain(renderState);
             }
         }
-
-        public float AccentuationFactor { get; set; }
-
-        public float Opacity { get; set; }
-
-        /// <summary>
-        /// Gets or sets the scaling factor.
-        /// </summary>
-        public float Scaling { get; set; }
-
-        /// <summary>
-        /// Gets or sets the alpha blend mode.
-        /// </summary>
-        public TexturePainterAlphaBlendMode AlphaBlendMode { get; set; }
     }
 }

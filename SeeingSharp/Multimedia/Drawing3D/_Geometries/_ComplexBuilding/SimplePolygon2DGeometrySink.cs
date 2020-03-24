@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Util;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -32,6 +33,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private List<Vector2> _currentPolygonBuilder;
         private Vector2 _origin;
         private List<Polygon2D> _polygons2D;
+
+        /// <summary>
+        /// Gets a collection containing all generated polygons.
+        /// </summary>
+        public IEnumerable<Polygon2D> GeneratedPolygons => _polygons2D;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePolygon2DGeometrySink" /> class.
@@ -189,10 +195,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
 
         }
-
-        /// <summary>
-        /// Gets a collection containing all generated polygons.
-        /// </summary>
-        public IEnumerable<Polygon2D> GeneratedPolygons => _polygons2D;
     }
 }

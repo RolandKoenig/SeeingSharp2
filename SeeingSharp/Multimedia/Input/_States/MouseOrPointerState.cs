@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Numerics;
+using SeeingSharp.Checking;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -42,6 +43,48 @@ namespace SeeingSharp.Multimedia.Input
         private bool[] _buttonsDown;       // All following frames the mouse is down
         private bool[] _buttonsUp;         // True on the frame when the button changes to up
         private bool _isInside;
+
+        public Vector2 MoveDistanceDip => _moveDistancePixel;
+
+        public Vector2 PositionDip => _positionPixel;
+
+        public Vector2 MoveDistanceRelative
+        {
+            get
+            {
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
+
+                return _moveDistancePixel / _screenSizePixel;
+            }
+        }
+
+        public Vector2 PositionRelative
+        {
+            get
+            {
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
+                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
+
+                return _positionPixel / _screenSizePixel;
+            }
+        }
+
+        /// <summary>
+        /// Gets the size of the screen in device independent pixel.
+        /// </summary>
+        public Vector2 ScreenSizeDip => _screenSizePixel;
+
+        /// <summary>
+        /// Gets the current wheel delta.
+        /// </summary>
+        public int WheelDelta => _wheelDelta;
+
+        public bool IsInsideView => _isInside;
+
+        public MouseOrPointerType Type { get; internal set; }
+
+        public MouseOrPointerStateInternals Internals { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseOrPointerState"/> class.
@@ -230,54 +273,18 @@ namespace SeeingSharp.Multimedia.Input
             }
         }
 
-        public Vector2 MoveDistanceDip => _moveDistancePixel;
-
-        public Vector2 PositionDip => _positionPixel;
-
-        public Vector2 MoveDistanceRelative
-        {
-            get
-            {
-                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
-                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
-
-                return _moveDistancePixel / _screenSizePixel;
-            }
-        }
-
-        public Vector2 PositionRelative
-        {
-            get
-            {
-                if (EngineMath.EqualsWithTolerance(_screenSizePixel.X, 0f)) { return Vector2.Zero; }
-                if (EngineMath.EqualsWithTolerance(_screenSizePixel.Y, 0f)) { return Vector2.Zero; }
-
-                return _positionPixel / _screenSizePixel;
-            }
-        }
-
-        /// <summary>
-        /// Gets the size of the screen in device independent pixel.
-        /// </summary>
-        public Vector2 ScreenSizeDip => _screenSizePixel;
-
-        /// <summary>
-        /// Gets the current wheel delta.
-        /// </summary>
-        public int WheelDelta => _wheelDelta;
-
-        public bool IsInsideView => _isInside;
-
-        public MouseOrPointerType Type { get; internal set; }
-
-        public MouseOrPointerStateInternals Internals { get; }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         public class MouseOrPointerStateInternals
         {
             private MouseOrPointerState _host;
+
+            public MouseOrPointerType Type
+            {
+                get => _host.Type;
+                set => _host.Type = value;
+            }
 
             internal MouseOrPointerStateInternals(MouseOrPointerState host)
             {
@@ -317,12 +324,6 @@ namespace SeeingSharp.Multimedia.Input
             public void NotifyInside(bool isMouseInside)
             {
                 _host.NotifyInside(isMouseInside);
-            }
-
-            public MouseOrPointerType Type
-            {
-                get => _host.Type;
-                set => _host.Type = value;
             }
         }
     }

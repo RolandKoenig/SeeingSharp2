@@ -23,6 +23,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
 {
     public class GeosphereGeometryFactory : GeometryFactory
     {
+        public int CountSubdivisions { get; set; } = 3;
+
+        public float Radius { get; set; } = 0.5f;
+
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             var result = new Geometry();
@@ -32,9 +36,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return result;
         }
-
-        public int CountSubdivisions { get; set; } = 3;
-
-        public float Radius { get; set; } = 0.5f;
     }
 }

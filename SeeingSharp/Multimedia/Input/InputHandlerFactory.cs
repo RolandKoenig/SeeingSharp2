@@ -19,17 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
     public class InputHandlerFactory
     {
         private List<IInputHandler> _inputHandlers;
+
+        /// <summary>
+        /// Gets the total count of loaded input handlers
+        /// </summary>
+        public int Count => _inputHandlers.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputHandlerFactory"/> class.
@@ -169,10 +175,5 @@ namespace SeeingSharp.Multimedia.Input
                 actInputHandler.Start(viewObject);
             }
         }
-
-        /// <summary>
-        /// Gets the total count of loaded input handlers
-        /// </summary>
-        public int Count => _inputHandlers.Count;
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Numerics;
 
@@ -31,10 +32,28 @@ namespace SeeingSharp.Multimedia.Drawing3D
         private float _aspectRatio;
 
         /// <summary>
+        /// Gets or sets the field of view value.
+        /// </summary>
+        public float FieldOfView
+        {
+            get => _fov;
+            set
+            {
+                _fov = value;
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Gets the current aspect ratio.
+        /// </summary>
+        public float AspectRatio => _aspectRatio;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
         /// </summary>
         public PerspectiveCamera3D()
-            : base(isOrthographic: false)
+            : base(false)
         {
 
         }
@@ -45,7 +64,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="width">Width of the render window.</param>
         /// <param name="height">Height of the render window.</param>
         public PerspectiveCamera3D(int width, int height)
-            : base(isOrthographic: false, width, height)
+            : base(false, width, height)
         {
 
         }
@@ -75,23 +94,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 _aspectRatio,
                 zNear, zFar, out projMatrix);
         }
-
-        /// <summary>
-        /// Gets or sets the field of view value.
-        /// </summary>
-        public float FieldOfView
-        {
-            get => _fov;
-            set
-            {
-                _fov = value;
-                this.UpdateCamera();
-            }
-        }
-
-        /// <summary>
-        /// Gets the current aspect ratio.
-        /// </summary>
-        public float AspectRatio => _aspectRatio;
     }
 }

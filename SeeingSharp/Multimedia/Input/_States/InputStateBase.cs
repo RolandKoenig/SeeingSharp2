@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -29,6 +30,27 @@ namespace SeeingSharp.Multimedia.Input
     /// </summary>
     public abstract class InputStateBase
     {
+        /// <summary>
+        /// The view object this input state was queried on.
+        /// Null, if this InputState does not depend on a view.
+        /// </summary>
+        public ViewInformation RelatedView { get; internal set; }
+
+        /// <summary>
+        /// The view index this input state was queried on.
+        /// -1, if this InputState does not depend on a view.
+        /// </summary>
+        public int ViewIndex
+        {
+            get
+            {
+                if (this.RelatedView == null) { return -1; }
+                return this.RelatedView.ViewIndex;
+            }
+        }
+
+        internal Type CurrentType { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InputStateBase"/> class.
         /// </summary>
@@ -53,26 +75,5 @@ namespace SeeingSharp.Multimedia.Input
         {
             this.CopyAndResetForUpdatePassInternal(targetState);
         }
-
-        /// <summary>
-        /// The view object this input state was queried on.
-        /// Null, if this InputState does not depend on a view.
-        /// </summary>
-        public ViewInformation RelatedView { get; internal set; }
-
-        /// <summary>
-        /// The view index this input state was queried on.
-        /// -1, if this InputState does not depend on a view.
-        /// </summary>
-        public int ViewIndex
-        {
-            get
-            {
-                if (this.RelatedView == null) { return -1; }
-                return this.RelatedView.ViewIndex;
-            }
-        }
-
-        internal Type CurrentType { get; }
     }
 }

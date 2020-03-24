@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -55,7 +56,7 @@ namespace SeeingSharp
 
         public void Transform(Matrix4x4 matrix)
         {
-            if(this == BoundingBox.Empty){ return; }
+            if(this == Empty){ return; }
 
             var corners = this.GetCorners();
             for (var loop = 0; loop < corners.Length; loop++)

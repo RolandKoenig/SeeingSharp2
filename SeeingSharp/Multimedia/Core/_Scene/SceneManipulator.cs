@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System;
-using System.Collections.Generic;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -33,6 +34,30 @@ namespace SeeingSharp.Multimedia.Core
         // Objects that remember all changes on object/resource collections
         private List<SceneObject> _createdObjects;
         private List<NamedOrGenericKey> _createdResources;
+
+        /// <summary>
+        /// Gets the owner of this manipulator object.
+        /// </summary>
+        public Scene Owner { get; }
+
+        /// <summary>
+        /// Is this manipulator still valid?
+        /// </summary>
+        public bool IsValid { get; internal set; }
+
+        /// <summary>
+        /// Gets a list containing all created objects.
+        /// </summary>
+        public IEnumerable<SceneObject> CreatedObjects => _createdObjects;
+
+        public int CreatedObjectsCount => _createdObjects.Count;
+
+        /// <summary>
+        /// Gets a list containing all created resources.
+        /// </summary>
+        public IEnumerable<NamedOrGenericKey> CreatedResources => _createdResources;
+
+        public int CreatedResourcesCount => _createdResources.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneManipulator"/> class.
@@ -493,29 +518,5 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (!this.IsValid) { throw new SeeingSharpGraphicsException("This scene manipulator is not valid currently!"); }
         }
-
-        /// <summary>
-        /// Gets the owner of this manipulator object.
-        /// </summary>
-        public Scene Owner { get; }
-
-        /// <summary>
-        /// Is this manipulator still valid?
-        /// </summary>
-        public bool IsValid { get; internal set; }
-
-        /// <summary>
-        /// Gets a list containing all created objects.
-        /// </summary>
-        public IEnumerable<SceneObject> CreatedObjects => _createdObjects;
-
-        public int CreatedObjectsCount => _createdObjects.Count;
-
-        /// <summary>
-        /// Gets a list containing all created resources.
-        /// </summary>
-        public IEnumerable<NamedOrGenericKey> CreatedResources => _createdResources;
-
-        public int CreatedResourcesCount => _createdResources.Count;
     }
 }

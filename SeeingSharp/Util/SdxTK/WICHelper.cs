@@ -23,12 +23,12 @@
 // This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SharpDX.DXGI;
-using SharpDX.WIC;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.DXGI;
+using SharpDX.WIC;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Util.SdxTK
@@ -62,7 +62,7 @@ namespace SeeingSharp.Util.SdxTK
 
                 new WICTranslate(SharpDX.WIC.PixelFormat.Format8bppAlpha, Format.A8_UNorm),
 
-                new WICTranslate(SharpDX.WIC.PixelFormat.FormatBlackWhite, Format.R1_UNorm),
+                new WICTranslate(SharpDX.WIC.PixelFormat.FormatBlackWhite, Format.R1_UNorm)
             };
 
         private static readonly WICConvert[] WICConvertTable =
@@ -113,10 +113,12 @@ namespace SeeingSharp.Util.SdxTK
                 new WICConvert(SharpDX.WIC.PixelFormat.Format40bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
                 new WICConvert(SharpDX.WIC.PixelFormat.Format80bppCMYKAlpha, SharpDX.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
 
-                new WICConvert(SharpDX.WIC.PixelFormat.Format96bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(SharpDX.WIC.PixelFormat.Format96bppRGBFixedPoint, SharpDX.WIC.PixelFormat.Format128bppRGBAFloat) // DXGI.Format.R32G32B32A32_FLOAT
 
                 // We don't support n-channel formats
             };
+
+        private static ImagingFactory Factory => _factory ?? (_factory = new ImagingFactory());
 
         public static void Dispose()
         {
@@ -681,8 +683,6 @@ namespace SeeingSharp.Util.SdxTK
                 EncodeSingleFrame(pixelBuffer[0], flags, GetContainerFormatFromFileType(fileType), stream);
             }
         }
-
-        private static ImagingFactory Factory => _factory ?? (_factory = new ImagingFactory());
 
         //-------------------------------------------------------------------------------------
         // WIC Pixel Format Translation Data

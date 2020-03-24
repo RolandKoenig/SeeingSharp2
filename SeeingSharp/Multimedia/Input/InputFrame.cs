@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Input
 {
@@ -34,6 +35,45 @@ namespace SeeingSharp.Multimedia.Input
         private TimeSpan _frameDuration;
         private List<InputStateBase> _inputStates;
         private List<InputStateBase> _recoveredStates;
+
+        /// <summary>
+        /// Gets the total count of input states.
+        /// </summary>
+        public int CountStates => _inputStates.Count;
+
+        /// <summary>
+        /// Gets a collection containing all gathered input states.
+        /// </summary>
+        public IEnumerable<InputStateBase> InputStates => _inputStates;
+
+        /// <summary>
+        /// Gets the first MouseOrPointerState.
+        /// </summary>
+        public MouseOrPointerState DefaultMouseOrPointer
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the default GamepadState.
+        /// </summary>
+        public GamepadState DefaultGamepad
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the default KeyboardState.
+        /// </summary>
+        public KeyboardState DefaultKeyboard
+        {
+            get;
+            private set;
+        }
+
+        public TimeSpan FrameDuration => _frameDuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputFrame"/> class.
@@ -189,44 +229,5 @@ namespace SeeingSharp.Multimedia.Input
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the total count of input states.
-        /// </summary>
-        public int CountStates => _inputStates.Count;
-
-        /// <summary>
-        /// Gets a collection containing all gathered input states.
-        /// </summary>
-        public IEnumerable<InputStateBase> InputStates => _inputStates;
-
-        /// <summary>
-        /// Gets the first MouseOrPointerState.
-        /// </summary>
-        public MouseOrPointerState DefaultMouseOrPointer
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the default GamepadState.
-        /// </summary>
-        public GamepadState DefaultGamepad
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the default KeyboardState.
-        /// </summary>
-        public KeyboardState DefaultKeyboard
-        {
-            get;
-            private set;
-        }
-
-        public TimeSpan FrameDuration => _frameDuration;
     }
 }

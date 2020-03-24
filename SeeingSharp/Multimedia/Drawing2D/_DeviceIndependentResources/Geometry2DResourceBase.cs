@@ -19,16 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Util;
+
 using System;
 using System.Numerics;
+using SeeingSharp.Checking;
+using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     public abstract class Geometry2DResourceBase : IDisposable, ICheckDisposed
     {
+        public abstract bool IsDisposed
+        {
+            get;
+        }
+
         /// <summary>
         /// A very simple collision check between this geometry and the given one.
         /// </summary>
@@ -66,10 +72,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         /// Gets the geometry object.
         /// </summary>
         internal abstract D2D.Geometry GetGeometry();
-
-        public abstract bool IsDisposed
-        {
-            get;
-        }
     }
 }

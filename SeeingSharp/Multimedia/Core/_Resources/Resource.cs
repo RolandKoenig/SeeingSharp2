@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
 {
@@ -30,6 +31,63 @@ namespace SeeingSharp.Multimedia.Core
         private NamedOrGenericKey _key;
         private bool _markedForReloading;
         private ResourceDictionary _resourceDictionary;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        public abstract bool IsLoaded
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Is this resource marked for reloading.
+        /// </summary>
+        public bool IsMarkedForReloading
+        {
+            get
+            {
+                if (!this.IsLoaded) { return false; }
+                return _markedForReloading;
+            }
+        }
+
+        /// <summary>
+        /// Gets the key of the resource.
+        /// </summary>
+        public NamedOrGenericKey Key
+        {
+            get => _key;
+            internal set
+            {
+                if (!_key.IsEmpty) { throw new SeeingSharpGraphicsException("Unable to change key because there is already a valid key set!"); }
+                _key = value;
+            }
+        }
+
+        /// <summary>
+        /// Is the resource key empty?
+        /// </summary>
+        public bool IsKeyEmpty => _key.IsEmpty;
+
+        /// <summary>
+        /// Gets the parent ResourceDictionary object.
+        /// </summary>
+        public ResourceDictionary Dictionary
+        {
+            get => _resourceDictionary;
+            internal set
+            {
+                _resourceDictionary = value;
+                if (_resourceDictionary != null) { _device = _resourceDictionary.Device; }
+                else { _device = null; }
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of this resource.
+        /// </summary>
+        public Type ResourceType { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Resource"/> class.
@@ -107,62 +165,5 @@ namespace SeeingSharp.Multimedia.Core
 
             this.UnloadResourceInternal(_device, _resourceDictionary);
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        public abstract bool IsLoaded
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Is this resource marked for reloading.
-        /// </summary>
-        public bool IsMarkedForReloading
-        {
-            get
-            {
-                if (!this.IsLoaded) { return false; }
-                return _markedForReloading;
-            }
-        }
-
-        /// <summary>
-        /// Gets the key of the resource.
-        /// </summary>
-        public NamedOrGenericKey Key
-        {
-            get => _key;
-            internal set
-            {
-                if (!_key.IsEmpty) { throw new SeeingSharpGraphicsException("Unable to change key because there is already a valid key set!"); }
-                _key = value;
-            }
-        }
-
-        /// <summary>
-        /// Is the resource key empty?
-        /// </summary>
-        public bool IsKeyEmpty => _key.IsEmpty;
-
-        /// <summary>
-        /// Gets the parent ResourceDictionary object.
-        /// </summary>
-        public ResourceDictionary Dictionary
-        {
-            get => _resourceDictionary;
-            internal set
-            {
-                _resourceDictionary = value;
-                if (_resourceDictionary != null) { _device = _resourceDictionary.Device; }
-                else { _device = null; }
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of this resource.
-        /// </summary>
-        public Type ResourceType { get; }
     }
 }

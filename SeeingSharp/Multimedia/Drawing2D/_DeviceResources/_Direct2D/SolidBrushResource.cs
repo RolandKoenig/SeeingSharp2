@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
-using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
@@ -32,6 +33,10 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // Resources
         private D2D.SolidColorBrush[] _loadedBrushes;
+
+        public Color4 Color { get; }
+
+        public float Opacity { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidBrushResource" /> class.
@@ -96,9 +101,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
 
             return result;
         }
-
-        public Color4 Color { get; }
-
-        public float Opacity { get; }
     }
 }

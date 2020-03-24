@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
-using System;
-using System.Collections.Generic;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -58,6 +59,192 @@ namespace SeeingSharp.Multimedia.Core
         private SampleDescription _antialiasingConfigLow;
         private SampleDescription _antialiasingConfigMedium;
         private SampleDescription _antialiasingConfigHigh;
+
+        /// <summary>
+        /// Checks for standard antialiasing support.
+        /// </summary>
+        public bool IsStandardAntialiasingPossible { get; private set; }
+
+        /// <summary>
+        /// Gets the exception occurred during initialization of the driver (if any).
+        /// </summary>
+        public Exception InitializationException { get; private set; }
+
+        /// <summary>
+        /// Gets the description of this adapter.
+        /// </summary>
+        public string AdapterDescription => _adapterInfo.AdapterDescription;
+
+        /// <summary>
+        /// Is this device loaded successfully.
+        /// </summary>
+        public bool IsLoadedSuccessfully => this.InitializationException == null;
+
+        public bool IsSoftware { get; }
+
+        /// <summary>
+        /// Gets the supported detail level of this device.
+        /// </summary>
+        public DetailLevel SupportedDetailLevel
+        {
+            get
+            {
+                if (_isDetailLevelForced) { return _forcedDetailLevel; }
+
+                if (this.IsSoftware) { return DetailLevel.Low; }
+                return DetailLevel.High;
+            }
+        }
+
+        /// <summary>
+        /// Is high detail supported with this card?
+        /// </summary>
+        public bool IsHighDetailSupported => (this.SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
+
+        /// <summary>
+        /// Gets the level of the graphics driver.
+        /// </summary>
+        public HardwareDriverLevel DriverLevel
+        {
+            get
+            {
+                if (_handlerD3D11 != null) { return _handlerD3D11.DriverLevel; }
+                return HardwareDriverLevel.Direct3D11;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the default shader model.
+        /// </summary>
+        public string DefaultPixelShaderModel
+        {
+            get
+            {
+                return this.DriverLevel switch
+                {
+                    HardwareDriverLevel.Direct3D12 => "ps_5_0",
+                    HardwareDriverLevel.Direct3D11 => "ps_5_0",
+                    HardwareDriverLevel.Direct3D10 => "ps_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the default shader model.
+        /// </summary>
+        public string DefaultVertexShaderModel
+        {
+            get
+            {
+                return this.DriverLevel switch
+                {
+                    HardwareDriverLevel.Direct3D12 => "vs_5_0",
+                    HardwareDriverLevel.Direct3D11 => "vs_5_0",
+                    HardwareDriverLevel.Direct3D10 => "vs_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the default shader model.
+        /// </summary>
+        public string DefaultGeometryShaderModel
+        {
+            get
+            {
+                return this.DriverLevel switch
+                {
+                    HardwareDriverLevel.Direct3D12 => "gs_5_0",
+                    HardwareDriverLevel.Direct3D11 => "gs_5_0",
+                    HardwareDriverLevel.Direct3D10 => "gs_4_0",
+                    _ => throw new SeeingSharpGraphicsException(
+                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the Direct3D 11 device object.
+        /// </summary>
+        internal D3D11.Device1 DeviceD3D11_1 => _handlerD3D11.Device1;
+
+        internal D2D.Device DeviceD2D => _handlerD2D.Device;
+
+        internal D2D.DeviceContext DeviceContextD2D => _handlerD2D.DeviceContext;
+
+        /// <summary>
+        /// A unique value that identifies the adapter.
+        /// </summary>
+        public long Luid => _adapterInfo.Luid;
+
+        public bool Supports2D =>
+            _handlerD2D != null &&
+            _handlerD2D.IsLoaded;
+
+        /// <summary>
+        /// Gets the main Direct3D 11 context object.
+        /// </summary>
+        internal D3D11.DeviceContext DeviceImmediateContextD3D11 => _handlerD3D11.ImmediateContext;
+
+        /// <summary>
+        /// Gets the current device configuration.
+        /// </summary>
+        public GraphicsDeviceConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Gets the DXGI factory object.
+        /// </summary>
+        internal Factory2 FactoryDxgi => _handlerDXGI.Factory;
+
+        /// <summary>
+        /// Gets the 2D render target which can be used to load 2D resources on this device.
+        /// </summary>
+        internal D2D.RenderTarget FakeRenderTarget2D
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the index of this device.
+        /// </summary>
+        public int DeviceIndex
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Internal property for device lost handling.
+        /// This value gets incremented each time when a device is recreated after a device lost event.
+        /// </summary>
+        internal int LoadDeviceIndex { get; private set; }
+
+        /// <summary>
+        /// This property is set to true if the device got lost.
+        /// </summary>
+        public bool IsLost
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Is debug mode enabled?
+        /// </summary>
+        public bool DebugEnabled => this.Configuration.CoreConfiguration.DebugEnabled;
+
+        /// <summary>
+        /// Internal members, use with care.
+        /// </summary>
+        public EngineDeviceInternals Internals { get; }
+
+        /// <inheritdoc />
+        public bool IsDisposed => _isDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
@@ -149,23 +336,6 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Get the sample description for the given quality level.
-        /// </summary>
-        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        internal SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
-        {
-            if(_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
-
-            return qualityLevel switch
-            {
-                AntialiasingQualityLevel.Low => _antialiasingConfigLow,
-                AntialiasingQualityLevel.Medium => _antialiasingConfigMedium,
-                AntialiasingQualityLevel.High => _antialiasingConfigHigh,
-                _ => new SampleDescription(1, 0)
-            };
-        }
-
-        /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
@@ -181,6 +351,23 @@ namespace SeeingSharp.Multimedia.Core
         {
             this.UnloadResources();
             _isDisposed = true;
+        }
+
+        /// <summary>
+        /// Get the sample description for the given quality level.
+        /// </summary>
+        /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
+        internal SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        {
+            if(_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+
+            return qualityLevel switch
+            {
+                AntialiasingQualityLevel.Low => _antialiasingConfigLow,
+                AntialiasingQualityLevel.Medium => _antialiasingConfigMedium,
+                AntialiasingQualityLevel.High => _antialiasingConfigHigh,
+                _ => new SampleDescription(1, 0)
+            };
         }
 
         internal void RegisterDeviceResource(IEngineDeviceResource resource)
@@ -387,198 +574,26 @@ namespace SeeingSharp.Multimedia.Core
             return lowQualityLevels > 0;
         }
 
-        /// <summary>
-        /// Checks for standard antialiasing support.
-        /// </summary>
-        public bool IsStandardAntialiasingPossible { get; private set; }
-
-        /// <summary>
-        /// Gets the exception occurred during initialization of the driver (if any).
-        /// </summary>
-        public Exception InitializationException { get; private set; }
-
-        /// <summary>
-        /// Gets the description of this adapter.
-        /// </summary>
-        public string AdapterDescription => _adapterInfo.AdapterDescription;
-
-        /// <summary>
-        /// Is this device loaded successfully.
-        /// </summary>
-        public bool IsLoadedSuccessfully => this.InitializationException == null;
-
-        public bool IsSoftware { get; }
-
-        /// <summary>
-        /// Gets the supported detail level of this device.
-        /// </summary>
-        public DetailLevel SupportedDetailLevel
-        {
-            get
-            {
-                if (_isDetailLevelForced) { return _forcedDetailLevel; }
-
-                if (this.IsSoftware) { return DetailLevel.Low; }
-                return DetailLevel.High;
-            }
-        }
-
-        /// <summary>
-        /// Is high detail supported with this card?
-        /// </summary>
-        public bool IsHighDetailSupported => (this.SupportedDetailLevel | DetailLevel.High) == DetailLevel.High;
-
-        /// <summary>
-        /// Gets the level of the graphics driver.
-        /// </summary>
-        public HardwareDriverLevel DriverLevel
-        {
-            get
-            {
-                if (_handlerD3D11 != null) { return _handlerD3D11.DriverLevel; }
-                return HardwareDriverLevel.Direct3D11;
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the default shader model.
-        /// </summary>
-        public string DefaultPixelShaderModel
-        {
-            get
-            {
-                return this.DriverLevel switch
-                {
-                    HardwareDriverLevel.Direct3D12 => "ps_5_0",
-                    HardwareDriverLevel.Direct3D11 => "ps_5_0",
-                    HardwareDriverLevel.Direct3D10 => "ps_4_0",
-                    _ => throw new SeeingSharpGraphicsException(
-                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
-                };
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the default shader model.
-        /// </summary>
-        public string DefaultVertexShaderModel
-        {
-            get
-            {
-                return this.DriverLevel switch
-                {
-                    HardwareDriverLevel.Direct3D12 => "vs_5_0",
-                    HardwareDriverLevel.Direct3D11 => "vs_5_0",
-                    HardwareDriverLevel.Direct3D10 => "vs_4_0",
-                    _ => throw new SeeingSharpGraphicsException(
-                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
-                };
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the default shader model.
-        /// </summary>
-        public string DefaultGeometryShaderModel
-        {
-            get
-            {
-                return this.DriverLevel switch
-                {
-                    HardwareDriverLevel.Direct3D12 => "gs_5_0",
-                    HardwareDriverLevel.Direct3D11 => "gs_5_0",
-                    HardwareDriverLevel.Direct3D10 => "gs_4_0",
-                    _ => throw new SeeingSharpGraphicsException(
-                        $"Unable to get shader model for DriverLevel {this.DriverLevel}!")
-                };
-            }
-        }
-
-        /// <summary>
-        /// Gets the Direct3D 11 device object.
-        /// </summary>
-        internal D3D11.Device1 DeviceD3D11_1 => _handlerD3D11.Device1;
-
-        internal D2D.Device DeviceD2D => _handlerD2D.Device;
-
-        internal D2D.DeviceContext DeviceContextD2D => _handlerD2D.DeviceContext;
-
-        /// <summary>
-        /// A unique value that identifies the adapter.
-        /// </summary>
-        public long Luid => _adapterInfo.Luid;
-
-        public bool Supports2D =>
-            _handlerD2D != null &&
-            _handlerD2D.IsLoaded;
-
-        /// <summary>
-        /// Gets the main Direct3D 11 context object.
-        /// </summary>
-        internal D3D11.DeviceContext DeviceImmediateContextD3D11 => _handlerD3D11.ImmediateContext;
-
-        /// <summary>
-        /// Gets the current device configuration.
-        /// </summary>
-        public GraphicsDeviceConfiguration Configuration { get; }
-
-        /// <summary>
-        /// Gets the DXGI factory object.
-        /// </summary>
-        internal Factory2 FactoryDxgi => _handlerDXGI.Factory;
-
-        /// <summary>
-        /// Gets the 2D render target which can be used to load 2D resources on this device.
-        /// </summary>
-        internal D2D.RenderTarget FakeRenderTarget2D
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the index of this device.
-        /// </summary>
-        public int DeviceIndex
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
-        /// Internal property for device lost handling.
-        /// This value gets incremented each time when a device is recreated after a device lost event.
-        /// </summary>
-        internal int LoadDeviceIndex { get; private set; }
-
-        /// <summary>
-        /// This property is set to true if the device got lost.
-        /// </summary>
-        public bool IsLost
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
-        /// Is debug mode enabled?
-        /// </summary>
-        public bool DebugEnabled => this.Configuration.CoreConfiguration.DebugEnabled;
-
-        /// <summary>
-        /// Internal members, use with care.
-        /// </summary>
-        public EngineDeviceInternals Internals { get; }
-
-        /// <inheritdoc />
-        public bool IsDisposed => _isDisposed;
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
         public class EngineDeviceInternals
         {
             private EngineDevice _host;
+
+            public Adapter1 Adapter => _host._handlerDXGI?.Adapter;
+
+            public D2D.RenderTarget FakeRenderTarget2D => _host.FakeRenderTarget2D;
+
+            public Factory2 FactoryDxgi => _host.FactoryDxgi;
+
+            public D3D11.DeviceContext DeviceImmediateContextD3D11 => _host.DeviceImmediateContextD3D11;
+
+            public D2D.DeviceContext DeviceContextD2D => _host.DeviceContextD2D;
+
+            public D2D.Device DeviceD2D => _host.DeviceD2D;
+
+            public D3D11.Device1 DeviceD3D11_1 => _host.DeviceD3D11_1;
 
             internal EngineDeviceInternals(EngineDevice host)
             {
@@ -599,20 +614,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 return _host.GetSampleDescription(qualityLevel);
             }
-
-            public Adapter1 Adapter => _host._handlerDXGI?.Adapter;
-
-            public D2D.RenderTarget FakeRenderTarget2D => _host.FakeRenderTarget2D;
-
-            public Factory2 FactoryDxgi => _host.FactoryDxgi;
-
-            public D3D11.DeviceContext DeviceImmediateContextD3D11 => _host.DeviceImmediateContextD3D11;
-
-            public D2D.DeviceContext DeviceContextD2D => _host.DeviceContextD2D;
-
-            public D2D.Device DeviceD2D => _host.DeviceD2D;
-
-            public D3D11.Device1 DeviceD3D11_1 => _host.DeviceD3D11_1;
         }
     }
 }

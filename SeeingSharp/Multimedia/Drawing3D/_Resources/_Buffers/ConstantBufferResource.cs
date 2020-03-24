@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -30,6 +31,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Direct3D resources
         private D3D11.Buffer _constantBuffer;
+
+        /// <summary>
+        /// Is the buffer loaded correctly?
+        /// </summary>
+        public override bool IsLoaded => _constantBuffer != null;
+
+        /// <summary>
+        /// Gets the total size of the constant buffer.
+        /// </summary>
+        public int BufferSize { get; }
+
+        /// <summary>
+        /// Gets the buffer object.
+        /// </summary>
+        internal D3D11.Buffer ConstantBuffer => _constantBuffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.
@@ -69,20 +85,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             _constantBuffer = SeeingSharpUtil.DisposeObject(_constantBuffer);
         }
-
-        /// <summary>
-        /// Is the buffer loaded correctly?
-        /// </summary>
-        public override bool IsLoaded => _constantBuffer != null;
-
-        /// <summary>
-        /// Gets the total size of the constant buffer.
-        /// </summary>
-        public int BufferSize { get; }
-
-        /// <summary>
-        /// Gets the buffer object.
-        /// </summary>
-        internal D3D11.Buffer ConstantBuffer => _constantBuffer;
     }
 }

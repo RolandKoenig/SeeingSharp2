@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -119,15 +120,6 @@ namespace SeeingSharp.Multimedia.Core
     public class Rendering3DArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Rendering3DArgs"/> class.
-        /// </summary>
-        /// <param name="renderState">Current render state.</param>
-        public Rendering3DArgs(RenderState renderState)
-        {
-            this.RenderState = renderState;
-        }
-
-        /// <summary>
         /// Gets the render state.
         /// </summary>
         /// <value>Gets the render state.</value>
@@ -135,6 +127,15 @@ namespace SeeingSharp.Multimedia.Core
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Rendering3DArgs"/> class.
+        /// </summary>
+        /// <param name="renderState">Current render state.</param>
+        public Rendering3DArgs(RenderState renderState)
+        {
+            this.RenderState = renderState;
         }
     }
 
@@ -144,20 +145,20 @@ namespace SeeingSharp.Multimedia.Core
     public class Updating3DArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Updating3DArgs"/> class.
-        /// </summary>
-        public Updating3DArgs(UpdateState updateState)
-        {
-            this.UpdateState = updateState;
-        }
-
-        /// <summary>
         /// Gets or sets the update state.
         /// </summary>
         public UpdateState UpdateState
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Updating3DArgs"/> class.
+        /// </summary>
+        public Updating3DArgs(UpdateState updateState)
+        {
+            this.UpdateState = updateState;
         }
     }
 }

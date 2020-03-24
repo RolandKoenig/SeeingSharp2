@@ -19,13 +19,20 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.Multimedia.Components
 {
     public class FocusedObjectCameraComponent : FocusedCameraComponent
     {
+        public SceneSpacialObject FocusedObject
+        {
+            get;
+            set;
+        }
+
         protected override Vector3 GetFocusedLocation()
         {
             var focusedObject = this.FocusedObject;
@@ -35,12 +42,6 @@ namespace SeeingSharp.Multimedia.Components
                 return focusedObject.Position;
             }
             return Vector3.Zero;
-        }
-
-        public SceneSpacialObject FocusedObject
-        {
-            get;
-            set;
         }
     }
 }

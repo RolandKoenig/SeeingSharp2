@@ -19,34 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
+using SeeingSharp.Multimedia.Core;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Multimedia.Drawing2D
 {
     public abstract class BitmapResource : Drawing2DResourceBase, IImage, IImageInternal
     {
-        internal abstract D2D.Bitmap GetBitmap(EngineDevice engineDevice);
-
-        /// <summary>
-        /// Gets the input object for an effect.
-        /// </summary>
-        /// <param name="device">The device for which to get the input.</param>
-        IDisposable IImageInternal.GetImageObject(EngineDevice device)
-        {
-            return this.GetBitmap(device)
-                .QueryInterface<D2D.Bitmap>();
-        }
-
-        /// <summary>
-        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
-        /// </summary>
-        BitmapResource IImageInternal.TryGetSourceBitmap()
-        {
-            return this;
-        }
-
         public abstract int PixelWidth
         {
             get;
@@ -90,6 +71,25 @@ namespace SeeingSharp.Multimedia.Drawing2D
         public abstract int SingleFramePixelHeight
         {
             get;
+        }
+        internal abstract D2D.Bitmap GetBitmap(EngineDevice engineDevice);
+
+        /// <summary>
+        /// Gets the input object for an effect.
+        /// </summary>
+        /// <param name="device">The device for which to get the input.</param>
+        IDisposable IImageInternal.GetImageObject(EngineDevice device)
+        {
+            return this.GetBitmap(device)
+                .QueryInterface<D2D.Bitmap>();
+        }
+
+        /// <summary>
+        /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
+        /// </summary>
+        BitmapResource IImageInternal.TryGetSourceBitmap()
+        {
+            return this;
         }
     }
 }

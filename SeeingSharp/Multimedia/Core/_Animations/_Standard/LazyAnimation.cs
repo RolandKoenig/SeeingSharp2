@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.Multimedia.Core
@@ -27,6 +28,47 @@ namespace SeeingSharp.Multimedia.Core
     {
         private IAnimation _animation;
         private Func<IAnimation> _animationCreator;
+
+        /// <summary>
+        /// Is the animation finished?
+        /// </summary>
+        public bool Finished
+        {
+            get
+            {
+                if (_animation == null) { _animation = _animationCreator(); }
+                if (_animation == null) { return true; }
+                return _animation.Finished;
+            }
+        }
+
+        /// <summary>
+        /// Is this animation a blocking animation?
+        /// </summary>
+        public bool IsBlockingAnimation
+        {
+            get
+            {
+                if (_animation == null) { _animation = _animationCreator(); }
+                if (_animation == null) { return false; }
+                return _animation.IsBlockingAnimation;
+            }
+        }
+
+        /// <summary>
+        /// Is this animation canceled?
+        /// </summary>
+        public bool Canceled
+        {
+            get;
+            set;
+        }
+
+        public bool IgnorePauseState
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyAnimation"/> class.
@@ -86,47 +128,6 @@ namespace SeeingSharp.Multimedia.Core
             if (_animation == null) { return TimeSpan.Zero; }
 
             return _animation.GetTimeTillNextEvent(previousMinFinishTime, previousMaxFinishTime, defaultCycleTime);
-        }
-
-        /// <summary>
-        /// Is the animation finished?
-        /// </summary>
-        public bool Finished
-        {
-            get
-            {
-                if (_animation == null) { _animation = _animationCreator(); }
-                if (_animation == null) { return true; }
-                return _animation.Finished;
-            }
-        }
-
-        /// <summary>
-        /// Is this animation a blocking animation?
-        /// </summary>
-        public bool IsBlockingAnimation
-        {
-            get
-            {
-                if (_animation == null) { _animation = _animationCreator(); }
-                if (_animation == null) { return false; }
-                return _animation.IsBlockingAnimation;
-            }
-        }
-
-        /// <summary>
-        /// Is this animation canceled?
-        /// </summary>
-        public bool Canceled
-        {
-            get;
-            set;
-        }
-
-        public bool IgnorePauseState
-        {
-            get;
-            set;
         }
     }
 }

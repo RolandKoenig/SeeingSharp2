@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
-using System;
-using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;
 
@@ -37,6 +38,111 @@ namespace SeeingSharp.Multimedia.Drawing2D
         // Main view related properties
         private D2D.RenderTarget _renderTarget;
         private D2D.DeviceContext _deviceContext;
+
+        /// <summary>
+        /// Gets the device which is used for rendering.
+        /// </summary>
+        public EngineDevice Device { get; }
+
+        /// <summary>
+        /// Gets the bounds of the screen.
+        /// </summary>
+        public RectangleF ScreenBounds
+        {
+            get
+            {
+                var screenSize = this.ScreenSize;
+                return new RectangleF(
+                    0f, 0f,
+                    screenSize.Width, screenSize.Height);
+            }
+        }
+
+        /// <summary>
+        /// Gets the total size of pixels (already scaled by DPI).
+        /// </summary>
+        public Size2F ScreenPixelSize { get; }
+
+        /// <summary>
+        /// Gets the total size of this screen.
+        /// This value may be a virtual screen size (see TransformMode).
+        /// </summary>
+        public Size2F ScreenSize
+        {
+            get
+            {
+                switch (_transformSettings.TransformMode)
+                {
+                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
+                        return _transformSettings.VirtualScreenSize;
+
+                    default:
+                        return this.ScreenPixelSize;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Gets the width of the screen.
+        /// This value may be a virtual screen size (see TransformMode).
+        /// </summary>
+        public float ScreenWidth
+        {
+            get
+            {
+                switch (_transformSettings.TransformMode)
+                {
+                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
+                        return _transformSettings.VirtualScreenSize.Width;
+
+                    default:
+                        return this.ScreenPixelSize.Width;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the height of the screen.
+        /// This value may be a virtual screen size (see TransformMode).
+        /// </summary>
+        public float ScreenHeight
+        {
+            get
+            {
+                switch (_transformSettings.TransformMode)
+                {
+                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
+                        return _transformSettings.VirtualScreenSize.Height;
+
+                    default:
+                        return this.ScreenPixelSize.Height;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Gets the current transform stack.
+        /// Call 'ApplyTransformStack' to apply the current top matrix of this stack.
+        /// </summary>
+        public Matrix3x2Stack TransformStack { get; }
+
+        public Matrix3x2 Transform
+        {
+            get
+            {
+                if (_renderTarget == null) { return Matrix3x2.Identity; }
+                return SdxMathHelper.Matrix3x2FromRaw(_renderTarget.Transform);
+            }
+            set
+            {
+                if (_renderTarget == null) { return; }
+                _renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
+            }
+        }
+
+        public Graphics2DInternals Internals { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Graphics2D"/> class.
@@ -597,111 +703,6 @@ namespace SeeingSharp.Multimedia.Drawing2D
             this.ApplyTransformStack();
         }
 
-        /// <summary>
-        /// Gets the device which is used for rendering.
-        /// </summary>
-        public EngineDevice Device { get; }
-
-        /// <summary>
-        /// Gets the bounds of the screen.
-        /// </summary>
-        public RectangleF ScreenBounds
-        {
-            get
-            {
-                var screenSize = this.ScreenSize;
-                return new RectangleF(
-                    0f, 0f,
-                    screenSize.Width, screenSize.Height);
-            }
-        }
-
-        /// <summary>
-        /// Gets the total size of pixels (already scaled by DPI).
-        /// </summary>
-        public Size2F ScreenPixelSize { get; }
-
-        /// <summary>
-        /// Gets the total size of this screen.
-        /// This value may be a virtual screen size (see TransformMode).
-        /// </summary>
-        public Size2F ScreenSize
-        {
-            get
-            {
-                switch (_transformSettings.TransformMode)
-                {
-                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return _transformSettings.VirtualScreenSize;
-
-                    default:
-                        return this.ScreenPixelSize;
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// Gets the width of the screen.
-        /// This value may be a virtual screen size (see TransformMode).
-        /// </summary>
-        public float ScreenWidth
-        {
-            get
-            {
-                switch (_transformSettings.TransformMode)
-                {
-                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return _transformSettings.VirtualScreenSize.Width;
-
-                    default:
-                        return this.ScreenPixelSize.Width;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the height of the screen.
-        /// This value may be a virtual screen size (see TransformMode).
-        /// </summary>
-        public float ScreenHeight
-        {
-            get
-            {
-                switch (_transformSettings.TransformMode)
-                {
-                    case Graphics2DTransformMode.AutoScaleToVirtualScreen:
-                        return _transformSettings.VirtualScreenSize.Height;
-
-                    default:
-                        return this.ScreenPixelSize.Height;
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// Gets the current transform stack.
-        /// Call 'ApplyTransformStack' to apply the current top matrix of this stack.
-        /// </summary>
-        public Matrix3x2Stack TransformStack { get; }
-
-        public Matrix3x2 Transform
-        {
-            get
-            {
-                if (_renderTarget == null) { return Matrix3x2.Identity; }
-                return SdxMathHelper.Matrix3x2FromRaw(_renderTarget.Transform);
-            }
-            set
-            {
-                if (_renderTarget == null) { return; }
-                _renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
-            }
-        }
-
-        public Graphics2DInternals Internals { get; }
-
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -709,14 +710,14 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             private Graphics2D _owner;
 
+            public D2D.RenderTarget RenderTarget => _owner._renderTarget;
+
+            public D2D.DeviceContext DeviceContext => _owner._deviceContext;
+
             internal Graphics2DInternals(Graphics2D owner)
             {
                 _owner = owner;
             }
-
-            public D2D.RenderTarget RenderTarget => _owner._renderTarget;
-
-            public D2D.DeviceContext DeviceContext => _owner._deviceContext;
         }
     }
 }

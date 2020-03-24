@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Multimedia.Drawing3D;
 using D3D = SharpDX.Direct3D;
 
@@ -28,6 +29,12 @@ namespace SeeingSharp.Multimedia.Core
     {
         private DefaultResources _defaultResources;
         private LineRenderResources _lineRenderResources;
+
+        /// <summary>
+        /// Is the resource loaded?
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override bool IsLoaded => _defaultResources != null;
 
         /// <summary>
         /// Applies this RenderPass (called before starting rendering first objects with it).
@@ -78,11 +85,5 @@ namespace SeeingSharp.Multimedia.Core
             _defaultResources = null;
             _lineRenderResources = null;
         }
-
-        /// <summary>
-        /// Is the resource loaded?
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override bool IsLoaded => _defaultResources != null;
     }
 }

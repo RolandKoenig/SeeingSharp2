@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {

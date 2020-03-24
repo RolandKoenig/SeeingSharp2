@@ -40,10 +40,10 @@ namespace SeeingSharp
         /// <param name="w">The W component.</param>
         public Half4(Half x, Half y, Half z, Half w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace SeeingSharp
         /// <param name="value">The value to set for the X, Y, Z, and W components.</param>
         public Half4(Half value)
         {
-            this.X = value;
-            this.Y = value;
-            this.Z = value;
-            this.W = value;
+            X = value;
+            Y = value;
+            Z = value;
+            W = value;
         }
 
         /// <summary>
@@ -148,9 +148,9 @@ namespace SeeingSharp
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            int num2 = this.W.GetHashCode() + this.Z.GetHashCode();
-            int num = this.Y.GetHashCode() + num2;
-            return (this.X.GetHashCode() + num);
+            var num2 = W.GetHashCode() + Z.GetHashCode();
+            var num = Y.GetHashCode() + num2;
+            return X.GetHashCode() + num;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace SeeingSharp
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
         public static bool Equals(ref Half4 value1, ref Half4 value2)
         {
-            return (((value1.X == value2.X) && (value1.Y == value2.Y)) && ((value1.Z == value2.Z) && (value1.W == value2.W)));
+            return value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W;
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace SeeingSharp
         /// <c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals(Half4 other)
         {
-            return (((this.X == other.X) && (this.Y == other.Y)) && ((this.Z == other.Z) && (this.W == other.W)));
+            return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
         }
 
         /// <summary>

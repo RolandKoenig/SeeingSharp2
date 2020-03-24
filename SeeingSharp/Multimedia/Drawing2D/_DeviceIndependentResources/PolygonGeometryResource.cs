@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -31,6 +32,8 @@ namespace SeeingSharp.Multimedia.Drawing2D
     {
         // resources
         private D2D.PathGeometry _d2dGeometry;
+
+        public override bool IsDisposed => _d2dGeometry == null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonGeometryResource"/> class.
@@ -116,7 +119,5 @@ namespace SeeingSharp.Multimedia.Drawing2D
         {
             return _d2dGeometry;
         }
-
-        public override bool IsDisposed => _d2dGeometry == null;
     }
 }

@@ -19,13 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -49,400 +50,6 @@ namespace SeeingSharp.Multimedia.Core
         private MaterialResource _forcedMaterial;
         private MaterialResource _lastAppliedMaterial;
         private RenderPassDump _currentTargetDump;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
-        /// </summary>
-        /// <param name="device">The device object.</param>
-        private RenderState(EngineDevice device)
-        {
-            // Set device members
-            this.Device = device;
-            DeviceIndex = device.DeviceIndex;
-
-            // Initialize world matrix
-            _world = new Matrix4Stack(Matrix4x4.Identity);
-
-            // Create settings stack
-            _cachedRenderStackEntries = new Stack<RenderStackEntry>(8);
-            _renderSettingsStack = new Stack<RenderStackEntry>();
-            _sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenderState"/> class.
-        /// </summary>
-        internal RenderState(
-            EngineDevice device,
-            RenderTargets renderTargets,
-            RawViewportF viewport,
-            Camera3DBase camera, ViewInformation viewInformation)
-            : this(device)
-        {
-            this.Reset(renderTargets, viewport, camera, viewInformation);
-        }
-
-        /// <summary>
-        /// Renders all given chunks.
-        /// </summary>
-        /// <param name="chunks">The chunks to be rendered.</param>
-        internal void RenderChunks(in RenderingChunk[] chunks)
-        {
-            var device = this.Device;
-            var deviceContext = device.DeviceImmediateContextD3D11;
-
-            var lastVertexBufferId = -1;
-            var lastIndexBufferId = -1;
-            for (var loop = 0; loop < chunks.Length; loop++)
-            {
-                var actChunk = chunks[loop];
-
-                // Apply VertexBuffer
-                if (lastVertexBufferId != actChunk.Template.VertexBufferId)
-                {
-                    lastVertexBufferId = actChunk.Template.VertexBufferId;
-                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
-                }
-
-                // Apply IndexBuffer
-                if (lastIndexBufferId != actChunk.Template.IndexBufferId)
-                {
-                    lastIndexBufferId = actChunk.Template.IndexBufferId;
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
-                }
-
-                // Apply material
-                this.ApplyMaterial(actChunk.Material);
-
-                // Draw current render block
-                deviceContext.DrawIndexed(
-                    actChunk.Template.IndexCount,
-                    actChunk.Template.StartIndex,
-                    0);
-                this.CountDrawCallsInternal++;
-            }
-        }
-
-        /// <summary>
-        /// Applies current render target settings.
-        /// </summary>
-        public void ClearState()
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-
-            // Clear material properties
-            _lastAppliedMaterial?.Discard(this);
-            _lastAppliedMaterial = null;
-            _forcedMaterial = null;
-
-            this.Device.DeviceImmediateContextD3D11.ClearState();
-            _currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
-        }
-
-        /// <summary>
-        /// Clears current depth buffer.
-        /// </summary>
-        public void ClearCurrentDepthBuffer()
-        {
-            this.ClearCurrentDepthBuffer(1f, 0);
-        }
-
-        /// <summary>
-        /// Clears current depth buffer.
-        /// </summary>
-        /// <param name="depth">The depth value to write over the whole buffer.</param>
-        /// <param name="stencil">The stencil value to write over the whole buffer.</param>
-        public void ClearCurrentDepthBuffer(float depth, byte stencil)
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("RenderState");
-            }
-
-            var currentTargets = this.CurrentRenderTargets;
-
-            if (currentTargets.DepthStencilBuffer != null)
-            {
-                this.Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
-                    currentTargets.DepthStencilBuffer,
-                    D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil,
-                    depth, stencil);
-            }
-        }
-
-        /// <summary>
-        /// Clears current color buffer.
-        /// </summary>
-        /// <param name="color">The color used for clearing.</param>
-        public void ClearCurrentColorBuffer(Color4 color)
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("RenderState");
-            }
-
-            var currentTargets = this.CurrentRenderTargets;
-
-            if (currentTargets.ColorBuffer != null)
-            {
-                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
-                    currentTargets.ColorBuffer,
-                    SdxMathHelper.RawFromColor4(color));
-            }
-        }
-
-        /// <summary>
-        /// Clears current normal-depth buffer.
-        /// </summary>
-        public void ClearCurrentNormalDepth()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("RenderState");
-            }
-
-            var currentTargets = this.CurrentRenderTargets;
-
-            if (currentTargets.NormalDepthBuffer != null)
-            {
-                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
-                    currentTargets.NormalDepthBuffer,
-                    SdxMathHelper.RawFromColor4(Color4.Transparent));
-            }
-        }
-
-        /// <summary>
-        /// Pushes a scene onto the stack.
-        /// </summary>
-        /// <param name="scene">Scene to be pushed onto the stack.</param>
-        /// <param name="resourceDictionary">The <see cref="ResourceDictionary"/> to be pushed onto the stack.</param>
-        internal void PushScene(Scene scene, ResourceDictionary resourceDictionary)
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-
-            _sceneStack.Push(Tuple.Create(_currentScene, _currentResourceDictionary));
-            _currentScene = scene;
-            _currentResourceDictionary = resourceDictionary;
-        }
-
-        /// <summary>
-        /// Pops a scene from the stack.
-        /// </summary>
-        internal void PopScene()
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-            if (_sceneStack.Count < 0) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
-
-            var lowerContent = _sceneStack.Pop();
-            _currentScene = lowerContent.Item1;
-            _currentResourceDictionary = lowerContent.Item2;
-        }
-
-        /// <summary>
-        /// Pops a render target from the render target stack.
-        /// </summary>
-        internal void PopRenderTarget()
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-            if (_renderSettingsStack.Count < 1) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
-
-            // Register current stack entry for reusing
-            _cachedRenderStackEntries.Push(_currentRenderSettings);
-
-            // Apply old configuration
-            _currentRenderSettings = _renderSettingsStack.Pop();
-            _currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
-        }
-
-        /// <summary>
-        /// Applies current target settings.
-        /// </summary>
-        internal void ApplyCurrentTarget()
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-
-            _currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
-        }
-
-        /// <summary>
-        /// Generates a WorldViewProjection matrix.
-        /// </summary>
-        /// <param name="world">The world matrix.</param>
-        public Matrix4x4 GenerateWorldViewProj(Matrix4x4 world)
-        {
-            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
-
-            return world * _currentRenderSettings.ViewProj;
-        }
-
-        /// <summary>
-        /// Disposes all resources of this object.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_disposed) { return; }
-
-            _disposed = true;
-        }
-
-        /// <summary>
-        /// Forces the use of the given material.
-        /// </summary>
-        /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
-        internal void ForceMaterial(MaterialResource material)
-        {
-            _forcedMaterial = material;
-        }
-
-        /// <summary>
-        /// Applies the given material to the renderer.
-        /// </summary>
-        /// <param name="resourceToApply">The material to apply.</param>
-        internal void ApplyMaterial(MaterialResource resourceToApply)
-        {
-            // Use forced material if any set
-            if (_forcedMaterial != null &&
-                resourceToApply != _forcedMaterial)
-            {
-                resourceToApply = _forcedMaterial;
-            }
-
-            // Disable logic if given material is null
-            if (resourceToApply == null)
-            {
-                _lastAppliedMaterial?.Discard(this);
-                _lastAppliedMaterial = null;
-                return;
-            }
-
-            if (_lastAppliedMaterial != resourceToApply)
-            {
-                _lastAppliedMaterial?.Discard(this);
-
-                // Apply material (material or instancing mode has changed)
-                resourceToApply.Apply(this, _lastAppliedMaterial);
-
-                _lastAppliedMaterial = resourceToApply;
-            }
-        }
-
-        /// <summary>
-        /// An internal helper method which tells the RenderState to clear
-        /// the cached material resource, which was applied lastly.
-        /// This method must be called if other parts (e. g. postprocessing) work
-        /// with shaders or such like outside of the renderstate.
-        /// </summary>
-        internal void ClearCachedAppliedMaterial()
-        {
-            _lastAppliedMaterial?.Discard(this);
-            _lastAppliedMaterial = null;
-        }
-
-        internal void DumpCurrentRenderTargetsIfActivated(string layerName, int passId, string step)
-        {
-            if (_currentTargetDump == null) { return; }
-            if (_currentRenderSettings == null) { return; }
-
-            _currentTargetDump.Dump($"{layerName}.Pass{passId}.{step}", _currentRenderSettings.RenderTargets);
-        }
-
-        /// <summary>
-        /// Start writing to given <see cref="RenderPassDump"/> object.
-        /// </summary>
-        internal void StartDump(RenderPassDump targetDump)
-        {
-            _currentTargetDump = targetDump;
-        }
-
-        /// <summary>
-        /// Stop writing to dump object.
-        /// </summary>
-        internal void StopDump()
-        {
-            _currentTargetDump = null;
-        }
-
-        /// <summary>
-        /// Resets the render state.
-        /// </summary>
-        /// <param name="viewport">The viewport.</param>
-        /// <param name="camera">The camera for the new render target.</param>
-        /// <param name="viewInformation">The view information.</param>
-        /// <param name="renderTargets">The render targets used for rendering.</param>
-        internal void Reset(
-            in RenderTargets renderTargets,
-            in RawViewportF viewport,
-            in Camera3DBase camera, in ViewInformation viewInformation)
-        {
-            _currentTargetDump = null;
-            _renderSettingsStack.Clear();
-            _sceneStack.Clear();
-            _currentScene = null;
-            _world.ResetStackToIdentity();
-
-            this.CountDrawCallsInternal = 0;
-            this.CountVisibleObjectsInternal = 0;
-
-            // Initialize current render properties
-            if (_currentRenderSettings == null)
-            {
-                if (_cachedRenderStackEntries.Count > 0)
-                {
-                    _currentRenderSettings = _cachedRenderStackEntries.Pop();
-                    _currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
-                }
-                else
-                {
-                    _currentRenderSettings = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
-                }
-            }
-            else
-            {
-                _currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
-            }
-
-            // Apply initial render properties
-            _currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
-        }
-
-        /// <summary>
-        /// Pushes a new render target onto the render target stack.
-        /// </summary>
-        /// <param name="viewport">The viewport object.</param>
-        /// <param name="renderTargets">A structure containing all relevant render targets.</param>
-        /// <param name="camera">The camera for the new render target.</param>
-        /// <param name="viewInformation">The view information.</param>
-        /// <exception cref="System.ObjectDisposedException">RenderState</exception>
-        internal void PushRenderTarget(
-            in RenderTargets renderTargets,
-            in RawViewportF viewport,
-            in Camera3DBase camera, in ViewInformation viewInformation)
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("RenderState");
-            }
-
-            // Build new render stack entry
-            RenderStackEntry newEntry;
-            if (_cachedRenderStackEntries.Count > 0)
-            {
-                newEntry = _cachedRenderStackEntries.Pop();
-                newEntry.Reset(camera, renderTargets, viewport, viewInformation);
-            }
-            else
-            {
-                newEntry = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
-            }
-
-            // Overtake device settings
-            newEntry.Apply(this.Device.DeviceImmediateContextD3D11);
-
-            // Push new entry onto the stack
-            _renderSettingsStack.Push(_currentRenderSettings);
-            _currentRenderSettings = newEntry;
-        }
 
         /// <summary>
         /// Gets current Device object.
@@ -550,6 +157,400 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         internal int CountVisibleObjectsInternal;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// </summary>
+        /// <param name="device">The device object.</param>
+        private RenderState(EngineDevice device)
+        {
+            // Set device members
+            this.Device = device;
+            DeviceIndex = device.DeviceIndex;
+
+            // Initialize world matrix
+            _world = new Matrix4Stack(Matrix4x4.Identity);
+
+            // Create settings stack
+            _cachedRenderStackEntries = new Stack<RenderStackEntry>(8);
+            _renderSettingsStack = new Stack<RenderStackEntry>();
+            _sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderState"/> class.
+        /// </summary>
+        internal RenderState(
+            EngineDevice device,
+            RenderTargets renderTargets,
+            RawViewportF viewport,
+            Camera3DBase camera, ViewInformation viewInformation)
+            : this(device)
+        {
+            this.Reset(renderTargets, viewport, camera, viewInformation);
+        }
+
+        /// <summary>
+        /// Applies current render target settings.
+        /// </summary>
+        public void ClearState()
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+
+            // Clear material properties
+            _lastAppliedMaterial?.Discard(this);
+            _lastAppliedMaterial = null;
+            _forcedMaterial = null;
+
+            this.Device.DeviceImmediateContextD3D11.ClearState();
+            _currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
+        }
+
+        /// <summary>
+        /// Clears current depth buffer.
+        /// </summary>
+        public void ClearCurrentDepthBuffer()
+        {
+            this.ClearCurrentDepthBuffer(1f, 0);
+        }
+
+        /// <summary>
+        /// Clears current depth buffer.
+        /// </summary>
+        /// <param name="depth">The depth value to write over the whole buffer.</param>
+        /// <param name="stencil">The stencil value to write over the whole buffer.</param>
+        public void ClearCurrentDepthBuffer(float depth, byte stencil)
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
+
+            var currentTargets = this.CurrentRenderTargets;
+
+            if (currentTargets.DepthStencilBuffer != null)
+            {
+                this.Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
+                    currentTargets.DepthStencilBuffer,
+                    D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil,
+                    depth, stencil);
+            }
+        }
+
+        /// <summary>
+        /// Clears current color buffer.
+        /// </summary>
+        /// <param name="color">The color used for clearing.</param>
+        public void ClearCurrentColorBuffer(Color4 color)
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
+
+            var currentTargets = this.CurrentRenderTargets;
+
+            if (currentTargets.ColorBuffer != null)
+            {
+                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                    currentTargets.ColorBuffer,
+                    SdxMathHelper.RawFromColor4(color));
+            }
+        }
+
+        /// <summary>
+        /// Clears current normal-depth buffer.
+        /// </summary>
+        public void ClearCurrentNormalDepth()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
+
+            var currentTargets = this.CurrentRenderTargets;
+
+            if (currentTargets.NormalDepthBuffer != null)
+            {
+                this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                    currentTargets.NormalDepthBuffer,
+                    SdxMathHelper.RawFromColor4(Color4.Transparent));
+            }
+        }
+
+        /// <summary>
+        /// Generates a WorldViewProjection matrix.
+        /// </summary>
+        /// <param name="world">The world matrix.</param>
+        public Matrix4x4 GenerateWorldViewProj(Matrix4x4 world)
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+
+            return world * _currentRenderSettings.ViewProj;
+        }
+
+        /// <summary>
+        /// Disposes all resources of this object.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) { return; }
+
+            _disposed = true;
+        }
+
+        /// <summary>
+        /// Renders all given chunks.
+        /// </summary>
+        /// <param name="chunks">The chunks to be rendered.</param>
+        internal void RenderChunks(in RenderingChunk[] chunks)
+        {
+            var device = this.Device;
+            var deviceContext = device.DeviceImmediateContextD3D11;
+
+            var lastVertexBufferId = -1;
+            var lastIndexBufferId = -1;
+            for (var loop = 0; loop < chunks.Length; loop++)
+            {
+                var actChunk = chunks[loop];
+
+                // Apply VertexBuffer
+                if (lastVertexBufferId != actChunk.Template.VertexBufferId)
+                {
+                    lastVertexBufferId = actChunk.Template.VertexBufferId;
+                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
+                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
+                }
+
+                // Apply IndexBuffer
+                if (lastIndexBufferId != actChunk.Template.IndexBufferId)
+                {
+                    lastIndexBufferId = actChunk.Template.IndexBufferId;
+                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
+                }
+
+                // Apply material
+                this.ApplyMaterial(actChunk.Material);
+
+                // Draw current render block
+                deviceContext.DrawIndexed(
+                    actChunk.Template.IndexCount,
+                    actChunk.Template.StartIndex,
+                    0);
+                CountDrawCallsInternal++;
+            }
+        }
+
+        /// <summary>
+        /// Pushes a scene onto the stack.
+        /// </summary>
+        /// <param name="scene">Scene to be pushed onto the stack.</param>
+        /// <param name="resourceDictionary">The <see cref="ResourceDictionary"/> to be pushed onto the stack.</param>
+        internal void PushScene(Scene scene, ResourceDictionary resourceDictionary)
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+
+            _sceneStack.Push(Tuple.Create(_currentScene, _currentResourceDictionary));
+            _currentScene = scene;
+            _currentResourceDictionary = resourceDictionary;
+        }
+
+        /// <summary>
+        /// Pops a scene from the stack.
+        /// </summary>
+        internal void PopScene()
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (_sceneStack.Count < 0) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
+
+            var lowerContent = _sceneStack.Pop();
+            _currentScene = lowerContent.Item1;
+            _currentResourceDictionary = lowerContent.Item2;
+        }
+
+        /// <summary>
+        /// Pops a render target from the render target stack.
+        /// </summary>
+        internal void PopRenderTarget()
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+            if (_renderSettingsStack.Count < 1) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
+
+            // Register current stack entry for reusing
+            _cachedRenderStackEntries.Push(_currentRenderSettings);
+
+            // Apply old configuration
+            _currentRenderSettings = _renderSettingsStack.Pop();
+            _currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
+        }
+
+        /// <summary>
+        /// Applies current target settings.
+        /// </summary>
+        internal void ApplyCurrentTarget()
+        {
+            if (_disposed) { throw new ObjectDisposedException("RenderState"); }
+
+            _currentRenderSettings?.Apply(this.Device.DeviceImmediateContextD3D11);
+        }
+
+        /// <summary>
+        /// Forces the use of the given material.
+        /// </summary>
+        /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
+        internal void ForceMaterial(MaterialResource material)
+        {
+            _forcedMaterial = material;
+        }
+
+        /// <summary>
+        /// Applies the given material to the renderer.
+        /// </summary>
+        /// <param name="resourceToApply">The material to apply.</param>
+        internal void ApplyMaterial(MaterialResource resourceToApply)
+        {
+            // Use forced material if any set
+            if (_forcedMaterial != null &&
+                resourceToApply != _forcedMaterial)
+            {
+                resourceToApply = _forcedMaterial;
+            }
+
+            // Disable logic if given material is null
+            if (resourceToApply == null)
+            {
+                _lastAppliedMaterial?.Discard(this);
+                _lastAppliedMaterial = null;
+                return;
+            }
+
+            if (_lastAppliedMaterial != resourceToApply)
+            {
+                _lastAppliedMaterial?.Discard(this);
+
+                // Apply material (material or instancing mode has changed)
+                resourceToApply.Apply(this, _lastAppliedMaterial);
+
+                _lastAppliedMaterial = resourceToApply;
+            }
+        }
+
+        /// <summary>
+        /// An internal helper method which tells the RenderState to clear
+        /// the cached material resource, which was applied lastly.
+        /// This method must be called if other parts (e. g. postprocessing) work
+        /// with shaders or such like outside of the renderstate.
+        /// </summary>
+        internal void ClearCachedAppliedMaterial()
+        {
+            _lastAppliedMaterial?.Discard(this);
+            _lastAppliedMaterial = null;
+        }
+
+        internal void DumpCurrentRenderTargetsIfActivated(string layerName, int passId, string step)
+        {
+            if (_currentTargetDump == null) { return; }
+            if (_currentRenderSettings == null) { return; }
+
+            _currentTargetDump.Dump($"{layerName}.Pass{passId}.{step}", _currentRenderSettings.RenderTargets);
+        }
+
+        /// <summary>
+        /// Start writing to given <see cref="RenderPassDump"/> object.
+        /// </summary>
+        internal void StartDump(RenderPassDump targetDump)
+        {
+            _currentTargetDump = targetDump;
+        }
+
+        /// <summary>
+        /// Stop writing to dump object.
+        /// </summary>
+        internal void StopDump()
+        {
+            _currentTargetDump = null;
+        }
+
+        /// <summary>
+        /// Resets the render state.
+        /// </summary>
+        /// <param name="viewport">The viewport.</param>
+        /// <param name="camera">The camera for the new render target.</param>
+        /// <param name="viewInformation">The view information.</param>
+        /// <param name="renderTargets">The render targets used for rendering.</param>
+        internal void Reset(
+            in RenderTargets renderTargets,
+            in RawViewportF viewport,
+            in Camera3DBase camera, in ViewInformation viewInformation)
+        {
+            _currentTargetDump = null;
+            _renderSettingsStack.Clear();
+            _sceneStack.Clear();
+            _currentScene = null;
+            _world.ResetStackToIdentity();
+
+            CountDrawCallsInternal = 0;
+            CountVisibleObjectsInternal = 0;
+
+            // Initialize current render properties
+            if (_currentRenderSettings == null)
+            {
+                if (_cachedRenderStackEntries.Count > 0)
+                {
+                    _currentRenderSettings = _cachedRenderStackEntries.Pop();
+                    _currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
+                }
+                else
+                {
+                    _currentRenderSettings = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
+                }
+            }
+            else
+            {
+                _currentRenderSettings.Reset(camera, renderTargets, viewport, viewInformation);
+            }
+
+            // Apply initial render properties
+            _currentRenderSettings.Apply(this.Device.DeviceImmediateContextD3D11);
+        }
+
+        /// <summary>
+        /// Pushes a new render target onto the render target stack.
+        /// </summary>
+        /// <param name="viewport">The viewport object.</param>
+        /// <param name="renderTargets">A structure containing all relevant render targets.</param>
+        /// <param name="camera">The camera for the new render target.</param>
+        /// <param name="viewInformation">The view information.</param>
+        /// <exception cref="System.ObjectDisposedException">RenderState</exception>
+        internal void PushRenderTarget(
+            in RenderTargets renderTargets,
+            in RawViewportF viewport,
+            in Camera3DBase camera, in ViewInformation viewInformation)
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("RenderState");
+            }
+
+            // Build new render stack entry
+            RenderStackEntry newEntry;
+            if (_cachedRenderStackEntries.Count > 0)
+            {
+                newEntry = _cachedRenderStackEntries.Pop();
+                newEntry.Reset(camera, renderTargets, viewport, viewInformation);
+            }
+            else
+            {
+                newEntry = new RenderStackEntry(camera, renderTargets, viewport, viewInformation);
+            }
+
+            // Overtake device settings
+            newEntry.Apply(this.Device.DeviceImmediateContextD3D11);
+
+            // Push new entry onto the stack
+            _renderSettingsStack.Push(_currentRenderSettings);
+            _currentRenderSettings = newEntry;
+        }
+
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
@@ -561,6 +562,21 @@ namespace SeeingSharp.Multimedia.Core
             // Local array which store all RenderTargets for usage
             private D3D11.RenderTargetView[] _targetArray;
             private RawViewportF[] _viewports;
+
+            /// <summary>
+            /// Gets the current view projection matrix.
+            /// </summary>
+            public Matrix4x4 ViewProj => this.Camera.ViewProjection;
+
+            public Camera3DBase Camera { get; private set; }
+
+            public Matrix4Stack Matrix4Stack { get; private set; }
+
+            public RenderTargets RenderTargets { get; private set; }
+
+            public RawViewportF SingleViewport { get; private set; }
+
+            public ViewInformation ViewInformation { get; private set; }
 
             public RenderStackEntry(
                 in Camera3DBase camera, in RenderTargets renderTargets, 
@@ -602,21 +618,6 @@ namespace SeeingSharp.Multimedia.Core
                 deviceContext.Rasterizer.SetViewports(_viewports);
                 deviceContext.OutputMerger.SetTargets(this.RenderTargets.DepthStencilBuffer, _targetArray);
             }
-
-            /// <summary>
-            /// Gets the current view projection matrix.
-            /// </summary>
-            public Matrix4x4 ViewProj => this.Camera.ViewProjection;
-
-            public Camera3DBase Camera { get; private set; }
-
-            public Matrix4Stack Matrix4Stack { get; private set; }
-
-            public RenderTargets RenderTargets { get; private set; }
-
-            public RawViewportF SingleViewport { get; private set; }
-
-            public ViewInformation ViewInformation { get; private set; }
         }
     }
 }
