@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.Util;
@@ -28,6 +29,8 @@ namespace SeeingSharp.WpfSamples
     public class PerformanceOverviewViewModel : PropertyChangedBase
     {
         private PerformanceAnalyzer _performanceAnalyzer;
+
+        public List<DurationPerformanceResult> DurationResults { get; }
 
         public PerformanceOverviewViewModel(PerformanceAnalyzer performanceAnalyzer)
         {
@@ -44,7 +47,5 @@ namespace SeeingSharp.WpfSamples
             }
             this.DurationResults.Sort((left, right) => -left.SumAverageMsDouble.CompareTo(right.SumAverageMsDouble));
         }
-
-        public List<DurationPerformanceResult> DurationResults { get; }
     }
 }

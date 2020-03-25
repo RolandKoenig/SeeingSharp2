@@ -19,21 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.SampleContainer.Util
 {
     public class SampleCommand : DelegateCommand
     {
+        public string CommandText
+        {
+            get;
+        }
+
         public SampleCommand(string commandText, Action execute, Func<bool> canExecute)
             : base(execute, canExecute)
         {
             this.CommandText = commandText;
-        }
-
-        public string CommandText
-        {
-            get;
         }
     }
 }

@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Threading.Tasks;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
-using System.Numerics;
-using System.Threading.Tasks;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D._07_ExtrudeGeometry

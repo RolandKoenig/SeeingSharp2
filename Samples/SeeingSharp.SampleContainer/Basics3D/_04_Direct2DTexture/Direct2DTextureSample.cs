@@ -19,16 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.ComponentModel;
+using System.Numerics;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System;
-using System.ComponentModel;
-using System.Numerics;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics3D._04_Direct2DTexture
 {

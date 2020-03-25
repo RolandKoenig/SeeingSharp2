@@ -19,15 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.ComponentModel;
+using System.Numerics;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System;
-using System.ComponentModel;
-using System.Numerics;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
 {
@@ -145,7 +146,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                     if (givenValue > 50) { givenValue = 50; }
 
                     _cubeCountPerSide = givenValue;
-                    base.RaiseRecreateRequest();
+                    this.RaiseRecreateRequest();
                 }
             }
 
@@ -156,7 +157,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                 set
                 {
                     _animated = value;
-                    base.RaiseRecreateRequest();
+                    this.RaiseRecreateRequest();
                 }
             }
 
@@ -167,7 +168,7 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
                 set
                 {
                     _halfTextured = value;
-                    base.RaiseRecreateRequest();
+                    this.RaiseRecreateRequest();
                 }
             }
         }

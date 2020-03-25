@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace SeeingSharp.SampleContainer.Primitives3D
 {
@@ -9,7 +6,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
     {
         public const string CATEGORY_NAME = "Primitive";
 
-        private bool _textured = false;
+        private bool _textured;
         private bool _animated = true;
 
         [Category(CATEGORY_NAME)]
@@ -21,7 +18,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
                 if (_textured != value)
                 {
                     _textured = value;
-                    base.RaiseRecreateRequest();
+                    this.RaiseRecreateRequest();
                 }
             }
         }
@@ -35,7 +32,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
                 if (_animated != value)
                 {
                     _animated = value;
-                    base.RaiseRecreateRequest();
+                    this.RaiseRecreateRequest();
                 }
             }
         }

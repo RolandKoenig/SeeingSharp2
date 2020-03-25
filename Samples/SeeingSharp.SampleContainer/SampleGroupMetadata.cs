@@ -19,19 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 
 namespace SeeingSharp.SampleContainer
 {
     public class SampleGroupMetadata
     {
-        public SampleGroupMetadata(string groupName)
-        {
-            this.Samples = new List<SampleMetadata>();
-
-            this.GroupName = groupName;
-        }
-
         public string GroupName
         {
             get;
@@ -40,6 +34,13 @@ namespace SeeingSharp.SampleContainer
         public List<SampleMetadata> Samples
         {
             get;
+        }
+
+        public SampleGroupMetadata(string groupName)
+        {
+            this.Samples = new List<SampleMetadata>();
+
+            this.GroupName = groupName;
         }
     }
 }

@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -35,57 +36,6 @@ namespace SeeingSharp.UwpSamples
         private SampleSettings _sampleSettings;
         private string _selectedGroup;
         private SampleViewModel _selectedSample;
-
-        public MainWindowViewModel()
-        {
-            if (!DesignMode.DesignModeEnabled) { return; }
-
-            for (var loop = 1; loop < 5; loop++)
-            {
-                this.SampleGroups.Add($"DummyGroup {loop}");
-            }
-            this.SelectedGroup = "DummyGroup 2";
-
-            for (var loop = 1; loop < 5; loop++)
-            {
-                this.Samples.Add(new SampleViewModel(new SampleMetadata(
-                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"), this.GetType())));
-            }
-        }
-
-        public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
-        {
-            _selectedGroup = string.Empty;
-
-            _sampleRepo = sampleRepo;
-            _renderLoop = renderLoop;
-
-            // Load samples
-            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
-                .Select(actGroup => actGroup.GroupName))
-            {
-                this.SampleGroups.Add(actSampleGroupName);
-            }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
-
-            _renderLoop.Filters.Add(new SceneViewboxObjectFilter());
-        }
-
-        private void UpdateSampleCollection()
-        {
-            if (DesignMode.DesignModeEnabled) { return; }
-
-            var sampleGroup = _sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
-            if (sampleGroup == null) { return; }
-
-            this.Samples.Clear();
-            foreach (var actSampleMetadata in sampleGroup.Samples)
-            {
-                this.Samples.Add(new SampleViewModel(actSampleMetadata));
-            }
-            this.SelectedSample = this.Samples.FirstOrDefault();
-        }
 
         public ObservableCollection<string> SampleGroups
         {
@@ -151,5 +101,56 @@ namespace SeeingSharp.UwpSamples
         } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings => _sampleSettings;
+
+        public MainWindowViewModel()
+        {
+            if (!DesignMode.DesignModeEnabled) { return; }
+
+            for (var loop = 1; loop < 5; loop++)
+            {
+                this.SampleGroups.Add($"DummyGroup {loop}");
+            }
+            this.SelectedGroup = "DummyGroup 2";
+
+            for (var loop = 1; loop < 5; loop++)
+            {
+                this.Samples.Add(new SampleViewModel(new SampleMetadata(
+                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"), this.GetType())));
+            }
+        }
+
+        public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
+        {
+            _selectedGroup = string.Empty;
+
+            _sampleRepo = sampleRepo;
+            _renderLoop = renderLoop;
+
+            // Load samples
+            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
+                .Select(actGroup => actGroup.GroupName))
+            {
+                this.SampleGroups.Add(actSampleGroupName);
+            }
+            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+
+            _renderLoop.Filters.Add(new SceneViewboxObjectFilter());
+        }
+
+        private void UpdateSampleCollection()
+        {
+            if (DesignMode.DesignModeEnabled) { return; }
+
+            var sampleGroup = _sampleRepo.SampleGroups
+                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
+            if (sampleGroup == null) { return; }
+
+            this.Samples.Clear();
+            foreach (var actSampleMetadata in sampleGroup.Samples)
+            {
+                this.Samples.Add(new SampleViewModel(actSampleMetadata));
+            }
+            this.SelectedSample = this.Samples.FirstOrDefault();
+        }
     }
 }

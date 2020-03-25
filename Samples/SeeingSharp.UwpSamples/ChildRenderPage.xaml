@@ -21,15 +21,15 @@
         <Grid Background="Transparent"
               Grid.Row="0"
               x:Name="TextAppTitleRow">
-            <TextBlock Text="Custom Title Bar" 
+            <TextBlock Text="Custom Title Bar"
                        x:Name="TextAppTitle"
-                       Style="{StaticResource CaptionTextBlockStyle}" 
-                       Margin="12,8,0,8"/>
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Margin="12,8,0,8" />
         </Grid>
 
         <!-- Renderer -->
         <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain"
-                                       Grid.Row="1" Grid.RowSpan="2"/>
+                                       Grid.Row="1" Grid.RowSpan="2" />
 
         <!-- Status bar -->
         <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"

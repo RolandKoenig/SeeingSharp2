@@ -14,19 +14,19 @@
             <MenuItem Header="File">
                 <MenuItem Header="Open"
                           Command="{Binding Path=Command_OpenFile}"
-                          IsEnabled="{Binding Path=ControlsEnabled}"/>
+                          IsEnabled="{Binding Path=ControlsEnabled}" />
                 <MenuItem Header="Close"
                           Command="{Binding Path=Command_CloseFile}"
-                          IsEnabled="{Binding Path=ControlsEnabled}"/>
+                          IsEnabled="{Binding Path=ControlsEnabled}" />
                 <Separator />
                 <MenuItem Header="Exit"
-                          Command="{Binding Path=Command_Exit}"/>
+                          Command="{Binding Path=Command_Exit}" />
             </MenuItem>
         </Menu>
 
         <!-- Status bar -->
-        <local:StatusBarControl DockPanel.Dock="Bottom" 
-                                CtrlRenderer="{Binding ElementName=CtrlRenderer}" 
+        <local:StatusBarControl DockPanel.Dock="Bottom"
+                                CtrlRenderer="{Binding ElementName=CtrlRenderer}"
                                 IsEnabled="{Binding Path=ControlsEnabled}" />
 
         <!-- The 3D renderer control-->
@@ -49,16 +49,16 @@
             </StackPanel>
 
             <Grid Width="300" Height="100"
-                  Background="#BBD3D3D3" 
+                  Background="#BBD3D3D3"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   Visibility="{Binding Path=LoadingWindowVisibility}">
                 <Border BorderBrush="DarkGray" />
 
                 <StackPanel Margin="10" Orientation="Vertical"
                             VerticalAlignment="Center">
-                    <TextBlock Text="Loading..." 
+                    <TextBlock Text="Loading..."
                                FontSize="20" FontWeight="Bold" />
-                    <ProgressBar Margin="10" Height="20" IsIndeterminate="True"/>
+                    <ProgressBar Margin="10" Height="20" IsIndeterminate="True" />
                 </StackPanel>
             </Grid>
         </Grid>

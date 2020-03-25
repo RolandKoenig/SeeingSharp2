@@ -19,12 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,6 +29,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
@@ -64,6 +66,83 @@ namespace SeeingSharp.Multimedia.Views
         private bool _isMouseInside;
         private DateTime _lastSizeChange;
         private Dictionary<MouseButtons, DateTime> _mouseButtonDownTime;
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Scene Scene
+        {
+            get => _renderLoop.Scene;
+            set => _renderLoop.SetScene(value);
+        }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Camera3DBase Camera
+        {
+            get => _renderLoop.Camera;
+            set => _renderLoop.Camera = value;
+        }
+
+        /// <summary>
+        /// Gets the render loop object.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public RenderLoop RenderLoop => _renderLoop;
+
+        /// <summary>
+        /// Discard rendering?
+        /// </summary>
+        [Browsable(false)]
+        [DefaultValue(false)]
+        public bool DiscardRendering
+        {
+            get => _renderLoop.DiscardRendering;
+            set => _renderLoop.DiscardRendering = value;
+        }
+
+        /// <summary>
+        /// Discard present of rendering results on the screen?
+        /// </summary>
+        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
+        [DefaultValue(false)]
+        public bool DiscardPresent
+        {
+            get => _renderLoop.DiscardPresent;
+            set => _renderLoop.DiscardPresent = value;
+        }
+
+        /// <summary>
+        /// Gets the view configuration.
+        /// </summary>
+        [Browsable(true)]
+        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public GraphicsViewConfiguration Configuration => _renderLoop.Configuration;
+
+        public sealed override GDI.Color BackColor
+        {
+            get => base.BackColor;
+            set
+            {
+                base.BackColor = value;
+                _renderLoop.ClearColor = value.Color4FromGdiColor();
+            }
+        }
+
+        [Browsable(false)]
+        public EngineDevice Device => _renderLoop?.Device;
+
+        /// <summary>
+        /// True if the control is connected with the main rendering loop.
+        /// False if something went wrong.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsOperational => _renderLoop.IsOperational;
+
+        [Browsable(false)]
+        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
 
         /// <summary>
         /// Raises when mouse was down a short amount of time.
@@ -505,7 +584,7 @@ namespace SeeingSharp.Multimedia.Views
             {
                 _swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
             }
-            catch (SharpDX.SharpDXException ex)
+            catch (SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware
@@ -526,82 +605,5 @@ namespace SeeingSharp.Multimedia.Views
                 this.StopRendering();
             }
         }
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Scene Scene
-        {
-            get => _renderLoop.Scene;
-            set => _renderLoop.SetScene(value);
-        }
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Camera3DBase Camera
-        {
-            get => _renderLoop.Camera;
-            set => _renderLoop.Camera = value;
-        }
-
-        /// <summary>
-        /// Gets the render loop object.
-        /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public RenderLoop RenderLoop => _renderLoop;
-
-        /// <summary>
-        /// Discard rendering?
-        /// </summary>
-        [Browsable(false)]
-        [DefaultValue(false)]
-        public bool DiscardRendering
-        {
-            get => _renderLoop.DiscardRendering;
-            set => _renderLoop.DiscardRendering = value;
-        }
-
-        /// <summary>
-        /// Discard present of rendering results on the screen?
-        /// </summary>
-        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
-        [DefaultValue(false)]
-        public bool DiscardPresent
-        {
-            get => _renderLoop.DiscardPresent;
-            set => _renderLoop.DiscardPresent = value;
-        }
-
-        /// <summary>
-        /// Gets the view configuration.
-        /// </summary>
-        [Browsable(true)]
-        [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public GraphicsViewConfiguration Configuration => _renderLoop.Configuration;
-
-        public sealed override GDI.Color BackColor
-        {
-            get => base.BackColor;
-            set
-            {
-                base.BackColor = value;
-                _renderLoop.ClearColor = value.Color4FromGdiColor();
-            }
-        }
-
-        [Browsable(false)]
-        public EngineDevice Device => _renderLoop?.Device;
-
-        /// <summary>
-        /// True if the control is connected with the main rendering loop.
-        /// False if something went wrong.
-        /// </summary>
-        [Browsable(false)]
-        public bool IsOperational => _renderLoop.IsOperational;
-
-        [Browsable(false)]
-        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
     }
 }

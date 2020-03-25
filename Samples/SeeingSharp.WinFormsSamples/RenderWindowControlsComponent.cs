@@ -14,82 +14,6 @@ namespace SeeingSharp.WinFormsSamples
         private ToolStripDropDownButton _mnuChooseDevice;
         private ToolStripDropDownButton _mnuChangeResolution;
 
-        public void UpdateTargetControlStates()
-        {
-            if (!GraphicsCore.IsLoaded) { return; }
-
-            // Update all status labels
-            if (this.LblCurrentResolution != null)
-            {
-                var viewSize = _renderControl.RenderLoop.ViewInformation.CurrentViewSize;
-                this.LblCurrentResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
-            }
-
-            if(this.LblCurrentResourceCount != null)
-            {
-                this.LblCurrentResourceCount.Text = _renderControl.RenderLoop.CountGraphicsResources.ToString();
-            }
-
-            if (this.LblCurrentObjectCount != null)
-            {
-                this.LblCurrentObjectCount.Text = _renderControl.RenderLoop.CountVisibleObjects.ToString();
-            }
-
-            if (this.LblCurrentDrawCallCount != null)
-            {
-                this.LblCurrentDrawCallCount.Text = _renderControl.RenderLoop.CountDrawCalls.ToString();
-            }
-
-            if (this.LblCurrentDevice != null)
-            {
-                this.LblCurrentDevice.Text = _renderControl.RenderLoop.Device?.AdapterDescription ?? "-";
-            }
-        }
-
-        public void ChangeRenderResolution(int width, int height)
-        {
-            var renderControl = _renderControl;
-            if (renderControl == null) { return; }
-
-            var targetWindow = this.TargetWindow;
-            if(targetWindow == null){ return; }
-
-            var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            var currentWindowSize = new Size2(targetWindow.Width, targetWindow.Height);
-            var difference = new Size2(
-                currentWindowSize.Width - currentViewSize.Width,
-                currentWindowSize.Height - currentViewSize.Height);
-            var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
-
-            targetWindow.WindowState = FormWindowState.Normal;
-            targetWindow.Width = newWindowSize.Width;
-            targetWindow.Height = newWindowSize.Height;
-        }
-
-        private void OnCmdChangeDevice_Click(object sender, EventArgs eArgs)
-        {
-            if (_renderControl == null) { return; }
-            if (!(sender is ToolStripButton changeButton)) { return; }
-            if (!(changeButton.Tag is EngineDevice device)) { return; }
-
-            _renderControl.RenderLoop.SetRenderingDevice(device);
-        }
-
-        private void OnCmdChangeResolution_Click(object sender, EventArgs e)
-        {
-            var menuItem = sender as ToolStripMenuItem;
-
-            if (menuItem?.Tag == null) { return; }
-
-            var splittedResolution = menuItem.Tag.ToString().Split('x');
-
-            if (splittedResolution.Length != 2) { return; }
-            if (!int.TryParse(splittedResolution[0], out var width)) { return; }
-            if (!int.TryParse(splittedResolution[1], out var height)) { return; }
-
-            this.ChangeRenderResolution(width, height);
-        }
-
         public SeeingSharpRendererControl RenderControl
         {
             get => _renderControl;
@@ -210,6 +134,82 @@ namespace SeeingSharp.WinFormsSamples
         {
             get;
             set;
+        }
+
+        public void UpdateTargetControlStates()
+        {
+            if (!GraphicsCore.IsLoaded) { return; }
+
+            // Update all status labels
+            if (this.LblCurrentResolution != null)
+            {
+                var viewSize = _renderControl.RenderLoop.ViewInformation.CurrentViewSize;
+                this.LblCurrentResolution.Text = $"{viewSize.Width}x{viewSize.Height}";
+            }
+
+            if(this.LblCurrentResourceCount != null)
+            {
+                this.LblCurrentResourceCount.Text = _renderControl.RenderLoop.CountGraphicsResources.ToString();
+            }
+
+            if (this.LblCurrentObjectCount != null)
+            {
+                this.LblCurrentObjectCount.Text = _renderControl.RenderLoop.CountVisibleObjects.ToString();
+            }
+
+            if (this.LblCurrentDrawCallCount != null)
+            {
+                this.LblCurrentDrawCallCount.Text = _renderControl.RenderLoop.CountDrawCalls.ToString();
+            }
+
+            if (this.LblCurrentDevice != null)
+            {
+                this.LblCurrentDevice.Text = _renderControl.RenderLoop.Device?.AdapterDescription ?? "-";
+            }
+        }
+
+        public void ChangeRenderResolution(int width, int height)
+        {
+            var renderControl = _renderControl;
+            if (renderControl == null) { return; }
+
+            var targetWindow = this.TargetWindow;
+            if(targetWindow == null){ return; }
+
+            var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
+            var currentWindowSize = new Size2(targetWindow.Width, targetWindow.Height);
+            var difference = new Size2(
+                currentWindowSize.Width - currentViewSize.Width,
+                currentWindowSize.Height - currentViewSize.Height);
+            var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
+
+            targetWindow.WindowState = FormWindowState.Normal;
+            targetWindow.Width = newWindowSize.Width;
+            targetWindow.Height = newWindowSize.Height;
+        }
+
+        private void OnCmdChangeDevice_Click(object sender, EventArgs eArgs)
+        {
+            if (_renderControl == null) { return; }
+            if (!(sender is ToolStripButton changeButton)) { return; }
+            if (!(changeButton.Tag is EngineDevice device)) { return; }
+
+            _renderControl.RenderLoop.SetRenderingDevice(device);
+        }
+
+        private void OnCmdChangeResolution_Click(object sender, EventArgs e)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+
+            if (menuItem?.Tag == null) { return; }
+
+            var splittedResolution = menuItem.Tag.ToString().Split('x');
+
+            if (splittedResolution.Length != 2) { return; }
+            if (!int.TryParse(splittedResolution[0], out var width)) { return; }
+            if (!int.TryParse(splittedResolution[1], out var height)) { return; }
+
+            this.ChangeRenderResolution(width, height);
         }
     }
 }

@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Windows;
 using System.Windows.Controls;
 using SeeingSharp.Multimedia.Views;
@@ -33,15 +34,15 @@ namespace SeeingSharp.ModelViewer
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRendererElement), typeof(StatusBarControl), new PropertyMetadata(null));
 
-        public StatusBarControl()
-        {
-            this.InitializeComponent();
-        }
-
         public SeeingSharpRendererElement CtrlRenderer
         {
             get => (SeeingSharpRendererElement)this.GetValue(CtrlRendererProperty);
             set => this.SetValue(CtrlRendererProperty, value);
+        }
+
+        public StatusBarControl()
+        {
+            this.InitializeComponent();
         }
     }
 }

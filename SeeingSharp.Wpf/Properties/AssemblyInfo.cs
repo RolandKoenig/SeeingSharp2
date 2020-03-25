@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://www.rolandk.de/seeingsharp", "SeeingSharp.Multimedia.Views")]

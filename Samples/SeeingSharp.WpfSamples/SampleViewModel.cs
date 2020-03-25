@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
+
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -30,11 +31,6 @@ namespace SeeingSharp.WpfSamples
     {
         private BitmapSource _bitmapSource;
         private Task _bitmapSourceTask;
-
-        public SampleViewModel(SampleMetadata sample)
-        {
-            this.SampleMetadata = sample;
-        }
 
         public SampleMetadata SampleMetadata { get; }
 
@@ -71,6 +67,11 @@ namespace SeeingSharp.WpfSamples
 
                 return _bitmapSource;
             }
+        }
+
+        public SampleViewModel(SampleMetadata sample)
+        {
+            this.SampleMetadata = sample;
         }
     }
 }

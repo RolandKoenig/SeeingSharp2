@@ -19,42 +19,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
 
 namespace SeeingSharp.Multimedia.Views
 {
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {
         private SeeingSharpPanelPainter _painter;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
-        /// </summary>
-        public SeeingSharpRenderPanel()
-        {
-            _painter = new SeeingSharpPanelPainter(this);
-            _painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
-            _painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
-        }
-
-        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
-        }
-
-        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
-        }
 
         /// <summary>
         /// Gets or sets the currently applied scene.
@@ -131,5 +110,27 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
+        /// </summary>
+        public SeeingSharpRenderPanel()
+        {
+            _painter = new SeeingSharpPanelPainter(this);
+            _painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
+            _painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
+        }
+
+        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
+        }
+
+        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
+        }
     }
 }

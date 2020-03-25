@@ -19,11 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Collections.Generic;
+using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace SeeingSharp.AssimpImporter
 {
@@ -57,6 +58,11 @@ namespace SeeingSharp.AssimpImporter
             return modelContainer;
         }
 
+        public ImportOptions CreateDefaultImportOptions()
+        {
+            return new AssimpImportOptions();
+        }
+
         private static void ProcessMaterials(ImportedModelContainer modelContainer, Assimp.Scene scene)
         {
             var materialCount = scene.MaterialCount;
@@ -66,7 +72,7 @@ namespace SeeingSharp.AssimpImporter
 
                 modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Material", materialIndex.ToString()),
-                    (device) =>
+                    device =>
                     {
                         var materialResource = new StandardMaterialResource();
                         if (actMaterial.HasColorDiffuse)
@@ -164,7 +170,7 @@ namespace SeeingSharp.AssimpImporter
                 var geometryKey = modelContainer.GetResourceKey("Geometry", actNode.Name);
                 modelContainer.ImportedResources.Add(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Geometry", actNode.Name),
-                    (device)=> new GeometryResource(newGeometry)));
+                    device=> new GeometryResource(newGeometry)));
 
                 var newMesh = new Mesh(geometryKey, materialKeys);
                 newMesh.CustomTransform = actTransform;
@@ -194,10 +200,6 @@ namespace SeeingSharp.AssimpImporter
                     modelContainer.ParentChildRelationships.Add(new ParentChildRelationship(actParent, actPivotObject));
                 }
             }
-            else
-            {
-                // Node should be something else, e. g. light, camera
-            }
 
             // Process all children
             foreach (var actChildNode in actNode.Children)
@@ -206,11 +208,6 @@ namespace SeeingSharp.AssimpImporter
             }
 
             boundingBoxCalc.PopTransform();
-        }
-
-        public ImportOptions CreateDefaultImportOptions()
-        {
-            return new AssimpImportOptions();
         }
     }
 }

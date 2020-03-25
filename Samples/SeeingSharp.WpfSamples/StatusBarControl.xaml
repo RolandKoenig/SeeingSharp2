@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="SeeingSharp.WpfSamples.StatusBarControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="CtrlRoot">
 
@@ -37,19 +37,19 @@
                    Fill="Gray" />
 
         <TextBlock Text="# 3D Resources:" />
-        <TextBlock x:Name="TxtResourceCount" 
+        <TextBlock x:Name="TxtResourceCount"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountGraphicsResources}" />
         <Rectangle Width="1"
                    Fill="Gray" />
 
         <TextBlock Text="# 3D Objects:" />
-        <TextBlock x:Name="TxtVisibleObjectCount" 
+        <TextBlock x:Name="TxtVisibleObjectCount"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountVisibleObjects}" />
         <Rectangle Width="1"
                    Fill="Gray" />
 
         <TextBlock Text="# Draw calls:" />
-        <TextBlock x:Name="TxtCountDrawCalls" 
+        <TextBlock x:Name="TxtCountDrawCalls"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountDrawCalls}" />
         <Rectangle Width="1"
                    Fill="Gray" />

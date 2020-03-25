@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using PropertyTools.DataAnnotations;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -32,23 +33,6 @@ namespace SeeingSharp.ModelViewer.Util
         private const string CATEGORY_LIGHTING = "Lighting";
 
         private readonly RenderLoop _renderLoop;
-
-        public RenderingOptions(RenderLoop renderLoop)
-        {
-            _renderLoop = renderLoop;
-
-            this.Reset = new DelegateCommand(() =>
-            {
-                _renderLoop.Configuration.Reset();
-
-                if (!(_renderLoop.Camera is PerspectiveCamera3D))
-                {
-                    _renderLoop.Camera = new PerspectiveCamera3D();
-                }
-
-                this.RaisePropertyChanged(string.Empty);
-            });
-        }
 
         [Category(CATEGORY_COMMON)]
         public DelegateCommand Reset { get; }
@@ -134,6 +118,23 @@ namespace SeeingSharp.ModelViewer.Util
                 _renderLoop.Configuration.StrongLightFactor = value;
                 this.RaisePropertyChanged(nameof(this.StrongLightFactor));
             }
+        }
+
+        public RenderingOptions(RenderLoop renderLoop)
+        {
+            _renderLoop = renderLoop;
+
+            this.Reset = new DelegateCommand(() =>
+            {
+                _renderLoop.Configuration.Reset();
+
+                if (!(_renderLoop.Camera is PerspectiveCamera3D))
+                {
+                    _renderLoop.Camera = new PerspectiveCamera3D();
+                }
+
+                this.RaisePropertyChanged(string.Empty);
+            });
         }
     }
 }

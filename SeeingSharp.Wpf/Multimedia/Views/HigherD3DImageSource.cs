@@ -19,16 +19,17 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Windows;
+using System.Windows.Interop;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
-using System;
-using System.Windows;
-using System.Windows.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
-using Resource = SharpDX.DXGI.Resource;
+using DXGI = SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -36,6 +37,8 @@ namespace SeeingSharp.Multimedia.Views
     {
         private D3D9.DeviceEx _d3dDevice;
         private D3D9.Texture _d3dRenderTarget;
+
+        public bool HasRenderTarget => _d3dRenderTarget != null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HigherD3DImageSource"/> class.
@@ -129,7 +132,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             texture.EnsureNotNull(nameof(texture));
 
-            using (var resource = texture.QueryInterface<Resource>())
+            using (var resource = texture.QueryInterface<DXGI.Resource>())
             {
                 return resource.SharedHandle;
             }
@@ -165,7 +168,5 @@ namespace SeeingSharp.Multimedia.Views
         {
             return (textureToCheck.Description.OptionFlags & D3D11.ResourceOptionFlags.Shared) != 0;
         }
-
-        public bool HasRenderTarget => _d3dRenderTarget != null;
     }
 }

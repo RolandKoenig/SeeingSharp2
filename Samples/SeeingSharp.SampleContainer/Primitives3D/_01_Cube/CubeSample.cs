@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+
 using System.ComponentModel;
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
@@ -40,7 +41,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new CubeGeometryFactory()
+                    new CubeGeometryFactory
                     {
                         Width = castedSettings.Width,
                         Height = castedSettings.Height,
@@ -48,7 +49,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._01_Cube
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f + (castedSettings.Height / 2f), 0f);
+            result.Position = new Vector3(0f, 0.5f + castedSettings.Height / 2f, 0f);
             return result;
         }
 

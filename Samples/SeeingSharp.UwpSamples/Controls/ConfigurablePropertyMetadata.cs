@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -30,6 +31,36 @@ namespace SeeingSharp.UwpSamples.Controls
         private object _hostObject;
         private Type _hostType;
         private PropertyInfo _propertyInfo;
+
+        public object ValueAccessor
+        {
+            get => this.GetValue();
+            set => this.SetValue(value);
+        }
+
+        public string CategoryName
+        {
+            get;
+            set;
+        }
+
+        public string PropertyName
+        {
+            get;
+            set;
+        }
+
+        public string PropertyDisplayName
+        {
+            get;
+            set;
+        }
+
+        public PropertyValueType ValueType
+        {
+            get;
+            set;
+        }
 
         internal ConfigurablePropertyMetadata(PropertyInfo propertyInfo, object hostObject)
         {
@@ -99,36 +130,6 @@ namespace SeeingSharp.UwpSamples.Controls
             {
                 _propertyInfo.SetValue(_hostObject, Convert.ChangeType(value, targetType));
             }
-        }
-
-        public object ValueAccessor
-        {
-            get => this.GetValue();
-            set => this.SetValue(value);
-        }
-
-        public string CategoryName
-        {
-            get;
-            set;
-        }
-
-        public string PropertyName
-        {
-            get;
-            set;
-        }
-
-        public string PropertyDisplayName
-        {
-            get;
-            set;
-        }
-
-        public PropertyValueType ValueType
-        {
-            get;
-            set;
         }
     }
 }

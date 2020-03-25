@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Views;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
 using System.Windows.Input;
+using SeeingSharp.Multimedia.Views;
 
 namespace SeeingSharp.Multimedia.Input
 {

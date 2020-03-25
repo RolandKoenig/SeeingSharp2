@@ -5,7 +5,7 @@
              xmlns:propTools="http://propertytools.org/wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-    
+
         <!-- Style for the property grid -->
         <Style TargetType="{x:Type propTools:PropertyGrid}">
             <Style.Resources>

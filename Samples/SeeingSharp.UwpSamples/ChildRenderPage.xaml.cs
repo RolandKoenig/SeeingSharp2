@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
-using Window = Windows.UI.Xaml.Window;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,23 +28,23 @@ namespace SeeingSharp.UwpSamples
             TextAppTitle.Text = $@"{appName} - Child window - {Assembly.GetExecutingAssembly().GetName().Version}";
             Window.Current.SetTitleBar(TextAppTitleRow);
 
-            this.Loaded += OnLoaded;
+            this.Loaded += this.OnLoaded;
         }
 
         public void InitializeChildWindow(Scene scene, Camera3DViewPoint viewPoint)
         {
-            this.CtrlSwapChain.Scene = scene;
-            this.CtrlSwapChain.Camera.ApplyViewPoint(viewPoint);
+            CtrlSwapChain.Scene = scene;
+            CtrlSwapChain.Camera.ApplyViewPoint(viewPoint);
 
-            this.CtrlSwapChain.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            CtrlSwapChain.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         public async Task SetRenderingDataAsync(SampleBase actSample)
         {
-            await actSample.OnInitRenderingWindowAsync(this.CtrlSwapChain.RenderLoop);
+            await actSample.OnInitRenderingWindowAsync(CtrlSwapChain.RenderLoop);
 
             await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(10f, this.CtrlSwapChain.ViewInformation));
+                new PerformanceMeasureDrawingLayer(10f, CtrlSwapChain.ViewInformation));
         }
 
         public async Task ClearAsync()

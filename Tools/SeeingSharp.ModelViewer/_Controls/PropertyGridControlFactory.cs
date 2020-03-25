@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using PropertyTools.DataAnnotations;
-using PropertyTools.Wpf;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using PropertyTools.DataAnnotations;
+using PropertyTools.Wpf;
 
 namespace SeeingSharp.ModelViewer
 {

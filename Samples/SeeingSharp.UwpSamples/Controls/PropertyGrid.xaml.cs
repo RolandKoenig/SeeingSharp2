@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
@@ -37,6 +38,12 @@ namespace SeeingSharp.UwpSamples.Controls
             DependencyProperty.Register(nameof(SelectedObject), typeof(object), typeof(PropertyGrid), new PropertyMetadata(null, OnSelectedObjectChanged));
 
         private PropertyGridViewModel _propertyGridVM;
+
+        public object SelectedObject
+        {
+            get => this.GetValue(SelectedObjectProperty);
+            set => this.SetValue(SelectedObjectProperty, value);
+        }
 
         public PropertyGrid()
         {
@@ -180,12 +187,6 @@ namespace SeeingSharp.UwpSamples.Controls
 
                 actRowIndex++;
             }
-        }
-
-        public object SelectedObject
-        {
-            get => this.GetValue(SelectedObjectProperty);
-            set => this.SetValue(SelectedObjectProperty, value);
         }
     }
 }

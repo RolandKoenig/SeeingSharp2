@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Threading;
-using SeeingSharp.Multimedia.Core;
 using FakeItEasy;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
 {
@@ -36,7 +37,7 @@ namespace SeeingSharp.ModelViewer
                 var result = new MainWindowVM(new RenderLoop(
                     new SynchronizationContext(),
                     renderLoopHost,
-                    isDesignMode: true));
+                    true));
                 result.IsLoading = true;
                 return result;
             }

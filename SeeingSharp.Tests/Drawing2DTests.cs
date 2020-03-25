@@ -19,6 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
@@ -26,9 +30,6 @@ using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Views;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Numerics;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.Tests
 {
@@ -280,8 +281,7 @@ namespace SeeingSharp.Tests
                     new GradientStop { Color = Color4.Gray, Position = 0f },
                     new GradientStop { Color = Color4.White, Position = 0.6f },
                     new GradientStop { Color = Color4.BlueColor, Position = 1f }
-                },
-                ExtendMode.Clamp))
+                }))
             using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
             {
                 // Perform rendering
@@ -321,7 +321,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -5f);
                 camera.Target = new Vector3(0f, 1f, 0f);
                 camera.UpdateCamera();
@@ -405,7 +405,7 @@ namespace SeeingSharp.Tests
                 memRenderTarget.ClearColor = Color4.CornflowerBlue;
 
                 // Get and configure the camera
-                var camera = memRenderTarget.Camera as PerspectiveCamera3D;
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(0f, 5f, -7f);
                 camera.Target = new Vector3(0f, 0f, 0f);
                 camera.UpdateCamera();
@@ -531,7 +531,7 @@ namespace SeeingSharp.Tests
             }
         }
 
-        private static SharpDX.Mathematics.Interop.RawColor4 Helper_Color4ToRaw(Color4 color)
+        private static RawColor4 Helper_Color4ToRaw(Color4 color)
         {
             return new RawColor4(color.Red, color.Green, color.Blue, color.Alpha);
         }

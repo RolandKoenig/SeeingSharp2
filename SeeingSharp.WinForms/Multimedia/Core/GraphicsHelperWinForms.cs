@@ -19,10 +19,12 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.Drawing.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Util;
+using SharpDX;
 using SharpDX.DXGI;
-using System.Drawing.Imaging;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
@@ -31,6 +33,35 @@ namespace SeeingSharp.Multimedia.Core
 {
     public static class GraphicsHelperWinForms
     {
+        /// <summary>
+        /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
+        /// </summary>
+        /// <param name="texture">The texture to be loaded into the bitmap.</param>
+        public static GDI.Bitmap LoadBitmapFromMemoryMappedTexture(MemoryMappedTexture<int> texture)
+        {
+            texture.EnsureNotNullOrDisposed(nameof(texture));
+
+            var width = texture.Width;
+            var height = texture.Height;
+
+            // Create and lock bitmap so it can be accessed for texture loading
+            var resultBitmap = new GDI.Bitmap(width, height);
+            var bitmapData = resultBitmap.LockBits(
+                new GDI.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
+                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                SeeingSharpUtil.CopyMemory(
+                    texture.Pointer, bitmapData.Scan0, texture.SizeInBytes);
+            }
+            finally
+            {
+                resultBitmap.UnlockBits(bitmapData);
+            }
+
+            return resultBitmap;
+        }
+
         /// <summary>
         /// Creates a default SwapChain for the given target control.
         /// </summary>
@@ -74,8 +105,7 @@ namespace SeeingSharp.Multimedia.Core
                     RefreshRate = new Rational(60, 1),
                     Scaling = DisplayModeScaling.Centered,
                     Windowed = true
-                },
-                null);
+                });
         }
 
         /// <summary>
@@ -112,7 +142,7 @@ namespace SeeingSharp.Multimedia.Core
             try
             {
                 // Open a reading stream for bitmap memory
-                var dataRectangle = new SharpDX.DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
+                var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
                 result = new D3D11.Texture2D(device.Internals.DeviceD3D11_1, new D3D11.Texture2DDescription
@@ -141,36 +171,6 @@ namespace SeeingSharp.Multimedia.Core
 
             return result;
         }
-
-        /// <summary>
-        /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.
-        /// </summary>
-        /// <param name="texture">The texture to be loaded into the bitmap.</param>
-        public static GDI.Bitmap LoadBitmapFromMemoryMappedTexture(MemoryMappedTexture<int> texture)
-        {
-            texture.EnsureNotNullOrDisposed(nameof(texture));
-
-            var width = texture.Width;
-            var height = texture.Height;
-
-            // Create and lock bitmap so it can be accessed for texture loading
-            var resultBitmap = new GDI.Bitmap(width, height);
-            var bitmapData = resultBitmap.LockBits(
-                new GDI.Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
-                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            try
-            {
-                SeeingSharpUtil.CopyMemory(
-                    texture.Pointer, bitmapData.Scan0, texture.SizeInBytes);
-            }
-            finally
-            {
-                resultBitmap.UnlockBits(bitmapData);
-            }
-
-            return resultBitmap;
-        }
-
 
         /// <summary>
         /// Loads a bitmap from the given texture. Be careful: The texture must have CPU read access and this only matches for staging textures.

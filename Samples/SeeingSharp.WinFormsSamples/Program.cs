@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Windows.Forms;
+using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.WinFormsSamples
 {

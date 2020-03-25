@@ -19,14 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
-using SharpDX.DXGI;
+
 using System;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SeeingSharp.Util;
+using SharpDX;
+using SharpDX.DXGI;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -41,76 +43,6 @@ namespace SeeingSharp.Multimedia.Views
         // Configuration
         private float _currentDpiX;
         private float _currentDpiY;
-        public event EventHandler CompositionScaleChanged;
-        public event EventHandler<RoutedEventArgs> Loaded;
-        public event EventHandler<SizeChangedEventArgs> SizeChanged;
-
-        // Forwarded events
-        public event EventHandler<RoutedEventArgs> Unloaded;
-
-        public SwapChainPanelWrapper()
-        {
-            var displayInfo = DisplayInformation.GetForCurrentView();
-            _currentDpiX = displayInfo.LogicalDpi;
-            _currentDpiY = displayInfo.LogicalDpi;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SwapChainPanelWrapper"/> class.
-        /// </summary>
-        /// <param name="bgPanel">The panel for which to create the wrapper.</param>
-        public SwapChainPanelWrapper(SwapChainBackgroundPanel bgPanel)
-            : this()
-        {
-            _bgPanel = bgPanel;
-            _bgPanelNative = SharpDX.ComObject.As<ISwapChainBackgroundPanelNative>(_bgPanel);
-
-            _bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            _bgPanel.Loaded += this.OnAnyPanel_Loaded;
-            _bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SwapChainPanelWrapper"/> class.
-        /// </summary>
-        /// <param name="panel">The panel for which to create the wrapper.</param>
-        public SwapChainPanelWrapper(SwapChainPanel panel)
-            : this()
-        {
-            _panel = panel;
-            _panelNative = SharpDX.ComObject.As<ISwapChainPanelNative>(_panel);
-
-            _panel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            _panel.Loaded += this.OnAnyPanel_Loaded;
-            _panel.Unloaded += this.OnAnyPanel_Unloaded;
-            _panel.CompositionScaleChanged += this.OnPanelCompositionScaleChanged;
-        }
-
-        public void Dispose()
-        {
-            SeeingSharpUtil.SafeDispose(ref _bgPanelNative);
-            SeeingSharpUtil.SafeDispose(ref _panelNative);
-        }
-
-        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
-        {
-            this.Unloaded?.Invoke(sender, e);
-        }
-
-        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Loaded?.Invoke(sender, e);
-        }
-
-        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            this.SizeChanged?.Invoke(sender, e);
-        }
-
-        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
-        {
-            this.CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
-        }
 
         public Size RenderSize => this.Panel.RenderSize;
 
@@ -184,6 +116,76 @@ namespace SeeingSharp.Multimedia.Views
                 if (_panel != null) { return _panel.Visibility; }
                 throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
+        }
+        public event EventHandler CompositionScaleChanged;
+        public event EventHandler<RoutedEventArgs> Loaded;
+        public event EventHandler<SizeChangedEventArgs> SizeChanged;
+
+        // Forwarded events
+        public event EventHandler<RoutedEventArgs> Unloaded;
+
+        public SwapChainPanelWrapper()
+        {
+            var displayInfo = DisplayInformation.GetForCurrentView();
+            _currentDpiX = displayInfo.LogicalDpi;
+            _currentDpiY = displayInfo.LogicalDpi;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SwapChainPanelWrapper"/> class.
+        /// </summary>
+        /// <param name="bgPanel">The panel for which to create the wrapper.</param>
+        public SwapChainPanelWrapper(SwapChainBackgroundPanel bgPanel)
+            : this()
+        {
+            _bgPanel = bgPanel;
+            _bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(_bgPanel);
+
+            _bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            _bgPanel.Loaded += this.OnAnyPanel_Loaded;
+            _bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SwapChainPanelWrapper"/> class.
+        /// </summary>
+        /// <param name="panel">The panel for which to create the wrapper.</param>
+        public SwapChainPanelWrapper(SwapChainPanel panel)
+            : this()
+        {
+            _panel = panel;
+            _panelNative = ComObject.As<ISwapChainPanelNative>(_panel);
+
+            _panel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            _panel.Loaded += this.OnAnyPanel_Loaded;
+            _panel.Unloaded += this.OnAnyPanel_Unloaded;
+            _panel.CompositionScaleChanged += this.OnPanelCompositionScaleChanged;
+        }
+
+        public void Dispose()
+        {
+            SeeingSharpUtil.SafeDispose(ref _bgPanelNative);
+            SeeingSharpUtil.SafeDispose(ref _panelNative);
+        }
+
+        private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.Unloaded?.Invoke(sender, e);
+        }
+
+        private void OnAnyPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Loaded?.Invoke(sender, e);
+        }
+
+        private void OnAnyPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.SizeChanged?.Invoke(sender, e);
+        }
+
+        private void OnPanelCompositionScaleChanged(SwapChainPanel sender, object args)
+        {
+            this.CompositionScaleChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

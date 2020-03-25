@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 
 namespace SeeingSharp.SampleContainer
@@ -26,16 +27,6 @@ namespace SeeingSharp.SampleContainer
     [AttributeUsage(AttributeTargets.Class)]
     public class SampleDescriptionAttribute : Attribute
     {
-        public SampleDescriptionAttribute(string sampleName, int orderId, string sampleGroupName, string sampleImageFileName = "", string sourceCodeUrl = "", Type settingsType = null)
-        {
-            this.SampleName = sampleName;
-            this.OrderId = orderId;
-            this.SampleGroupName = sampleGroupName;
-            this.SampleImageFileName = sampleImageFileName;
-            this.SourceCodeUrl = sourceCodeUrl;
-            this.SettingsType = settingsType;
-        }
-
         public string SampleName
         {
             get;
@@ -64,6 +55,16 @@ namespace SeeingSharp.SampleContainer
         public Type SettingsType
         {
             get;
+        }
+
+        public SampleDescriptionAttribute(string sampleName, int orderId, string sampleGroupName, string sampleImageFileName = "", string sourceCodeUrl = "", Type settingsType = null)
+        {
+            this.SampleName = sampleName;
+            this.OrderId = orderId;
+            this.SampleGroupName = sampleGroupName;
+            this.SampleImageFileName = sampleImageFileName;
+            this.SourceCodeUrl = sourceCodeUrl;
+            this.SettingsType = settingsType;
         }
     }
 }

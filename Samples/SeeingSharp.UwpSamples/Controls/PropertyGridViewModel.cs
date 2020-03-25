@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -29,6 +30,34 @@ namespace SeeingSharp.UwpSamples.Controls
     {
         private List<ConfigurablePropertyMetadata> _propertyMetadata;
         private object _selectedObject;
+
+        public object SelectedObject
+        {
+            get => _selectedObject;
+            set
+            {
+                if (_selectedObject != value)
+                {
+                    _selectedObject = value;
+                    this.RaisePropertyChanged();
+
+                    this.UpdatePropertyCollection();
+                }
+            }
+        }
+
+        public List<ConfigurablePropertyMetadata> PropertyMetadata
+        {
+            get => _propertyMetadata;
+            set
+            {
+                if (_propertyMetadata != value)
+                {
+                    _propertyMetadata = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
 
         private void UpdatePropertyCollection()
         {
@@ -57,34 +86,6 @@ namespace SeeingSharp.UwpSamples.Controls
             }
 
             this.PropertyMetadata = newPropertyMetadata;
-        }
-
-        public object SelectedObject
-        {
-            get => _selectedObject;
-            set
-            {
-                if (_selectedObject != value)
-                {
-                    _selectedObject = value;
-                    this.RaisePropertyChanged();
-
-                    this.UpdatePropertyCollection();
-                }
-            }
-        }
-
-        public List<ConfigurablePropertyMetadata> PropertyMetadata
-        {
-            get => _propertyMetadata;
-            set
-            {
-                if (_propertyMetadata != value)
-                {
-                    _propertyMetadata = value;
-                    this.RaisePropertyChanged();
-                }
-            }
         }
     }
 }

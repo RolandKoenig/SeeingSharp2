@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.ComponentModel;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics2D._02_Image
 {
@@ -38,7 +39,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
         private const float IMAGE_WIDTH = 64;
         private const float IMAGE_HEIGHT = 64;
 
-        private ImageSampleSettings _castedSettings; 
+        private ImageSampleSettings _castedSettings;
 
         private StandardBitmapResource _bitmap;
 
@@ -61,7 +62,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._02_Image
             await mainOrChildRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
-                base.Draw2DBackground(graphics);
+                this.Draw2DBackground(graphics);
 
                 var width = IMAGE_WIDTH * EngineMath.Clamp(_castedSettings.Scaling, 0f, 100f);
                 var height = IMAGE_HEIGHT * EngineMath.Clamp(_castedSettings.Scaling, 0f, 100f);

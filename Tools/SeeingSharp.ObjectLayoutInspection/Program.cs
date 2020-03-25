@@ -1,12 +1,11 @@
-﻿using System;
-using ObjectLayoutInspector;
+﻿using ObjectLayoutInspector;
 using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.ObjectLayoutInspection
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //TypeLayout.PrintLayout<VertexBasic>();
             //TypeLayout.PrintLayout<VertexBinormalTangent>();

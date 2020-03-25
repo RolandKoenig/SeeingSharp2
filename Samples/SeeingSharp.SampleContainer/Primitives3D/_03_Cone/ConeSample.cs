@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+
 using System.ComponentModel;
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
@@ -40,7 +41,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D._03_Cone
 
             var resGeometry = manipulator.AddResource(
                 device => new GeometryResource(
-                    new ConeGeometryFactory()
+                    new ConeGeometryFactory
                     { 
                         Radius = castedSettings.Radius,
                         Height = castedSettings.Height,

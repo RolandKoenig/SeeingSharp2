@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Windows;
 using System.Windows.Threading;
@@ -51,7 +52,7 @@ namespace SeeingSharp.WpfSamples
                 viewModel.TriggerRefresh();
             }
 
-            this.CtrlDataGrid.Items.Refresh();
+            CtrlDataGrid.Items.Refresh();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

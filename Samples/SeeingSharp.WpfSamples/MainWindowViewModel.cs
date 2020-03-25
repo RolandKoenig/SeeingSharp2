@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
+
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -37,42 +38,6 @@ namespace SeeingSharp.WpfSamples
         private SampleViewModel _selectedSample;
 
         public EventHandler ReloadRequest;
-
-        public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
-        {
-            _selectedGroup = string.Empty;
-
-            _sampleSettings = null;
-            _renderLoop = renderLoop;
-
-            // Load samples
-            _sampleRepo = sampleRepo;
-            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
-                .Select(actGroup => actGroup.GroupName))
-            {
-                this.SampleGroups.Add(actSampleGroupName);
-            }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
-        }
-
-        private void UpdateSampleCollection()
-        {
-            var sampleGroup = _sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
-            if (sampleGroup == null) { return; }
-
-            this.Samples.Clear();
-            foreach (var actSampleMetadata in sampleGroup.Samples)
-            {
-                this.Samples.Add(new SampleViewModel(actSampleMetadata));
-            }
-            this.SelectedSample = this.Samples.FirstOrDefault();
-        }
-
-        private void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
-        {
-            ReloadRequest?.Invoke(this, EventArgs.Empty);
-        }
 
         public ObservableCollection<string> SampleGroups
         {
@@ -142,5 +107,41 @@ namespace SeeingSharp.WpfSamples
         } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings => _sampleSettings;
+
+        public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
+        {
+            _selectedGroup = string.Empty;
+
+            _sampleSettings = null;
+            _renderLoop = renderLoop;
+
+            // Load samples
+            _sampleRepo = sampleRepo;
+            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
+                .Select(actGroup => actGroup.GroupName))
+            {
+                this.SampleGroups.Add(actSampleGroupName);
+            }
+            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+        }
+
+        private void UpdateSampleCollection()
+        {
+            var sampleGroup = _sampleRepo.SampleGroups
+                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
+            if (sampleGroup == null) { return; }
+
+            this.Samples.Clear();
+            foreach (var actSampleMetadata in sampleGroup.Samples)
+            {
+                this.Samples.Add(new SampleViewModel(actSampleMetadata));
+            }
+            this.SelectedSample = this.Samples.FirstOrDefault();
+        }
+
+        private void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        {
+            ReloadRequest?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

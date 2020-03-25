@@ -19,20 +19,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 using SeeingSharp.Multimedia.Core;
 
@@ -52,7 +40,7 @@ namespace SeeingSharp.ModelViewer
             // Initialize Viewmodel
             if (GraphicsCore.IsLoaded)
             {
-                _viewModel = new MainWindowVM(this.CtrlRenderer.RenderLoop);
+                _viewModel = new MainWindowVM(CtrlRenderer.RenderLoop);
                 _viewModel.OpenFileDialogRequest += this.OnViewModelOpenFileDialogRequest;
                 this.DataContext = _viewModel;
 

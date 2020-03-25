@@ -22,17 +22,16 @@
 
 using System;
 using System.Collections.Generic;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
 using System.Reflection;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -125,7 +124,7 @@ namespace SeeingSharp.UwpSamples
                     }
 
                     await CtrlSwapChain.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(130f, this.CtrlSwapChain.ViewInformation));
+                        new PerformanceMeasureDrawingLayer(130f, CtrlSwapChain.ViewInformation));
                 }
 
                 // Wait for next finished rendering
@@ -139,7 +138,7 @@ namespace SeeingSharp.UwpSamples
             }
         }
 
-        private async void OnSampleSettings_RecreateRequest(object sender, System.EventArgs e)
+        private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
         {
             var sample = _actSample;
             var sampleSettings = _actSampleSettings;
@@ -190,8 +189,8 @@ namespace SeeingSharp.UwpSamples
         private async void OnCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
         {
             // Get current scene and camera viewpoint
-            var currentScene = this.CtrlSwapChain.Scene;
-            var currentViewPoint = this.CtrlSwapChain.Camera.GetViewPoint();
+            var currentScene = CtrlSwapChain.Scene;
+            var currentViewPoint = CtrlSwapChain.Camera.GetViewPoint();
 
             // Create the child window and the page
             // Be careful: the child view has it's own UI thread. See https://docs.microsoft.com/en-us/windows/uwp/design/layout/application-view

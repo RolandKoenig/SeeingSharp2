@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
-using SharpDX.DXGI;
+
 using System;
 using System.Runtime.InteropServices;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
 using D3D9 = SharpDX.Direct3D9;
 
 namespace SeeingSharp.Multimedia.Core
@@ -31,6 +32,21 @@ namespace SeeingSharp.Multimedia.Core
     {
         private D3D9.DeviceEx _deviceEx;
         private D3D9.Direct3DEx _direct3DEx;
+
+        /// <summary>
+        /// Is the device successfully initialized?
+        /// </summary>
+        public bool IsInitialized => _deviceEx != null;
+
+        /// <summary>
+        /// Gets the initialized device.
+        /// </summary>
+        internal D3D9.DeviceEx Device => _deviceEx;
+
+        /// <summary>
+        /// Gets current DirectX context.
+        /// </summary>
+        internal D3D9.Direct3DEx Context => _direct3DEx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
@@ -46,9 +62,9 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     //Prepare device creation
                     const D3D9.CreateFlags CREATE_FLAGS = D3D9.CreateFlags.HardwareVertexProcessing |
-                        D3D9.CreateFlags.PureDevice |
-                        D3D9.CreateFlags.FpuPreserve |
-                        D3D9.CreateFlags.Multithreaded;
+                                                          D3D9.CreateFlags.PureDevice |
+                                                          D3D9.CreateFlags.FpuPreserve |
+                                                          D3D9.CreateFlags.Multithreaded;
 
                     var presentparams = new D3D9.PresentParameters
                     {
@@ -103,20 +119,5 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         [DllImport("user32.dll", SetLastError = false)]
         private static extern IntPtr GetDesktopWindow();
-
-        /// <summary>
-        /// Is the device successfully initialized?
-        /// </summary>
-        public bool IsInitialized => _deviceEx != null;
-
-        /// <summary>
-        /// Gets the initialized device.
-        /// </summary>
-        internal D3D9.DeviceEx Device => _deviceEx;
-
-        /// <summary>
-        /// Gets current DirectX context.
-        /// </summary>
-        internal D3D9.Direct3DEx Context => _direct3DEx;
     }
 }

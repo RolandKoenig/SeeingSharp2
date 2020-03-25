@@ -19,12 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,6 +29,12 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
@@ -63,6 +64,138 @@ namespace SeeingSharp.Multimedia.Views
         private DateTime _lastSizeChange;
         private WpfSeeingSharpCompositionMode _compositionMode;
         private bool _forceCompositionOverSoftware;
+
+        /// <summary>
+        /// Gets the RenderLoop that is currently in use.
+        /// </summary>
+        [Browsable(false)]
+        public RenderLoop RenderLoop { get; }
+
+        /// <summary>
+        /// Does the target control have focus?
+        /// </summary>
+        public bool Focused => this.IsFocused;
+
+        /// <summary>
+        /// Gets or sets the currently applied scene.
+        /// </summary>
+        public Scene Scene
+        {
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the camera.
+        /// </summary>
+        public Camera3DBase Camera
+        {
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
+        }
+
+        /// <summary>
+        /// Discard rendering?
+        /// </summary>
+        public bool DiscardRendering
+        {
+            get => this.RenderLoop.DiscardRendering;
+            set => this.RenderLoop.DiscardRendering = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the clear color of this 3D view.
+        /// </summary>
+        public System.Windows.Media.Color ClearColor
+        {
+            get
+            {
+                var clearColor = this.RenderLoop.ClearColor;
+                var result = new System.Windows.Media.Color();
+                SeeingSharpWpfUtil.WpfColorFromColor4(ref clearColor, ref result);
+                return result;
+            }
+            set
+            {
+                var clearColor = new Color4();
+                SeeingSharpWpfUtil.Color4FromWpfColor(ref value, ref clearColor);
+                this.RenderLoop.ClearColor = clearColor;
+            }
+        }
+
+        /// <summary>
+        /// True if the control is connected with the main rendering loop.
+        /// False if something went wrong.
+        /// </summary>
+        [Browsable(false)]
+        public bool IsOperational => this.RenderLoop.IsOperational;
+
+        public EngineDevice SelectedDevice
+        {
+            get => this.RenderLoop.Device;
+            set => this.RenderLoop.SetRenderingDevice(value);
+        }
+
+        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
+
+        public Size CurrentViewSize
+        {
+            get
+            {
+                var currentViewSize = this.RenderLoop.CurrentViewSize;
+
+                var result = new Size
+                {
+                    Width = currentViewSize.Width,
+                    Height = currentViewSize.Height
+                };
+
+                return result;
+            }
+        }
+
+        public IEnumerable<EngineDevice> PossibleDevices
+        {
+            get
+            {
+                if (!GraphicsCore.IsLoaded)
+                {
+                    return new EngineDevice[0];
+                }
+
+                return GraphicsCore.Current.Devices;
+            }
+        }
+
+        public WpfSeeingSharpCompositionMode CompositionMode
+        {
+            get => _compositionMode;
+            private set
+            {
+                if (_compositionMode != value)
+                {
+                    _compositionMode = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CompositionMode)));
+                }
+            }
+        }
+
+        public bool ForceCompositionOverSoftware
+        {
+            get => _forceCompositionOverSoftware;
+            set
+            {
+                if (_forceCompositionOverSoftware != value)
+                {
+                    _forceCompositionOverSoftware = value;
+                    this.RenderLoop.ForceViewReload();
+
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.ForceCompositionOverSoftware)));
+                }
+            }
+        }
+
+        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
 
         // State members for handling rendering problems
         public event PropertyChangedEventHandler PropertyChanged;
@@ -519,137 +652,5 @@ namespace SeeingSharp.Multimedia.Views
                 this.RenderLoop.ForceViewReload();
             }
         }
-
-        /// <summary>
-        /// Gets the RenderLoop that is currently in use.
-        /// </summary>
-        [Browsable(false)]
-        public RenderLoop RenderLoop { get; }
-
-        /// <summary>
-        /// Does the target control have focus?
-        /// </summary>
-        public bool Focused => this.IsFocused;
-
-        /// <summary>
-        /// Gets or sets the currently applied scene.
-        /// </summary>
-        public Scene Scene
-        {
-            get => this.RenderLoop.Scene;
-            set => this.RenderLoop.SetScene(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the camera.
-        /// </summary>
-        public Camera3DBase Camera
-        {
-            get => this.RenderLoop.Camera;
-            set => this.RenderLoop.Camera = value;
-        }
-
-        /// <summary>
-        /// Discard rendering?
-        /// </summary>
-        public bool DiscardRendering
-        {
-            get => this.RenderLoop.DiscardRendering;
-            set => this.RenderLoop.DiscardRendering = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the clear color of this 3D view.
-        /// </summary>
-        public System.Windows.Media.Color ClearColor
-        {
-            get
-            {
-                var clearColor = this.RenderLoop.ClearColor;
-                var result = new System.Windows.Media.Color();
-                SeeingSharpWpfUtil.WpfColorFromColor4(ref clearColor, ref result);
-                return result;
-            }
-            set
-            {
-                var clearColor = new Color4();
-                SeeingSharpWpfUtil.Color4FromWpfColor(ref value, ref clearColor);
-                this.RenderLoop.ClearColor = clearColor;
-            }
-        }
-
-        /// <summary>
-        /// True if the control is connected with the main rendering loop.
-        /// False if something went wrong.
-        /// </summary>
-        [Browsable(false)]
-        public bool IsOperational => this.RenderLoop.IsOperational;
-
-        public EngineDevice SelectedDevice
-        {
-            get => this.RenderLoop.Device;
-            set => this.RenderLoop.SetRenderingDevice(value);
-        }
-
-        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
-
-        public Size CurrentViewSize
-        {
-            get
-            {
-                var currentViewSize = this.RenderLoop.CurrentViewSize;
-
-                var result = new Size
-                {
-                    Width = currentViewSize.Width,
-                    Height = currentViewSize.Height
-                };
-
-                return result;
-            }
-        }
-
-        public IEnumerable<EngineDevice> PossibleDevices
-        {
-            get
-            {
-                if (!GraphicsCore.IsLoaded)
-                {
-                    return new EngineDevice[0];
-                }
-
-                return GraphicsCore.Current.Devices;
-            }
-        }
-
-        public WpfSeeingSharpCompositionMode CompositionMode
-        {
-            get => _compositionMode;
-            private set
-            {
-                if (_compositionMode != value)
-                {
-                    _compositionMode = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CompositionMode)));
-                }
-            }
-        }
-
-        public bool ForceCompositionOverSoftware
-        {
-            get => _forceCompositionOverSoftware;
-            set
-            {
-                if (_forceCompositionOverSoftware != value)
-                {
-                    _forceCompositionOverSoftware = value;
-                    this.RenderLoop.ForceViewReload();
-
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.ForceCompositionOverSoftware)));
-                }
-            }
-        }
-
-        public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
     }
 }

@@ -20,15 +20,15 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WpfSamples
 {
@@ -66,7 +66,7 @@ namespace SeeingSharp.WpfSamples
             this.DataContext = viewModel;
 
             // Register viewbox filter
-            this.CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
 
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
         }
@@ -144,7 +144,7 @@ namespace SeeingSharp.WpfSamples
                     _actSampleInfo = sampleInfo;
 
                     await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(120f, this.CtrlRenderer.ViewInformation));
+                        new PerformanceMeasureDrawingLayer(120f, CtrlRenderer.ViewInformation));
                 }
 
                 // Wait for next finished rendering
@@ -197,8 +197,8 @@ namespace SeeingSharp.WpfSamples
             var targetWith = int.Parse(parts[0]);
             var targetHeight = int.Parse(parts[1]);
 
-            var diffToFullWidth = this.Width - this.CtrlRenderer.RenderLoop.CurrentViewSize.Width;
-            var diffToFullHeight = this.Height - this.CtrlRenderer.RenderLoop.CurrentViewSize.Height;
+            var diffToFullWidth = this.Width - CtrlRenderer.RenderLoop.CurrentViewSize.Width;
+            var diffToFullHeight = this.Height - CtrlRenderer.RenderLoop.CurrentViewSize.Height;
             this.Width = targetWith + diffToFullWidth;
             this.Height = targetHeight + diffToFullHeight;
         }

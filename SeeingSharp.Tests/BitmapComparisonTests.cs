@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SeeingSharp.Tests
@@ -36,7 +37,7 @@ namespace SeeingSharp.Tests
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             {
                 Assert.IsTrue(
-                    BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap) == 0f);
+                    EngineMath.EqualsWithTolerance(BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap), 0f));
             }
         }
 
@@ -55,7 +56,7 @@ namespace SeeingSharp.Tests
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]
-        public void BitmapComparison_Negative_Inversed_Image()
+        public void BitmapComparison_Negative_Inverted_Image()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject_Negative.png"))
@@ -74,7 +75,7 @@ namespace SeeingSharp.Tests
             using (var rightBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "BlackScreen.png"))
             {
                 var comparisonResult = BitmapComparison.CalculatePercentageDifference(leftBitmap, rightBitmap);
-                Assert.IsTrue(comparisonResult == 1.0f);
+                Assert.IsTrue(EngineMath.EqualsWithTolerance(comparisonResult, 1.0f));
             }
         }
 

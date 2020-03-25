@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System.ComponentModel;
+using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Util;
-using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
 {
@@ -57,7 +58,7 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
             await mainOrChildRenderLoop.Register2DDrawingLayerAsync(graphics =>
             {
                 // Clear the screen
-                base.Draw2DBackground(graphics);
+                this.Draw2DBackground(graphics);
 
                 // Calculate rectangle location
                 var width = _castedSettings.Width;

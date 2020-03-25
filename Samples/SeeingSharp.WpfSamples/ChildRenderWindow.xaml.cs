@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace SeeingSharp.WpfSamples
             await actSample.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
 
             await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(10f, this.CtrlRenderer.ViewInformation));
+                new PerformanceMeasureDrawingLayer(10f, CtrlRenderer.ViewInformation));
         }
 
         public async Task ClearAsync()
@@ -71,7 +72,7 @@ namespace SeeingSharp.WpfSamples
             this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             // Register viewbox filter
-            this.CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
     }
 }

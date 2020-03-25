@@ -19,14 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Util;
+
 using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -89,7 +90,7 @@ namespace SeeingSharp.Tests
             {
                 using var actDumpColorBitmap =
                     GraphicsHelperWinForms.LoadBitmapFromMemoryMappedTexture(actDumpEntry.BufferColor);
-                TestUtilities.DumpToDesktop(actDumpColorBitmap, $"{actDumpEntry.Key}.png");
+                DumpToDesktop(actDumpColorBitmap, $"{actDumpEntry.Key}.png");
             }
         }
 

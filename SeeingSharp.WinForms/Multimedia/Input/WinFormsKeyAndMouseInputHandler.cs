@@ -19,10 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
+
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Multimedia.Core;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
@@ -30,9 +31,6 @@ namespace SeeingSharp.Multimedia.Input
 {
     internal class WinFormsKeyAndMouseInputHandler : IInputHandler
     {
-        private const float MOVEMENT = 0.3f;
-        private const float ROTATION = 0.01f;
-
         private static readonly Dictionary<WinForms.Keys, WinVirtualKey> s_keyMappingDict;
 
         // References to the view

@@ -19,8 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Util;
+
 using System;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -28,6 +29,30 @@ namespace SeeingSharp.SampleContainer
     {
         private SampleDescriptionAttribute _description;
         private Type _sampleType;
+
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        public int OrderId
+        {
+            get;
+            set;
+        }
+
+        public string Group
+        {
+            get;
+            set;
+        }
+
+        public string SourceCodeUrl
+        {
+            get;
+            set;
+        }
 
         public SampleMetadata(SampleDescriptionAttribute description, Type sampleType)
         {
@@ -80,30 +105,6 @@ namespace SeeingSharp.SampleContainer
             return new AssemblyResourceLink(
                 _sampleType,
                 _description.SampleImageFileName);
-        }
-
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        public int OrderId
-        {
-            get;
-            set;
-        }
-
-        public string Group
-        {
-            get;
-            set;
-        }
-
-        public string SourceCodeUrl
-        {
-            get;
-            set;
         }
     }
 }

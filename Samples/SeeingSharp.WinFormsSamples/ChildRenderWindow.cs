@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SeeingSharp.Multimedia.Core;
@@ -19,7 +13,7 @@ namespace SeeingSharp.WinFormsSamples
     {
         public ChildRenderWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public void InitializeChildWindow(Scene scene, Camera3DViewPoint viewPoint)
@@ -58,7 +52,7 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)
         {
-            this._renderWindowControlsComponent.UpdateTargetControlStates();
+            _renderWindowControlsComponent.UpdateTargetControlStates();
         }
     }
 }

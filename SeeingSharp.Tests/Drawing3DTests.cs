@@ -19,13 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Multimedia.Views;
-using System;
-using System.Numerics;
-using System.Threading.Tasks;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Tests
@@ -162,7 +163,7 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
-                [TestMethod]
+        [TestMethod]
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_FullScreenTexture()
         {
@@ -226,7 +227,7 @@ namespace SeeingSharp.Tests
                     var resGeometry = manipulator.AddResource(
                         device => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddResource(
-                        device => new StandardMaterialResource()
+                        device => new StandardMaterialResource
                         {
                             MaterialDiffuseColor = Color4.BlueColor,
                             UseVertexColors = false

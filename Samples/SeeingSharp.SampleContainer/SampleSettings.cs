@@ -19,21 +19,36 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer.Util;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.SampleContainer
 {
     public class SampleSettings : PropertyChangedBase
     {
-        public event EventHandler RecreateRequest;
-
         private int _lastRecreateRequestId;
+
+        [Browsable(false)]
+        public bool ThrottleRecreateRequest { get; set; } = true;
+
+        protected RenderLoop RenderLoop
+        {
+            get;
+            private set;
+        }
+
+        protected SampleMetadata SampleMetadata
+        {
+            get;
+            private set;
+        }
+        public event EventHandler RecreateRequest;
 
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
@@ -69,21 +84,6 @@ namespace SeeingSharp.SampleContainer
             {
                 this.RecreateRequest?.Invoke(this, EventArgs.Empty);
             }
-        }
-
-        [Browsable(false)]
-        public bool ThrottleRecreateRequest { get; set; } = true;
-
-        protected RenderLoop RenderLoop
-        {
-            get;
-            private set;
-        }
-
-        protected SampleMetadata SampleMetadata
-        {
-            get;
-            private set;
         }
     }
 }

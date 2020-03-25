@@ -19,13 +19,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Collections.Generic;
 using System.IO;
+using Assimp;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.AssimpImporter
 {
-    internal class AssimpIOSystem : Assimp.IOSystem
+    internal class AssimpIOSystem : IOSystem
     {
         private ResourceLink _originalResource;
 
@@ -34,7 +36,7 @@ namespace SeeingSharp.AssimpImporter
             _originalResource = originalResource;
         }
 
-        public override Assimp.IOStream OpenFile(string pathToFile, Assimp.FileIOMode fileMode)
+        public override IOStream OpenFile(string pathToFile, FileIOMode fileMode)
         {
             if (pathToFile == _originalResource.FileNameWithExtension)
             {
@@ -52,8 +54,7 @@ namespace SeeingSharp.AssimpImporter
                 }
                 else
                 {
-                    pathElements = pathToFile.Split(new[]
-                        {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar});
+                    pathElements = pathToFile.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 }
 
                 // Now get true directory path

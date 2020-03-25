@@ -19,12 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+
 using System;
 using System.Threading;
 using Windows.Foundation;
@@ -32,6 +27,12 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
@@ -56,6 +57,86 @@ namespace SeeingSharp.Multimedia.Views
         private D3D11.Texture2D _depthBuffer;
         private D3D11.RenderTargetView _renderTargetView;
         private D3D11.DepthStencilView _renderTargetDepth;
+
+        /// <summary>
+        /// Gets the current 3D scene.
+        /// </summary>
+        public Scene Scene
+        {
+            get => this.RenderLoop.Scene;
+            set => this.RenderLoop.SetScene(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the current 3D camera.
+        /// </summary>
+        public Camera3DBase Camera
+        {
+            get => this.RenderLoop.Camera;
+            set => this.RenderLoop.Camera = value;
+        }
+
+        /// <summary>
+        /// Gets current renderloop object.
+        /// </summary>
+        public RenderLoop RenderLoop { get; }
+
+        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
+
+        /// <summary>
+        /// Discard rendering?
+        /// </summary>
+        public bool DiscardRendering
+        {
+            get => this.RenderLoop.DiscardRendering;
+            set => this.RenderLoop.DiscardRendering = value;
+        }
+
+        /// <summary>
+        /// Should we detach automatically if the TargetPanel gets unloaded?
+        /// </summary>
+        public bool DetachOnUnload { get; set; }
+
+        /// <summary>
+        /// Is this painter attached to any panel?
+        /// </summary>
+        public bool IsAttachedToGui => _targetPanel != null;
+
+        /// <summary>
+        /// Gets the current pixel size of the target panel.
+        /// </summary>
+        public Size2 PixelSize => this.GetTargetRenderPixelSize();
+
+        public Size2 ActualSize => new Size2((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight);
+
+        /// <summary>
+        /// Gets or sets the clear color for the 3D view.
+        /// </summary>
+        public Color ClearColor
+        {
+            get
+            {
+                var clearColor = this.RenderLoop.ClearColor;
+                return SeeingSharpUwpUtil.UIColorFromColor4(ref clearColor);
+            }
+            set => this.RenderLoop.ClearColor = SeeingSharpUwpUtil.Color4FromUIColor(ref value);
+        }
+
+        public Panel TargetPanel => _targetPanel?.Panel;
+
+        /// <summary>
+        /// True if the control is connected with the main rendering loop.
+        /// False if something went wrong.
+        /// </summary>
+        public bool IsOperational => this.RenderLoop.IsOperational;
+
+        public CoreDispatcher Dispatcher => _targetPanel?.Dispatcher;
+
+        /// <summary>
+        /// Does the target control have focus?
+        /// (Return true here if rendering runs, because in WinRT we are every time at fullscreen)
+        /// </summary>
+        bool IInputEnabledView.Focused => this.RenderLoop.IsRegisteredOnMainLoop;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpPanelPainter" /> class.
@@ -450,85 +531,5 @@ namespace SeeingSharp.Multimedia.Views
         {
 
         }
-
-        /// <summary>
-        /// Gets the current 3D scene.
-        /// </summary>
-        public Scene Scene
-        {
-            get => this.RenderLoop.Scene;
-            set => this.RenderLoop.SetScene(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the current 3D camera.
-        /// </summary>
-        public Camera3DBase Camera
-        {
-            get => this.RenderLoop.Camera;
-            set => this.RenderLoop.Camera = value;
-        }
-
-        /// <summary>
-        /// Gets current renderloop object.
-        /// </summary>
-        public RenderLoop RenderLoop { get; }
-
-        public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
-
-        /// <summary>
-        /// Discard rendering?
-        /// </summary>
-        public bool DiscardRendering
-        {
-            get => this.RenderLoop.DiscardRendering;
-            set => this.RenderLoop.DiscardRendering = value;
-        }
-
-        /// <summary>
-        /// Should we detach automatically if the TargetPanel gets unloaded?
-        /// </summary>
-        public bool DetachOnUnload { get; set; }
-
-        /// <summary>
-        /// Is this painter attached to any panel?
-        /// </summary>
-        public bool IsAttachedToGui => _targetPanel != null;
-
-        /// <summary>
-        /// Gets the current pixel size of the target panel.
-        /// </summary>
-        public Size2 PixelSize => this.GetTargetRenderPixelSize();
-
-        public Size2 ActualSize => new Size2((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight);
-
-        /// <summary>
-        /// Gets or sets the clear color for the 3D view.
-        /// </summary>
-        public Color ClearColor
-        {
-            get
-            {
-                var clearColor = this.RenderLoop.ClearColor;
-                return SeeingSharpUwpUtil.UIColorFromColor4(ref clearColor);
-            }
-            set => this.RenderLoop.ClearColor = SeeingSharpUwpUtil.Color4FromUIColor(ref value);
-        }
-
-        public Panel TargetPanel => _targetPanel?.Panel;
-
-        /// <summary>
-        /// True if the control is connected with the main rendering loop.
-        /// False if something went wrong.
-        /// </summary>
-        public bool IsOperational => this.RenderLoop.IsOperational;
-
-        public CoreDispatcher Dispatcher => _targetPanel?.Dispatcher;
-
-        /// <summary>
-        /// Does the target control have focus?
-        /// (Return true here if rendering runs, because in WinRT we are every time at fullscreen)
-        /// </summary>
-        bool IInputEnabledView.Focused => this.RenderLoop.IsRegisteredOnMainLoop;
     }
 }

@@ -57,7 +57,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
-    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png"
+              Link="Assets\Icons\Adapter16x16.png" />
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png"
+              Link="Assets\Icons\Output16x16.png" />
   </ItemGroup>
 </Project>

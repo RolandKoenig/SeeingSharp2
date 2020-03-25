@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
-using System.Threading.Tasks;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Components;
@@ -37,6 +38,35 @@ namespace SeeingSharp.ModelViewer
         private string _loadedFile;
 
         private bool _isLoading;
+
+        public DelegateCommand Command_OpenFile { get; }
+
+        public DelegateCommand Command_CloseFile { get; }
+
+        public DelegateCommand Command_Exit { get; }
+
+        public string AppTitle { get; set; } = string.Empty;
+
+        public RenderingOptions OptionsRendering { get; }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                if (_isLoading != value)
+                {
+                    _isLoading = value;
+                    this.RaisePropertyChanged(nameof(this.IsLoading));
+                    this.RaisePropertyChanged(nameof(this.ControlsEnabled));
+                    this.RaisePropertyChanged(nameof(this.LoadingWindowVisibility));
+                }
+            }
+        }
+
+        public bool ControlsEnabled => !this.IsLoading;
+
+        public Visibility LoadingWindowVisibility => this.IsLoading ? Visibility.Visible : Visibility.Collapsed;
 
         public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequest;
 
@@ -57,7 +87,7 @@ namespace SeeingSharp.ModelViewer
         public async Task LoadInitialScene()
         {
             _renderLoop.SceneComponents.Add(
-                new FocusedPointCameraComponent()
+                new FocusedPointCameraComponent
                 {
                     CameraDistanceMin = 0.1f,
                     CameraDistanceMax = 5f,
@@ -141,41 +171,6 @@ namespace SeeingSharp.ModelViewer
 
             this.AppTitle = titleBuilder.ToString();
             this.RaisePropertyChanged(nameof(this.AppTitle));
-        }
-
-        public DelegateCommand Command_OpenFile { get; }
-
-        public DelegateCommand Command_CloseFile { get; }
-
-        public DelegateCommand Command_Exit { get; }
-
-        public string AppTitle { get; set; } = string.Empty;
-
-        public RenderingOptions OptionsRendering { get; }
-
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set
-            {
-                if (_isLoading != value)
-                {
-                    _isLoading = value;
-                    this.RaisePropertyChanged(nameof(this.IsLoading));
-                    this.RaisePropertyChanged(nameof(this.ControlsEnabled));
-                    this.RaisePropertyChanged(nameof(this.LoadingWindowVisibility));
-                }
-            }
-        }
-
-        public bool ControlsEnabled
-        {
-            get => !this.IsLoading;
-        }
-
-        public Visibility LoadingWindowVisibility
-        {
-            get => this.IsLoading ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

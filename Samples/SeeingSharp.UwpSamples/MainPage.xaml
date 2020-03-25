@@ -27,18 +27,18 @@
         <Grid Background="Transparent"
               Grid.Row="0"
               x:Name="TextAppTitleRow">
-            <TextBlock Text="Custom Title Bar" 
+            <TextBlock Text="Custom Title Bar"
                        x:Name="TextAppTitle"
-                       Style="{StaticResource CaptionTextBlockStyle}" 
-                       Margin="12,8,0,0"/>
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Margin="12,8,0,0" />
         </Grid>
 
         <!-- Menu bar -->
-        <StackPanel Grid.Row="1" 
+        <StackPanel Grid.Row="1"
                     Orientation="Horizontal">
             <Button Content="New Child Window"
                     Click="OnCmdNewChildWindow_Click"
-                    Margin="2,2,2,0"/>
+                    Margin="2,2,2,0" />
         </StackPanel>
 
         <!-- List of sample groups -->
@@ -93,7 +93,7 @@
             </ListBox>
             <Rectangle VerticalAlignment="Top"
                        Height="1" Fill="DarkGray"
-                       Margin="0,125,0,0"/>
+                       Margin="0,125,0,0" />
 
             <!-- Command bar -->
             <ItemsControl ItemsSource="{Binding Path=SampleCommands}"
@@ -106,7 +106,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Margin="10,135,10,40"
-                                Background="#E0D3D3D3" 
+                                Background="#E0D3D3D3"
                                 BorderThickness="1" BorderBrush="DarkGray"
                                 MinWidth="200"
                                 Command="{Binding}">
@@ -123,9 +123,9 @@
                     MaxWidth="530"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top">
-                <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}"/>
+                <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
             </Border>
-            
+
             <!-- Status bar -->
             <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"
                                             VerticalAlignment="Bottom" />

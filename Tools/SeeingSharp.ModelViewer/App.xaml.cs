@@ -19,9 +19,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.Text;
 using System.Windows;
+using System.Windows.Threading;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
@@ -43,7 +45,7 @@ namespace SeeingSharp.ModelViewer
             base.OnStartup(e);
         }
 
-        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             const string msgBoxCaption = "SeeingSharp ModelViewer";
 

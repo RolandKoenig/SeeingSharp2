@@ -19,15 +19,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.SampleContainer;
-using SeeingSharp.SampleContainer.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.SampleContainer.Util;
 
 namespace SeeingSharp.WinFormsSamples
 {
@@ -215,7 +216,7 @@ namespace SeeingSharp.WinFormsSamples
                 if (this.IsDisposed || !this.IsHandleCreated) { return; }
 
                 await _ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
-                if (this.IsDisposed || !this.IsHandleCreated) { return; }
+                if (this.IsDisposed || !this.IsHandleCreated) { }
             }
             finally
             {

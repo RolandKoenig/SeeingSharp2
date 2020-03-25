@@ -21,12 +21,12 @@
 */
 
 using System;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
 using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Components;
+using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.SampleContainer.Basics3D._09_WireframeMaterial
 {

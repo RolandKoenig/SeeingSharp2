@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Multimedia.Core;
@@ -49,11 +50,11 @@ namespace SeeingSharp.ModelViewer.Util
 
                 // Add bottom grid
                 var resGridGeometry = manipulator.AddResource(
-                    (device) => new GeometryResource(new Grid3DGeometryFactory()
+                    device => new GeometryResource(new Grid3DGeometryFactory
                     {
                         TileWidth = 0.05f,
                         TilesX = 50,
-                        TilesZ = 50,
+                        TilesZ = 50
                     }));
                 var gridMesh = manipulator.AddMeshObject(resGridGeometry);
                 gridMesh.YPos = -0.5f;

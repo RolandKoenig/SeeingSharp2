@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Numerics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SeeingSharp.Tests
 {
@@ -70,8 +71,6 @@ namespace SeeingSharp.Tests
 
             // Action
             var animHelper = new MovementAnimationHelper(movementSpeed, movementVector);
-
-            var pos = animHelper.GetPartialMoveDistance(animHelper.MovementTime);
 
             // Asserts
             Assert.IsTrue(animHelper.AccelerationTime > TimeSpan.Zero);

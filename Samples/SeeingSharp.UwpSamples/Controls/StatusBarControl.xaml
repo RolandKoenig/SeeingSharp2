@@ -28,7 +28,7 @@
                 <Setter Property="Margin" Value="2" />
             </Style>
         </StackPanel.Resources>
-    
+
         <Image Source="/Assets/Icons/Output16x16.png"
                Width="16" />
         <TextBlock Text="Resolution:" />

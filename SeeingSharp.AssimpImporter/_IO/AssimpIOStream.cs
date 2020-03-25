@@ -19,19 +19,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
 using System.IO;
+using Assimp;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.AssimpImporter
 {
-    internal class AssimpIOStream : Assimp.IOStream
+    internal class AssimpIOStream : IOStream
     {
         private const int TEMP_BUFFER_SIZE = 1024 * 1024;
 
         private readonly Stream _stream;
 
-        public AssimpIOStream(Stream stream, string pathToFile, Assimp.FileIOMode fileMode)
+        public override bool IsValid => true;
+
+        public AssimpIOStream(Stream stream, string pathToFile, FileIOMode fileMode)
             : base(pathToFile, fileMode)
         {
             _stream = stream;
@@ -78,15 +82,12 @@ namespace SeeingSharp.AssimpImporter
                     {
                         return actOffset;
                     }
-                    else if (bytesRead != countRead)
+                    if (bytesRead != countRead)
                     {
                         Array.Copy(tempBuffer, 0, targetBuffer, actOffset, bytesRead);
                         return actOffset + bytesRead;
                     }
-                    else
-                    {
-                        Array.Copy(tempBuffer, 0, targetBuffer, actOffset, bytesRead);
-                    }
+                    Array.Copy(tempBuffer, 0, targetBuffer, actOffset, bytesRead);
 
                     actOffset += TEMP_BUFFER_SIZE;
                 }
@@ -98,27 +99,19 @@ namespace SeeingSharp.AssimpImporter
             return totalReadBytesCount;
         }
 
-        public override Assimp.ReturnCode Seek(long offset, Assimp.Origin seekOrigin)
+        public override ReturnCode Seek(long offset, Origin seekOrigin)
         {
-            var netOrigin = SeekOrigin.Begin;
-            switch (seekOrigin)
+            var netOrigin = seekOrigin switch
             {
-                case Assimp.Origin.Set:
-                    netOrigin = SeekOrigin.Begin;
-                    break;
-                
-                case Assimp.Origin.Current:
-                    netOrigin = SeekOrigin.Current;
-                    break;
-
-                case Assimp.Origin.End:
-                    netOrigin = SeekOrigin.End;
-                    break;
-            }
+                Origin.Set => SeekOrigin.Begin,
+                Origin.Current => SeekOrigin.Current,
+                Origin.End => SeekOrigin.End,
+                _ => SeekOrigin.Begin
+            };
 
             _stream.Seek(offset, netOrigin);
 
-            return Assimp.ReturnCode.Success;
+            return ReturnCode.Success;
         }
 
         public override long GetPosition()
@@ -143,7 +136,5 @@ namespace SeeingSharp.AssimpImporter
                 SeeingSharpUtil.DisposeObject(_stream);
             }
         }
-
-        public override bool IsValid => true;
     }
 }

@@ -19,12 +19,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.SampleContainer;
-using SeeingSharp.Util;
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
+using SeeingSharp.SampleContainer;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -32,25 +33,6 @@ namespace SeeingSharp.UwpSamples
     {
         private BitmapSource _bitmapSource;
         private Task _bitmapSourceTask;
-
-        public SampleViewModel(SampleMetadata sample)
-        {
-            this.SampleMetadata = sample;
-        }
-
-        private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
-        {
-            var source = new BitmapImage();
-
-            using (var randomAccessStream = sourceLink.OpenRead().AsRandomAccessStream())
-            {
-                await source.SetSourceAsync(randomAccessStream);
-            }
-
-            _bitmapSource = source;
-
-            this.RaisePropertyChanged(nameof(this.BitmapSource));
-        }
 
         public SampleMetadata SampleMetadata { get; }
 
@@ -71,6 +53,25 @@ namespace SeeingSharp.UwpSamples
                 }
                 return _bitmapSource;
             }
+        }
+
+        public SampleViewModel(SampleMetadata sample)
+        {
+            this.SampleMetadata = sample;
+        }
+
+        private async Task LoadSampleImageAsync(AssemblyResourceLink sourceLink)
+        {
+            var source = new BitmapImage();
+
+            using (var randomAccessStream = sourceLink.OpenRead().AsRandomAccessStream())
+            {
+                await source.SetSourceAsync(randomAccessStream);
+            }
+
+            _bitmapSource = source;
+
+            this.RaisePropertyChanged(nameof(this.BitmapSource));
         }
     }
 }

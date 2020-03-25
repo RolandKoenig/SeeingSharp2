@@ -1,19 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Views;
 
@@ -27,6 +15,18 @@ namespace SeeingSharp.UwpSamples.Controls
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRenderPanel), typeof(StatusBarControl), new PropertyMetadata(null));
 
         private DispatcherTimer _refreshTimer;
+
+        public SeeingSharpRenderPanel CtrlRenderer
+        {
+            get => (SeeingSharpRenderPanel)this.GetValue(CtrlRendererProperty);
+            set => this.SetValue(CtrlRendererProperty, value);
+        }
+
+        public int CountResources => this.CtrlRenderer?.RenderLoop.CountGraphicsResources ?? 0;
+
+        public int CountObjects => this.CtrlRenderer?.RenderLoop.CountVisibleObjects ?? 0;
+
+        public int CountDrawCalls => this.CtrlRenderer?.RenderLoop.CountDrawCalls ?? 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -64,17 +64,5 @@ namespace SeeingSharp.UwpSamples.Controls
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountObjects)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountDrawCalls)));
         }
-
-        public SeeingSharpRenderPanel CtrlRenderer
-        {
-            get => (SeeingSharpRenderPanel)this.GetValue(CtrlRendererProperty);
-            set => this.SetValue(CtrlRendererProperty, value);
-        }
-
-        public int CountResources => this.CtrlRenderer?.RenderLoop.CountGraphicsResources ?? 0;
-
-        public int CountObjects => this.CtrlRenderer?.RenderLoop.CountVisibleObjects ?? 0;
-        
-        public int CountDrawCalls => this.CtrlRenderer?.RenderLoop.CountDrawCalls ?? 0;
     }
 }

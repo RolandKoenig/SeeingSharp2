@@ -13,7 +13,7 @@ namespace SeeingSharp.Tests.Util
         [TestCategory(TEST_CATEGORY)]
         public void Test_DurationCalculation_Default()
         {
-            var calculator = new DurationPerformanceCalculator("Dummy", maxHistoricalItems: 1000);
+            var calculator = new DurationPerformanceCalculator("Dummy", 1000);
 
             var start = new DateTime(2020, 1, 29, 0, 0, 0, 0);
             for (var loop = 0; loop < 2000; loop++)

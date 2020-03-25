@@ -19,9 +19,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using SeeingSharp.Checking;
+
 using System;
 using System.Drawing.Imaging;
+using SeeingSharp.Checking;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Tests
@@ -51,11 +52,11 @@ namespace SeeingSharp.Tests
         }
 
         /// <summary>
-        /// Caculate a differece between two pictures
+        /// Calculate a difference between two pictures
         /// </summary>
         /// <param name="bitmapLeft">The first bitmap for the comparison.</param>
         /// <param name="bitmapRight">The second bitmap for the comparison.</param>
-        /// <returns>Difference of both bitmaps in precent</returns>
+        /// <returns>Difference of both bitmaps in percent</returns>
         public static float CalculatePercentageDifference(GDI.Bitmap bitmapLeft, GDI.Bitmap bitmapRight)
         {
             bitmapLeft.EnsureNotNull(nameof(bitmapLeft));

@@ -19,23 +19,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SeeingSharp.ModelViewer
 {
     public class OpenFileDialogEventArgs : EventArgs
     {
+        public string FilterString { get; }
+
+        public string SelectedFile { get; set; }
+
         public OpenFileDialogEventArgs(string filterString)
         {
             this.FilterString = filterString;
             this.SelectedFile = string.Empty;
         }
-
-        public string FilterString { get; }
-
-        public string SelectedFile { get; set; }
     }
 
     public enum CameraMode
