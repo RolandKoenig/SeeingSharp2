@@ -33,20 +33,23 @@
         <Grid>
             <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
 
-            <StackPanel Orientation="Vertical"
-                        IsEnabled="{Binding Path=ControlsEnabled}">
+            <ScrollViewer IsEnabled="{Binding Path=ControlsEnabled}"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Hidden" 
+                          HorizontalAlignment="Left"
+                          Margin="5,5,15,5">
                 <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
-                                        Width="325" Margin="5,5,15,15"
+                                        Width="325"
                                         BorderThickness="1" BorderBrush="DarkGray"
                                         HorizontalAlignment="Left"
                                         TabVisibility="Collapsed"
                                         Background="#BBD3D3D3"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        VerticalAlignment="Top">
                     <propTools:PropertyGrid.ControlFactory>
                         <local:PropertyGridControlFactory />
                     </propTools:PropertyGrid.ControlFactory>
                 </propTools:PropertyGrid>
-            </StackPanel>
+            </ScrollViewer>
 
             <Grid Width="300" Height="100"
                   Background="#BBD3D3D3"
