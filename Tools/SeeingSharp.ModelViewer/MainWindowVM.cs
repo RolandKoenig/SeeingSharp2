@@ -79,7 +79,10 @@ namespace SeeingSharp.ModelViewer
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
 
-            this.OptionsRendering = new RenderingOptions(renderLoop);
+            var sceneDetailFilter = new SceneDetailsFilter();
+            renderLoop.Filters.Add(sceneDetailFilter);
+
+            this.OptionsRendering = new RenderingOptions(renderLoop, sceneDetailFilter);
 
             this.UpdateTitle();
         }

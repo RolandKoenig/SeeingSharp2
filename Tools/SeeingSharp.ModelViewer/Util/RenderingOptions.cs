@@ -31,11 +31,35 @@ namespace SeeingSharp.ModelViewer.Util
         private const string CATEGORY_COMMON = "Common";
         private const string CATEGORY_RENDERING = "Rendering";
         private const string CATEGORY_LIGHTING = "Lighting";
+        private const string CATEGORY_OBJECTS = "Objects";
 
         private readonly RenderLoop _renderLoop;
+        private readonly SceneDetailsFilter _detailFilter;
 
         [Category(CATEGORY_COMMON)]
         public DelegateCommand Reset { get; }
+
+        [Category(CATEGORY_OBJECTS)]
+        public bool ShowUnitCube
+        {
+            get => _detailFilter.ShowUnitCube;
+            set
+            {
+                _detailFilter.ShowUnitCube = value;
+                this.RaisePropertyChanged(nameof(this.ShowUnitCube));
+            }
+        }
+
+        [Category(CATEGORY_OBJECTS)]
+        public bool ShowGrid
+        {
+            get => _detailFilter.ShowGrid;
+            set
+            {
+                _detailFilter.ShowGrid = value;
+                this.RaisePropertyChanged(nameof(this.ShowGrid));
+            }
+        }
 
         [Category(CATEGORY_RENDERING)]
         public CameraMode CameraMode
@@ -120,9 +144,10 @@ namespace SeeingSharp.ModelViewer.Util
             }
         }
 
-        public RenderingOptions(RenderLoop renderLoop)
+        public RenderingOptions(RenderLoop renderLoop, SceneDetailsFilter detailFilter)
         {
             _renderLoop = renderLoop;
+            _detailFilter = detailFilter;
 
             this.Reset = new DelegateCommand(() =>
             {

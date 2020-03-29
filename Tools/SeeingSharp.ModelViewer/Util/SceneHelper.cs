@@ -58,13 +58,16 @@ namespace SeeingSharp.ModelViewer.Util
                     }));
                 var gridMesh = manipulator.AddMeshObject(resGridGeometry);
                 gridMesh.YPos = -0.5f;
+                gridMesh.Tag1 = Constants.OBJ_NAME_GRID;
 
                 // Add bounding box
-                manipulator.AddObject(new WireObject(
+                var unitCube = new WireObject(
                     Color4.GreenColor,
                     new BoundingBox(
                         new Vector3(-0.5f, -0.5f, -0.5f),
-                        new Vector3(0.5f, 0.5f, 0.5f))));
+                        new Vector3(0.5f, 0.5f, 0.5f)));
+                unitCube.Tag1 = Constants.OBJ_NAME_UNIT_CUBE;
+                manipulator.AddObject(unitCube);
             });
         }
     }
