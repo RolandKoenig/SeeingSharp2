@@ -2,9 +2,9 @@
 ![alt tag](_Misc/WikiImages/SeeingSharp_Samples.png)
 
 ### Quick Links
- - [Current progress / roadmap](/projects/1)
- - [Wiki](/wiki)
- - [Sample codes](/tree/master/Samples)
+ - [Current progress / roadmap](/../../projects/1)
+ - [Wiki](/../../wiki)
+ - [Sample codes](/../../tree/master/Samples)
 
 ### Common Information
 Seeing# is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps.
@@ -35,7 +35,7 @@ the particular gui framework.
 # Getting Started
 
 To give SeeingSharp2 a short try you can look into the [Getting Started samples in the 
-source code](/tree/master/Samples/GettingStarted).  
+source code](/../../tree/master/Samples/GettingStarted).  
 Here the steps for WPF:
 
 1. Download Nuget package (SeeingSharp2.WpfCore oder SeeingSharp2.Wpf, depending on your target framework
