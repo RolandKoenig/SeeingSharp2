@@ -8,3 +8,10 @@ dotnet pack -c Release -o ./publish ./SeeingSharp.WpfCore
 
 dotnet publish -c Release -f netcoreapp3.1 -o ./publish/WinFormsCoreSamples ./Samples/SeeingSharp.WinFormsCoreSamples
 dotnet publish -c Release -f netcoreapp3.1 -o ./publish/WpfCoreSamples ./Samples/SeeingSharp.WpfCoreSamples
+
+$compress = @{
+  Path = "./publish/WinFormsCoreSamples", "./publish/WpfCoreSamples"
+  CompressionLevel = "Optimal"
+  DestinationPath = "./publish/SeeingSharp.Samples.zip"
+}
+Compress-Archive @compress

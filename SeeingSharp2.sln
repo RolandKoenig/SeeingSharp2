@@ -65,6 +65,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.AssimpImporter"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ObjectLayoutInspection", "Tools\SeeingSharp.ObjectLayoutInspection\SeeingSharp.ObjectLayoutInspection.csproj", "{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", "{1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7}"
+	ProjectSection(SolutionItems) = preProject
+		_Misc\WikiImages\SeeingSharp_Samples.png = _Misc\WikiImages\SeeingSharp_Samples.png
+		_Misc\WikiImages\SimpleSampleWpf.png = _Misc\WikiImages\SimpleSampleWpf.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -464,6 +470,7 @@ Global
 		{23DF94AA-B58B-4B2A-9AE9-3350C0C3CA9A} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 		{42DD13E3-5595-4CB3-9314-B8AE62999C58} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
+		{1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7} = {4B6075B0-74B1-441E-8FF8-43754C876B1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
