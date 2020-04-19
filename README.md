@@ -28,10 +28,11 @@ the particular gui framework.
  - Import external 3D models 
  - And much more..
 
-# Getting Started (WPF)
+# Getting Started
 
 To give SeeingSharp2 a short try you can look into the Getting Started samples in the 
-source code. Here the steps for WPF:
+source code (see https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/GettingStarted).  
+Here the steps for WPF:
 
 1. Download Nuget package (SeeingSharp2.WpfCore oder SeeingSharp2.Wpf, depending on your target framework
 2. Include bootstrap code into your App.xaml.cs
