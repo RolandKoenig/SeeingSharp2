@@ -432,14 +432,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var modelContainer = new ImportedModelContainer(source, importOptions);
                 var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     resGeometryKey,
                     device => new GeometryResource(newGeometry)));
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     resMaterialKey,
                     device => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                modelContainer.Objects.Add(loadedMesh);
+                modelContainer.AddObject(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
                 modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
@@ -489,14 +489,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var modelContainer = new ImportedModelContainer(source, importOptions);
                 var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     resGeometryKey,
                     device => new GeometryResource(newGeometry)));
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     resMaterialKey,
                     device => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                modelContainer.Objects.Add(loadedMesh);
+                modelContainer.AddObject(loadedMesh);
 
                 // Append an object which transform the whole coordinate system
                 modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());

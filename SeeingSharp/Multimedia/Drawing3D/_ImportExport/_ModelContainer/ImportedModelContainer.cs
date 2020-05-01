@@ -54,17 +54,17 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Gets a collection containing all imported objects.
         /// </summary>
-        public IList<SceneObject> Objects => _objects;
+        public IReadOnlyList<SceneObject> Objects => _objects;
 
         /// <summary>
         /// Gets the hierarchy information of the imported objects.
         /// </summary>
-        public IList<ParentChildRelationship> ParentChildRelationships => _parentChildRelationships;
+        public IReadOnlyList<ParentChildRelationship> ParentChildRelationships => _parentChildRelationships;
 
         /// <summary>
         /// Gets a collection containing all imported resources.
         /// </summary>
-        public IList<ImportedResourceInfo> ImportedResources => _importedResources;
+        public IReadOnlyList<ImportedResourceInfo> ImportedResources => _importedResources;
 
         /// <summary>
         /// Is loading finished?
@@ -106,6 +106,27 @@ namespace SeeingSharp.Multimedia.Drawing3D
             _importId = Interlocked.Increment(ref s_maxContainerId);
         }
 
+        public void AddObject(SceneObject objectToAdd)
+        {
+            this.EnsureNotFinished();
+
+            _objects.Add(objectToAdd);
+        }
+
+        public void AddParentChildRelationship(ParentChildRelationship relationship)
+        {
+            this.EnsureNotFinished();
+
+            _parentChildRelationships.Add(relationship);
+        }
+
+        public void AddResource(ImportedResourceInfo resourceInfo)
+        {
+            this.EnsureNotFinished();
+
+            _importedResources.Add(resourceInfo);
+        }
+
         /// <summary>
         /// Finishes loading with the given exception.
         /// </summary>
@@ -132,10 +153,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public void FinishLoading(BoundingBox boundingBox)
         {
-            if (_isFinished)
-            {
-                throw new SeeingSharpException("ModelContainer already finished!");
-            }
+            this.EnsureNotFinished();
 
             try
             {
@@ -195,12 +213,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Find current root objects and assign them as child to the new root object
                 foreach (var actRootObject in this.FindRootObjects())
                 {
-                    this.ParentChildRelationships.Add(
+                    _parentChildRelationships.Add(
                         new ParentChildRelationship(rootObject, actRootObject));
                 }
 
                 // AddObject the object finally
-                this.Objects.Add(rootObject);
+                _objects.Add(rootObject);
                 this.RootObject = rootObject;
                 this.BoundingBox = boundingBox;
 
@@ -225,6 +243,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             return new NamedOrGenericKey(
                 "Imported." + _importId + "." + resourceClass + "." + resourceId);
+        }
+
+        private void EnsureNotFinished()
+        {
+            if (_isFinished)
+            {
+                throw new SeeingSharpException("ModelContainer already finished!");
+            }
         }
 
         /// <summary>

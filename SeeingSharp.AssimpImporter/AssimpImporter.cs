@@ -70,7 +70,7 @@ namespace SeeingSharp.AssimpImporter
             {
                 var actMaterial = scene.Materials[materialIndex];
 
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Material", materialIndex.ToString()),
                     device =>
                     {
@@ -168,19 +168,19 @@ namespace SeeingSharp.AssimpImporter
                 }
 
                 var geometryKey = modelContainer.GetResourceKey("Geometry", actNode.Name);
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Geometry", actNode.Name),
                     device=> new GeometryResource(newGeometry)));
 
                 var newMesh = new Mesh(geometryKey, materialKeys);
                 newMesh.CustomTransform = actTransform;
                 newMesh.TransformationType = SpacialTransformationType.CustomTransform;
-                modelContainer.Objects.Add(newMesh);
+                modelContainer.AddObject(newMesh);
                 nextParent = newMesh;
 
                 if (actParent != null)
                 {
-                    modelContainer.ParentChildRelationships.Add(new ParentChildRelationship(actParent, newMesh));
+                    modelContainer.AddParentChildRelationship(new ParentChildRelationship(actParent, newMesh));
                 }
             }
             else if(actNode.HasChildren)
@@ -192,12 +192,12 @@ namespace SeeingSharp.AssimpImporter
                 var actPivotObject = new ScenePivotObject();
                 actPivotObject.CustomTransform = actTransform;
                 actPivotObject.TransformationType = SpacialTransformationType.CustomTransform;
-                modelContainer.Objects.Add(actPivotObject);
+                modelContainer.AddObject(actPivotObject);
                 nextParent = actPivotObject;
 
                 if (actParent != null)
                 {
-                    modelContainer.ParentChildRelationships.Add(new ParentChildRelationship(actParent, actPivotObject));
+                    modelContainer.AddParentChildRelationship(new ParentChildRelationship(actParent, actPivotObject));
                 }
             }
 

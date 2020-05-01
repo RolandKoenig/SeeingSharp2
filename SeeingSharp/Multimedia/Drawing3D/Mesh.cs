@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
@@ -41,6 +42,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public override bool IsExportable => false;
 
         public NamedOrGenericKey GeometryResourceKey => _resGeometryKey;
+
+        public ReadOnlySpan<NamedOrGenericKey> MaterialResourceKeys => new ReadOnlySpan<NamedOrGenericKey>(_resMaterialResourceKeys);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mesh"/> class.

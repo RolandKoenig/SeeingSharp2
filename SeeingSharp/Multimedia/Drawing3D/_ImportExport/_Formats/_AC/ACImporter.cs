@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Generate GeometryResource
             var resGeometry = modelContainer.GetResourceKey("Geometry", "Main");
-            modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+            modelContainer.AddResource(new ImportedResourceInfo(
                 resGeometry,
                 device => new GeometryResource(geometry)));
 
@@ -60,7 +60,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var actACMaterial = fileInfo.Materials[loop];
                 materialKeys[loop] = modelContainer.GetResourceKey("Material", actACMaterial.Name);
 
-                modelContainer.ImportedResources.Add(new ImportedResourceInfo(
+                modelContainer.AddResource(new ImportedResourceInfo(
                     materialKeys[loop],
                     device => new StandardMaterialResource
                     {
@@ -70,7 +70,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Create the mesh
-            modelContainer.Objects.Add(new Mesh(resGeometry, materialKeys));
+            modelContainer.AddObject(new Mesh(resGeometry, materialKeys));
 
             modelContainer.FinishLoading(geometry.GenerateBoundingBox());
 
