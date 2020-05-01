@@ -71,6 +71,9 @@ namespace SeeingSharp.Multimedia.Views
         [Browsable(false)]
         public RenderLoop RenderLoop { get; }
 
+        [Browsable(false)]
+        public EngineDevice Device => this.RenderLoop?.Device;
+
         /// <summary>
         /// Does the target control have focus?
         /// </summary>

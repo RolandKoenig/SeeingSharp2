@@ -58,6 +58,8 @@ namespace SeeingSharp.Multimedia.Views
             set => this.RenderLoop.SetScene(value);
         }
 
+        public EngineDevice Device => this.RenderLoop?.Device;
+
         public Camera3DBase Camera
         {
             get => this.RenderLoop.Camera;

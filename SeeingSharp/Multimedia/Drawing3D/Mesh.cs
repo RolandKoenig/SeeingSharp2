@@ -22,6 +22,7 @@
 
 using System;
 using System.Numerics;
+using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Util;
 
@@ -63,13 +64,60 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Tries to get the count of rendering chunks for this mesh on the given device.
+        /// Be careful: Chunks are generated on first render. It this have not happened yet, then this method returns 0.
+        /// </summary>
+        /// <param name="device">The device for which to get the value.</param>
+        public int TryGetRenderingChunkCount(EngineDevice device)
+        {
+            device.EnsureNotNull(nameof(device));
+
+            var renderingChunks = _localChunks[device.DeviceIndex];
+            if (renderingChunks == null) { return 0; }
+
+            return renderingChunks.Length;
+        }
+
+        /// <summary>
+        /// Tries to get the <see cref="GeometryResource"/> object for the given device.
+        /// Be careful: Resource objects are created on first render. If this have not happened yet, then this method returns null.
+        /// </summary>
+        /// <param name="device">The device for which to get the <see cref="GeometryResource"/></param>
+        public GeometryResource TryGetGeometryResource(EngineDevice device)
+        {
+            device.EnsureNotNull(nameof(device));
+
+            return _localResGeometry[device.DeviceIndex];
+        }
+
+        /// <summary>
+        /// Tries to get the <see cref="MaterialResource"/> objects for the given device.
+        /// Be careful: Resource objects are created on first render. If this have not happened yet, then this method returns null.
+        /// </summary>
+        /// <param name="device">The device for which to get the <see cref="GeometryResource"/></param>
+        public MaterialResource[] TryGetMaterialResources(EngineDevice device)
+        {
+            device.EnsureNotNull(nameof(device));
+
+            var materialResources = _localResMaterials[device.DeviceIndex];
+            if (materialResources == null) { return null; }
+            if (materialResources.Length == 0) { return null; }
+
+            var result = new MaterialResource[materialResources.Length];
+            materialResources.CopyTo(result, 0);
+            return result;
+        }
+
+        /// <summary>
         /// Tries to get the bounding box for the given render-loop.
         /// Returns BoundingBox.Empty if it is not available.
         /// </summary>
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingBox.</param>
         public override BoundingBox TryGetBoundingBox(ViewInformation viewInfo)
         {
-            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
+            viewInfo.EnsureNotNull(nameof(viewInfo));
+
+            var geometryResource = this.TryGetGeometryResource(viewInfo.Device);
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -78,6 +126,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 result.Transform(this.Transform);
                 return result;
             }
+
             return default;
         }
 
@@ -88,7 +137,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <param name="viewInfo">The ViewInformation for which to get the BoundingSphere.</param>
         public override BoundingSphere TryGetBoundingSphere(ViewInformation viewInfo)
         {
-            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
+            viewInfo.EnsureNotNull(nameof(viewInfo));
+
+            var geometryResource = this.TryGetGeometryResource(viewInfo.Device);
 
             if (geometryResource != null &&
                 geometryResource.IsLoaded)
@@ -103,6 +154,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
                 return result;
             }
+
             return default;
         }
 

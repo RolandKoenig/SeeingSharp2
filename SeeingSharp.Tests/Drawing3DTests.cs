@@ -163,6 +163,62 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
+                [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public async Task QueryInfo_FromSimpleMesh()
+        {
+            await TestUtilities.InitializeWithGraphicsAsync();
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
+
+                // Get and configure the camera
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
+                camera.Position = new Vector3(0f, 5f, -7f);
+                camera.Target = new Vector3(0f, 0f, 0f);
+                camera.UpdateCamera();
+
+                // Define scene
+                Mesh newMesh = null;
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
+                {
+                    var resGeometry = manipulator.AddResource(
+                        device => new GeometryResource(new CubeGeometryFactory()));
+                    var resMaterial = manipulator.AddStandardMaterialResource();
+
+                    newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4.RedColor;
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                });
+                await memRenderTarget.AwaitRenderAsync();
+
+                // Query some information from the mesh
+                var renderingChunkCount = newMesh.TryGetRenderingChunkCount(memRenderTarget.Device);
+                var geoResource = newMesh.TryGetGeometryResource(memRenderTarget.Device);
+                var materialResources = newMesh.TryGetMaterialResources(memRenderTarget.Device);
+
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+
+                // Calculate and check difference
+                var isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+
+                // Check info from mesh
+                Assert.IsTrue(renderingChunkCount == 1, "Invalid count of rendering chunks");
+                Assert.IsTrue(geoResource != null, "Can not query GeometryResource");
+                Assert.IsTrue((materialResources != null) && (materialResources.Length == 1), "Can not query MaterialResource");
+            }
+
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
+
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]
         public async Task Render_FullScreenTexture()

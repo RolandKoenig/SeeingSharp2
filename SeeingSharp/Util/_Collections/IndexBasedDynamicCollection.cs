@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
     public class IndexBasedDynamicCollection<T> : IEnumerable<T>
         where T : class
     {
-        private List<T> _list;
+        private UnsafeList<T> _list;
         private int _listCount;
         private object _lockObject;
         private Dictionary<T, int> _objectIndices;
@@ -42,8 +42,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                var objectList = _list;
-                if (index >= _listCount) { return null; }
+                var objectList = _list.BackingArray;
+                if (index >= objectList.Length) { return null; }
                 return objectList[index];
             }
         }
@@ -55,8 +55,8 @@ namespace SeeingSharp.Util
         {
             get
             {
-                var objectList = _list;
-                for (var loop = 0; loop < objectList.Count; loop++)
+                var objectList = _list.BackingArray;
+                for (var loop = 0; loop < objectList.Length; loop++)
                 {
                     if (objectList[loop] != null) { return objectList[loop]; }
                 }
@@ -83,7 +83,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public IndexBasedDynamicCollection()
         {
-            _list = new List<T>(10);
+            _list = new UnsafeList<T>(10);
             _listCount = 0;
             _objectIndices = new Dictionary<T, int>();
             _lockObject = new object();
@@ -95,9 +95,9 @@ namespace SeeingSharp.Util
         /// <param name="index">The index to check.</param>
         public bool HasObjectAt(int index)
         {
-            var objectList = _list;
+            var objectList = _list.BackingArray;
 
-            if (_listCount <= index) { return false; }
+            if (objectList.Length <= index) { return false; }
             if (index < 0) { return false; }
 
             return objectList[index] != null;
