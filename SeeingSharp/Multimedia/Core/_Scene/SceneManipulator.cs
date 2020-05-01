@@ -508,7 +508,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
-            return sceneObject.GetAllChildrenInternal();
+            return sceneObject.GetAllChildren();
         }
 
         /// <summary>

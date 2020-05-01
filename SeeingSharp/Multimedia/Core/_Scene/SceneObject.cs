@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Dynamic;
 using System.Numerics;
 using SeeingSharp.Checking;
@@ -43,7 +44,7 @@ namespace SeeingSharp.Multimedia.Core
         private SceneLayer _sceneLayer;
 
         // Collections for describing object hierarchies
-        private List<SceneObject> _children;
+        private UnsafeList<SceneObject> _children;
         private SceneObject _parent;
 
         // Members for animations
@@ -164,7 +165,7 @@ namespace SeeingSharp.Multimedia.Core
 
             _targetDetailLevel = DetailLevel.All;
 
-            _children = new List<SceneObject>();
+            _children = new UnsafeList<SceneObject>();
             _parent = null;
 
             _animationHandler = new AnimationHandler(this);
@@ -216,6 +217,29 @@ namespace SeeingSharp.Multimedia.Core
             //          it is callable on the SceneObject class directly
 
             return objectToCheck._parent == this;
+        }
+
+        /// <summary>
+        /// Queries for all children (also lower level).
+        /// </summary>
+        public IEnumerable<SceneObject> GetAllChildren()
+        {           
+            // Caution: This method must be thread safe because
+            //          it is callable on the SceneObject class directly
+
+            var childArray = _children.BackingArray;
+            for (var loop = 0; loop < childArray.Length; loop++)
+            {
+                var actChild = childArray[loop];
+                if(actChild == null){ continue; }
+
+                yield return actChild;
+
+                foreach (var actLowerChild in actChild.GetAllChildren())
+                {
+                    yield return actLowerChild;
+                }
+            }
         }
 
         /// <summary>
@@ -338,7 +362,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="updateState">The current update state.</param>
         /// <param name="children">The full list of children that should be updated.</param>
-        protected virtual void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
+        protected virtual void UpdateChildrenInternal(SceneRelatedUpdateState updateState, UnsafeList<SceneObject> children)
         {
             // Trigger updates of all dependencies
             foreach (var actDependency in _children)
@@ -352,7 +376,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="updateState">The current update state.</param>
         /// <param name="children">The full list of children that should be updated.</param>
-        protected virtual void UpdateChildrenOverallInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
+        protected virtual void UpdateChildrenOverallInternal(SceneRelatedUpdateState updateState, UnsafeList<SceneObject> children)
         {
             // Trigger updates of all dependencies
             foreach (var actDependency in _children)
@@ -419,22 +443,6 @@ namespace SeeingSharp.Multimedia.Core
 
             // Call virtual event
             this.OnRemovedFromScene(oldScene);
-        }
-
-        /// <summary>
-        /// Queries for all children (also lower level).
-        /// </summary>
-        internal IEnumerable<SceneObject> GetAllChildrenInternal()
-        {
-            foreach (var actChild in _children)
-            {
-                yield return actChild;
-
-                foreach (var actLowerChild in actChild.GetAllChildrenInternal())
-                {
-                    yield return actLowerChild;
-                }
-            }
         }
 
         /// <summary>

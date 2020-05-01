@@ -28,36 +28,37 @@ namespace SeeingSharp.Multimedia.Core
 {
     public class SceneObjectInfo
     {
-        private List<SceneObjectInfo> _children;
-
         public SceneObject OriginalObject { get; }
 
         public SceneObjectInfoType Type { get; }
 
-        public IReadOnlyList<SceneObjectInfo> Children => _children;
+        /// <summary>
+        /// Queries for all children of this object.
+        /// </summary>
+        public IEnumerable<SceneObjectInfo> Children
+        {
+            get
+            {
+                foreach (var actChildObject in this.OriginalObject.GetAllChildren())
+                {
+                    yield return new SceneObjectInfo(actChildObject);
+                }
+            }
+        }
+
+        public bool IsAssociatedToScene => this.OriginalObject.Scene != null;
+
+        public Scene AssociatedScene => this.OriginalObject.Scene;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectInfo"/> class.
         /// </summary>
         /// <param name="obj">The object for which to build this info object.</param>
-        /// <param name="buildFullChildTree">True to build a full child tree automatically.</param>
-        internal SceneObjectInfo(SceneObject obj, bool buildFullChildTree = true)
+        public SceneObjectInfo(SceneObject obj)
         {
             obj.EnsureNotNull(nameof(obj));
-            obj.Scene.EnsureNotNull($"{nameof(obj)}.{nameof(obj.Scene)}");
 
             this.OriginalObject = obj;
-
-            // Build child list
-            _children = new List<SceneObjectInfo>(obj.CountChildren);
-
-            if (buildFullChildTree)
-            {
-                foreach (var actChildObject in obj.GetAllChildrenInternal())
-                {
-                    _children.Add(new SceneObjectInfo(actChildObject));
-                }
-            }
 
             // Set the type of this object
             this.Type = SceneObjectInfoType.Other;
@@ -71,11 +72,23 @@ namespace SeeingSharp.Multimedia.Core
             {
                 this.Type = SceneObjectInfoType.Pivot;
             }
+            else if (clrType == typeof(FullscreenTexture))
+            {
+                this.Type = SceneObjectInfoType.FullscreenTexture;
+            }
+            else if (clrType == typeof(Skybox))
+            {
+                this.Type = SceneObjectInfoType.FullscreenTexture;
+            }
+            else if(clrType == typeof(WireObject))
+            {
+                this.Type = SceneObjectInfoType.WireObject;
+            }
         }
 
         public override string ToString()
         {
-            return $"Type:{this.Type}, #Children:{this.Children.Count}";
+            return $"Type:{this.Type}, #Children:{this.OriginalObject.CountChildren}";
         }
     }
 }

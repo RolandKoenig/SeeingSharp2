@@ -41,14 +41,21 @@ namespace SeeingSharp.ModelViewer
             if (GraphicsCore.IsLoaded)
             {
                 _viewModel = new MainWindowVM(CtrlRenderer.RenderLoop);
-                _viewModel.OpenFileDialogRequest += this.OnViewModelOpenFileDialogRequest;
+                _viewModel.OpenFileDialogRequest += this.OnViewModel_OpenFileDialogRequest;
                 this.DataContext = _viewModel;
 
                 this.Loaded += this.OnLoaded;
             }
         }
 
-        private void OnViewModelOpenFileDialogRequest(object? sender, OpenFileDialogEventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel == null) { return; }
+
+            await _viewModel.LoadInitialScene();
+        }
+
+        private void OnViewModel_OpenFileDialogRequest(object? sender, OpenFileDialogEventArgs e)
         {
             var dlgOpenFile = new OpenFileDialog();
             dlgOpenFile.Filter = e.FilterString;
@@ -62,11 +69,17 @@ namespace SeeingSharp.ModelViewer
             }
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnMnuShowSceneBrowser_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel == null) { return; }
+            var scene = this.CtrlRenderer.Scene;
+            if (scene == null) { return; }
 
-            await _viewModel.LoadInitialScene();
+            var sceneInfoViewModel = new SceneBrowserViewModel(scene);
+            var dlgSceneBrowser = new SceneBrowserWindow();
+            dlgSceneBrowser.DataContext = sceneInfoViewModel;
+            dlgSceneBrowser.Owner = this;
+
+            dlgSceneBrowser.Show();
         }
     }
 }

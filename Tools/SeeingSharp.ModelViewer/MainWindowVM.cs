@@ -60,11 +60,14 @@ namespace SeeingSharp.ModelViewer
                     this.RaisePropertyChanged(nameof(this.IsLoading));
                     this.RaisePropertyChanged(nameof(this.ControlsEnabled));
                     this.RaisePropertyChanged(nameof(this.LoadingWindowVisibility));
+                    this.RaisePropertyChanged(nameof(this.IsCloseEnabled));
                 }
             }
         }
 
         public bool ControlsEnabled => !this.IsLoading;
+
+        public bool IsCloseEnabled => (!this.IsLoading) && (!string.IsNullOrEmpty((_loadedFile)));
 
         public Visibility LoadingWindowVisibility => this.IsLoading ? Visibility.Visible : Visibility.Collapsed;
 

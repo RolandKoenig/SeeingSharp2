@@ -19,20 +19,19 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-namespace SeeingSharp.Multimedia.Core
+
+using System.Windows;
+
+namespace SeeingSharp.ModelViewer
 {
-    public enum SceneObjectInfoType
+    /// <summary>
+    /// Interaction logic for SceneInfoWindow.xaml
+    /// </summary>
+    public partial class SceneBrowserWindow : Window
     {
-        Mesh,
-
-        Pivot,
-
-        FullscreenTexture,
-
-        Skybox,
-
-        WireObject,
-
-        Other
+        public SceneBrowserWindow()
+        {
+            this.InitializeComponent();
+        }
     }
 }

@@ -20,46 +20,46 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using FakeItEasy;
+using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Util;
 
 namespace SeeingSharp.ModelViewer
 {
-    public static class DesignData
+    public class SceneBrowserViewModel
     {
-        public static MainWindowVM MainWindowVM
-        {
-            get
-            {
-                var renderLoopHost = A.Fake<IRenderLoopHost>();
+        private Func<Task<IEnumerable<SceneObjectInfo>>> _sceneObjectGetter;
 
-                var result = new MainWindowVM(new RenderLoop(
-                    new SynchronizationContext(),
-                    renderLoopHost,
-                    true));
-                result.IsLoading = true;
-                return result;
-            }
+        public ObservableCollection<SceneObjectInfo> SceneObjectInfos { get; } = new ObservableCollection<SceneObjectInfo>();
+
+        public DelegateCommand Command_Refresh { get; }
+
+        public SceneBrowserViewModel(Scene scene)
+            : this(() => scene
+                .GetSceneObjectInfoAsync()
+                .ContinueWith(task => (IEnumerable<SceneObjectInfo>)task.Result))
+        {
+            this.RefreshData();
         }
 
-        public static SceneBrowserViewModel SceneBrowserViewModel
+        public SceneBrowserViewModel(Func<Task<IEnumerable<SceneObjectInfo>>> sceneObjectGetter)
         {
-            get
-            {
-                return new SceneBrowserViewModel( () =>
-                {
-                    var sceneObjects = new List<SceneObjectInfo>();
-                    sceneObjects.Add(new SceneObjectInfo(new Mesh(NamedOrGenericKey.Empty)));
-                    sceneObjects.Add(new SceneObjectInfo(new Mesh(NamedOrGenericKey.Empty)));
-                    sceneObjects.Add(new SceneObjectInfo(new Mesh(NamedOrGenericKey.Empty)));
+            this.Command_Refresh = new DelegateCommand(this.RefreshData);
 
-                    return Task.FromResult((IEnumerable<SceneObjectInfo>)sceneObjects);
-                });
+            _sceneObjectGetter = sceneObjectGetter;
+        }
+
+        public async void RefreshData()
+        {
+            var currentSceneInfos = await _sceneObjectGetter();
+
+            this.SceneObjectInfos.Clear();
+            foreach (var actObjectInfo in currentSceneInfos)
+            {
+                this.SceneObjectInfos.Add(actObjectInfo);
             }
         }
     }

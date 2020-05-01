@@ -17,10 +17,14 @@
                           IsEnabled="{Binding Path=ControlsEnabled}" />
                 <MenuItem Header="Close"
                           Command="{Binding Path=Command_CloseFile}"
-                          IsEnabled="{Binding Path=ControlsEnabled}" />
+                          IsEnabled="{Binding Path=IsCloseEnabled}" />
                 <Separator />
                 <MenuItem Header="Exit"
                           Command="{Binding Path=Command_Exit}" />
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Scene Browser" 
+                          Click="OnMnuShowSceneBrowser_Click"/>
             </MenuItem>
         </Menu>
 

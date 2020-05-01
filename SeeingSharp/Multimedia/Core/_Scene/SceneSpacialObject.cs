@@ -792,7 +792,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="updateState">The current update state.</param>
         /// <param name="children">The full list of children that should be updated.</param>
-        protected override void UpdateChildrenInternal(SceneRelatedUpdateState updateState, List<SceneObject> children)
+        protected override void UpdateChildrenInternal(SceneRelatedUpdateState updateState, UnsafeList<SceneObject> children)
         {
             var prevForceState = updateState.ForceTransformUpdatesOnChildren;
             updateState.ForceTransformUpdatesOnChildren = prevForceState || _forceTransformUpdateOnChildren;
