@@ -36,7 +36,7 @@ namespace SeeingSharp.ModelViewer
     {
         private RenderLoop _renderLoop;
         private string _loadedFile;
-
+        private ImportedModelContainer? _loadedModel;
         private bool _isLoading;
 
         public DelegateCommand Command_OpenFile { get; }
@@ -73,8 +73,9 @@ namespace SeeingSharp.ModelViewer
         public MainWindowVM(RenderLoop renderLoop)
         {
             _renderLoop = renderLoop;
+            _loadedModel = null;
             _loadedFile = string.Empty;
-
+            
             this.Command_OpenFile = new DelegateCommand(this.OpenFile);
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
@@ -128,6 +129,7 @@ namespace SeeingSharp.ModelViewer
                 if (modelLink == null)
                 {
                     _loadedFile = string.Empty;
+                    _loadedModel = null;
                 }
                 else
                 {
@@ -139,12 +141,16 @@ namespace SeeingSharp.ModelViewer
 
                     try
                     {
-                        await _renderLoop.Scene.ImportAsync(modelLink, importOptions);
+                        _loadedModel = await GraphicsCore.Current.ImportersAndExporters
+                            .ImportAsync(modelLink, importOptions);
+
+                        await _renderLoop.Scene.ImportAsync(_loadedModel);
                     }
                     catch (Exception)
                     {
                         await SceneHelper.ResetScene(_renderLoop);
                         _loadedFile = string.Empty;
+                        _loadedModel = null;
                         throw;
                     }
                 
