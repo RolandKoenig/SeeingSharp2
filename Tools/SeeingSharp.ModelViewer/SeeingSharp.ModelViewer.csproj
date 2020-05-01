@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="6.0.0" />
+    <PackageReference Include="FakeItEasy" Version="6.0.1" />
     <PackageReference Include="PropertyTools" Version="3.0.0" />
     <PackageReference Include="PropertyTools.Wpf" Version="3.0.0">
       <NoWarn>NU1701</NoWarn>
@@ -57,9 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png"
-              Link="Assets\Icons\Adapter16x16.png" />
-    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png"
-              Link="Assets\Icons\Output16x16.png" />
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
+    <Resource Include="..\..\Samples\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
   </ItemGroup>
 </Project>
