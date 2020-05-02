@@ -6,7 +6,14 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
         xmlns:propTools="http://propertytools.org/wpf"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
         Title="{Binding Path=AppTitle}" Height="850" Width="1500"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
     <DockPanel LastChildFill="True">
@@ -35,16 +42,33 @@
             <Grid Grid.Row="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="300" MinWidth="100" />
                         <ColumnDefinition Width="3" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" MinWidth="100" />
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Grid.Column="0" 
+                              Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="Configuration">
                         <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
-                                                BorderThickness="1" BorderBrush="DarkGray"
                                                 TabVisibility="Collapsed">
+                            <propTools:PropertyGrid.Resources>
+                                <Style TargetType="{x:Type GroupBox}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GroupBox}">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Content="{TemplateBinding Header}"
+                                                           FontSize="12" FontWeight="Bold" />
+                                                    <Rectangle Height="1" Fill="LightGray" Margin="0,0,0,8" />
+                                                    <ContentPresenter />
+                                                </StackPanel>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </propTools:PropertyGrid.Resources>
+
                             <propTools:PropertyGrid.ControlFactory>
                                 <local:PropertyGridControlFactory />
                             </propTools:PropertyGrid.ControlFactory>
@@ -56,6 +80,7 @@
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                     <GroupBox Grid.Column="2"
+                              Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="3D View">
                         <DockPanel LastChildFill="True">
                             <local:StatusBarControl DockPanel.Dock="Bottom"
@@ -73,6 +98,7 @@
                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
             <GroupBox Grid.Row="2"
+                      Style="{DynamicResource MaterialDesignGroupBox}"
                       Header="Scene Browser">
                 <local:SceneBrowserView DataContext="{Binding Path=SceneBrowserViewModel}"/>
             </GroupBox>

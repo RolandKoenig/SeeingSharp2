@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="6.0.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.1.1" />
     <PackageReference Include="PropertyTools" Version="3.0.0" />
     <PackageReference Include="PropertyTools.Wpf" Version="3.0.0">
       <NoWarn>NU1701</NoWarn>

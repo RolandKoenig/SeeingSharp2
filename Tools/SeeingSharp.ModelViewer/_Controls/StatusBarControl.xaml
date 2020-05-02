@@ -9,7 +9,6 @@
              x:Name="CtrlRoot">
 
     <StackPanel Orientation="Horizontal"
-                Background="#BBD3D3D3"
                 VerticalAlignment="Bottom">
         <StackPanel.Resources>
             <Style TargetType="TextBlock">

@@ -3,42 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
              xmlns:propTools="http://propertytools.org/wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <!-- Style for the property grid -->
-        <Style TargetType="{x:Type propTools:PropertyGrid}">
-            <Style.Resources>
-                <Style TargetType="{x:Type GroupBox}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type GroupBox}">
-                                <StackPanel Orientation="Vertical">
-                                    <Label Content="{TemplateBinding Header}"
-                                           FontSize="12" FontWeight="Bold" Foreground="Black" />
-                                    <Rectangle Height="1" Fill="DarkGray" Margin="0,0,0,8" />
-                                    <ContentPresenter />
-                                </StackPanel>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type propTools:TextBoxEx}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-                <Style TargetType="{x:Type propTools:RadioButtonList}">
-                    <Setter Property="FontSize" Value="10" />
-                </Style>
-            </Style.Resources>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <!-- Style for the property grid -->
+                    <!--<Style TargetType="{x:Type propTools:PropertyGrid}">
+                        <Style.Resources>
+                            <Style TargetType="{x:Type GroupBox}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupBox}">
+                                            <StackPanel Orientation="Vertical">
+                                                <Label Content="{TemplateBinding Header}"
+                                                       FontSize="12" FontWeight="Bold" Foreground="Black" />
+                                                <Rectangle Height="1" Fill="DarkGray" Margin="0,0,0,8" />
+                                                <ContentPresenter />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <Style TargetType="{x:Type Label}">
+                                <Setter Property="FontSize" Value="10" />
+                            </Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontSize" Value="10" />
+                            </Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Setter Property="FontSize" Value="10" />
+                            </Style>
+                            <Style TargetType="{x:Type propTools:TextBoxEx}">
+                                <Setter Property="FontSize" Value="10" />
+                            </Style>
+                            <Style TargetType="{x:Type propTools:RadioButtonList}">
+                                <Setter Property="FontSize" Value="10" />
+                            </Style>
+                        </Style.Resources>
+                    </Style>-->
+                </ResourceDictionary>
+
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="Grey" SecondaryColor="Cyan" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" /> 
+
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
