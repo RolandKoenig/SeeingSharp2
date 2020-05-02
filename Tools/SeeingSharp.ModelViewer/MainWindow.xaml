@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
         xmlns:propTools="http://propertytools.org/wpf"
         mc:Ignorable="d"
-        Title="{Binding Path=AppTitle}" Height="450" Width="800"
+        Title="{Binding Path=AppTitle}" Height="850" Width="1500"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
@@ -22,40 +22,64 @@
                 <MenuItem Header="Exit"
                           Command="{Binding Path=Command_Exit}" />
             </MenuItem>
-            <MenuItem Header="Tools">
-                <MenuItem Header="Scene Browser" 
-                          Click="OnMnuShowSceneBrowser_Click"/>
-            </MenuItem>
         </Menu>
-
-        <!-- Status bar -->
-        <local:StatusBarControl DockPanel.Dock="Bottom"
-                                CtrlRenderer="{Binding ElementName=CtrlRenderer}"
-                                IsEnabled="{Binding Path=ControlsEnabled}" />
 
         <!-- The 3D renderer control-->
         <Grid>
-            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="250" MinHeight="100" />
+            </Grid.RowDefinitions>
 
-            <ScrollViewer IsEnabled="{Binding Path=ControlsEnabled}"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Hidden" 
-                          HorizontalAlignment="Left"
-                          Margin="5,5,15,5">
-                <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
-                                        Width="325"
-                                        BorderThickness="1" BorderBrush="DarkGray"
-                                        HorizontalAlignment="Left"
-                                        TabVisibility="Collapsed"
-                                        Background="#BBD3D3D3"
-                                        VerticalAlignment="Top">
-                    <propTools:PropertyGrid.ControlFactory>
-                        <local:PropertyGridControlFactory />
-                    </propTools:PropertyGrid.ControlFactory>
-                </propTools:PropertyGrid>
-            </ScrollViewer>
+            <Grid Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="3" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
+                    <GroupBox Grid.Column="0" 
+                              Header="Configuration">
+                        <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
+                                                BorderThickness="1" BorderBrush="DarkGray"
+                                                TabVisibility="Collapsed">
+                            <propTools:PropertyGrid.ControlFactory>
+                                <local:PropertyGridControlFactory />
+                            </propTools:PropertyGrid.ControlFactory>
+                        </propTools:PropertyGrid>
+                    </GroupBox>
+
+
+                    <GridSplitter Grid.Column="1" 
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                    <GroupBox Grid.Column="2"
+                              Header="3D View">
+                        <DockPanel LastChildFill="True">
+                            <local:StatusBarControl DockPanel.Dock="Bottom"
+                                                    CtrlRenderer="{Binding ElementName=CtrlRenderer}"
+                                                    IsEnabled="{Binding Path=ControlsEnabled}" />
+
+                            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+                        </DockPanel>
+                        
+                    </GroupBox>
+                </Grid>
+            </Grid>
+
+            <GridSplitter Grid.Row="1" 
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+            <GroupBox Grid.Row="2"
+                      Header="Scene Browser">
+                <local:SceneBrowserView DataContext="{Binding Path=SceneBrowserViewModel}"/>
+            </GroupBox>
+
+            <!-- Overall loading view -->
             <Grid Width="300" Height="100"
+                  Grid.RowSpan="3"
                   Background="#BBD3D3D3"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   Visibility="{Binding Path=LoadingWindowVisibility}">

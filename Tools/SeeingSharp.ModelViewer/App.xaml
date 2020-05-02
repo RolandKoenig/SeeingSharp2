@@ -16,7 +16,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <Label Content="{TemplateBinding Header}"
                                            FontSize="12" FontWeight="Bold" Foreground="Black" />
-                                    <Rectangle Height="1" Fill="Black" Margin="0,0,0,8" />
+                                    <Rectangle Height="1" Fill="DarkGray" Margin="0,0,0,8" />
                                     <ContentPresenter />
                                 </StackPanel>
                             </ControlTemplate>

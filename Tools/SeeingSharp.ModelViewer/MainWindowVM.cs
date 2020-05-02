@@ -71,6 +71,8 @@ namespace SeeingSharp.ModelViewer
 
         public Visibility LoadingWindowVisibility => this.IsLoading ? Visibility.Visible : Visibility.Collapsed;
 
+        public SceneBrowserViewModel SceneBrowserViewModel { get; }
+
         public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequest;
 
         public MainWindowVM(RenderLoop renderLoop)
@@ -79,6 +81,8 @@ namespace SeeingSharp.ModelViewer
             _loadedModel = null;
             _loadedFile = string.Empty;
             
+            this.SceneBrowserViewModel = new SceneBrowserViewModel(renderLoop.Scene);
+
             this.Command_OpenFile = new DelegateCommand(this.OpenFile);
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
@@ -168,6 +172,8 @@ namespace SeeingSharp.ModelViewer
             {
                 this.IsLoading = false;
             }
+
+            this.SceneBrowserViewModel.RefreshData();
 
             this.UpdateTitle();
         }
