@@ -7,7 +7,6 @@
         xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
         xmlns:propTools="http://propertytools.org/wpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -20,9 +19,11 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Header="Open"
+                          Icon="{materialDesign:PackIcon Kind=Folder}"
                           Command="{Binding Path=Command_OpenFile}"
                           IsEnabled="{Binding Path=ControlsEnabled}" />
                 <MenuItem Header="Close"
+                          Icon="{materialDesign:PackIcon Kind=Close}"
                           Command="{Binding Path=Command_CloseFile}"
                           IsEnabled="{Binding Path=IsCloseEnabled}" />
                 <Separator />
@@ -31,7 +32,6 @@
             </MenuItem>
         </Menu>
 
-        <!-- The 3D renderer control-->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -47,6 +47,7 @@
                         <ColumnDefinition Width="*" MinWidth="100" />
                     </Grid.ColumnDefinitions>
 
+                    <!-- Configuration -->
                     <GroupBox Grid.Column="0" 
                               Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="Configuration">
@@ -89,6 +90,7 @@
                     <GridSplitter Grid.Column="1" 
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
+                    <!-- 3D-View -->
                     <GroupBox Grid.Column="2"
                               Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="3D View">
@@ -117,6 +119,7 @@
             <GridSplitter Grid.Row="1" 
                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
+            <!-- Scene Browser -->
             <GroupBox Grid.Row="2"
                       Style="{DynamicResource MaterialDesignGroupBox}"
                       Header="Scene Browser">
@@ -135,7 +138,7 @@
 
             <!-- Overall loading view -->
             <Grid Width="300" Height="100"
-                  Grid.RowSpan="3"
+                  Grid.Row="0" Grid.RowSpan="3"
                   Background="#BBD3D3D3"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   Visibility="{Binding Path=LoadingWindowVisibility}">

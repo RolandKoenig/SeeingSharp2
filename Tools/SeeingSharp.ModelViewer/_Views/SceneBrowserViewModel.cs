@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
 
@@ -31,30 +30,30 @@ namespace SeeingSharp.ModelViewer
 {
     public class SceneBrowserViewModel
     {
-        private Func<Task<IEnumerable<SceneObjectInfo>>> _sceneObjectGetter;
+        private Func<IEnumerable<SceneObjectInfo>> _sceneObjectGetter;
 
         public ObservableCollection<SceneObjectInfo> SceneObjectInfos { get; } = new ObservableCollection<SceneObjectInfo>();
 
         public DelegateCommand Command_Refresh { get; }
 
         public SceneBrowserViewModel(Scene scene)
-            : this(() => scene
-                .GetSceneObjectInfoAsync()
-                .ContinueWith(task => (IEnumerable<SceneObjectInfo>)task.Result))
+            : this(() => scene.GetSceneObjectInfos())
         {
-            this.RefreshData();
+            
         }
 
-        public SceneBrowserViewModel(Func<Task<IEnumerable<SceneObjectInfo>>> sceneObjectGetter)
+        public SceneBrowserViewModel(Func<IEnumerable<SceneObjectInfo>> sceneObjectGetter)
         {
             this.Command_Refresh = new DelegateCommand(this.RefreshData);
 
             _sceneObjectGetter = sceneObjectGetter;
+
+            this.RefreshData();
         }
 
-        public async void RefreshData()
+        public void RefreshData()
         {
-            var currentSceneInfos = await _sceneObjectGetter();
+            var currentSceneInfos = _sceneObjectGetter();
 
             this.SceneObjectInfos.Clear();
             foreach (var actObjectInfo in currentSceneInfos)

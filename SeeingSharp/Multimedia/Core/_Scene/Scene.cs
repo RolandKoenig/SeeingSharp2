@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Core
 
         // Misc
         private bool _initialized;
-        private List<SceneLayer> _sceneLayers;
+        private UnsafeList<SceneLayer> _sceneLayers;
 
         /// <summary>
         /// Gets total count of objects within the scene.
@@ -161,7 +161,7 @@ namespace SeeingSharp.Multimedia.Core
 
             _sceneComponents = new SceneComponentFlyweight(this);
 
-            _sceneLayers = new List<SceneLayer>();
+            _sceneLayers = new UnsafeList<SceneLayer>();
             _sceneLayers.Add(new SceneLayer(DEFAULT_LAYER_NAME, this));
             this.Layers = new ReadOnlyCollection<SceneLayer>(_sceneLayers);
 
@@ -210,50 +210,32 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets a full list of <see cref="SceneObjectInfo"/>  objects describing the contents of this scene.
+        /// Gets a full list of <see cref="SceneObjectInfo"/> objects describing the contents of this scene.
         /// </summary>
         /// <param name="layer">Only return objects of this layer (empty means all layers).</param>
-        public async Task<List<SceneObjectInfo>> GetSceneObjectInfoAsync(string layer = "")
+        public IEnumerable<SceneObjectInfo> GetSceneObjectInfos(string layer = "")
         {
-            var result = new List<SceneObjectInfo>(16);
-            await this.PerformBesideRenderingAsync(() =>
+            var layerArray = _sceneLayers.BackingArray;
+            for (var loop = 0; loop < layerArray.Length; loop++)
             {
-                foreach (var actLayer in _sceneLayers)
+                var actLayer = layerArray[loop];
+                if(actLayer == null) { continue; }
+
+                if ((!string.IsNullOrEmpty(layer)) &&
+                    (actLayer.Name != layer))
                 {
-                    // Layer filter
-                    if (!string.IsNullOrEmpty(layer) &&
-                       actLayer.Name != layer)
-                    {
-                        continue;
-                    }
-
-                    foreach (var actSceneObject in actLayer.ObjectsInternal)
-                    {
-                        if (actSceneObject.HasChildren) { continue; }
-                        result.Add(new SceneObjectInfo(actSceneObject));
-                    }
+                    continue;
                 }
-            });
 
-            return result;
-        }
+                var objectArrayInLayer = actLayer.ObjectsInternal.BackingArray;
+                for (var loopObject = 0; loopObject < objectArrayInLayer.Length; loopObject++)
+                {
+                    var actObject = objectArrayInLayer[loopObject];
+                    if(actObject == null){ continue; }
 
-        /// <summary>
-        /// Gets a <see cref="SceneObjectInfo"/>  object describing the given <see cref="SceneObject"/> .
-        /// </summary>
-        /// <param name="sceneObject">The <see cref="SceneObject"/> to describe.</param>
-        public async Task<SceneObjectInfo> GetSceneObjectInfoAsync(SceneObject sceneObject)
-        {
-            sceneObject.EnsureNotNull(nameof(sceneObject));
-            sceneObject.EnsureObjectOfScene(this, nameof(sceneObject));
-
-            SceneObjectInfo result = null;
-            await this.PerformBesideRenderingAsync(() =>
-            {
-                result = new SceneObjectInfo(sceneObject);
-            });
-
-            return result;
+                    yield return new SceneObjectInfo(actObject);
+                }
+            }
         }
 
         /// <summary>

@@ -30,9 +30,7 @@ namespace SeeingSharp.ModelViewer.Util
         private Func<bool>? _canExecuteAction;
         private Action _executeAction;
 
-#pragma warning disable
         public event EventHandler? CanExecuteChanged;
-#pragma warning restore
 
         public DelegateCommand(Action executeAction)
         {
@@ -43,6 +41,11 @@ namespace SeeingSharp.ModelViewer.Util
         {
             _executeAction = executeAction;
             _canExecuteAction = canExecuteAction;
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public bool CanExecute(object parameter)

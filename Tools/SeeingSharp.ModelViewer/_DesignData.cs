@@ -22,7 +22,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using FakeItEasy;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
@@ -58,7 +57,7 @@ namespace SeeingSharp.ModelViewer
                     sceneObjects.Add(new SceneObjectInfo(new Mesh(NamedOrGenericKey.Empty)));
                     sceneObjects.Add(new SceneObjectInfo(new Mesh(NamedOrGenericKey.Empty)));
 
-                    return Task.FromResult((IEnumerable<SceneObjectInfo>)sceneObjects);
+                    return sceneObjects;
                 });
             }
         }
