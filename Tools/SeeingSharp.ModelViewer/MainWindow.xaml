@@ -50,6 +50,16 @@
                     <GroupBox Grid.Column="0" 
                               Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="Configuration">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Cogs"/>
+                                    <TextBlock Text="{Binding}"
+                                               Margin="10,0,0,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+
                         <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
                                                 TabVisibility="Collapsed">
                             <propTools:PropertyGrid.Resources>
@@ -82,6 +92,16 @@
                     <GroupBox Grid.Column="2"
                               Style="{DynamicResource MaterialDesignGroupBox}"
                               Header="3D View">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Earth" />
+                                    <TextBlock Text="{Binding}"
+                                               Margin="10,0,0,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+
                         <DockPanel LastChildFill="True">
                             <local:StatusBarControl DockPanel.Dock="Bottom"
                                                     CtrlRenderer="{Binding ElementName=CtrlRenderer}"
@@ -100,6 +120,16 @@
             <GroupBox Grid.Row="2"
                       Style="{DynamicResource MaterialDesignGroupBox}"
                       Header="Scene Browser">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FileTree" />
+                            <TextBlock Text="{Binding}"
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+
                 <local:SceneBrowserView DataContext="{Binding Path=SceneBrowserViewModel}"/>
             </GroupBox>
 

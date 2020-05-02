@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="CtrlRoot">
@@ -15,9 +16,9 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="2" />
             </Style>
-            <Style TargetType="Image">
+            <Style TargetType="{x:Type materialDesign:PackIcon}" BasedOn="{StaticResource ModelViewerIconStyle}">
                 <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="Margin" Value="2" />
+                <Setter Property="Margin" Value="10,2,2,2" />
             </Style>
             <Style TargetType="ComboBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -28,39 +29,37 @@
             </Style>
         </StackPanel.Resources>
 
-        <Image Source="/Assets/Icons/Output16x16.png"
-               Width="16" />
-        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize}" />
+        <materialDesign:PackIcon Kind="Monitor" 
+                                 Margin="0,2,2,2"/>
+        <TextBlock Text="Resolution:" />
+        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize.Width}" />
+        <TextBlock Text="x" />
+        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize.Height}" />
         <TextBlock Text="px" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
-        <TextBlock Text="# 3D Resources:" />
+        <materialDesign:PackIcon Kind="PackageVariantClosed" />
+        <TextBlock Text="# Resources:" />
         <TextBlock x:Name="TxtResourceCount"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountGraphicsResources}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
-        <TextBlock Text="# 3D Objects:" />
+        <materialDesign:PackIcon Kind="Sitemap"/>
+        <TextBlock Text="# Objects:" />
         <TextBlock x:Name="TxtVisibleObjectCount"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountVisibleObjects}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
+        <materialDesign:PackIcon Kind="Brush"/>
         <TextBlock Text="# Draw calls:" />
         <TextBlock x:Name="TxtCountDrawCalls"
                    Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.RenderLoop.CountDrawCalls}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
-        <Image Source="/Assets/Icons/Adapter16x16.png"
-               Width="16" />
+        <materialDesign:PackIcon Kind="ExpansionCard" />
+        <TextBlock Text="Graphics Device:" />
         <ComboBox ItemsSource="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.PossibleDevices}"
                   SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"
+                  VerticalAlignment="Center"
                   Width="200" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
+        <materialDesign:PackIcon Kind="ImageMultipleOutline" />
         <TextBlock Text="Composition:" />
         <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CompositionMode}" />
     </StackPanel>
