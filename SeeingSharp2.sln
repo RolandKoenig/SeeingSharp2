@@ -77,8 +77,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted.WinForms", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted.Wpf", "Samples\GettingStarted\GettingStarted.Wpf\GettingStarted.Wpf.csproj", "{4910D33D-4F6D-4EE9-B92E-0DE8725EE12F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfCompositionMode", "WpfCompositionMode", "{548142FB-594E-4B3E-8325-04727D694903}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -522,7 +520,6 @@ Global
 		{270A9634-9CB6-4A40-AC7A-7D8632DA7ED7} = {790928B0-DED6-4996-9BAE-421B79C36561}
 		{91F55829-7B9F-436A-9A12-DD74E9F32B11} = {270A9634-9CB6-4A40-AC7A-7D8632DA7ED7}
 		{4910D33D-4F6D-4EE9-B92E-0DE8725EE12F} = {270A9634-9CB6-4A40-AC7A-7D8632DA7ED7}
-		{548142FB-594E-4B3E-8325-04727D694903} = {1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
