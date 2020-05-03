@@ -81,24 +81,8 @@
                         </GroupBox.HeaderTemplate>
 
                         <propTools:PropertyGrid SelectedObject="{Binding Path=OptionsRendering}"
-                                                TabVisibility="Collapsed">
-                            <propTools:PropertyGrid.Resources>
-                                <Style TargetType="{x:Type GroupBox}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type GroupBox}">
-                                                <StackPanel Orientation="Vertical">
-                                                    <Label Content="{TemplateBinding Header}"
-                                                           FontSize="12" FontWeight="Bold" />
-                                                    <Rectangle Height="1" Fill="LightGray" Margin="0,0,0,8" />
-                                                    <ContentPresenter />
-                                                </StackPanel>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </propTools:PropertyGrid.Resources>
-
+                                                TabVisibility="Collapsed"
+                                                Style="{StaticResource ModelViewerPropertyGrid}">
                             <propTools:PropertyGrid.ControlFactory>
                                 <local:PropertyGridControlFactory />
                             </propTools:PropertyGrid.ControlFactory>

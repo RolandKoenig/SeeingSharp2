@@ -20,22 +20,44 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using SeeingSharp.ModelViewer.Util;
+using System.ComponentModel;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
 {
-    public class SceneBrowserObjectViewModel : PropertyChangedBase
+    public class SceneBrowserObjectHardwareIndependentDetails
     {
+        private const string CATEGORY_PROPERTIES = "Properties (hardware independent)";
+
         private SceneObjectInfo _sceneObjectInfo;
 
-        public SceneBrowserObjectViewModel(SceneObjectInfo sceneObjectInfo)
+        public SceneBrowserObjectHardwareIndependentDetails(SceneObjectInfo sceneObjectInfo)
         {
             _sceneObjectInfo = sceneObjectInfo;
-
-
         }
 
-        public SceneBrowserObjectHardwareIndependentDetails HardwareIndependentDetails => new SceneBrowserObjectHardwareIndependentDetails(_sceneObjectInfo);
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public string Type => _sceneObjectInfo.Type.ToString();
+
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public int CountChildren => _sceneObjectInfo.OriginalObject.CountChildren;
+
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public bool HasParent => _sceneObjectInfo.OriginalObject.HasParent;
+
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public bool HasChildren => _sceneObjectInfo.OriginalObject.HasChildren;
+
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public bool IsStatic => _sceneObjectInfo.OriginalObject.IsStatic;
+
+        [Category(CATEGORY_PROPERTIES)]
+        [ReadOnly(true)]
+        public string TargetDetailLevel => _sceneObjectInfo.OriginalObject.TargetDetailLevel.ToString();
     }
 }

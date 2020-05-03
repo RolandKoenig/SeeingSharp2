@@ -21,44 +21,47 @@
 */
 
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.ModelViewer
 {
-    public class SceneBrowserObjectHardwareIndependentDetails
+    public class SceneBrowserObjectHardwareDependentDetails : PropertyChangedBase
     {
-        private const string CATEGORY_PROPERTIES = "Properties (hardware independent)";
+        private const string CATEGORY_PROPERTIES = "Properties (hardware)";
 
         private SceneObjectInfo _sceneObjectInfo;
+        private EngineDevice _device;
+        private GeometryResource? _resGeometry;
 
-        public SceneBrowserObjectHardwareIndependentDetails(SceneObjectInfo sceneObjectInfo)
+        public SceneBrowserObjectHardwareDependentDetails(SceneObjectInfo sceneObjectInfo, EngineDevice device)
         {
             _sceneObjectInfo = sceneObjectInfo;
+            _device = device;
+
+            this.RefreshHardwareDependentDetails();
+        }
+
+        private void RefreshHardwareDependentDetails()
+        {
+            GeometryResource? newResGeometry = null;
+
+            if(_sceneObjectInfo.OriginalObject is Mesh originalMesh)
+            {
+                newResGeometry = originalMesh.TryGetGeometryResource(_device);
+            }
+
+            if (newResGeometry != _resGeometry)
+            {
+                _resGeometry = newResGeometry;
+            }
         }
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public string Type => _sceneObjectInfo.Type.ToString();
+        public string GraphicsDevice => _device.AdapterDescription;
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public int CountChildren => _sceneObjectInfo.OriginalObject.CountChildren;
-
-        [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public bool HasParent => _sceneObjectInfo.OriginalObject.HasParent;
-
-        [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public bool HasChildren => _sceneObjectInfo.OriginalObject.HasChildren;
-
-        [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public bool IsStatic => _sceneObjectInfo.OriginalObject.IsStatic;
-
-        [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
-        public string TargetDetailLevel => _sceneObjectInfo.OriginalObject.TargetDetailLevel.ToString();
+        public bool IsLoaded => _resGeometry != null;
     }
 }

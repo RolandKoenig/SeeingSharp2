@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="SeeingSharp.ModelViewer.SceneBrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:propTools="http://propertytools.org/wpf"
+             xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{x:Static local:DesignData.SceneBrowserViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" MinWidth="100" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" MinWidth="100"/>
+        </Grid.ColumnDefinitions>
+    
+        <TreeView x:Name="SceneObjectTree" 
+                  Grid.Column="0"
+                  ItemsSource="{Binding Path=SceneObjectInfos}"
+                  SelectedItemChanged="OnTreeView_SelectedItemChanged">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=Type}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    
+        <GridSplitter Grid.Column="1"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+        <ScrollViewer Grid.Column="2"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="propTools:PropertyGrid" BasedOn="{StaticResource ModelViewerPropertyGrid}">
+                        <Setter Property="Width" Value="400" />
+                        <Setter Property="Margin" Value="3" />
+                    </Style>
+                </Grid.Resources>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <propTools:PropertyGrid Grid.Column="0" 
+                                        SelectedObject="{Binding Path=SelectedObjectViewModel.HardwareIndependentDetails}"
+                                        TabVisibility="Collapsed">
+                    <propTools:PropertyGrid.ControlFactory>
+                        <local:PropertyGridControlFactory />
+                    </propTools:PropertyGrid.ControlFactory>
+                </propTools:PropertyGrid>
+
+                <ItemsControl Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              ItemsSource="{Binding Path=SelectedObjectViewModel.HardwareDependentDetails}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <propTools:PropertyGrid SelectedObject="{Binding}"
+                                                    TabVisibility="Collapsed">
+                                <propTools:PropertyGrid.ControlFactory>
+                                    <local:PropertyGridControlFactory />
+                                </propTools:PropertyGrid.ControlFactory>
+                            </propTools:PropertyGrid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+</UserControl>

@@ -1,7 +1,6 @@
 ﻿<Application x:Class="SeeingSharp.ModelViewer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SeeingSharp.ModelViewer"
              xmlns:propTools="http://propertytools.org/wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="MainWindow.xaml">
@@ -16,6 +15,24 @@
                         <Setter Property="Width" Value="20" />
                         <Setter Property="Height" Value="20"/>
                         <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
+                    </Style>
+
+                    <Style x:Key="ModelViewerPropertyGrid" TargetType="propTools:PropertyGrid">
+                        <Setter Property="CategoryControlType" Value="Template" />
+                        <Setter Property="CategoryControlTemplate">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
+                                    <StackPanel Orientation="Vertical">
+                                        <Label FontSize="12" FontWeight="Bold">
+                                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
+                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </Label>
+                                        <Rectangle Height="1" Fill="LightGray" Margin="0,0,0,8" />
+                                        <ContentPresenter />
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
