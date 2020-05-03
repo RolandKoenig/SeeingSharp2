@@ -173,7 +173,7 @@ namespace SeeingSharp.ModelViewer
                 this.IsLoading = false;
             }
 
-            this.SceneBrowserViewModel.RefreshData();
+            this.SceneBrowserViewModel.RefreshSceneTree();
 
             this.UpdateTitle();
         }

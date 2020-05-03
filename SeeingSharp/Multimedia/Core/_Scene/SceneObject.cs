@@ -219,9 +219,10 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Queries for all children (also lower level).
+        /// Queries for all children.
         /// </summary>
-        public IEnumerable<SceneObject> GetAllChildren()
+        /// <param name="queryDeep">Do also return lower level children?</param>
+        public IEnumerable<SceneObject> GetAllChildren(bool queryDeep = true)
         {           
             // Caution: This method must be thread safe because
             //          it is callable on the SceneObject class directly
@@ -234,9 +235,12 @@ namespace SeeingSharp.Multimedia.Core
 
                 yield return actChild;
 
-                foreach (var actLowerChild in actChild.GetAllChildren())
+                if (queryDeep)
                 {
-                    yield return actLowerChild;
+                    foreach (var actLowerChild in actChild.GetAllChildren())
+                    {
+                        yield return actLowerChild;
+                    }
                 }
             }
         }

@@ -232,6 +232,7 @@ namespace SeeingSharp.Multimedia.Core
                 {
                     var actObject = objectArrayInLayer[loopObject];
                     if(actObject == null){ continue; }
+                    if(actObject.HasParent){ continue; }
 
                     yield return new SceneObjectInfo(actObject);
                 }

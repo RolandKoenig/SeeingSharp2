@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.ObjectModel;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
@@ -40,9 +41,32 @@ namespace SeeingSharp.ModelViewer
         {
             _sceneObjectInfo = sceneObjectInfo;
 
-            foreach(var actDevice in GraphicsCore.Current.Devices)
+            switch (_sceneObjectInfo.Type)
             {
-                this.HardwareDependentDetails.Add(new SceneBrowserObjectHardwareDependentDetails(_sceneObjectInfo, actDevice));
+                case SceneObjectInfoType.Mesh:
+                    foreach(var actDevice in GraphicsCore.Current.Devices)
+                    {
+                        this.HardwareDependentDetails.Add(new SceneBrowserObjectHardwareDependentDetails(_sceneObjectInfo, actDevice));
+                    }
+                    break;
+
+                case SceneObjectInfoType.Pivot:
+                    break;
+
+                case SceneObjectInfoType.FullscreenTexture:
+                    break;
+
+                case SceneObjectInfoType.Skybox:
+                    break;
+
+                case SceneObjectInfoType.WireObject:
+                    break;
+
+                case SceneObjectInfoType.Other:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

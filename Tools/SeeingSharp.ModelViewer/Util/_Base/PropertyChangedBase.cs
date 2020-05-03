@@ -29,7 +29,7 @@ namespace SeeingSharp.ModelViewer.Util
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void RaisePropertyChanged([CallerMemberName] string propName = "")
+        public void RaisePropertyChanged([CallerMemberName] string propName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }

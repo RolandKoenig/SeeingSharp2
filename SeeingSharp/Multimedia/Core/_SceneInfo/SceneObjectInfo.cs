@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             get
             {
-                foreach (var actChildObject in this.OriginalObject.GetAllChildren())
+                foreach (var actChildObject in this.OriginalObject.GetAllChildren(false))
                 {
                     yield return new SceneObjectInfo(actChildObject);
                 }

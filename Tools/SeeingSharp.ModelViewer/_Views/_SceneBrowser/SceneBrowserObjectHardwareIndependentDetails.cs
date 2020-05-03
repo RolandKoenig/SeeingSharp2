@@ -21,11 +21,12 @@
 */
 
 using System.ComponentModel;
+using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
 {
-    public class SceneBrowserObjectHardwareIndependentDetails
+    public class SceneBrowserObjectHardwareIndependentDetails : PropertyChangedBase
     {
         private const string CATEGORY_PROPERTIES = "Properties (hardware independent)";
 
@@ -36,28 +37,27 @@ namespace SeeingSharp.ModelViewer
             _sceneObjectInfo = sceneObjectInfo;
         }
 
+        public void RefreshData()
+        {
+            this.RaisePropertyChanged(string.Empty);
+        }
+
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public string Type => _sceneObjectInfo.Type.ToString();
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public int CountChildren => _sceneObjectInfo.OriginalObject.CountChildren;
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public bool HasParent => _sceneObjectInfo.OriginalObject.HasParent;
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public bool HasChildren => _sceneObjectInfo.OriginalObject.HasChildren;
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public bool IsStatic => _sceneObjectInfo.OriginalObject.IsStatic;
 
         [Category(CATEGORY_PROPERTIES)]
-        [ReadOnly(true)]
         public string TargetDetailLevel => _sceneObjectInfo.OriginalObject.TargetDetailLevel.ToString();
     }
 }

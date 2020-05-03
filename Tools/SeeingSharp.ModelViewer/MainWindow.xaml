@@ -30,25 +30,6 @@
                 <MenuItem Header="Exit"
                           Command="{Binding Path=Command_Exit}" />
             </MenuItem>
-
-            <MenuItem Header="Generate Model">
-                <MenuItem Header="Cube"
-                          IsEnabled="False" />
-                <MenuItem Header="More Cubes"
-                          IsEnabled="False" />
-                <MenuItem Header="Sphere"
-                          IsEnabled="False" />
-            </MenuItem>
-
-            <MenuItem Header="Help">
-                <MenuItem Header="About"
-                          Icon="{materialDesign:PackIcon Kind=InfoOutline}"
-                          IsEnabled="False"/>
-                <Separator />
-                <MenuItem Header="Documentation"
-                          Icon="{materialDesign:PackIcon Kind=Help}" 
-                          IsEnabled="False"/>
-            </MenuItem>
         </Menu>
 
         <Grid>

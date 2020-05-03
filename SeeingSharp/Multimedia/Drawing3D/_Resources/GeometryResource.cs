@@ -54,6 +54,10 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public BoundingBox BoundingBox => _boundingBox;
 
+        public int LoadedGeometryTriangleCount { get; private set; }
+
+        public int LoadedGeometryRenderingChunkCount { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryResource"/> class.
         /// </summary>
@@ -95,6 +99,14 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             // Build geometry
             _chunkTemplates = BuildBuffers(device, geometries);
+
+            // Update counters
+            this.LoadedGeometryTriangleCount = 0;
+            this.LoadedGeometryRenderingChunkCount = _chunkTemplates.Length;
+            for (var loop = 0; loop < _chunkTemplates.Length; loop++)
+            {
+                this.LoadedGeometryTriangleCount += (_chunkTemplates[loop].IndexCount / 3);
+            }
         }
 
         /// <inheritdoc />
@@ -107,6 +119,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 SeeingSharpUtil.DisposeObject(_chunkTemplates[loop]);
             }
             _chunkTemplates = new RenderingChunkTemplate[0];
+
+            this.LoadedGeometryTriangleCount = 0;
+            this.LoadedGeometryRenderingChunkCount = 0;
         }
 
         /// <summary>

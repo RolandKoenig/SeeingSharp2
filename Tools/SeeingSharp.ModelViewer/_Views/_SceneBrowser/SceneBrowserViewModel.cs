@@ -64,14 +64,17 @@ namespace SeeingSharp.ModelViewer
 
         public SceneBrowserViewModel(Func<IEnumerable<SceneObjectInfo>> sceneObjectGetter)
         {
-            this.Command_Refresh = new DelegateCommand(this.RefreshData);
+            this.Command_Refresh = new DelegateCommand(this.RefreshSceneTree);
 
             _sceneObjectGetter = sceneObjectGetter;
 
-            this.RefreshData();
+            this.RefreshSceneTree();
         }
 
-        public void RefreshData()
+        /// <summary>
+        /// Gets the current collection of objects from the scene and rebuilds local scene tree.
+        /// </summary>
+        public void RefreshSceneTree()
         {
             var currentSceneInfos = _sceneObjectGetter();
 
@@ -80,6 +83,22 @@ namespace SeeingSharp.ModelViewer
             foreach (var actObjectInfo in currentSceneInfos)
             {
                 this.SceneObjectInfos.Add(actObjectInfo);
+            }
+        }
+
+        /// <summary>
+        /// Refreshes local scene tree.
+        /// </summary>
+        public void RefreshData()
+        {
+            if (this.SelectedObjectViewModel != null)
+            {
+                foreach (var actSubViewModel in this.SelectedObjectViewModel.HardwareDependentDetails)
+                {
+                    actSubViewModel.RefreshData();
+                }
+
+                this.SelectedObjectViewModel.HardwareIndependentDetails.RefreshData();
             }
         }
     }

@@ -40,10 +40,10 @@ namespace SeeingSharp.ModelViewer
             _sceneObjectInfo = sceneObjectInfo;
             _device = device;
 
-            this.RefreshHardwareDependentDetails();
+            this.RefreshData();
         }
 
-        private void RefreshHardwareDependentDetails()
+        public void RefreshData()
         {
             GeometryResource? newResGeometry = null;
 
@@ -56,6 +56,8 @@ namespace SeeingSharp.ModelViewer
             {
                 _resGeometry = newResGeometry;
             }
+
+            this.RaisePropertyChanged(string.Empty);
         }
 
         [Category(CATEGORY_PROPERTIES)]
@@ -63,5 +65,11 @@ namespace SeeingSharp.ModelViewer
 
         [Category(CATEGORY_PROPERTIES)]
         public bool IsLoaded => _resGeometry != null;
+
+        [Category(CATEGORY_PROPERTIES)]
+        public int TriangleCount => _resGeometry?.LoadedGeometryTriangleCount ?? 0;
+
+        [Category(CATEGORY_PROPERTIES)]
+        public int RenderingChunkCount => _resGeometry?.LoadedGeometryRenderingChunkCount ?? 0;
     }
 }

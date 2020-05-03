@@ -504,11 +504,13 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Queries for all children (also lower level).
         /// </summary>
-        internal IEnumerable<SceneObject> GetAllChildObjects(SceneObject sceneObject)
+        /// <param name="sceneObject">The object for which to return all children.</param>
+        /// <param name="queryDeep">Do also return lower level children?</param>
+        internal IEnumerable<SceneObject> GetAllChildObjects(SceneObject sceneObject, bool queryDeep)
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
 
-            return sceneObject.GetAllChildren();
+            return sceneObject.GetAllChildren(queryDeep);
         }
 
         /// <summary>

@@ -20,7 +20,7 @@
                   ItemsSource="{Binding Path=SceneObjectInfos}"
                   SelectedItemChanged="OnTreeView_SelectedItemChanged">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=Type}" />
                     </StackPanel>
