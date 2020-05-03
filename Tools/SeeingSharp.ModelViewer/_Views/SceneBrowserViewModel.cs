@@ -28,13 +28,33 @@ using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
 {
-    public class SceneBrowserViewModel
+    public class SceneBrowserViewModel : PropertyChangedBase
     {
         private Func<IEnumerable<SceneObjectInfo>> _sceneObjectGetter;
+        private SceneObjectInfo? _selectedObject;
+        private SceneBrowserObjectViewModel? _selectedObjectViewModel;
 
         public ObservableCollection<SceneObjectInfo> SceneObjectInfos { get; } = new ObservableCollection<SceneObjectInfo>();
 
         public DelegateCommand Command_Refresh { get; }
+
+        public SceneObjectInfo? SelectedObject
+        {
+            get => _selectedObject;
+            set
+            {
+                if (_selectedObject != value)
+                {
+                    _selectedObject = value;
+                    _selectedObjectViewModel =
+                        _selectedObject != null ? new SceneBrowserObjectViewModel(_selectedObject) : null;
+                    this.RaisePropertyChanged(nameof(this.SelectedObject));
+                    this.RaisePropertyChanged(nameof(this.SelectedObjectViewModel));
+                }
+            }
+        }
+
+        public SceneBrowserObjectViewModel? SelectedObjectViewModel => _selectedObjectViewModel;
 
         public SceneBrowserViewModel(Scene scene)
             : this(() => scene.GetSceneObjectInfos())
@@ -56,6 +76,7 @@ namespace SeeingSharp.ModelViewer
             var currentSceneInfos = _sceneObjectGetter();
 
             this.SceneObjectInfos.Clear();
+            this.SelectedObject = null;
             foreach (var actObjectInfo in currentSceneInfos)
             {
                 this.SceneObjectInfos.Add(actObjectInfo);

@@ -20,28 +20,22 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
+using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
 
 namespace SeeingSharp.ModelViewer
 {
-    /// <summary>
-    /// Interaction logic for SceneBrowserView.xaml
-    /// </summary>
-    public partial class SceneBrowserView : UserControl
+    public class SceneBrowserObjectViewModel : PropertyChangedBase
     {
-        public SceneBrowserView()
+        private SceneObjectInfo _sceneObjectInfo;
+
+        public SceneBrowserObjectViewModel(SceneObjectInfo sceneObjectInfo)
         {
-            this.InitializeComponent();
+            _sceneObjectInfo = sceneObjectInfo;
+
+
         }
 
-        private void OnTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (!(this.DataContext is SceneBrowserViewModel viewModel)) { return; }
-
-            viewModel.SelectedObject = e.NewValue as SceneObjectInfo;
-        }
+        public SceneBrowserObjectHardwareIndependentDetails HardwareIndependentDetails => new SceneBrowserObjectHardwareIndependentDetails(_sceneObjectInfo);
     }
 }
